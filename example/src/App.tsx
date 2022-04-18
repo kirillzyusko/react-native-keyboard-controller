@@ -1,13 +1,35 @@
 import * as React from 'react';
 
-import { StyleSheet, View } from 'react-native';
-import { KeyboardEventsView } from 'react-native-keyboard-events';
+import { Animated, StyleSheet, View, TextInput } from 'react-native';
+import {
+  KeyboardProvider,
+  useKeyboardProgress,
+} from 'react-native-keyboard-events';
+
+function KeyboardAnimation() {
+  const progress = useKeyboardProgress();
+
+  return (
+    <View style={styles.container}>
+      <Animated.View
+        style={{
+          width: 50,
+          height: 50,
+          backgroundColor: 'red',
+          borderRadius: 25,
+          transform: [{ translateY: progress }],
+        }}
+      />
+      <TextInput style={{ width: 200, height: 50, backgroundColor: "yellow" }} />
+    </View>
+  );
+}
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <KeyboardEventsViewManager color="#32a852" style={styles.box} />
-    </View>
+    <KeyboardProvider>
+      <KeyboardAnimation />
+    </KeyboardProvider>
   );
 }
 
