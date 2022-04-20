@@ -4,7 +4,7 @@ import { Animated, StyleSheet, View, TextInput } from 'react-native';
 import {
   KeyboardProvider,
   useKeyboardProgress,
-} from 'react-native-keyboard-events';
+} from 'react-native-keyboard-controller';
 
 function KeyboardAnimation() {
   const progress = useKeyboardProgress();

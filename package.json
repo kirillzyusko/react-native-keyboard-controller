@@ -1,5 +1,5 @@
 {
-  "name": "react-native-keyboard-events",
+  "name": "react-native-keyboard-controller",
   "version": "0.1.0",
   "description": "Platform agnostic keyboard manager",
   "main": "lib/commonjs/index",
@@ -13,7 +13,7 @@
     "android",
     "ios",
     "cpp",
-    "react-native-keyboard-events.podspec",
+    "react-native-keyboard-controller.podspec",
     "!lib/typescript/example",
     "!android/build",
     "!ios/build",
@@ -36,13 +36,13 @@
     "ios",
     "android"
   ],
-  "repository": "https://github.com/kirillzyusko/react-native-keyboard-events",
+  "repository": "https://github.com/kirillzyusko/react-native-keyboard-controller",
   "author": "Kiryl Ziusko <zyusko.kirik@gmail.com> (https://github.com/kirillzyusko)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/kirillzyusko/react-native-keyboard-events/issues"
+    "url": "https://github.com/kirillzyusko/react-native-keyboard-controller/issues"
   },
-  "homepage": "https://github.com/kirillzyusko/react-native-keyboard-events#readme",
+  "homepage": "https://github.com/kirillzyusko/react-native-keyboard-controller#readme",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },

@@ -1,4 +1,4 @@
-package com.reactnativekeyboardevents
+package com.reactnativekeyboardcontroller
 
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
@@ -10,7 +10,7 @@ import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.UIManagerModule
 import com.facebook.react.views.view.ReactViewGroup
 import com.facebook.react.views.view.ReactViewManager
-import com.reactnativekeyboardevents.events.KeyboardTransitionEvent
+import com.reactnativekeyboardcontroller.events.KeyboardTransitionEvent
 import java.util.*
 import kotlin.concurrent.schedule
 
@@ -23,7 +23,7 @@ import kotlin.concurrent.schedule
 // 6. (x) Стили не применяются к кастомной вьюшке - унаследовался от реактовской компоненты
 // 7. (x) Не мапится ивент на анимейтед (addListener ничего не возвращает) - see 5, 8
 // 8. (x) useNativeDriver: false - createAnimatedComponent
-class KeyboardEventsViewManager(reactContext: ReactApplicationContext?) : ReactViewManager() {
+class KeyboardControllerViewManager(reactContext: ReactApplicationContext?) : ReactViewManager() {
   private var mReactContext = reactContext;
   init {
     /*println("LALALA")
@@ -46,7 +46,7 @@ class KeyboardEventsViewManager(reactContext: ReactApplicationContext?) : ReactV
     )*/
   }
 
-  override fun getName() = "KeyboardEventsView"
+  override fun getName() = "KeyboardControllerView"
 
   override fun createViewInstance(reactContext: ThemedReactContext): ReactViewGroup {
     val view = ReactViewGroup(reactContext)

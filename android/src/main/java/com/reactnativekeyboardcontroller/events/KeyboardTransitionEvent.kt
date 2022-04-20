@@ -1,4 +1,4 @@
-package com.reactnativekeyboardevents.events
+package com.reactnativekeyboardcontroller.events
 
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.uimanager.events.Event

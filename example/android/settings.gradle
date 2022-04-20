@@ -1,6 +1,6 @@
-rootProject.name = 'KeyboardEventsExample'
+rootProject.name = 'KeyboardControllerExample'
 apply from: file("../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesSettingsGradle(settings)
 include ':app'
 
-include ':reactnativekeyboardevents'
-project(':reactnativekeyboardevents').projectDir = new File(rootProject.projectDir, '../../android')
+include ':reactnativekeyboardcontroller'
+project(':reactnativekeyboardcontroller').projectDir = new File(rootProject.projectDir, '../../android')

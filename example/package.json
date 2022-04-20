@@ -1,6 +1,6 @@
 {
-  "name": "react-native-keyboard-events-example",
-  "description": "Example app for react-native-keyboard-events",
+  "name": "react-native-keyboard-controller-example",
+  "description": "Example app for react-native-keyboard-controller",
   "version": "0.0.1",
   "private": true,
   "scripts": {

@@ -1,4 +1,4 @@
-import React, { useRef, useContext, useMemo, useEffect } from 'react';
+import React, { useRef, useContext, useMemo } from 'react';
 import {
   requireNativeComponent,
   UIManager,
@@ -8,28 +8,28 @@ import {
 } from 'react-native';
 
 const LINKING_ERROR =
-  `The package 'react-native-keyboard-events' doesn't seem to be linked. Make sure: \n\n` +
+  `The package 'react-native-keyboard-controller' doesn't seem to be linked. Make sure: \n\n` +
   Platform.select({ ios: "- You have run 'pod install'\n", default: '' }) +
   '- You rebuilt the app after installing the package\n' +
   '- You are not using Expo managed workflow\n';
 
-type KeyboardEventsProps = {
+type KeyboardControllerProps = {
   style?: ViewStyle;
   children: React.ReactNode;
   onProgress: (progress: Animated.Value) => void;
 };
 
-const ComponentName = 'KeyboardEventsView';
+const ComponentName = 'KeyboardControllerView';
 
-export const KeyboardEventsView =
+export const KeyboardControllerView =
   UIManager.getViewManagerConfig(ComponentName) != null
-    ? requireNativeComponent<KeyboardEventsProps>(ComponentName)
+    ? requireNativeComponent<KeyboardControllerProps>(ComponentName)
     : () => {
         throw new Error(LINKING_ERROR);
       };
-const KeyboardEventsViewAnimated = Animated.createAnimatedComponent(
-  KeyboardEventsView
-) as React.ComponentType<KeyboardEventsProps>;
+const KeyboardControllerViewAnimated = Animated.createAnimatedComponent(
+  KeyboardControllerView
+) as React.FC<KeyboardControllerProps>;
 
 const defaultContext = {
   progress: new Animated.Value(0),
@@ -52,7 +52,7 @@ export const KeyboardProvider = ({
 
   return (
     <KeyboardContext.Provider value={context}>
-      <KeyboardEventsViewAnimated
+      <KeyboardControllerViewAnimated
         onProgress={Animated.event(
           [
             {
@@ -66,7 +66,7 @@ export const KeyboardProvider = ({
         style={{ flex: 1 }}
       >
         {children}
-      </KeyboardEventsViewAnimated>
+      </KeyboardControllerViewAnimated>
     </KeyboardContext.Provider>
   );
 };

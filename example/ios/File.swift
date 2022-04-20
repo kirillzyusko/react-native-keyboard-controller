@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  KeyboardEventsExample
+//  KeyboardControllerExample
 //
 
 import Foundation

@@ -2,7 +2,7 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "react-native-keyboard-events": ["./src/index"]
+      "react-native-keyboard-controller": ["./src/index"]
     },
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,

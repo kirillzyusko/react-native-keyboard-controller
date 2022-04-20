@@ -37,7 +37,7 @@ import com.android.build.OutputFile
  *   // bundleInBeta: true,
  *
  *   // whether to disable dev mode in custom build variants (by default only disabled in release)
- *   // for KeyboardEventsExample: to disable dev mode in the staging build type (if configured)
+ *   // for KeyboardControllerExample: to disable dev mode in the staging build type (if configured)
  *   devDisabledInStaging: true,
  *   // The configuration property can be in the following formats
  *   //         'devDisabledIn${productFlavor}${buildType}'
@@ -64,7 +64,7 @@ import com.android.build.OutputFile
  *   // that we don't look at files in android/ or ios/ to determine whether the tasks are up to
  *   // date; if you have any other folders that you want to ignore for performance reasons (gradle
  *   // indexes the entire tree), add them here. Alternatively, if you have JS files in android/
- *   // for KeyboardEventsExample, you might want to remove it from here.
+ *   // for KeyboardControllerExample, you might want to remove it from here.
  *   inputExcludes: ["android/**", "ios/**"],
  *
  *   // override which node gets called and with what additional arguments
@@ -100,7 +100,7 @@ def enableProguardInReleaseBuilds = false
 /**
  * The preferred build flavor of JavaScriptCore.
  *
- * For KeyboardEventsExample, to use the international variant, you can use:
+ * For KeyboardControllerExample, to use the international variant, you can use:
  * `def jscFlavor = 'org.webkit:android-jsc-intl:+'`
  *
  * The international variant includes ICU i18n library and necessary data
@@ -128,7 +128,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.example.reactnativekeyboardevents"
+        applicationId "com.example.reactnativekeyboardcontroller"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
@@ -204,7 +204,7 @@ dependencies {
         implementation jscFlavor
     }
 
-    implementation project(':reactnativekeyboardevents')
+    implementation project(':reactnativekeyboardcontroller')
 }
 
 // Run this once to be able to run the application with BUCK

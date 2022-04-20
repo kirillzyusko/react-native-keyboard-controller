@@ -29,9 +29,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "KeyboardEventsExample.app"
-               BlueprintName = "KeyboardEventsExample"
-               ReferencedContainer = "container:KeyboardEventsExample.xcodeproj">
+               BuildableName = "KeyboardControllerExample.app"
+               BlueprintName = "KeyboardControllerExample"
+               ReferencedContainer = "container:KeyboardControllerExample.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -45,9 +45,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "KeyboardEventsExample.app"
-            BlueprintName = "KeyboardEventsExample"
-            ReferencedContainer = "container:KeyboardEventsExample.xcodeproj">
+            BuildableName = "KeyboardControllerExample.app"
+            BlueprintName = "KeyboardControllerExample"
+            ReferencedContainer = "container:KeyboardControllerExample.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </TestAction>
@@ -66,9 +66,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "KeyboardEventsExample.app"
-            BlueprintName = "KeyboardEventsExample"
-            ReferencedContainer = "container:KeyboardEventsExample.xcodeproj">
+            BuildableName = "KeyboardControllerExample.app"
+            BlueprintName = "KeyboardControllerExample"
+            ReferencedContainer = "container:KeyboardControllerExample.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -83,9 +83,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "KeyboardEventsExample.app"
-            BlueprintName = "KeyboardEventsExample"
-            ReferencedContainer = "container:KeyboardEventsExample.xcodeproj">
+            BuildableName = "KeyboardControllerExample.app"
+            BlueprintName = "KeyboardControllerExample"
+            ReferencedContainer = "container:KeyboardControllerExample.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

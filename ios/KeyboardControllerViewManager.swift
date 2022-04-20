@@ -1,12 +1,12 @@
-@objc(KeyboardEventsViewManager)
-class KeyboardEventsViewManager: RCTViewManager {
+@objc(KeyboardControllerViewManager)
+class KeyboardControllerViewManager: RCTViewManager {
 
-  override func view() -> (KeyboardEventsView) {
-    return KeyboardEventsView()
+  override func view() -> (KeyboardControllerView) {
+    return KeyboardControllerView()
   }
 }
 
-class KeyboardEventsView : UIView {
+class KeyboardControllerView : UIView {
 
   @objc var color: String = "" {
     didSet {

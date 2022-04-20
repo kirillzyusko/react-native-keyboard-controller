@@ -1,21 +1,21 @@
-# react-native-keyboard-events
+# react-native-keyboard-controller
 
 Platform agnostic keyboard manager
 
 ## Installation
 
 ```sh
-npm install react-native-keyboard-events
+npm install react-native-keyboard-controller
 ```
 
 ## Usage
 
 ```js
-import { KeyboardEventsView } from "react-native-keyboard-events";
+import { KeyboardControllerView } from "react-native-keyboard-controller";
 
 // ...
 
-<KeyboardEventsView color="tomato" />
+<KeyboardControllerView color="tomato" />
 ```
 
 ## Contributing

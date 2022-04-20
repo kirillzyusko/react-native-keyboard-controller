@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-package com.reactnativekeyboardevents
+package com.reactnativekeyboardcontroller
 
 import androidx.core.graphics.Insets
 import androidx.core.view.WindowInsetsAnimationCompat
 import androidx.core.view.WindowInsetsCompat
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.uimanager.UIManagerModule
-import com.reactnativekeyboardevents.events.KeyboardTransitionEvent
+import com.reactnativekeyboardcontroller.events.KeyboardTransitionEvent
 
 /**
  * A [WindowInsetsAnimationCompat.Callback] which will translate/move the given view during any
