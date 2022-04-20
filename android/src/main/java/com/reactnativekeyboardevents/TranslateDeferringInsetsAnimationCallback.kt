@@ -41,6 +41,7 @@ import com.reactnativekeyboardevents.events.KeyboardTransitionEvent
  * See [WindowInsetsAnimationCompat.Callback.getDispatchMode].
  */
 class TranslateDeferringInsetsAnimationCallback(
+    val viewId: Int,
     val persistentInsetTypes: Int,
     val deferredInsetTypes: Int,
     dispatchMode: Int = DISPATCH_MODE_STOP,
@@ -57,6 +58,7 @@ class TranslateDeferringInsetsAnimationCallback(
         insets: WindowInsetsCompat,
         runningAnimations: List<WindowInsetsAnimationCompat>
     ): WindowInsetsCompat {
+        println(22222)
         // onProgress() is called when any of the running animations progress...
 
         // First we get the insets which are potentially deferred
@@ -74,7 +76,7 @@ class TranslateDeferringInsetsAnimationCallback(
         context
           ?.getNativeModule(UIManagerModule::class.java)
           ?.eventDispatcher
-          ?.dispatchEvent(KeyboardTransitionEvent(diffY))
+          ?.dispatchEvent(KeyboardTransitionEvent(viewId, diffY))
 
 
         return insets

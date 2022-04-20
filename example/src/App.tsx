@@ -20,7 +20,7 @@ function KeyboardAnimation() {
           transform: [{ translateY: progress }],
         }}
       />
-      <TextInput style={{ width: 200, height: 50, backgroundColor: "yellow" }} />
+      <TextInput style={{ width: 200, marginTop: 50, height: 50, backgroundColor: "yellow" }} />
     </View>
   );
 }

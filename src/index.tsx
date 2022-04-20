@@ -1,4 +1,4 @@
-import React, { useRef, useContext, useMemo } from 'react';
+import React, { useRef, useContext, useMemo, useEffect } from 'react';
 import {
   requireNativeComponent,
   UIManager,
@@ -27,6 +27,9 @@ export const KeyboardEventsView =
     : () => {
         throw new Error(LINKING_ERROR);
       };
+const KeyboardEventsViewAnimated = Animated.createAnimatedComponent(
+  KeyboardEventsView
+) as React.ComponentType<KeyboardEventsProps>;
 
 const defaultContext = {
   progress: new Animated.Value(0),
@@ -49,7 +52,7 @@ export const KeyboardProvider = ({
 
   return (
     <KeyboardContext.Provider value={context}>
-      <KeyboardEventsView
+      <KeyboardEventsViewAnimated
         onProgress={Animated.event(
           [
             {
@@ -60,9 +63,10 @@ export const KeyboardProvider = ({
           ],
           { useNativeDriver: true }
         )}
+        style={{ flex: 1 }}
       >
         {children}
-      </KeyboardEventsView>
+      </KeyboardEventsViewAnimated>
     </KeyboardContext.Provider>
   );
 };

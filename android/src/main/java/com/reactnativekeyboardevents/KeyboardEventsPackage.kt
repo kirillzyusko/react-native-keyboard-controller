@@ -11,6 +11,6 @@ class KeyboardEventsPackage : ReactPackage {
     }
 
     override fun createViewManagers(reactContext: ReactApplicationContext): List<ViewManager<*, *>> {
-        return listOf(KeyboardEventsViewManager())
+        return listOf(KeyboardEventsViewManager(reactContext))
     }
 }
