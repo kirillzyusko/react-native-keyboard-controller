@@ -5,6 +5,7 @@ import {
   Platform,
   ViewStyle,
   Animated,
+  Easing,
 } from 'react-native';
 
 const LINKING_ERROR =
@@ -31,6 +32,8 @@ const KeyboardControllerViewAnimated = Animated.createAnimatedComponent(
   KeyboardControllerView
 ) as React.FC<KeyboardControllerProps>;
 
+// cubic-bezier(.17,.67,.34,.94)
+export const defaultAndroidEasing = Easing.bezier(0.4, 0.0, 0.2, 1);
 const defaultContext = {
   progress: new Animated.Value(0),
 };
