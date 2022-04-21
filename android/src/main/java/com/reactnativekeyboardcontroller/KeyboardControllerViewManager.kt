@@ -53,7 +53,7 @@ class KeyboardControllerViewManager(reactContext: ReactApplicationContext?) : Re
 
     reactContext.currentActivity?.let { WindowCompat.setDecorFitsSystemWindows(it.window, false) }
 
-    Timer("SettingUp", false).schedule(1500) {
+    /*Timer("SettingUp", false).schedule(4500) {
       for (i in 0..360) {
         Thread.sleep(8 )
         mReactContext
@@ -61,13 +61,13 @@ class KeyboardControllerViewManager(reactContext: ReactApplicationContext?) : Re
           ?.eventDispatcher
           ?.dispatchEvent(KeyboardTransitionEvent(view.id, i.toFloat() / 2))
         }
-      }
+      }*/
 
     // TODO: maybe it will work here? (why statusbar is gray by default?)
     ViewCompat.setWindowInsetsAnimationCallback(
-      view,
+      reactContext.currentActivity!!.window!!.decorView,
       TranslateDeferringInsetsAnimationCallback(
-        viewId = view.id,
+        view = view,
         persistentInsetTypes = WindowInsetsCompat.Type.systemBars(),
         deferredInsetTypes = WindowInsetsCompat.Type.ime(),
         // We explicitly allow dispatch to continue down to binding.messageHolder's

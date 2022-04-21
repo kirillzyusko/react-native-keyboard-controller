@@ -16,12 +16,18 @@
 
 package com.reactnativekeyboardcontroller
 
+import android.content.Context
 import androidx.core.graphics.Insets
 import androidx.core.view.WindowInsetsAnimationCompat
 import androidx.core.view.WindowInsetsCompat
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.uimanager.UIManagerModule
+import com.facebook.react.views.view.ReactViewGroup
 import com.reactnativekeyboardcontroller.events.KeyboardTransitionEvent
+import java.util.*
+import kotlin.concurrent.schedule
+
+fun toDp(px: Float, context: Context): Int = (px / context.resources.displayMetrics.density).toInt()
 
 /**
  * A [WindowInsetsAnimationCompat.Callback] which will translate/move the given view during any
@@ -41,11 +47,11 @@ import com.reactnativekeyboardcontroller.events.KeyboardTransitionEvent
  * See [WindowInsetsAnimationCompat.Callback.getDispatchMode].
  */
 class TranslateDeferringInsetsAnimationCallback(
-    val viewId: Int,
-    val persistentInsetTypes: Int,
-    val deferredInsetTypes: Int,
-    dispatchMode: Int = DISPATCH_MODE_STOP,
-    val context: ReactApplicationContext?
+  val view: ReactViewGroup,
+  val persistentInsetTypes: Int,
+  val deferredInsetTypes: Int,
+  dispatchMode: Int = DISPATCH_MODE_STOP,
+  val context: ReactApplicationContext?
 ) : WindowInsetsAnimationCompat.Callback(dispatchMode) {
     init {
         require(persistentInsetTypes and deferredInsetTypes == 0) {
@@ -58,7 +64,6 @@ class TranslateDeferringInsetsAnimationCallback(
         insets: WindowInsetsCompat,
         runningAnimations: List<WindowInsetsAnimationCompat>
     ): WindowInsetsCompat {
-        println(22222)
         // onProgress() is called when any of the running animations progress...
 
         // First we get the insets which are potentially deferred
@@ -72,12 +77,12 @@ class TranslateDeferringInsetsAnimationCallback(
             Insets.max(it, Insets.NONE)
         }
         val diffY = (diff.top - diff.bottom).toFloat()
+        println("22222: " + diffY + " " + toDp(diffY, context!!))
 
         context
           ?.getNativeModule(UIManagerModule::class.java)
           ?.eventDispatcher
-          ?.dispatchEvent(KeyboardTransitionEvent(viewId, diffY))
-
+          ?.dispatchEvent(KeyboardTransitionEvent(view.id, toDp(diffY, context!!)))
 
         return insets
     }

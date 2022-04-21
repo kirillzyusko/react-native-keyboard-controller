@@ -4,7 +4,7 @@ import com.facebook.react.bridge.Arguments
 import com.facebook.react.uimanager.events.Event
 import com.facebook.react.uimanager.events.RCTEventEmitter
 
-class KeyboardTransitionEvent(viewId: Int, private val diffY: Float) : Event<KeyboardTransitionEvent>(viewId) {
+class KeyboardTransitionEvent(private val viewId: Int, private val diffY: Int) : Event<KeyboardTransitionEvent>(viewId) {
   override fun getEventName() = EVENT_NAME
 
   // TODO: All events for a given view can be coalesced?
@@ -12,7 +12,7 @@ class KeyboardTransitionEvent(viewId: Int, private val diffY: Float) : Event<Key
 
   override fun dispatch(rctEventEmitter: RCTEventEmitter) {
     val map = Arguments.createMap()
-    map.putDouble("progress", diffY.toDouble())
+    map.putInt("progress", diffY)
     rctEventEmitter.receiveEvent(viewTag, eventName, map)
   }
 

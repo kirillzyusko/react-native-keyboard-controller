@@ -11,6 +11,7 @@ function KeyboardAnimation() {
 
   return (
     <View style={styles.container}>
+      <TextInput style={{ width: 200, marginTop: 50, height: 50, backgroundColor: "yellow" }} />
       <Animated.View
         style={{
           width: 50,
@@ -20,7 +21,6 @@ function KeyboardAnimation() {
           transform: [{ translateY: progress }],
         }}
       />
-      <TextInput style={{ width: 200, marginTop: 50, height: 50, backgroundColor: "yellow" }} />
     </View>
   );
 }
