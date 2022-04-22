@@ -9,17 +9,45 @@ class KeyboardControllerViewManager: RCTViewManager {
 class KeyboardControllerView : UIView {
     @objc var onProgress: RCTDirectEventBlock?
     
-    override func didMoveToWindow() {
-        print(4567456456, onProgress)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-            print(4567456456, self.onProgress)
-            if self.onProgress == nil {
-                return
-              }
+    override func willMove(toWindow newWindow: UIWindow?) {
+        super.willMove(toWindow: newWindow)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillDisappear), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillAppear), name: UIResponder.keyboardWillShowNotification, object: nil)
+        /*NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)*/
+    }
+    
+    /*@objc func keyboardWillChangeFrame(_ notification: Notification) {
+        if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+            let keyboardHeight = keyboardFrame.cgRectValue.size.height
+
             var event = [AnyHashable: Any]()
-            event["progress"] = 50
+            event["progress"] = -keyboardHeight
 
             self.onProgress!(event)
         }
+    }*/
+
+    @objc func keyboardWillAppear(_ notification: Notification) {
+        print("keyboardWillAppear", notification)
+        if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+            let keyboardHeight = keyboardFrame.cgRectValue.size.height
+
+            var event = [AnyHashable: Any]()
+            event["progress"] = -keyboardHeight
+
+            self.onProgress!(event)
+        }
+    }
+
+    @objc func keyboardWillDisappear() {
+        var event = [AnyHashable: Any]()
+        event["progress"] = 0
+
+        self.onProgress!(event)
+    }
+
+    override func willRemoveSubview(_ subview: UIView) {
+        super.willRemoveSubview(subview)
+        NotificationCenter.default.removeObserver(self) // TODO: correct place?
     }
 }
