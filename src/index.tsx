@@ -9,6 +9,7 @@ import {
   NativeModules,
   Keyboard,
   NativeEventEmitter,
+  StyleSheet,
 } from 'react-native';
 
 const LINKING_ERROR =
@@ -133,6 +134,16 @@ export const useKeyboardReplicaProgress = () => {
   return replica;
 };
 
+type Styles = {
+  container: ViewStyle;
+};
+
+const styles = StyleSheet.create<Styles>({
+  container: {
+    flex: 1,
+  },
+});
+
 export const KeyboardProvider = ({
   children,
 }: {
@@ -140,21 +151,24 @@ export const KeyboardProvider = ({
 }) => {
   const progress = useRef(new Animated.Value(0));
   const context = useMemo(() => ({ progress: progress.current }), [progress]);
+  const onProgress = useRef(
+    Animated.event(
+      [
+        {
+          nativeEvent: {
+            progress: progress.current,
+          },
+        },
+      ],
+      { useNativeDriver: true }
+    )
+  );
 
   return (
     <KeyboardContext.Provider value={context}>
       <KeyboardControllerViewAnimated
-        onProgress={Animated.event(
-          [
-            {
-              nativeEvent: {
-                progress: progress.current,
-              },
-            },
-          ],
-          { useNativeDriver: true }
-        )}
-        style={{ flex: 1 }}
+        onProgress={onProgress.current}
+        style={styles.container}
       >
         {children}
       </KeyboardControllerViewAnimated>
