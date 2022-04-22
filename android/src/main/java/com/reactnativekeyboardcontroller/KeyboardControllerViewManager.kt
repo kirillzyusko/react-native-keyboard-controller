@@ -23,6 +23,7 @@ import kotlin.concurrent.schedule
 // 6. (x) Стили не применяются к кастомной вьюшке - унаследовался от реактовской компоненты
 // 7. (x) Не мапится ивент на анимейтед (addListener ничего не возвращает) - see 5, 8
 // 8. (x) useNativeDriver: false - createAnimatedComponent
+// 9. (x) rn-snoopy to intercept onFocus events
 class KeyboardControllerViewManager(reactContext: ReactApplicationContext?) : ReactViewManager() {
   private var mReactContext = reactContext;
   init {

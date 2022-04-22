@@ -60,6 +60,21 @@ class TranslateDeferringInsetsAnimationCallback(
         }
     }
 
+  override fun onStart(
+    animation: WindowInsetsAnimationCompat,
+    bounds: WindowInsetsAnimationCompat.BoundsCompat
+  ): WindowInsetsAnimationCompat.BoundsCompat {
+    println(1111111)
+
+    return super.onStart(animation, bounds)
+  }
+
+  override fun onEnd(animation: WindowInsetsAnimationCompat) {
+    super.onEnd(animation)
+
+    println(333333)
+  }
+
     override fun onProgress(
         insets: WindowInsetsCompat,
         runningAnimations: List<WindowInsetsAnimationCompat>

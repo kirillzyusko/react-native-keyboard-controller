@@ -1,4 +1,4 @@
-import React, { useRef, useContext, useMemo } from 'react';
+import React, { useRef, useContext, useMemo, useEffect } from 'react';
 import {
   requireNativeComponent,
   UIManager,
@@ -6,6 +6,7 @@ import {
   ViewStyle,
   Animated,
   Easing,
+  NativeModules,
 } from 'react-native';
 
 const LINKING_ERROR =
@@ -14,14 +15,28 @@ const LINKING_ERROR =
   '- You rebuilt the app after installing the package\n' +
   '- You are not using Expo managed workflow\n';
 
+export enum AndroidSoftInputModes {
+  SOFT_INPUT_ADJUST_NOTHING = 48,
+  SOFT_INPUT_ADJUST_PAN = 32,
+  SOFT_INPUT_ADJUST_RESIZE = 16,
+  SOFT_INPUT_ADJUST_UNSPECIFIED = 0,
+}
+
 type KeyboardControllerProps = {
   style?: ViewStyle;
   children: React.ReactNode;
   onProgress: (progress: Animated.Value) => void;
 };
+type KeyboardController = {
+  // android only
+  setDefaultMode: () => void;
+  setInputMode: (mode: AndroidSoftInputModes) => void;
+};
 
 const ComponentName = 'KeyboardControllerView';
 
+export const KeyboardController =
+  NativeModules.KeyboardController as KeyboardController;
 export const KeyboardControllerView =
   UIManager.getViewManagerConfig(ComponentName) != null
     ? requireNativeComponent<KeyboardControllerProps>(ComponentName)
@@ -40,6 +55,13 @@ const defaultContext = {
 const KeyboardContext = React.createContext(defaultContext);
 
 export const useKeyboardProgress = () => {
+  useEffect(() => {
+    KeyboardController.setInputMode(
+      AndroidSoftInputModes.SOFT_INPUT_ADJUST_RESIZE
+    );
+
+    return () => KeyboardController.setDefaultMode();
+  }, []);
   const value = useContext(KeyboardContext).progress;
 
   return value;
