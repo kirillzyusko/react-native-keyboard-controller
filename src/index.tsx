@@ -39,10 +39,10 @@ type KeyboardController = {
 
 const ComponentName = 'KeyboardControllerView';
 
-export const KeyboardController =
-  NativeModules.KeyboardController as KeyboardController;
+const RCTKeyboardController = NativeModules.KeyboardController;
+export const KeyboardController = RCTKeyboardController as KeyboardController;
 
-const eventEmitter = new NativeEventEmitter(NativeModules.KeyboardController);
+const eventEmitter = new NativeEventEmitter(RCTKeyboardController);
 type KeyboardControllerEvents =
   | 'keyboardWillShow'
   | 'keyboardDidShow'
