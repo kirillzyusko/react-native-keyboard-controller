@@ -19,8 +19,5 @@ public class MainActivity extends ReactActivity {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-
-    // Tell the Window that our app is going to responsible for fitting for any system windows.
-    WindowCompat.setDecorFitsSystemWindows(this.getWindow(), false);
   }
 }

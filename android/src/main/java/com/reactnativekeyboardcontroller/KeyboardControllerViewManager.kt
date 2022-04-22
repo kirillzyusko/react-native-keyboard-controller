@@ -19,8 +19,6 @@ class KeyboardControllerViewManager(reactContext: ReactApplicationContext?) : Re
   override fun createViewInstance(reactContext: ThemedReactContext): ReactViewGroup {
     val view = ReactViewGroup(reactContext)
 
-    reactContext.currentActivity?.let { WindowCompat.setDecorFitsSystemWindows(it.window, false) }
-
     ViewCompat.setWindowInsetsAnimationCallback(
       reactContext.currentActivity!!.window!!.decorView,
       TranslateDeferringInsetsAnimationCallback(

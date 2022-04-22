@@ -7,6 +7,7 @@ import {
   Animated,
   Easing,
   NativeModules,
+  Keyboard,
 } from 'react-native';
 
 const LINKING_ERROR =
@@ -29,6 +30,7 @@ type KeyboardControllerProps = {
 };
 type KeyboardController = {
   // android only
+  enable: () => void;
   setDefaultMode: () => void;
   setInputMode: (mode: AndroidSoftInputModes) => void;
 };
@@ -56,6 +58,7 @@ const KeyboardContext = React.createContext(defaultContext);
 
 export const useKeyboardProgress = () => {
   useEffect(() => {
+    KeyboardController.enable(); // TODO: maybe it can be enabled on provider level?
     KeyboardController.setInputMode(
       AndroidSoftInputModes.SOFT_INPUT_ADJUST_RESIZE
     );
@@ -65,6 +68,52 @@ export const useKeyboardProgress = () => {
   const value = useContext(KeyboardContext).progress;
 
   return value;
+};
+
+/**
+ * An experimental implementation of tracing keyboard appearance.
+ * Switch an input mode to adjust resize mode. In this case all did* events
+ * are triggering before keyboard appears, and using some approximations
+ * it tries to mimicries a native transition.
+ *
+ * @returns {Animated.Value}
+ */
+export const useKeyboardReplicaProgress = () => {
+  const replica = React.useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    KeyboardController.setInputMode(
+      AndroidSoftInputModes.SOFT_INPUT_ADJUST_RESIZE
+    );
+
+    return () => KeyboardController.setDefaultMode();
+  }, []);
+  useEffect(() => {
+    const listener = Keyboard.addListener('keyboardDidShow', (e) => {
+      Animated.timing(replica, {
+        toValue: -e.endCoordinates.height,
+        duration: 300,
+        easing: Easing.bezier(0.4, 0.0, 0.2, 1),
+        useNativeDriver: true,
+      }).start();
+
+      return () => listener.remove();
+    });
+  }, []);
+  useEffect(() => {
+    const listener = Keyboard.addListener('keyboardDidHide', () => {
+      Animated.timing(replica, {
+        toValue: 0,
+        duration: 300,
+        easing: Easing.bezier(0.4, 0.0, 0.2, 1),
+        useNativeDriver: true,
+      }).start();
+
+      return () => listener.remove();
+    });
+  }, []);
+
+  return replica;
 };
 
 export const KeyboardProvider = ({

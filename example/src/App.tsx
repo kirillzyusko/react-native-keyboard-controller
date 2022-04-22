@@ -1,46 +1,15 @@
 import * as React from 'react';
 
-import {
-  Animated,
-  StyleSheet,
-  View,
-  TextInput,
-  Keyboard,
-  Easing,
-} from 'react-native';
+import { Animated, StyleSheet, View, TextInput } from 'react-native';
 import {
   KeyboardProvider,
   useKeyboardProgress,
+  useKeyboardReplicaProgress,
 } from 'react-native-keyboard-controller';
 
 function KeyboardAnimation() {
   const progress = useKeyboardProgress();
-  const replica = React.useRef(new Animated.Value(0)).current;
-
-  React.useEffect(() => {
-    const listener = Keyboard.addListener('keyboardDidShow', (e) => {
-      Animated.timing(replica, {
-        toValue: -e.endCoordinates.height,
-        duration: 300,
-        easing: Easing.bezier(0.4, 0.0, 0.2, 1),
-        useNativeDriver: true,
-      }).start();
-
-      return () => listener.remove();
-    });
-  }, []);
-  React.useEffect(() => {
-    const listener = Keyboard.addListener('keyboardDidHide', (e) => {
-      Animated.timing(replica, {
-        toValue: 0,
-        duration: 300,
-        easing: Easing.bezier(0.4, 0.0, 0.2, 1),
-        useNativeDriver: true,
-      }).start();
-
-      return () => listener.remove();
-    });
-  }, []);
+  const replica = useKeyboardReplicaProgress();
 
   return (
     <View style={styles.container}>
