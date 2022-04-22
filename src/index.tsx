@@ -8,6 +8,7 @@ import {
   Easing,
   NativeModules,
   Keyboard,
+  NativeEventEmitter,
 } from 'react-native';
 
 const LINKING_ERROR =
@@ -39,6 +40,9 @@ const ComponentName = 'KeyboardControllerView';
 
 export const KeyboardController =
   NativeModules.KeyboardController as KeyboardController;
+
+const eventEmitter = new NativeEventEmitter(NativeModules.KeyboardController);
+export const KeyboardEvents = eventEmitter; // TODO: TS types of events
 export const KeyboardControllerView =
   UIManager.getViewManagerConfig(ComponentName) != null
     ? requireNativeComponent<KeyboardControllerProps>(ComponentName)

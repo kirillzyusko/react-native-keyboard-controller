@@ -20,7 +20,10 @@ import android.content.Context
 import androidx.core.graphics.Insets
 import androidx.core.view.WindowInsetsAnimationCompat
 import androidx.core.view.WindowInsetsCompat
+import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReactApplicationContext
+import com.facebook.react.bridge.WritableMap
+import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.facebook.react.uimanager.UIManagerModule
 import com.facebook.react.views.view.ReactViewGroup
 import com.reactnativekeyboardcontroller.events.KeyboardTransitionEvent
@@ -52,18 +55,33 @@ class TranslateDeferringInsetsAnimationCallback(
   dispatchMode: Int = DISPATCH_MODE_STOP,
   val context: ReactApplicationContext?
 ) : WindowInsetsAnimationCompat.Callback(dispatchMode) {
-    init {
+  private var startBottom = 0f
+  private var isShown = true // onStart will be fired on mount :)
+
+  init {
         require(persistentInsetTypes and deferredInsetTypes == 0) {
             "persistentInsetTypes and deferredInsetTypes can not contain any of " +
                     " same WindowInsetsCompat.Type values"
         }
     }
 
+  override fun onPrepare(
+    animation: WindowInsetsAnimationCompat
+  ) {
+    startBottom = view.bottom.toFloat()
+  }
+
   override fun onStart(
     animation: WindowInsetsAnimationCompat,
     bounds: WindowInsetsAnimationCompat.BoundsCompat
   ): WindowInsetsAnimationCompat.BoundsCompat {
-    println(1111111)
+    val params: WritableMap = Arguments.createMap()
+    params.putDouble("height", toDp((startBottom - view.bottom.toFloat()), context!!).toDouble())
+    context.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)?.emit(if(isShown) "keyboardWillHide" else "keyboardWillShow", params)
+
+    println("HEIGHT:: " + toDp((startBottom - view.bottom.toFloat()), context))
+
+    isShown = !isShown
 
     return super.onStart(animation, bounds)
   }
@@ -71,6 +89,8 @@ class TranslateDeferringInsetsAnimationCallback(
   override fun onEnd(animation: WindowInsetsAnimationCompat) {
     super.onEnd(animation)
 
+    val params: WritableMap = Arguments.createMap()
+    context?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)?.emit(if(isShown) "keyboardDidHide" else "keyboardDidShow", params)
     println(333333)
   }
 
@@ -96,7 +116,7 @@ class TranslateDeferringInsetsAnimationCallback(
         context
           ?.getNativeModule(UIManagerModule::class.java)
           ?.eventDispatcher
-          ?.dispatchEvent(KeyboardTransitionEvent(view.id, toDp(diffY, context!!)))
+          ?.dispatchEvent(KeyboardTransitionEvent(view.id, toDp(diffY, context)))
 
         return insets
     }
