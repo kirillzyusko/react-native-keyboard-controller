@@ -25,7 +25,6 @@ import com.facebook.react.uimanager.UIManagerModule
 import com.facebook.react.views.view.ReactViewGroup
 import com.reactnativekeyboardcontroller.events.KeyboardTransitionEvent
 import java.util.*
-import kotlin.concurrent.schedule
 
 fun toDp(px: Float, context: Context): Int = (px / context.resources.displayMetrics.density).toInt()
 
