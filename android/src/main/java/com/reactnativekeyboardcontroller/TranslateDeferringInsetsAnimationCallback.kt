@@ -77,8 +77,9 @@ class TranslateDeferringInsetsAnimationCallback(
   ): WindowInsetsAnimationCompat.BoundsCompat {
     val params: WritableMap = Arguments.createMap()
     params.putDouble("height", toDp((startBottom - view.bottom.toFloat()), context!!).toDouble())
-    context.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)?.emit(if(isShown) "keyboardWillHide" else "keyboardWillShow", params)
+    context.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)?.emit("KeyboardController::" + if(isShown) "keyboardWillHide" else "keyboardWillShow", params)
 
+    println("KeyboardController::" + if(isShown) "keyboardWillHide" else "keyboardWillShow")
     println("HEIGHT:: " + toDp((startBottom - view.bottom.toFloat()), context))
 
     isShown = !isShown
@@ -90,7 +91,7 @@ class TranslateDeferringInsetsAnimationCallback(
     super.onEnd(animation)
 
     val params: WritableMap = Arguments.createMap()
-    context?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)?.emit(if(isShown) "keyboardDidHide" else "keyboardDidShow", params)
+    context?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)?.emit("KeyboardController::" + if(isShown) "keyboardDidHide" else "keyboardDidShow", params)
     println(333333)
   }
 

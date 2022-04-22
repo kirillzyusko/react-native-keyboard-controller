@@ -42,7 +42,20 @@ export const KeyboardController =
   NativeModules.KeyboardController as KeyboardController;
 
 const eventEmitter = new NativeEventEmitter(NativeModules.KeyboardController);
-export const KeyboardEvents = eventEmitter; // TODO: TS types of events
+type KeyboardControllerEvents =
+  | 'keyboardWillShow'
+  | 'keyboardDidShow'
+  | 'keyboardWillHide'
+  | 'keyboardDidHide';
+type KeyboardEvent = {
+  height: number; // TODO: it will be always present?
+};
+export const KeyboardEvents = {
+  addListener: (
+    name: KeyboardControllerEvents,
+    cb: (e: KeyboardEvent) => void
+  ) => eventEmitter.addListener('KeyboardController::' + name, cb),
+};
 export const KeyboardControllerView =
   UIManager.getViewManagerConfig(ComponentName) != null
     ? requireNativeComponent<KeyboardControllerProps>(ComponentName)

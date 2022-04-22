@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import { Animated, StyleSheet, View, TextInput } from 'react-native';
 import {
+  KeyboardEvents,
   KeyboardProvider,
   useKeyboardProgress,
   useKeyboardReplicaProgress,
@@ -10,6 +11,14 @@ import {
 function KeyboardAnimation() {
   const progress = useKeyboardProgress();
   const replica = useKeyboardReplicaProgress();
+
+  React.useEffect(() => {
+    const listener = KeyboardEvents.addListener('keyboardWillShow', (e) => {
+      console.debug(3434343, e);
+    });
+
+    return () => listener.remove();
+  }, []);
 
   return (
     <View style={styles.container}>
