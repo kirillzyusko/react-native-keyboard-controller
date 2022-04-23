@@ -21,7 +21,7 @@ class KeyboardController: RCTEventEmitter {
 
   // Android stubs
   @objc func enable() {}
-  @objc func setInputMode() {}
+  @objc func setInputMode(_ mode: NSNumber!) {}
   @objc func setDefaultMode() {}
     
   @objc open override func supportedEvents() -> [String] {

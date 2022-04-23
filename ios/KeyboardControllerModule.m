@@ -13,7 +13,7 @@
 
 // Android stubs
 RCT_EXTERN_METHOD(enable)
-RCT_EXTERN_METHOD(setInputMode) // (NSNumber*) mode
+RCT_EXTERN_METHOD(setInputMode: (nonnull NSNumber*) mode)
 RCT_EXTERN_METHOD(setDefaultMode)
 
 // event emitter
