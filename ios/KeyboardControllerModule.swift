@@ -12,12 +12,24 @@ import AVFoundation
 
 @objc(KeyboardController)
 class KeyboardController: RCTEventEmitter {
+  public static var shared: KeyboardController?
+
+  override init() {
+    super.init()
+    KeyboardController.shared = self
+  }
+
   // Android stubs
   @objc func enable() {}
   @objc func setInputMode() {}
   @objc func setDefaultMode() {}
     
   @objc open override func supportedEvents() -> [String] {
-    return ["KeyboardController::keyboardWillShow"]
+    return [
+        "KeyboardController::keyboardWillShow",
+        "KeyboardController::keyboardDidShow",
+        "KeyboardController::keyboardWillHide",
+        "KeyboardController::keyboardDidHide"
+    ]
   }
 }

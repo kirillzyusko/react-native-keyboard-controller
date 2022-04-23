@@ -111,7 +111,6 @@ export const useKeyboardReplicaProgress = () => {
     const listener = Keyboard.addListener(
       `keyboard${availableOSEventType}Show`,
       (e) => {
-        console.log(111, e);
         Animated.timing(replica, {
           toValue: -e.endCoordinates.height,
           duration: e.duration ?? 300,
