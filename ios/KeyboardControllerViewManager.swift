@@ -1,5 +1,8 @@
 @objc(KeyboardControllerViewManager)
 class KeyboardControllerViewManager: RCTViewManager {
+  override class func requiresMainQueueSetup() -> Bool {
+    return false
+  }
 
   override func view() -> (KeyboardControllerView) {
       return KeyboardControllerView()

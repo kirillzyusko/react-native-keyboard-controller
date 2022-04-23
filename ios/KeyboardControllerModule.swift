@@ -13,6 +13,10 @@ import AVFoundation
 @objc(KeyboardController)
 class KeyboardController: RCTEventEmitter {
   public static var shared: KeyboardController?
+    
+  override class func requiresMainQueueSetup() -> Bool {
+    return false
+  }
 
   override init() {
     super.init()
