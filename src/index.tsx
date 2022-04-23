@@ -87,6 +87,7 @@ export const useKeyboardProgress = () => {
 
   return value;
 };
+const availableOSEventType = Platform.OS === 'ios' ? 'Will' : 'Did';
 
 /**
  * An experimental implementation of tracing keyboard appearance.
@@ -107,28 +108,35 @@ export const useKeyboardReplicaProgress = () => {
     return () => KeyboardController.setDefaultMode();
   }, []);
   useEffect(() => {
-    const listener = Keyboard.addListener('keyboardDidShow', (e) => {
-      Animated.timing(replica, {
-        toValue: -e.endCoordinates.height,
-        duration: 300,
-        easing: Easing.bezier(0.4, 0.0, 0.2, 1),
-        useNativeDriver: true,
-      }).start();
+    const listener = Keyboard.addListener(
+      `keyboard${availableOSEventType}Show`,
+      (e) => {
+        console.log(111, e);
+        Animated.timing(replica, {
+          toValue: -e.endCoordinates.height,
+          duration: e.duration ?? 300,
+          easing: Easing.bezier(0.4, 0.0, 0.2, 1),
+          useNativeDriver: true,
+        }).start();
 
-      return () => listener.remove();
-    });
+        return () => listener.remove();
+      }
+    );
   }, []);
   useEffect(() => {
-    const listener = Keyboard.addListener('keyboardDidHide', () => {
-      Animated.timing(replica, {
-        toValue: 0,
-        duration: 300,
-        easing: Easing.bezier(0.4, 0.0, 0.2, 1),
-        useNativeDriver: true,
-      }).start();
+    const listener = Keyboard.addListener(
+      `keyboard${availableOSEventType}Hide`,
+      (e) => {
+        Animated.timing(replica, {
+          toValue: 0,
+          duration: e.duration ?? 300,
+          easing: Easing.bezier(0.4, 0.0, 0.2, 1),
+          useNativeDriver: true,
+        }).start();
 
-      return () => listener.remove();
-    });
+        return () => listener.remove();
+      }
+    );
   }, []);
 
   return replica;
