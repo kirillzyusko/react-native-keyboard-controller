@@ -18,6 +18,7 @@ package com.reactnativekeyboardcontroller
 
 import android.content.Context
 import androidx.core.graphics.Insets
+import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsAnimationCompat
 import androidx.core.view.WindowInsetsCompat
 import com.facebook.react.bridge.Arguments
@@ -55,9 +56,6 @@ class TranslateDeferringInsetsAnimationCallback(
   dispatchMode: Int = DISPATCH_MODE_STOP,
   val context: ReactApplicationContext?
 ) : WindowInsetsAnimationCompat.Callback(dispatchMode) {
-  private var startBottom = 0f
-  private var isShown = true // onStart will be fired on mount :)
-
   init {
         require(persistentInsetTypes and deferredInsetTypes == 0) {
             "persistentInsetTypes and deferredInsetTypes can not contain any of " +
@@ -65,24 +63,20 @@ class TranslateDeferringInsetsAnimationCallback(
         }
     }
 
-  override fun onPrepare(
-    animation: WindowInsetsAnimationCompat
-  ) {
-    startBottom = view.bottom.toFloat()
-  }
-
   override fun onStart(
     animation: WindowInsetsAnimationCompat,
     bounds: WindowInsetsAnimationCompat.BoundsCompat
   ): WindowInsetsAnimationCompat.BoundsCompat {
+    val insets = ViewCompat.getRootWindowInsets(view)
+    val keyboardHeight = insets?.getInsets(WindowInsetsCompat.Type.ime())?.bottom ?: 0
+    val isKeyboardVisible = isKeyboardVisible()
+
     val params: WritableMap = Arguments.createMap()
-    params.putDouble("height", toDp((startBottom - view.bottom.toFloat()), context!!).toDouble())
-    context.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)?.emit("KeyboardController::" + if(isShown) "keyboardWillHide" else "keyboardWillShow", params)
+    params.putDouble("height", toDp(keyboardHeight.toFloat(), context!!).toDouble())
+    context.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)?.emit("KeyboardController::" + if(!isKeyboardVisible) "keyboardWillHide" else "keyboardWillShow", params)
 
-    println("KeyboardController::" + if(isShown) "keyboardWillHide" else "keyboardWillShow")
-    println("HEIGHT:: " + toDp((startBottom - view.bottom.toFloat()), context))
-
-    isShown = !isShown
+    println("KeyboardController::" + if(!isKeyboardVisible) "keyboardWillHide" else "keyboardWillShow")
+    println("HEIGHT:: " + toDp(keyboardHeight.toFloat(), context))
 
     return super.onStart(animation, bounds)
   }
@@ -90,9 +84,18 @@ class TranslateDeferringInsetsAnimationCallback(
   override fun onEnd(animation: WindowInsetsAnimationCompat) {
     super.onEnd(animation)
 
+    val isKeyboardVisible = isKeyboardVisible()
+
     val params: WritableMap = Arguments.createMap()
-    context?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)?.emit("KeyboardController::" + if(isShown) "keyboardDidHide" else "keyboardDidShow", params)
-    println(333333)
+    context?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)?.emit("KeyboardController::" + if(!isKeyboardVisible) "keyboardDidHide" else "keyboardDidShow", params)
+
+    println("KeyboardController::" + if(!isKeyboardVisible) "keyboardDidHide" else "keyboardDidShow")
+  }
+
+  private fun isKeyboardVisible(): Boolean {
+    val insets = ViewCompat.getRootWindowInsets(view)
+
+    return insets?.isVisible(WindowInsetsCompat.Type.ime()) ?: false
   }
 
     override fun onProgress(

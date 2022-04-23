@@ -113,7 +113,7 @@ export const useKeyboardReplicaProgress = () => {
       (e) => {
         Animated.timing(replica, {
           toValue: -e.endCoordinates.height,
-          duration: e.duration ?? 300,
+          duration: e.duration !== 0 ? e.duration : 300,
           easing: Easing.bezier(0.4, 0.0, 0.2, 1),
           useNativeDriver: true,
         }).start();
@@ -128,7 +128,7 @@ export const useKeyboardReplicaProgress = () => {
       (e) => {
         Animated.timing(replica, {
           toValue: 0,
-          duration: e.duration ?? 300,
+          duration: e.duration !== 0 ? e.duration : 300,
           easing: Easing.bezier(0.4, 0.0, 0.2, 1),
           useNativeDriver: true,
         }).start();
