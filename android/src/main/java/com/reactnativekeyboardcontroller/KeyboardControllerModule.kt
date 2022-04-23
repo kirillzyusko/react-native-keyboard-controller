@@ -34,6 +34,16 @@ class KeyboardControllerModule(private val mReactContext: ReactApplicationContex
     }
   }
 
+  @ReactMethod
+  fun addListener(eventName: String?) {
+    /* Required for RN built-in Event Emitter Calls. */
+  }
+
+  @ReactMethod
+  fun removeListeners(count: Int?) {
+    /* Required for RN built-in Event Emitter Calls. */
+  }
+
   private fun setSoftInputMode(mode: Int) {
     UiThreadUtil.runOnUiThread {
       mReactContext.currentActivity?.window?.setSoftInputMode(mode)
