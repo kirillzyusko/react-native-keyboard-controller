@@ -74,7 +74,7 @@ const defaultContext = {
 };
 const KeyboardContext = React.createContext(defaultContext);
 
-export const useKeyboardProgress = () => {
+export const useKeyboardProgress = (): Animated.Value => {
   useEffect(() => {
     KeyboardController.enable(); // TODO: maybe it can be enabled on provider level?
     KeyboardController.setInputMode(
@@ -97,8 +97,8 @@ const availableOSEventType = Platform.OS === 'ios' ? 'Will' : 'Did';
  *
  * @returns {Animated.Value}
  */
-export const useKeyboardReplicaProgress = () => {
-  const replica = React.useRef(new Animated.Value(0)).current;
+export const useKeyboardReplicaProgress = (): Animated.Value => {
+  const replica = React.useRef(new Animated.Value(0));
 
   useEffect(() => {
     KeyboardController.setInputMode(
@@ -111,7 +111,7 @@ export const useKeyboardReplicaProgress = () => {
     const listener = Keyboard.addListener(
       `keyboard${availableOSEventType}Show`,
       (e) => {
-        Animated.timing(replica, {
+        Animated.timing(replica.current, {
           toValue: -e.endCoordinates.height,
           duration: e.duration !== 0 ? e.duration : 300,
           easing: Easing.bezier(0.4, 0.0, 0.2, 1),
@@ -126,7 +126,7 @@ export const useKeyboardReplicaProgress = () => {
     const listener = Keyboard.addListener(
       `keyboard${availableOSEventType}Hide`,
       (e) => {
-        Animated.timing(replica, {
+        Animated.timing(replica.current, {
           toValue: 0,
           duration: e.duration !== 0 ? e.duration : 300,
           easing: Easing.bezier(0.4, 0.0, 0.2, 1),
@@ -138,7 +138,7 @@ export const useKeyboardReplicaProgress = () => {
     );
   }, []);
 
-  return replica;
+  return replica.current;
 };
 
 type Styles = {
