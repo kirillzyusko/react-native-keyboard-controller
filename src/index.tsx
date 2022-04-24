@@ -28,7 +28,7 @@ export enum AndroidSoftInputModes {
 type KeyboardControllerProps = {
   style?: ViewStyle;
   children: React.ReactNode;
-  onProgress: (progress: Animated.Value) => void;
+  onKeyboardMove: (progress: Animated.Value) => void;
 };
 type KeyboardController = {
   // android only
@@ -69,12 +69,17 @@ const KeyboardControllerViewAnimated = Animated.createAnimatedComponent(
 
 // cubic-bezier(.17,.67,.34,.94)
 export const defaultAndroidEasing = Easing.bezier(0.4, 0.0, 0.2, 1);
-const defaultContext = {
+type KeyboardAnimation = {
+  progress: Animated.Value;
+  height: Animated.Value;
+};
+const defaultContext: KeyboardAnimation = {
   progress: new Animated.Value(0),
+  height: new Animated.Value(0),
 };
 const KeyboardContext = React.createContext(defaultContext);
 
-export const useKeyboardProgress = (): Animated.Value => {
+export const useKeyboardAnimation = (): KeyboardAnimation => {
   useEffect(() => {
     KeyboardController.enable(); // TODO: maybe it can be enabled on provider level?
     KeyboardController.setInputMode(
@@ -83,9 +88,9 @@ export const useKeyboardProgress = (): Animated.Value => {
 
     return () => KeyboardController.setDefaultMode();
   }, []);
-  const value = useContext(KeyboardContext).progress;
+  const context = useContext(KeyboardContext);
 
-  return value;
+  return context;
 };
 const availableOSEventType = Platform.OS === 'ios' ? 'Will' : 'Did';
 
@@ -97,8 +102,16 @@ const availableOSEventType = Platform.OS === 'ios' ? 'Will' : 'Did';
  *
  * @returns {Animated.Value}
  */
-export const useKeyboardReplicaProgress = (): Animated.Value => {
-  const replica = React.useRef(new Animated.Value(0));
+export const useKeyboardAnimationReplica = (): KeyboardAnimation => {
+  const height = useRef(new Animated.Value(0));
+  const progress = useRef(new Animated.Value(0));
+  const animation = useMemo(
+    () => ({
+      height: height.current,
+      progress: progress.current,
+    }),
+    []
+  );
 
   useEffect(() => {
     KeyboardController.setInputMode(
@@ -111,7 +124,7 @@ export const useKeyboardReplicaProgress = (): Animated.Value => {
     const listener = Keyboard.addListener(
       `keyboard${availableOSEventType}Show`,
       (e) => {
-        Animated.timing(replica.current, {
+        Animated.timing(height.current, {
           toValue: -e.endCoordinates.height,
           duration: e.duration !== 0 ? e.duration : 300,
           easing: Easing.bezier(0.4, 0.0, 0.2, 1),
@@ -126,7 +139,7 @@ export const useKeyboardReplicaProgress = (): Animated.Value => {
     const listener = Keyboard.addListener(
       `keyboard${availableOSEventType}Hide`,
       (e) => {
-        Animated.timing(replica.current, {
+        Animated.timing(height.current, {
           toValue: 0,
           duration: e.duration !== 0 ? e.duration : 300,
           easing: Easing.bezier(0.4, 0.0, 0.2, 1),
@@ -138,7 +151,7 @@ export const useKeyboardReplicaProgress = (): Animated.Value => {
     );
   }, []);
 
-  return replica.current;
+  return animation;
 };
 
 type Styles = {
@@ -157,13 +170,18 @@ export const KeyboardProvider = ({
   children: React.ReactNode;
 }) => {
   const progress = useRef(new Animated.Value(0));
-  const context = useMemo(() => ({ progress: progress.current }), [progress]);
-  const onProgress = useRef(
+  const height = useRef(new Animated.Value(0));
+  const context = useMemo(
+    () => ({ progress: progress.current, height: height.current }),
+    []
+  );
+  const onKeyboardMove = useRef(
     Animated.event(
       [
         {
           nativeEvent: {
             progress: progress.current,
+            height: height.current,
           },
         },
       ],
@@ -174,7 +192,7 @@ export const KeyboardProvider = ({
   return (
     <KeyboardContext.Provider value={context}>
       <KeyboardControllerViewAnimated
-        onProgress={onProgress.current}
+        onKeyboardMove={onKeyboardMove.current}
         style={styles.container}
       >
         {children}

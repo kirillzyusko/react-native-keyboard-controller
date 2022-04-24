@@ -4,13 +4,13 @@ import { Animated, StyleSheet, View, TextInput } from 'react-native';
 import {
   KeyboardEvents,
   KeyboardProvider,
-  useKeyboardProgress,
-  useKeyboardReplicaProgress,
+  useKeyboardAnimation,
+  useKeyboardAnimationReplica,
 } from 'react-native-keyboard-controller';
 
 function KeyboardAnimation() {
-  const progress = useKeyboardProgress();
-  const replica = useKeyboardReplicaProgress();
+  const { height, progress } = useKeyboardAnimation();
+  const { height: heightReplica } = useKeyboardAnimationReplica();
 
   React.useEffect(() => {
     const listener = KeyboardEvents.addListener('keyboardWillShow', (e) => {
@@ -22,14 +22,6 @@ function KeyboardAnimation() {
 
   return (
     <View style={styles.container}>
-      <TextInput
-        style={{
-          width: 200,
-          marginTop: 50,
-          height: 50,
-          backgroundColor: 'yellow',
-        }}
-      />
       <View style={styles.row}>
         <Animated.View
           style={{
@@ -37,7 +29,23 @@ function KeyboardAnimation() {
             height: 50,
             backgroundColor: 'red',
             borderRadius: 25,
-            transform: [{ translateY: progress }],
+            transform: [{ translateY: height }],
+          }}
+        />
+        <Animated.View
+          style={{
+            width: 50,
+            height: 50,
+            backgroundColor: 'green',
+            borderRadius: 25,
+            transform: [
+              {
+                translateX: progress.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [0, 100],
+                }),
+              },
+            ],
           }}
         />
         <Animated.View
@@ -46,10 +54,18 @@ function KeyboardAnimation() {
             height: 50,
             backgroundColor: 'blue',
             borderRadius: 25,
-            transform: [{ translateY: replica }],
+            transform: [{ translateY: heightReplica }],
           }}
         />
       </View>
+      <TextInput
+        style={{
+          width: 200,
+          marginTop: 50,
+          height: 50,
+          backgroundColor: 'yellow',
+        }}
+      />
     </View>
   );
 }

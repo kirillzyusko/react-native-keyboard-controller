@@ -56,27 +56,33 @@ class TranslateDeferringInsetsAnimationCallback(
   dispatchMode: Int = DISPATCH_MODE_STOP,
   val context: ReactApplicationContext?
 ) : WindowInsetsAnimationCompat.Callback(dispatchMode) {
+  private var persistentKeyboardHeight = 0
+
   init {
-        require(persistentInsetTypes and deferredInsetTypes == 0) {
-            "persistentInsetTypes and deferredInsetTypes can not contain any of " +
-                    " same WindowInsetsCompat.Type values"
-        }
-    }
+      require(persistentInsetTypes and deferredInsetTypes == 0) {
+          "persistentInsetTypes and deferredInsetTypes can not contain any of " +
+                  " same WindowInsetsCompat.Type values"
+      }
+  }
 
   override fun onStart(
     animation: WindowInsetsAnimationCompat,
     bounds: WindowInsetsAnimationCompat.BoundsCompat
   ): WindowInsetsAnimationCompat.BoundsCompat {
-    val insets = ViewCompat.getRootWindowInsets(view)
-    val keyboardHeight = insets?.getInsets(WindowInsetsCompat.Type.ime())?.bottom ?: 0
+    val keyboardHeight = getCurrentKeyboardHeight()
     val isKeyboardVisible = isKeyboardVisible()
 
+    if (isKeyboardVisible) {
+      // do not update it on hide, since back progress will be invalid
+      this.persistentKeyboardHeight = keyboardHeight
+    }
+
     val params: WritableMap = Arguments.createMap()
-    params.putDouble("height", toDp(keyboardHeight.toFloat(), context!!).toDouble())
-    context.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)?.emit("KeyboardController::" + if(!isKeyboardVisible) "keyboardWillHide" else "keyboardWillShow", params)
+    params.putInt("height", keyboardHeight)
+    context?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)?.emit("KeyboardController::" + if(!isKeyboardVisible) "keyboardWillHide" else "keyboardWillShow", params)
 
     println("KeyboardController::" + if(!isKeyboardVisible) "keyboardWillHide" else "keyboardWillShow")
-    println("HEIGHT:: " + toDp(keyboardHeight.toFloat(), context))
+    println("HEIGHT:: " + keyboardHeight)
 
     return super.onStart(animation, bounds)
   }
@@ -98,6 +104,15 @@ class TranslateDeferringInsetsAnimationCallback(
     return insets?.isVisible(WindowInsetsCompat.Type.ime()) ?: false
   }
 
+  private fun getCurrentKeyboardHeight(): Int {
+    val insets = ViewCompat.getRootWindowInsets(view)
+    val keyboardHeight = insets?.getInsets(WindowInsetsCompat.Type.ime())?.bottom ?: 0
+    val navigationBar = insets?.getInsets(WindowInsetsCompat.Type.navigationBars())?.bottom ?: 0
+
+    // on hide it will be negative value, so we are using max function
+    return Math.max(toDp((keyboardHeight - navigationBar).toFloat(), context!!), 0)
+  }
+
     override fun onProgress(
         insets: WindowInsetsCompat,
         runningAnimations: List<WindowInsetsAnimationCompat>
@@ -115,12 +130,19 @@ class TranslateDeferringInsetsAnimationCallback(
             Insets.max(it, Insets.NONE)
         }
         val diffY = (diff.top - diff.bottom).toFloat()
-        println("22222: " + diffY + " " + toDp(diffY, context!!))
+        val height = toDp(diffY, context!!)
+
+        var progress = 0.0
+        try {
+          progress = Math.abs((height.toDouble() / persistentKeyboardHeight))
+        } catch (e: ArithmeticException) {
+          // do nothing, send progress as 0
+        }
 
         context
-          ?.getNativeModule(UIManagerModule::class.java)
+          .getNativeModule(UIManagerModule::class.java)
           ?.eventDispatcher
-          ?.dispatchEvent(KeyboardTransitionEvent(view.id, toDp(diffY, context)))
+          ?.dispatchEvent(KeyboardTransitionEvent(view.id, height, progress))
 
         return insets
     }

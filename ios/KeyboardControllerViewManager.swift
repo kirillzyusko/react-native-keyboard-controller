@@ -10,13 +10,14 @@ class KeyboardControllerViewManager: RCTViewManager {
 }
 
 class KeyboardControllerView : UIView {
-    @objc var onProgress: RCTDirectEventBlock?
+    @objc var onKeyboardMove: RCTDirectEventBlock?
     
     override func willMove(toWindow newWindow: UIWindow?) {
         super.willMove(toWindow: newWindow)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillDisappear), name: UIResponder.keyboardWillHideNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillAppear), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidAppear), name: UIResponder.keyboardDidShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidDisappear), name: UIResponder.keyboardDidHideNotification, object: nil)
     }
 
     @objc func keyboardWillAppear(_ notification: Notification) {
@@ -24,9 +25,10 @@ class KeyboardControllerView : UIView {
             let keyboardHeight = keyboardFrame.cgRectValue.size.height
 
             var event = [AnyHashable: Any]()
-            event["progress"] = -keyboardHeight
+            event["height"] = -keyboardHeight
+            event["progress"] = 1
 
-            self.onProgress!(event)
+            self.onKeyboardMove!(event)
 
             var data = [AnyHashable: Any]()
             data["height"] = keyboardHeight
@@ -37,8 +39,9 @@ class KeyboardControllerView : UIView {
     @objc func keyboardWillDisappear() {
         var event = [AnyHashable: Any]()
         event["progress"] = 0
+        event["height"] = 0
 
-        self.onProgress!(event)
+        self.onKeyboardMove!(event)
         
         var data = [AnyHashable: Any]()
         data["height"] = 0
