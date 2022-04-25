@@ -28,7 +28,7 @@ class KeyboardControllerView : UIView {
             event["height"] = -keyboardHeight
             event["progress"] = 1
 
-            self.onKeyboardMove!(event)
+            self.onKeyboardMove?(event)
 
             var data = [AnyHashable: Any]()
             data["height"] = keyboardHeight
@@ -41,7 +41,7 @@ class KeyboardControllerView : UIView {
         event["progress"] = 0
         event["height"] = 0
 
-        self.onKeyboardMove!(event)
+        self.onKeyboardMove?(event)
         
         var data = [AnyHashable: Any]()
         data["height"] = 0

@@ -1,4 +1,4 @@
-import React, { useRef, useContext, useMemo, useEffect } from 'react';
+import React, { useRef, useMemo, useEffect } from 'react';
 import {
   requireNativeComponent,
   UIManager,
@@ -9,7 +9,7 @@ import {
   NativeModules,
   Keyboard,
   NativeEventEmitter,
-  StyleSheet,
+  NativeSyntheticEvent,
 } from 'react-native';
 
 const LINKING_ERROR =
@@ -25,10 +25,14 @@ export enum AndroidSoftInputModes {
   SOFT_INPUT_ADJUST_UNSPECIFIED = 0,
 }
 
-type KeyboardControllerProps = {
+export type NativeEvent = {
+  progress: number;
+  height: number;
+};
+export type KeyboardControllerProps = {
   style?: ViewStyle;
   children: React.ReactNode;
-  onKeyboardMove: (progress: Animated.Value) => void;
+  onKeyboardMove: (e: NativeSyntheticEvent<NativeEvent>) => void;
 };
 type KeyboardController = {
   // android only
@@ -63,9 +67,6 @@ export const KeyboardControllerView =
     : () => {
         throw new Error(LINKING_ERROR);
       };
-const KeyboardControllerViewAnimated = Animated.createAnimatedComponent(
-  KeyboardControllerView
-) as React.FC<KeyboardControllerProps>;
 
 // cubic-bezier(.17,.67,.34,.94)
 export const defaultAndroidEasing = Easing.bezier(0.4, 0.0, 0.2, 1);
@@ -73,13 +74,8 @@ type KeyboardAnimation = {
   progress: Animated.Value;
   height: Animated.Value;
 };
-const defaultContext: KeyboardAnimation = {
-  progress: new Animated.Value(0),
-  height: new Animated.Value(0),
-};
-const KeyboardContext = React.createContext(defaultContext);
 
-export const useKeyboardAnimation = (): KeyboardAnimation => {
+export const useResizeMode = () => {
   useEffect(() => {
     KeyboardController.enable(); // TODO: maybe it can be enabled on provider level?
     KeyboardController.setInputMode(
@@ -88,10 +84,8 @@ export const useKeyboardAnimation = (): KeyboardAnimation => {
 
     return () => KeyboardController.setDefaultMode();
   }, []);
-  const context = useContext(KeyboardContext);
-
-  return context;
 };
+
 const availableOSEventType = Platform.OS === 'ios' ? 'Will' : 'Did';
 
 /**
@@ -152,51 +146,4 @@ export const useKeyboardAnimationReplica = (): KeyboardAnimation => {
   }, []);
 
   return animation;
-};
-
-type Styles = {
-  container: ViewStyle;
-};
-
-const styles = StyleSheet.create<Styles>({
-  container: {
-    flex: 1,
-  },
-});
-
-export const KeyboardProvider = ({
-  children,
-}: {
-  children: React.ReactNode;
-}) => {
-  const progress = useRef(new Animated.Value(0));
-  const height = useRef(new Animated.Value(0));
-  const context = useMemo(
-    () => ({ progress: progress.current, height: height.current }),
-    []
-  );
-  const onKeyboardMove = useRef(
-    Animated.event(
-      [
-        {
-          nativeEvent: {
-            progress: progress.current,
-            height: height.current,
-          },
-        },
-      ],
-      { useNativeDriver: true }
-    )
-  );
-
-  return (
-    <KeyboardContext.Provider value={context}>
-      <KeyboardControllerViewAnimated
-        onKeyboardMove={onKeyboardMove.current}
-        style={styles.container}
-      >
-        {children}
-      </KeyboardControllerViewAnimated>
-    </KeyboardContext.Provider>
-  );
 };
