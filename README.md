@@ -2,6 +2,18 @@
 
 Platform agnostic keyboard manager
 
+## Demonstration
+
+<div>
+  <img align="right" width="30%" style="margin-left: 20px" src="./gifs/ios.gif?raw=true">
+  <img align="right" width="30%" style="margin-left: 20px" src="./gifs/android.gif?raw=true">
+</div>
+
+- mapping keyboard appearance to animated values 😎
+- missing `keyboardWillShow`/`keyboardWillHide` events are available on Android 😍
+- module for changing soft input mode on Android 🤔
+- reanimated support (planned) 🚀
+- and more is coming... Stay tuned! 😊
 ## Installation
 
 The module is not available on `npm`, but you can install it from github.
