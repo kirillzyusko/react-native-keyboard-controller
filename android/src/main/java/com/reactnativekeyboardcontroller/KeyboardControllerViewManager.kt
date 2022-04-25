@@ -1,9 +1,7 @@
 package com.reactnativekeyboardcontroller
 
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsAnimationCompat
-import androidx.core.view.WindowInsetsCompat
+import androidx.appcompat.widget.FitWindowsLinearLayout
+import androidx.core.view.*
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.common.MapBuilder
 import com.facebook.react.uimanager.ThemedReactContext
@@ -11,13 +9,26 @@ import com.facebook.react.views.view.ReactViewGroup
 import com.facebook.react.views.view.ReactViewManager
 import com.reactnativekeyboardcontroller.events.KeyboardTransitionEvent
 
-class KeyboardControllerViewManager(reactContext: ReactApplicationContext?) : ReactViewManager() {
+class KeyboardControllerViewManager(reactContext: ReactApplicationContext) : ReactViewManager() {
   private var mReactContext = reactContext
 
   override fun getName() = "KeyboardControllerView"
 
   override fun createViewInstance(reactContext: ThemedReactContext): ReactViewGroup {
-    val view = ReactViewGroup(reactContext)
+    val view = EdgeToEdgeReactViewGroup(reactContext)
+
+    ViewCompat.setOnApplyWindowInsetsListener(view) { v, insets ->
+      val content =
+        mReactContext.currentActivity?.window?.decorView?.rootView?.findViewById<FitWindowsLinearLayout>(
+          R.id.action_bar_root
+        )
+      content?.setPadding(
+        0, insets?.getInsets(WindowInsetsCompat.Type.systemBars())?.top ?: 0, 0,
+        insets?.getInsets(WindowInsetsCompat.Type.navigationBars())?.bottom ?: 0
+      )
+
+      insets
+    }
 
     ViewCompat.setWindowInsetsAnimationCallback(
       reactContext.currentActivity!!.window!!.decorView,

@@ -138,6 +138,7 @@ class TranslateDeferringInsetsAnimationCallback(
         } catch (e: ArithmeticException) {
           // do nothing, send progress as 0
         }
+        println("DiffY: " + diffY + " " + height)
 
         context
           .getNativeModule(UIManagerModule::class.java)

@@ -12,7 +12,6 @@
 @interface RCT_EXTERN_MODULE(KeyboardController, RCTEventEmitter)
 
 // Android stubs
-RCT_EXTERN_METHOD(enable)
 RCT_EXTERN_METHOD(setInputMode: (nonnull NSNumber*) mode)
 RCT_EXTERN_METHOD(setDefaultMode)
 

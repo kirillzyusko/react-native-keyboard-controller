@@ -36,7 +36,6 @@ export type KeyboardControllerProps = {
 };
 type KeyboardController = {
   // android only
-  enable: () => void;
   setDefaultMode: () => void;
   setInputMode: (mode: AndroidSoftInputModes) => void;
 };
@@ -77,7 +76,6 @@ type KeyboardAnimation = {
 
 export const useResizeMode = () => {
   useEffect(() => {
-    KeyboardController.enable(); // TODO: maybe it can be enabled on provider level?
     KeyboardController.setInputMode(
       AndroidSoftInputModes.SOFT_INPUT_ADJUST_RESIZE
     );

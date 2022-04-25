@@ -1,7 +1,6 @@
 package com.reactnativekeyboardcontroller
 
 import android.view.WindowManager
-import androidx.core.view.WindowCompat
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
@@ -20,18 +19,6 @@ class KeyboardControllerModule(private val mReactContext: ReactApplicationContex
   @ReactMethod(isBlockingSynchronousMethod = true)
   fun setDefaultMode() {
     setSoftInputMode(mDefaultMode)
-  }
-
-  @ReactMethod(isBlockingSynchronousMethod = true)
-  fun enable() {
-    UiThreadUtil.runOnUiThread {
-      mReactContext.currentActivity?.let {
-        WindowCompat.setDecorFitsSystemWindows(
-          it.window,
-          false
-        )
-      }
-    }
   }
 
   @ReactMethod
