@@ -30,7 +30,34 @@ import {
 // 2. get animation values where you need them
 const { height, progress } = useKeyboardAnimation();
 
-// 3. Animate as you wish :)
+// 3. Animate any elements as you wish :)
+<Animated.View
+  style={{
+    width: 50,
+    height: 50,
+    backgroundColor: 'red',
+    borderRadius: 25,
+    // the element will move up with the keyboard
+    transform: [{ translateY: height }],
+  }}
+/>
+<Animated.View
+  style={{
+    width: 50,
+    height: 50,
+    backgroundColor: 'green',
+    borderRadius: 25,
+    transform: [
+      {
+        // or use custom interpolation using `progress`
+        translateX: progress.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0, 100],
+        }),
+      },
+    ],
+  }}
+/>
 ```
 
 ## Contributing
