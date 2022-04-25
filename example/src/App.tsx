@@ -1,10 +1,11 @@
 import * as React from 'react';
 
-import { Animated, StyleSheet, View, TextInput, Text } from 'react-native';
+import { StyleSheet, View, TextInput, Text } from 'react-native';
 import {
-  KeyboardProvider,
-  useKeyboardAnimation,
+  KeyboardReanimatedProvider,
+  useReanimatedKeyboardAnimation,
 } from 'react-native-keyboard-controller';
+import Reanimated, { useAnimatedStyle } from 'react-native-reanimated';
 
 type MessageProps = {
   text: string;
@@ -54,35 +55,44 @@ function Message({ text, sender }: MessageProps) {
   );
 }
 
-const AnimatedTextInput = Animated.createAnimatedComponent(TextInput);
+const AnimatedTextInput = Reanimated.createAnimatedComponent(TextInput);
 
 function KeyboardAnimation() {
-  const { height } = useKeyboardAnimation();
+  const { height } = useReanimatedKeyboardAnimation();
+
+  const scrollViewStyle = useAnimatedStyle(
+    () => ({
+      transform: [{ translateY: height.value }],
+    }),
+    []
+  );
+  const textInputStyle = useAnimatedStyle(
+    () => ({
+      height: 50,
+      width: '100%',
+      backgroundColor: '#ECECEC',
+      transform: [{ translateY: height.value }],
+    }),
+    []
+  );
 
   return (
     <View style={{ justifyContent: 'flex-end', flex: 1 }}>
-      <Animated.ScrollView style={{ transform: [{ translateY: height }] }}>
+      <Reanimated.ScrollView style={scrollViewStyle}>
         {history.map((message, index) => (
           <Message key={index} {...message} />
         ))}
-      </Animated.ScrollView>
-      <AnimatedTextInput
-        style={{
-          height: 50,
-          width: '100%',
-          backgroundColor: '#ECECEC',
-          transform: [{ translateY: height }],
-        }}
-      />
+      </Reanimated.ScrollView>
+      <AnimatedTextInput style={textInputStyle} />
     </View>
   );
 }
 
 export default function App() {
   return (
-    <KeyboardProvider>
+    <KeyboardReanimatedProvider>
       <KeyboardAnimation />
-    </KeyboardProvider>
+    </KeyboardReanimatedProvider>
   );
 }
 
