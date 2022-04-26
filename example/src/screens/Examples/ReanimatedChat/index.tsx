@@ -1,4 +1,6 @@
 import React from 'react';
+import { useCallback } from 'react';
+import { useRef } from 'react';
 import { TextInput, View } from 'react-native';
 import { useReanimatedKeyboardAnimation } from 'react-native-keyboard-controller';
 import Reanimated, { useAnimatedStyle } from 'react-native-reanimated';
@@ -9,7 +11,12 @@ import styles from './styles';
 const AnimatedTextInput = Reanimated.createAnimatedComponent(TextInput);
 
 function ReanimatedChat() {
+  const scrollView = useRef<Reanimated.ScrollView>();
   const { height } = useReanimatedKeyboardAnimation();
+
+  const scrollToBottom = useCallback(() => {
+    scrollView.current?.scrollToEnd({ animated: false });
+  }, []);
 
   const scrollViewStyle = useAnimatedStyle(
     () => ({
@@ -26,10 +33,22 @@ function ReanimatedChat() {
     }),
     []
   );
+  const fakeView = useAnimatedStyle(
+    () => ({
+      height: Math.abs(height.value),
+    }),
+    []
+  );
 
   return (
     <View style={styles.container}>
-      <Reanimated.ScrollView style={scrollViewStyle}>
+      <Reanimated.ScrollView
+        ref={scrollView}
+        onContentSizeChange={scrollToBottom}
+        showsVerticalScrollIndicator={false}
+        style={scrollViewStyle}
+      >
+        <Reanimated.View style={fakeView} />
         {history.map((message, index) => (
           <Message key={index} {...message} />
         ))}

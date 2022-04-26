@@ -7,5 +7,5 @@ export const examples: Example[] = [
     info: ScreenNames.ANIMATED_EXAMPLE,
     icons: '😍⌨️',
   },
-  { title: 'Chat', info: ScreenNames.REANIMATED_CHAT, icons: '⌨️' },
+  { title: 'Chat', info: ScreenNames.REANIMATED_CHAT, icons: '💬' },
 ];
