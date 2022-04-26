@@ -5,12 +5,22 @@ class KeyboardControllerViewManager: RCTViewManager {
   }
 
   override func view() -> (KeyboardControllerView) {
-      return KeyboardControllerView()
+      return KeyboardControllerView(frame: CGRect.zero, eventDispatcher: self.bridge.eventDispatcher())
   }
 }
 
 class KeyboardControllerView : UIView {
+    private var eventDispatcher: RCTEventDispatcherProtocol
     @objc var onKeyboardMove: RCTDirectEventBlock?
+    
+    init(frame: CGRect, eventDispatcher: RCTEventDispatcherProtocol) {
+        self.eventDispatcher = eventDispatcher
+        super.init(frame: frame)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func willMove(toWindow newWindow: UIWindow?) {
         super.willMove(toWindow: newWindow)
@@ -24,11 +34,7 @@ class KeyboardControllerView : UIView {
         if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
             let keyboardHeight = keyboardFrame.cgRectValue.size.height
 
-            var event = [AnyHashable: Any]()
-            event["height"] = -keyboardHeight
-            event["progress"] = 1
-
-            self.onKeyboardMove?(event)
+            self.eventDispatcher.send(KeyboardMoveEvent(reactTag: self.reactTag, height: -keyboardHeight as NSNumber, progress: 1))
 
             var data = [AnyHashable: Any]()
             data["height"] = keyboardHeight
@@ -37,11 +43,7 @@ class KeyboardControllerView : UIView {
     }
 
     @objc func keyboardWillDisappear() {
-        var event = [AnyHashable: Any]()
-        event["progress"] = 0
-        event["height"] = 0
-
-        self.onKeyboardMove?(event)
+        self.eventDispatcher.send(KeyboardMoveEvent(reactTag: self.reactTag, height: 0, progress: 0))
         
         var data = [AnyHashable: Any]()
         data["height"] = 0
