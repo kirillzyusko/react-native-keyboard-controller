@@ -8,4 +8,5 @@ export const examples: Example[] = [
     icons: '😍⌨️',
   },
   { title: 'Chat', info: ScreenNames.REANIMATED_CHAT, icons: '💬' },
+  { title: 'Events', info: ScreenNames.EVENTS, icons: '🎃 📅' },
 ];
