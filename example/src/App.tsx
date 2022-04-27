@@ -16,13 +16,11 @@ import RootStack from './navigation/RootStack';
 export default function App() {
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-      <KeyboardReanimatedProvider>
-        <KeyboardProvider>
-          <NavigationContainer>
-            <RootStack />
-          </NavigationContainer>
-        </KeyboardProvider>
-      </KeyboardReanimatedProvider>
+      <KeyboardProvider>
+        <NavigationContainer>
+          <RootStack />
+        </NavigationContainer>
+      </KeyboardProvider>
     </SafeAreaProvider>
   );
 }

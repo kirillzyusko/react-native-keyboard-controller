@@ -29,10 +29,17 @@ export type NativeEvent = {
   progress: number;
   height: number;
 };
+export type EventWithName<T> = {
+  eventName: string;
+} & T;
 export type KeyboardControllerProps = {
   style?: ViewStyle;
   children: React.ReactNode;
-  onKeyboardMove: (e: NativeSyntheticEvent<NativeEvent>) => void;
+  onKeyboardMove: (e: NativeSyntheticEvent<EventWithName<NativeEvent>>) => void;
+  // fake prop used to activate reanimated bindings
+  onKeyboardMoveReanimated: (
+    e: NativeSyntheticEvent<EventWithName<NativeEvent>>
+  ) => void;
 };
 type KeyboardController = {
   // android only
