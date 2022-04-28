@@ -1,13 +1,10 @@
-import React, { useRef, useMemo, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import {
   requireNativeComponent,
   UIManager,
   Platform,
   ViewStyle,
-  Animated,
-  Easing,
   NativeModules,
-  Keyboard,
   NativeEventEmitter,
   NativeSyntheticEvent,
 } from 'react-native';
@@ -59,7 +56,7 @@ type KeyboardControllerEvents =
   | 'keyboardWillHide'
   | 'keyboardDidHide';
 type KeyboardEvent = {
-  height: number; // TODO: it will be always present?
+  height: number;
 };
 export const KeyboardEvents = {
   addListener: (
@@ -74,13 +71,6 @@ export const KeyboardControllerView =
         throw new Error(LINKING_ERROR);
       };
 
-// cubic-bezier(.17,.67,.34,.94)
-export const defaultAndroidEasing = Easing.bezier(0.4, 0.0, 0.2, 1);
-type KeyboardAnimation = {
-  progress: Animated.Value;
-  height: Animated.Value;
-};
-
 export const useResizeMode = () => {
   useEffect(() => {
     KeyboardController.setInputMode(
@@ -89,66 +79,4 @@ export const useResizeMode = () => {
 
     return () => KeyboardController.setDefaultMode();
   }, []);
-};
-
-const availableOSEventType = Platform.OS === 'ios' ? 'Will' : 'Did';
-
-/**
- * An experimental implementation of tracing keyboard appearance.
- * Switch an input mode to adjust resize mode. In this case all did* events
- * are triggering before keyboard appears, and using some approximations
- * it tries to mimicries a native transition.
- *
- * @returns {Animated.Value}
- */
-export const useKeyboardAnimationReplica = (): KeyboardAnimation => {
-  const height = useRef(new Animated.Value(0));
-  const progress = useRef(new Animated.Value(0));
-  const animation = useMemo(
-    () => ({
-      height: height.current,
-      progress: progress.current,
-    }),
-    []
-  );
-
-  useEffect(() => {
-    KeyboardController.setInputMode(
-      AndroidSoftInputModes.SOFT_INPUT_ADJUST_RESIZE
-    );
-
-    return () => KeyboardController.setDefaultMode();
-  }, []);
-  useEffect(() => {
-    const listener = Keyboard.addListener(
-      `keyboard${availableOSEventType}Show`,
-      (e) => {
-        Animated.timing(height.current, {
-          toValue: -e.endCoordinates.height,
-          duration: e.duration !== 0 ? e.duration : 300,
-          easing: Easing.bezier(0.4, 0.0, 0.2, 1),
-          useNativeDriver: true,
-        }).start();
-
-        return () => listener.remove();
-      }
-    );
-  }, []);
-  useEffect(() => {
-    const listener = Keyboard.addListener(
-      `keyboard${availableOSEventType}Hide`,
-      (e) => {
-        Animated.timing(height.current, {
-          toValue: 0,
-          duration: e.duration !== 0 ? e.duration : 300,
-          easing: Easing.bezier(0.4, 0.0, 0.2, 1),
-          useNativeDriver: true,
-        }).start();
-
-        return () => listener.remove();
-      }
-    );
-  }, []);
-
-  return animation;
 };
