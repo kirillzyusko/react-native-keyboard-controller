@@ -12,7 +12,8 @@ Platform agnostic keyboard manager
 - mapping keyboard appearance to animated values 😎
 - missing `keyboardWillShow`/`keyboardWillHide` events are available on Android 😍
 - module for changing soft input mode on Android 🤔
-- reanimated support (planned) 🚀
+- reanimated support 🚀
+- interactive keyboard dismissing (planned) 👆📱
 - and more is coming... Stay tuned! 😊
 ## Installation
 
