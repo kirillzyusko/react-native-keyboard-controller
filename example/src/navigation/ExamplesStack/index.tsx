@@ -1,15 +1,18 @@
 import React from 'react';
 
 import { createStackNavigator } from '@react-navigation/stack';
+
 import { ScreenNames } from '../../constants/screenNames';
 import KeyboardAnimation from '../../screens/Examples/KeyboardAnimation';
 import ReanimatedChat from '../../screens/Examples/ReanimatedChat';
 import Events from '../../screens/Examples/Events';
+import AwareScrollView from '../../screens/Examples/AwareScrollView';
 
 type ExamplesStackParamList = {
   [ScreenNames.ANIMATED_EXAMPLE]: undefined;
   [ScreenNames.REANIMATED_CHAT]: undefined;
   [ScreenNames.EVENTS]: undefined;
+  [ScreenNames.AWARE_SCROLL_VIEW]: undefined;
 };
 
 const Stack = createStackNavigator<ExamplesStackParamList>();
@@ -23,6 +26,9 @@ const options = {
   },
   [ScreenNames.EVENTS]: {
     title: 'Events',
+  },
+  [ScreenNames.AWARE_SCROLL_VIEW]: {
+    title: 'Aware scroll view',
   },
 };
 
@@ -42,6 +48,11 @@ const ExamplesStack = () => (
       name={ScreenNames.EVENTS}
       component={Events}
       options={options[ScreenNames.EVENTS]}
+    />
+    <Stack.Screen
+      name={ScreenNames.AWARE_SCROLL_VIEW}
+      component={AwareScrollView}
+      options={options[ScreenNames.AWARE_SCROLL_VIEW]}
     />
   </Stack.Navigator>
 );
