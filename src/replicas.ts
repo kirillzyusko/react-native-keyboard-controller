@@ -1,6 +1,14 @@
 import { useRef, useEffect, useMemo } from 'react';
 import { Animated, Easing, Keyboard, Platform } from 'react-native';
-import { useSharedValue, withSpring } from 'react-native-reanimated';
+import {
+  runOnUI,
+  useAnimatedReaction,
+  useDerivedValue,
+  useSharedValue,
+  useWorkletCallback,
+  withSpring,
+} from 'react-native-reanimated';
+import { useReanimatedKeyboardAnimation } from './animated';
 
 import { AndroidSoftInputModes, KeyboardController } from './native';
 
@@ -98,16 +106,35 @@ const IOS_SPRING_CONFIG = {
  */
 export const useReanimatedKeyboardAnimationReplica = () => {
   const height = useSharedValue(0);
-  const progress = useSharedValue(0);
+  const heightEvent = useSharedValue(0);
+
+  const progress = useDerivedValue(() => height.value / heightEvent.value);
+
+  const handler = useWorkletCallback((_height: number) => {
+    heightEvent.value = _height;
+  }, []);
+
+  useAnimatedReaction(
+    () => ({
+      _keyboardHeight: heightEvent.value,
+    }),
+    (result, _previousResult) => {
+      const { _keyboardHeight } = result;
+      const _previousKeyboardHeight = _previousResult?._keyboardHeight;
+
+      if (_keyboardHeight !== _previousKeyboardHeight) {
+        height.value = withSpring(_keyboardHeight, IOS_SPRING_CONFIG);
+      }
+    },
+    []
+  );
 
   useEffect(() => {
     const show = Keyboard.addListener('keyboardWillShow', (e) => {
-      height.value = withSpring(-e.endCoordinates.height, IOS_SPRING_CONFIG);
-      progress.value = withSpring(1, IOS_SPRING_CONFIG);
+      runOnUI(handler)(-e.endCoordinates.height);
     });
     const hide = Keyboard.addListener('keyboardWillHide', () => {
-      height.value = withSpring(0, IOS_SPRING_CONFIG);
-      progress.value = withSpring(0, IOS_SPRING_CONFIG);
+      runOnUI(handler)(0);
     });
 
     return () => {
@@ -118,3 +145,8 @@ export const useReanimatedKeyboardAnimationReplica = () => {
 
   return { height, progress };
 };
+
+export const useGradualKeyboardAnimation =
+  Platform.OS === 'ios'
+    ? useReanimatedKeyboardAnimationReplica
+    : useReanimatedKeyboardAnimation;
