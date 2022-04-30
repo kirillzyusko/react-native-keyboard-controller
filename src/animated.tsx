@@ -1,9 +1,11 @@
-import React, { useContext, useMemo, useRef } from 'react';
-import { Animated, StyleSheet, ViewStyle } from 'react-native';
+import React, { useContext, useEffect, useMemo, useRef } from 'react';
+import { Animated, Easing, StyleSheet, ViewStyle } from 'react-native';
 import Reanimated, {
+  useAnimatedProps,
   useEvent,
   useHandler,
   useSharedValue,
+  withTiming,
 } from 'react-native-reanimated';
 import {
   EventWithName,
@@ -158,11 +160,28 @@ export const KeyboardProvider = ({
     []
   );
 
+  const animation = useSharedValue(0); // useRef(new Animated.Value(0));
+
+  useEffect(() => {
+    /*Animated.timing(animation.current, {
+      toValue: 1,
+      duration: 20000,
+      easing: Easing.linear,
+      useNativeDriver: true,
+    }).start();*/
+    animation.value = withTiming(1, { duration: 20000 });
+  }, []);
+
+  const animatedProps = useAnimatedProps(() => {
+    return { animation: animation.value };
+  }, []);
+
   return (
     <KeyboardContext.Provider value={context}>
       <KeyboardControllerViewAnimated
         onKeyboardMoveReanimated={handler}
         onKeyboardMove={onKeyboardMove}
+        animatedProps={animatedProps}
         statusBarTranslucent={statusBarTranslucent}
         style={styles.container}
       >
