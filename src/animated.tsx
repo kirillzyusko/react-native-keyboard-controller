@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useCallback, useContext, useMemo } from 'react';
 import { Animated, StyleSheet, ViewStyle } from 'react-native';
 import Reanimated, {
   useEvent,
@@ -27,9 +27,13 @@ type ReanimatedContext = {
   progress: Reanimated.SharedValue<number>;
   height: Reanimated.SharedValue<number>;
 };
+type MetaContext = {
+  touch: Reanimated.SharedValue<number>;
+};
 type KeyboardAnimationContext = {
   animated: AnimatedContext;
   reanimated: ReanimatedContext;
+  meta: MetaContext;
 };
 const defaultContext: KeyboardAnimationContext = {
   animated: {
@@ -39,6 +43,9 @@ const defaultContext: KeyboardAnimationContext = {
   reanimated: {
     progress: { value: 0 },
     height: { value: 0 },
+  },
+  meta: {
+    touch: { value: 0 },
   },
 };
 const KeyboardContext = React.createContext(defaultContext);
@@ -55,6 +62,12 @@ export const useReanimatedKeyboardAnimation = (): ReanimatedContext => {
   const context = useContext(KeyboardContext);
 
   return context.reanimated;
+};
+
+export const useMetaContext = (): MetaContext => {
+  const context = useContext(KeyboardContext);
+
+  return context.meta;
 };
 
 function useAnimatedKeyboardHandler<TContext extends Record<string, unknown>>(
@@ -103,10 +116,12 @@ export const KeyboardProvider = ({
   const height = useMemo(() => new Animated.Value(0), []);
   const progressSV = useSharedValue(0);
   const heightSV = useSharedValue(0);
+  const touch = useSharedValue(0);
   const context = useMemo(
     () => ({
       animated: { progress: progress, height: height },
       reanimated: { progress: progressSV, height: heightSV },
+      meta: { touch },
     }),
     []
   );
@@ -138,11 +153,16 @@ export const KeyboardProvider = ({
     []
   );
 
+  const onTouchStart = useCallback((e) => {
+    touch.value = e.nativeEvent.pageY;
+  }, []);
+
   return (
     <KeyboardContext.Provider value={context}>
       <KeyboardControllerViewAnimated
         onKeyboardMoveReanimated={handler}
         onKeyboardMove={onKeyboardMove}
+        onTouchStart={onTouchStart}
         style={styles.container}
       >
         <Animated.View

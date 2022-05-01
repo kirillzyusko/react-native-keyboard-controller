@@ -14,4 +14,9 @@ export const examples: Example[] = [
     info: ScreenNames.AWARE_SCROLL_VIEW,
     icons: '🤓',
   },
+  {
+    title: 'Interactive keyboard (WIP - iOS only for now)',
+    info: ScreenNames.INTERACTIVE_KEYBOARD,
+    icons: '👆📱',
+  },
 ];

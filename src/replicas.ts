@@ -1,16 +1,15 @@
 import { useRef, useEffect, useMemo } from 'react';
 import { Animated, Easing, Keyboard, Platform } from 'react-native';
 import {
-  runOnUI,
   useAnimatedReaction,
   useDerivedValue,
   useSharedValue,
-  useWorkletCallback,
   withSpring,
 } from 'react-native-reanimated';
 import { useReanimatedKeyboardAnimation } from './animated';
 
 import { AndroidSoftInputModes, KeyboardController } from './native';
+import { useKeyboardMetrics } from './utils';
 
 const availableOSEventType = Platform.OS === 'ios' ? 'Will' : 'Did';
 
@@ -106,13 +105,9 @@ const IOS_SPRING_CONFIG = {
  */
 export const useReanimatedKeyboardAnimationReplica = () => {
   const height = useSharedValue(0);
-  const heightEvent = useSharedValue(0);
+  const heightEvent = useKeyboardMetrics();
 
   const progress = useDerivedValue(() => height.value / heightEvent.value);
-
-  const handler = useWorkletCallback((_height: number) => {
-    heightEvent.value = _height;
-  }, []);
 
   useAnimatedReaction(
     () => ({
@@ -128,20 +123,6 @@ export const useReanimatedKeyboardAnimationReplica = () => {
     },
     []
   );
-
-  useEffect(() => {
-    const show = Keyboard.addListener('keyboardWillShow', (e) => {
-      runOnUI(handler)(-e.endCoordinates.height);
-    });
-    const hide = Keyboard.addListener('keyboardWillHide', () => {
-      runOnUI(handler)(0);
-    });
-
-    return () => {
-      show.remove();
-      hide.remove();
-    };
-  }, []);
 
   return { height, progress };
 };
