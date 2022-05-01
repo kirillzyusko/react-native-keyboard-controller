@@ -1,6 +1,8 @@
 # react-native-keyboard-controller
 
-Platform agnostic keyboard manager
+Keyboard manager which works in identical way on both iOS and Android.
+
+> **Note**: This library is still in development and in `alpha` stage. So most likely it has bugs/issues - don't hesitate to report if you find them 🙂.
 
 ## Demonstration
 
@@ -15,12 +17,16 @@ Platform agnostic keyboard manager
 - reanimated support 🚀
 - interactive keyboard dismissing (planned) 👆📱
 - and more is coming... Stay tuned! 😊
+
 ## Installation
 
-The module is not available on `npm`, but you can install it from github.
+Install `react-native-keyboard-controller` package from npm:
 
 ```sh
-yarn add https://github.com/kirillzyusko/react-native-keyboard-controller
+yarn add react-native-keyboard-controller
+
+# or
+# npm install react-native-keyboard-controller --save
 ```
 
 ## Usage
