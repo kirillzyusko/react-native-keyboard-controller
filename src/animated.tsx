@@ -1,11 +1,10 @@
-import React, { useContext, useEffect, useMemo, useRef } from 'react';
-import { Animated, Easing, StyleSheet, ViewStyle } from 'react-native';
+import React, { useContext, useMemo, useRef } from 'react';
+import { Animated, StyleSheet, ViewStyle } from 'react-native';
 import Reanimated, {
   useAnimatedProps,
   useEvent,
   useHandler,
   useSharedValue,
-  withTiming,
 } from 'react-native-reanimated';
 import {
   EventWithName,
@@ -29,9 +28,15 @@ type ReanimatedContext = {
   progress: Reanimated.SharedValue<number>;
   height: Reanimated.SharedValue<number>;
 };
+type InteractiveKeyboardContext = {
+  isScrollActive: Reanimated.SharedValue<boolean>;
+  location: Reanimated.SharedValue<number>;
+  opacity: Reanimated.SharedValue<number>;
+};
 type KeyboardAnimationContext = {
   animated: AnimatedContext;
   reanimated: ReanimatedContext;
+  interactive: InteractiveKeyboardContext;
 };
 const defaultContext: KeyboardAnimationContext = {
   animated: {
@@ -41,6 +46,11 @@ const defaultContext: KeyboardAnimationContext = {
   reanimated: {
     progress: { value: 0 },
     height: { value: 0 },
+  },
+  interactive: {
+    isScrollActive: { value: false },
+    location: { value: 0 },
+    opacity: { value: 1 },
   },
 };
 export const KeyboardContext = React.createContext(defaultContext);
@@ -57,6 +67,12 @@ export const useReanimatedKeyboardAnimation = (): ReanimatedContext => {
   const context = useContext(KeyboardContext);
 
   return context.reanimated;
+};
+
+export const useInteractiveKeyboardContext = (): InteractiveKeyboardContext => {
+  const context = useContext(KeyboardContext);
+
+  return context.interactive;
 };
 
 function useAnimatedKeyboardHandler<TContext extends Record<string, unknown>>(
@@ -114,14 +130,21 @@ export const KeyboardProvider = ({
   children,
   statusBarTranslucent,
 }: KeyboardProviderProps) => {
+  // mapping of the animated values
   const progress = useRef(new Animated.Value(0)).current;
   const height = useRef(new Animated.Value(0)).current;
   const progressSV = useSharedValue(0);
   const heightSV = useSharedValue(0);
-  const context = useMemo(
+  // interactive keyboard
+  const isScrollActive = useSharedValue(false);
+  const location = useSharedValue(0);
+  const opacity = useSharedValue(1);
+  // context
+  const context = useMemo<KeyboardAnimationContext>(
     () => ({
       animated: { progress: progress, height: height },
       reanimated: { progress: progressSV, height: heightSV },
+      interactive: { isScrollActive, location, opacity },
     }),
     []
   );
@@ -160,20 +183,12 @@ export const KeyboardProvider = ({
     []
   );
 
-  const animation = useSharedValue(0); // useRef(new Animated.Value(0));
-
-  useEffect(() => {
-    /*Animated.timing(animation.current, {
-      toValue: 1,
-      duration: 20000,
-      easing: Easing.linear,
-      useNativeDriver: true,
-    }).start();*/
-    animation.value = withTiming(1, { duration: 20000 });
-  }, []);
-
   const animatedProps = useAnimatedProps(() => {
-    return { animation: animation.value };
+    return {
+      isScrollActive: isScrollActive.value,
+      location: location.value,
+      opacity: opacity.value,
+    };
   }, []);
 
   return (

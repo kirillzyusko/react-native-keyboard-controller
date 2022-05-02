@@ -35,8 +35,14 @@ export type KeyboardControllerProps = {
   onKeyboardMoveReanimated: (
     e: NativeSyntheticEvent<EventWithName<NativeEvent>>
   ) => void;
+  animatedProps: Partial<{
+    isScrollActive: boolean;
+    position: number;
+    opacity: number;
+  }>;
   statusBarTranslucent?: boolean;
 } & ViewProps;
+
 type KeyboardController = {
   // android only
   setDefaultMode: () => void;

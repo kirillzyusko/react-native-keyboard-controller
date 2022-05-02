@@ -11,13 +11,15 @@ import androidx.core.view.WindowInsetsAnimationCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.graphics.Insets
 import com.facebook.react.bridge.ReactApplicationContext
+import com.facebook.react.bridge.UiThreadUtil
 import com.facebook.react.common.MapBuilder
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.annotations.ReactProp
 import com.facebook.react.views.view.ReactViewGroup
 import com.facebook.react.views.view.ReactViewManager
 import com.reactnativekeyboardcontroller.events.KeyboardTransitionEvent
-
+import java.util.*
+import kotlin.concurrent.schedule
 
 class KeyboardControllerViewManager(reactContext: ReactApplicationContext) : ReactViewManager() {
   private val TAG = KeyboardControllerViewManager::class.qualifiedName
@@ -73,14 +75,6 @@ class KeyboardControllerViewManager(reactContext: ReactApplicationContext) : Rea
       insets
     }
 
-    ViewCompat.getWindowInsetsController(reactContext.currentActivity!!.window!!.decorView)?.controlWindowInsetsAnimation(
-      WindowInsetsCompat.Type.ime(), //types
-      -1,                //durationMillis
-      LinearInterpolator(),          //interpolator
-      CancellationSignal(),          //cancellationSignal
-      animationControlListener       //listener
-    )
-
     ViewCompat.setWindowInsetsAnimationCallback(
       decorView,
       TranslateDeferringInsetsAnimationCallback(
@@ -102,18 +96,37 @@ class KeyboardControllerViewManager(reactContext: ReactApplicationContext) : Rea
     this.isStatusBarTranslucent = isStatusBarTranslucent
   }
 
-  @ReactProp(name = "animation")
-  fun setAnimation(view: ReactViewGroup, animation: Double) {
-    // view.setSource(sources)
-    println("HHHHHH: " + animation + " " + animationController)
-    if (animation > 0.8) {
-      animationController?.setInsetsAndAlpha(
-        Insets.of(0, 0, 0, -(animation * 100).toInt()),
-        1f,
-        0f
+  @ReactProp(name = "isScrollActive")
+  fun setScrollActive(view: ReactViewGroup, isScrollActive: Boolean) {
+    println("HHHHHH: " + isScrollActive + " " + animationController)
+
+    val decorView = mReactContext.currentActivity!!.window!!.decorView
+    if (isScrollActive && ViewCompat.getRootWindowInsets(decorView)?.isVisible(WindowInsetsCompat.Type.ime()) == true) {
+      ViewCompat.getWindowInsetsController(decorView)?.controlWindowInsetsAnimation(
+        WindowInsetsCompat.Type.ime(), // types
+        -1,                // durationMillis
+        LinearInterpolator(),          // interpolator
+        CancellationSignal(),          // cancellationSignal
+        animationControlListener       // listener
       )
     }
+
+    Timer().schedule(2000) {
+      UiThreadUtil.runOnUiThread {
+        animationController?.setInsetsAndAlpha(
+          Insets.of(0, 0, 0, 100),
+          1f,
+          0f
+        )
+      }
+    }
   }
+
+  @ReactProp(name = "opacity")
+  fun setOpacity(view: ReactViewGroup, opacity: Double) {}
+
+  @ReactProp(name = "location")
+  fun setLocation(view: ReactViewGroup, location: Double) {}
 
   override fun getExportedCustomDirectEventTypeConstants(): MutableMap<String, Any> {
     val map: MutableMap<String, Any> = MapBuilder.of(
