@@ -4,8 +4,8 @@ import { useRef } from 'react';
 import { TextInput, View } from 'react-native';
 import { useReanimatedKeyboardAnimation } from 'react-native-keyboard-controller';
 import Reanimated, { useAnimatedStyle } from 'react-native-reanimated';
-import Message from './components/Message';
-import { history } from './constants';
+import Message from '../../../components/Message';
+import { history } from '../../../components/Message/data';
 import styles from './styles';
 
 const AnimatedTextInput = Reanimated.createAnimatedComponent(TextInput);

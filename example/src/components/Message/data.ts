@@ -10,8 +10,7 @@ export const history: MessageProps[] = [
   { text: 'Try to check it. I hope it helps you...', sender: true },
   { text: 'It really pushes you to think twice on how to design it first' },
   {
-    text:
-      'Looks promising!😎 I was always looking for a solution that would allow us to run animations on native thread and provide at least stable 60 FPS',
+    text: 'Looks promising!😎 I was always looking for a solution that would allow us to run animations on native thread and provide at least stable 60 FPS',
   },
   { text: 'You have to check it!!!', sender: true },
   { text: "Ha-ha! I'm definitely going to check it!" },
