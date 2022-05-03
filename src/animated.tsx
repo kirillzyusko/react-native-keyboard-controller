@@ -28,10 +28,13 @@ type ReanimatedContext = {
   progress: Reanimated.SharedValue<number>;
   height: Reanimated.SharedValue<number>;
 };
+export type KeyboardUI = Reanimated.SharedValue<{
+  position: number;
+  opacity: number;
+}>;
 type InteractiveKeyboardContext = {
   isScrollActive: Reanimated.SharedValue<boolean>;
-  location: Reanimated.SharedValue<number>;
-  opacity: Reanimated.SharedValue<number>;
+  keyboard: KeyboardUI;
 };
 type KeyboardAnimationContext = {
   animated: AnimatedContext;
@@ -49,8 +52,7 @@ const defaultContext: KeyboardAnimationContext = {
   },
   interactive: {
     isScrollActive: { value: false },
-    location: { value: 0 },
-    opacity: { value: 1 },
+    keyboard: { value: { position: 0, opacity: 1 } },
   },
 };
 export const KeyboardContext = React.createContext(defaultContext);
@@ -137,14 +139,16 @@ export const KeyboardProvider = ({
   const heightSV = useSharedValue(0);
   // interactive keyboard
   const isScrollActive = useSharedValue(false);
-  const location = useSharedValue(0);
-  const opacity = useSharedValue(1);
+  const keyboard = useSharedValue({
+    position: 0,
+    opacity: 1,
+  });
   // context
   const context = useMemo<KeyboardAnimationContext>(
     () => ({
       animated: { progress: progress, height: height },
       reanimated: { progress: progressSV, height: heightSV },
-      interactive: { isScrollActive, location, opacity },
+      interactive: { isScrollActive, keyboard },
     }),
     []
   );
@@ -186,8 +190,7 @@ export const KeyboardProvider = ({
   const animatedProps = useAnimatedProps(() => {
     return {
       isScrollActive: isScrollActive.value,
-      location: location.value,
-      opacity: opacity.value,
+      keyboard: keyboard.value,
     };
   }, []);
 

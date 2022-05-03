@@ -1,6 +1,7 @@
 package com.reactnativekeyboardcontroller
 
 import android.util.Log
+import android.content.Context
 import android.os.Build
 import android.os.CancellationSignal
 import android.view.animation.LinearInterpolator
@@ -11,6 +12,7 @@ import androidx.core.view.WindowInsetsAnimationCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.graphics.Insets
 import com.facebook.react.bridge.ReactApplicationContext
+import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.bridge.UiThreadUtil
 import com.facebook.react.common.MapBuilder
 import com.facebook.react.uimanager.ThemedReactContext
@@ -18,8 +20,8 @@ import com.facebook.react.uimanager.annotations.ReactProp
 import com.facebook.react.views.view.ReactViewGroup
 import com.facebook.react.views.view.ReactViewManager
 import com.reactnativekeyboardcontroller.events.KeyboardTransitionEvent
-import java.util.*
-import kotlin.concurrent.schedule
+
+fun toPx(dp: Float, context: Context): Int = (dp * context.resources.displayMetrics.density).toInt()
 
 class KeyboardControllerViewManager(reactContext: ReactApplicationContext) : ReactViewManager() {
   private val TAG = KeyboardControllerViewManager::class.qualifiedName
@@ -37,12 +39,12 @@ class KeyboardControllerViewManager(reactContext: ReactApplicationContext) : Rea
       }
 
       override fun onFinished(controller: WindowInsetsAnimationControllerCompat) {
-        // animationController = null
+        animationController = null
         println("YYYYYYY")
       }
 
       override fun onCancelled(controller: WindowInsetsAnimationControllerCompat?) {
-        // animationController = null
+        animationController = null
         println("ZZZZZZZZ")
       }
     }
@@ -98,8 +100,6 @@ class KeyboardControllerViewManager(reactContext: ReactApplicationContext) : Rea
 
   @ReactProp(name = "isScrollActive")
   fun setScrollActive(view: ReactViewGroup, isScrollActive: Boolean) {
-    println("HHHHHH: " + isScrollActive + " " + animationController)
-
     val decorView = mReactContext.currentActivity!!.window!!.decorView
     if (isScrollActive && ViewCompat.getRootWindowInsets(decorView)?.isVisible(WindowInsetsCompat.Type.ime()) == true) {
       ViewCompat.getWindowInsetsController(decorView)?.controlWindowInsetsAnimation(
@@ -110,23 +110,26 @@ class KeyboardControllerViewManager(reactContext: ReactApplicationContext) : Rea
         animationControlListener       // listener
       )
     }
+    // TODO: cancellation?
+  }
 
-    Timer().schedule(2000) {
+  @ReactProp(name = "keyboard")
+  fun setKeyboard(view: ReactViewGroup, keyboard: ReadableMap) {
+    val opacity = keyboard.getDouble("opacity")
+    val position = keyboard.getDouble("position")
+
+    println("RTRTRT: " + opacity + " " + toPx(position.toFloat(), mReactContext))
+
+    if (animationController != null && position >= 0) {
       UiThreadUtil.runOnUiThread {
         animationController?.setInsetsAndAlpha(
-          Insets.of(0, 0, 0, 100),
-          1f,
+          Insets.of(0, 0, 0, toPx(position.toFloat(), mReactContext)),
+          opacity.toFloat(),
           0f
         )
       }
     }
   }
-
-  @ReactProp(name = "opacity")
-  fun setOpacity(view: ReactViewGroup, opacity: Double) {}
-
-  @ReactProp(name = "location")
-  fun setLocation(view: ReactViewGroup, location: Double) {}
 
   override fun getExportedCustomDirectEventTypeConstants(): MutableMap<String, Any> {
     val map: MutableMap<String, Any> = MapBuilder.of(

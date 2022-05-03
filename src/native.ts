@@ -37,8 +37,10 @@ export type KeyboardControllerProps = {
   ) => void;
   animatedProps: Partial<{
     isScrollActive: boolean;
-    position: number;
-    opacity: number;
+    keyboard: {
+      position: number;
+      opacity: number;
+    };
   }>;
   statusBarTranslucent?: boolean;
 } & ViewProps;
