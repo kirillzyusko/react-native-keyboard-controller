@@ -19,4 +19,9 @@ export const examples: Example[] = [
     info: ScreenNames.STATUS_BAR,
     icons: '🔋',
   },
+  {
+    title: 'Interactive keyboard (WIP)',
+    info: ScreenNames.INTERACTIVE_KEYBOARD,
+    icons: '👆📱',
+  },
 ];

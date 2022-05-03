@@ -21,7 +21,7 @@ const screenHeight = Dimensions.get('window').height;
 
 export const useInteractiveKeyboardAnimation = (interpolator: Interpolator) => {
   const { isScrollActive, keyboard } = useInteractiveKeyboardContext();
-  const keyboardHeight = { value: 281 }; // useKeyboardMetrics();
+  const keyboardHeight = { value: 296 }; // keyboard height + bottom insets. useKeyboardMetrics();
 
   const handler = useAnimatedGestureHandler<
     PanGestureHandlerGestureEvent,

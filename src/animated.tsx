@@ -1,5 +1,5 @@
 import React, { useContext, useMemo, useRef } from 'react';
-import { Animated, StyleSheet, ViewStyle } from 'react-native';
+import { Animated } from 'react-native';
 import Reanimated, {
   useAnimatedProps,
   useEvent,
@@ -13,6 +13,7 @@ import {
   NativeEvent,
   useResizeMode,
 } from './native';
+import { styles } from './styles';
 
 const KeyboardControllerViewAnimated = Reanimated.createAnimatedComponent(
   Animated.createAnimatedComponent(
@@ -98,21 +99,6 @@ function useAnimatedKeyboardHandler<TContext extends Record<string, unknown>>(
     doDependenciesDiffer
   );
 }
-
-type Styles = {
-  container: ViewStyle;
-  hidden: ViewStyle;
-};
-
-export const styles = StyleSheet.create<Styles>({
-  container: {
-    flex: 1,
-  },
-  hidden: {
-    display: 'none',
-    position: 'absolute',
-  },
-});
 
 type KeyboardProviderProps = {
   children: React.ReactNode;

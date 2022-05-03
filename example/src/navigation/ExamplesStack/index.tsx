@@ -8,6 +8,7 @@ import ReanimatedChat from '../../screens/Examples/ReanimatedChat';
 import Events from '../../screens/Examples/Events';
 import AwareScrollView from '../../screens/Examples/AwareScrollView';
 import StatusBar from '../../screens/Examples/StatusBar';
+import InteractiveKeyboard from '../../screens/Examples/InteractiveKeyboard';
 
 type ExamplesStackParamList = {
   [ScreenNames.ANIMATED_EXAMPLE]: undefined;
@@ -15,6 +16,7 @@ type ExamplesStackParamList = {
   [ScreenNames.EVENTS]: undefined;
   [ScreenNames.AWARE_SCROLL_VIEW]: undefined;
   [ScreenNames.STATUS_BAR]: undefined;
+  [ScreenNames.INTERACTIVE_KEYBOARD]: undefined;
 };
 
 const Stack = createStackNavigator<ExamplesStackParamList>();
@@ -35,6 +37,9 @@ const options = {
   [ScreenNames.STATUS_BAR]: {
     headerShown: false,
     title: 'Status bar manipulation',
+  },
+  [ScreenNames.INTERACTIVE_KEYBOARD]: {
+    title: 'Interactive keyboard',
   },
 };
 
@@ -64,6 +69,11 @@ const ExamplesStack = () => (
       name={ScreenNames.STATUS_BAR}
       component={StatusBar}
       options={options[ScreenNames.STATUS_BAR]}
+    />
+    <Stack.Screen
+      name={ScreenNames.INTERACTIVE_KEYBOARD}
+      component={InteractiveKeyboard}
+      options={options[ScreenNames.INTERACTIVE_KEYBOARD]}
     />
   </Stack.Navigator>
 );
