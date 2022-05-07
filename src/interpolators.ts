@@ -10,6 +10,7 @@ export const defaultLinearInterpolator = (
   return {
     position: interpolate(finger, [0, keyboardHeight], [keyboardHeight, 0]),
     opacity: 1,
+    direction: finger > keyboardHeight / 2 ? 'down' : 'up',
   };
 };
 
@@ -29,5 +30,6 @@ export const iOSInteractiveKeyboard = (
       [keyboardHeight, keyboardHeight, 0]
     ),
     opacity: 1,
+    direction: 'up',
   };
 };

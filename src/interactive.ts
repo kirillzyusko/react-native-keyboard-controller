@@ -1,6 +1,11 @@
 import { Dimensions } from 'react-native';
 import type { PanGestureHandlerGestureEvent } from 'react-native-gesture-handler';
-import { useAnimatedGestureHandler } from 'react-native-reanimated';
+import {
+  useAnimatedGestureHandler,
+  useAnimatedReaction,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 import { useInteractiveKeyboardContext } from './animated';
 import { useKeyboardMetrics } from './utils';
 
@@ -15,13 +20,30 @@ type Interpolator = (
 ) => {
   opacity: number;
   position: number;
+  direction: 'up' | 'down';
 };
 
 const screenHeight = Dimensions.get('window').height;
 
 export const useInteractiveKeyboardAnimation = (interpolator: Interpolator) => {
+  const animation = useSharedValue(0);
   const { isScrollActive, keyboard } = useInteractiveKeyboardContext();
   const keyboardHeight = { value: 296 }; // keyboard height + bottom insets. useKeyboardMetrics();
+
+  useAnimatedReaction(
+    () => {
+      return animation.value;
+    },
+    (result, previous) => {
+      if (result !== previous) {
+        keyboard.value = {
+          position: result,
+          opacity: 1,
+        };
+      }
+    },
+    []
+  );
 
   const handler = useAnimatedGestureHandler<
     PanGestureHandlerGestureEvent,
@@ -47,8 +69,19 @@ export const useInteractiveKeyboardAnimation = (interpolator: Interpolator) => {
           keyboardHeight.value
         );
       },
-      onEnd: () => {
-        // TODO: onCancel, onFinish, onFail?
+      // TODO: onCancel, onFinish, onFail?
+      onEnd: (e, ctx) => {
+        const finger = e.y - ctx.start;
+        const { direction, position } = interpolator(
+          finger,
+          screenHeight - ctx.start - keyboardHeight.value,
+          keyboardHeight.value
+        );
+
+        animation.value = position;
+        animation.value = withTiming(
+          direction === 'up' ? keyboardHeight.value : 0
+        );
         isScrollActive.value = false;
       },
     },

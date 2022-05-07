@@ -35,20 +35,18 @@ class KeyboardControllerViewManager(reactContext: ReactApplicationContext) : Rea
 
       override fun onReady(controller: WindowInsetsAnimationControllerCompat, types: Int) {
         animationController = controller
-        println("XXXXXXXX")
       }
 
       override fun onFinished(controller: WindowInsetsAnimationControllerCompat) {
         animationController = null
-        println("YYYYYYY")
       }
 
       override fun onCancelled(controller: WindowInsetsAnimationControllerCompat?) {
         animationController = null
-        println("ZZZZZZZZ")
       }
     }
   }
+  private var cancellationSignal = CancellationSignal()
 
   override fun getName() = "KeyboardControllerView"
 
@@ -102,32 +100,33 @@ class KeyboardControllerViewManager(reactContext: ReactApplicationContext) : Rea
   fun setScrollActive(view: ReactViewGroup, isScrollActive: Boolean) {
     val decorView = mReactContext.currentActivity!!.window!!.decorView
     if (isScrollActive && ViewCompat.getRootWindowInsets(decorView)?.isVisible(WindowInsetsCompat.Type.ime()) == true) {
+      cancellationSignal = CancellationSignal()
       ViewCompat.getWindowInsetsController(decorView)?.controlWindowInsetsAnimation(
         WindowInsetsCompat.Type.ime(), // types
         -1,                // durationMillis
         LinearInterpolator(),          // interpolator
-        CancellationSignal(),          // cancellationSignal
+        cancellationSignal,          // cancellationSignal
         animationControlListener       // listener
       )
     }
-    // TODO: cancellation?
   }
 
   @ReactProp(name = "keyboard")
   fun setKeyboard(view: ReactViewGroup, keyboard: ReadableMap) {
     val opacity = keyboard.getDouble("opacity")
-    val position = keyboard.getDouble("position")
-
-    println("RTRTRT: " + opacity + " " + toPx(position.toFloat(), mReactContext))
+    val position = toPx(keyboard.getDouble("position").toFloat(), mReactContext)
 
     if (animationController != null && position >= 0) {
       UiThreadUtil.runOnUiThread {
         animationController?.setInsetsAndAlpha(
-          Insets.of(0, 0, 0, toPx(position.toFloat(), mReactContext)),
+          Insets.of(0, 0, 0, position),
           opacity.toFloat(),
           0f
         )
       }
+    }
+    if (position == 0) {
+      cancellationSignal.cancel()
     }
   }
 
