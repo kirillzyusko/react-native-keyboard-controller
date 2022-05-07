@@ -23,6 +23,8 @@ Keyboard manager which works in identical way on both iOS and Android.
   </div>
 </div>
 
+<div style="clear: both;"></div>
+
 ## Installation
 
 Install `react-native-keyboard-controller` package from npm:
