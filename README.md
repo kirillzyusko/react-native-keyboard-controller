@@ -23,7 +23,7 @@ Keyboard manager which works in identical way on both iOS and Android.
   </div>
 </div>
 
-<br clear="left" />
+<br clear="right" />
 
 ## Installation
 
