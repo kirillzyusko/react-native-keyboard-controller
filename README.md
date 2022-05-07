@@ -24,7 +24,6 @@ Install `react-native-keyboard-controller` package from npm:
 
 ```sh
 yarn add react-native-keyboard-controller
-
 # or
 # npm install react-native-keyboard-controller --save
 ```
