@@ -7,21 +7,16 @@ Keyboard manager which works in identical way on both iOS and Android.
 ## Demonstration
 
 <div>
-  <div>
-    <img align="right" width="28.65%" style="margin-left: 20px" src="./gifs/ios.gif?raw=true">
-    <img align="right" width="30%" style="margin-left: 20px" src="./gifs/android.gif?raw=true">
-  </div>
-  <div>
-    <ul>
-      <li>mapping keyboard appearance to animated values 😎</li>
-      <li>missing `keyboardWillShow` / `keyboardWillHide` events are available on Android 😍</li>
-      <li>module for changing soft input mode on Android 🤔</li>
-      <li>reanimated support 🚀</li>
-      <li>interactive keyboard dismissing (planned) 👆📱</li>
-      <li>and more is coming... Stay tuned! 😊</li>
-    </ul>
-  </div>
+  <img align="right" width="28.65%" style="margin-left: 20px" src="./gifs/ios.gif?raw=true">
+  <img align="right" width="30%" style="margin-left: 20px" src="./gifs/android.gif?raw=true">  
 </div>
+
+- mapping keyboard appearance to animated values 😎
+- missing `keyboardWillShow` / `keyboardWillHide` events are available on Android 😍
+- module for changing soft input mode on Android 🤔
+- reanimated support 🚀
+- interactive keyboard dismissing (planned) 👆📱
+- and more is coming... Stay tuned! 😊
 
 <br clear="right" />
 
