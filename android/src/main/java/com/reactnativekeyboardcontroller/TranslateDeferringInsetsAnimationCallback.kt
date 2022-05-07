@@ -17,6 +17,7 @@
 package com.reactnativekeyboardcontroller
 
 import android.content.Context
+import android.util.Log
 import androidx.core.graphics.Insets
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsAnimationCompat
@@ -56,6 +57,7 @@ class TranslateDeferringInsetsAnimationCallback(
   dispatchMode: Int = DISPATCH_MODE_STOP,
   val context: ReactApplicationContext?
 ) : WindowInsetsAnimationCompat.Callback(dispatchMode) {
+  private val TAG = TranslateDeferringInsetsAnimationCallback::class.qualifiedName
   private var persistentKeyboardHeight = 0
 
   init {
@@ -81,8 +83,8 @@ class TranslateDeferringInsetsAnimationCallback(
     params.putInt("height", keyboardHeight)
     context?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)?.emit("KeyboardController::" + if(!isKeyboardVisible) "keyboardWillHide" else "keyboardWillShow", params)
 
-    println("KeyboardController::" + if(!isKeyboardVisible) "keyboardWillHide" else "keyboardWillShow")
-    println("HEIGHT:: " + keyboardHeight)
+    Log.i(TAG, "KeyboardController::" + if(!isKeyboardVisible) "keyboardWillHide" else "keyboardWillShow")
+    Log.i(TAG, "HEIGHT:: $keyboardHeight")
 
     return super.onStart(animation, bounds)
   }
@@ -95,7 +97,7 @@ class TranslateDeferringInsetsAnimationCallback(
     val params: WritableMap = Arguments.createMap()
     context?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)?.emit("KeyboardController::" + if(!isKeyboardVisible) "keyboardDidHide" else "keyboardDidShow", params)
 
-    println("KeyboardController::" + if(!isKeyboardVisible) "keyboardDidHide" else "keyboardDidShow")
+    Log.i(TAG, "KeyboardController::" + if(!isKeyboardVisible) "keyboardDidHide" else "keyboardDidShow")
   }
 
   private fun isKeyboardVisible(): Boolean {
@@ -138,7 +140,7 @@ class TranslateDeferringInsetsAnimationCallback(
         } catch (e: ArithmeticException) {
           // do nothing, send progress as 0
         }
-        println("DiffY: " + diffY + " " + height)
+        Log.i(TAG, "DiffY: $diffY $height")
 
         context
           .getNativeModule(UIManagerModule::class.java)
