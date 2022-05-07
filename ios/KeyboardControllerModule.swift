@@ -13,6 +13,7 @@ import AVFoundation
 @objc(KeyboardController)
 class KeyboardController: RCTEventEmitter {
   public static var shared: KeyboardController?
+  private var hasListeners = false
     
   override class func requiresMainQueueSetup() -> Bool {
     return false
@@ -34,5 +35,19 @@ class KeyboardController: RCTEventEmitter {
         "KeyboardController::keyboardWillHide",
         "KeyboardController::keyboardDidHide"
     ]
+  }
+    
+  @objc open override func startObserving() {
+    hasListeners = true
+  }
+    
+  @objc open override func stopObserving() {
+    hasListeners = false
+  }
+    
+  @objc open override func sendEvent(withName name: String!, body: Any!) {
+    if (hasListeners) {
+        super.sendEvent(withName: name, body: body)
+    }
   }
 }

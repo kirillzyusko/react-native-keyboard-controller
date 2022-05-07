@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { TextInput, LogBox, View, Dimensions } from 'react-native';
+import { TextInput, View, Dimensions } from 'react-native';
 import { KeyboardEvents } from 'react-native-keyboard-controller';
 import Reanimated, {
   useAnimatedRef,
@@ -8,10 +8,8 @@ import Reanimated, {
   useSharedValue,
 } from 'react-native-reanimated';
 
-LogBox.ignoreAllLogs();
-
 function randomColor() {
-  return '#' + Math.floor(Math.random() * 16777215).toString(16);
+  return '#' + Math.random().toString(16).slice(-6);
 }
 
 const screenHeight = Dimensions.get('window').height;
