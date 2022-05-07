@@ -7,16 +7,18 @@ Keyboard manager which works in identical way on both iOS and Android.
 ## Demonstration
 
 <div>
-  <img align="right" width="30%" style="margin-left: 20px" src="./gifs/ios.gif?raw=true">
-  <img align="right" width="30%" style="margin-left: 20px" src="./gifs/android.gif?raw=true">
+  <img align="right" width="28.65%" style="margin-left: 20px" src="./gifs/ios.gif?raw=true">
+  <img align="right" width="30%" style="margin-left: 20px" src="./gifs/android.gif?raw=true">  
 </div>
 
 - mapping keyboard appearance to animated values 😎
-- missing `keyboardWillShow`/`keyboardWillHide` events are available on Android 😍
+- missing `keyboardWillShow` / `keyboardWillHide` events are available on Android 😍
 - module for changing soft input mode on Android 🤔
 - reanimated support 🚀
 - interactive keyboard dismissing (planned) 👆📱
 - and more is coming... Stay tuned! 😊
+
+<br clear="right" />
 
 ## Installation
 
@@ -24,7 +26,6 @@ Install `react-native-keyboard-controller` package from npm:
 
 ```sh
 yarn add react-native-keyboard-controller
-
 # or
 # npm install react-native-keyboard-controller --save
 ```
