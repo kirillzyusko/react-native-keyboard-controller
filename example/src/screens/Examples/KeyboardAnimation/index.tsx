@@ -1,7 +1,6 @@
 import React from 'react';
 import { Animated, TextInput, View } from 'react-native';
 import {
-  KeyboardEvents,
   useKeyboardAnimation,
   useKeyboardAnimationReplica,
 } from 'react-native-keyboard-controller';
@@ -10,14 +9,6 @@ import styles from './styles';
 export default function KeyboardAnimation() {
   const { height, progress } = useKeyboardAnimation();
   const { height: heightReplica } = useKeyboardAnimationReplica();
-
-  React.useEffect(() => {
-    const listener = KeyboardEvents.addListener('keyboardWillShow', (e) => {
-      console.debug(e);
-    });
-
-    return () => listener.remove();
-  }, []);
 
   return (
     <View style={styles.container}>
