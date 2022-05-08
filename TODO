@@ -2,3 +2,8 @@
 - [ ] animation keyboard dismissing (velocity sensitive)
 - [ ] после анимированного закрытия и последующем открытии контент немного фризится
 - [ ] во время анимации клавиатуры можно подскроливать СкролВьюшку (это вообще законно?)
+
+## Commands
+
+- adb shell input keyevent 82
+- adb reverse tcp:8081 tcp:8081

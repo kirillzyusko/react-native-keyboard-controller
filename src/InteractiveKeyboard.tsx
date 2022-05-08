@@ -13,7 +13,7 @@ type Props = {
   handler: ReturnType<typeof useAnimatedGestureHandler>;
 };
 
-const offset = [-1, 1];
+const offset = [0, 0];
 const InteractiveKeyboard = ({ children, handler }: Props) => {
   const handlerRef = useRef();
 
