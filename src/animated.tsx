@@ -94,11 +94,21 @@ export const styles = StyleSheet.create<Styles>({
   },
 });
 
+type KeyboardProviderProps = {
+  children: React.ReactNode;
+  /**
+   * Set the value to `true`, if you use translucent status bar on Android.
+   * Defaults to `false`.
+   *
+   * @platform android
+   */
+  statusBarTranslucent: boolean;
+};
+
 export const KeyboardProvider = ({
   children,
-}: {
-  children: React.ReactNode;
-}) => {
+  statusBarTranslucent,
+}: KeyboardProviderProps) => {
   const progress = useMemo(() => new Animated.Value(0), []);
   const height = useMemo(() => new Animated.Value(0), []);
   const progressSV = useSharedValue(0);
@@ -143,6 +153,7 @@ export const KeyboardProvider = ({
       <KeyboardControllerViewAnimated
         onKeyboardMoveReanimated={handler}
         onKeyboardMove={onKeyboardMove}
+        statusBarTranslucent={statusBarTranslucent}
         style={styles.container}
       >
         <Animated.View
