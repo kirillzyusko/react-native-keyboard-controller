@@ -98,8 +98,11 @@ type KeyboardProviderProps = {
   children: React.ReactNode;
   /**
    * Set the value to `true`, if you use translucent status bar on Android.
+   * If you already control status bar translucency via `react-native-screens`
+   * or `StatusBar` component from `react-native`, you can ignore it.
    * Defaults to `false`.
    *
+   * @see https://github.com/kirillzyusko/react-native-keyboard-controller/issues/14
    * @platform android
    */
   statusBarTranslucent?: boolean;
