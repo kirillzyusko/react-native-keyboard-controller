@@ -102,7 +102,7 @@ type KeyboardProviderProps = {
    *
    * @platform android
    */
-  statusBarTranslucent: boolean;
+  statusBarTranslucent?: boolean;
 };
 
 export const KeyboardProvider = ({
