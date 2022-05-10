@@ -156,21 +156,23 @@ export const KeyboardProvider = ({
         statusBarTranslucent={statusBarTranslucent}
         style={styles.container}
       >
-        <Animated.View
-          style={[
-            // we are using this small hack, because if the component (where
-            // animated value has been used) is unmounted, then animation will
-            // stop receiving events (seems like it's react-native optimization).
-            // So we need to keep a reference to the animated value, to keep it's
-            // always mounted (keep a reference to an animated value).
-            //
-            // To test why it's needed, try to open screen which consumes Animated.Value
-            // then close it and open it again (for example 'Animated transition').
-            styles.hidden,
-            { transform: [{ translateX: height }, { translateY: progress }] },
-          ]}
-        />
-        {children}
+        <>
+          <Animated.View
+            style={[
+              // we are using this small hack, because if the component (where
+              // animated value has been used) is unmounted, then animation will
+              // stop receiving events (seems like it's react-native optimization).
+              // So we need to keep a reference to the animated value, to keep it's
+              // always mounted (keep a reference to an animated value).
+              //
+              // To test why it's needed, try to open screen which consumes Animated.Value
+              // then close it and open it again (for example 'Animated transition').
+              styles.hidden,
+              { transform: [{ translateX: height }, { translateY: progress }] },
+            ]}
+          />
+          {children}
+        </>
       </KeyboardControllerViewAnimated>
     </KeyboardContext.Provider>
   );
