@@ -5,12 +5,14 @@ import androidx.core.view.*
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.common.MapBuilder
 import com.facebook.react.uimanager.ThemedReactContext
+import com.facebook.react.uimanager.annotations.ReactProp
 import com.facebook.react.views.view.ReactViewGroup
 import com.facebook.react.views.view.ReactViewManager
 import com.reactnativekeyboardcontroller.events.KeyboardTransitionEvent
 
 class KeyboardControllerViewManager(reactContext: ReactApplicationContext) : ReactViewManager() {
   private var mReactContext = reactContext
+  private var isStatusBarTranslucent = false
 
   override fun getName() = "KeyboardControllerView"
 
@@ -23,7 +25,7 @@ class KeyboardControllerViewManager(reactContext: ReactApplicationContext) : Rea
           R.id.action_bar_root
         )
       content?.setPadding(
-        0, insets?.getInsets(WindowInsetsCompat.Type.systemBars())?.top ?: 0, 0,
+        0, if (this.isStatusBarTranslucent) 0 else insets?.getInsets(WindowInsetsCompat.Type.systemBars())?.top ?: 0, 0,
         insets?.getInsets(WindowInsetsCompat.Type.navigationBars())?.bottom ?: 0
       )
 
@@ -44,6 +46,11 @@ class KeyboardControllerViewManager(reactContext: ReactApplicationContext) : Rea
     )
 
     return view
+  }
+
+  @ReactProp(name = "statusBarTranslucent")
+  fun setStatusBarTranslucent(view: ReactViewGroup, isStatusBarTranslucent: Boolean) {
+    this.isStatusBarTranslucent = isStatusBarTranslucent
   }
 
   override fun getExportedCustomDirectEventTypeConstants(): MutableMap<String, Any> {

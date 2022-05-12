@@ -1,12 +1,12 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import {
   requireNativeComponent,
   UIManager,
   Platform,
-  ViewStyle,
   NativeModules,
   NativeEventEmitter,
   NativeSyntheticEvent,
+  ViewProps,
 } from 'react-native';
 
 const LINKING_ERROR =
@@ -30,14 +30,13 @@ export type EventWithName<T> = {
   eventName: string;
 } & T;
 export type KeyboardControllerProps = {
-  style?: ViewStyle;
-  children: React.ReactNode;
   onKeyboardMove: (e: NativeSyntheticEvent<EventWithName<NativeEvent>>) => void;
   // fake prop used to activate reanimated bindings
   onKeyboardMoveReanimated: (
     e: NativeSyntheticEvent<EventWithName<NativeEvent>>
   ) => void;
-};
+  statusBarTranslucent?: boolean;
+} & ViewProps;
 type KeyboardController = {
   // android only
   setDefaultMode: () => void;
