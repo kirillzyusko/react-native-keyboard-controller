@@ -6,8 +6,8 @@
 //  Copyright © 2022 Facebook. All rights reserved.
 //
 
-#import "RCTBridgeModule.h"
-#import "RCTEventEmitter.h"
+#import <React/RCTBridgeModule.h>
+#import <React/RCTEventEmitter.h>
 
 @interface RCT_EXTERN_MODULE(KeyboardController, RCTEventEmitter)
 
