@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react';
+import React, { useContext, useMemo, useRef } from 'react';
 import { Animated, StyleSheet, ViewStyle } from 'react-native';
 import Reanimated, {
   useEvent,
@@ -112,8 +112,8 @@ export const KeyboardProvider = ({
   children,
   statusBarTranslucent,
 }: KeyboardProviderProps) => {
-  const progress = useMemo(() => new Animated.Value(0), []);
-  const height = useMemo(() => new Animated.Value(0), []);
+  const progress = useRef(new Animated.Value(0)).current;
+  const height = useRef(new Animated.Value(0)).current;
   const progressSV = useSharedValue(0);
   const heightSV = useSharedValue(0);
   const context = useMemo(
@@ -121,6 +121,13 @@ export const KeyboardProvider = ({
       animated: { progress: progress, height: height },
       reanimated: { progress: progressSV, height: heightSV },
     }),
+    []
+  );
+  const style = useMemo(
+    () => [
+      styles.hidden,
+      { transform: [{ translateX: height }, { translateY: progress }] },
+    ],
     []
   );
 
@@ -161,18 +168,15 @@ export const KeyboardProvider = ({
       >
         <>
           <Animated.View
-            style={[
-              // we are using this small hack, because if the component (where
-              // animated value has been used) is unmounted, then animation will
-              // stop receiving events (seems like it's react-native optimization).
-              // So we need to keep a reference to the animated value, to keep it's
-              // always mounted (keep a reference to an animated value).
-              //
-              // To test why it's needed, try to open screen which consumes Animated.Value
-              // then close it and open it again (for example 'Animated transition').
-              styles.hidden,
-              { transform: [{ translateX: height }, { translateY: progress }] },
-            ]}
+            // we are using this small hack, because if the component (where
+            // animated value has been used) is unmounted, then animation will
+            // stop receiving events (seems like it's react-native optimization).
+            // So we need to keep a reference to the animated value, to keep it's
+            // always mounted (keep a reference to an animated value).
+            //
+            // To test why it's needed, try to open screen which consumes Animated.Value
+            // then close it and open it again (for example 'Animated transition').
+            style={style}
           />
           {children}
         </>
