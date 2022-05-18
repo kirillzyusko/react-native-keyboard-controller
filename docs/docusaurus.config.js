@@ -8,8 +8,8 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 const config = {
   title: 'My Site',
   tagline: 'Dinosaurs are cool',
-  url: 'https://kirillzyusko.github.io/react-native-keyboard-controller',
-  baseUrl: '/',
+  url: 'https://kirillzyusko.github.io',
+  baseUrl: '/react-native-keyboard-controller/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
