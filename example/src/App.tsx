@@ -3,10 +3,7 @@ import 'react-native-gesture-handler';
 import * as React from 'react';
 
 import { NavigationContainer } from '@react-navigation/native';
-import {
-  KeyboardProvider,
-  KeyboardReanimatedProvider,
-} from 'react-native-keyboard-controller';
+import { KeyboardProvider } from 'react-native-keyboard-controller';
 import {
   SafeAreaProvider,
   initialWindowMetrics,

@@ -5,9 +5,9 @@ import { ScreenNames } from '../../constants/screenNames';
 import ExamplesStack from '../ExamplesStack';
 import ExampleMain from '../../screens/Examples/Main';
 
-type RootStackParamList = {
+export type RootStackParamList = {
   [ScreenNames.EXAMPLES]: undefined;
-  [ScreenNames.EXAMPLES_STACK]: undefined;
+  [ScreenNames.EXAMPLES_STACK]: {};
 };
 
 const Stack = createStackNavigator<RootStackParamList>();

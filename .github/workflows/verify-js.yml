@@ -1,0 +1,23 @@
+name: Verify JS
+
+on:
+  push:
+    branches:
+      - main
+      - feature/ci
+
+
+jobs:
+  compile:
+    name: Compile TS
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+          cache: yarn
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Run TypeScript
+        run: yarn typescript

@@ -1,9 +1,10 @@
-import React from 'react';
-import { useCallback } from 'react';
-import { useRef } from 'react';
+import React, { useCallback } from 'react';
 import { TextInput, View } from 'react-native';
 import { useReanimatedKeyboardAnimation } from 'react-native-keyboard-controller';
-import Reanimated, { useAnimatedStyle } from 'react-native-reanimated';
+import Reanimated, {
+  useAnimatedRef,
+  useAnimatedStyle,
+} from 'react-native-reanimated';
 import Message from '../../../components/Message';
 import { history } from '../../../components/Message/data';
 import styles from './styles';
@@ -11,7 +12,7 @@ import styles from './styles';
 const AnimatedTextInput = Reanimated.createAnimatedComponent(TextInput);
 
 function ReanimatedChat() {
-  const scrollView = useRef<Reanimated.ScrollView>();
+  const scrollView = useAnimatedRef<Reanimated.ScrollView>();
   const { height } = useReanimatedKeyboardAnimation();
 
   const scrollToBottom = useCallback(() => {

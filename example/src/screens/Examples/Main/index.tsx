@@ -4,6 +4,8 @@ import { ScrollView } from 'react-native-gesture-handler';
 import ExampleLink from './components/ExampleLink';
 import { examples } from './constants';
 import { StyleSheet } from 'react-native';
+import type { StackScreenProps } from '@react-navigation/stack';
+import type { RootStackParamList } from 'example/src/navigation/RootStack';
 
 const styles = StyleSheet.create({
   scrollViewContainer: {
@@ -13,7 +15,9 @@ const styles = StyleSheet.create({
   },
 });
 
-const ExampleMain = ({ navigation }) => {
+type Props = StackScreenProps<RootStackParamList>;
+
+const ExampleMain = ({ navigation }: Props) => {
   const onExamplePress = useCallback(
     (info: ScreenNames) =>
       navigation.navigate(ScreenNames.EXAMPLES_STACK, { screen: info }),
