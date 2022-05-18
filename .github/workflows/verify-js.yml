@@ -5,6 +5,9 @@ on:
     branches:
       - main
       - feature/ci
+  pull_request:
+    branches:
+      - main
 
 
 jobs:
@@ -18,6 +21,9 @@ jobs:
           node-version: 16.x
           cache: yarn
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: |
+          yarn install --frozen-lockfile
+          cd example
+          yarn install --frozen-lockfile
       - name: Run TypeScript
         run: yarn typescript
