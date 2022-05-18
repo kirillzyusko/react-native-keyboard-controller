@@ -6,8 +6,8 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'My Site',
-  tagline: 'Dinosaurs are cool',
+  title: 'Keyboard Controller',
+  tagline: 'Control each frame of keyboard movement in react native',
   url: 'https://kirillzyusko.github.io',
   baseUrl: '/react-native-keyboard-controller/',
   onBrokenLinks: 'throw',
@@ -50,6 +50,10 @@ const config = {
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
         },
+        gtag: {
+          trackingID: 'G-4JH9YK1X2Q',
+          anonymizeIP: true,
+        },
       }),
     ],
   ],
@@ -58,9 +62,9 @@ const config = {
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       navbar: {
-        title: 'My Site',
+        title: 'Keyboard Controller',
         logo: {
-          alt: 'My Site Logo',
+          alt: 'Keyboard Controller Logo',
           src: 'img/logo.svg',
         },
         items: [
@@ -72,7 +76,7 @@ const config = {
           },
           {to: '/blog', label: 'Blog', position: 'left'},
           {
-            href: 'https://github.com/facebook/docusaurus',
+            href: 'https://github.com/kirillzyusko/react-native-keyboard-controller',
             label: 'GitHub',
             position: 'right',
           },
@@ -116,7 +120,7 @@ const config = {
               },
               {
                 label: 'GitHub',
-                href: 'https://github.com/facebook/docusaurus',
+                href: 'https://github.com/kirillzyusko/react-native-keyboard-controller',
               },
             ],
           },
