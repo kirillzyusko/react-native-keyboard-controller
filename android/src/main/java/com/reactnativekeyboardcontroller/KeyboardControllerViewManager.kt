@@ -20,6 +20,8 @@ class KeyboardControllerViewManager(reactContext: ReactApplicationContext) : Rea
 
   override fun createViewInstance(reactContext: ThemedReactContext): ReactViewGroup {
     val view = EdgeToEdgeReactViewGroup(reactContext)
+    val window = mReactContext.currentActivity!!.window
+    val decorView = window.decorView
 
     ViewCompat.setOnApplyWindowInsetsListener(view) { v, insets ->
       val content =
@@ -35,7 +37,7 @@ class KeyboardControllerViewManager(reactContext: ReactApplicationContext) : Rea
     }
 
     ViewCompat.setWindowInsetsAnimationCallback(
-      reactContext.currentActivity!!.window!!.decorView,
+      decorView,
       TranslateDeferringInsetsAnimationCallback(
         view = view,
         persistentInsetTypes = WindowInsetsCompat.Type.systemBars(),

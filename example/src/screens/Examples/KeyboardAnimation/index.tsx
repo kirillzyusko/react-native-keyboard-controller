@@ -1,5 +1,5 @@
 import React from 'react';
-import { Animated, TextInput, View } from 'react-native';
+import { Animated, StatusBar, TextInput, View } from 'react-native';
 import {
   useKeyboardAnimation,
   useKeyboardAnimationReplica,
@@ -12,6 +12,12 @@ export default function KeyboardAnimation() {
 
   return (
     <View style={styles.container}>
+      <StatusBar
+        animated
+        translucent
+        backgroundColor="#0000FF"
+        barStyle="light-content"
+      />
       <View style={styles.row}>
         <Animated.View
           style={{
