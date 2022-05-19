@@ -15,7 +15,9 @@ Keyboard manager which works in identical way on both iOS and Android.
 
 <div>
 <img align="right" width="28.65%" style="margin-left: 20px" src="./gifs/ios.gif?raw=true">
+<p>
 a
+</p>
 </div>
 
 - mapping keyboard appearance to animated values 😎
