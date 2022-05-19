@@ -6,10 +6,8 @@ Keyboard manager which works in identical way on both iOS and Android.
 
 ## Demonstration
 
-<div>
-  <img align="right" width="28.65%" style="margin-left: 20px" src="./gifs/ios.gif?raw=true">
-  <img align="right" width="30%" style="margin-left: 20px" src="./gifs/android.gif?raw=true">  
-</div>
+<img align="right" width="28.65%" style="margin-left: 20px" src="./gifs/ios.gif?raw=true">
+<img align="right" width="30%" style="margin-left: 20px" src="./gifs/android.gif?raw=true">  
 
 - mapping keyboard appearance to animated values 😎
 - missing `keyboardWillShow` / `keyboardWillHide` events are available on Android 😍
