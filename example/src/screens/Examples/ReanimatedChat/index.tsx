@@ -45,6 +45,7 @@ function ReanimatedChat() {
     <View style={styles.container}>
       <Reanimated.ScrollView
         ref={scrollView}
+        keyboardDismissMode="interactive"
         onContentSizeChange={scrollToBottom}
         showsVerticalScrollIndicator={false}
         style={scrollViewStyle}
