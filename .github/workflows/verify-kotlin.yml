@@ -15,8 +15,7 @@ jobs:
     name: Kotlin Lint
     steps:
       - uses: actions/checkout@v2
-      - name: Run Kotlin Lint GitHub Action
-        #uses: touchlab-lab/ktlint-action-setup@1.0.0
-        #with:
-        #  ktlint_version: 0.45.2
-        run: ktlint "android/src/**/*.kt"
+      - uses: touchlab-lab/ktlint-action-setup@1.0.0
+        with:
+          ktlint_version: 0.45.2
+      - run: ktlint "android/src/**/*.kt"
