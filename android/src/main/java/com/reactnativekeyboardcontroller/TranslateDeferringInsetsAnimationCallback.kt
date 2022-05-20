@@ -61,10 +61,10 @@ class TranslateDeferringInsetsAnimationCallback(
   private var persistentKeyboardHeight = 0
 
   init {
-      require(persistentInsetTypes and deferredInsetTypes == 0) {
-          "persistentInsetTypes and deferredInsetTypes can not contain any of " +
-                  " same WindowInsetsCompat.Type values"
-      }
+    require(persistentInsetTypes and deferredInsetTypes == 0) {
+      "persistentInsetTypes and deferredInsetTypes can not contain any of " +
+        " same WindowInsetsCompat.Type values"
+    }
   }
 
   override fun onStart(
@@ -81,9 +81,9 @@ class TranslateDeferringInsetsAnimationCallback(
 
     val params: WritableMap = Arguments.createMap()
     params.putInt("height", keyboardHeight)
-    context?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)?.emit("KeyboardController::" + if(!isKeyboardVisible) "keyboardWillHide" else "keyboardWillShow", params)
+    context?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)?.emit("KeyboardController::" + if (!isKeyboardVisible) "keyboardWillHide" else "keyboardWillShow", params)
 
-    Log.i(TAG, "KeyboardController::" + if(!isKeyboardVisible) "keyboardWillHide" else "keyboardWillShow")
+    Log.i(TAG, "KeyboardController::" + if (!isKeyboardVisible) "keyboardWillHide" else "keyboardWillShow")
     Log.i(TAG, "HEIGHT:: $keyboardHeight")
 
     return super.onStart(animation, bounds)
@@ -95,9 +95,9 @@ class TranslateDeferringInsetsAnimationCallback(
     val isKeyboardVisible = isKeyboardVisible()
 
     val params: WritableMap = Arguments.createMap()
-    context?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)?.emit("KeyboardController::" + if(!isKeyboardVisible) "keyboardDidHide" else "keyboardDidShow", params)
+    context?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)?.emit("KeyboardController::" + if (!isKeyboardVisible) "keyboardDidHide" else "keyboardDidShow", params)
 
-    Log.i(TAG, "KeyboardController::" + if(!isKeyboardVisible) "keyboardDidHide" else "keyboardDidShow")
+    Log.i(TAG, "KeyboardController::" + if (!isKeyboardVisible) "keyboardDidHide" else "keyboardDidShow")
   }
 
   private fun isKeyboardVisible(): Boolean {
@@ -115,38 +115,38 @@ class TranslateDeferringInsetsAnimationCallback(
     return Math.max(toDp((keyboardHeight - navigationBar).toFloat(), context!!), 0)
   }
 
-    override fun onProgress(
-        insets: WindowInsetsCompat,
-        runningAnimations: List<WindowInsetsAnimationCompat>
-    ): WindowInsetsCompat {
-        // onProgress() is called when any of the running animations progress...
+  override fun onProgress(
+    insets: WindowInsetsCompat,
+    runningAnimations: List<WindowInsetsAnimationCompat>
+  ): WindowInsetsCompat {
+    // onProgress() is called when any of the running animations progress...
 
-        // First we get the insets which are potentially deferred
-        val typesInset = insets.getInsets(deferredInsetTypes)
-        // Then we get the persistent inset types which are applied as padding during layout
-        val otherInset = insets.getInsets(persistentInsetTypes)
+    // First we get the insets which are potentially deferred
+    val typesInset = insets.getInsets(deferredInsetTypes)
+    // Then we get the persistent inset types which are applied as padding during layout
+    val otherInset = insets.getInsets(persistentInsetTypes)
 
-        // Now that we subtract the two insets, to calculate the difference. We also coerce
-        // the insets to be >= 0, to make sure we don't use negative insets.
-        val diff = Insets.subtract(typesInset, otherInset).let {
-            Insets.max(it, Insets.NONE)
-        }
-        val diffY = (diff.top - diff.bottom).toFloat()
-        val height = toDp(diffY, context!!)
-
-        var progress = 0.0
-        try {
-          progress = Math.abs((height.toDouble() / persistentKeyboardHeight))
-        } catch (e: ArithmeticException) {
-          // do nothing, send progress as 0
-        }
-        Log.i(TAG, "DiffY: $diffY $height")
-
-        context
-          .getNativeModule(UIManagerModule::class.java)
-          ?.eventDispatcher
-          ?.dispatchEvent(KeyboardTransitionEvent(view.id, height, progress))
-
-        return insets
+    // Now that we subtract the two insets, to calculate the difference. We also coerce
+    // the insets to be >= 0, to make sure we don't use negative insets.
+    val diff = Insets.subtract(typesInset, otherInset).let {
+      Insets.max(it, Insets.NONE)
     }
+    val diffY = (diff.top - diff.bottom).toFloat()
+    val height = toDp(diffY, context!!)
+
+    var progress = 0.0
+    try {
+      progress = Math.abs((height.toDouble() / persistentKeyboardHeight))
+    } catch (e: ArithmeticException) {
+      // do nothing, send progress as 0
+    }
+    Log.i(TAG, "DiffY: $diffY $height")
+
+    context
+      .getNativeModule(UIManagerModule::class.java)
+      ?.eventDispatcher
+      ?.dispatchEvent(KeyboardTransitionEvent(view.id, height, progress))
+
+    return insets
+  }
 }

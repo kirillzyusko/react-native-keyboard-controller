@@ -1,7 +1,9 @@
 package com.reactnativekeyboardcontroller
 
 import androidx.appcompat.widget.FitWindowsLinearLayout
-import androidx.core.view.*
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsAnimationCompat
+import androidx.core.view.WindowInsetsCompat
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.common.MapBuilder
 import com.facebook.react.uimanager.ThemedReactContext
