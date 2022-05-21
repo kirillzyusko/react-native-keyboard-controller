@@ -6,9 +6,9 @@
 //  Copyright © 2022 Facebook. All rights reserved.
 //
 
+import AVFoundation
 import Foundation
 import UIKit
-import AVFoundation
 
 @objc(KeyboardController)
 class KeyboardController: RCTEventEmitter {
@@ -25,29 +25,29 @@ class KeyboardController: RCTEventEmitter {
   }
 
   // Android stubs
-  @objc func setInputMode(_ mode: NSNumber!) {}
+  @objc func setInputMode(_: NSNumber!) {}
   @objc func setDefaultMode() {}
 
-  @objc open override func supportedEvents() -> [String] {
+  @objc override open func supportedEvents() -> [String] {
     return [
-        "KeyboardController::keyboardWillShow",
-        "KeyboardController::keyboardDidShow",
-        "KeyboardController::keyboardWillHide",
-        "KeyboardController::keyboardDidHide"
+      "KeyboardController::keyboardWillShow",
+      "KeyboardController::keyboardDidShow",
+      "KeyboardController::keyboardWillHide",
+      "KeyboardController::keyboardDidHide",
     ]
   }
 
-  @objc open override func startObserving() {
+  @objc override open func startObserving() {
     hasListeners = true
   }
 
-  @objc open override func stopObserving() {
+  @objc override open func stopObserving() {
     hasListeners = false
   }
 
-  @objc open override func sendEvent(withName name: String!, body: Any!) {
+  @objc override open func sendEvent(withName name: String!, body: Any!) {
     if hasListeners {
-        super.sendEvent(withName: name, body: body)
+      super.sendEvent(withName: name, body: body)
     }
   }
 }
