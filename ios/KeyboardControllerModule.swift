@@ -14,7 +14,7 @@ import AVFoundation
 class KeyboardController: RCTEventEmitter {
   public static var shared: KeyboardController?
   private var hasListeners = false
-    
+
   override class func requiresMainQueueSetup() -> Bool {
     return false
   }
@@ -27,7 +27,7 @@ class KeyboardController: RCTEventEmitter {
   // Android stubs
   @objc func setInputMode(_ mode: NSNumber!) {}
   @objc func setDefaultMode() {}
-    
+
   @objc open override func supportedEvents() -> [String] {
     return [
         "KeyboardController::keyboardWillShow",
@@ -36,17 +36,17 @@ class KeyboardController: RCTEventEmitter {
         "KeyboardController::keyboardDidHide"
     ]
   }
-    
+
   @objc open override func startObserving() {
     hasListeners = true
   }
-    
+
   @objc open override func stopObserving() {
     hasListeners = false
   }
-    
+
   @objc open override func sendEvent(withName name: String!, body: Any!) {
-    if (hasListeners) {
+    if hasListeners {
         super.sendEvent(withName: name, body: body)
     }
   }

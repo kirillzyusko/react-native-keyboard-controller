@@ -12,23 +12,27 @@ class KeyboardMoveEvent: NSObject, RCTEvent {
     var coalescingKey: UInt16 = 0
     var height: NSNumber!
     var progress: NSNumber!
-    
+
     func canCoalesce() -> Bool {
         return false
     }
-    
+
     func coalesce(with newEvent: RCTEvent!) -> RCTEvent! {
         return newEvent
     }
-    
+
     static func moduleDotMethod() -> String! {
         return "RCTEventEmitter.receiveEvent"
     }
-    
+
     func arguments() -> [Any]! {
-        return [self.viewTag, RCTNormalizeInputEventName(self.eventName), ["height": self.height, "progress": self.progress]]
+        return [
+            self.viewTag,
+            RCTNormalizeInputEventName(self.eventName),
+            ["height": self.height, "progress": self.progress]
+        ]
     }
-    
+
     init(reactTag: NSNumber, height: NSNumber, progress: NSNumber) {
         self.viewTag = reactTag
         self.height = height

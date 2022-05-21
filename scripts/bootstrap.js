@@ -12,7 +12,7 @@ const options = {
 };
 
 if (os.type() === 'Windows_NT') {
-  options.shell = true
+  options.shell = true;
 }
 
 let result;

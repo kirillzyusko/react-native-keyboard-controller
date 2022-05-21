@@ -1,0 +1,22 @@
+name: Validate Swift
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    name: Swift Lint
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run SwiftLint GitHub Action (--strict)
+        uses: norio-nomura/action-swiftlint@master
+        with:
+          args: --strict
+        env:
+          WORKING_DIRECTORY: ios
