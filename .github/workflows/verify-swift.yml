@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - feature/swift-format
   pull_request:
     branches:
       - main
@@ -20,3 +21,19 @@ jobs:
           args: --strict
         env:
           WORKING_DIRECTORY: ios
+  format:
+    runs-on: macOS-latest
+    defaults:
+      run:
+        working-directory: ./ios
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install SwiftFormat
+        run: brew install swiftformat
+
+      - name: Format Swift code
+        run: swiftformat --verbose .
+
+      - name: Verify that the formatted code hasn't been changed
+        run: git diff --exit-code HEAD
