@@ -74,7 +74,7 @@ const config = {
             position: 'left',
             label: 'Tutorial',
           },
-          {to: '/blog', label: 'Blog', position: 'left'},
+          { to: '/blog', label: 'Blog', position: 'left' },
           {
             href: 'https://github.com/kirillzyusko/react-native-keyboard-controller',
             label: 'GitHub',
@@ -107,7 +107,7 @@ const config = {
               },
               {
                 label: 'Twitter',
-                href: 'https://twitter.com/docusaurus',
+                href: 'https://twitter.com/ziusko',
               },
             ],
           },
@@ -125,7 +125,7 @@ const config = {
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+        copyright: `Copyright © ${new Date().getFullYear()} Kirill Zyusko. Built with Docusaurus.`,
       },
       prism: {
         theme: lightCodeTheme,

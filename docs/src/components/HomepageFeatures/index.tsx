@@ -10,7 +10,7 @@ type FeatureItem = {
 
 const FeatureList: FeatureItem[] = [
   {
-    title: 'Easy to Use',
+    title: 'Track each keyboard frame',
     Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
     description: (
       <>
@@ -19,6 +19,7 @@ const FeatureList: FeatureItem[] = [
       </>
     ),
   },
+  // cross-platform, interactive keyboard,
   {
     title: 'Focus on What Matters',
     Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
