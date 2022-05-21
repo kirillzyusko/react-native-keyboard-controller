@@ -24,7 +24,7 @@
   "scripts": {
     "test": "jest",
     "typescript": "tsc --noEmit",
-    "lint": "eslint \"**/*.{js,ts,tsx}\"",
+    "lint": "eslint --quiet \"**/*.{js,ts,tsx}\"",
     "prepare": "bob build",
     "release": "release-it",
     "example": "yarn --cwd example",
