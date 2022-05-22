@@ -1,0 +1,5 @@
+--indent 2
+
+--disable redundantReturn
+
+--exclude Pods,Generated
