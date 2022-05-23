@@ -41,7 +41,7 @@ const defaultContext: KeyboardAnimationContext = {
     height: { value: 0 },
   },
 };
-const KeyboardContext = React.createContext(defaultContext);
+export const KeyboardContext = React.createContext(defaultContext);
 
 export const useKeyboardAnimation = (): AnimatedContext => {
   useResizeMode();
