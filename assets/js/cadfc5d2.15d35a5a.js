@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[399],{2207:function(a){a.exports=JSON.parse('{"label":"docusaurus","permalink":"/react-native-keyboard-controller/blog/tags/docusaurus","allTagsPath":"/react-native-keyboard-controller/blog/tags","count":1}')}}]);
