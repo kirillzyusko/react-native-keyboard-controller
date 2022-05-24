@@ -74,7 +74,7 @@ const config = {
             position: 'left',
             label: 'Guides',
           },
-          { to: '/api', label: 'API', position: 'left' },
+          { to: '/blog', label: 'API', position: 'left' },
           { to: '/blog', label: 'Blog', position: 'left' },
           {
             href: 'https://github.com/kirillzyusko/react-native-keyboard-controller/example',
