@@ -1,52 +1,55 @@
 import React from 'react';
+import Lottie from 'lottie-react';
+import interactive from './interactive.json';
+import transform from './transform.json';
+
 import clsx from 'clsx';
 import styles from './styles.module.css';
 
 type FeatureItem = {
   title: string;
-  Svg: React.ComponentType<React.ComponentProps<'svg'>>;
+  lottie: Record<string, unknown>;
   description: JSX.Element;
 };
 
 const FeatureList: FeatureItem[] = [
   {
     title: 'Track each keyboard frame',
-    Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
+    lottie: transform,
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
-      </>
-    ),
-  },
-  // cross-platform, interactive keyboard,
-  {
-    title: 'Focus on What Matters',
-    Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
-    description: (
-      <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+        Take an advantage of mapping keyboard appearance to animated values and
+        apply any UI transformation that you can imagine 😎
       </>
     ),
   },
   {
-    title: 'Powered by React',
-    Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
+    title: 'Cross platform',
+    lottie: null,
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+        Library uses all power of each platform capabilities and provides
+        unified API which works on all platforms.
       </>
     ),
+  },
+  {
+    title: 'Interactive keyboard (planned)',
+    lottie: interactive,
+    description: <>Dismiss your keyboard interactively without a hassle</>,
   },
 ];
 
-function Feature({title, Svg, description}: FeatureItem) {
+const lottieStyle = {
+  height: 400,
+  marginBottom: 24,
+};
+
+function Feature({ title, lottie, description }: FeatureItem) {
   return (
     <div className={clsx('col col--4')}>
       <div className="text--center">
-        <Svg className={styles.featureSvg} role="img" />
+        <Lottie animationData={lottie} style={lottieStyle} loop />
       </div>
       <div className="text--center padding-horiz--md">
         <h3>{title}</h3>

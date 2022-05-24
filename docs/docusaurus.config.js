@@ -72,9 +72,15 @@ const config = {
             type: 'doc',
             docId: 'intro',
             position: 'left',
-            label: 'Tutorial',
+            label: 'Guides',
           },
+          { to: '/api', label: 'API', position: 'left' },
           { to: '/blog', label: 'Blog', position: 'left' },
+          {
+            href: 'https://github.com/kirillzyusko/react-native-keyboard-controller/example',
+            label: 'Example App',
+            position: 'right',
+          },
           {
             href: 'https://github.com/kirillzyusko/react-native-keyboard-controller',
             label: 'GitHub',
@@ -89,7 +95,7 @@ const config = {
             title: 'Docs',
             items: [
               {
-                label: 'Tutorial',
+                label: 'Guides',
                 to: '/docs/intro',
               },
             ],
@@ -98,12 +104,8 @@ const config = {
             title: 'Community',
             items: [
               {
-                label: 'Stack Overflow',
-                href: 'https://stackoverflow.com/questions/tagged/docusaurus',
-              },
-              {
-                label: 'Discord',
-                href: 'https://discordapp.com/invite/docusaurus',
+                label: 'GitHub discussions',
+                href: 'https://github.com/kirillzyusko/react-native-keyboard-controller/discussions',
               },
               {
                 label: 'Twitter',
