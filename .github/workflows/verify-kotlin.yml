@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - feature/android-lint
   pull_request:
     branches:
       - main
@@ -18,3 +19,20 @@ jobs:
         with:
           ktlint_version: 0.45.2
       - run: ktlint "android/src/**/*.kt"
+  android-lint:
+    runs-on: ubuntu-latest
+    name: Android Lint
+    defaults:
+      run:
+        working-directory: ./android
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup JDK 11
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'microsoft'
+          java-version: '11'
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile --cwd ..
+      - name: Run Gradle Lint
+        run: ./gradlew lint
