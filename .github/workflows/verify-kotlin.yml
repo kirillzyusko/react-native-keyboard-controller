@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - feature/android-lint
   pull_request:
     branches:
       - main
