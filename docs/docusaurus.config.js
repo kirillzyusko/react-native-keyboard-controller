@@ -70,14 +70,18 @@ const config = {
         items: [
           {
             type: 'doc',
-            docId: 'intro',
+            docId: 'installation',
             position: 'left',
             label: 'Guides',
           },
-          { to: '/blog', label: 'API', position: 'left' },
+          {
+            to: '/docs/category/api-reference',
+            label: 'API',
+            position: 'left',
+          },
           { to: '/blog', label: 'Blog', position: 'left' },
           {
-            href: 'https://github.com/kirillzyusko/react-native-keyboard-controller/example',
+            href: 'https://github.com/kirillzyusko/react-native-keyboard-controller/tree/main/example',
             label: 'Example App',
             position: 'right',
           },
@@ -96,7 +100,7 @@ const config = {
             items: [
               {
                 label: 'Guides',
-                to: '/docs/intro',
+                to: '/docs/installation',
               },
             ],
           },

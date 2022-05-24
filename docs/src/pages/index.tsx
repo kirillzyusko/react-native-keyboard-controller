@@ -16,7 +16,7 @@ function HomepageHeader() {
         <div className={styles.buttons}>
           <Link
             className="button button--secondary button--lg"
-            to="/docs/intro"
+            to="/docs/installation"
           >
             Get Started
           </Link>
@@ -28,10 +28,11 @@ function HomepageHeader() {
 
 export default function Home(): JSX.Element {
   const { siteConfig } = useDocusaurusContext();
+
   return (
     <Layout
-      title={`Hello from ${siteConfig.title}`}
-      description="Description will go into a meta tag in <head />"
+      title={`React Native Keyboard Controller · Control each frame of keyboard movement`}
+      description={siteConfig.tagline}
     >
       <HomepageHeader />
       <main>
