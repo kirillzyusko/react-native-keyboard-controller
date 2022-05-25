@@ -6,7 +6,7 @@ Keyboard manager which works in identical way on both iOS and Android.
 
 ## Demonstration
 
-<img src="./gifs/demo.gif?raw=true">
+<img src="./gifs/demo.gif?raw=true" width="60%">
 
 ## Key features
 
