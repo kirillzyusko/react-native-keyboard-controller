@@ -6,7 +6,11 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import com.facebook.react.bridge.*
+import com.facebook.react.bridge.Promise
+import com.facebook.react.bridge.ReactApplicationContext
+import com.facebook.react.bridge.ReactContextBaseJavaModule
+import com.facebook.react.bridge.ReactMethod
+import com.facebook.react.bridge.UiThreadUtil
 
 // TODO: resolve promises?
 class StatusBarManagerCompatModule(private val mReactContext: ReactApplicationContext) : ReactContextBaseJavaModule(mReactContext) {
@@ -32,7 +36,7 @@ class StatusBarManagerCompatModule(private val mReactContext: ReactApplicationCo
       val window = mReactContext.currentActivity!!.window
 
       if (animated) {
-        val curColor: Int = mReactContext.currentActivity!!.window!!.statusBarColor
+        val curColor: Int = window.statusBarColor
         val colorAnimation = ValueAnimator.ofObject(ArgbEvaluator(), curColor, color)
         colorAnimation.addUpdateListener { animator ->
           window.statusBarColor = animator.animatedValue as Int
@@ -60,7 +64,9 @@ class StatusBarManagerCompatModule(private val mReactContext: ReactApplicationCo
 
   private fun getController(): WindowInsetsControllerCompat? {
     if (this.controller == null) {
-      this.controller = WindowInsetsControllerCompat(mReactContext.currentActivity!!.window, mReactContext.currentActivity!!.window.decorView)
+      val window = mReactContext.currentActivity!!.window
+
+      this.controller = WindowInsetsControllerCompat(window, window.decorView)
     }
 
     return this.controller
