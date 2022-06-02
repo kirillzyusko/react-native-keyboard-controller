@@ -14,4 +14,9 @@ export const examples: Example[] = [
     info: ScreenNames.AWARE_SCROLL_VIEW,
     icons: '🤓',
   },
+  {
+    title: 'Status Bar',
+    info: ScreenNames.STATUS_BAR,
+    icons: '🔋',
+  },
 ];

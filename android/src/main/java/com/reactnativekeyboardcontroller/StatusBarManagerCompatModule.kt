@@ -47,7 +47,6 @@ class StatusBarManagerCompatModule(private val mReactContext: ReactApplicationCo
         window.statusBarColor = color
       }
     }
-    // TODO: animated
   }
 
   @ReactMethod

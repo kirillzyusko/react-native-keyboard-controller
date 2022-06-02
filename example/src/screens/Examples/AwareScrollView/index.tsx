@@ -7,10 +7,7 @@ import Reanimated, {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
-
-function randomColor() {
-  return '#' + Math.random().toString(16).slice(-6);
-}
+import { randomColor } from '../../../utils';
 
 const screenHeight = Dimensions.get('window').height;
 
