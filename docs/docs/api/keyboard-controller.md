@@ -1,0 +1,4 @@
+# KeyboardController
+
+- setInputMode()
+- setDefaultMode()

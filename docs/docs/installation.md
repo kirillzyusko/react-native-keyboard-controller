@@ -20,13 +20,13 @@ This package supports [autolinking](https://github.com/react-native-community/cl
 
 :::tip Pods update
 
-Don't forget to re-install `pods` after adding the package
+Don't forget to re-install `pods` after adding the package and don't forget to re-assemble `android` and `ios` applications, since this library contains native code.
 
 :::
 
 ### Expo
 
-This library contains native code, so it does not work with _Expo Go_ but you can easily install it using a [custom dev client](https://docs.expo.dev/development/getting-started/).
+This library has native code, so it does not work with _Expo Go_ but you can easily install it using a [custom dev client](https://docs.expo.dev/development/getting-started/).
 
 ## Adding provider
 
