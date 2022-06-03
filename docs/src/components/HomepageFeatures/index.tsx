@@ -2,6 +2,7 @@ import React from 'react';
 import Lottie from 'lottie-react';
 import interactive from './interactive.json';
 import transform from './transform.json';
+import crossPlatform from './cross-platform.json';
 
 import clsx from 'clsx';
 import styles from './styles.module.css';
@@ -19,13 +20,13 @@ const FeatureList: FeatureItem[] = [
     description: (
       <>
         Take an advantage of mapping keyboard appearance to animated values and
-        apply any UI transformation that you can imagine 😎
+        apply any UI transformations that you can imagine 😎
       </>
     ),
   },
   {
     title: 'Cross platform',
-    lottie: null,
+    lottie: crossPlatform,
     description: (
       <>
         Library uses all power of each platform capabilities and provides
