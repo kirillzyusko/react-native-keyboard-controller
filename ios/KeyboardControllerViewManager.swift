@@ -67,7 +67,7 @@ class KeyboardControllerView: UIView {
 
       eventDispatcher.send(
         KeyboardMoveEvent(
-          reactTag: reactTag,
+          viewTag: reactTag,
           height: -keyboardHeight as NSNumber,
           progress: 1
         )
@@ -80,7 +80,7 @@ class KeyboardControllerView: UIView {
   }
 
   @objc func keyboardWillDisappear() {
-    eventDispatcher.send(KeyboardMoveEvent(reactTag: reactTag, height: 0, progress: 0))
+    eventDispatcher.send(KeyboardMoveEvent(viewTag: reactTag, height: 0, progress: 0))
 
     var data = [AnyHashable: Any]()
     data["height"] = 0
