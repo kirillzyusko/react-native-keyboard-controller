@@ -86,11 +86,15 @@ GEM
       nanaimo (~> 0.3.0)
       rexml (~> 3.2.4)
     zeitwerk (2.5.4)
+
 PLATFORMS
   ruby
+
 DEPENDENCIES
   cocoapods (~> 1.11, >= 1.11.2)
+
 RUBY VERSION
-   ruby 2.7.4p191
+   ruby 2.6.8p205
+
 BUNDLED WITH
-   2.2.27
+   2.3.13
