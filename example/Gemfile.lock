@@ -3,7 +3,7 @@ GEM
   specs:
     CFPropertyList (3.0.5)
       rexml
-    activesupport (6.1.5)
+    activesupport (6.1.6)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 1.6, < 2)
       minitest (>= 5.1)
@@ -65,7 +65,7 @@ GEM
     httpclient (2.8.3)
     i18n (1.10.0)
       concurrent-ruby (~> 1.0)
-    json (2.6.1)
+    json (2.6.2)
     minitest (5.15.0)
     molinillo (0.8.0)
     nanaimo (0.3.0)
@@ -86,11 +86,15 @@ GEM
       nanaimo (~> 0.3.0)
       rexml (~> 3.2.4)
     zeitwerk (2.5.4)
+
 PLATFORMS
   ruby
+
 DEPENDENCIES
   cocoapods (~> 1.11, >= 1.11.2)
+
 RUBY VERSION
-   ruby 2.7.4p191
+   ruby 2.7.6p219
+
 BUNDLED WITH
-   2.2.27
+   2.3.11
