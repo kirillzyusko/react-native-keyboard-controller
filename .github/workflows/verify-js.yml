@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - feature/unit-tests-ci
   pull_request:
     branches:
       - main
@@ -38,3 +39,16 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Run Lint
         run: yarn lint
+  tests:
+    name: Unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+          cache: yarn
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Run tests
+        run: yarn test
