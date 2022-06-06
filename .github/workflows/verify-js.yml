@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - feature/unit-tests-ci
   pull_request:
     branches:
       - main
