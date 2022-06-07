@@ -14,6 +14,12 @@ To track each keyboard frame in Android you need to perform 3 steps:
 
 - enter [edge-to-edge](https://developer.android.com/training/gestures/edge-to-edge) mode (`KeyboardControllerView` already does it for you, and `KeyboardProvider` uses `KeyboardControllerView`, so once you've wrapped your app in `KeyboardProvider` - you've completed this step 🎉).
 - change `android:windowSoftInputMode` to `adjustResize` (this library exposes [KeyboardController](./../api/keyboard-controller.md) and you can change it in runtime - default hooks changes soft input mode on mount and restore default behavior on unmount, but you can control it as you wish (change mode on focus/unfocus screen etc.));
-- setup `WindowInsetsAnimationCallback` and track keyboard frames. `KeyboardControllerView` maps events from this callback and forward them in `onKeyboardMove` callback on JS side.
+- setup `WindowInsetsAnimationCallback` and track keyboard frames. `KeyboardControllerView` maps events from this callback and forward them in `onKeyboardMove` callback on JS side (`KeyboardProvider` handles it and maps these events to `Animated` values + stores it in `context`).
 
 ## iOS
+
+iOS doesn't give an API to track each keyboard frame. But it gives an information when keyboard will appear and when it appeared (i.e. the start and the end of the keyboard movement) and also it schedules layout animation.
+
+:::caution Non discrete values
+Unlike Android, `progress` value on iOS will have only two values (`0` or `1`) - i.e. it will not have an intermediate values, like 0.07, 0.12, 0.27 etc.
+:::

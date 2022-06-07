@@ -50,4 +50,4 @@ export default function App() {
 }
 ```
 
-Congratulations! 🎉 You've just finished installation process. Go to the [next section](./guides/markdown-features.mdx) to get more insights of what you can do using this library. 😎
+Congratulations! 🎉 You've just finished installation process. Go to the [next section](./guides/first-animation) to get more insights of what you can do using this library. 😎
