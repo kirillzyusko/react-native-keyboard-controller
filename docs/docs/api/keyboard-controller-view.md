@@ -1,1 +1,4 @@
 # KeyboardControllerView
+
+- onKeyboardMove
+- statusBarTranslucent

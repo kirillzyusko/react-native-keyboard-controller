@@ -4,12 +4,12 @@ sidebar_position: 1
 
 # First animation
 
-To build you first animation you will need to use two hooks: [useKeyboardAnimation](../api/use-keyboard-animation) or [useReanimatedKeyboardAnimation](../api/use-reanimated-keyboard-animation).
+To build your first animation you will need to use two hooks: [useKeyboardAnimation](../api/hooks/use-keyboard-animation.md) or [useReanimatedKeyboardAnimation](../api/hooks/use-reanimated-keyboard-animation.md).
 
 Both of them return an object with two properties: `progress` and `height` (depends on the hook used, values will be `Animated.Value` or `Reanimated.SharedValue`).
 
 :::info
-`useKeyboardAnimation` returns Animated values with enabled Native Driver (`useNativeDriver: true`). Thus some properties can not be animated, such as `height`, `backgroundColor`, etc.
+`useKeyboardAnimation` returns Animated values with enabled **Native Driver** (`useNativeDriver: true`). Thus some properties can not be animated, such as `height`, `backgroundColor`, etc.
 :::
 
 :::caution
