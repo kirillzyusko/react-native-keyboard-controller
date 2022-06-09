@@ -5,13 +5,13 @@ import KeyboardAnimationTemplate from '../../../components/KeyboardAnimation';
 import { randomColor } from '../../../utils';
 
 export default function StatusBarManipulation() {
-  const [color, setColor] = useState('#00FF00');
+  const [color, setColor] = useState('#00FF0000');
   const [barStyle, setBarStyle] = useState<StatusBarStyle>('light-content');
   const [hidden, setHidden] = useState(false);
   const [animated, setAnimated] = useState(true);
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: 'pink' }}>
       <StatusBar
         backgroundColor={color}
         barStyle={barStyle}

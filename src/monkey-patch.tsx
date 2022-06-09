@@ -13,12 +13,10 @@ if (Platform.OS === 'android') {
   NativeAndroidManager.default = {
     getConstants,
     setColor(color: number, animated: boolean): void {
-      console.log(color, animated);
       RCTStatusBarManagerCompat.setColor(color, animated);
     },
 
     setTranslucent(translucent: boolean): void {
-      console.log(translucent);
       RCTStatusBarManagerCompat.setTranslucent(translucent);
     },
 
@@ -28,12 +26,10 @@ if (Platform.OS === 'android') {
      *    - 'dark-content'
      */
     setStyle(statusBarStyle?: string): void {
-      console.log(statusBarStyle);
       RCTStatusBarManagerCompat.setStyle(statusBarStyle);
     },
 
     setHidden(hidden: boolean): void {
-      console.log(hidden);
       RCTStatusBarManagerCompat.setHidden(hidden);
     },
   };

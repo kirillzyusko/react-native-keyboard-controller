@@ -6,20 +6,18 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.UiThreadUtil
 
-// TODO: resolve promises?
 class StatusBarManagerCompatModule(private val mReactContext: ReactApplicationContext) : ReactContextBaseJavaModule(mReactContext) {
   private var controller: WindowInsetsControllerCompat? = null
 
   override fun getName(): String = "StatusBarManagerCompat"
 
   @ReactMethod
-  private fun setHidden(hidden: Boolean, promise: Promise) {
+  private fun setHidden(hidden: Boolean) {
     UiThreadUtil.runOnUiThread {
       if (hidden) {
         getController()?.hide(WindowInsetsCompat.Type.statusBars())
@@ -31,7 +29,7 @@ class StatusBarManagerCompatModule(private val mReactContext: ReactApplicationCo
 
   @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
   @ReactMethod
-  private fun setColor(color: Int, animated: Boolean, promise: Promise) {
+  private fun setColor(color: Int, animated: Boolean) {
     UiThreadUtil.runOnUiThread {
       val window = mReactContext.currentActivity!!.window
 
@@ -50,12 +48,22 @@ class StatusBarManagerCompatModule(private val mReactContext: ReactApplicationCo
   }
 
   @ReactMethod
-  private fun setTranslucent(translucent: Boolean, promise: Promise) {
-    // TODO: implement
+  private fun setTranslucent(translucent: Boolean) {
+    // the status bar is translucent by default (once you wrapped App in Provider,
+    // and EdgeToEdgeReactViewGroup has been mounted and called
+    // `setDecorFitsSystemWindows(window, false)`. By default this library applies default padding
+    // which equal to StatusBar height, so it will have a default RN app behavior. Though once you
+    // need to set StatusBar as translucent, you will need to use `statusBarTranslucent` prop on
+    // `KeyboardProvider` (it will preventing of applying additional padding, and status bar will be
+    // translucent. Though it's important to note, that this value is not reactive (i. e. if you change
+    // `statusBarTranslucent` in runtime it will not have any effect. Just theoretically I could make
+    // it reactive, but I know, that most of apps or don't use StatusBar translucency at all or they are
+    // specifying it for entire app, so I don't see a lot of sense to make it reactive as of now. If your
+    // app requires to dynamically manage it - just shoot an issue and I will try to add a support fot that.
   }
 
   @ReactMethod
-  private fun setStyle(style: String, promise: Promise) {
+  private fun setStyle(style: String) {
     UiThreadUtil.runOnUiThread {
       getController()?.isAppearanceLightStatusBars = style == "dark-content"
     }

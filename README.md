@@ -4,7 +4,6 @@ Keyboard manager which works in identical way on both iOS and Android.
 
 > **Note**: This library is still in development and in `alpha` stage. So most likely it has bugs/issues - don't hesitate to report if you find them 🙂.
 
-> **Note**: this library requires `react-native-screens` 3.14.+ to work.
 ## Demonstration
 
 <img src="./gifs/demo.gif?raw=true" width="60%">

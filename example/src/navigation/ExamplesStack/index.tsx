@@ -33,6 +33,7 @@ const options = {
     title: 'Aware scroll view',
   },
   [ScreenNames.STATUS_BAR]: {
+    headerShown: false,
     title: 'Status bar manipulation',
   },
 };
