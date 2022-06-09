@@ -1,6 +1,6 @@
 {
   "name": "react-native-keyboard-controller",
-  "version": "1.0.0-alpha.3",
+  "version": "1.0.0-beta.0",
   "description": "Platform agnostic keyboard manager",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -33,6 +33,8 @@
   },
   "keywords": [
     "react-native",
+    "keyboard",
+    "animation",
     "ios",
     "android"
   ],
