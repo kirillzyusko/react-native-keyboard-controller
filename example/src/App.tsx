@@ -13,7 +13,7 @@ import RootStack from './navigation/RootStack';
 export default function App() {
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-      <KeyboardProvider>
+      <KeyboardProvider statusBarTranslucent>
         <NavigationContainer>
           <RootStack />
         </NavigationContainer>
