@@ -2,7 +2,7 @@
 
 Keyboard manager which works in identical way on both iOS and Android.
 
-> **Note**: This library is still in development and in `alpha` stage. So most likely it has bugs/issues - don't hesitate to report if you find them 🙂.
+> **Note**: This library is still in development and in `beta` stage. So most likely it has bugs/issues - don't hesitate to report if you find them 🙂.
 
 ## Demonstration
 
