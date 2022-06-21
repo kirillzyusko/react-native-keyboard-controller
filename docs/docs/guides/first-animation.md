@@ -78,5 +78,5 @@ export default function KeyboardAnimation() {
 ```
 
 :::info
-If you are going to use these Animated values in class components (i.e. without hooks) - you can easily do it. Check out [source](https://github.com/kirillzyusko/react-native-keyboard-controller/blob/cf27eb00877db34b860a04cf52a026110e44b4b3/src/animated.tsx#L46-L51) code - this hook simply changes `softInputMode` and consumes `Context`. Also you may read [architecture](../recipes/architecture.md) deep dive to understand more about how this library works.
+If you are going to use these Animated values in class components (i.e. without hooks) - you can easily [do](../api/hooks/use-keyboard-animation.md) it. Check out [source](https://github.com/kirillzyusko/react-native-keyboard-controller/blob/cf27eb00877db34b860a04cf52a026110e44b4b3/src/animated.tsx#L46-L51) code - this hook simply changes `softInputMode` and consumes `Context`. Also you may read [architecture](../recipes/architecture.md) deep dive to understand more about how this library works.
 :::
