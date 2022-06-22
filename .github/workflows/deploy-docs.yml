@@ -5,6 +5,9 @@ on:
     branches:
       - main
       - feature/docs
+    paths:
+      - '.github/workflows/deploy-docs.yml'
+      - 'docs/**'
     # Review gh actions docs if you want to further define triggers, paths, etc
     # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#on
 
