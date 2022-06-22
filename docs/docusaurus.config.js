@@ -137,6 +137,12 @@ const config = {
         theme: lightCodeTheme,
         darkTheme: darkCodeTheme,
       },
+      metadata: [
+        {
+          name: 'keywords',
+          content: 'react-native, keyboard, animation, ios, android',
+        },
+      ],
     }),
 };
 
