@@ -143,6 +143,15 @@ const config = {
           content: 'react-native, keyboard, animation, ios, android',
         },
       ],
+      algolia: {
+        appId: 'CX4YXK1FST',
+        apiKey: '38ac854aece5593cbb4cc70c303d742e',
+        indexName: 'react-native-keyboard-controller',
+        contextualSearch: true,
+        externalUrlRegex: 'kirillzyusko\\.github.io',
+        searchParameters: {},
+        searchPagePath: false,
+      },
     }),
 };
 

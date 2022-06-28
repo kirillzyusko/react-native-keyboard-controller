@@ -41,7 +41,7 @@ class KeyboardAnimation extends React.PureComponent {
 
   render() {
     // 3. consume animated values 😊
-    const {animated} = this.context;
+    const { animated } = this.context;
   }
 }
 ```
