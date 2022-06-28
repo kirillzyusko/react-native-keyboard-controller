@@ -27,9 +27,7 @@ yarn add react-native-keyboard-controller
 
 ## Documentation
 
-Check out our dedicated documentation page for info about this library, API reference and more:
-
-https://kirillzyusko.github.io/react-native-keyboard-controller/
+Check out our dedicated documentation page for info about this library, API reference and more: [https://kirillzyusko.github.io/react-native-keyboard-controller/](https://kirillzyusko.github.io/react-native-keyboard-controller/)
 
 ## Contributing
 
