@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[2535],{5641:function(e){e.exports=JSON.parse('{"title":"Recent posts","items":[{"title":"React Native meets smooth keyboard animations","permalink":"/react-native-keyboard-controller/blog/welcome"}]}')}}]);
