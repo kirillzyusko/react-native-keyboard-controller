@@ -148,7 +148,6 @@ const config = {
         apiKey: '38ac854aece5593cbb4cc70c303d742e',
         indexName: 'react-native-keyboard-controller',
         contextualSearch: true,
-        externalUrlRegex: 'kirillzyusko\\.github.io',
         searchParameters: {},
         searchPagePath: false,
       },
