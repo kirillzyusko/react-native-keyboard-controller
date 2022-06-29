@@ -2,8 +2,6 @@
 
 Keyboard manager which works in identical way on both iOS and Android.
 
-> **Note**: This library is still in development and in `beta` stage. So most likely it has bugs/issues - don't hesitate to report if you find them 🙂.
-
 ## Demonstration
 
 <img src="./gifs/demo.gif?raw=true" width="60%">
@@ -27,55 +25,9 @@ yarn add react-native-keyboard-controller
 # npm install react-native-keyboard-controller --save
 ```
 
-## Usage
+## Documentation
 
-For more comprehensive usage you can have a look on [example](https://github.com/kirillzyusko/react-native-keyboard-controller/tree/main/example).
-
-Below you can see a short overview of library API:
-
-```js
-import {
-  KeyboardProvider,
-  useKeyboardAnimation,
-} from 'react-native-keyboard-controller';
-
-// 1. wrap your app in Provider
-<KeyboardProvider>
-  <AppContainer />
-</KeyboardProvider>
-
-// 2. get animation values where you need them
-const { height, progress } = useKeyboardAnimation();
-
-// 3. Animate any elements as you wish :)
-<Animated.View
-  style={{
-    width: 50,
-    height: 50,
-    backgroundColor: 'red',
-    borderRadius: 25,
-    // the element will move up with the keyboard
-    transform: [{ translateY: height }],
-  }}
-/>
-<Animated.View
-  style={{
-    width: 50,
-    height: 50,
-    backgroundColor: 'green',
-    borderRadius: 25,
-    transform: [
-      {
-        // or use custom interpolation using `progress`
-        translateX: progress.interpolate({
-          inputRange: [0, 1],
-          outputRange: [0, 100],
-        }),
-      },
-    ],
-  }}
-/>
-```
+Check out our dedicated documentation page for info about this library, API reference and more: [https://kirillzyusko.github.io/react-native-keyboard-controller/](https://kirillzyusko.github.io/react-native-keyboard-controller/)
 
 ## Contributing
 
