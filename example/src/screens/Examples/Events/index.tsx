@@ -15,6 +15,7 @@ const styles = StyleSheet.create({
 function EventsListener() {
   useEffect(() => {
     const show = KeyboardEvents.addListener('keyboardWillShow', (e) => {
+      console.log(new Date().getTime());
       Toast.show({
         type: 'info',
         text1: '⬆️ ⌨️ Keyboard will show',

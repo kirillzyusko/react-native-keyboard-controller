@@ -10,7 +10,12 @@ import {
 } from 'react-native-reanimated';
 import { useReanimatedKeyboardAnimation } from './animated';
 
-import { AndroidSoftInputModes, KeyboardController } from './native';
+import {
+  AndroidSoftInputModes,
+  KeyboardController,
+  KeyboardEvents,
+} from './native';
+import { withSpringTimestamp } from './reanimated';
 
 const availableOSEventType = Platform.OS === 'ios' ? 'Will' : 'Did';
 
@@ -107,34 +112,42 @@ const IOS_SPRING_CONFIG = {
 export const useReanimatedKeyboardAnimationReplica = () => {
   const height = useSharedValue(0);
   const heightEvent = useSharedValue(0);
+  const timestampEvent = useSharedValue(0);
 
   const progress = useDerivedValue(() => height.value / heightEvent.value);
 
-  const handler = useWorkletCallback((_height: number) => {
+  const handler = useWorkletCallback((_height: number, _timestamp: number) => {
     heightEvent.value = _height;
+    timestampEvent.value = _timestamp;
   }, []);
 
   useAnimatedReaction(
     () => ({
       _keyboardHeight: heightEvent.value,
+      _timestamp: timestampEvent.value,
     }),
     (result, _previousResult) => {
-      const { _keyboardHeight } = result;
+      const { _keyboardHeight, _timestamp } = result;
       const _previousKeyboardHeight = _previousResult?._keyboardHeight;
 
       if (_keyboardHeight !== _previousKeyboardHeight) {
-        height.value = withSpring(_keyboardHeight, IOS_SPRING_CONFIG);
+        console.log(1111, _keyboardHeight, _timestamp);
+        height.value = withSpringTimestamp(
+          _keyboardHeight,
+          _timestamp - 100000,
+          IOS_SPRING_CONFIG
+        );
       }
     },
     []
   );
 
   useEffect(() => {
-    const show = Keyboard.addListener('keyboardWillShow', (e) => {
-      runOnUI(handler)(-e.endCoordinates.height);
+    const show = KeyboardEvents.addListener('keyboardWillShow', (e) => {
+      runOnUI(handler)(-e.height, e.timestamp);
     });
-    const hide = Keyboard.addListener('keyboardWillHide', () => {
-      runOnUI(handler)(0);
+    const hide = KeyboardEvents.addListener('keyboardWillHide', (e) => {
+      runOnUI(handler)(0, e.timestamp);
     });
 
     return () => {

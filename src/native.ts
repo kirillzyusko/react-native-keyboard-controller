@@ -56,6 +56,7 @@ type KeyboardControllerEvents =
   | 'keyboardDidHide';
 type KeyboardEvent = {
   height: number;
+  timestamp: number;
 };
 export const KeyboardEvents = {
   addListener: (

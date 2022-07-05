@@ -9,6 +9,12 @@ class KeyboardControllerViewManager: RCTViewManager {
   }
 }
 
+extension Date {
+    static var currentTimeStamp: Int64{
+        return Int64(Date().timeIntervalSince1970 * 1000)
+    }
+}
+
 class KeyboardControllerView: UIView {
   private var eventDispatcher: RCTEventDispatcherProtocol
   @objc var onKeyboardMove: RCTDirectEventBlock?
@@ -58,10 +64,18 @@ class KeyboardControllerView: UIView {
         name: UIResponder.keyboardDidHideNotification,
         object: nil
       )
+        NotificationCenter.default.addObserver(
+          self,
+          selector: #selector(keyboardWillChangeFrame),
+          name: UIResponder.keyboardWillChangeFrameNotification,
+          object: nil
+        )
     }
   }
 
   @objc func keyboardWillAppear(_ notification: Notification) {
+      let timeStamp = CACurrentMediaTime() * 1000
+
     if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
       let keyboardHeight = keyboardFrame.cgRectValue.size.height
 
@@ -72,18 +86,33 @@ class KeyboardControllerView: UIView {
           progress: 1
         )
       )
+        
+        print(1)
+        print(timeStamp)
+        print(2)
 
       var data = [AnyHashable: Any]()
       data["height"] = keyboardHeight
+      data["timestamp"] = timeStamp
       KeyboardController.shared?.sendEvent(withName: "KeyboardController::keyboardWillShow", body: data)
     }
   }
+    
+    @objc func keyboardWillChangeFrame(_ notification: Notification) {
+        let timeStamp = Date.currentTimeStamp
+        print(3)
+        print(timeStamp)
+        print(4)
+    }
 
   @objc func keyboardWillDisappear() {
+      
+      let timeStamp = Date.currentTimeStamp
     eventDispatcher.send(KeyboardMoveEvent(viewTag: reactTag, height: 0, progress: 0))
 
     var data = [AnyHashable: Any]()
     data["height"] = 0
+    data["timestamp"] = timeStamp
     KeyboardController.shared?.sendEvent(withName: "KeyboardController::keyboardWillHide", body: data)
   }
 

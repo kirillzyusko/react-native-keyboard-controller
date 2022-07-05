@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react';
 import { TextInput, View } from 'react-native';
-import { useReanimatedKeyboardAnimation } from 'react-native-keyboard-controller';
+import { useGradualKeyboardAnimation, useReanimatedKeyboardAnimation } from 'react-native-keyboard-controller';
 import Reanimated, {
   useAnimatedRef,
   useAnimatedStyle,
@@ -13,7 +13,7 @@ const AnimatedTextInput = Reanimated.createAnimatedComponent(TextInput);
 
 function ReanimatedChat() {
   const scrollView = useAnimatedRef<Reanimated.ScrollView>();
-  const { height } = useReanimatedKeyboardAnimation();
+  const { height } = useGradualKeyboardAnimation();
 
   const scrollToBottom = useCallback(() => {
     scrollView.current?.scrollToEnd({ animated: false });
