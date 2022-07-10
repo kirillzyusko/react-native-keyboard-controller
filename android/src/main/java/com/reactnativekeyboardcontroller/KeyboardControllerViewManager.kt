@@ -1,16 +1,18 @@
 package com.reactnativekeyboardcontroller
 
-import android.util.Log
 import android.content.Context
 import android.os.Build
 import android.os.CancellationSignal
+import android.util.Log
 import android.view.animation.LinearInterpolator
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.FitWindowsLinearLayout
+import androidx.core.graphics.Insets
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsAnimationCompat
+import androidx.core.view.WindowInsetsAnimationControlListenerCompat
+import androidx.core.view.WindowInsetsAnimationControllerCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.graphics.Insets
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReadableMap
 import com.facebook.react.bridge.UiThreadUtil
@@ -108,10 +110,10 @@ class KeyboardControllerViewManager(reactContext: ReactApplicationContext) : Rea
       cancellationSignal = CancellationSignal()
       ViewCompat.getWindowInsetsController(decorView)?.controlWindowInsetsAnimation(
         WindowInsetsCompat.Type.ime(), // types
-        -1,                // durationMillis
-        LinearInterpolator(),          // interpolator
-        cancellationSignal,          // cancellationSignal
-        animationControlListener       // listener
+        -1, // durationMillis
+        LinearInterpolator(), // interpolator
+        cancellationSignal, // cancellationSignal
+        animationControlListener // listener
       )
     }
   }
