@@ -16,10 +16,8 @@ import {
 import { styles } from './styles';
 
 const KeyboardControllerViewAnimated = Reanimated.createAnimatedComponent(
-  Animated.createAnimatedComponent(
-    KeyboardControllerView
-  ) as React.FC<KeyboardControllerProps>
-);
+  Animated.createAnimatedComponent(KeyboardControllerView)
+) as React.FC<KeyboardControllerProps>;
 
 type AnimatedContext = {
   progress: Animated.Value;
