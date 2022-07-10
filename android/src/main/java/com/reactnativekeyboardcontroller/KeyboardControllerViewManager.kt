@@ -98,7 +98,12 @@ class KeyboardControllerViewManager(reactContext: ReactApplicationContext) : Rea
 
   @ReactProp(name = "isScrollActive")
   fun setScrollActive(view: ReactViewGroup, isScrollActive: Boolean) {
-    val decorView = mReactContext.currentActivity!!.window!!.decorView
+    val decorView = mReactContext.currentActivity?.window?.decorView
+    if (decorView == null) {
+      Log.w(TAG, "Can not setup keyboard controller, since `currentActivity` is null")
+      return
+    }
+
     if (isScrollActive && ViewCompat.getRootWindowInsets(decorView)?.isVisible(WindowInsetsCompat.Type.ime()) == true) {
       cancellationSignal = CancellationSignal()
       ViewCompat.getWindowInsetsController(decorView)?.controlWindowInsetsAnimation(
