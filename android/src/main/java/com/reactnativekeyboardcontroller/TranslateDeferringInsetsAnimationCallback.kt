@@ -31,7 +31,13 @@ import com.facebook.react.views.view.ReactViewGroup
 import com.reactnativekeyboardcontroller.events.KeyboardTransitionEvent
 import java.util.*
 
-fun toDp(px: Float, context: Context): Int = (px / context.resources.displayMetrics.density).toInt()
+fun toDp(px: Float, context: Context?): Int {
+  if (context == null) {
+    return 0
+  }
+
+  return (px / context.resources.displayMetrics.density).toInt()
+}
 
 /**
  * A [WindowInsetsAnimationCompat.Callback] which will translate/move the given view during any
@@ -112,7 +118,7 @@ class TranslateDeferringInsetsAnimationCallback(
     val navigationBar = insets?.getInsets(WindowInsetsCompat.Type.navigationBars())?.bottom ?: 0
 
     // on hide it will be negative value, so we are using max function
-    return Math.max(toDp((keyboardHeight - navigationBar).toFloat(), context!!), 0)
+    return Math.max(toDp((keyboardHeight - navigationBar).toFloat(), context), 0)
   }
 
   override fun onProgress(
@@ -132,7 +138,7 @@ class TranslateDeferringInsetsAnimationCallback(
       Insets.max(it, Insets.NONE)
     }
     val diffY = (diff.top - diff.bottom).toFloat()
-    val height = toDp(diffY, context!!)
+    val height = toDp(diffY, context)
 
     var progress = 0.0
     try {
@@ -143,7 +149,7 @@ class TranslateDeferringInsetsAnimationCallback(
     Log.i(TAG, "DiffY: $diffY $height")
 
     context
-      .getNativeModule(UIManagerModule::class.java)
+      ?.getNativeModule(UIManagerModule::class.java)
       ?.eventDispatcher
       ?.dispatchEvent(KeyboardTransitionEvent(view.id, height, progress))
 

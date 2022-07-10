@@ -1,5 +1,6 @@
 package com.reactnativekeyboardcontroller
 
+import android.util.Log
 import androidx.appcompat.widget.FitWindowsLinearLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsAnimationCompat
@@ -13,6 +14,7 @@ import com.facebook.react.views.view.ReactViewManager
 import com.reactnativekeyboardcontroller.events.KeyboardTransitionEvent
 
 class KeyboardControllerViewManager(reactContext: ReactApplicationContext) : ReactViewManager() {
+  private val TAG = KeyboardControllerViewManager::class.qualifiedName
   private var mReactContext = reactContext
   private var isStatusBarTranslucent = false
 
@@ -20,7 +22,14 @@ class KeyboardControllerViewManager(reactContext: ReactApplicationContext) : Rea
 
   override fun createViewInstance(reactContext: ThemedReactContext): ReactViewGroup {
     val view = EdgeToEdgeReactViewGroup(reactContext)
-    val window = mReactContext.currentActivity!!.window
+    val activity = mReactContext.currentActivity
+
+    if (activity == null) {
+      Log.w(TAG, "Can not setup keyboard animation listener, since `currentActivity` is null")
+      return view
+    }
+
+    val window = activity.window
     val decorView = window.decorView
 
     ViewCompat.setOnApplyWindowInsetsListener(view) { v, insets ->

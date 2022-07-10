@@ -3,6 +3,7 @@ package com.reactnativekeyboardcontroller
 import android.animation.ArgbEvaluator
 import android.animation.ValueAnimator
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -12,6 +13,7 @@ import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.UiThreadUtil
 
 class StatusBarManagerCompatModule(private val mReactContext: ReactApplicationContext) : ReactContextBaseJavaModule(mReactContext) {
+  private val TAG = StatusBarManagerCompatModule::class.qualifiedName
   private var controller: WindowInsetsControllerCompat? = null
 
   override fun getName(): String = "StatusBarManagerCompat"
@@ -30,8 +32,14 @@ class StatusBarManagerCompatModule(private val mReactContext: ReactApplicationCo
   @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
   @ReactMethod
   private fun setColor(color: Int, animated: Boolean) {
+    val activity = mReactContext.currentActivity
+    if (activity == null) {
+      Log.w(TAG, "StatusBarManagerCompatModule: Ignored status bar change, current activity is null.")
+      return
+    }
+
     UiThreadUtil.runOnUiThread {
-      val window = mReactContext.currentActivity!!.window
+      val window = activity.window
 
       if (animated) {
         val curColor: Int = window.statusBarColor
@@ -71,7 +79,13 @@ class StatusBarManagerCompatModule(private val mReactContext: ReactApplicationCo
 
   private fun getController(): WindowInsetsControllerCompat? {
     if (this.controller == null) {
-      val window = mReactContext.currentActivity!!.window
+      val activity = mReactContext.currentActivity
+      if (activity == null) {
+        Log.w(TAG, "StatusBarManagerCompatModule: can not get `WindowInsetsControllerCompat` because current activity is null.")
+        return this.controller
+      }
+
+      val window = activity.window
 
       this.controller = WindowInsetsControllerCompat(window, window.decorView)
     }
