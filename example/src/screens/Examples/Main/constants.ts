@@ -24,4 +24,9 @@ export const examples: Example[] = [
     info: ScreenNames.INTERACTIVE_KEYBOARD,
     icons: '👆📱',
   },
+  {
+    title: 'Interactive keyboard (native)',
+    info: ScreenNames.INTERACTIVE_KEYBOARD_NATIVE,
+    icons: '👆📱',
+  },
 ];

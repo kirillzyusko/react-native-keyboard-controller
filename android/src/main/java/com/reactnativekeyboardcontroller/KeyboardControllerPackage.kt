@@ -11,6 +11,6 @@ class KeyboardControllerPackage : ReactPackage {
   }
 
   override fun createViewManagers(reactContext: ReactApplicationContext): List<ViewManager<*, *>> {
-    return listOf(KeyboardControllerViewManager(reactContext))
+    return listOf(KeyboardControllerViewManager(reactContext), InteractiveKeyboardViewManager(reactContext))
   }
 }

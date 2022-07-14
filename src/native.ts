@@ -78,6 +78,18 @@ export const KeyboardControllerView =
         throw new Error(LINKING_ERROR);
       };
 
+type KeyboardGestureAreaProps = ViewProps;
+
+const KeyboardGestureAreaComponentName = 'InteractiveKeyboardView';
+export const KeyboardGestureArea =
+  UIManager.getViewManagerConfig(KeyboardGestureAreaComponentName) != null
+    ? requireNativeComponent<KeyboardGestureAreaProps>(
+        KeyboardGestureAreaComponentName
+      )
+    : () => {
+        throw new Error(LINKING_ERROR);
+      };
+
 export const useResizeMode = () => {
   useEffect(() => {
     KeyboardController.setInputMode(

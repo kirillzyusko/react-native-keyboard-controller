@@ -9,6 +9,7 @@ import Events from '../../screens/Examples/Events';
 import AwareScrollView from '../../screens/Examples/AwareScrollView';
 import StatusBar from '../../screens/Examples/StatusBar';
 import InteractiveKeyboard from '../../screens/Examples/InteractiveKeyboard';
+import InteractiveKeyboardNative from '../../screens/Examples/InteractiveKeyboardNative';
 
 type ExamplesStackParamList = {
   [ScreenNames.ANIMATED_EXAMPLE]: undefined;
@@ -17,6 +18,7 @@ type ExamplesStackParamList = {
   [ScreenNames.AWARE_SCROLL_VIEW]: undefined;
   [ScreenNames.STATUS_BAR]: undefined;
   [ScreenNames.INTERACTIVE_KEYBOARD]: undefined;
+  [ScreenNames.INTERACTIVE_KEYBOARD_NATIVE]: undefined;
 };
 
 const Stack = createStackNavigator<ExamplesStackParamList>();
@@ -40,6 +42,9 @@ const options = {
   },
   [ScreenNames.INTERACTIVE_KEYBOARD]: {
     title: 'Interactive keyboard',
+  },
+  [ScreenNames.INTERACTIVE_KEYBOARD_NATIVE]: {
+    title: 'Interactive keyboard (native)',
   },
 };
 
@@ -74,6 +79,11 @@ const ExamplesStack = () => (
       name={ScreenNames.INTERACTIVE_KEYBOARD}
       component={InteractiveKeyboard}
       options={options[ScreenNames.INTERACTIVE_KEYBOARD]}
+    />
+    <Stack.Screen
+      name={ScreenNames.INTERACTIVE_KEYBOARD_NATIVE}
+      component={InteractiveKeyboardNative}
+      options={options[ScreenNames.INTERACTIVE_KEYBOARD_NATIVE]}
     />
   </Stack.Navigator>
 );
