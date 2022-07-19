@@ -5566,6 +5566,9 @@ react-native-gradle-plugin@^0.70.0:
   resolved "https://registry.yarnpkg.com/react-native-gradle-plugin/-/react-native-gradle-plugin-0.70.0.tgz#5700a2341dad7025453696961bac257d2a471534"
   integrity sha512-tCYXPThRSqHJ216bCzGDNabNK8HSlmikGw5YqNgIyUmD08a5TFZyV8SMbSJmndUbYuF+lhB0MuAaT8HEtIgtzA==
 
+react-native-keyboard-controller@../:
+  version "1.0.1"
+
 react-native-reanimated@3.0.0-rc.0:
   version "3.0.0-rc.0"
   resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-3.0.0-rc.0.tgz#05edcb2d9ca99c50d6e0ce378b74a5a0661bba93"
