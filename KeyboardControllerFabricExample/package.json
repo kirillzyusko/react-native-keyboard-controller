@@ -1,5 +1,5 @@
 {
-  "name": "fabricexample",
+  "name": "keyboardcontrollerfabricexample",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -7,16 +7,15 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint .",
-    "postinstall": "patch-package"
+    "lint": "eslint ."
   },
   "dependencies": {
     "@react-native-masked-view/masked-view": "^0.2.7",
     "@react-navigation/bottom-tabs": "^6.3.2",
     "@react-navigation/native": "^6.0.11",
     "@react-navigation/stack": "^6.2.2",
-    "react": "18.1.0",
-    "react-native": "0.70.0-rc.0",
+    "react": "18.0.0",
+    "react-native": "0.69.1",
     "react-native-gesture-handler": "^2.5.0",
     "react-native-reanimated": "3.0.0-rc.0",
     "react-native-safe-area-context": "^4.3.1",
@@ -30,9 +29,8 @@
     "babel-jest": "^26.6.3",
     "eslint": "^7.32.0",
     "jest": "^26.6.3",
-    "metro-react-native-babel-preset": "^0.71.3",
-    "patch-package": "^6.4.7",
-    "react-test-renderer": "18.1.0"
+    "metro-react-native-babel-preset": "^0.70.3",
+    "react-test-renderer": "18.0.0"
   },
   "jest": {
     "preset": "react-native"
