@@ -1,6 +1,5 @@
 import React, {useRef} from 'react';
 import {Animated, TextInput, View} from 'react-native';
-import {useSharedValue} from 'react-native-reanimated';
 /*import {
   useKeyboardAnimation,
   useKeyboardAnimationReplica,
@@ -10,7 +9,7 @@ import styles from './styles';
 export default function KeyboardAnimation() {
   const height = useRef(new Animated.Value(0)).current;
   const progress = useRef(new Animated.Value(0)).current;
-  const heightReplica = useSharedValue(0);
+  const heightReplica = useRef(new Animated.Value(0)).current;
   // const { height, progress } = useKeyboardAnimation();
   // const { height: heightReplica } = useKeyboardAnimationReplica();
 
