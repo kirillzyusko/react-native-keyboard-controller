@@ -1,5 +1,5 @@
-import React, {useRef} from 'react';
-import {Animated, TextInput, View} from 'react-native';
+import React, { useRef } from 'react';
+import { Animated, TextInput, View } from 'react-native';
 /*import {
   useKeyboardAnimation,
   useKeyboardAnimationReplica,
@@ -22,7 +22,7 @@ export default function KeyboardAnimation() {
             height: 50,
             backgroundColor: 'red',
             borderRadius: 25,
-            transform: [{translateY: height}],
+            transform: [{ translateY: height }],
           }}
         />
         <Animated.View
@@ -47,7 +47,7 @@ export default function KeyboardAnimation() {
             height: 50,
             backgroundColor: 'blue',
             borderRadius: 25,
-            transform: [{translateY: heightReplica}],
+            transform: [{ translateY: heightReplica }],
           }}
         />
       </View>
