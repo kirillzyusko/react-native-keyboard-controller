@@ -1,4 +1,4 @@
-name: Validate Kotlin
+name: Validate Android
 
 on:
   push:
