@@ -4,21 +4,20 @@ import android.view.WindowManager
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
-import com.facebook.react.bridge.UiThreadUtil
 
 class KeyboardControllerModule(private val mReactContext: ReactApplicationContext) : ReactContextBaseJavaModule(mReactContext) {
-  private val mDefaultMode: Int = mReactContext.currentActivity?.window?.attributes?.softInputMode ?: WindowManager.LayoutParams.SOFT_INPUT_STATE_UNSPECIFIED
+  private val module = KeyboardControllerModuleImpl(mReactContext)
 
-  override fun getName(): String = "KeyboardController"
+  override fun getName(): String = KeyboardControllerModuleImpl.NAME
 
   @ReactMethod(isBlockingSynchronousMethod = true)
   fun setInputMode(mode: Int) {
-    setSoftInputMode(mode)
+    module.setInputMode(mode)
   }
 
   @ReactMethod(isBlockingSynchronousMethod = true)
   fun setDefaultMode() {
-    setSoftInputMode(mDefaultMode)
+    module.setDefaultMode()
   }
 
   @ReactMethod
@@ -29,11 +28,5 @@ class KeyboardControllerModule(private val mReactContext: ReactApplicationContex
   @ReactMethod
   fun removeListeners(count: Int?) {
     /* Required for RN built-in Event Emitter Calls. */
-  }
-
-  private fun setSoftInputMode(mode: Int) {
-    UiThreadUtil.runOnUiThread {
-      mReactContext.currentActivity?.window?.setSoftInputMode(mode)
-    }
   }
 }
