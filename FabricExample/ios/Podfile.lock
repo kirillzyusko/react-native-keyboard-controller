@@ -625,6 +625,14 @@ PODS:
   - React-jsinspector (0.69.2)
   - React-logger (0.69.2):
     - glog
+  - react-native-keyboard-controller (1.0.1):
+    - RCT-Folly
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
+    - React-Core
+    - React-RCTFabric
+    - ReactCommon/turbomodule/core
   - react-native-safe-area-context (4.3.1):
     - RCT-Folly
     - RCTRequired
@@ -832,6 +840,7 @@ DEPENDENCIES:
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
+  - react-native-keyboard-controller (from `../..`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
@@ -918,6 +927,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
   React-logger:
     :path: "../node_modules/react-native/ReactCommon/logger"
+  react-native-keyboard-controller:
+    :path: "../.."
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   React-perflogger:
@@ -996,6 +1007,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 7c23e92591431ac925f430b3118de934cb816ac0
   React-jsinspector: 31e53f048cc8f32605de36981903a7bbf9456892
   React-logger: 9a6c684d5cd56c4129e0c2842dba75c4bfb1e981
+  react-native-keyboard-controller: f5cfd2526eab51020ef165121c4d1320877eb8e7
   react-native-safe-area-context: 9812064211b05789b1c8d5e7b5ca12eabaac00f2
   React-perflogger: 281c34e42f13245c7a4d6932364d9182f8655e1a
   React-RCTActionSheet: 92f4292754a1b4a0e42bf9b1489206a06f878929
