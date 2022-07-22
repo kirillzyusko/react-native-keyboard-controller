@@ -9,6 +9,8 @@ import {
   ViewProps,
 } from 'react-native';
 
+import { isTurboModuleEnabled } from './architecture';
+
 const LINKING_ERROR =
   `The package 'react-native-keyboard-controller' doesn't seem to be linked. Make sure: \n\n` +
   Platform.select({ ios: "- You have run 'pod install'\n", default: '' }) +
@@ -45,7 +47,9 @@ type KeyboardController = {
 
 const ComponentName = 'KeyboardControllerView';
 
-const RCTKeyboardController = NativeModules.KeyboardController;
+const RCTKeyboardController = isTurboModuleEnabled
+  ? require('./NativeKeyboardController').default
+  : NativeModules.KeyboardController;
 export const KeyboardController = RCTKeyboardController as KeyboardController;
 
 const eventEmitter = new NativeEventEmitter(RCTKeyboardController);
