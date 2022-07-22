@@ -14,15 +14,23 @@ buildscript {
   }
 }
 
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-
 def getExtOrDefault(name) {
   return rootProject.ext.has(name) ? rootProject.ext.get(name) : project.properties['KeyboardController_' + name]
 }
 
 def getExtOrIntegerDefault(name) {
   return rootProject.ext.has(name) ? rootProject.ext.get(name) : (project.properties['KeyboardController_' + name]).toInteger()
+}
+
+def isNewArchitectureEnabled() {
+  return project.hasProperty("newArchEnabled") && project.newArchEnabled == "true"
+}
+
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+if (isNewArchitectureEnabled()) {
+  apply plugin: 'com.facebook.react'
 }
 
 android {
@@ -32,7 +40,19 @@ android {
     targetSdkVersion getExtOrIntegerDefault('targetSdkVersion')
     versionCode 1
     versionName "1.0"
+  }
 
+  sourceSets {
+    main {
+      if (isNewArchitectureEnabled()) {
+        java.srcDirs += [
+          'src/fabric',
+          'build/generated/source/codegen/java'
+        ]
+      } else {
+        java.srcDirs += ['src/paper']
+      }
+    }
   }
 
   buildTypes {
@@ -126,4 +146,14 @@ dependencies {
   api 'com.facebook.react:react-native:+'
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
   implementation 'androidx.core:core-ktx:1.5.0-beta03'
+}
+
+if (isNewArchitectureEnabled()) {
+  react {
+    reactNativeDir = rootProject.file("../node_modules/react-native/")
+    jsRootDir = file("../src/")
+    codegenDir = rootProject.file("../node_modules/react-native-codegen/")
+    libraryName = "reactnativekeyboardcontroller"
+    codegenJavaPackageName = "com.reactnativekeyboardcontroller"
+  }
 }
