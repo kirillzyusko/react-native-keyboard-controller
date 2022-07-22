@@ -3,7 +3,7 @@ import 'react-native-gesture-handler';
 import * as React from 'react';
 
 import { NavigationContainer } from '@react-navigation/native';
-// import { KeyboardProvider } from 'react-native-keyboard-controller';
+import { KeyboardProvider } from 'react-native-keyboard-controller';
 import {
   SafeAreaProvider,
   initialWindowMetrics,
@@ -13,11 +13,11 @@ import RootStack from './navigation/RootStack';
 export default function App() {
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-      <>
+      <KeyboardProvider statusBarTranslucent>
         <NavigationContainer>
           <RootStack />
         </NavigationContainer>
-      </>
+      </KeyboardProvider>
     </SafeAreaProvider>
   );
 }

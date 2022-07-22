@@ -7,6 +7,7 @@ import {
   NativeEventEmitter,
   NativeSyntheticEvent,
   ViewProps,
+  View,
 } from 'react-native';
 
 import { isTurboModuleEnabled } from './architecture';
@@ -67,12 +68,13 @@ export const KeyboardEvents = {
     cb: (e: KeyboardEvent) => void
   ) => eventEmitter.addListener('KeyboardController::' + name, cb),
 };
-export const KeyboardControllerView =
-  UIManager.getViewManagerConfig(ComponentName) != null
-    ? requireNativeComponent<KeyboardControllerProps>(ComponentName)
-    : () => {
-        throw new Error(LINKING_ERROR);
-      };
+export const KeyboardControllerView = isTurboModuleEnabled
+  ? View // TODO: use a real component
+  : UIManager.getViewManagerConfig(ComponentName) != null
+  ? requireNativeComponent<KeyboardControllerProps>(ComponentName)
+  : () => {
+      throw new Error(LINKING_ERROR);
+    };
 
 export const useResizeMode = () => {
   useEffect(() => {
