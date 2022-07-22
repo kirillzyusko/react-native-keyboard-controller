@@ -1,17 +1,14 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import { Animated, TextInput, View } from 'react-native';
-/*import {
+import {
   useKeyboardAnimation,
   useKeyboardAnimationReplica,
-} from 'react-native-keyboard-controller';*/
+} from 'react-native-keyboard-controller';
 import styles from './styles';
 
 export default function KeyboardAnimation() {
-  const height = useRef(new Animated.Value(0)).current;
-  const progress = useRef(new Animated.Value(0)).current;
-  const heightReplica = useRef(new Animated.Value(0)).current;
-  // const { height, progress } = useKeyboardAnimation();
-  // const { height: heightReplica } = useKeyboardAnimationReplica();
+  const { height, progress } = useKeyboardAnimation();
+  const { height: heightReplica } = useKeyboardAnimationReplica();
 
   return (
     <View style={styles.container}>

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { TextInput, View, Dimensions } from 'react-native';
-// import { KeyboardEvents } from 'react-native-keyboard-controller';
+import { KeyboardEvents } from 'react-native-keyboard-controller';
 import Reanimated, {
   useAnimatedRef,
   useAnimatedScrollHandler,
@@ -25,7 +25,7 @@ export default function BottomTabs() {
   });
 
   useEffect(() => {
-    /*const show = KeyboardEvents.addListener('keyboardWillShow', (e) => {
+    const show = KeyboardEvents.addListener('keyboardWillShow', (e) => {
       fakeViewHeight.value = e.height;
     });
     const hide = KeyboardEvents.addListener('keyboardWillHide', () => {
@@ -35,7 +35,7 @@ export default function BottomTabs() {
     return () => {
       show.remove();
       hide.remove();
-    };*/
+    };
   }, []);
 
   const view = useAnimatedStyle(() => ({
