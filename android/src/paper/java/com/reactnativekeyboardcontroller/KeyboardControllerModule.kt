@@ -1,11 +1,10 @@
 package com.reactnativekeyboardcontroller
 
-import android.view.WindowManager
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 
-class KeyboardControllerModule(private val mReactContext: ReactApplicationContext) : ReactContextBaseJavaModule(mReactContext) {
+class KeyboardControllerModule(mReactContext: ReactApplicationContext) : ReactContextBaseJavaModule(mReactContext) {
   private val module = KeyboardControllerModuleImpl(mReactContext)
 
   override fun getName(): String = KeyboardControllerModuleImpl.NAME
