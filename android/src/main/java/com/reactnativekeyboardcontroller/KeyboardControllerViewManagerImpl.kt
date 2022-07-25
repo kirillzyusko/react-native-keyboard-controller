@@ -8,19 +8,15 @@ import androidx.core.view.WindowInsetsCompat
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.common.MapBuilder
 import com.facebook.react.uimanager.ThemedReactContext
-import com.facebook.react.uimanager.annotations.ReactProp
 import com.facebook.react.views.view.ReactViewGroup
-import com.facebook.react.views.view.ReactViewManager
 import com.reactnativekeyboardcontroller.events.KeyboardTransitionEvent
 
-class KeyboardControllerViewManager(reactContext: ReactApplicationContext) : ReactViewManager() {
-  private val TAG = KeyboardControllerViewManager::class.qualifiedName
+class KeyboardControllerViewManagerImpl(reactContext: ReactApplicationContext) {
+  private val TAG = KeyboardControllerViewManagerImpl::class.qualifiedName
   private var mReactContext = reactContext
   private var isStatusBarTranslucent = false
 
-  override fun getName() = "KeyboardControllerView"
-
-  override fun createViewInstance(reactContext: ThemedReactContext): ReactViewGroup {
+  fun createViewInstance(reactContext: ThemedReactContext): ReactViewGroup {
     val view = EdgeToEdgeReactViewGroup(reactContext)
     val activity = mReactContext.currentActivity
 
@@ -56,17 +52,20 @@ class KeyboardControllerViewManager(reactContext: ReactApplicationContext) : Rea
     return view
   }
 
-  @ReactProp(name = "statusBarTranslucent")
   fun setStatusBarTranslucent(view: ReactViewGroup, isStatusBarTranslucent: Boolean) {
     this.isStatusBarTranslucent = isStatusBarTranslucent
   }
 
-  override fun getExportedCustomDirectEventTypeConstants(): MutableMap<String, Any> {
+  fun getExportedCustomDirectEventTypeConstants(): MutableMap<String, Any> {
     val map: MutableMap<String, Any> = MapBuilder.of(
       KeyboardTransitionEvent.EVENT_NAME,
       MapBuilder.of("registrationName", "onKeyboardMove")
     )
 
     return map
+  }
+
+  companion object {
+    const val NAME = "KeyboardControllerView"
   }
 }
