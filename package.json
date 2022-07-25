@@ -54,7 +54,7 @@
     "@release-it/conventional-changelog": "^2.0.0",
     "@types/jest": "^27.4.1",
     "@types/react": "^17.0.39",
-    "@types/react-native": "0.67.6",
+    "@types/react-native": "0.69.3",
     "commitlint": "^11.0.0",
     "eslint": "^7.2.0",
     "eslint-config-prettier": "^7.0.0",
@@ -154,6 +154,11 @@
       {
         "name": "RNKeyboardControllerSpec",
         "type": "modules",
+        "jsSrcsDir": "src"
+      },
+      {
+        "name": "RNKeyboardControllerViewSpec",
+        "type": "components",
         "jsSrcsDir": "src"
       }
     ]
