@@ -41,29 +41,29 @@ android {
     versionCode 1
     versionName "1.0"
     buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
-      if (isNewArchitectureEnabled()) {
-        var appProject = rootProject.allprojects.find { it.plugins.hasPlugin('com.android.application') }
-        externalNativeBuild {
-          ndkBuild {
-            arguments "APP_PLATFORM=android-21",
-                    "APP_STL=c++_shared",
-                    "NDK_TOOLCHAIN_VERSION=clang",
-                    "GENERATED_SRC_DIR=${appProject.buildDir}/generated/source",
-                    "PROJECT_BUILD_DIR=${appProject.buildDir}",
-                    "REACT_ANDROID_DIR=${appProject.rootDir}/../node_modules/react-native/ReactAndroid",
-                    "REACT_ANDROID_BUILD_DIR=${appProject.rootDir}/../node_modules/react-native/ReactAndroid/build"
-            cFlags "-Wall", "-Werror", "-fexceptions", "-frtti", "-DWITH_INSPECTOR=1"
-            cppFlags "-std=c++17"
-            targets "reactnativekeyboardcontroller_modules"
-          }
+    if (isNewArchitectureEnabled()) {
+      var appProject = rootProject.allprojects.find { it.plugins.hasPlugin('com.android.application') }
+      externalNativeBuild {
+        ndkBuild {
+          arguments "APP_PLATFORM=android-21",
+                  "APP_STL=c++_shared",
+                  "NDK_TOOLCHAIN_VERSION=clang",
+                  "GENERATED_SRC_DIR=${appProject.buildDir}/generated/source",
+                  "PROJECT_BUILD_DIR=${appProject.buildDir}",
+                  "REACT_ANDROID_DIR=${appProject.rootDir}/../node_modules/react-native/ReactAndroid",
+                  "REACT_ANDROID_BUILD_DIR=${appProject.rootDir}/../node_modules/react-native/ReactAndroid/build"
+          cFlags "-Wall", "-Werror", "-fexceptions", "-frtti", "-DWITH_INSPECTOR=1"
+          cppFlags "-std=c++17"
+          targets "reactnativekeyboardcontroller_modules"
         }
       }
+    }
   }
 
   if (isNewArchitectureEnabled()) {
     externalNativeBuild {
       ndkBuild {
-          path "src/main/jni/Android.mk"
+        path "src/main/jni/Android.mk"
       }
     }
 
