@@ -39,3 +39,5 @@ LOCAL_SHARED_LIBRARIES := libjsi \
 LOCAL_CFLAGS := \
     -DLOG_TAG=\"ReactNative\"
 LOCAL_CFLAGS += -fexceptions -frtti -std=c++17 -Wall
+
+include $(BUILD_SHARED_LIBRARY)
