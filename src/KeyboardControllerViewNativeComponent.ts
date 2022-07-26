@@ -1,16 +1,21 @@
-import type { ViewProps } from 'ViewPropTypes';
 import type { HostComponent } from 'react-native';
-import type { DirectEventHandler } from 'react-native/Libraries/Types/CodegenTypes';
+import type { ViewProps } from 'react-native/Libraries/Components/View/ViewPropTypes';
+import type {
+  DirectEventHandler,
+  WithDefault,
+  Float,
+  Int32,
+} from 'react-native/Libraries/Types/CodegenTypes';
 import codegenNativeComponent from 'react-native/Libraries/Utilities/codegenNativeComponent';
 
 type KeyboardMoveEvent = {
-  height: number;
-  progress: number;
+  height: Int32;
+  progress: Float;
 };
 
 export interface NativeProps extends ViewProps {
-  //statusBarTranslucent?: boolean;
-  //onKeyboardMove?: DirectEventHandler<KeyboardMoveEvent>;
+  statusBarTranslucent?: WithDefault<boolean, false>;
+  onKeyboardMove?: DirectEventHandler<KeyboardMoveEvent>;
 }
 
 export default codegenNativeComponent<NativeProps>(
