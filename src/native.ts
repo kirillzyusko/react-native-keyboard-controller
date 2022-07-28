@@ -9,7 +9,7 @@ import {
   ViewProps,
 } from 'react-native';
 
-import { isTurboModuleEnabled } from './architecture';
+import { isFabricEnabled, isTurboModuleEnabled } from './architecture';
 
 const LINKING_ERROR =
   `The package 'react-native-keyboard-controller' doesn't seem to be linked. Make sure: \n\n` +
@@ -67,7 +67,7 @@ export const KeyboardEvents = {
     cb: (e: KeyboardEvent) => void
   ) => eventEmitter.addListener('KeyboardController::' + name, cb),
 };
-export const KeyboardControllerView = isTurboModuleEnabled
+export const KeyboardControllerView = isFabricEnabled
   ? require('./KeyboardControllerViewNativeComponent').default
   : UIManager.getViewManagerConfig(ComponentName) != null
   ? requireNativeComponent<KeyboardControllerProps>(ComponentName)
