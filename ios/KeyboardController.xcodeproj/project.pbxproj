@@ -28,7 +28,7 @@
 
 /* Begin PBXFileReference section */
 		134814201AA4EA6300B7C361 /* libKeyboardController.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libKeyboardController.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		B3E7B5891CC2AC0600A0062D /* KeyboardControllerViewManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeyboardControllerViewManager.m; sourceTree = "<group>"; };
+		B3E7B5891CC2AC0600A0062D /* KeyboardControllerViewManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = KeyboardControllerViewManager.mm; sourceTree = "<group>"; };
 		F359D34C28133BE1000B6AFE /* KeyboardControllerModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardControllerModule.swift; sourceTree = "<group>"; };
 		F359D34E28133C26000B6AFE /* KeyboardControllerModule.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = KeyboardControllerModule.mm; sourceTree = "<group>"; };
 		F359D35028133C6F000B6AFE /* KeyboardControllerModule-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "KeyboardControllerModule-Header.h"; sourceTree = "<group>"; };
@@ -66,7 +66,7 @@
 				F359D34E28133C26000B6AFE /* KeyboardControllerModule.mm */,
 				F359D34C28133BE1000B6AFE /* KeyboardControllerModule.swift */,
 				F4FF95D6245B92E800C19C63 /* KeyboardControllerViewManager.swift */,
-				B3E7B5891CC2AC0600A0062D /* KeyboardControllerViewManager.m */,
+				B3E7B5891CC2AC0600A0062D /* KeyboardControllerViewManager.mm */,
 				F4FF95D5245B92E700C19C63 /* KeyboardController-Bridging-Header.h */,
 				134814211AA4EA7D00B7C361 /* Products */,
 			);
