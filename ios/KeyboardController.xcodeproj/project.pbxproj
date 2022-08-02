@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F333F8D428996B8D0015B05F /* KeyboardControllerView.mm in Sources */ = {isa = PBXBuildFile; fileRef = F333F8D228996B8D0015B05F /* KeyboardControllerView.mm */; };
 		F359D34D28133BE1000B6AFE /* KeyboardControllerModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = F359D34C28133BE1000B6AFE /* KeyboardControllerModule.swift */; };
 		F359D34F28133C26000B6AFE /* KeyboardControllerModule.mm in Sources */ = {isa = PBXBuildFile; fileRef = F359D34E28133C26000B6AFE /* KeyboardControllerModule.mm */; };
 		F3626A0728B3FE760021B2D9 /* KeyboardMovementObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3626A0628B3FE760021B2D9 /* KeyboardMovementObserver.swift */; };
@@ -29,6 +30,8 @@
 /* Begin PBXFileReference section */
 		134814201AA4EA6300B7C361 /* libKeyboardController.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libKeyboardController.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3E7B5891CC2AC0600A0062D /* KeyboardControllerViewManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = KeyboardControllerViewManager.mm; sourceTree = "<group>"; };
+		F333F8D128996B1C0015B05F /* KeyboardControllerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KeyboardControllerView.h; sourceTree = "<group>"; };
+		F333F8D228996B8D0015B05F /* KeyboardControllerView.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = KeyboardControllerView.mm; sourceTree = "<group>"; };
 		F359D34C28133BE1000B6AFE /* KeyboardControllerModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardControllerModule.swift; sourceTree = "<group>"; };
 		F359D34E28133C26000B6AFE /* KeyboardControllerModule.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = KeyboardControllerModule.mm; sourceTree = "<group>"; };
 		F359D35028133C6F000B6AFE /* KeyboardControllerModule-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "KeyboardControllerModule-Header.h"; sourceTree = "<group>"; };
@@ -61,6 +64,8 @@
 			isa = PBXGroup;
 			children = (
 				F3626A0628B3FE760021B2D9 /* KeyboardMovementObserver.swift */,
+				F333F8D228996B8D0015B05F /* KeyboardControllerView.mm */,
+				F333F8D128996B1C0015B05F /* KeyboardControllerView.h */,
 				F3FF0914281851CC006831B1 /* KeyboardMoveEvent.swift */,
 				F359D35028133C6F000B6AFE /* KeyboardControllerModule-Header.h */,
 				F359D34E28133C26000B6AFE /* KeyboardControllerModule.mm */,
@@ -134,6 +139,7 @@
 				F359D34F28133C26000B6AFE /* KeyboardControllerModule.mm in Sources */,
 				F359D34D28133BE1000B6AFE /* KeyboardControllerModule.swift in Sources */,
 				F4FF95D7245B92E800C19C63 /* KeyboardControllerViewManager.swift in Sources */,
+				F333F8D428996B8D0015B05F /* KeyboardControllerView.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
