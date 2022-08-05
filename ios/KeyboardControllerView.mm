@@ -8,8 +8,8 @@
 
 // This guard prevent the code from being compiled in the old architecture
 #ifdef RCT_NEW_ARCH_ENABLED
-#import "KeyboardMovementObserver.h"
 #import "KeyboardControllerView.h"
+#import "react_native_keyboard_controller-Swift.h"
 
 #import <react/renderer/components/RNKeyboardControllerViewSpec/ComponentDescriptors.h>
 #import <react/renderer/components/RNKeyboardControllerViewSpec/EventEmitters.h>

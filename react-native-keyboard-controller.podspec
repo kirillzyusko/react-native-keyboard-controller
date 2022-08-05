@@ -16,6 +16,7 @@ Pod::Spec.new do |s|
   s.source       = { :git => "https://github.com/kirillzyusko/react-native-keyboard-controller.git", :tag => "#{s.version}" }
 
   s.source_files = "ios/**/*.{h,m,mm,swift}"
+  s.public_header_files = "ios/**/*.h"
 
   s.dependency "React-Core"
 
