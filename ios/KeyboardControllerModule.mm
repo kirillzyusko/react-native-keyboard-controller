@@ -1,5 +1,5 @@
 //
-//  RCTBridge.m
+//  KeyboardControllerModule.m
 //  KeyboardController
 //
 //  Created by Kiryl Ziusko on 22.04.22.

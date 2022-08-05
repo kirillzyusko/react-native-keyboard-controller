@@ -8,12 +8,15 @@
 
 // This guard prevent the code from being compiled in the old architecture
 #ifdef RCT_NEW_ARCH_ENABLED
+#import "KeyboardMovementObserver.h"
 #import "KeyboardControllerView.h"
 
 #import <react/renderer/components/RNKeyboardControllerViewSpec/ComponentDescriptors.h>
 #import <react/renderer/components/RNKeyboardControllerViewSpec/EventEmitters.h>
 #import <react/renderer/components/RNKeyboardControllerViewSpec/Props.h>
 #import <react/renderer/components/RNKeyboardControllerViewSpec/RCTComponentViewHelpers.h>
+
+#import <React/RCTBridge+Private.h>
 
 #import "RCTFabricComponentsPlugins.h"
 
@@ -24,7 +27,7 @@ using namespace facebook::react;
 @end
 
 @implementation KeyboardControllerView {
-
+    KeyboardMovementObserver *observer;
 }
 
 + (ComponentDescriptorProvider)componentDescriptorProvider
@@ -37,14 +40,39 @@ using namespace facebook::react;
   if (self = [super initWithFrame:frame]) {
     static const auto defaultProps = std::make_shared<const KeyboardControllerViewProps>();
     _props = defaultProps;
-      
-    /*if (_eventEmitter) {
-        std::dynamic_pointer_cast<const facebook::react::KeyboardControllerViewEventEmitter>(_eventEmitter)
-            ->onKeyboardMove(facebook::react::KeyboardControllerViewEventEmitter::OnKeyboardMove{
-              .height = 100,
-              .progress = 1
-            });
-        }*/
+
+      observer = [[KeyboardMovementObserver alloc] initWithHandler:^(NSNumber* height, NSNumber* progress){
+          NSLog(@"Event");
+          if (self->_eventEmitter) {
+              NSLog(@"Спортсмены на месте");
+          }
+          NSLog(@"%@", height);
+          NSLog(@"%d", self.tag);
+          
+          
+          
+          
+          /*if (self->_eventEmitter) {
+              std::dynamic_pointer_cast<const facebook::react::KeyboardControllerViewEventEmitter>(self->_eventEmitter)
+                  ->onKeyboardMove(facebook::react::KeyboardControllerViewEventEmitter::OnKeyboardMove{
+                    .height = 100,
+                    .progress = 1
+                  });
+              }*/
+          
+          
+          
+          
+
+          // TODO: use built-in _eventEmitter once NativeAnimated module will use ModernEventemitter
+          RCTBridge *bridge = [RCTBridge currentBridge];
+          if (bridge) {
+            // [bridge.eventDispatcher sendEvent:scrollEvent];
+          }
+      } onNotify:^(NSString* event, NSDictionary* data){
+          NSLog(@"Event received");
+      }];
+    [observer mount];
   }
 
   return self;

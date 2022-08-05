@@ -139,6 +139,7 @@
 				F359D34F28133C26000B6AFE /* KeyboardControllerModule.mm in Sources */,
 				F359D34D28133BE1000B6AFE /* KeyboardControllerModule.swift in Sources */,
 				F4FF95D7245B92E800C19C63 /* KeyboardControllerViewManager.swift in Sources */,
+				F3C26A502899AADB007FD645 /* KeyboardMovementObserver.swift in Sources */,
 				F333F8D428996B8D0015B05F /* KeyboardControllerView.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

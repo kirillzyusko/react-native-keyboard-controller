@@ -1,5 +1,5 @@
 //
-//  Module-Bridging-Header.h
+//  KeyboardControllerModule-Header.h
 //  KeyboardController
 //
 //  Created by Kiryl Ziusko on 22.04.22.

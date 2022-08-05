@@ -49,7 +49,7 @@ class KeyboardControllerView: UIView {
     )
   }
 
-  func onNotify(event: String, data: Any) {
-    KeyboardController.shared?.sendEvent(withName: event, body: data)
-  }
+    func onNotify(event: String, data: Any) {
+        KeyboardController.shared?.sendEvent(withName: event, body: data)
+    }
 }
