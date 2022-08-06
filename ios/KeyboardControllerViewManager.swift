@@ -38,18 +38,18 @@ class KeyboardControllerView: UIView {
       keyboardObserver?.mount()
     }
   }
-    
-    func onEvent(height: NSNumber, progress: NSNumber) {
-        eventDispatcher.send(
-          KeyboardMoveEvent(
-            reactTag: reactTag,
-            height: height,
-            progress: progress
-          )
-        )
-    }
 
-    func onNotify(event: String, data: Any) {
-        KeyboardController.shared?.sendEvent(withName: event, body: data)
-    }
+  func onEvent(height: NSNumber, progress: NSNumber) {
+    eventDispatcher.send(
+      KeyboardMoveEvent(
+        reactTag: reactTag,
+        height: height,
+        progress: progress
+      )
+    )
+  }
+
+  func onNotify(event: String, data: Any) {
+    KeyboardController.shared?.sendEvent(withName: event, body: data)
+  }
 }
