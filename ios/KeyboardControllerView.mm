@@ -43,23 +43,13 @@ using namespace facebook::react;
     _props = defaultProps;
 
       observer = [[KeyboardMovementObserver alloc] initWithHandler:^(NSNumber* height, NSNumber* progress){
-          NSLog(@"Event");
           if (self->_eventEmitter) {
-              NSLog(@"Спортсмены на месте");
-          }
-          NSLog(@"%@", height);
-          NSLog(@"%d", self.tag);
-          
-          
-          
-          
-          /*if (self->_eventEmitter) {
               std::dynamic_pointer_cast<const facebook::react::KeyboardControllerViewEventEmitter>(self->_eventEmitter)
                   ->onKeyboardMove(facebook::react::KeyboardControllerViewEventEmitter::OnKeyboardMove{
-                    .height = 100,
-                    .progress = 1
+                    .height = [height intValue],
+                    .progress = static_cast<Float>(self.tag)
                   });
-              }*/
+              }
           
           
           
