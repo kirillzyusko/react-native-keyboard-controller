@@ -10,17 +10,17 @@
 #import <React/RCTAssert.h>
 
 @implementation KeyboardMoveEvent {
-    NSNumber *_progress;
-    NSNumber *_height;
-    uint16_t _coalescingKey;
+  NSNumber *_progress;
+  NSNumber *_height;
+  uint16_t _coalescingKey;
 }
 
 @synthesize viewTag = _viewTag;
 @synthesize eventName = _eventName;
 
 - (instancetype)initWithReactTag:(NSNumber *)reactTag
-                           height:(NSNumber *)height
-                         progress:(NSNumber *)progress
+                          height:(NSNumber *)height
+                        progress:(NSNumber *)progress
 {
   RCTAssertParam(reactTag);
 

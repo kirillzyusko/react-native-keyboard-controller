@@ -12,7 +12,7 @@
 @interface KeyboardMoveEvent : NSObject <RCTEvent>
 
 - (instancetype)initWithReactTag:(NSNumber *)reactTag
-                           height:(NSNumber *)height
-                         progress:(NSNumber *)progress;
+                          height:(NSNumber *)height
+                        progress:(NSNumber *)progress;
 
 @end

@@ -1,4 +1,4 @@
-- [ ] CLang formatter
+- [x] CLang formatter
 - [ ] Fabric (iOS) - chat example scroll view bouncing
 - [ ] Fabric (iOS) - no events arrived
 - [ ] Fabric (iOS) - AwareScrollView is not working in
