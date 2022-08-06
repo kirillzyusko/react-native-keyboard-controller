@@ -10,6 +10,7 @@
 #ifdef RCT_NEW_ARCH_ENABLED
 #import "KeyboardControllerView.h"
 #import "react_native_keyboard_controller-Swift.h"
+#import "KeyboardMoveEvent.h"
 
 #import <react/renderer/components/RNKeyboardControllerViewSpec/ComponentDescriptors.h>
 #import <react/renderer/components/RNKeyboardControllerViewSpec/EventEmitters.h>
@@ -67,7 +68,11 @@ using namespace facebook::react;
           // TODO: use built-in _eventEmitter once NativeAnimated module will use ModernEventemitter
           RCTBridge *bridge = [RCTBridge currentBridge];
           if (bridge) {
-            // [bridge.eventDispatcher sendEvent:scrollEvent];
+              KeyboardMoveEvent *keyboardMoveEvent = [[KeyboardMoveEvent alloc] initWithReactTag:@(self.tag)
+                                                  height:height
+                                                       progress:progress
+                                              ];
+            [bridge.eventDispatcher sendEvent:keyboardMoveEvent];
           }
       } onNotify:^(NSString* event, NSDictionary* data){
           NSLog(@"Event received");

@@ -1,9 +1,11 @@
 import type { HostComponent } from 'react-native';
+// @ts-expect-error - no type definition
 import type { ViewProps } from 'react-native/Libraries/Components/View/ViewPropTypes';
 import type {
   DirectEventHandler,
   Float,
   Int32,
+  // @ts-expect-error - no type definition
 } from 'react-native/Libraries/Types/CodegenTypes';
 import codegenNativeComponent from 'react-native/Libraries/Utilities/codegenNativeComponent';
 
