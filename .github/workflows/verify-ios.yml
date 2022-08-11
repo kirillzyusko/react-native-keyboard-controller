@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  lint:
+  swift-lint:
     runs-on: ubuntu-latest
     name: Swift Lint
     steps:
@@ -37,3 +37,14 @@ jobs:
 
       - name: Verify that the formatted code hasn't been changed
         run: git diff --exit-code HEAD
+  objc-lint:
+    runs-on: macOS-latest
+    name: ObjC Lint
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Verify formatting
+        run: yarn lint-clang
