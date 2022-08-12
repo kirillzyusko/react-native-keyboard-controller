@@ -12,6 +12,7 @@ import LottieAnimation from '../../screens/Examples/Lottie';
 import NonUIProps from '../../screens/Examples/NonUIProps';
 import InteractiveKeyboard from '../../screens/Examples/InteractiveKeyboard';
 import InteractiveKeyboardIOS from '../../screens/Examples/InteractiveKeyboardIOS';
+import NativeStack from '../NestedStack';
 
 export type ExamplesStackParamList = {
   [ScreenNames.ANIMATED_EXAMPLE]: undefined;
@@ -23,6 +24,7 @@ export type ExamplesStackParamList = {
   [ScreenNames.NON_UI_PROPS]: undefined;
   [ScreenNames.INTERACTIVE_KEYBOARD]: undefined;
   [ScreenNames.INTERACTIVE_KEYBOARD_IOS]: undefined;
+  [ScreenNames.NATIVE_STACK]: undefined;
 };
 
 const Stack = createStackNavigator<ExamplesStackParamList>();
@@ -55,6 +57,9 @@ const options = {
   },
   [ScreenNames.INTERACTIVE_KEYBOARD_IOS]: {
     title: 'Interactive keyboard 🍏',
+  },
+  [ScreenNames.NATIVE_STACK]: {
+    title: 'Native stack',
   },
 };
 
@@ -104,6 +109,11 @@ const ExamplesStack = () => (
       name={ScreenNames.INTERACTIVE_KEYBOARD_IOS}
       component={InteractiveKeyboardIOS}
       options={options[ScreenNames.INTERACTIVE_KEYBOARD_IOS]}
+    />
+    <Stack.Screen
+      name={ScreenNames.NATIVE_STACK}
+      component={NativeStack}
+      options={options[ScreenNames.NATIVE_STACK]}
     />
   </Stack.Navigator>
 );
