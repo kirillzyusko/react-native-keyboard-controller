@@ -9,6 +9,7 @@
   "source": "src/index",
   "files": [
     "src",
+    "plugin/build",
     "lib",
     "android",
     "ios",
