@@ -26,11 +26,12 @@
     "typescript": "tsc --noEmit --project tsconfig.build.json",
     "lint": "eslint --quiet \"**/*.{js,ts,tsx}\"",
     "lint-clang": "find ios/ -iname *.h -o -iname *.m -o -iname *.mm | grep -v -e Pods -e build | xargs clang-format -i -n --Werror",
-    "prepare": "bob build",
+    "prepare": "bob build && yarn build:plugin",
     "release": "release-it",
     "example": "yarn --cwd example",
     "pods": "cd example && pod-install --quiet",
-    "bootstrap": "yarn example && yarn && yarn pods"
+    "bootstrap": "yarn example && yarn && yarn pods",
+    "build:plugin": "tsc --build plugin"
   },
   "keywords": [
     "react-native",
@@ -49,10 +50,14 @@
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
+  "dependencies": {
+    "@expo/config-plugins": "^5.0.1"
+  },
   "devDependencies": {
     "@commitlint/config-conventional": "^11.0.0",
     "@react-native-community/eslint-config": "^2.0.0",
     "@release-it/conventional-changelog": "^2.0.0",
+    "@tsconfig/node10": "^1.0.9",
     "@types/jest": "^27.4.1",
     "@types/react": "^18.0.17",
     "@types/react-native": "0.69.5",
