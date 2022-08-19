@@ -1,24 +1,11 @@
-/*
- * Copyright 2020 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.reactnativekeyboardcontroller
 
+import android.animation.ValueAnimator
 import android.content.Context
 import android.util.Log
+import android.view.View
 import androidx.core.graphics.Insets
+import androidx.core.view.OnApplyWindowInsetsListener
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsAnimationCompat
 import androidx.core.view.WindowInsetsCompat
@@ -27,9 +14,9 @@ import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.facebook.react.uimanager.UIManagerModule
+import com.facebook.react.uimanager.events.Event
 import com.facebook.react.views.view.ReactViewGroup
 import com.reactnativekeyboardcontroller.events.KeyboardTransitionEvent
-import java.util.*
 
 fun toDp(px: Float, context: Context?): Int {
   if (context == null) {
@@ -39,32 +26,16 @@ fun toDp(px: Float, context: Context?): Int {
   return (px / context.resources.displayMetrics.density).toInt()
 }
 
-/**
- * A [WindowInsetsAnimationCompat.Callback] which will translate/move the given view during any
- * inset animations of the given inset type.
- *
- * This class works in tandem with [RootViewDeferringInsetsCallback] to support the deferring of
- * certain [WindowInsetsCompat.Type] values during a [WindowInsetsAnimationCompat], provided in
- * [deferredInsetTypes]. The values passed into this constructor should match those which
- * the [RootViewDeferringInsetsCallback] is created with.
- *
- * @param view the view to translate from it's start to end state
- * @param persistentInsetTypes the bitmask of any inset types which were handled as part of the
- * layout
- * @param deferredInsetTypes the bitmask of insets types which should be deferred until after
- * any [WindowInsetsAnimationCompat]s have ended
- * @param dispatchMode The dispatch mode for this callback.
- * See [WindowInsetsAnimationCompat.Callback.getDispatchMode].
- */
 class TranslateDeferringInsetsAnimationCallback(
   val view: ReactViewGroup,
   val persistentInsetTypes: Int,
   val deferredInsetTypes: Int,
   dispatchMode: Int = DISPATCH_MODE_STOP,
   val context: ReactApplicationContext?
-) : WindowInsetsAnimationCompat.Callback(dispatchMode) {
+) : WindowInsetsAnimationCompat.Callback(dispatchMode), OnApplyWindowInsetsListener {
   private val TAG = TranslateDeferringInsetsAnimationCallback::class.qualifiedName
   private var persistentKeyboardHeight = 0
+  private var isKeyboardVisible = this.isKeyboardVisible()
 
   init {
     require(persistentInsetTypes and deferredInsetTypes == 0) {
@@ -73,12 +44,43 @@ class TranslateDeferringInsetsAnimationCallback(
     }
   }
 
+  // TODO: (x) it dispatches too frequently
+  // TODO: (x) move code duplication to separated method
+  // TODO: dispatch didShow event
+  // TODO: calculate animated progress (should it be >1?)
+  // TODO: (x) remove android documentation
+  // TODO: (x) rename class?
+  override fun onApplyWindowInsets(v: View?, insets: WindowInsetsCompat?): WindowInsetsCompat {
+    // sometimes this method is called after `onStart` (keyboard appears),
+    // sometimes it's called before `onStart` (keyboard hides)
+    // since `onStart` updates `isKeyboardVisible` in order to avoid
+    // unnecessary calls we will need to use the double check
+    // TODO: write why it's needed
+    if (isKeyboardVisible && isKeyboardVisible()) {
+      val keyboardHeight = getCurrentKeyboardHeight()
+      /*val animation = ValueAnimator.ofInt(-this.persistentKeyboardHeight, -keyboardHeight)
+      animation.addUpdateListener { animator ->
+        val toValue = animator.animatedValue as Int
+        this.sendEventToJS(KeyboardTransitionEvent(view.id, toValue, 1.0))
+      }
+
+      animation.setDuration(250).startDelay = 0
+      animation.start()*/
+
+      this.sendEventToJS(KeyboardTransitionEvent(view.id, -keyboardHeight, 1.0))
+
+      this.persistentKeyboardHeight = keyboardHeight
+    }
+
+    return WindowInsetsCompat.CONSUMED
+  }
+
   override fun onStart(
     animation: WindowInsetsAnimationCompat,
     bounds: WindowInsetsAnimationCompat.BoundsCompat
   ): WindowInsetsAnimationCompat.BoundsCompat {
+    isKeyboardVisible = isKeyboardVisible()
     val keyboardHeight = getCurrentKeyboardHeight()
-    val isKeyboardVisible = isKeyboardVisible()
 
     if (isKeyboardVisible) {
       // do not update it on hide, since back progress will be invalid
@@ -93,32 +95,6 @@ class TranslateDeferringInsetsAnimationCallback(
     Log.i(TAG, "HEIGHT:: $keyboardHeight")
 
     return super.onStart(animation, bounds)
-  }
-
-  override fun onEnd(animation: WindowInsetsAnimationCompat) {
-    super.onEnd(animation)
-
-    val isKeyboardVisible = isKeyboardVisible()
-
-    val params: WritableMap = Arguments.createMap()
-    context?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)?.emit("KeyboardController::" + if (!isKeyboardVisible) "keyboardDidHide" else "keyboardDidShow", params)
-
-    Log.i(TAG, "KeyboardController::" + if (!isKeyboardVisible) "keyboardDidHide" else "keyboardDidShow")
-  }
-
-  private fun isKeyboardVisible(): Boolean {
-    val insets = ViewCompat.getRootWindowInsets(view)
-
-    return insets?.isVisible(WindowInsetsCompat.Type.ime()) ?: false
-  }
-
-  private fun getCurrentKeyboardHeight(): Int {
-    val insets = ViewCompat.getRootWindowInsets(view)
-    val keyboardHeight = insets?.getInsets(WindowInsetsCompat.Type.ime())?.bottom ?: 0
-    val navigationBar = insets?.getInsets(WindowInsetsCompat.Type.navigationBars())?.bottom ?: 0
-
-    // on hide it will be negative value, so we are using max function
-    return Math.max(toDp((keyboardHeight - navigationBar).toFloat(), context), 0)
   }
 
   override fun onProgress(
@@ -148,11 +124,39 @@ class TranslateDeferringInsetsAnimationCallback(
     }
     Log.i(TAG, "DiffY: $diffY $height")
 
+    this.sendEventToJS(KeyboardTransitionEvent(view.id, height, progress))
+
+    return insets
+  }
+
+  override fun onEnd(animation: WindowInsetsAnimationCompat) {
+    super.onEnd(animation)
+
+    val params: WritableMap = Arguments.createMap()
+    context?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)?.emit("KeyboardController::" + if (!isKeyboardVisible) "keyboardDidHide" else "keyboardDidShow", params)
+
+    Log.i(TAG, "KeyboardController::" + if (!isKeyboardVisible) "keyboardDidHide" else "keyboardDidShow")
+  }
+
+  private fun isKeyboardVisible(): Boolean {
+    val insets = ViewCompat.getRootWindowInsets(view)
+
+    return insets?.isVisible(WindowInsetsCompat.Type.ime()) ?: false
+  }
+
+  private fun getCurrentKeyboardHeight(): Int {
+    val insets = ViewCompat.getRootWindowInsets(view)
+    val keyboardHeight = insets?.getInsets(WindowInsetsCompat.Type.ime())?.bottom ?: 0
+    val navigationBar = insets?.getInsets(WindowInsetsCompat.Type.navigationBars())?.bottom ?: 0
+
+    // on hide it will be negative value, so we are using max function
+    return Math.max(toDp((keyboardHeight - navigationBar).toFloat(), context), 0)
+  }
+
+  private fun sendEventToJS(event: Event<*>) {
     context
       ?.getNativeModule(UIManagerModule::class.java)
       ?.eventDispatcher
-      ?.dispatchEvent(KeyboardTransitionEvent(view.id, height, progress))
-
-    return insets
+      ?.dispatchEvent(event)
   }
 }
