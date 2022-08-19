@@ -32,6 +32,17 @@ class KeyboardControllerViewManager(reactContext: ReactApplicationContext) : Rea
     val window = activity.window
     val decorView = window.decorView
 
+    val callback = TranslateDeferringInsetsAnimationCallback(
+      view = view,
+      persistentInsetTypes = WindowInsetsCompat.Type.systemBars(),
+      deferredInsetTypes = WindowInsetsCompat.Type.ime(),
+      // We explicitly allow dispatch to continue down to binding.messageHolder's
+      // child views, so that step 2.5 below receives the call
+      dispatchMode = WindowInsetsAnimationCompat.Callback.DISPATCH_MODE_CONTINUE_ON_SUBTREE,
+      context = mReactContext
+    )
+    ViewCompat.setWindowInsetsAnimationCallback(decorView, callback)
+    ViewCompat.setOnApplyWindowInsetsListener(view, callback)
     ViewCompat.setOnApplyWindowInsetsListener(view) { v, insets ->
       val content =
         mReactContext.currentActivity?.window?.decorView?.rootView?.findViewById<FitWindowsLinearLayout>(
@@ -44,18 +55,6 @@ class KeyboardControllerViewManager(reactContext: ReactApplicationContext) : Rea
 
       insets
     }
-
-    val callback = TranslateDeferringInsetsAnimationCallback(
-      view = view,
-      persistentInsetTypes = WindowInsetsCompat.Type.systemBars(),
-      deferredInsetTypes = WindowInsetsCompat.Type.ime(),
-      // We explicitly allow dispatch to continue down to binding.messageHolder's
-      // child views, so that step 2.5 below receives the call
-      dispatchMode = WindowInsetsAnimationCompat.Callback.DISPATCH_MODE_CONTINUE_ON_SUBTREE,
-      context = mReactContext
-    )
-    ViewCompat.setWindowInsetsAnimationCallback(decorView, callback)
-    ViewCompat.setOnApplyWindowInsetsListener(view, callback)
 
     return view
   }
