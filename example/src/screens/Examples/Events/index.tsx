@@ -21,11 +21,11 @@ function EventsListener() {
         text2: `📲 Height: ${e.height}`,
       });
     });
-    const shown = KeyboardEvents.addListener('keyboardDidShow', () => {
+    const shown = KeyboardEvents.addListener('keyboardDidShow', (e) => {
       Toast.show({
         type: 'success',
         text1: '⌨️ Keyboard is shown',
-        text2: '👋',
+        text2: `👋 Height: ${e.height}`,
       });
     });
     const hide = KeyboardEvents.addListener('keyboardWillHide', (e) => {
@@ -35,11 +35,11 @@ function EventsListener() {
         text2: `📲 Height: ${e.height}`,
       });
     });
-    const hid = KeyboardEvents.addListener('keyboardDidHide', () => {
+    const hid = KeyboardEvents.addListener('keyboardDidHide', (e) => {
       Toast.show({
         type: 'error',
         text1: '⌨️ Keyboard is hidden',
-        text2: '🤐',
+        text2: `🤐 Height: ${e.height}`,
       });
     });
 

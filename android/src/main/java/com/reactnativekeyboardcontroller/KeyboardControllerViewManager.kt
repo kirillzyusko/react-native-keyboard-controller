@@ -42,7 +42,7 @@ class KeyboardControllerViewManager(reactContext: ReactApplicationContext) : Rea
       context = mReactContext
     )
     ViewCompat.setWindowInsetsAnimationCallback(decorView, callback)
-    ViewCompat.setOnApplyWindowInsetsListener(view, callback)
+    ViewCompat.setOnApplyWindowInsetsListener(decorView, callback)
     ViewCompat.setOnApplyWindowInsetsListener(view) { v, insets ->
       val content =
         mReactContext.currentActivity?.window?.decorView?.rootView?.findViewById<FitWindowsLinearLayout>(

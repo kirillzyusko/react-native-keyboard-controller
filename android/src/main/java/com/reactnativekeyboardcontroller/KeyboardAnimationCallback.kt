@@ -1,6 +1,5 @@
 package com.reactnativekeyboardcontroller
 
-import android.animation.ValueAnimator
 import android.content.Context
 import android.util.Log
 import android.view.View
@@ -44,30 +43,38 @@ class TranslateDeferringInsetsAnimationCallback(
     }
   }
 
-  // TODO: (x) it dispatches too frequently
-  // TODO: (x) move code duplication to separated method
-  // TODO: dispatch didShow event
-  // TODO: calculate animated progress (should it be >1?)
-  // TODO: (x) remove android documentation
-  // TODO: (x) rename class?
   override fun onApplyWindowInsets(v: View?, insets: WindowInsetsCompat): WindowInsetsCompat {
-    // sometimes this method is called after `onStart` (keyboard appears),
-    // sometimes it's called before `onStart` (keyboard hides)
-    // since `onStart` updates `isKeyboardVisible` in order to avoid
-    // unnecessary calls we will need to use the double check
-    // TODO: write why it's needed
+    // this method calls everytime when keyboard appears or hides
+    // and it calls before `onStart` (in `onStart` we update `this.isKeyboardVisible` field)
+    // so when keyboard appears values will be (false && true)
+    // when keyboard disappears values will be (true && false)
+    //
+    // having such check allows us not to dispatch unnecessary incorrect events
     if (isKeyboardVisible && isKeyboardVisible()) {
       val keyboardHeight = getCurrentKeyboardHeight()
-      /*val animation = ValueAnimator.ofInt(-this.persistentKeyboardHeight, -keyboardHeight)
-      animation.addUpdateListener { animator ->
-        val toValue = animator.animatedValue as Int
-        this.sendEventToJS(KeyboardTransitionEvent(view.id, toValue, 1.0))
-      }
-
-      animation.setDuration(250).startDelay = 0
-      animation.start()*/
-
+      /**
+       * By default it's up to OS whether to animate keyboard changes or not.
+       * For example my Xiaomi Redmi Note 5 Pro (Android 9) applies layout animation
+       * whereas Pixel 3 (Android 12) is not applying layout animation and view changes
+       * it's position instantly. We stick to such default behavior and rely on it.
+       * Though if we decide to animate always (any animation looks better that instant transition)
+       * we can use the code below:
+       *
+       * <pre>
+       *   val animation = ValueAnimator.ofInt(-this.persistentKeyboardHeight, -keyboardHeight)
+       *
+       *   animation.addUpdateListener { animator ->
+       *     val toValue = animator.animatedValue as Int
+       *     this.sendEventToJS(KeyboardTransitionEvent(view.id, toValue, 1.0))
+       *   }
+       *   animation.setDuration(250).startDelay = 0
+       *   animation.start()
+       * </pre>
+       *
+       * But for now let's rely on OS preferences.
+       */
       this.sendEventToJS(KeyboardTransitionEvent(view.id, -keyboardHeight, 1.0))
+      this.emitEvent("KeyboardController::keyboardDidShow", getEventParams(keyboardHeight))
 
       this.persistentKeyboardHeight = keyboardHeight
     }
@@ -87,11 +94,8 @@ class TranslateDeferringInsetsAnimationCallback(
       this.persistentKeyboardHeight = keyboardHeight
     }
 
-    val params: WritableMap = Arguments.createMap()
-    params.putInt("height", keyboardHeight)
-    context?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)?.emit("KeyboardController::" + if (!isKeyboardVisible) "keyboardWillHide" else "keyboardWillShow", params)
+    this.emitEvent("KeyboardController::" + if (!isKeyboardVisible) "keyboardWillHide" else "keyboardWillShow", getEventParams(keyboardHeight))
 
-    Log.i(TAG, "KeyboardController::" + if (!isKeyboardVisible) "keyboardWillHide" else "keyboardWillShow")
     Log.i(TAG, "HEIGHT:: $keyboardHeight")
 
     return super.onStart(animation, bounds)
@@ -132,10 +136,8 @@ class TranslateDeferringInsetsAnimationCallback(
   override fun onEnd(animation: WindowInsetsAnimationCompat) {
     super.onEnd(animation)
 
-    val params: WritableMap = Arguments.createMap()
-    context?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)?.emit("KeyboardController::" + if (!isKeyboardVisible) "keyboardDidHide" else "keyboardDidShow", params)
-
-    Log.i(TAG, "KeyboardController::" + if (!isKeyboardVisible) "keyboardDidHide" else "keyboardDidShow")
+    this.persistentKeyboardHeight = getCurrentKeyboardHeight()
+    this.emitEvent("KeyboardController::" + if (!isKeyboardVisible) "keyboardDidHide" else "keyboardDidShow", getEventParams(this.persistentKeyboardHeight))
   }
 
   private fun isKeyboardVisible(): Boolean {
@@ -158,5 +160,18 @@ class TranslateDeferringInsetsAnimationCallback(
       ?.getNativeModule(UIManagerModule::class.java)
       ?.eventDispatcher
       ?.dispatchEvent(event)
+  }
+
+  private fun emitEvent(event: String, params: WritableMap) {
+    context?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)?.emit(event, params)
+
+    Log.i(TAG, event)
+  }
+
+  private fun getEventParams(height: Int): WritableMap {
+    val params: WritableMap = Arguments.createMap()
+    params.putInt("height", height)
+
+    return params
   }
 }
