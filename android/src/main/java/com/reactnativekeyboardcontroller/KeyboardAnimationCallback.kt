@@ -50,7 +50,7 @@ class TranslateDeferringInsetsAnimationCallback(
   // TODO: calculate animated progress (should it be >1?)
   // TODO: (x) remove android documentation
   // TODO: (x) rename class?
-  override fun onApplyWindowInsets(v: View?, insets: WindowInsetsCompat?): WindowInsetsCompat {
+  override fun onApplyWindowInsets(v: View?, insets: WindowInsetsCompat): WindowInsetsCompat {
     // sometimes this method is called after `onStart` (keyboard appears),
     // sometimes it's called before `onStart` (keyboard hides)
     // since `onStart` updates `isKeyboardVisible` in order to avoid
@@ -72,7 +72,7 @@ class TranslateDeferringInsetsAnimationCallback(
       this.persistentKeyboardHeight = keyboardHeight
     }
 
-    return WindowInsetsCompat.CONSUMED
+    return insets
   }
 
   override fun onStart(
