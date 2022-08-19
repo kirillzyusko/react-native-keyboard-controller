@@ -19,7 +19,7 @@ on:
       - 'example/yarn.lock'
 
 jobs:
-  build_example:
+  build:
     name: Build Android Example App
     runs-on: ubuntu-latest
     steps:
