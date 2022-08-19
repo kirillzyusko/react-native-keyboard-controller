@@ -34,7 +34,7 @@ class TranslateDeferringInsetsAnimationCallback(
 ) : WindowInsetsAnimationCompat.Callback(dispatchMode), OnApplyWindowInsetsListener {
   private val TAG = TranslateDeferringInsetsAnimationCallback::class.qualifiedName
   private var persistentKeyboardHeight = 0
-  private var isKeyboardVisible = this.isKeyboardVisible()
+  private var isKeyboardVisible = false
 
   init {
     require(persistentInsetTypes and deferredInsetTypes == 0) {
@@ -43,21 +43,26 @@ class TranslateDeferringInsetsAnimationCallback(
     }
   }
 
+  /**
+   * This method is called everytime when keyboard appears or hides (*)
+   * and the call happens before `onStart` (in `onStart` we update `this.isKeyboardVisible` field)
+   *
+   * *in fact it's getting called much more times, but here for the simplicity we are talking only about keyboard
+   */
   override fun onApplyWindowInsets(v: View?, insets: WindowInsetsCompat): WindowInsetsCompat {
-    // this method calls everytime when keyboard appears or hides
-    // and it calls before `onStart` (in `onStart` we update `this.isKeyboardVisible` field)
-    // so when keyboard appears values will be (false && true)
+    // when keyboard appears values will be (false && true)
     // when keyboard disappears values will be (true && false)
-    //
     // having such check allows us not to dispatch unnecessary incorrect events
+    // the condition will be executed only when keyboard is opened and changes its size
+    // (for example it happens when user changes keyboard type from 'text' to 'emoji' input
     if (isKeyboardVisible && isKeyboardVisible()) {
       val keyboardHeight = getCurrentKeyboardHeight()
       /**
        * By default it's up to OS whether to animate keyboard changes or not.
        * For example my Xiaomi Redmi Note 5 Pro (Android 9) applies layout animation
        * whereas Pixel 3 (Android 12) is not applying layout animation and view changes
-       * it's position instantly. We stick to such default behavior and rely on it.
-       * Though if we decide to animate always (any animation looks better that instant transition)
+       * its position instantly. We stick to the default behavior and rely on it.
+       * Though if we decide to animate always (any animation looks better than instant transition)
        * we can use the code below:
        *
        * <pre>
