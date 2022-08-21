@@ -19,4 +19,9 @@ export const examples: Example[] = [
     info: ScreenNames.STATUS_BAR,
     icons: '🔋',
   },
+  {
+    title: 'Lottie',
+    info: ScreenNames.LOTTIE,
+    icons: '⚠️ 🎞',
+  },
 ];
