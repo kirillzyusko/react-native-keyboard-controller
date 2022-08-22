@@ -30,7 +30,8 @@ class KeyboardAnimationCallback(
   val persistentInsetTypes: Int,
   val deferredInsetTypes: Int,
   dispatchMode: Int = DISPATCH_MODE_STOP,
-  val context: ReactApplicationContext?
+  val context: ReactApplicationContext?,
+  val onApplyWindowInsetsListener: OnApplyWindowInsetsListener
 ) : WindowInsetsAnimationCompat.Callback(dispatchMode), OnApplyWindowInsetsListener {
   private val TAG = KeyboardAnimationCallback::class.qualifiedName
   private var persistentKeyboardHeight = 0
@@ -84,7 +85,7 @@ class KeyboardAnimationCallback(
       this.persistentKeyboardHeight = keyboardHeight
     }
 
-    return insets
+    return onApplyWindowInsetsListener.onApplyWindowInsets(v, insets)
   }
 
   override fun onStart(
