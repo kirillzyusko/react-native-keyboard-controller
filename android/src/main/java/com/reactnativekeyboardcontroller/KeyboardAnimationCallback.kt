@@ -25,14 +25,14 @@ fun toDp(px: Float, context: Context?): Int {
   return (px / context.resources.displayMetrics.density).toInt()
 }
 
-class TranslateDeferringInsetsAnimationCallback(
+class KeyboardAnimationCallback(
   val view: ReactViewGroup,
   val persistentInsetTypes: Int,
   val deferredInsetTypes: Int,
   dispatchMode: Int = DISPATCH_MODE_STOP,
   val context: ReactApplicationContext?
 ) : WindowInsetsAnimationCompat.Callback(dispatchMode), OnApplyWindowInsetsListener {
-  private val TAG = TranslateDeferringInsetsAnimationCallback::class.qualifiedName
+  private val TAG = KeyboardAnimationCallback::class.qualifiedName
   private var persistentKeyboardHeight = 0
   private var isKeyboardVisible = false
 

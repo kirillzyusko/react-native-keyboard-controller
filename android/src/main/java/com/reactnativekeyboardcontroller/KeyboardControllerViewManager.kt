@@ -32,7 +32,7 @@ class KeyboardControllerViewManager(reactContext: ReactApplicationContext) : Rea
     val window = activity.window
     val decorView = window.decorView
 
-    val callback = TranslateDeferringInsetsAnimationCallback(
+    val callback = KeyboardAnimationCallback(
       view = view,
       persistentInsetTypes = WindowInsetsCompat.Type.systemBars(),
       deferredInsetTypes = WindowInsetsCompat.Type.ime(),
