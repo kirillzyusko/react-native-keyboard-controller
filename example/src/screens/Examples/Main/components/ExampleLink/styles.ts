@@ -13,4 +13,7 @@ export default StyleSheet.create({
     flexDirection: 'row',
     alignContent: 'center',
   },
+  text: {
+    color: '#000000',
+  },
 });
