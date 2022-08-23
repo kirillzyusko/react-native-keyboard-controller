@@ -29,34 +29,29 @@ class KeyboardControllerViewManager(reactContext: ReactApplicationContext) : Rea
       return view
     }
 
-    val window = activity.window
-    val decorView = window.decorView
-
-    ViewCompat.setOnApplyWindowInsetsListener(view) { v, insets ->
-      val content =
-        mReactContext.currentActivity?.window?.decorView?.rootView?.findViewById<FitWindowsLinearLayout>(
-          R.id.action_bar_root
+    val callback = KeyboardAnimationCallback(
+      view = view,
+      persistentInsetTypes = WindowInsetsCompat.Type.systemBars(),
+      deferredInsetTypes = WindowInsetsCompat.Type.ime(),
+      // We explicitly allow dispatch to continue down to binding.messageHolder's
+      // child views, so that step 2.5 below receives the call
+      dispatchMode = WindowInsetsAnimationCompat.Callback.DISPATCH_MODE_CONTINUE_ON_SUBTREE,
+      context = mReactContext,
+      onApplyWindowInsetsListener = { v, insets ->
+        val content =
+          mReactContext.currentActivity?.window?.decorView?.rootView?.findViewById<FitWindowsLinearLayout>(
+            R.id.action_bar_root
+          )
+        content?.setPadding(
+          0, if (this.isStatusBarTranslucent) 0 else insets?.getInsets(WindowInsetsCompat.Type.systemBars())?.top ?: 0, 0,
+          insets?.getInsets(WindowInsetsCompat.Type.navigationBars())?.bottom ?: 0
         )
-      content?.setPadding(
-        0, if (this.isStatusBarTranslucent) 0 else insets?.getInsets(WindowInsetsCompat.Type.systemBars())?.top ?: 0, 0,
-        insets?.getInsets(WindowInsetsCompat.Type.navigationBars())?.bottom ?: 0
-      )
 
-      insets
-    }
-
-    ViewCompat.setWindowInsetsAnimationCallback(
-      decorView,
-      TranslateDeferringInsetsAnimationCallback(
-        view = view,
-        persistentInsetTypes = WindowInsetsCompat.Type.systemBars(),
-        deferredInsetTypes = WindowInsetsCompat.Type.ime(),
-        // We explicitly allow dispatch to continue down to binding.messageHolder's
-        // child views, so that step 2.5 below receives the call
-        dispatchMode = WindowInsetsAnimationCompat.Callback.DISPATCH_MODE_CONTINUE_ON_SUBTREE,
-        context = mReactContext
-      )
+        insets
+      }
     )
+    ViewCompat.setWindowInsetsAnimationCallback(view, callback)
+    ViewCompat.setOnApplyWindowInsetsListener(view, callback)
 
     return view
   }
