@@ -50,7 +50,6 @@ public class KeyboardMovementObserver: NSObject {
     NotificationCenter.default.removeObserver(self)
   }
 
-  ///
   @objc func keyboardWillAppear(_ notification: Notification) {
     if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
       let keyboardHeight = keyboardFrame.cgRectValue.size.height
