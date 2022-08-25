@@ -10,6 +10,7 @@ class KeyboardControllerViewManager: RCTViewManager {
 }
 
 class KeyboardControllerView: UIView {
+  private var keyboardObserver: KeyboardMovementObserver?
   private var eventDispatcher: RCTEventDispatcherProtocol
   @objc var onKeyboardMove: RCTDirectEventBlock?
 
@@ -26,81 +27,29 @@ class KeyboardControllerView: UIView {
   override func willMove(toWindow newWindow: UIWindow?) {
     if newWindow == nil {
       // Will be removed from a window
-      // swiftlint:disable notification_center_detachment
-      NotificationCenter.default.removeObserver(self)
+      keyboardObserver?.unmount()
     }
   }
 
   override func didMoveToWindow() {
     if window != nil {
       // Added to a window
-      NotificationCenter.default.addObserver(
-        self,
-        selector: #selector(keyboardWillDisappear),
-        name: UIResponder.keyboardWillHideNotification,
-        object: nil
-      )
-      NotificationCenter.default.addObserver(
-        self,
-        selector: #selector(keyboardWillAppear),
-        name: UIResponder.keyboardWillShowNotification,
-        object: nil
-      )
-      NotificationCenter.default.addObserver(
-        self,
-        selector: #selector(keyboardDidAppear),
-        name: UIResponder.keyboardDidShowNotification,
-        object: nil
-      )
-      NotificationCenter.default.addObserver(
-        self,
-        selector: #selector(keyboardDidDisappear),
-        name: UIResponder.keyboardDidHideNotification,
-        object: nil
-      )
+      keyboardObserver = KeyboardMovementObserver(handler: onEvent, onNotify: onNotify)
+      keyboardObserver?.mount()
     }
   }
 
-  @objc func keyboardWillAppear(_ notification: Notification) {
-    if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
-      let keyboardHeight = keyboardFrame.cgRectValue.size.height
-
-      eventDispatcher.send(
-        KeyboardMoveEvent(
-          viewTag: reactTag,
-          height: -keyboardHeight as NSNumber,
-          progress: 1
-        )
+  func onEvent(height: NSNumber, progress: NSNumber) {
+    eventDispatcher.send(
+      KeyboardMoveEvent(
+        viewTag: reactTag,
+        height: height,
+        progress: progress
       )
-
-      var data = [AnyHashable: Any]()
-      data["height"] = keyboardHeight
-      KeyboardController.shared?.sendEvent(withName: "KeyboardController::keyboardWillShow", body: data)
-    }
+    )
   }
 
-  @objc func keyboardWillDisappear() {
-    eventDispatcher.send(KeyboardMoveEvent(viewTag: reactTag, height: 0, progress: 0))
-
-    var data = [AnyHashable: Any]()
-    data["height"] = 0
-    KeyboardController.shared?.sendEvent(withName: "KeyboardController::keyboardWillHide", body: data)
-  }
-
-  @objc func keyboardDidAppear(_ notification: Notification) {
-    if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
-      let keyboardHeight = keyboardFrame.cgRectValue.size.height
-
-      var data = [AnyHashable: Any]()
-      data["height"] = keyboardHeight
-
-      KeyboardController.shared?.sendEvent(withName: "KeyboardController::keyboardDidShow", body: data)
-    }
-  }
-
-  @objc func keyboardDidDisappear() {
-    var data = [AnyHashable: Any]()
-    data["height"] = 0
-    KeyboardController.shared?.sendEvent(withName: "KeyboardController::keyboardDidHide", body: data)
+  func onNotify(event: String, data: Any) {
+    KeyboardController.shared?.sendEvent(withName: event, body: data)
   }
 }

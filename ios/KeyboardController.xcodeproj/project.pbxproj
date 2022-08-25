@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		F359D34D28133BE1000B6AFE /* KeyboardControllerModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = F359D34C28133BE1000B6AFE /* KeyboardControllerModule.swift */; };
 		F359D34F28133C26000B6AFE /* KeyboardControllerModule.m in Sources */ = {isa = PBXBuildFile; fileRef = F359D34E28133C26000B6AFE /* KeyboardControllerModule.m */; };
+		F3626A0728B3FE760021B2D9 /* KeyboardMovementObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3626A0628B3FE760021B2D9 /* KeyboardMovementObserver.swift */; };
 		F3FF0915281851CC006831B1 /* KeyboardMoveEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3FF0914281851CC006831B1 /* KeyboardMoveEvent.swift */; };
 		F4FF95D7245B92E800C19C63 /* KeyboardControllerViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FF95D6245B92E800C19C63 /* KeyboardControllerViewManager.swift */; };
 /* End PBXBuildFile section */
@@ -31,6 +32,7 @@
 		F359D34C28133BE1000B6AFE /* KeyboardControllerModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardControllerModule.swift; sourceTree = "<group>"; };
 		F359D34E28133C26000B6AFE /* KeyboardControllerModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KeyboardControllerModule.m; sourceTree = "<group>"; };
 		F359D35028133C6F000B6AFE /* KeyboardControllerModule-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "KeyboardControllerModule-Header.h"; sourceTree = "<group>"; };
+		F3626A0628B3FE760021B2D9 /* KeyboardMovementObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardMovementObserver.swift; sourceTree = "<group>"; };
 		F3FF0914281851CC006831B1 /* KeyboardMoveEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardMoveEvent.swift; sourceTree = "<group>"; };
 		F4FF95D5245B92E700C19C63 /* KeyboardController-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "KeyboardController-Bridging-Header.h"; sourceTree = "<group>"; };
 		F4FF95D6245B92E800C19C63 /* KeyboardControllerViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardControllerViewManager.swift; sourceTree = "<group>"; };
@@ -58,6 +60,7 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
+				F3626A0628B3FE760021B2D9 /* KeyboardMovementObserver.swift */,
 				F3FF0914281851CC006831B1 /* KeyboardMoveEvent.swift */,
 				F359D35028133C6F000B6AFE /* KeyboardControllerModule-Header.h */,
 				F359D34E28133C26000B6AFE /* KeyboardControllerModule.m */,
@@ -127,6 +130,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F3FF0915281851CC006831B1 /* KeyboardMoveEvent.swift in Sources */,
+				F3626A0728B3FE760021B2D9 /* KeyboardMovementObserver.swift in Sources */,
 				F359D34F28133C26000B6AFE /* KeyboardControllerModule.m in Sources */,
 				F359D34D28133BE1000B6AFE /* KeyboardControllerModule.swift in Sources */,
 				F4FF95D7245B92E800C19C63 /* KeyboardControllerViewManager.swift in Sources */,
