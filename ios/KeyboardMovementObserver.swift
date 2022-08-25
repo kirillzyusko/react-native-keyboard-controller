@@ -1,5 +1,5 @@
 //
-//  KeyboardObserver.swift
+//  KeyboardMovementObserver.swift
 //  KeyboardController
 //
 //  Created by Kiryl Ziusko on 2.08.22.
