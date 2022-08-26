@@ -81,7 +81,7 @@ export const useKeyboardAnimationReplica = (): KeyboardAnimation => {
   return animation;
 };
 
-const IOS_SPRING_CONFIG = {
+export const IOS_SPRING_CONFIG = {
   damping: 500,
   stiffness: 1000,
   mass: 3,

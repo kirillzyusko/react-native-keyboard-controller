@@ -1,9 +1,11 @@
-import React, { useContext, useMemo, useRef } from 'react';
+import React, { useContext, useEffect, useMemo, useRef } from 'react';
 import { Animated, StyleSheet, ViewStyle } from 'react-native';
 import Reanimated, {
+  useAnimatedReaction,
   useEvent,
   useHandler,
   useSharedValue,
+  withSpring,
 } from 'react-native-reanimated';
 import {
   EventWithName,
@@ -12,6 +14,7 @@ import {
   NativeEvent,
   useResizeMode,
 } from './native';
+import { IOS_SPRING_CONFIG } from './replicas';
 
 const KeyboardControllerViewAnimated = Reanimated.createAnimatedComponent(
   Animated.createAnimatedComponent(
@@ -128,6 +131,35 @@ export const KeyboardProvider = ({
       styles.hidden,
       { transform: [{ translateX: height }, { translateY: progress }] },
     ],
+    []
+  );
+
+  const a = useSharedValue(0);
+  useEffect(() => {
+    const a = new Animated.Value(1);
+    Animated.spring(a, {
+      toValue: 1,
+      damping: 500,
+      delay: 0,
+      useNativeDriver: false,
+      stiffness: 1000,
+      mass: 3,
+      overshootClamping: true,
+      restDisplacementThreshold: 10,
+      restSpeedThreshold: 10,
+    }).start();
+    a.addListener(({value}) => {
+      console.log(6666, value);
+    })
+  }, []);
+
+  const derived = useAnimatedReaction(
+    () => {
+      return a.value;
+    },
+    (result, previous) => {
+      console.log(111, result);
+    },
     []
   );
 

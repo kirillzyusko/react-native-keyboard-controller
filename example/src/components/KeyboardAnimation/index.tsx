@@ -2,16 +2,48 @@ import React from 'react';
 import { Animated, TextInput, View } from 'react-native';
 import {
   useKeyboardAnimation,
-  useKeyboardAnimationReplica,
+  useReanimatedKeyboardAnimation,
+  useReanimatedKeyboardAnimationReplica,
 } from 'react-native-keyboard-controller';
+import Reanimated, { useAnimatedKeyboard, useAnimatedStyle } from 'react-native-reanimated';
 import styles from './styles';
 
 export default function KeyboardAnimation() {
   const { height, progress } = useKeyboardAnimation();
-  const { height: heightReplica } = useKeyboardAnimationReplica();
+  const { height: heightReplica } = useReanimatedKeyboardAnimationReplica();
+
+  const style = useAnimatedStyle(
+    () => ({
+      width: 50,
+      height: 50,
+      backgroundColor: 'blue',
+      borderRadius: 25,
+      transform: [{ translateY: heightReplica.value }],
+    }),
+    []
+  );
+
+  const keyboard = useAnimatedKeyboard();
+  const translateStyle = useAnimatedStyle(() => {
+    return {
+      width: 50,
+      height: 50,
+      backgroundColor: 'gray',
+      borderRadius: 25,
+      transform: [{ translateY: -keyboard.height.value }],
+    };
+  });
 
   return (
     <View style={styles.container}>
+      <TextInput
+        style={{
+          width: 200,
+          marginTop: 50,
+          height: 50,
+          backgroundColor: 'yellow',
+        }}
+      />
       <View style={styles.row}>
         <Animated.View
           style={{
@@ -38,24 +70,9 @@ export default function KeyboardAnimation() {
             ],
           }}
         />
-        <Animated.View
-          style={{
-            width: 50,
-            height: 50,
-            backgroundColor: 'blue',
-            borderRadius: 25,
-            transform: [{ translateY: heightReplica }],
-          }}
-        />
+        <Reanimated.View style={style} />
+        <Reanimated.View style={translateStyle} />
       </View>
-      <TextInput
-        style={{
-          width: 200,
-          marginTop: 50,
-          height: 50,
-          backgroundColor: 'yellow',
-        }}
-      />
     </View>
   );
 }

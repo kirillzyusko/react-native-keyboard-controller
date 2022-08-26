@@ -11,6 +11,7 @@
 		F359D34F28133C26000B6AFE /* KeyboardControllerModule.mm in Sources */ = {isa = PBXBuildFile; fileRef = F359D34E28133C26000B6AFE /* KeyboardControllerModule.mm */; };
 		F3626A0728B3FE760021B2D9 /* KeyboardMovementObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3626A0628B3FE760021B2D9 /* KeyboardMovementObserver.swift */; };
 		F3F50669289E653B003091D6 /* KeyboardMoveEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = F3F50668289E653B003091D6 /* KeyboardMoveEvent.m */; };
+		F3626A0928B532A90021B2D9 /* TAProgressLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3626A0828B532A90021B2D9 /* TAProgressLayer.swift */; };
 		F4FF95D7245B92E800C19C63 /* KeyboardControllerViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FF95D6245B92E800C19C63 /* KeyboardControllerViewManager.swift */; };
 /* End PBXBuildFile section */
 
@@ -36,6 +37,7 @@
 		F3626A0628B3FE760021B2D9 /* KeyboardMovementObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardMovementObserver.swift; sourceTree = "<group>"; };
 		F3F50667289E653B003091D6 /* KeyboardMoveEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KeyboardMoveEvent.h; sourceTree = "<group>"; };
 		F3F50668289E653B003091D6 /* KeyboardMoveEvent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KeyboardMoveEvent.m; sourceTree = "<group>"; };
+		F3626A0828B532A90021B2D9 /* TAProgressLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TAProgressLayer.swift; sourceTree = "<group>"; };
 		F4FF95D5245B92E700C19C63 /* KeyboardController-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "KeyboardController-Bridging-Header.h"; sourceTree = "<group>"; };
 		F4FF95D6245B92E800C19C63 /* KeyboardControllerViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardControllerViewManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -64,6 +66,7 @@
 			children = (
 				F3F50667289E653B003091D6 /* KeyboardMoveEvent.h */,
 				F3F50668289E653B003091D6 /* KeyboardMoveEvent.m */,
+				F3626A0828B532A90021B2D9 /* TAProgressLayer.swift */,
 				F3626A0628B3FE760021B2D9 /* KeyboardMovementObserver.swift */,
 				F333F8D228996B8D0015B05F /* KeyboardControllerView.mm */,
 				F333F8D128996B1C0015B05F /* KeyboardControllerView.h */,
@@ -138,6 +141,7 @@
 				F4FF95D7245B92E800C19C63 /* KeyboardControllerViewManager.swift in Sources */,
 				F333F8D428996B8D0015B05F /* KeyboardControllerView.mm in Sources */,
 				F3F50669289E653B003091D6 /* KeyboardMoveEvent.m in Sources */,
+				F3626A0928B532A90021B2D9 /* TAProgressLayer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

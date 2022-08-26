@@ -1,9 +1,10 @@
-import React, { useCallback } from 'react';
-import { TextInput, View } from 'react-native';
+import React, { useCallback, useEffect } from 'react';
+import { Keyboard, TextInput, View } from 'react-native';
 import { useReanimatedKeyboardAnimation } from 'react-native-keyboard-controller';
 import Reanimated, {
   useAnimatedRef,
   useAnimatedStyle,
+  useSharedValue,
 } from 'react-native-reanimated';
 import Message from '../../../components/Message';
 import { history } from '../../../components/Message/data';
@@ -14,6 +15,22 @@ const AnimatedTextInput = Reanimated.createAnimatedComponent(TextInput);
 function ReanimatedChat() {
   const scrollView = useAnimatedRef<Reanimated.ScrollView>();
   const { height } = useReanimatedKeyboardAnimation();
+  const shouldTranslate = useSharedValue(false);
+  const constKeyboardHeight = useSharedValue(0);
+
+  useEffect(() => {
+    const subscription = Keyboard.addListener('keyboardDidShow', (e) => {
+      shouldTranslate.value = true;
+      constKeyboardHeight.value = e.endCoordinates.height;
+      setTimeout(() => {
+        scrollView.current?.setNativeProps({ scrollEnabled: false });
+      }, 5000);
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
 
   const scrollToBottom = useCallback(() => {
     scrollView.current?.scrollToEnd({ animated: false });
@@ -21,7 +38,13 @@ function ReanimatedChat() {
 
   const scrollViewStyle = useAnimatedStyle(
     () => ({
-      transform: [{ translateY: height.value }],
+      transform: [
+        {
+          translateY: shouldTranslate.value
+            ? -constKeyboardHeight.value
+            : height.value,
+        },
+      ],
     }),
     []
   );
@@ -47,9 +70,13 @@ function ReanimatedChat() {
         ref={scrollView}
         onContentSizeChange={scrollToBottom}
         showsVerticalScrollIndicator={false}
+        automaticallyAdjustContentInsets={false}
+        contentInsetAdjustmentBehavior="never"
+        keyboardDismissMode="interactive"
+        // automaticallyAdjustKeyboardInsets
         style={scrollViewStyle}
       >
-        <Reanimated.View style={fakeView} />
+        {/*<Reanimated.View style={fakeView} />*/}
         {history.map((message, index) => (
           <Message key={index} {...message} />
         ))}
