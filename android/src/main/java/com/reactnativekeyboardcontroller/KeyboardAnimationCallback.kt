@@ -1,8 +1,11 @@
 package com.reactnativekeyboardcontroller
 
+import android.animation.ValueAnimator
 import android.content.Context
+import android.os.Build
 import android.util.Log
 import android.view.View
+import androidx.core.animation.doOnEnd
 import androidx.core.graphics.Insets
 import androidx.core.view.OnApplyWindowInsetsListener
 import androidx.core.view.ViewCompat
@@ -45,42 +48,40 @@ class KeyboardAnimationCallback(
   }
 
   /**
-   * This method is called everytime when keyboard appears or hides (*)
-   * and the call happens before `onStart` (in `onStart` we update `this.isKeyboardVisible` field)
-   *
-   * *in fact it's getting called much more times, but here for the simplicity we are talking only about keyboard
+   * When keyboard changes its size we have different behavior per APIs.
+   * On 21<=API<30 - WindowInsetsAnimationCompat dispatches onStart/onProgress/onEnd events.
+   * On API>=30 - WindowInsetsAnimationCompat doesn't dispatch anything. As a result behavior
+   * between different Android versions is not consistent. On old Android versions we have a
+   * reaction, on newer versions - not. In my understanding it's a bug in core library and the
+   * behavior should be consistent across all versions of platform. To level the difference we
+   * have to implement `onApplyWindowInsets` listener and simulate onStart/onProgress/onEnd
+   * events when keyboard changes its size.
+   * In the method below we fully recreate the logic that is implemented on old android versions:
+   * - we dispatch `keyboardWillShow` (onStart);
+   * - we dispatch change height/progress as animated values (onProgress);
+   * - we dispatch `keyboardDidShow` (onEnd).
    */
-  override fun onApplyWindowInsets(v: View?, insets: WindowInsetsCompat): WindowInsetsCompat {
+  override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat): WindowInsetsCompat {
     // when keyboard appears values will be (false && true)
     // when keyboard disappears values will be (true && false)
     // having such check allows us not to dispatch unnecessary incorrect events
     // the condition will be executed only when keyboard is opened and changes its size
     // (for example it happens when user changes keyboard type from 'text' to 'emoji' input
-    if (isKeyboardVisible && isKeyboardVisible()) {
+    if (isKeyboardVisible && isKeyboardVisible() && Build.VERSION.SDK_INT >= 30) {
       val keyboardHeight = getCurrentKeyboardHeight()
-      /**
-       * By default it's up to OS whether to animate keyboard changes or not.
-       * For example my Xiaomi Redmi Note 5 Pro (Android 9) applies layout animation
-       * whereas Pixel 3 (Android 12) is not applying layout animation and view changes
-       * its position instantly. We stick to the default behavior and rely on it.
-       * Though if we decide to animate always (any animation looks better than instant transition)
-       * we can use the code below:
-       *
-       * <pre>
-       *   val animation = ValueAnimator.ofInt(-this.persistentKeyboardHeight, -keyboardHeight)
-       *
-       *   animation.addUpdateListener { animator ->
-       *     val toValue = animator.animatedValue as Int
-       *     this.sendEventToJS(KeyboardTransitionEvent(view.id, toValue, 1.0))
-       *   }
-       *   animation.setDuration(250).startDelay = 0
-       *   animation.start()
-       * </pre>
-       *
-       * But for now let's rely on OS preferences.
-       */
-      this.sendEventToJS(KeyboardTransitionEvent(view.id, -keyboardHeight, 1.0))
-      this.emitEvent("KeyboardController::keyboardDidShow", getEventParams(keyboardHeight))
+
+      this.emitEvent("KeyboardController::keyboardWillShow", getEventParams(keyboardHeight))
+
+      val animation = ValueAnimator.ofInt(-this.persistentKeyboardHeight, -keyboardHeight)
+      animation.addUpdateListener { animator ->
+        val toValue = animator.animatedValue as Int
+        this.sendEventToJS(KeyboardTransitionEvent(view.id, toValue, -toValue.toDouble() / keyboardHeight))
+      }
+      animation.doOnEnd {
+        this.emitEvent("KeyboardController::keyboardDidShow", getEventParams(keyboardHeight))
+      }
+      animation.setDuration(250).startDelay = 0
+      animation.start()
 
       this.persistentKeyboardHeight = keyboardHeight
     }
@@ -132,7 +133,7 @@ class KeyboardAnimationCallback(
     } catch (e: ArithmeticException) {
       // do nothing, send progress as 0
     }
-    Log.i(TAG, "DiffY: $diffY $height")
+    Log.i(TAG, "DiffY: $diffY $height $progress")
 
     this.sendEventToJS(KeyboardTransitionEvent(view.id, height, progress))
 
