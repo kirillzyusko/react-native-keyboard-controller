@@ -1,7 +1,7 @@
 - [ ] Fabric (iOS) - chat example scroll view bouncing
 - [ ] Fabric (iOS) - no events arrived
 - [ ] Fabric (iOS) - AwareScrollView is not working in
-- [ ] Fabric (Android) - no events are arriving in onKeyboardMove callback
+- [x] Fabric (Android) - no events are arriving in onKeyboardMove callback
 - [ ] Verify how cpp lint works
 - [ ] Fabric (iOS) - KeyboardMoveEvent rewrite to Swift
 - [ ] bump version to 1.1.0
