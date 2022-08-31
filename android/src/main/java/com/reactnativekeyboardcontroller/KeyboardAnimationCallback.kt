@@ -39,6 +39,7 @@ class KeyboardAnimationCallback(
   private val TAG = KeyboardAnimationCallback::class.qualifiedName
   private var persistentKeyboardHeight = 0
   private var isKeyboardVisible = false
+  private var isTransitioning = false
 
   init {
     require(persistentInsetTypes and deferredInsetTypes == 0) {
@@ -64,10 +65,11 @@ class KeyboardAnimationCallback(
   override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat): WindowInsetsCompat {
     // when keyboard appears values will be (false && true)
     // when keyboard disappears values will be (true && false)
+    // `!isTransitioning` check is needed to avoid calls of `onApplyWindowInsets` during keyboard animation
     // having such check allows us not to dispatch unnecessary incorrect events
     // the condition will be executed only when keyboard is opened and changes its size
     // (for example it happens when user changes keyboard type from 'text' to 'emoji' input
-    if (isKeyboardVisible && isKeyboardVisible() && Build.VERSION.SDK_INT >= 30) {
+    if (isKeyboardVisible && isKeyboardVisible() && !isTransitioning && Build.VERSION.SDK_INT >= 30) {
       val keyboardHeight = getCurrentKeyboardHeight()
 
       this.emitEvent("KeyboardController::keyboardWillShow", getEventParams(keyboardHeight))
@@ -93,6 +95,7 @@ class KeyboardAnimationCallback(
     animation: WindowInsetsAnimationCompat,
     bounds: WindowInsetsAnimationCompat.BoundsCompat
   ): WindowInsetsAnimationCompat.BoundsCompat {
+    isTransitioning = true
     isKeyboardVisible = isKeyboardVisible()
     val keyboardHeight = getCurrentKeyboardHeight()
 
@@ -143,6 +146,7 @@ class KeyboardAnimationCallback(
   override fun onEnd(animation: WindowInsetsAnimationCompat) {
     super.onEnd(animation)
 
+    isTransitioning = false
     this.persistentKeyboardHeight = getCurrentKeyboardHeight()
     this.emitEvent("KeyboardController::" + if (!isKeyboardVisible) "keyboardDidHide" else "keyboardDidShow", getEventParams(this.persistentKeyboardHeight))
   }
