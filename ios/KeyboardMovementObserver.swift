@@ -42,7 +42,7 @@ public class KeyboardMovementObserver: NSObject, CAProgressLayerDelegate {
     private var keyboardHeight = 0.0
   private var positions = [[CGFloat]]()
     private var timestamp: CFTimeInterval?
-  private let movement = [];
+    private let movement: [Double] = [];
 
   // constructor params
   var onEvent: (NSNumber, NSNumber) -> Void
@@ -100,8 +100,8 @@ public class KeyboardMovementObserver: NSObject, CAProgressLayerDelegate {
       // onEvent(Float(-keyboardHeight) as NSNumber, 1)
       onNotify("KeyboardController::keyboardWillShow", data)
         
-        //displayLink = CADisplayLink(target: self, selector: #selector(updateKeyboardFrame))
-        //displayLink?.add(to: .main, forMode: .common)
+        displayLink = CADisplayLink(target: self, selector: #selector(doubleUpdateKeyboardFrame))
+        displayLink?.add(to: .main, forMode: .common)
         timestamp = CACurrentMediaTime()
         // let timer = Timer.scheduledTimer(timeInterval: 1/10000, target: self, selector: #selector(self.updateKeyboardFrame), userInfo: nil, repeats: true)
         // displayLink = CADisplayLink(target: self, selector: #selector(self.sendLatestPosition))
@@ -197,7 +197,8 @@ public class KeyboardMovementObserver: NSObject, CAProgressLayerDelegate {
         // positions.append([CACurrentMediaTime() - timestamp!, (keyboardTopPosition)])
         events += 1
         // prevKeyboardTopPosition = Int((-CGFloat(keyboardHeight)) * progress)
-        onEvent(-keyboardTopPosition as NSNumber, (keyboardTopPosition / keyboardHeight) as NSNumber)
+        // onEvent(-keyboardTopPosition as NSNumber, (keyboardTopPosition / keyboardHeight) as NSNumber)
+        print("PDC: \(keyboardTopPosition)")
     }
 
   @objc func keyboardWillDisappear() {
@@ -265,7 +266,7 @@ public class KeyboardMovementObserver: NSObject, CAProgressLayerDelegate {
     return result
   }
 
-  @objc func updateKeyboardFrame(displaylink: CADisplayLink) {
+    @objc func updateKeyboardFrame(displaylink: CADisplayLink) {
     if keyboardView == nil {
       return
     }
@@ -291,7 +292,9 @@ public class KeyboardMovementObserver: NSObject, CAProgressLayerDelegate {
 
     prevKeyboardTopPosition = keyboardTopPosition
 
-      // onEvent(Double(-keyboardTopPosition) as NSNumber, Double(prevKeyboardTopPosition) / Double(keyboardHeight) as NSNumber)
+      onEvent(Double(-keyboardTopPosition) as NSNumber, Double(prevKeyboardTopPosition) / Double(keyboardHeight) as NSNumber)
+      
+      print("CA: \(keyboardTopPosition) - \(displaylink)")
       
       // print("Old: \(keyboardTopPosition1), New: \(keyboardTopPosition)")
       // positions.append([Int(Date().currentTimeMillis() - timestamp!), (keyboardTopPosition)])
@@ -316,7 +319,7 @@ public class KeyboardMovementObserver: NSObject, CAProgressLayerDelegate {
       // print("\(diff), \(height)")
       print("Metric: \(keyboardTopPosition), NEW (current moment): \(height2), NEW (advanced): \(height), Diff: \(diff), duration: \(displaylink.targetTimestamp - displaylink.timestamp)")*/
       
-      var closestTimestamp = 0.0
+      /*var closestTimestamp = 0.0
       for position in movement {
           if (keyboardTopPosition > position[1]) {
               closestTimestamp = position[0]
@@ -334,9 +337,14 @@ public class KeyboardMovementObserver: NSObject, CAProgressLayerDelegate {
       
       print("Metric: \(keyboardTopPosition), New: \(height)")
       
-      onEvent(-(height) as NSNumber, height / 336 as NSNumber)
+      onEvent(-(height) as NSNumber, height / 336 as NSNumber)*/
       
   }
+    
+    @objc func doubleUpdateKeyboardFrame(displaylink: CADisplayLink) {
+        self.updateKeyboardFrame(displaylink: displaylink)
+        let timer = Timer.scheduledTimer(timeInterval: 1/80, target: self, selector: #selector(self.updateKeyboardFrame), userInfo: nil, repeats: false)
+    }
     
     @objc func sendLatestPosition() {
         // let diff = Date().currentTimeMillis() - (timestamp ?? 0)

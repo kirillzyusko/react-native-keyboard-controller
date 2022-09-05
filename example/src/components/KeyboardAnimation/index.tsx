@@ -5,13 +5,25 @@ import {
   useReanimatedKeyboardAnimation,
   useReanimatedKeyboardAnimationReplica,
 } from 'react-native-keyboard-controller';
-import Reanimated, { useAnimatedKeyboard, useAnimatedStyle } from 'react-native-reanimated';
+import Reanimated, {
+  useAnimatedKeyboard,
+  useAnimatedStyle,
+  useDerivedValue,
+} from 'react-native-reanimated';
+import { ReText } from 'react-native-redash';
 import styles from './styles';
 
 export default function KeyboardAnimation() {
-  const { height, progress } = useKeyboardAnimation();
+  const { height, progress } = useReanimatedKeyboardAnimation();
   const { height: heightReplica } = useReanimatedKeyboardAnimationReplica();
 
+  const style1 = useAnimatedStyle(() => ({
+    width: 50,
+    height: 50,
+    backgroundColor: 'red',
+    borderRadius: 25,
+    transform: [{ translateY: height.value }],
+  }));
   const style = useAnimatedStyle(
     () => ({
       width: 50,
@@ -33,9 +45,22 @@ export default function KeyboardAnimation() {
       transform: [{ translateY: -keyboard.height.value }],
     };
   });
+  const rea = useDerivedValue(() => `REA: ${keyboard.height.value}`);
+  const my = useDerivedValue(() => `MY: ${height.value}`);
 
   return (
     <View style={styles.container}>
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: 'aqua',
+          width: '100%',
+          height: '100%',
+        }}
+      >
+        <ReText text={rea} style={{ color: 'white', fontSize: 28 }} />
+        <ReText text={my} style={{ color: 'white', fontSize: 28 }} />
+      </View>
       <TextInput
         style={{
           width: 200,
@@ -45,16 +70,8 @@ export default function KeyboardAnimation() {
         }}
       />
       <View style={styles.row}>
-        <Animated.View
-          style={{
-            width: 50,
-            height: 50,
-            backgroundColor: 'red',
-            borderRadius: 25,
-            transform: [{ translateY: height }],
-          }}
-        />
-        <Animated.View
+        <Reanimated.View style={style1} />
+        {/*<Animated.View
           style={{
             width: 50,
             height: 50,
@@ -69,7 +86,7 @@ export default function KeyboardAnimation() {
               },
             ],
           }}
-        />
+        />*/}
         <Reanimated.View style={style} />
         <Reanimated.View style={translateStyle} />
       </View>
