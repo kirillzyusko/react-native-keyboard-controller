@@ -1,7 +1,6 @@
 package com.reactnativekeyboardcontroller
 
 import com.facebook.react.bridge.ReactApplicationContext
-import com.facebook.react.bridge.ReactMethod
 
 class KeyboardControllerModule(mReactContext: ReactApplicationContext) : NativeKeyboardControllerSpec(mReactContext) {
   private val module = KeyboardControllerModuleImpl(mReactContext)
@@ -16,13 +15,11 @@ class KeyboardControllerModule(mReactContext: ReactApplicationContext) : NativeK
     module.setDefaultMode()
   }
 
-  @ReactMethod
-  fun addListener(eventName: String?) {
+  override fun addListener(eventName: String?) {
     /* Required for RN built-in Event Emitter Calls. */
   }
 
-  @ReactMethod
-  fun removeListeners(count: Int?) {
+  override fun removeListeners(count: Double) {
     /* Required for RN built-in Event Emitter Calls. */
   }
 }
