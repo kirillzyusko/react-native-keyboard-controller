@@ -3,8 +3,9 @@
 - [ ] Fabric (iOS) - AwareScrollView is not working in
 - [x] Fabric (Android) - no events are arriving in onKeyboardMove callback
 - [ ] CI builds (fabric iOS/Android)
-- [ ] crash on iOS (as soon as open a screen)
+- [x] crash on iOS (as soon as open a screen)
 - [x] remove @ReactMethod on Android (addListener/removeListener)
+- [ ] sending ... with no listeners registered - warning (paper)
 - [ ] Verify how cpp lint works
 - [ ] Fabric (iOS) - KeyboardMoveEvent rewrite to Swift
 - [ ] bump version to 1.2.0
