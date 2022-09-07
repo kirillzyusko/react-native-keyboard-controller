@@ -12,15 +12,17 @@
 // Thanks to this guard, we won't import this header when we build for the old architecture.
 #ifdef RCT_NEW_ARCH_ENABLED
 #import "RNKeyboardControllerSpec.h"
+#import <FBReactNativeSpec/FBReactNativeSpec.h>
 #endif
 
 #import "KeyboardControllerModule-Header.h"
 
-#import <FBReactNativeSpec/FBReactNativeSpec.h>
 #import <React/RCTEventDispatcherProtocol.h>
 
+#ifdef RCT_NEW_ARCH_ENABLED
 @interface KeyboardController () <NativeKeyboardControllerSpec>
 @end
+#endif
 
 @implementation KeyboardController {
     bool hasListeners;
@@ -35,6 +37,10 @@ RCT_EXPORT_MODULE()
     shared = self;
     
     return self;
+}
+
++ (BOOL)requiresMainQueueSetup {
+    return NO;
 }
 
 - (void)setDefaultMode {
