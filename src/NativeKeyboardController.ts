@@ -8,10 +8,9 @@ export interface Spec extends TurboModule {
   setInputMode(mode: number): void;
   setDefaultMode(): void;
 
-  // TODO: implement
   // event emitter
-  // addListener: (eventName: string) => void;
-  // removeListeners: (count: number) => void;
+  addListener: (eventName: string) => void;
+  removeListeners: (count: number) => void;
 }
 
 export default TurboModuleRegistry.get<Spec>('KeyboardController');

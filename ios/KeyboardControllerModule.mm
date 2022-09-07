@@ -14,14 +14,63 @@
 #import "RNKeyboardControllerSpec.h"
 #endif
 
-@interface RCT_EXTERN_MODULE (KeyboardController, RCTEventEmitter)
+#import "KeyboardControllerModule-Header.h"
 
-// Android stubs
-RCT_EXTERN_METHOD(setInputMode : (nonnull NSNumber *)mode)
-RCT_EXTERN_METHOD(setDefaultMode)
+#import <FBReactNativeSpec/FBReactNativeSpec.h>
+#import <React/RCTEventDispatcherProtocol.h>
 
-// event emitter
-RCT_EXTERN_METHOD(supportedEvents)
+@interface KeyboardController () <NativeKeyboardControllerSpec>
+@end
+
+@implementation KeyboardController {
+    bool hasListeners;
+}
+
+static KeyboardController *shared = nil;
+
+RCT_EXPORT_MODULE()
+
+- (instancetype)init {
+    self = [super init];
+    shared = self;
+    
+    return self;
+}
+
+- (void)setDefaultMode {
+}
+
+- (void)setInputMode:(double)mode {
+}
+
++ (KeyboardController*)shared
+{
+    return shared;
+}
+
+-(void)startObserving {
+    hasListeners = YES;
+}
+
+-(void)stopObserving {
+    hasListeners = NO;
+}
+
+-(void)sendEvent:(NSString *)name body:(id)body {
+    if (hasListeners) {
+      [self sendEventWithName:name body:body];
+    }
+}
+
+- (NSArray<NSString *> *)supportedEvents
+{
+  return @[
+      @"KeyboardController::keyboardWillShow",
+      @"KeyboardController::keyboardDidShow",
+      @"KeyboardController::keyboardWillHide",
+      @"KeyboardController::keyboardDidHide",
+  ];
+}
 
 // Thanks to this guard, we won't compile this code when we build for the old architecture.
 #ifdef RCT_NEW_ARCH_ENABLED
@@ -33,3 +82,4 @@ RCT_EXTERN_METHOD(supportedEvents)
 #endif
 
 @end
+

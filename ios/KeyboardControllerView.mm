@@ -20,6 +20,7 @@
 #import <React/RCTBridge+Private.h>
 
 #import "RCTFabricComponentsPlugins.h"
+#import "KeyboardControllerModule-Header.h"
 
 using namespace facebook::react;
 
@@ -63,6 +64,7 @@ using namespace facebook::react;
           }
         }
         onNotify:^(NSString *event, NSDictionary *data) {
+          [KeyboardController.shared sendEvent:event body:data];
           NSLog(@"Event received");
         }];
     [observer mount];

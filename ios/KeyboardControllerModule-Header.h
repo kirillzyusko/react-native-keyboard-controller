@@ -6,5 +6,9 @@
 //  Copyright © 2022 Facebook. All rights reserved.
 //
 
-#import <React/RCTBridgeModule.h>
 #import <React/RCTEventEmitter.h>
+
+@interface KeyboardController : RCTEventEmitter
++(KeyboardController*)shared;
+-(void)sendEvent:(NSString *)name body:(id)body;
+@end
