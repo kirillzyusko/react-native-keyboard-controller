@@ -5,7 +5,8 @@
 - [ ] CI builds (fabric iOS/Android)
 - [x] crash on iOS (as soon as open a screen)
 - [x] remove @ReactMethod on Android (addListener/removeListener)
-- [ ] sending ... with no listeners registered - warning (paper)
+- [x] sending ... with no listeners registered - warning (paper)
+- [ ] ???many events instead of single events???
 - [ ] Verify how cpp lint works
 - [ ] Fabric (iOS) - KeyboardMoveEvent rewrite to Swift
 - [ ] bump version to 1.2.0
