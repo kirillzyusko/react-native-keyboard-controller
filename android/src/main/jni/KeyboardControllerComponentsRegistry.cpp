@@ -1,5 +1,6 @@
 #include "KeyboardControllerComponentsRegistry.h"
 
+#include <memory>
 #include <CoreComponentsRegistry.h>
 #include <fbjni/fbjni.h>
 #include <react/renderer/componentregistry/ComponentDescriptorProviderRegistry.h>

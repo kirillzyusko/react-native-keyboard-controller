@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <ComponentFactory.h>
 #include <fbjni/fbjni.h>
 #include <react/renderer/componentregistry/ComponentDescriptorProviderRegistry.h>
@@ -9,14 +10,14 @@ namespace facebook {
 namespace react {
 
 class KeyboardControllerComponentsRegistry
-   : public facebook::jni::HybridClass<KeyboardControllerComponentsRegistry> {
+    : public facebook::jni::HybridClass<KeyboardControllerComponentsRegistry> {
  public:
   constexpr static auto kJavaDescriptor =
       "Lcom/reactnativekeyboardcontroller/KeyboardControllerComponentsRegistry;";
 
   static void registerNatives();
 
-  KeyboardControllerComponentsRegistry(ComponentFactory *delegate);
+  explicit KeyboardControllerComponentsRegistry(ComponentFactory *delegate);
 
  private:
   friend HybridBase;
