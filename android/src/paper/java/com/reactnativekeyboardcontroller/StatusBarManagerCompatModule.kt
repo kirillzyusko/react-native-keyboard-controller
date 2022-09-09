@@ -1,5 +1,7 @@
 package com.reactnativekeyboardcontroller
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
@@ -15,6 +17,7 @@ class StatusBarManagerCompatModule(private val mReactContext: ReactApplicationCo
   }
 
   @ReactMethod
+  @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
   private fun setColor(color: Int, animated: Boolean) {
     module.setColor(color, animated)
   }
