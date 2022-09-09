@@ -9,6 +9,6 @@
 #import <React/RCTEventEmitter.h>
 
 @interface KeyboardController : RCTEventEmitter
-+(KeyboardController*)shared;
--(void)sendEvent:(NSString *)name body:(id)body;
++ (KeyboardController *)shared;
+- (void)sendEvent:(NSString *)name body:(id)body;
 @end

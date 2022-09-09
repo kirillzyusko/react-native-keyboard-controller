@@ -11,8 +11,8 @@
 
 // Thanks to this guard, we won't import this header when we build for the old architecture.
 #ifdef RCT_NEW_ARCH_ENABLED
-#import "RNKeyboardControllerSpec.h"
 #import <FBReactNativeSpec/FBReactNativeSpec.h>
+#import "RNKeyboardControllerSpec.h"
 #endif
 
 #import "KeyboardControllerModule-Header.h"
@@ -25,22 +25,24 @@
 #endif
 
 @implementation KeyboardController {
-    bool hasListeners;
+  bool hasListeners;
 }
 
 static KeyboardController *shared = nil;
 
 RCT_EXPORT_MODULE()
 
-- (instancetype)init {
-    self = [super init];
-    shared = self;
-    
-    return self;
+- (instancetype)init
+{
+  self = [super init];
+  shared = self;
+
+  return self;
 }
 
-+ (BOOL)requiresMainQueueSetup {
-    return NO;
++ (BOOL)requiresMainQueueSetup
+{
+  return NO;
 }
 
 #ifdef RCT_NEW_ARCH_ENABLED
@@ -54,37 +56,40 @@ RCT_EXPORT_METHOD(setDefaultMode)
 #ifdef RCT_NEW_ARCH_ENABLED
 - (void)setInputMode:(double)mode
 #else
-RCT_EXPORT_METHOD(setInputMode:(nonnull NSNumber *)mode)
+RCT_EXPORT_METHOD(setInputMode : (nonnull NSNumber *)mode)
 #endif
 {
 }
 
-+ (KeyboardController*)shared
++ (KeyboardController *)shared
 {
-    return shared;
+  return shared;
 }
 
--(void)startObserving {
-    hasListeners = YES;
+- (void)startObserving
+{
+  hasListeners = YES;
 }
 
--(void)stopObserving {
-    hasListeners = NO;
+- (void)stopObserving
+{
+  hasListeners = NO;
 }
 
--(void)sendEvent:(NSString *)name body:(id)body {
-    if (hasListeners) {
-      [self sendEventWithName:name body:body];
-    }
+- (void)sendEvent:(NSString *)name body:(id)body
+{
+  if (hasListeners) {
+    [self sendEventWithName:name body:body];
+  }
 }
 
 - (NSArray<NSString *> *)supportedEvents
 {
   return @[
-      @"KeyboardController::keyboardWillShow",
-      @"KeyboardController::keyboardDidShow",
-      @"KeyboardController::keyboardWillHide",
-      @"KeyboardController::keyboardDidHide",
+    @"KeyboardController::keyboardWillShow",
+    @"KeyboardController::keyboardDidShow",
+    @"KeyboardController::keyboardWillHide",
+    @"KeyboardController::keyboardDidHide",
   ];
 }
 
@@ -98,4 +103,3 @@ RCT_EXPORT_METHOD(setInputMode:(nonnull NSNumber *)mode)
 #endif
 
 @end
-

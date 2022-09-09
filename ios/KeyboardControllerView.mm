@@ -19,8 +19,8 @@
 
 #import <React/RCTBridge+Private.h>
 
-#import "RCTFabricComponentsPlugins.h"
 #import "KeyboardControllerModule-Header.h"
+#import "RCTFabricComponentsPlugins.h"
 
 using namespace facebook::react;
 
