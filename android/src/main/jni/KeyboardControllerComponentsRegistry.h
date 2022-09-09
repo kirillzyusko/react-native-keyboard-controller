@@ -1,10 +1,10 @@
 #pragma once
 
 #include <ComponentFactory.h>
-#include <memory>
 #include <fbjni/fbjni.h>
 #include <react/renderer/componentregistry/ComponentDescriptorProviderRegistry.h>
 #include <react/renderer/componentregistry/ComponentDescriptorRegistry.h>
+#include <memory>
 
 namespace facebook {
 namespace react {

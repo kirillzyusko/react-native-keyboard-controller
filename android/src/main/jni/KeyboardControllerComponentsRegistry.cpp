@@ -2,10 +2,10 @@
 
 #include <CoreComponentsRegistry.h>
 #include <fbjni/fbjni.h>
-#include <memory>
 #include <react/renderer/componentregistry/ComponentDescriptorProviderRegistry.h>
 #include <react/renderer/components/rncore/ComponentDescriptors.h>
 #include <react/renderer/components/reactnativekeyboardcontroller/ComponentDescriptors.h>
+#include <memory>
 
 namespace facebook {
 namespace react {
