@@ -8,7 +8,6 @@ import com.facebook.react.viewmanagers.KeyboardControllerViewManagerInterface
 import com.facebook.react.views.view.ReactViewGroup
 import com.facebook.react.views.view.ReactViewManager
 
-// TODO: ReactViewGroup or EdgeToEdgeReactViewGroup?
 class KeyboardControllerViewManager(mReactContext: ReactApplicationContext) : ReactViewManager(), KeyboardControllerViewManagerInterface<ReactViewGroup> {
   private val manager = KeyboardControllerViewManagerImpl(mReactContext)
   private val mDelegate = KeyboardControllerViewManagerDelegate(this)
