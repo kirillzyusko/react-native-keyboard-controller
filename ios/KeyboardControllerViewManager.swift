@@ -50,6 +50,6 @@ class KeyboardControllerView: UIView {
   }
 
   func onNotify(event: String, data: Any) {
-      KeyboardController.shared()?.sendEvent(event, body: data)
+    KeyboardController.shared()?.sendEvent(event, body: data)
   }
 }
