@@ -1,7 +1,7 @@
 #pragma once
 
-#include <memory>
 #include <ComponentFactory.h>
+#include <memory>
 #include <fbjni/fbjni.h>
 #include <react/renderer/componentregistry/ComponentDescriptorProviderRegistry.h>
 #include <react/renderer/componentregistry/ComponentDescriptorRegistry.h>
