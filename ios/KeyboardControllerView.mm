@@ -65,7 +65,6 @@ using namespace facebook::react;
         }
         onNotify:^(NSString *event, NSDictionary *data) {
           [KeyboardController.shared sendEvent:event body:data];
-          NSLog(@"Event received");
         }];
     [observer mount];
   }
