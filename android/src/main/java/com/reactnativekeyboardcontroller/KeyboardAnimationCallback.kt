@@ -133,7 +133,7 @@ class KeyboardAnimationCallback(
 
     var progress = 0.0
     try {
-      progress = Math.abs((height.toDouble() / persistentKeyboardHeight))
+      progress = Math.abs((height.toDouble() / persistentKeyboardHeight)).let { if (it.isNaN()) 0.0 else it}
     } catch (e: ArithmeticException) {
       // do nothing, send progress as 0
     }
