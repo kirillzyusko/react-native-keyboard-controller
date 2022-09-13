@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import QuartzCore
 
 extension Date {
     func currentTimeMillis() -> Int64 {
@@ -41,7 +42,7 @@ public class KeyboardMovementObserver: NSObject, CAProgressLayerDelegate {
   private var isKeyboardVisible: Bool = false
     private var keyboardHeight = 0.0
   private var positions = [[CGFloat]]()
-    private var timestamp: CFTimeInterval?
+    private var timestamp: Int64?
     private let movement: [Double] = [];
 
   // constructor params
@@ -102,7 +103,7 @@ public class KeyboardMovementObserver: NSObject, CAProgressLayerDelegate {
         
         displayLink = CADisplayLink(target: self, selector: #selector(doubleUpdateKeyboardFrame))
         displayLink?.add(to: .main, forMode: .common)
-        timestamp = CACurrentMediaTime()
+        timestamp = Date().currentTimeMillis()
         // let timer = Timer.scheduledTimer(timeInterval: 1/10000, target: self, selector: #selector(self.updateKeyboardFrame), userInfo: nil, repeats: true)
         // displayLink = CADisplayLink(target: self, selector: #selector(self.sendLatestPosition))
         // displayLink?.add(to: .main, forMode: .common)
@@ -195,6 +196,7 @@ public class KeyboardMovementObserver: NSObject, CAProgressLayerDelegate {
         // print("\(-progress * Double(keyboardHeight)) \(keyboardTopPosition)")
         // print("PROGRESS: \(progress), \(CACurrentMediaTime())")
         // positions.append([CACurrentMediaTime() - timestamp!, (keyboardTopPosition)])
+        // positions.append([Double(Date().currentTimeMillis() - timestamp!), (keyboardTopPosition)])
         events += 1
         // prevKeyboardTopPosition = Int((-CGFloat(keyboardHeight)) * progress)
         // onEvent(-keyboardTopPosition as NSNumber, (keyboardTopPosition / keyboardHeight) as NSNumber)
@@ -266,7 +268,7 @@ public class KeyboardMovementObserver: NSObject, CAProgressLayerDelegate {
     return result
   }
 
-    @objc func updateKeyboardFrame(displaylink: CADisplayLink) {
+    @objc func updateKeyboardFrame(displaylink: CADisplayLink, dl: Double) {
     if keyboardView == nil {
       return
     }
@@ -292,9 +294,9 @@ public class KeyboardMovementObserver: NSObject, CAProgressLayerDelegate {
 
     prevKeyboardTopPosition = keyboardTopPosition
 
-      onEvent(Double(-keyboardTopPosition) as NSNumber, Double(prevKeyboardTopPosition) / Double(keyboardHeight) as NSNumber)
+      // onEvent(Double(-keyboardTopPosition) as NSNumber, Double(prevKeyboardTopPosition) / Double(keyboardHeight) as NSNumber)
       
-      print("CA: \(keyboardTopPosition) - \(displaylink)")
+      // print("CA: \(keyboardTopPosition) - \(displaylink)")
       
       // print("Old: \(keyboardTopPosition1), New: \(keyboardTopPosition)")
       // positions.append([Int(Date().currentTimeMillis() - timestamp!), (keyboardTopPosition)])
@@ -319,31 +321,44 @@ public class KeyboardMovementObserver: NSObject, CAProgressLayerDelegate {
       // print("\(diff), \(height)")
       print("Metric: \(keyboardTopPosition), NEW (current moment): \(height2), NEW (advanced): \(height), Diff: \(diff), duration: \(displaylink.targetTimestamp - displaylink.timestamp)")*/
       
-      /*var closestTimestamp = 0.0
-      for position in movement {
+      var closestTimestamp = 0.0
+      for position in KeyboardPositions.normal {
           if (keyboardTopPosition > position[1]) {
               closestTimestamp = position[0]
           }
       }
       let duration = displaylink.targetTimestamp - displaylink.timestamp
-      let targetTimestamp = closestTimestamp + duration
+      let targetTimestamp = closestTimestamp + 16 - dl // duration
       var height = 0.0
-      for position in movement {
+      for position in KeyboardPositions.normal {
           if (targetTimestamp > position[0]) {
               height = position[1]
           }
       }
-      height = (height + keyboardTopPosition) / 2
+      // height = (height + keyboardTopPosition) / 2
       
       print("Metric: \(keyboardTopPosition), New: \(height)")
       
-      onEvent(-(height) as NSNumber, height / 336 as NSNumber)*/
+      onEvent(-(height) as NSNumber, height / 336 as NSNumber)
       
   }
-    
+    /// короче, тут похоже на двойную задержку
+    /// оригинальная дата по точным таймстемпам отличается и довольно сильно
+    /// но если от первого таймстемпа отнять его же значение (привести к 0)
+    /// и в дальнейшем это число отнять от всех последующих таймстемпов
+    /// то мы получаем "приведённый" вид данных - и вот этот приведённый вид
+    /// уже равен между собой
+    /// Вдобавок к этому сам CADisplayLink может вызывать колбек с задержкой
+    /// то есть нельзя просто взять и найти ближайший таймстемп, найти от него
+    /// значение дальше на 16мс и диспатчнуть этот ивент (надо учитывать дилей)
+    ///
+    /// Надо подумать, как все эти дилеи компансировать наиболее оптимальным путёми посмотреть, как это будет работать
     @objc func doubleUpdateKeyboardFrame(displaylink: CADisplayLink) {
-        self.updateKeyboardFrame(displaylink: displaylink)
-        let timer = Timer.scheduledTimer(timeInterval: 1/80, target: self, selector: #selector(self.updateKeyboardFrame), userInfo: nil, repeats: false)
+        let delay = CACurrentMediaTime() - displaylink.timestamp
+        
+        print("delay: \(delay * 1000)")
+        self.updateKeyboardFrame(displaylink: displaylink, dl: delay)
+        /*let timer = Timer.scheduledTimer(timeInterval: 1/80, target: self, selector: #selector(self.updateKeyboardFrame), userInfo: nil, repeats: false)*/
     }
     
     @objc func sendLatestPosition() {
