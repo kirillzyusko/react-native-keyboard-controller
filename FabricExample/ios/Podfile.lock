@@ -738,12 +738,12 @@ PODS:
     - React-Codegen
     - React-RCTFabric
     - ReactCommon/turbomodule/core
-  - RNReanimated (3.0.0-rc.0):
+  - RNReanimated (3.0.0-rc.2):
     - DoubleConversion
     - FBLazyVector
     - FBReactNativeSpec
     - glog
-    - RCT-Folly (= 2021.06.28.00-v2)
+    - RCT-Folly
     - RCTRequired
     - RCTTypeSafety
     - React-callinvoker
@@ -1025,7 +1025,7 @@ SPEC CHECKSUMS:
   ReactCommon: 8f67bd7e0a6afade0f20718f859dc8c2275f2e83
   RNCMaskedView: cb9670ea9239998340eaab21df13fa12a1f9de15
   RNGestureHandler: 28c0a447ceb87b96c4045c2f786f67958837f320
-  RNReanimated: 94d4e56073c2989550dba1ce29d41a5fe9d74e7f
+  RNReanimated: 42c9351d8b8656441ee62a9c81e7fdba176f696b
   RNScreens: 78f0b221c5367816aa4ff41e59916109a600df3c
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
   Yoga: ff994563b2fd98c982ca58e8cd9db2cdaf4dda74

@@ -3655,10 +3655,10 @@ react-native-gradle-plugin@^0.0.7:
   version "0.0.0"
   uid ""
 
-react-native-reanimated@3.0.0-rc.0:
-  version "3.0.0-rc.0"
-  resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-3.0.0-rc.0.tgz#05edcb2d9ca99c50d6e0ce378b74a5a0661bba93"
-  integrity sha512-YlkqVPKVs97ZMRwzdrxuhCXvU6RjxXmxE9rOiyAij/uJVMb+5Zx5CQH5ngfKjT/iEqC8HE/n6jd3pi3UlKsPeQ==
+react-native-reanimated@3.0.0-rc.2:
+  version "3.0.0-rc.2"
+  resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-3.0.0-rc.2.tgz#aadce91407313dd730ed9503102a6abd52903675"
+  integrity sha512-Or8O6PcO2xP+GTNd1fX+InmhpnDWWvrSudByIvzIqVRq99HkVCnyiWDODOZJUz3BqwcLJpFPfMBRfOAhX3YQCQ==
   dependencies:
     "@babel/plugin-transform-object-assign" "^7.16.7"
     "@babel/preset-typescript" "^7.16.7"
