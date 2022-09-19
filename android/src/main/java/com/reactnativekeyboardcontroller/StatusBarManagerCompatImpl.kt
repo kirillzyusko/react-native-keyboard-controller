@@ -8,18 +8,13 @@ import androidx.annotation.RequiresApi
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.facebook.react.bridge.ReactApplicationContext
-import com.facebook.react.bridge.ReactContextBaseJavaModule
-import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.UiThreadUtil
 
-class StatusBarManagerCompatModule(private val mReactContext: ReactApplicationContext) : ReactContextBaseJavaModule(mReactContext) {
-  private val TAG = StatusBarManagerCompatModule::class.qualifiedName
+class StatusBarManagerCompatImpl(private val mReactContext: ReactApplicationContext) {
+  private val TAG = StatusBarManagerCompatImpl::class.qualifiedName
   private var controller: WindowInsetsControllerCompat? = null
 
-  override fun getName(): String = "StatusBarManagerCompat"
-
-  @ReactMethod
-  private fun setHidden(hidden: Boolean) {
+  fun setHidden(hidden: Boolean) {
     UiThreadUtil.runOnUiThread {
       if (hidden) {
         getController()?.hide(WindowInsetsCompat.Type.statusBars())
@@ -30,8 +25,7 @@ class StatusBarManagerCompatModule(private val mReactContext: ReactApplicationCo
   }
 
   @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-  @ReactMethod
-  private fun setColor(color: Int, animated: Boolean) {
+  fun setColor(color: Int, animated: Boolean) {
     val activity = mReactContext.currentActivity
     if (activity == null) {
       Log.w(TAG, "StatusBarManagerCompatModule: Ignored status bar change, current activity is null.")
@@ -55,8 +49,7 @@ class StatusBarManagerCompatModule(private val mReactContext: ReactApplicationCo
     }
   }
 
-  @ReactMethod
-  private fun setTranslucent(translucent: Boolean) {
+  fun setTranslucent(translucent: Boolean) {
     // the status bar is translucent by default (once you wrapped App in Provider,
     // and EdgeToEdgeReactViewGroup has been mounted and called
     // `setDecorFitsSystemWindows(window, false)`. By default this library applies default padding
@@ -70,8 +63,7 @@ class StatusBarManagerCompatModule(private val mReactContext: ReactApplicationCo
     // app requires to dynamically manage it - just shoot an issue and I will try to add a support fot that.
   }
 
-  @ReactMethod
-  private fun setStyle(style: String) {
+  fun setStyle(style: String) {
     UiThreadUtil.runOnUiThread {
       getController()?.isAppearanceLightStatusBars = style == "dark-content"
     }
@@ -91,5 +83,9 @@ class StatusBarManagerCompatModule(private val mReactContext: ReactApplicationCo
     }
 
     return this.controller
+  }
+
+  companion object {
+    const val NAME = "StatusBarManagerCompat"
   }
 }

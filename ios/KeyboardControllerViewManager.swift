@@ -42,7 +42,7 @@ class KeyboardControllerView: UIView {
   func onEvent(height: NSNumber, progress: NSNumber) {
     eventDispatcher.send(
       KeyboardMoveEvent(
-        viewTag: reactTag,
+        reactTag: reactTag,
         height: height,
         progress: progress
       )
@@ -50,6 +50,6 @@ class KeyboardControllerView: UIView {
   }
 
   func onNotify(event: String, data: Any) {
-    KeyboardController.shared?.sendEvent(withName: event, body: data)
+    KeyboardController.shared()?.sendEvent(event, body: data)
   }
 }

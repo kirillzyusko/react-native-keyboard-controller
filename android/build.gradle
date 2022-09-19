@@ -14,15 +14,23 @@ buildscript {
   }
 }
 
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
-
 def getExtOrDefault(name) {
   return rootProject.ext.has(name) ? rootProject.ext.get(name) : project.properties['KeyboardController_' + name]
 }
 
 def getExtOrIntegerDefault(name) {
   return rootProject.ext.has(name) ? rootProject.ext.get(name) : (project.properties['KeyboardController_' + name]).toInteger()
+}
+
+def isNewArchitectureEnabled() {
+  return project.hasProperty("newArchEnabled") && project.newArchEnabled == "true"
+}
+
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+if (isNewArchitectureEnabled()) {
+  apply plugin: 'com.facebook.react'
 }
 
 android {
@@ -32,7 +40,50 @@ android {
     targetSdkVersion getExtOrIntegerDefault('targetSdkVersion')
     versionCode 1
     versionName "1.0"
+    buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
+    if (isNewArchitectureEnabled()) {
+      var appProject = rootProject.allprojects.find { it.plugins.hasPlugin('com.android.application') }
+      externalNativeBuild {
+        ndkBuild {
+          arguments "APP_PLATFORM=android-21",
+                  "APP_STL=c++_shared",
+                  "NDK_TOOLCHAIN_VERSION=clang",
+                  "GENERATED_SRC_DIR=${appProject.buildDir}/generated/source",
+                  "PROJECT_BUILD_DIR=${appProject.buildDir}",
+                  "REACT_ANDROID_DIR=${appProject.rootDir}/../node_modules/react-native/ReactAndroid",
+                  "REACT_ANDROID_BUILD_DIR=${appProject.rootDir}/../node_modules/react-native/ReactAndroid/build"
+          cFlags "-Wall", "-Werror", "-fexceptions", "-frtti", "-DWITH_INSPECTOR=1"
+          cppFlags "-std=c++17"
+          targets "reactnativekeyboardcontroller_modules"
+        }
+      }
+    }
+  }
 
+  if (isNewArchitectureEnabled()) {
+    externalNativeBuild {
+      ndkBuild {
+        path "src/main/jni/Android.mk"
+      }
+    }
+
+    packagingOptions {
+      exclude "**/libreact_render_*.so"
+      exclude "**/librrc_root.so"
+    }
+  }
+
+  sourceSets {
+    main {
+      if (isNewArchitectureEnabled()) {
+        java.srcDirs += [
+          'src/fabric',
+          'build/generated/source/codegen/java'
+        ]
+      } else {
+        java.srcDirs += ['src/paper']
+      }
+    }
   }
 
   buildTypes {
@@ -126,4 +177,14 @@ dependencies {
   api 'com.facebook.react:react-native:+'
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
   implementation 'androidx.core:core-ktx:1.5.0-beta03'
+}
+
+if (isNewArchitectureEnabled()) {
+  react {
+    reactNativeDir = rootProject.file("../node_modules/react-native/")
+    jsRootDir = file("../src/")
+    codegenDir = rootProject.file("../node_modules/react-native-codegen/")
+    libraryName = "reactnativekeyboardcontroller"
+    codegenJavaPackageName = "com.reactnativekeyboardcontroller"
+  }
 }

@@ -150,5 +150,19 @@
         }
       ]
     ]
+  },
+  "codegenConfig": {
+    "libraries": [
+      {
+        "name": "RNKeyboardControllerSpec",
+        "type": "modules",
+        "jsSrcsDir": "src"
+      },
+      {
+        "name": "RNKeyboardControllerViewSpec",
+        "type": "components",
+        "jsSrcsDir": "src"
+      }
+    ]
   }
 }

@@ -15,8 +15,9 @@ import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.modules.core.DeviceEventManagerModule
-import com.facebook.react.uimanager.UIManagerModule
+import com.facebook.react.uimanager.UIManagerHelper
 import com.facebook.react.uimanager.events.Event
+import com.facebook.react.uimanager.events.EventDispatcher
 import com.facebook.react.views.view.ReactViewGroup
 import com.reactnativekeyboardcontroller.events.KeyboardTransitionEvent
 
@@ -132,7 +133,7 @@ class KeyboardAnimationCallback(
 
     var progress = 0.0
     try {
-      progress = Math.abs((height.toDouble() / persistentKeyboardHeight))
+      progress = Math.abs((height.toDouble() / persistentKeyboardHeight)).let { if (it.isNaN()) 0.0 else it }
     } catch (e: ArithmeticException) {
       // do nothing, send progress as 0
     }
@@ -167,10 +168,9 @@ class KeyboardAnimationCallback(
   }
 
   private fun sendEventToJS(event: Event<*>) {
-    context
-      ?.getNativeModule(UIManagerModule::class.java)
-      ?.eventDispatcher
-      ?.dispatchEvent(event)
+    val eventDispatcher: EventDispatcher? =
+      UIManagerHelper.getEventDispatcherForReactTag(context, view.id)
+    eventDispatcher?.dispatchEvent(event)
   }
 
   private fun emitEvent(event: String, params: WritableMap) {
