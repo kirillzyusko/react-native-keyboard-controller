@@ -13,3 +13,4 @@
 - [ ] Fabric (iOS) - KeyboardMoveEvent rewrite to Swift
 - [ ] bump version to 1.2.0
 - [ ] prepare blog release
+- [ ] unify onKeyboardMove type declaration (remove code duplication)
