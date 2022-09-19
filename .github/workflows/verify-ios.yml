@@ -4,9 +4,15 @@ on:
   push:
     branches:
       - main
+    paths:
+      - '.github/workflows/verify-ios.yml'
+      - 'ios/**'
   pull_request:
     branches:
       - main
+    paths:
+      - '.github/workflows/verify-ios.yml'
+      - 'ios/**'
 
 jobs:
   swift-lint:
