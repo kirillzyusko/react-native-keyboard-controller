@@ -55,6 +55,16 @@ jobs:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
+            android/build
+            android/.cxx
+            FabricExample/android/build
+            FabricExample/android/.cxx
+            FabricExample/android/.gradle
+            FabricExample/android/app/build
+            FabricExample/android/app/.cxx
+            FabricExample/node_modules/react-native/ReactAndroid/build
+            FabricExample/node_modules/react-native/ReactAndroid/hermes-engine/build
+            FabricExample/node_modules/react-native/ReactAndroid/hermes-engine/.cxx
           key: ${{ runner.os }}-fabric-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-fabric-gradle-
