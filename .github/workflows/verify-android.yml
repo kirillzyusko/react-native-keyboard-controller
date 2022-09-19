@@ -4,9 +4,15 @@ on:
   push:
     branches:
       - main
+    paths:
+      - '.github/workflows/verify-android.yml'
+      - 'android/**'
   pull_request:
     branches:
       - main
+    paths:
+      - '.github/workflows/verify-android.yml'
+      - 'android/**'
 
 jobs:
   lint:

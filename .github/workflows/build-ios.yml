@@ -4,9 +4,21 @@ on:
   push:
     branches:
       - main
+    paths:
+      - '.github/workflows/build-ios.yml'
+      - 'ios/**'
+      - 'example/ios/**'
+      - 'yarn.lock'
+      - 'example/yarn.lock'
   pull_request:
     branches:
       - main
+    paths:
+      - '.github/workflows/build-ios.yml'
+      - 'ios/**'
+      - 'example/ios/**'
+      - 'yarn.lock'
+      - 'example/yarn.lock'
 
 jobs:
   build:
