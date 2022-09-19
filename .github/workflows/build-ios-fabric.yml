@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - '.github/workflows/build-ios.yml'
+      - '.github/workflows/build-ios-fabric.yml'
       - 'ios/**'
       - 'FabricExample/ios/**'
       - 'yarn.lock'
@@ -14,7 +14,7 @@ on:
     branches:
       - main
     paths:
-      - '.github/workflows/build-ios.yml'
+      - '.github/workflows/build-ios-fabric.yml'
       - 'ios/**'
       - 'FabricExample/ios/**'
       - 'yarn.lock'
