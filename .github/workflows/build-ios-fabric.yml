@@ -57,16 +57,16 @@ jobs:
           bundler-cache: true
           working-directory: FabricExample/ios
 
-      - name: Restore Pods cache
-        uses: actions/cache@v2
-        with:
-          path: |
-            FabricExample/ios/Pods
-            ~/Library/Caches/CocoaPods
-            ~/.cocoapods
-          key: ${{ runner.os }}-fabric-pods-${{ hashFiles('**/Podfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-fabric-pods-
+      #- name: Restore Pods cache
+      #  uses: actions/cache@v2
+      #  with:
+      #    path: |
+      #      FabricExample/ios/Pods
+      #      ~/Library/Caches/CocoaPods
+      #      ~/.cocoapods
+      #    key: ${{ runner.os }}-fabric-pods-${{ hashFiles('**/Podfile.lock') }}
+      #    restore-keys: |
+      #      ${{ runner.os }}-fabric-pods-
       - name: Install Pods
         run: pod install
       - name: Install xcpretty
