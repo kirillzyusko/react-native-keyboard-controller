@@ -33,22 +33,22 @@ jobs:
       - name: Get yarn cache directory path
         id: fabric-yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"
-      - name: Restore node_modules from cache
-        uses: actions/cache@v2
-        id: yarn-cache
-        with:
-          path: ${{ steps.fabric-yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-fabric-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-fabric-yarn-
+      #- name: Restore node_modules from cache
+      #  uses: actions/cache@v2
+      #  id: yarn-cache
+      #  with:
+      #    path: ${{ steps.fabric-yarn-cache-dir-path.outputs.dir }}
+      #    key: ${{ runner.os }}-fabric-yarn-${{ hashFiles('**/yarn.lock') }}
+      #    restore-keys: |
+      #      ${{ runner.os }}-fabric-yarn-
       - name: Install node_modules for FabricExample/
         run: yarn install --frozen-lockfile --cwd ..
 
-      - name: Restore buildcache
-        uses: mikehardy/buildcache-action@v1
-        continue-on-error: true
-        with:
-          cache_key: react-native-keyboard-controller-fabric
+      #- name: Restore buildcache
+      #  uses: mikehardy/buildcache-action@v1
+      #  continue-on-error: true
+      #  with:
+      #    cache_key: react-native-keyboard-controller-fabric
 
       - name: Setup Ruby (bundle)
         uses: ruby/setup-ruby@v1
