@@ -26,6 +26,11 @@ def isNewArchitectureEnabled() {
   return project.hasProperty("newArchEnabled") && project.newArchEnabled == "true"
 }
 
+def reactNativeArchitectures() {
+  def value = project.getProperties().get("reactNativeArchitectures")
+  return value ? value.split(",") : ["armeabi-v7a", "x86", "x86_64", "arm64-v8a"]
+}
+
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
@@ -57,6 +62,9 @@ android {
           targets "reactnativekeyboardcontroller_modules"
         }
       }
+    }
+    ndk {
+      abiFilters (*reactNativeArchitectures())
     }
   }
 
