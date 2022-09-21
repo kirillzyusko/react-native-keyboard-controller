@@ -16,6 +16,7 @@
     "react-native-keyboard-controller.podspec",
     "!lib/typescript/example",
     "!android/build",
+    "!android/.gradle",
     "!ios/build",
     "!**/__tests__",
     "!**/__fixtures__",
