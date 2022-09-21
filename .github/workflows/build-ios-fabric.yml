@@ -1,0 +1,84 @@
+name: Build iOS Fabric
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/build-ios-fabric.yml'
+      - 'ios/**'
+      - 'FabricExample/ios/**'
+      - 'yarn.lock'
+      - 'FabricExample/yarn.lock'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/build-ios-fabric.yml'
+      - 'ios/**'
+      - 'FabricExample/ios/**'
+      - 'yarn.lock'
+      - 'FabricExample/yarn.lock'
+
+jobs:
+  build:
+    name: Build iOS FabricExample App
+    runs-on: macOS-latest
+    defaults:
+      run:
+        working-directory: FabricExample/ios
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Get yarn cache directory path
+        id: fabric-yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - name: Restore node_modules from cache
+        uses: actions/cache@v2
+        id: yarn-cache
+        with:
+          path: ${{ steps.fabric-yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-fabric-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-fabric-yarn-
+      - name: Install node_modules for FabricExample/
+        run: yarn install --frozen-lockfile --cwd ..
+
+      - name: Restore buildcache
+        uses: mikehardy/buildcache-action@v1
+        continue-on-error: true
+        with:
+          cache_key: react-native-keyboard-controller-fabric
+
+      - name: Setup Ruby (bundle)
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.7.6
+          bundler-cache: true
+          working-directory: FabricExample/ios
+
+      - name: Restore Pods cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            FabricExample/ios/Pods
+            ~/Library/Caches/CocoaPods
+            ~/.cocoapods
+          key: ${{ runner.os }}-fabric-pods-${{ hashFiles('**/Podfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-fabric-pods-
+      - name: Install Pods
+        run: pod install
+      - name: Install xcpretty
+        run: gem install xcpretty
+      - name: Build App
+        run: "set -o pipefail && xcodebuild \
+          CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ \
+          -derivedDataPath build -UseModernBuildSystem=YES \
+          -workspace KeyboardControllerFabricExample.xcworkspace \
+          -scheme KeyboardControllerFabricExample \
+          -sdk iphonesimulator \
+          -configuration Debug \
+          -destination 'platform=iOS Simulator,name=iPhone 11 Pro' \
+          build \
+          CODE_SIGNING_ALLOWED=NO | xcpretty"
