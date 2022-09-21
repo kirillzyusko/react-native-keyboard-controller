@@ -633,21 +633,21 @@ PODS:
     - React-Core
     - React-RCTFabric
     - ReactCommon/turbomodule/core
-  - react-native-safe-area-context (4.3.3):
+  - react-native-safe-area-context (4.3.4):
     - RCT-Folly
     - RCTRequired
     - RCTTypeSafety
     - React-Core
-    - react-native-safe-area-context/common (= 4.3.3)
-    - react-native-safe-area-context/fabric (= 4.3.3)
+    - react-native-safe-area-context/common (= 4.3.4)
+    - react-native-safe-area-context/fabric (= 4.3.4)
     - ReactCommon/turbomodule/core
-  - react-native-safe-area-context/common (4.3.3):
+  - react-native-safe-area-context/common (4.3.4):
     - RCT-Folly
     - RCTRequired
     - RCTTypeSafety
     - React-Core
     - ReactCommon/turbomodule/core
-  - react-native-safe-area-context/fabric (4.3.3):
+  - react-native-safe-area-context/fabric (4.3.4):
     - RCT-Folly
     - RCTRequired
     - RCTTypeSafety
@@ -730,8 +730,8 @@ PODS:
     - React-perflogger (= 0.69.4)
   - RNCMaskedView (0.2.7):
     - React-Core
-  - RNGestureHandler (2.6.1):
-    - RCT-Folly
+  - RNGestureHandler (2.5.0):
+    - RCT-Folly (= 2021.06.28.00-v2)
     - RCTRequired
     - RCTTypeSafety
     - React
@@ -1008,7 +1008,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 8a3d3f5dcd23a91e8c80b1bf0e96902cd1dca999
   React-logger: 1088859f145b8f6dd0d3ed051a647ef0e3e80fad
   react-native-keyboard-controller: ae18b2bd7e9d7ffda09e5c712084cde00bec2dce
-  react-native-safe-area-context: 6ab17f921537d721f7315b198d82d6a65a2680f9
+  react-native-safe-area-context: 82b1d3e2cfc694d750df2d2311c67dbf8ca82987
   React-perflogger: cb386fd44c97ec7f8199c04c12b22066b0f2e1e0
   React-RCTActionSheet: f803a85e46cf5b4066c2ac5e122447f918e9c6e5
   React-RCTAnimation: 19c80fa950ccce7f4db76a2a7f2cf79baae07fc7
@@ -1024,7 +1024,7 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: 61ee22a8cdf8b6bb2a7fb7b4ba2cc763e5285196
   ReactCommon: 8f67bd7e0a6afade0f20718f859dc8c2275f2e83
   RNCMaskedView: cb9670ea9239998340eaab21df13fa12a1f9de15
-  RNGestureHandler: d05b31657710f5f57108e1a51ff6ed72f7a4673c
+  RNGestureHandler: 28c0a447ceb87b96c4045c2f786f67958837f320
   RNReanimated: 42c9351d8b8656441ee62a9c81e7fdba176f696b
   RNScreens: e2cd04caa74748a6e42609a7b84f76c71d70a6ee
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
