@@ -2,11 +2,28 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://kirillzyusko.github.io/react-native-keyboard-controller/blog</id>
     <title>Keyboard Controller Blog</title>
-    <updated>2022-06-22T00:00:00.000Z</updated>
+    <updated>2022-09-22T00:00:00.000Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog"/>
     <subtitle>Keyboard Controller Blog</subtitle>
     <icon>https://kirillzyusko.github.io/react-native-keyboard-controller/img/favicon.ico</icon>
+    <entry>
+        <title type="html"><![CDATA[Version 1.2.0 with new architecture support]]></title>
+        <id>fabric</id>
+        <link href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/fabric"/>
+        <updated>2022-09-22T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[I'm glad to announce, that new upcoming release 1.2.0 brings a support for new react native architecture 😎]]></summary>
+        <content type="html"><![CDATA[<p>I'm glad to announce, that new upcoming release <code>1.2.0</code> brings a support for new react native architecture 😎</p><p>Fortunately this library is backward compatible with old architecture and will be compiled conditionally depending on which architecture you are using. So don't be afraid of updating it to the latest version - it doesn't have any breaking changes!</p><p><img loading="lazy" alt="react native logo" src="/react-native-keyboard-controller/assets/images/react-native-a8361256fb00129d8544074b6a103da6.png" width="1160" height="560" class="img_ev3q"></p><p>The decision to add support for a new architecture (to prioritize a new architecture adoption over other features) was made in order to understand all peculiarities of the new architecture and to discover its possibilities. Hopefully such knowledge can help add new features for the library in the future.</p><p>Obviously, the migration process will take some time for other libraries, so future versions of this library will still support two architectures. When most other open source libraries will be migrated to the new architecture and the new architecture becomes the standard in the react native ecosystem, then support for the old architecture will be removed.</p><p>Stay tuned for future updates! 😊</p>]]></content>
+        <author>
+            <name>Kirill Zyusko</name>
+            <uri>https://github.com/kirillzyusko</uri>
+        </author>
+        <category label="react-native" term="react-native"/>
+        <category label="release" term="release"/>
+        <category label="new architecture" term="new architecture"/>
+        <category label="fabric" term="fabric"/>
+        <category label="turbo modules" term="turbo modules"/>
+    </entry>
     <entry>
         <title type="html"><![CDATA[React Native meets smooth keyboard animations]]></title>
         <id>welcome</id>

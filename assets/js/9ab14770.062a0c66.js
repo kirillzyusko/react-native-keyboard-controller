@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[9666],{4803:e=>{e.exports=JSON.parse('{"label":"turbo modules","permalink":"/react-native-keyboard-controller/blog/tags/turbo-modules","allTagsPath":"/react-native-keyboard-controller/blog/tags","count":1}')}}]);
