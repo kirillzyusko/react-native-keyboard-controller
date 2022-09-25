@@ -41,15 +41,21 @@ public class KeyboardMovementObserver: NSObject, CAProgressLayerDelegate {
   private var displayLink: CADisplayLink?
   private var isKeyboardVisible: Bool = false
     private var keyboardHeight = 0.0
+    private let bezier = CAMediaTimingFunction(controlPoints:0.380, 0.700, 0.125, 1.000)
   private var positions = [[CGFloat]]()
-    private var timestamp: Int64?
+    private var timestamp = CACurrentMediaTime()
     private let movement: [Double] = [];
+    private let frames = 0.5 * 60 // TODO: use real CADisplayLink preferedFramRate
+    private var frameCount = 0
 
   // constructor params
   var onEvent: (NSNumber, NSNumber) -> Void
   var onNotify: (String, Any) -> Void
   var view: UIView
   var events = 0
+    
+    // views (debug)
+    var txtField: UITextField!
 
     @objc public init(handler: @escaping (NSNumber, NSNumber) -> Void, onNotify: @escaping (String, Any) -> Void, view: UIView) {
     onEvent = handler
@@ -92,7 +98,8 @@ public class KeyboardMovementObserver: NSObject, CAProgressLayerDelegate {
   @objc func keyboardWillAppear(_ notification: Notification) {
     if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
       let keyboardHeight = keyboardFrame.cgRectValue.size.height
-
+      /*let curveVal = (info[UIResponder.keyboardAnimationCurveUserInfoKey] as? NSNumber)?.intValue ?? 7 // default value for keyboard animation
+        let easeInEaseOut = CAMediaTimingFunction(*/
       var data = [AnyHashable: Any]()
       data["height"] = keyboardHeight
         
@@ -103,7 +110,7 @@ public class KeyboardMovementObserver: NSObject, CAProgressLayerDelegate {
         
         displayLink = CADisplayLink(target: self, selector: #selector(doubleUpdateKeyboardFrame))
         displayLink?.add(to: .main, forMode: .common)
-        timestamp = Date().currentTimeMillis()
+        timestamp = CACurrentMediaTime()
         // let timer = Timer.scheduledTimer(timeInterval: 1/10000, target: self, selector: #selector(self.updateKeyboardFrame), userInfo: nil, repeats: true)
         // displayLink = CADisplayLink(target: self, selector: #selector(self.sendLatestPosition))
         // displayLink?.add(to: .main, forMode: .common)
@@ -156,6 +163,13 @@ public class KeyboardMovementObserver: NSObject, CAProgressLayerDelegate {
                 newSublayer.cornerRadius = size / 2
                 newSublayer.backgroundColor = UIColor.green.cgColor
                 view.layer.addSublayer(newSublayer)
+            
+            // text
+            self.txtField = UITextField(frame: CGRect(x: 10, y: 50, width: 500.00, height: 30.00))
+            txtField.borderStyle = UITextField.BorderStyle.line
+            txtField.text = "zero"
+            txtField.backgroundColor = UIColor.red
+            view.addSubview(txtField)
               
 
         let progressView = ProgressView(frame: newSublayer.frame)
@@ -190,17 +204,20 @@ public class KeyboardMovementObserver: NSObject, CAProgressLayerDelegate {
         let keyboardFrameY = keyboardView!.layer.presentation()!.frame.origin.y
         let keyboardWindowH = keyboardView!.window!.bounds.size.height
         let keyboardTopPosition = (keyboardWindowH - keyboardFrameY)
+        
+        self.txtField.text = "\(keyboardTopPosition)"
+        
         // print("OnProgress: \(keyboardTopPosition), \(progress * 336)")
         //onEvent(-keyboardTopPosition as NSNumber, 0.0)
 
         // print("\(-progress * Double(keyboardHeight)) \(keyboardTopPosition)")
         // print("PROGRESS: \(progress), \(CACurrentMediaTime())")
-        // positions.append([CACurrentMediaTime() - timestamp!, (keyboardTopPosition)])
+        // positions.append([CACurrentMediaTime() - timestamp, (progress)])
         // positions.append([Double(Date().currentTimeMillis() - timestamp!), (keyboardTopPosition)])
         events += 1
         // prevKeyboardTopPosition = Int((-CGFloat(keyboardHeight)) * progress)
         // onEvent(-keyboardTopPosition as NSNumber, (keyboardTopPosition / keyboardHeight) as NSNumber)
-        print("PDC: \(keyboardTopPosition)")
+        // print("PDC: \(keyboardTopPosition)")
     }
 
   @objc func keyboardWillDisappear() {
@@ -321,25 +338,45 @@ public class KeyboardMovementObserver: NSObject, CAProgressLayerDelegate {
       // print("\(diff), \(height)")
       print("Metric: \(keyboardTopPosition), NEW (current moment): \(height2), NEW (advanced): \(height), Diff: \(diff), duration: \(displaylink.targetTimestamp - displaylink.timestamp)")*/
       
+      let newDelay = CACurrentMediaTime() - displaylink.timestamp
+        // print("Old delay: \(dl*1000), new delay: \(newDelay*1000)")
+        
       var closestTimestamp = 0.0
       for position in KeyboardPositions.normal {
-          if (keyboardTopPosition > position[1]) {
+          if (keyboardTopPosition > position[1] * keyboardHeight) {
               closestTimestamp = position[0]
+          } else {
+              break;
           }
       }
+        
+        frameCount += 1
+        let frameProgress = Double(frameCount) / Double(frames)
+        // let animationProgress = bezier.valueAtTime(x: frameProgress)
+        let index = Int(1906 * frameProgress)
+        
+        //print("element: \(KeyboardPositions.normal[index][1] * keyboardHeight)")
+        
+        // onEvent(-(KeyboardPositions.normal[index][1] * keyboardHeight) as NSNumber, 0 as NSNumber)
+        
+
+        print("time since start: \(CACurrentMediaTime() - timestamp), closestTimestamp: \(closestTimestamp), delay: \(dl), advance: \(displaylink.duration - dl)")
+        
       let duration = displaylink.targetTimestamp - displaylink.timestamp
-      let targetTimestamp = closestTimestamp + 16 - dl // duration
+        let targetTimestamp = closestTimestamp + displaylink.duration - dl // duration
       var height = 0.0
       for position in KeyboardPositions.normal {
           if (targetTimestamp > position[0]) {
-              height = position[1]
+              height = position[1] * keyboardHeight
+          } else {
+              break;
           }
       }
       // height = (height + keyboardTopPosition) / 2
       
-      print("Metric: \(keyboardTopPosition), New: \(height)")
+      print("Metric: \(keyboardTopPosition), New: \(height), keyboardHeight: \(keyboardHeight)")
       
-      onEvent(-(height) as NSNumber, height / 336 as NSNumber)
+      onEvent(-(height) as NSNumber, height / keyboardHeight as NSNumber)
       
   }
     /// короче, тут похоже на двойную задержку
@@ -356,7 +393,7 @@ public class KeyboardMovementObserver: NSObject, CAProgressLayerDelegate {
     @objc func doubleUpdateKeyboardFrame(displaylink: CADisplayLink) {
         let delay = CACurrentMediaTime() - displaylink.timestamp
         
-        print("delay: \(delay * 1000)")
+        // print("delay: \(delay * 1000), fps: \((displaylink.targetTimestamp - displaylink.timestamp)*1000)")
         self.updateKeyboardFrame(displaylink: displaylink, dl: delay)
         /*let timer = Timer.scheduledTimer(timeInterval: 1/80, target: self, selector: #selector(self.updateKeyboardFrame), userInfo: nil, repeats: false)*/
     }
