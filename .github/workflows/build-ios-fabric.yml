@@ -10,6 +10,7 @@ on:
       - 'FabricExample/ios/**'
       - 'yarn.lock'
       - 'FabricExample/yarn.lock'
+      - 'src/specs/**'
   pull_request:
     branches:
       - main
@@ -19,6 +20,7 @@ on:
       - 'FabricExample/ios/**'
       - 'yarn.lock'
       - 'FabricExample/yarn.lock'
+      - 'src/specs/**'
 
 jobs:
   build:
