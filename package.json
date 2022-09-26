@@ -157,12 +157,12 @@
       {
         "name": "RNKeyboardControllerSpec",
         "type": "modules",
-        "jsSrcsDir": "src"
+        "jsSrcsDir": "src/specs"
       },
       {
         "name": "RNKeyboardControllerViewSpec",
         "type": "components",
-        "jsSrcsDir": "src"
+        "jsSrcsDir": "src/specs"
       }
     ]
   }
