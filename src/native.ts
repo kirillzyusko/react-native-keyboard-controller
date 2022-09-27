@@ -48,7 +48,7 @@ type KeyboardController = {
 const ComponentName = 'KeyboardControllerView';
 
 const RCTKeyboardController = isTurboModuleEnabled
-  ? require('./NativeKeyboardController').default
+  ? require('./specs/NativeKeyboardController').default
   : NativeModules.KeyboardController;
 export const KeyboardController = RCTKeyboardController as KeyboardController;
 
@@ -68,7 +68,7 @@ export const KeyboardEvents = {
   ) => eventEmitter.addListener('KeyboardController::' + name, cb),
 };
 export const KeyboardControllerView = isFabricEnabled
-  ? require('./KeyboardControllerViewNativeComponent').default
+  ? require('./specs/KeyboardControllerViewNativeComponent').default
   : UIManager.getViewManagerConfig(ComponentName) != null
   ? requireNativeComponent<KeyboardControllerProps>(ComponentName)
   : () => {

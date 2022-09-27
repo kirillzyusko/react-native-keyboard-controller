@@ -190,7 +190,7 @@ dependencies {
 if (isNewArchitectureEnabled()) {
   react {
     reactNativeDir = rootProject.file("../node_modules/react-native/")
-    jsRootDir = file("../src/")
+    jsRootDir = file("../src/specs/")
     codegenDir = rootProject.file("../node_modules/react-native-codegen/")
     libraryName = "reactnativekeyboardcontroller"
     codegenJavaPackageName = "com.reactnativekeyboardcontroller"

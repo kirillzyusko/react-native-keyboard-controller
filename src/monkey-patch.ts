@@ -7,7 +7,7 @@ import { isTurboModuleEnabled } from './architecture';
 const getConstants = NativeAndroidManager.default.getConstants;
 
 const RCTStatusBarManagerCompat = isTurboModuleEnabled
-  ? require('./NativeStatusBarManagerCompat').default
+  ? require('./specs/NativeStatusBarManagerCompat').default
   : NativeModules.StatusBarManagerCompat;
 
 // On Android < 11 RN uses legacy API which breaks EdgeToEdge mode in RN, so
