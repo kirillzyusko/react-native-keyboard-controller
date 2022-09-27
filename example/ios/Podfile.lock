@@ -600,7 +600,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 47201924064085223b63ec7e3ee9fd40ad8508e8
   React-jsinspector: 1363be638eccfe1aea1b10dd42e632b0397e5ec8
   React-logger: 7bd569e3857d74ed412ce0a5c51f421ff7d4ca7f
-  react-native-keyboard-controller: de87977012ae8b2cdf658f7cfbdbab8335e67f4e
+  react-native-keyboard-controller: 65ed39ecc3d26511a7ba4365eff70599b5a202c2
   react-native-safe-area-context: dfe5aa13bee37a0c7e8059d14f72ffc076d120e9
   React-perflogger: 48c6b363e867d64b682e84f80ca45636bd65e19c
   React-RCTActionSheet: 33c74fe5c754835e3715c300618da9aa2f7203fa
