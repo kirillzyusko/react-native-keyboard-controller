@@ -10,11 +10,11 @@
   },
   "dependencies": {
     "@react-native-masked-view/masked-view": "^0.2.7",
-    "@react-navigation/bottom-tabs": "^6.3.2",
-    "@react-navigation/native": "^6.0.11",
-    "@react-navigation/stack": "^6.2.2",
-    "react": "18.0.0",
-    "react-native": "0.69.4",
+    "@react-navigation/bottom-tabs": "^6.4.0",
+    "@react-navigation/native": "^6.0.13",
+    "@react-navigation/stack": "^6.3.1",
+    "react": "18.1.0",
+    "react-native": "0.70.1",
     "react-native-gesture-handler": "2.5.0",
     "react-native-keyboard-controller": "link:../",
     "react-native-reanimated": "3.0.0-rc.2",
@@ -26,10 +26,10 @@
     "@babel/core": "^7.12.9",
     "@babel/runtime": "^7.12.5",
     "@tsconfig/react-native": "^2.0.2",
-    "@types/react-native": "^0.69.3",
-    "metro-react-native-babel-preset": "^0.70.3",
+    "@types/react-native": "^0.70.4",
+    "metro-react-native-babel-preset": "^0.72.1",
     "patch-package": "^6.4.7",
-    "typescript": "^4.4.4"
+    "typescript": "^4.8.3"
   },
   "jest": {
     "preset": "react-native",
