@@ -1,4 +1,4 @@
-name: Build Android Fabric
+name: 🤖 Build Android Fabric
 
 on:
   push:
