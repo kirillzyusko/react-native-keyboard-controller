@@ -1,4 +1,4 @@
-name: Build iOS Fabric
+name: 🍎 Build iOS Fabric
 
 on:
   push:
