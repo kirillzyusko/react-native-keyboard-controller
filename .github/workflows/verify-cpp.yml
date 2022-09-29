@@ -5,11 +5,11 @@ on:
     branches:
       - main
     paths:
-      - '.github/workflows/validate-cpp.yml'
+      - '.github/workflows/verify-cpp.yml'
       - 'android/src/main/**'
   pull_request:
     paths:
-      - '.github/workflows/validate-cpp.yml'
+      - '.github/workflows/verify-cpp.yml'
       - 'android/src/main/**'
 
 jobs:
