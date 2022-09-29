@@ -3,7 +3,6 @@
 #include <ReactCommon/JavaTurboModule.h>
 #include <ReactCommon/TurboModule.h>
 #include <jsi/jsi.h>
-#include <react/renderer/components/reactnativekeyboardcontroller/KeyboardControllerViewComponentDescriptor.h>
 
 namespace facebook {
 namespace react {
