@@ -14,6 +14,7 @@
     "ios",
     "cpp",
     "react-native-keyboard-controller.podspec",
+    "react-native.config.js",
     "!lib/typescript/example",
     "!android/build",
     "!android/.gradle",
@@ -156,17 +157,11 @@
     ]
   },
   "codegenConfig": {
-    "libraries": [
-      {
-        "name": "RNKeyboardControllerSpec",
-        "type": "modules",
-        "jsSrcsDir": "src/specs"
-      },
-      {
-        "name": "RNKeyboardControllerViewSpec",
-        "type": "components",
-        "jsSrcsDir": "src/specs"
-      }
-    ]
+    "name": "reactnativekeyboardcontroller",
+    "type": "all",
+    "jsSrcsDir": "./src/specs",
+    "android": {
+      "javaPackageName": "com.reactnativekeyboardcontroller"
+    }
   }
 }

@@ -12,10 +12,6 @@ class KeyboardControllerPackage : ReactPackage {
   }
 
   override fun createViewManagers(reactContext: ReactApplicationContext): List<ViewManager<*, *>> {
-    if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
-      SoLoader.loadLibrary("reactnativekeyboardcontroller_modules")
-    }
-
     return listOf(KeyboardControllerViewManager(reactContext))
   }
 }
