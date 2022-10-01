@@ -154,5 +154,6 @@ dependencies {
   // noinspection GradleDynamicVersion
   api 'com.facebook.react:react-native:+'
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-  implementation 'androidx.core:core-ktx:1.5.0-beta03'
+  // https://github.com/androidx/androidx/commit/723694c3eeb0c9101a1b66c56c1e6867247ea5a9
+  implementation 'androidx.core:core-ktx:1.9.0'
 }
