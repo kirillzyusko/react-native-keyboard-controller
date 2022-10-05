@@ -12,10 +12,10 @@
 #import "KeyboardMoveEvent.h"
 #import "react_native_keyboard_controller-Swift.h"
 
-#import <react/renderer/components/RNKeyboardControllerViewSpec/ComponentDescriptors.h>
-#import <react/renderer/components/RNKeyboardControllerViewSpec/EventEmitters.h>
-#import <react/renderer/components/RNKeyboardControllerViewSpec/Props.h>
-#import <react/renderer/components/RNKeyboardControllerViewSpec/RCTComponentViewHelpers.h>
+#import <react/renderer/components/reactnativekeyboardcontroller/ComponentDescriptors.h>
+#import <react/renderer/components/reactnativekeyboardcontroller/EventEmitters.h>
+#import <react/renderer/components/reactnativekeyboardcontroller/Props.h>
+#import <react/renderer/components/reactnativekeyboardcontroller/RCTComponentViewHelpers.h>
 
 #import <React/RCTBridge+Private.h>
 

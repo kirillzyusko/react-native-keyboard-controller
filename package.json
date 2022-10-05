@@ -156,17 +156,11 @@
     ]
   },
   "codegenConfig": {
-    "libraries": [
-      {
-        "name": "RNKeyboardControllerSpec",
-        "type": "modules",
-        "jsSrcsDir": "src/specs"
-      },
-      {
-        "name": "RNKeyboardControllerViewSpec",
-        "type": "components",
-        "jsSrcsDir": "src/specs"
-      }
-    ]
+    "name": "reactnativekeyboardcontroller",
+    "type": "all",
+    "jsSrcsDir": "./src/specs",
+    "android": {
+      "javaPackageName": "com.reactnativekeyboardcontroller"
+    }
   }
 }
