@@ -30,11 +30,13 @@ A clear and concise description of what you expected to happen.
 If applicable, add screenshots to help explain your problem.
 
 **Smartphone (please complete the following information):**
- - Desktop OS [e.g. Windows 10, MacOS 10.15.5]
- - Device: [e.g. iPhone6]
- - OS: [e.g. iOS 8.1]
- - JS engine [e.g. JSC, Hermes, v8]
- - Library version [e.g. 22]
+ - Desktop OS: [e.g. Windows 10, MacOS 10.15.5]
+ - Device: [e.g. iPhone8]
+ - OS: [e.g. iOS 10.0]
+ - RN version: [e.g. 0.68.2]
+ - RN architecture: [e.g. old/new or paper/fabric]
+ - JS engine: [e.g. JSC, Hermes, v8]
+ - Library version: [e.g. 1.2.0]
 
 **Additional context**
 Add any other context about the problem here.
