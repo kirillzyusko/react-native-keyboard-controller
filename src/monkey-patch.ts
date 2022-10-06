@@ -1,14 +1,11 @@
-import { NativeModules, Platform } from 'react-native';
+import { Platform } from 'react-native';
 // @ts-expect-error because there is no corresponding type definition
 import * as NativeAndroidManager from 'react-native/Libraries/Components/StatusBar/NativeStatusBarManagerAndroid';
 
-import { isTurboModuleEnabled } from './architecture';
-
 const getConstants = NativeAndroidManager.default.getConstants;
 
-const RCTStatusBarManagerCompat = isTurboModuleEnabled
-  ? require('./specs/NativeStatusBarManagerCompat').default
-  : NativeModules.StatusBarManagerCompat;
+const RCTStatusBarManagerCompat =
+  require('./specs/NativeStatusBarManagerCompat').default;
 
 // On Android < 11 RN uses legacy API which breaks EdgeToEdge mode in RN, so
 // in order to use library on all available platforms we have to monkey patch
