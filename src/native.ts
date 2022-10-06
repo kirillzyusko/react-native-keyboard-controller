@@ -1,21 +1,9 @@
 import { useEffect } from 'react';
 import {
-  requireNativeComponent,
-  UIManager,
-  Platform,
-  NativeModules,
   NativeEventEmitter,
   NativeSyntheticEvent,
   ViewProps,
 } from 'react-native';
-
-import { isFabricEnabled, isTurboModuleEnabled } from './architecture';
-
-const LINKING_ERROR =
-  `The package 'react-native-keyboard-controller' doesn't seem to be linked. Make sure: \n\n` +
-  Platform.select({ ios: "- You have run 'pod install'\n", default: '' }) +
-  '- You rebuilt the app after installing the package\n' +
-  '- You are not using Expo managed workflow\n';
 
 export enum AndroidSoftInputModes {
   SOFT_INPUT_ADJUST_NOTHING = 48,
@@ -45,11 +33,8 @@ type KeyboardController = {
   setInputMode: (mode: AndroidSoftInputModes) => void;
 };
 
-const ComponentName = 'KeyboardControllerView';
-
-const RCTKeyboardController = isTurboModuleEnabled
-  ? require('./specs/NativeKeyboardController').default
-  : NativeModules.KeyboardController;
+const RCTKeyboardController =
+  require('./specs/NativeKeyboardController').default;
 export const KeyboardController = RCTKeyboardController as KeyboardController;
 
 const eventEmitter = new NativeEventEmitter(RCTKeyboardController);
@@ -67,13 +52,8 @@ export const KeyboardEvents = {
     cb: (e: KeyboardEvent) => void
   ) => eventEmitter.addListener('KeyboardController::' + name, cb),
 };
-export const KeyboardControllerView = isFabricEnabled
-  ? require('./specs/KeyboardControllerViewNativeComponent').default
-  : UIManager.getViewManagerConfig(ComponentName) != null
-  ? requireNativeComponent<KeyboardControllerProps>(ComponentName)
-  : () => {
-      throw new Error(LINKING_ERROR);
-    };
+export const KeyboardControllerView =
+  require('./specs/KeyboardControllerViewNativeComponent').default;
 
 export const useResizeMode = () => {
   useEffect(() => {
