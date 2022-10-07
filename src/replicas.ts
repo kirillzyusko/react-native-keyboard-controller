@@ -8,7 +8,7 @@ import {
   useWorkletCallback,
   withSpring,
 } from 'react-native-reanimated';
-import { useReanimatedKeyboardAnimation } from './animated';
+import { useReanimatedKeyboardAnimation } from './hooks';
 
 import { AndroidSoftInputModes, KeyboardController } from './native';
 

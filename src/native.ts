@@ -1,10 +1,10 @@
-import { useEffect } from 'react';
-import {
-  Platform,
-  NativeEventEmitter,
-  NativeSyntheticEvent,
-  ViewProps,
-} from 'react-native';
+import { Platform, NativeEventEmitter } from 'react-native';
+
+import type {
+  KeyboardControllerEvents,
+  KeyboardControllerModule,
+  KeyboardEventData,
+} from './types';
 
 const LINKING_ERROR =
   `The package 'react-native-keyboard-controller' doesn't seem to be linked. Make sure: \n\n` +
@@ -30,30 +30,6 @@ export enum AndroidSoftInputModes {
   SOFT_INPUT_STATE_VISIBLE = 4,
 }
 
-export type NativeEvent = {
-  progress: number;
-  height: number;
-};
-export type EventWithName<T> = {
-  eventName: string;
-} & T;
-export type KeyboardControllerProps = {
-  onKeyboardMove: (e: NativeSyntheticEvent<EventWithName<NativeEvent>>) => void;
-  // fake prop used to activate reanimated bindings
-  onKeyboardMoveReanimated: (
-    e: NativeSyntheticEvent<EventWithName<NativeEvent>>
-  ) => void;
-  statusBarTranslucent?: boolean;
-} & ViewProps;
-type KeyboardController = {
-  // android only
-  setDefaultMode: () => void;
-  setInputMode: (mode: number) => void;
-  // native event module stuff
-  addListener: (eventName: string) => void;
-  removeListeners: (count: number) => void;
-};
-
 const RCTKeyboardController =
   require('./specs/NativeKeyboardController').default;
 export const KeyboardController = (
@@ -67,32 +43,15 @@ export const KeyboardController = (
           },
         }
       )
-) as KeyboardController;
+) as KeyboardControllerModule;
 
 const eventEmitter = new NativeEventEmitter(KeyboardController);
-type KeyboardControllerEvents =
-  | 'keyboardWillShow'
-  | 'keyboardDidShow'
-  | 'keyboardWillHide'
-  | 'keyboardDidHide';
-type KeyboardEvent = {
-  height: number;
-};
+
 export const KeyboardEvents = {
   addListener: (
     name: KeyboardControllerEvents,
-    cb: (e: KeyboardEvent) => void
+    cb: (e: KeyboardEventData) => void
   ) => eventEmitter.addListener('KeyboardController::' + name, cb),
 };
 export const KeyboardControllerView =
   require('./specs/KeyboardControllerViewNativeComponent').default;
-
-export const useResizeMode = () => {
-  useEffect(() => {
-    KeyboardController.setInputMode(
-      AndroidSoftInputModes.SOFT_INPUT_ADJUST_RESIZE
-    );
-
-    return () => KeyboardController.setDefaultMode();
-  }, []);
-};
