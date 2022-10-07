@@ -12,16 +12,7 @@ export default function KeyboardAnimation() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.row}>
-        <Animated.View
-          style={{
-            width: 50,
-            height: 50,
-            backgroundColor: 'red',
-            borderRadius: 25,
-            transform: [{ translateY: height }],
-          }}
-        />
+      <View>
         <Animated.View
           style={{
             width: 50,
@@ -38,24 +29,37 @@ export default function KeyboardAnimation() {
             ],
           }}
         />
-        <Animated.View
+      </View>
+      <View>
+        <TextInput
           style={{
-            width: 50,
+            width: 200,
+            marginTop: 50,
             height: 50,
-            backgroundColor: 'blue',
-            borderRadius: 25,
-            transform: [{ translateY: heightReplica }],
+            backgroundColor: 'yellow',
           }}
         />
+        <View style={[styles.row, styles.center]}>
+          <Animated.View
+            style={{
+              width: 50,
+              height: 50,
+              backgroundColor: 'red',
+              borderRadius: 25,
+              transform: [{ translateY: height }],
+            }}
+          />
+          <Animated.View
+            style={{
+              width: 50,
+              height: 50,
+              backgroundColor: 'blue',
+              borderRadius: 25,
+              transform: [{ translateY: heightReplica }],
+            }}
+          />
+        </View>
       </View>
-      <TextInput
-        style={{
-          width: 200,
-          marginTop: 50,
-          height: 50,
-          backgroundColor: 'yellow',
-        }}
-      />
     </View>
   );
 }

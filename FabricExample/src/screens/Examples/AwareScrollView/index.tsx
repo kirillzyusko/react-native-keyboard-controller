@@ -1,6 +1,9 @@
 import React, { useEffect } from 'react';
 import { TextInput, View, Dimensions } from 'react-native';
-import { KeyboardEvents } from 'react-native-keyboard-controller';
+import {
+  KeyboardEvents,
+  useResizeMode,
+} from 'react-native-keyboard-controller';
 import Reanimated, {
   useAnimatedRef,
   useAnimatedScrollHandler,
@@ -17,6 +20,8 @@ export default function BottomTabs() {
   const click = useSharedValue(0);
   const position = useSharedValue(0);
   const fakeViewHeight = useSharedValue(0);
+
+  useResizeMode();
 
   const onScroll = useAnimatedScrollHandler({
     onScroll: (e) => {

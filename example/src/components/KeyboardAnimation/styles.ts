@@ -4,7 +4,7 @@ export default StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
   },
   box: {
     width: 60,
@@ -13,5 +13,8 @@ export default StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
+  },
+  center: {
+    justifyContent: 'center',
   },
 });
