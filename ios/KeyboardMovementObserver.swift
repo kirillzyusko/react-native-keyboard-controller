@@ -120,6 +120,7 @@ public class KeyboardMovementObserver: NSObject {
 
   @objc func setupKeyboardWatcher() {
     displayLink = CADisplayLink(target: self, selector: #selector(updateKeyboardFrame))
+    displayLink?.preferredFramesPerSecond = 120; // will fallback to 60 fps for devices without Pro Motion display
     displayLink?.add(to: .main, forMode: .common)
   }
 
