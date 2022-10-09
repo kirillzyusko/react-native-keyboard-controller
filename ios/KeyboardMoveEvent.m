@@ -19,13 +19,14 @@
 @synthesize eventName = _eventName;
 
 - (instancetype)initWithReactTag:(NSNumber *)reactTag
+                           event:(NSString *)event
                           height:(NSNumber *)height
                         progress:(NSNumber *)progress
 {
   RCTAssertParam(reactTag);
 
   if ((self = [super init])) {
-    _eventName = @"onKeyboardMove";
+    _eventName = [event copy];
     _viewTag = reactTag;
     _progress = progress;
     _height = height;
@@ -68,7 +69,11 @@ RCT_NOT_IMPLEMENTED(-(instancetype)init)
 
 - (NSArray *)arguments
 {
-  return @[ self.viewTag, RCTNormalizeInputEventName(self.eventName), [self body] ];
+  return @[
+    self.viewTag,
+    RCTNormalizeInputEventName(self.eventName),
+    [self body]
+  ];
 }
 
 @end

@@ -78,7 +78,7 @@ class KeyboardAnimationCallback(
       val animation = ValueAnimator.ofInt(-this.persistentKeyboardHeight, -keyboardHeight)
       animation.addUpdateListener { animator ->
         val toValue = animator.animatedValue as Int
-        this.sendEventToJS(KeyboardTransitionEvent(view.id, toValue, -toValue.toDouble() / keyboardHeight))
+        this.sendEventToJS(KeyboardTransitionEvent(view.id, "topKeyboardMove", toValue, -toValue.toDouble() / keyboardHeight))
       }
       animation.doOnEnd {
         this.emitEvent("KeyboardController::keyboardDidShow", getEventParams(keyboardHeight))
@@ -108,6 +108,7 @@ class KeyboardAnimationCallback(
     this.emitEvent("KeyboardController::" + if (!isKeyboardVisible) "keyboardWillHide" else "keyboardWillShow", getEventParams(keyboardHeight))
 
     Log.i(TAG, "HEIGHT:: $keyboardHeight")
+    this.sendEventToJS(KeyboardTransitionEvent(view.id, "topKeyboardMoveStart", keyboardHeight, if (!isKeyboardVisible) 0.0 else 1.0))
 
     return super.onStart(animation, bounds)
   }
@@ -128,7 +129,7 @@ class KeyboardAnimationCallback(
     val diff = Insets.subtract(typesInset, otherInset).let {
       Insets.max(it, Insets.NONE)
     }
-    val diffY = (diff.top - diff.bottom).toFloat()
+    val diffY = (diff.bottom - diff.top).toFloat()
     val height = toDp(diffY, context)
 
     var progress = 0.0
@@ -139,7 +140,7 @@ class KeyboardAnimationCallback(
     }
     Log.i(TAG, "DiffY: $diffY $height $progress")
 
-    this.sendEventToJS(KeyboardTransitionEvent(view.id, height, progress))
+    this.sendEventToJS(KeyboardTransitionEvent(view.id, "topKeyboardMove", height, progress))
 
     return insets
   }
@@ -150,6 +151,7 @@ class KeyboardAnimationCallback(
     isTransitioning = false
     this.persistentKeyboardHeight = getCurrentKeyboardHeight()
     this.emitEvent("KeyboardController::" + if (!isKeyboardVisible) "keyboardDidHide" else "keyboardDidShow", getEventParams(this.persistentKeyboardHeight))
+    this.sendEventToJS(KeyboardTransitionEvent(view.id, "topKeyboardMoveStart", this.persistentKeyboardHeight, if (!isKeyboardVisible) 0.0 else 1.0))
   }
 
   private fun isKeyboardVisible(): Boolean {

@@ -7,4 +7,5 @@ export enum ScreenNames {
   LOTTIE = 'LOTTIE',
   EXAMPLES_STACK = 'EXAMPLES_STACK',
   EXAMPLES = 'EXAMPLES',
+  NON_UI_PROPS = 'NON_UI_PROPS',
 }

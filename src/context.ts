@@ -2,6 +2,7 @@ import { createContext } from 'react';
 import { Animated } from 'react-native';
 
 import type { SharedValue } from 'react-native-reanimated';
+import type { KeyboardHandlers } from './types';
 
 export type AnimatedContext = {
   progress: Animated.Value;
@@ -14,6 +15,7 @@ export type ReanimatedContext = {
 export type KeyboardAnimationContext = {
   animated: AnimatedContext;
   reanimated: ReanimatedContext;
+  setHandlers: (handlers: KeyboardHandlers) => void;
 };
 const defaultContext: KeyboardAnimationContext = {
   animated: {
@@ -24,5 +26,6 @@ const defaultContext: KeyboardAnimationContext = {
     progress: { value: 0 },
     height: { value: 0 },
   },
+  setHandlers: () => {},
 };
 export const KeyboardContext = createContext(defaultContext);

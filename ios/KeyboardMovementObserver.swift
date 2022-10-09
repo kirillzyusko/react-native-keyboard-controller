@@ -10,10 +10,28 @@ import Foundation
 
 @objc(KeyboardMovementObserver)
 public class KeyboardMovementObserver: NSObject {
-  var onEvent: (NSNumber, NSNumber) -> Void
+  // class members
+  var onEvent: (NSString, NSNumber, NSNumber) -> Void
   var onNotify: (String, Any) -> Void
+  // progress tracker
+  private var _keyboardView: UIView?
+  private var keyboardView: UIView? {
+    let windowsCount = UIApplication.shared.windows.count
 
-  @objc public init(handler: @escaping (NSNumber, NSNumber) -> Void, onNotify: @escaping (String, Any) -> Void) {
+    if _keyboardView == nil || windowsCount != _windowsCount {
+      _keyboardView = findKeyboardView()
+      _windowsCount = windowsCount
+    }
+
+    return _keyboardView
+  }
+
+  private var _windowsCount: Int = 0
+  private var prevKeyboardPosition = 0.0
+  private var displayLink: CADisplayLink?
+  private var keyboardHeight: CGFloat = 0.0
+
+  @objc public init(handler: @escaping (NSString, NSNumber, NSNumber) -> Void, onNotify: @escaping (String, Any) -> Void) {
     onEvent = handler
     self.onNotify = onNotify
   }
@@ -53,12 +71,15 @@ public class KeyboardMovementObserver: NSObject {
   @objc func keyboardWillAppear(_ notification: Notification) {
     if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
       let keyboardHeight = keyboardFrame.cgRectValue.size.height
+      self.keyboardHeight = keyboardHeight
 
       var data = [AnyHashable: Any]()
       data["height"] = keyboardHeight
 
-      onEvent(Float(-keyboardHeight) as NSNumber, 1)
+      onEvent("onKeyboardMoveStart", Float(keyboardHeight) as NSNumber, 1)
       onNotify("KeyboardController::keyboardWillShow", data)
+
+      setupKeyboardWatcher()
     }
   }
 
@@ -66,18 +87,24 @@ public class KeyboardMovementObserver: NSObject {
     var data = [AnyHashable: Any]()
     data["height"] = 0
 
-    onEvent(0, 0)
+    onEvent("onKeyboardMoveStart", 0, 0)
     onNotify("KeyboardController::keyboardWillHide", data)
+
+    setupKeyboardWatcher()
   }
 
   @objc func keyboardDidAppear(_ notification: Notification) {
     if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
       let keyboardHeight = keyboardFrame.cgRectValue.size.height
+      self.keyboardHeight = keyboardHeight
 
       var data = [AnyHashable: Any]()
       data["height"] = keyboardHeight
 
+      onEvent("onKeyboardMoveEnd", keyboardHeight as NSNumber, 1)
       onNotify("KeyboardController::keyboardDidShow", data)
+
+      removeKeyboardWatcher()
     }
   }
 
@@ -85,6 +112,60 @@ public class KeyboardMovementObserver: NSObject {
     var data = [AnyHashable: Any]()
     data["height"] = 0
 
+    onEvent("onKeyboardMoveEnd", 0 as NSNumber, 0)
     onNotify("KeyboardController::keyboardDidHide", data)
+
+    removeKeyboardWatcher()
+  }
+
+  @objc func setupKeyboardWatcher() {
+    displayLink = CADisplayLink(target: self, selector: #selector(updateKeyboardFrame))
+    displayLink?.add(to: .main, forMode: .common)
+  }
+
+  @objc func removeKeyboardWatcher() {
+    displayLink?.invalidate()
+    displayLink = nil
+  }
+
+  // https://stackoverflow.com/questions/32598490/show-uiview-with-buttons-over-keyboard-like-in-skype-viber-messengers-swift-i
+  func findKeyboardView() -> UIView? {
+    var result: UIView?
+
+    let windows = UIApplication.shared.windows
+    for window in windows {
+      if window.description.hasPrefix("<UITextEffectsWindow") {
+        for subview in window.subviews {
+          if subview.description.hasPrefix("<UIInputSetContainerView") {
+            for sv in subview.subviews {
+              if sv.description.hasPrefix("<UIInputSetHostView") {
+                result = sv as? UIView
+                break
+              }
+            }
+            break
+          }
+        }
+        break
+      }
+    }
+    return result
+  }
+
+  @objc func updateKeyboardFrame() {
+    if keyboardView == nil {
+      return
+    }
+
+    var keyboardFrameY = keyboardView!.layer.presentation()!.frame.origin.y
+    var keyboardWindowH = keyboardView!.window!.bounds.size.height
+    var keyboardPosition = keyboardWindowH - keyboardFrameY
+
+    if keyboardPosition == prevKeyboardPosition || keyboardFrameY == 0 {
+      return
+    }
+
+    prevKeyboardPosition = keyboardPosition
+    onEvent("onKeyboardMove", keyboardPosition as NSNumber, keyboardPosition / CGFloat(keyboardHeight) as NSNumber)
   }
 }

@@ -13,7 +13,15 @@ export type EventWithName<T> = {
 // native View/Module declarations
 
 export type KeyboardControllerProps = {
-  onKeyboardMove: (e: NativeSyntheticEvent<EventWithName<NativeEvent>>) => void;
+  onKeyboardMoveStart?: (
+    e: NativeSyntheticEvent<EventWithName<NativeEvent>>
+  ) => void;
+  onKeyboardMove?: (
+    e: NativeSyntheticEvent<EventWithName<NativeEvent>>
+  ) => void;
+  onKeyboardMoveEnd?: (
+    e: NativeSyntheticEvent<EventWithName<NativeEvent>>
+  ) => void;
   // fake prop used to activate reanimated bindings
   onKeyboardMoveReanimated: (
     e: NativeSyntheticEvent<EventWithName<NativeEvent>>
@@ -40,3 +48,12 @@ export type KeyboardControllerEvents =
 export type KeyboardEventData = {
   height: number;
 };
+
+// package types
+
+export type KeyboardHandler = {
+  onStart?: (e: NativeEvent) => void;
+  onMove?: (e: NativeEvent) => void;
+  onEnd?: (e: NativeEvent) => void;
+};
+export type KeyboardHandlers = Record<string, KeyboardHandler | undefined>;

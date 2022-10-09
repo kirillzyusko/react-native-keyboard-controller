@@ -58,8 +58,12 @@ class KeyboardControllerViewManagerImpl(reactContext: ReactApplicationContext) {
 
   fun getExportedCustomDirectEventTypeConstants(): MutableMap<String, Any> {
     val map: MutableMap<String, Any> = MapBuilder.of(
-      KeyboardTransitionEvent.EVENT_NAME,
-      MapBuilder.of("registrationName", "onKeyboardMove")
+      "topKeyboardMove",
+      MapBuilder.of("registrationName", "onKeyboardMove"),
+      "topKeyboardMoveStart",
+      MapBuilder.of("registrationName", "onKeyboardMoveStart"),
+      "topKeyboardMoveEnd",
+      MapBuilder.of("registrationName", "onKeyboardMoveEnd"),
     )
 
     return map
