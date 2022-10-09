@@ -39,7 +39,7 @@ function NonUIProps() {
   const rStyle = useAnimatedStyle(() => {
     return {
       backgroundColor: 'gray',
-      height: Math.abs(height.value),
+      height: height.value,
       width: interpolate(progress.value, [0, 1], [100, 200]),
     };
   });

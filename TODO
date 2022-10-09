@@ -1,6 +1,7 @@
-- [ ] check that context handlers reacts to local state changes
+- [x] check that context handlers reacts to local state changes
 - [ ] check fabric
 - [ ] state in events? (open, close, change, interactive)
-- [ ] check that values always present in all methods (onStart,onEnd,onMove) in all test cases (close, open, change size)
-- [ ] useKeyboardHandler (with and without resize)
+- [x] check that values always present in all methods (onStart,onEnd,onMove) in all test cases (close, open, change size)
+- [ ] useKeyboardHandler (with and without adjustResize)
 - [ ] versioned docs
+- [ ] iOS (on hide calls start/end twice)

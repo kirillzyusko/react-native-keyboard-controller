@@ -74,14 +74,16 @@ class KeyboardAnimationCallback(
       val keyboardHeight = getCurrentKeyboardHeight()
 
       this.emitEvent("KeyboardController::keyboardWillShow", getEventParams(keyboardHeight))
+      this.sendEventToJS(KeyboardTransitionEvent(view.id, "topKeyboardMoveStart", keyboardHeight, 1.0))
 
-      val animation = ValueAnimator.ofInt(-this.persistentKeyboardHeight, -keyboardHeight)
+      val animation = ValueAnimator.ofInt(this.persistentKeyboardHeight, keyboardHeight)
       animation.addUpdateListener { animator ->
         val toValue = animator.animatedValue as Int
-        this.sendEventToJS(KeyboardTransitionEvent(view.id, "topKeyboardMove", toValue, -toValue.toDouble() / keyboardHeight))
+        this.sendEventToJS(KeyboardTransitionEvent(view.id, "topKeyboardMove", toValue, toValue.toDouble() / keyboardHeight))
       }
       animation.doOnEnd {
         this.emitEvent("KeyboardController::keyboardDidShow", getEventParams(keyboardHeight))
+        this.sendEventToJS(KeyboardTransitionEvent(view.id, "topKeyboardMoveEnd", keyboardHeight, 1.0))
       }
       animation.setDuration(250).startDelay = 0
       animation.start()
@@ -151,7 +153,7 @@ class KeyboardAnimationCallback(
     isTransitioning = false
     this.persistentKeyboardHeight = getCurrentKeyboardHeight()
     this.emitEvent("KeyboardController::" + if (!isKeyboardVisible) "keyboardDidHide" else "keyboardDidShow", getEventParams(this.persistentKeyboardHeight))
-    this.sendEventToJS(KeyboardTransitionEvent(view.id, "topKeyboardMoveStart", this.persistentKeyboardHeight, if (!isKeyboardVisible) 0.0 else 1.0))
+    this.sendEventToJS(KeyboardTransitionEvent(view.id, "topKeyboardMoveEnd", this.persistentKeyboardHeight, if (!isKeyboardVisible) 0.0 else 1.0))
   }
 
   private fun isKeyboardVisible(): Boolean {
