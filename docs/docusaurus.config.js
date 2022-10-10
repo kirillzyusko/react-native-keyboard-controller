@@ -39,6 +39,11 @@ const config = {
           // Remove this to remove the "edit this page" links.
           editUrl:
             'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+          versions: {
+            '1.0.0': {
+              label: '1.0.0-1.3.0',
+            },
+          },
         },
         blog: {
           showReadingTime: true,
@@ -80,6 +85,11 @@ const config = {
             position: 'left',
           },
           { to: '/blog', label: 'Blog', position: 'left' },
+          {
+            type: 'docsVersionDropdown',
+            position: 'left',
+            dropdownActiveClassDisabled: true,
+          },
           {
             href: 'https://github.com/kirillzyusko/react-native-keyboard-controller/tree/main/example',
             label: 'Example App',
