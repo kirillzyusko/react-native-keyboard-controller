@@ -69,11 +69,7 @@ RCT_NOT_IMPLEMENTED(-(instancetype)init)
 
 - (NSArray *)arguments
 {
-  return @[
-    self.viewTag,
-    RCTNormalizeInputEventName(self.eventName),
-    [self body]
-  ];
+  return @[ self.viewTag, RCTNormalizeInputEventName(self.eventName), [self body] ];
 }
 
 @end

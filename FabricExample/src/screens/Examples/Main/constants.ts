@@ -19,4 +19,9 @@ export const examples: Example[] = [
     info: ScreenNames.STATUS_BAR,
     icons: '🔋',
   },
+  {
+    title: 'Non UI Props',
+    info: ScreenNames.NON_UI_PROPS,
+    icons: '🚀',
+  },
 ];
