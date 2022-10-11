@@ -31,7 +31,10 @@ public class KeyboardMovementObserver: NSObject {
   private var displayLink: CADisplayLink?
   private var keyboardHeight: CGFloat = 0.0
 
-  @objc public init(handler: @escaping (NSString, NSNumber, NSNumber) -> Void, onNotify: @escaping (String, Any) -> Void) {
+  @objc public init(
+    handler: @escaping (NSString, NSNumber, NSNumber) -> Void,
+    onNotify: @escaping (String, Any) -> Void
+  ) {
     onEvent = handler
     self.onNotify = onNotify
   }
@@ -120,7 +123,7 @@ public class KeyboardMovementObserver: NSObject {
 
   @objc func setupKeyboardWatcher() {
     displayLink = CADisplayLink(target: self, selector: #selector(updateKeyboardFrame))
-    displayLink?.preferredFramesPerSecond = 120; // will fallback to 60 fps for devices without Pro Motion display
+    displayLink?.preferredFramesPerSecond = 120 // will fallback to 60 fps for devices without Pro Motion display
     displayLink?.add(to: .main, forMode: .common)
   }
 
@@ -138,9 +141,9 @@ public class KeyboardMovementObserver: NSObject {
       if window.description.hasPrefix("<UITextEffectsWindow") {
         for subview in window.subviews {
           if subview.description.hasPrefix("<UIInputSetContainerView") {
-            for sv in subview.subviews {
-              if sv.description.hasPrefix("<UIInputSetHostView") {
-                result = sv as? UIView
+            for hostView in subview.subviews {
+              if hostView.description.hasPrefix("<UIInputSetHostView") {
+                result = hostView as? UIView
                 break
               }
             }
