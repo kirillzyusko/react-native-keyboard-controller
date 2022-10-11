@@ -1,9 +1,0 @@
-- [x] check that context handlers reacts to local state changes
-- [x] check fabric
-- [x] fix TS
-- [ ] state in events? (open, close, change, interactive)
-- [x] check that values always present in all methods (onStart,onEnd,onMove) in all test cases (close, open, change size)
-- [x] useKeyboardHandler (with and without adjustResize)
-- [x] versioned docs
-- [ ] iOS (on hide calls start/end twice)
-- [ ] blog post
