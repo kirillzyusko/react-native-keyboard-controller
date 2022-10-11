@@ -51,9 +51,10 @@ export type KeyboardEventData = {
 
 // package types
 
+export type Handlers<T> = Record<string, T | undefined>;
 export type KeyboardHandler = {
   onStart?: (e: NativeEvent) => void;
   onMove?: (e: NativeEvent) => void;
   onEnd?: (e: NativeEvent) => void;
 };
-export type KeyboardHandlers = Record<string, KeyboardHandler | undefined>;
+export type KeyboardHandlers = Handlers<KeyboardHandler>;

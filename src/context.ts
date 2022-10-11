@@ -6,7 +6,7 @@ import type { KeyboardHandlers } from './types';
 
 export type AnimatedContext = {
   progress: Animated.Value;
-  height: Animated.Value;
+  height: Animated.AnimatedMultiplication<number>;
 };
 export type ReanimatedContext = {
   progress: SharedValue<number>;

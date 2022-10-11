@@ -1,7 +1,7 @@
 import { useCallback, useRef } from 'react';
 import { useEvent, useHandler, useSharedValue } from 'react-native-reanimated';
 
-import type { EventWithName, NativeEvent } from './types';
+import type { EventWithName, Handlers, NativeEvent } from './types';
 
 export function useAnimatedKeyboardHandler<
   TContext extends Record<string, unknown>
@@ -41,11 +41,18 @@ export function useAnimatedKeyboardHandler<
   );
 }
 
-type Handlers<T> = Record<string, T>;
-
-// TODO: T - overkill?
-// TODO: make types correct (type is not a string)
-export function useSharedHandlers<T>() {
+/**
+ * Hook for storing worklet handlers (objects with keys, where values are worklets).
+ * Returns methods for setting handlers and broadcasting events in them.
+ *
+ * T is a generic that looks like:
+ * @example
+ * {
+ *  onEvent: () => {},
+ *  onEvent2: () => {},
+ * }
+ */
+export function useSharedHandlers<T extends Record<string, Function>>() {
   const handlers = useSharedValue<Handlers<T>>({});
   const jsHandlers = useRef<Handlers<T>>({});
 
@@ -68,7 +75,7 @@ export function useSharedHandlers<T>() {
     };
     updateSharedHandlers();
   }, []);
-  const broadcast = (type: string, event: NativeEvent) => {
+  const broadcast = (type: keyof T, event: NativeEvent) => {
     'worklet';
 
     Object.keys(handlers.value).forEach((key) =>
