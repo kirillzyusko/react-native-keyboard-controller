@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo } from 'react';
+import { DependencyList, useContext, useEffect } from 'react';
 
 import { AnimatedContext, KeyboardContext, ReanimatedContext } from './context';
 import { AndroidSoftInputModes, KeyboardController } from './native';
@@ -32,10 +32,9 @@ export const useReanimatedKeyboardAnimation = (): ReanimatedContext => {
 
 export function useGenericKeyboardHandler(
   handler: KeyboardHandler,
-  deps?: ReadonlyArray<unknown>
+  deps?: DependencyList
 ) {
   const context = useContext(KeyboardContext);
-  const memoizedHandler = useMemo(() => handler, deps);
 
   useEffect(() => {
     const key = uuid();
@@ -45,12 +44,12 @@ export function useGenericKeyboardHandler(
     return () => {
       context.setHandlers({ [key]: undefined });
     };
-  }, [memoizedHandler]);
+  }, deps);
 }
 
 export function useKeyboardHandler(
   handler: KeyboardHandler,
-  deps?: ReadonlyArray<unknown>
+  deps?: DependencyList
 ) {
   useResizeMode();
   useGenericKeyboardHandler(handler, deps);
