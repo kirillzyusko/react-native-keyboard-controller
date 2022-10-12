@@ -144,6 +144,7 @@ const config = {
         copyright: `Copyright © ${new Date().getFullYear()} Kirill Zyusko. Built with Docusaurus.`,
       },
       prism: {
+        additionalLanguages: ['java', 'kotlin', 'swift'],
         theme: lightCodeTheme,
         darkTheme: darkCodeTheme,
       },
