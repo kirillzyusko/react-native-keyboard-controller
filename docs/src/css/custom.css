@@ -68,3 +68,20 @@
     var(--ifm-color-emphasis-100) 100%
   );
 }
+
+.grid {
+  display: grid;
+  grid-template-columns: 80% 20%;
+}
+
+@media (max-width: 700px) {
+  .grid { grid-template-columns: 70% 30% }
+}
+
+@media (max-width: 500px) {
+  .grid { grid-template-columns: 60% 40% }
+}
+
+@media (max-width: 356px) {
+  .grid { grid-template-columns: 100% 0% }
+}
