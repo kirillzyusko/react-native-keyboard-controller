@@ -23,5 +23,5 @@ iOS doesn't give an API to track each keyboard frame. But it gives an informatio
 :::caution Non discrete values
 Unlike Android, `progress` value on iOS will have only two values (`0` or `1`) - i.e. it will not have an intermediate values, like 0.07, 0.12, 0.27 etc (same is applied to `height` property - it doesn't have an intermediate values). It's not a big problem, but some interpolations (which are relying on intermediate values) may not work properly.
 
-It's a known limitation and I'm looking for a solution to overcome this problem 👀
+If you are animating non UI props (such as `width`, `height`, etc.) and you need to have intermediate values - consider to use [useKeyboardHandler](../api/hooks/use-keyboard-handler.md) hook.
 :::
