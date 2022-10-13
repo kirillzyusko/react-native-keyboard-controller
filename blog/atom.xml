@@ -2,11 +2,26 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://kirillzyusko.github.io/react-native-keyboard-controller/blog</id>
     <title>Keyboard Controller Blog</title>
-    <updated>2022-09-22T00:00:00.000Z</updated>
+    <updated>2022-10-15T00:00:00.000Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog"/>
     <subtitle>Keyboard Controller Blog</subtitle>
     <icon>https://kirillzyusko.github.io/react-native-keyboard-controller/img/favicon.ico</icon>
+    <entry>
+        <title type="html"><![CDATA[Version 1.4.0 with new hook]]></title>
+        <id>new-hook</id>
+        <link href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/new-hook"/>
+        <updated>2022-10-15T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[New 1.4.0 release enhance API and adds new useKeyboardHandler hook. While keeping no breaking changes this release (via new hook) adds an ability to have intermediate values on iOS for height and progress values (before it was not possible and it was a restriction of the library).]]></summary>
+        <content type="html"><![CDATA[<p>New 1.4.0 release enhance API and adds new <code>useKeyboardHandler</code> hook. While keeping no breaking changes this release (via new hook) adds an ability to have intermediate values on iOS for <code>height</code> and <code>progress</code> values (before it was not possible and it was a restriction of the library).</p><p>Also this hooks allow to track keyboard lifecycle and it's better suit for complex animations 😎</p><p>Check out the new documentation for this hook, upgrade library version to <code>1.4.0</code> and start using it today!</p>]]></content>
+        <author>
+            <name>Kirill Zyusko</name>
+            <uri>https://github.com/kirillzyusko</uri>
+        </author>
+        <category label="new hook" term="new hook"/>
+        <category label="iOS" term="iOS"/>
+        <category label="intermediate values" term="intermediate values"/>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Version 1.2.0 with new architecture support]]></title>
         <id>fabric</id>

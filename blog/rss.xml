@@ -4,10 +4,21 @@
         <title>Keyboard Controller Blog</title>
         <link>https://kirillzyusko.github.io/react-native-keyboard-controller/blog</link>
         <description>Keyboard Controller Blog</description>
-        <lastBuildDate>Thu, 22 Sep 2022 00:00:00 GMT</lastBuildDate>
+        <lastBuildDate>Sat, 15 Oct 2022 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <language>en</language>
+        <item>
+            <title><![CDATA[Version 1.4.0 with new hook]]></title>
+            <link>https://kirillzyusko.github.io/react-native-keyboard-controller/blog/new-hook</link>
+            <guid>new-hook</guid>
+            <pubDate>Sat, 15 Oct 2022 00:00:00 GMT</pubDate>
+            <description><![CDATA[New 1.4.0 release enhance API and adds new useKeyboardHandler hook. While keeping no breaking changes this release (via new hook) adds an ability to have intermediate values on iOS for height and progress values (before it was not possible and it was a restriction of the library).]]></description>
+            <content:encoded><![CDATA[<p>New 1.4.0 release enhance API and adds new <code>useKeyboardHandler</code> hook. While keeping no breaking changes this release (via new hook) adds an ability to have intermediate values on iOS for <code>height</code> and <code>progress</code> values (before it was not possible and it was a restriction of the library).</p><p>Also this hooks allow to track keyboard lifecycle and it's better suit for complex animations 😎</p><p>Check out the new documentation for this hook, upgrade library version to <code>1.4.0</code> and start using it today!</p>]]></content:encoded>
+            <category>new hook</category>
+            <category>iOS</category>
+            <category>intermediate values</category>
+        </item>
         <item>
             <title><![CDATA[Version 1.2.0 with new architecture support]]></title>
             <link>https://kirillzyusko.github.io/react-native-keyboard-controller/blog/fabric</link>
