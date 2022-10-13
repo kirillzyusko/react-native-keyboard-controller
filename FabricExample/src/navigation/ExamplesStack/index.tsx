@@ -8,6 +8,7 @@ import ReanimatedChat from '../../screens/Examples/ReanimatedChat';
 import Events from '../../screens/Examples/Events';
 import AwareScrollView from '../../screens/Examples/AwareScrollView';
 import StatusBar from '../../screens/Examples/StatusBar';
+import NonUIProps from '../../screens/Examples/NonUIProps';
 
 type ExamplesStackParamList = {
   [ScreenNames.ANIMATED_EXAMPLE]: undefined;
@@ -15,6 +16,7 @@ type ExamplesStackParamList = {
   [ScreenNames.EVENTS]: undefined;
   [ScreenNames.AWARE_SCROLL_VIEW]: undefined;
   [ScreenNames.STATUS_BAR]: undefined;
+  [ScreenNames.NON_UI_PROPS]: undefined;
 };
 
 const Stack = createStackNavigator<ExamplesStackParamList>();
@@ -35,6 +37,9 @@ const options = {
   [ScreenNames.STATUS_BAR]: {
     headerShown: false,
     title: 'Status bar manipulation',
+  },
+  [ScreenNames.NON_UI_PROPS]: {
+    title: 'Non UI Props',
   },
 };
 
@@ -64,6 +69,11 @@ const ExamplesStack = () => (
       name={ScreenNames.STATUS_BAR}
       component={StatusBar}
       options={options[ScreenNames.STATUS_BAR]}
+    />
+    <Stack.Screen
+      name={ScreenNames.NON_UI_PROPS}
+      component={NonUIProps}
+      options={options[ScreenNames.NON_UI_PROPS]}
     />
   </Stack.Navigator>
 );

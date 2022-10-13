@@ -19,13 +19,14 @@
 @synthesize eventName = _eventName;
 
 - (instancetype)initWithReactTag:(NSNumber *)reactTag
+                           event:(NSString *)event
                           height:(NSNumber *)height
                         progress:(NSNumber *)progress
 {
   RCTAssertParam(reactTag);
 
   if ((self = [super init])) {
-    _eventName = @"onKeyboardMove";
+    _eventName = [event copy];
     _viewTag = reactTag;
     _progress = progress;
     _height = height;

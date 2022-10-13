@@ -1,12 +1,16 @@
 import React, { useMemo, useRef } from 'react';
-import { Animated, StyleSheet, ViewStyle } from 'react-native';
+import { Animated, Platform, StyleSheet, ViewStyle } from 'react-native';
 import Reanimated, { useSharedValue } from 'react-native-reanimated';
 
 import { KeyboardContext } from './context';
-import { useAnimatedKeyboardHandler } from './internal';
+import { useAnimatedKeyboardHandler, useSharedHandlers } from './internal';
 import { KeyboardControllerView } from './native';
 
-import type { KeyboardControllerProps, NativeEvent } from './types';
+import type {
+  KeyboardControllerProps,
+  KeyboardHandler,
+  NativeEvent,
+} from './types';
 
 const KeyboardControllerViewAnimated = Reanimated.createAnimatedComponent(
   Animated.createAnimatedComponent(
@@ -53,11 +57,13 @@ export const KeyboardProvider = ({
   // shared values
   const progressSV = useSharedValue(0);
   const heightSV = useSharedValue(0);
+  const { setHandlers, broadcast } = useSharedHandlers<KeyboardHandler>();
   // memo
   const context = useMemo(
     () => ({
-      animated: { progress: progress, height: height },
+      animated: { progress: progress, height: Animated.multiply(height, -1) },
       reanimated: { progress: progressSV, height: heightSV },
+      setHandlers,
     }),
     []
   );
@@ -84,12 +90,32 @@ export const KeyboardProvider = ({
     []
   );
   // handlers
+  const updateSharedValues = (event: NativeEvent, platforms: string[]) => {
+    'worklet';
+
+    if (platforms.includes(Platform.OS)) {
+      progressSV.value = event.progress;
+      heightSV.value = -event.height;
+    }
+  };
   const handler = useAnimatedKeyboardHandler(
     {
+      onKeyboardMoveStart: (event: NativeEvent) => {
+        'worklet';
+
+        broadcast('onStart', event);
+        updateSharedValues(event, ['ios']);
+      },
       onKeyboardMove: (event: NativeEvent) => {
         'worklet';
-        progressSV.value = event.progress;
-        heightSV.value = event.height;
+
+        broadcast('onMove', event);
+        updateSharedValues(event, ['android']);
+      },
+      onKeyboardMoveEnd: (event: NativeEvent) => {
+        'worklet';
+
+        broadcast('onEnd', event);
       },
     },
     []
@@ -99,7 +125,8 @@ export const KeyboardProvider = ({
     <KeyboardContext.Provider value={context}>
       <KeyboardControllerViewAnimated
         onKeyboardMoveReanimated={handler}
-        onKeyboardMove={onKeyboardMove}
+        onKeyboardMoveStart={Platform.OS === 'ios' ? onKeyboardMove : undefined}
+        onKeyboardMove={Platform.OS === 'android' ? onKeyboardMove : undefined}
         statusBarTranslucent={statusBarTranslucent}
         style={styles.container}
       >

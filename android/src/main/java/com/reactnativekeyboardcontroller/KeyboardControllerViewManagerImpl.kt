@@ -9,7 +9,6 @@ import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.common.MapBuilder
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.views.view.ReactViewGroup
-import com.reactnativekeyboardcontroller.events.KeyboardTransitionEvent
 
 class KeyboardControllerViewManagerImpl(reactContext: ReactApplicationContext) {
   private val TAG = KeyboardControllerViewManagerImpl::class.qualifiedName
@@ -58,8 +57,12 @@ class KeyboardControllerViewManagerImpl(reactContext: ReactApplicationContext) {
 
   fun getExportedCustomDirectEventTypeConstants(): MutableMap<String, Any> {
     val map: MutableMap<String, Any> = MapBuilder.of(
-      KeyboardTransitionEvent.EVENT_NAME,
-      MapBuilder.of("registrationName", "onKeyboardMove")
+      "topKeyboardMove",
+      MapBuilder.of("registrationName", "onKeyboardMove"),
+      "topKeyboardMoveStart",
+      MapBuilder.of("registrationName", "onKeyboardMoveStart"),
+      "topKeyboardMoveEnd",
+      MapBuilder.of("registrationName", "onKeyboardMoveEnd"),
     )
 
     return map

@@ -1,7 +1,12 @@
 import React from 'react';
 import { StyleSheet, TextInput, View } from 'react-native';
 import Lottie from 'lottie-react-native';
-import { useKeyboardAnimation } from 'react-native-keyboard-controller';
+import { useKeyboardHandler } from 'react-native-keyboard-controller';
+import Reanimated, {
+  interpolate,
+  useAnimatedProps,
+  useSharedValue,
+} from 'react-native-reanimated';
 
 // animation is taken from lottie public animations: https://lottiefiles.com/46216-lock-debit-card-morph
 import LockDebitCardMorph from './animation.json';
@@ -22,23 +27,41 @@ const styles = StyleSheet.create({
   },
 });
 
-function LottieAnimation() {
-  const { progress } = useKeyboardAnimation();
+const ReanimatedLottieView = Reanimated.createAnimatedComponent(Lottie);
 
-  const animation = progress.interpolate({
-    inputRange: [0, 1],
-    // 104 - total frames
-    // 7 frame - transition begins
-    // 35 frame - transition ends
-    outputRange: [7 / 104, 35 / 104],
+function LottieAnimation() {
+  const progress = useSharedValue(0);
+
+  useKeyboardHandler(
+    {
+      onMove: (e) => {
+        'worklet';
+
+        progress.value = e.progress;
+      },
+    },
+    []
+  );
+
+  const animatedProps = useAnimatedProps(() => {
+    return {
+      progress: interpolate(
+        progress.value,
+        [0, 1],
+        // 104 - total frames
+        // 7 frame - transition begins
+        // 35 frame - transition ends
+        [7 / 104, 35 / 104]
+      ),
+    };
   });
 
   return (
     <View style={styles.container}>
-      <Lottie
+      <ReanimatedLottieView
         style={styles.lottie}
         source={LockDebitCardMorph}
-        progress={animation}
+        animatedProps={animatedProps}
       />
       <TextInput style={styles.input} />
     </View>

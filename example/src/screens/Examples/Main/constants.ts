@@ -24,4 +24,9 @@ export const examples: Example[] = [
     info: ScreenNames.LOTTIE,
     icons: '⚠️ 🎞',
   },
+  {
+    title: 'Non UI Props',
+    info: ScreenNames.NON_UI_PROPS,
+    icons: '🚀',
+  },
 ];

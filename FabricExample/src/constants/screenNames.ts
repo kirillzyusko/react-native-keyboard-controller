@@ -6,4 +6,5 @@ export enum ScreenNames {
   STATUS_BAR = 'STATUS_BAR',
   EXAMPLES_STACK = 'EXAMPLES_STACK',
   EXAMPLES = 'EXAMPLES',
+  NON_UI_PROPS = 'NON_UI_PROPS',
 }
