@@ -49,33 +49,43 @@ Since `onMove` handler on iOS is based on `CADisplayLink` usage - you may need t
 
 #### `onStart`
 
+export const onStartCode = (
+  <CodeBlock
+    language="ts"
+  >
+{`useKeyboardHandler(
+  {
+    onStart: (e) => {
+      'worklet';
+      const willKeyboardAppear = e.progress === 1;
+    }
+  },
+  []
+);`}
+  </CodeBlock>
+);
+
 <div class="grid">
   <div style={{paddingRight: 20}}>
     This function is called before the keyboard movement starts. <code>height</code> and <code>progress</code> values will have <b>destination</b> values, i. e. if keyboard was closed but will appear - these values will have a values like "keyboard is already opened" (<code>progress</code> will be equal to <code>1</code> and <code>height</code> will have non-zero value).
     <br/>
     <br/>
-    <CodeBlock
-      language="ts"
-    >
-      {`onStart: (e) => {
-  'worklet';
-  const willKeyboardAppear = e.progress === 1;
-}`}
-    </CodeBlock>
+    <div class="desktop">
+      {onStartCode}
+    </div>
   </div>
   <div>
     <img src={require('./start.png').default} />
   </div>
 </div>
+<div class="mobile">
+  {onStartCode}
+</div>
 
 #### `onMove`
 
-<div class="grid">
-  <div style={{paddingRight: 20}}>
-    This function will be called every frame when the keyboard changes its position.
-    <br/>
-    <br/>
-    <CodeBlock
+export const onMoveCode = (
+  <CodeBlock
       language="ts"
     >
       {`useKeyboardHandler(
@@ -89,10 +99,23 @@ Since `onMove` handler on iOS is based on `CADisplayLink` usage - you may need t
   []
 );`}
     </CodeBlock>
+);
+
+<div class="grid">
+  <div style={{paddingRight: 20}}>
+    This function will be called every frame when the keyboard changes its position.
+    <br/>
+    <br/>
+    <div class="desktop">
+      {onMoveCode}
+    </div>
   </div>
   <div>
     <img src={require('./move.png').default} />
   </div>
+</div>
+<div class="mobile">
+  {onMoveCode}
 </div>
 
 :::info Not precise values
@@ -103,12 +126,8 @@ The same is applied to Android < 11 - these OS versions don't have API for getti
 
 #### `onEnd`
 
-<div class="grid">
-  <div style={{paddingRight: 20}}>
-    This function will be called when the keyboard has completed its movement. The event will contain <b>current</b> keyboard metrics.
-    <br/>
-    <br/>
-    <CodeBlock
+export const onEndCode = (
+  <CodeBlock
       language="ts"
     >
       {`useKeyboardHandler(
@@ -122,8 +141,22 @@ The same is applied to Android < 11 - these OS versions don't have API for getti
   []
 );`}
     </CodeBlock>
+);
+
+<div class="grid">
+  <div style={{paddingRight: 20}}>
+    This function will be called when the keyboard has completed its movement. The event will contain <b>current</b> keyboard metrics.
+    <br/>
+    <br/>
+    <div class="desktop">
+      {onEndCode}
+    </div>
   </div>
   <div>
     <img src={require('./end.png').default} />
   </div>
+</div>
+
+<div class="mobile">
+  {onEndCode}
 </div>

@@ -93,3 +93,16 @@
 @media (max-width: 356px) {
   .grid { grid-template-columns: 100% 0% }
 }
+
+.desktop {
+  display: block;
+}
+
+.mobile {
+  display: none;
+}
+
+@media (max-width: 500px) {
+  .desktop { display: none; }
+  .mobile { display: block; }
+}
