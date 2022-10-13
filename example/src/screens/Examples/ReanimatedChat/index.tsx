@@ -1,15 +1,7 @@
 import React from 'react';
 import { TextInput, View } from 'react-native';
-import {
-  useKeyboardHandler,
-  useReanimatedKeyboardAnimation,
-} from 'react-native-keyboard-controller';
-import Reanimated, {
-  Easing,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated';
+import { useReanimatedKeyboardAnimation } from 'react-native-keyboard-controller';
+import Reanimated, { useAnimatedStyle } from 'react-native-reanimated';
 import Message from '../../../components/Message';
 import { history } from '../../../components/Message/data';
 import styles from './styles';
@@ -17,27 +9,7 @@ import styles from './styles';
 const AnimatedTextInput = Reanimated.createAnimatedComponent(TextInput);
 
 function ReanimatedChat() {
-  const heightR = useSharedValue(0);
-  useKeyboardHandler(
-    {
-      onStart: (e) => {
-        'worklet';
-
-        heightR.value = withTiming(-e.height, {
-          duration: 250,
-          easing: Easing.bezier(
-            0.19919472913616398,
-            0.010644531250000006,
-            0.27920937042459737,
-            0.91025390625
-          ),
-        });
-      },
-    },
-    []
-  );
-  // const { height } = useReanimatedKeyboardAnimation();
-  const height = heightR;
+  const { height } = useReanimatedKeyboardAnimation();
 
   const scrollViewStyle = useAnimatedStyle(
     () => ({
