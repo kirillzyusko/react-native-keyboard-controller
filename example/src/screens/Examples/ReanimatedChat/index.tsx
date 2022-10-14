@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Text, TextInput, View } from 'react-native';
 import { useReanimatedKeyboardAnimation } from 'react-native-keyboard-controller';
-import Reanimated, { useAnimatedStyle } from 'react-native-reanimated';
+import Reanimated, {
+  useAnimatedStyle,
+  useDerivedValue,
+} from 'react-native-reanimated';
 
 import Message from '../../../components/Message';
 import { history } from '../../../components/Message/data';
@@ -21,7 +24,7 @@ function ReanimatedChat({ navigation }: Props) {
     navigation.setOptions({
       headerRight: () => (
         <Text
-          style={{ marginRight: 12 }}
+          style={styles.header}
           onPress={() => setTGTransition((value) => !value)}
         >
           {`Switch to ${isTGTransition ? 'Platform' : 'Telegram'}`}
@@ -32,13 +35,16 @@ function ReanimatedChat({ navigation }: Props) {
 
   const { height: telegram } = useTelegramTransitions();
   const { height: platform } = useReanimatedKeyboardAnimation();
-  const height = isTGTransition ? telegram : platform;
+  const height = useDerivedValue(
+    () => (isTGTransition ? telegram.value : platform.value),
+    [isTGTransition]
+  );
 
   const scrollViewStyle = useAnimatedStyle(
     () => ({
       transform: [{ translateY: height.value }, ...styles.inverted.transform],
     }),
-    [isTGTransition]
+    []
   );
   const textInputStyle = useAnimatedStyle(
     () => ({
@@ -47,13 +53,13 @@ function ReanimatedChat({ navigation }: Props) {
       backgroundColor: '#BCBCBC',
       transform: [{ translateY: height.value }],
     }),
-    [isTGTransition]
+    []
   );
   const fakeView = useAnimatedStyle(
     () => ({
       height: Math.abs(height.value),
     }),
-    [isTGTransition]
+    []
   );
 
   return (

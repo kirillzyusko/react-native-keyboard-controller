@@ -1,15 +1,44 @@
-import React from 'react';
-import { TextInput, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Text, TextInput, View } from 'react-native';
 import { useReanimatedKeyboardAnimation } from 'react-native-keyboard-controller';
-import Reanimated, { useAnimatedStyle } from 'react-native-reanimated';
+import Reanimated, {
+  useAnimatedStyle,
+  useDerivedValue,
+} from 'react-native-reanimated';
+
 import Message from '../../../components/Message';
 import { history } from '../../../components/Message/data';
+import { useTelegramTransitions } from './hooks';
 import styles from './styles';
+
+import type { StackScreenProps } from '@react-navigation/stack';
+import type { ExamplesStackParamList } from '../../../navigation/ExamplesStack';
 
 const AnimatedTextInput = Reanimated.createAnimatedComponent(TextInput);
 
-function ReanimatedChat() {
-  const { height } = useReanimatedKeyboardAnimation();
+type Props = StackScreenProps<ExamplesStackParamList>;
+
+function ReanimatedChat({ navigation }: Props) {
+  const [isTGTransition, setTGTransition] = useState(false);
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <Text
+          style={styles.header}
+          onPress={() => setTGTransition((value) => !value)}
+        >
+          {`Switch to ${isTGTransition ? 'Platform' : 'Telegram'}`}
+        </Text>
+      ),
+    });
+  }, [isTGTransition]);
+
+  const { height: telegram } = useTelegramTransitions();
+  const { height: platform } = useReanimatedKeyboardAnimation();
+  const height = useDerivedValue(
+    () => (isTGTransition ? telegram.value : platform.value),
+    [isTGTransition]
+  );
 
   const scrollViewStyle = useAnimatedStyle(
     () => ({
