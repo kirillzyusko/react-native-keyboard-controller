@@ -1,55 +1,44 @@
-import React from 'react';
-import { Platform, TextInput, View } from 'react-native';
-import { useKeyboardHandler } from 'react-native-keyboard-controller';
-import Reanimated, {
-  Easing,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from 'react-native-reanimated';
+import React, { useEffect, useState } from 'react';
+import { Text, TextInput, View } from 'react-native';
+import { useReanimatedKeyboardAnimation } from 'react-native-keyboard-controller';
+import Reanimated, { useAnimatedStyle } from 'react-native-reanimated';
+
 import Message from '../../../components/Message';
 import { history } from '../../../components/Message/data';
+import { useTelegramTransitions } from './hooks';
 import styles from './styles';
+
+import type { StackScreenProps } from '@react-navigation/stack';
+import type { ExamplesStackParamList } from '../../../navigation/ExamplesStack';
 
 const AnimatedTextInput = Reanimated.createAnimatedComponent(TextInput);
 
-function ReanimatedChat() {
-  const height = useSharedValue(0);
-  useKeyboardHandler(
-    {
-      onStart: (e) => {
-        'worklet';
+type Props = StackScreenProps<ExamplesStackParamList>;
 
-        if (Platform.OS === 'android') {
-          // on Android Telegram is not using androidx.core values and uses custom interpolation
-          // duration is taken from here: https://github.com/DrKLO/Telegram/blob/e9a35cea54c06277c69d41b8e25d94b5d7ede065/TMessagesProj/src/main/java/org/telegram/ui/ActionBar/AdjustPanLayoutHelper.java#L39
-          // and bezier is taken from: https://github.com/DrKLO/Telegram/blob/e9a35cea54c06277c69d41b8e25d94b5d7ede065/TMessagesProj/src/main/java/androidx/recyclerview/widget/ChatListItemAnimator.java#L40
-          height.value = withTiming(-e.height, {
-            duration: 250,
-            easing: Easing.bezier(
-              0.19919472913616398,
-              0.010644531250000006,
-              0.27920937042459737,
-              0.91025390625
-            ),
-          });
-        } else {
-          // on iOS Telegram simply moves TextInput synchronously with the content
-          // to achieve such behavior we are instantly change `height.value` to keyboard
-          // final frame - iOS will schedule layout animation and it will move the content
-          // altogether with the keyboard
-          height.value = -e.height;
-        }
-      },
-    },
-    []
-  );
+function ReanimatedChat({ navigation }: Props) {
+  const [isTGTransition, setTGTransition] = useState(false);
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <Text
+          style={{ marginRight: 12 }}
+          onPress={() => setTGTransition((value) => !value)}
+        >
+          {`Switch to ${isTGTransition ? 'Platform' : 'Telegram'}`}
+        </Text>
+      ),
+    });
+  }, [isTGTransition]);
+
+  const { height: telegram } = useTelegramTransitions();
+  const { height: platform } = useReanimatedKeyboardAnimation();
+  const height = isTGTransition ? telegram : platform;
 
   const scrollViewStyle = useAnimatedStyle(
     () => ({
       transform: [{ translateY: height.value }, ...styles.inverted.transform],
     }),
-    []
+    [isTGTransition]
   );
   const textInputStyle = useAnimatedStyle(
     () => ({
@@ -58,13 +47,13 @@ function ReanimatedChat() {
       backgroundColor: '#BCBCBC',
       transform: [{ translateY: height.value }],
     }),
-    []
+    [isTGTransition]
   );
   const fakeView = useAnimatedStyle(
     () => ({
       height: Math.abs(height.value),
     }),
-    []
+    [isTGTransition]
   );
 
   return (
