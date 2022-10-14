@@ -5,6 +5,9 @@ export default StyleSheet.create({
     justifyContent: 'flex-end',
     flex: 1,
   },
+  header: {
+    marginRight: 12,
+  },
   inverted: {
     transform: [
       {

@@ -10,7 +10,7 @@ import AwareScrollView from '../../screens/Examples/AwareScrollView';
 import StatusBar from '../../screens/Examples/StatusBar';
 import NonUIProps from '../../screens/Examples/NonUIProps';
 
-type ExamplesStackParamList = {
+export type ExamplesStackParamList = {
   [ScreenNames.ANIMATED_EXAMPLE]: undefined;
   [ScreenNames.REANIMATED_CHAT]: undefined;
   [ScreenNames.EVENTS]: undefined;
