@@ -35,10 +35,8 @@ const config = {
       ({
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+            'https://github.com/kirillzyusko/react-native-keyboard-controller/tree/main/docs/',
           versions: {
             '1.0.0': {
               label: '1.0.0-1.3.0',
@@ -50,10 +48,8 @@ const config = {
         },
         blog: {
           showReadingTime: true,
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+            'https://github.com/kirillzyusko/react-native-keyboard-controller/tree/main/docs/',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
