@@ -161,8 +161,8 @@ public class KeyboardMovementObserver: NSObject {
       return
     }
 
-    var keyboardFrameY = keyboardView!.layer.presentation()!.frame.origin.y
-    var keyboardWindowH = keyboardView!.window!.bounds.size.height
+    var keyboardFrameY = keyboardView?.layer.presentation()?.frame.origin.y ?? 0
+    var keyboardWindowH = keyboardView?.window?.bounds.size.height ?? 0
     var keyboardPosition = keyboardWindowH - keyboardFrameY
 
     if keyboardPosition == prevKeyboardPosition || keyboardFrameY == 0 {
