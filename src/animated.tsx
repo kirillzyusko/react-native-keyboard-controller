@@ -1,9 +1,13 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useMemo } from 'react';
 import { Animated, Platform, StyleSheet, ViewStyle } from 'react-native';
 import Reanimated, { useSharedValue } from 'react-native-reanimated';
 
 import { KeyboardContext } from './context';
-import { useAnimatedKeyboardHandler, useSharedHandlers } from './internal';
+import {
+  useAnimatedKeyboardHandler,
+  useSharedHandlers,
+  useAnimatedValue,
+} from './internal';
 import { KeyboardControllerView } from './native';
 
 import type {
@@ -52,8 +56,8 @@ export const KeyboardProvider = ({
   statusBarTranslucent,
 }: KeyboardProviderProps) => {
   // animated values
-  const progress = useRef(new Animated.Value(0)).current;
-  const height = useRef(new Animated.Value(0)).current;
+  const progress = useAnimatedValue(0);
+  const height = useAnimatedValue(0);
   // shared values
   const progressSV = useSharedValue(0);
   const heightSV = useSharedValue(0);

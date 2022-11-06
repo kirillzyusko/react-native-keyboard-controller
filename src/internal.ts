@@ -1,4 +1,5 @@
 import { useCallback, useRef } from 'react';
+import { Animated } from 'react-native';
 import { useEvent, useHandler, useSharedValue } from 'react-native-reanimated';
 
 import type { EventWithName, Handlers, NativeEvent } from './types';
@@ -84,4 +85,26 @@ export function useSharedHandlers<T extends Record<string, Function>>() {
   };
 
   return { setHandlers, broadcast };
+}
+
+/**
+ * TS variant of `useAnimatedValue` hook which is added in RN 0.71
+ * A better alternative of storing animated values in refs, since
+ * it doesn't recreate a new `Animated.Value` object on every re-render
+ * and therefore consumes less memory. We can not use a variant from
+ * RN, since this library supports earlier versions of RN.
+ *
+ * @see https://github.com/facebook/react-native/commit/e22217fe8b9455e32695f88ca835e11442b0a937
+ */
+export function useAnimatedValue(
+  initialValue: number,
+  config?: Animated.AnimatedConfig
+): Animated.Value {
+  const ref = useRef<Animated.Value | null>(null);
+
+  if (ref.current == null) {
+    ref.current = new Animated.Value(initialValue, config);
+  }
+
+  return ref.current;
 }
