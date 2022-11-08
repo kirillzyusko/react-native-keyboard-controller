@@ -59,7 +59,7 @@
     "@release-it/conventional-changelog": "^2.0.0",
     "@types/jest": "^27.4.1",
     "@types/react": "^18.0.21",
-    "@types/react-native": "0.70.4",
+    "@types/react-native": "0.70.6",
     "commitlint": "^11.0.0",
     "clang-format": "^1.8.0",
     "eslint": "^7.2.0",
