@@ -15,7 +15,7 @@
     "@react-navigation/stack": "^6.3.1",
     "lottie-react-native": "^5.1.4",
     "react": "18.1.0",
-    "react-native": "0.70.2",
+    "react-native": "0.70.5",
     "react-native-gesture-handler": "2.7.0",
     "react-native-keyboard-controller": "link:../",
     "react-native-reanimated": "^2.10.0",
@@ -27,7 +27,7 @@
     "@babel/core": "^7.12.10",
     "@babel/runtime": "^7.12.5",
     "@types/react": "^18.0.21",
-    "@types/react-native": "^0.70.4",
+    "@types/react-native": "^0.70.6",
     "babel-plugin-module-resolver": "^4.0.0",
     "metro-react-native-babel-preset": "^0.72.3"
   }
