@@ -5,6 +5,7 @@ import type {
   KeyboardControllerModule,
   KeyboardControllerProps,
   KeyboardEventData,
+  KeyboardGestureAreaProps,
 } from './types';
 
 const LINKING_ERROR =
@@ -56,3 +57,5 @@ export const KeyboardEvents = {
 };
 export const KeyboardControllerView: React.FC<KeyboardControllerProps> =
   require('./specs/KeyboardControllerViewNativeComponent').default;
+export const KeyboardGestureArea: React.FC<KeyboardGestureAreaProps> =
+  require('./specs/KeyboardGestureAreaNativeComponent').default;

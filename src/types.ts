@@ -30,6 +30,10 @@ export type KeyboardControllerProps = {
   navigationBarTranslucent?: boolean;
 } & ViewProps;
 
+export type KeyboardGestureAreaProps = {
+  interpolator: 'ios' | 'linear';
+} & ViewProps;
+
 export type KeyboardControllerModule = {
   // android only
   setDefaultMode: () => void;
