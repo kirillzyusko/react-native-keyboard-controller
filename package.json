@@ -6,7 +6,7 @@
   "module": "lib/module/index",
   "types": "lib/typescript/index.d.ts",
   "react-native": "src/index",
-  "source": "src/index",
+  "source": "./",
   "files": [
     "src",
     "lib",
@@ -14,6 +14,7 @@
     "ios",
     "cpp",
     "react-native-keyboard-controller.podspec",
+    "jestSetup.js",
     "!lib/typescript/example",
     "!android/build",
     "!android/.gradle",
