@@ -20,7 +20,7 @@ exports[`unit test sample should match to snapshot 1`] = `
           "height": 50,
           "transform": Array [
             Object {
-              "translateX": 33.33333333333333,
+              "translateX": 50,
             },
           ],
           "width": 50,
@@ -60,7 +60,7 @@ exports[`unit test sample should match to snapshot 1`] = `
             "height": 50,
             "transform": Array [
               Object {
-                "translateY": 100,
+                "translateY": 200,
               },
             ],
             "width": 50,
@@ -76,7 +76,7 @@ exports[`unit test sample should match to snapshot 1`] = `
             "height": 50,
             "transform": Array [
               Object {
-                "translateY": 100,
+                "translateY": 200,
               },
             ],
             "width": 50,
