@@ -1,2 +1,5 @@
 import 'react-native-gesture-handler/jestSetup';
-import 'react-native-keyboard-controller/jestSetup';
+
+jest.mock('react-native-keyboard-controller', () =>
+  require('react-native-keyboard-controller/jest/mock')
+);

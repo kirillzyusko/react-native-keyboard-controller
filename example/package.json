@@ -41,6 +41,10 @@
     "setupFiles": ["./jestSetup.js"],
     "transformIgnorePatterns": [
       "node_modules/(?!(jest-)?@?react-native|@react-native-community|@react-navigation)"
+    ],
+    "moduleDirectories": [
+      "<rootDir>/node_modules",
+      "node_modules"
     ]
   }
 }

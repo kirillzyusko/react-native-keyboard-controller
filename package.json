@@ -14,7 +14,7 @@
     "ios",
     "cpp",
     "react-native-keyboard-controller.podspec",
-    "jestSetup.js",
+    "jest",
     "!lib/typescript/example",
     "!android/build",
     "!android/.gradle",
