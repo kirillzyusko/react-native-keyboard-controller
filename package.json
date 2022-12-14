@@ -129,6 +129,9 @@
         }
       ],
       "react-hooks/exhaustive-deps": "warn"
+    },
+    "globals": {
+      "jest": "readonly"
     }
   },
   "eslintIgnore": [
