@@ -13,10 +13,10 @@ const values = {
   },
 };
 
-const setKeyboardVisibleHeight = (height: number) => {
+const setKeyboardVisibleHeight = (height) => {
   keyboardVisibleHeight = height;
 };
-const setKeyboardPosition = (height: number) => {
+const setKeyboardPosition = (height) => {
   const progress = height / keyboardVisibleHeight;
 
   values.animated.progress.setValue(progress);
@@ -27,9 +27,9 @@ const setKeyboardPosition = (height: number) => {
 
 const mock = {
   // hooks
-  useKeyboardAnimation: () => values.animated,
-  useReanimatedKeyboardAnimation: () => values.reanimated,
-  useKeyboardAnimationReplica: () => values.animated,
+  useKeyboardAnimation: jest.fn().mockReturnValue(values.animated),
+  useReanimatedKeyboardAnimation: jest.fn().mockReturnValue(values.reanimated),
+  useKeyboardAnimationReplica: jest.fn().mockReturnValue(values.animated),
   useResizeMode: jest.fn(),
   useGenericKeyboardHandler: jest.fn(),
   useKeyboardHandler: jest.fn(),
@@ -42,7 +42,9 @@ const mock = {
     addListener: jest.fn(() => ({ remove: jest.fn() })),
   },
   // views
-  KeyboardControllerView: () => <></>,
+  KeyboardControllerView: 'KeyboardControllerView',
+  // providers
+  KeyboardProvider: 'KeyboardProvider',
   // mocks
   setKeyboardVisibleHeight,
   setKeyboardPosition,
