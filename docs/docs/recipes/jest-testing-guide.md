@@ -4,10 +4,59 @@ sidebar_position: 3
 
 # Jest testing guide
 
+## Setting up a mock
+
 This library includes a built in mock for Jest. To use it, add the following code to the [jest setup](https://jestjs.io/docs/configuration#setupfiles-array) file:
 
 ```js
 jest.mock('react-native-keyboard-controller', () =>
   require('react-native-keyboard-controller/jest')
 );
+```
+
+## Testing API
+
+Once you've set up mock - you can write your first test 😊. To help you test different cases the library gives a simple API:
+
+- `setKeyboardVisibleHeight` - set keyboard height when it's fully visible. `300` by default.
+- `setKeyboardPosition` - set current keyboard position.
+
+## Test case example
+
+A sample of test case is shown below:
+
+```tsx
+import '@testing-library/jest-native/extend-expect';
+import React from 'react';
+import { Animated } from 'react-native';
+import { render } from '@testing-library/react-native';
+
+import {
+  setKeyboardPosition,
+} from 'react-native-keyboard-controller/jest';
+
+import { useKeyboardAnimation } from 'react-native-keyboard-controller';
+
+function TestComponent() {
+  const { height } = useKeyboardAnimation();
+
+  return (
+    <Animated.View
+      testID="view"
+      style={{ transform: [{ translateY: height }] }}
+    />
+  );
+}
+
+describe('keyboard test cases', () => {
+  it('should have correct style when keyboard is shown', () => {
+    const { getByTestId } = render(<TestComponent />);
+
+    setKeyboardPosition(300);
+
+    expect(getByTestId('view')).toHaveStyle({
+      transform: [{ translateY: 300 }],
+    });
+  });
+});
 ```

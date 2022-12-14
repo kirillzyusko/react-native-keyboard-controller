@@ -17,7 +17,9 @@ const setKeyboardVisibleHeight = (height) => {
   keyboardVisibleHeight = height;
 };
 const setKeyboardPosition = (height) => {
-  const progress = height / keyboardVisibleHeight;
+  // to exclude negative values and values greater than `keyboardVisibleHeight`
+  const normalizedHeight = Math.min(Math.max(height, 0), keyboardVisibleHeight);
+  const progress = height / normalizedHeight;
 
   values.animated.progress.setValue(progress);
   values.animated.height.setValue(height);

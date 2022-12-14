@@ -1,6 +1,6 @@
-1. source in package.json
+1. (x) source in package.json
 2. testing kit
-3. docs 
-4. unit tests stage in CI
+3. docs
+4. (x) unit tests stage in CI
 5. will not mock changes affect other tests?
 6. update 1.4.0 docs

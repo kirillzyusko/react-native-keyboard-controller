@@ -35,7 +35,7 @@ describe('unit test sample', () => {
     expect(getByTestId('view')).toHaveStyle({ transform: [{ translateY: 0 }] });
   });
 
-  it(`should have \`${KEYBOARD_HEIGHT}\` translate when keyboard is not shown`, () => {
+  it(`should have \`${KEYBOARD_HEIGHT}\` translate when keyboard is shown`, () => {
     const { getByTestId } = render(<TestComponent />);
 
     setKeyboardPosition(KEYBOARD_HEIGHT);
