@@ -27,7 +27,7 @@ type Styles = {
   hidden: ViewStyle;
 };
 
-export const styles = StyleSheet.create<Styles>({
+const styles = StyleSheet.create<Styles>({
   container: {
     flex: 1,
   },

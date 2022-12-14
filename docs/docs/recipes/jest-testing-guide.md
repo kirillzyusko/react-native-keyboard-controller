@@ -23,7 +23,7 @@ Once you've set up mock - you can write your first test 😊. To help you test d
 
 ## Test case example
 
-A sample of test case is shown below:
+A sample of test case is shown below. For more test cases please see [this](https://github.com/kirillzyusko/react-native-keyboard-controller/tree/main/example/__tests__) link.
 
 ```tsx
 import '@testing-library/jest-native/extend-expect';

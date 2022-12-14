@@ -31,7 +31,6 @@ const mock = {
   // hooks
   useKeyboardAnimation: jest.fn().mockReturnValue(values.animated),
   useReanimatedKeyboardAnimation: jest.fn().mockReturnValue(values.reanimated),
-  useKeyboardAnimationReplica: jest.fn().mockReturnValue(values.animated),
   useResizeMode: jest.fn(),
   useGenericKeyboardHandler: jest.fn(),
   useKeyboardHandler: jest.fn(),

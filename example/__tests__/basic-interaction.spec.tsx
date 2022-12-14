@@ -28,7 +28,7 @@ beforeAll(() => {
   setKeyboardVisibleHeight(KEYBOARD_HEIGHT);
 });
 
-describe('unit test sample', () => {
+describe('basic keyboard interaction', () => {
   it('should have `0` translate when keyboard is not shown', () => {
     const { getByTestId } = render(<TestComponent />);
 
