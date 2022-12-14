@@ -4,4 +4,4 @@
 4. (x) unit tests stage in CI
 5. (x) will not mock changes affect other tests?
 6. update 1.4.0 docs
-7. are testing kit good enough?
+7. (x) are testing kit good enough?

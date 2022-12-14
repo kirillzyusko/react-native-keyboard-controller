@@ -3,8 +3,6 @@ import React from 'react';
 import Reanimated, { useAnimatedStyle } from 'react-native-reanimated';
 import { render } from '@testing-library/react-native';
 
-import { setKeyboardPosition } from 'react-native-keyboard-controller/jest';
-
 import { useReanimatedKeyboardAnimation } from 'react-native-keyboard-controller';
 
 function TestComponent() {
@@ -22,17 +20,26 @@ function TestComponent() {
   return <Reanimated.View testID="view" style={style} />;
 }
 
-describe('unit test sample', () => {
-  it('should have `0` translate when keyboard is not shown', () => {
-    const { getByTestId } = render(<TestComponent />);
-
-    expect(getByTestId('view')).toHaveStyle({ transform: [{ translateY: 0 }] });
-  });
-
-  it(`should have 300 translate when keyboard is shown`, () => {
+describe('basic keyboard interaction', () => {
+  it('should have different styles depends on position', () => {
     const { getByTestId, update } = render(<TestComponent />);
 
-    setKeyboardPosition(300);
+    expect(getByTestId('view')).toHaveStyle({ transform: [{ translateY: 0 }] });
+
+    (useReanimatedKeyboardAnimation as jest.Mock).mockReturnValue({
+      height: { value: 150 },
+      progress: { progress: 0.5 },
+    });
+    update(<TestComponent />);
+
+    expect(getByTestId('view')).toHaveStyle({
+      transform: [{ translateY: 150 }],
+    });
+
+    (useReanimatedKeyboardAnimation as jest.Mock).mockReturnValue({
+      height: { value: 300 },
+      progress: { progress: 1 },
+    });
     update(<TestComponent />);
 
     expect(getByTestId('view')).toHaveStyle({

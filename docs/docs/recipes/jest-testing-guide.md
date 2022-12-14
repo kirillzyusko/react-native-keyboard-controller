@@ -14,26 +14,15 @@ jest.mock('react-native-keyboard-controller', () =>
 );
 ```
 
-## Testing API
-
-Once you've set up mock - you can write your first test 😊. To help you test different cases the library gives a simple API:
-
-- `setKeyboardVisibleHeight` - set keyboard height when it's fully visible. `300` by default.
-- `setKeyboardPosition` - set current keyboard position.
-
 ## Test case example
 
-A sample of test case is shown below. For more test cases please see [this](https://github.com/kirillzyusko/react-native-keyboard-controller/tree/main/example/__tests__) link.
+Once you've set up mock - you can write your first test 😊. A sample of test case is shown below. For more test cases please see [this](https://github.com/kirillzyusko/react-native-keyboard-controller/tree/main/example/__tests__) link.
 
 ```tsx
 import '@testing-library/jest-native/extend-expect';
 import React from 'react';
 import { Animated } from 'react-native';
 import { render } from '@testing-library/react-native';
-
-import {
-  setKeyboardPosition,
-} from 'react-native-keyboard-controller/jest';
 
 import { useKeyboardAnimation } from 'react-native-keyboard-controller';
 
@@ -48,11 +37,27 @@ function TestComponent() {
   );
 }
 
-describe('keyboard test cases', () => {
-  it('should have correct style when keyboard is shown', () => {
-    const { getByTestId } = render(<TestComponent />);
+describe('basic keyboard interaction', () => {
+  it('should have different styles depends on position', () => {
+    const { getByTestId, update } = render(<TestComponent />);
 
-    setKeyboardPosition(300);
+    expect(getByTestId('view')).toHaveStyle({ transform: [{ translateY: 0 }] });
+
+    (useKeyboardAnimation as jest.Mock).mockReturnValue({
+      height: new Animated.Value(150),
+      progress: new Animated.Value(0.5),
+    });
+    update(<TestComponent />);
+
+    expect(getByTestId('view')).toHaveStyle({
+      transform: [{ translateY: 150 }],
+    });
+
+    (useKeyboardAnimation as jest.Mock).mockReturnValue({
+      height: new Animated.Value(300),
+      progress: new Animated.Value(1),
+    });
+    update(<TestComponent />);
 
     expect(getByTestId('view')).toHaveStyle({
       transform: [{ translateY: 300 }],

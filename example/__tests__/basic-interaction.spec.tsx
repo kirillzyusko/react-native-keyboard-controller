@@ -3,11 +3,6 @@ import React from 'react';
 import { Animated } from 'react-native';
 import { render } from '@testing-library/react-native';
 
-import {
-  setKeyboardPosition,
-  setKeyboardVisibleHeight,
-} from 'react-native-keyboard-controller/jest';
-
 import { useKeyboardAnimation } from 'react-native-keyboard-controller';
 
 function TestComponent() {
@@ -21,37 +16,30 @@ function TestComponent() {
   );
 }
 
-const KEYBOARD_HEIGHT = 400;
-const INTERMEDIATE_KEYBOARD_HEIGHT = KEYBOARD_HEIGHT / 2;
-
-beforeAll(() => {
-  setKeyboardVisibleHeight(KEYBOARD_HEIGHT);
-});
-
 describe('basic keyboard interaction', () => {
-  it('should have `0` translate when keyboard is not shown', () => {
-    const { getByTestId } = render(<TestComponent />);
+  it('should have different styles depends on position', () => {
+    const { getByTestId, update } = render(<TestComponent />);
 
     expect(getByTestId('view')).toHaveStyle({ transform: [{ translateY: 0 }] });
-  });
 
-  it(`should have \`${KEYBOARD_HEIGHT}\` translate when keyboard is shown`, () => {
-    const { getByTestId } = render(<TestComponent />);
-
-    setKeyboardPosition(KEYBOARD_HEIGHT);
-
-    expect(getByTestId('view')).toHaveStyle({
-      transform: [{ translateY: KEYBOARD_HEIGHT }],
+    (useKeyboardAnimation as jest.Mock).mockReturnValue({
+      height: new Animated.Value(150),
+      progress: new Animated.Value(0.5),
     });
-  });
-
-  it(`should have \`${INTERMEDIATE_KEYBOARD_HEIGHT}\` translate when keyboard is hiding`, () => {
-    const { getByTestId } = render(<TestComponent />);
-
-    setKeyboardPosition(INTERMEDIATE_KEYBOARD_HEIGHT);
+    update(<TestComponent />);
 
     expect(getByTestId('view')).toHaveStyle({
-      transform: [{ translateY: INTERMEDIATE_KEYBOARD_HEIGHT }],
+      transform: [{ translateY: 150 }],
+    });
+
+    (useKeyboardAnimation as jest.Mock).mockReturnValue({
+      height: new Animated.Value(300),
+      progress: new Animated.Value(1),
+    });
+    update(<TestComponent />);
+
+    expect(getByTestId('view')).toHaveStyle({
+      transform: [{ translateY: 300 }],
     });
   });
 });

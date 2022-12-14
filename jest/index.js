@@ -1,7 +1,5 @@
 const Animated = require('react-native/Libraries/Animated/Animated');
 
-let keyboardVisibleHeight = 300;
-
 const values = {
   animated: {
     progress: new Animated.Value(0),
@@ -11,20 +9,6 @@ const values = {
     progress: { value: 0 },
     height: { value: 0 },
   },
-};
-
-const setKeyboardVisibleHeight = (height) => {
-  keyboardVisibleHeight = height;
-};
-const setKeyboardPosition = (height) => {
-  // to exclude negative values and values greater than `keyboardVisibleHeight`
-  const normalizedHeight = Math.min(Math.max(height, 0), keyboardVisibleHeight);
-  const progress = height / normalizedHeight;
-
-  values.animated.progress.setValue(progress);
-  values.animated.height.setValue(height);
-  values.reanimated.height.value = height;
-  values.reanimated.progress.value = progress;
 };
 
 const mock = {
@@ -46,9 +30,6 @@ const mock = {
   KeyboardControllerView: 'KeyboardControllerView',
   // providers
   KeyboardProvider: 'KeyboardProvider',
-  // mocks
-  setKeyboardVisibleHeight,
-  setKeyboardPosition,
 };
 
 module.exports = mock;
