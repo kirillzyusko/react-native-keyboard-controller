@@ -1,4 +1,6 @@
+import '@testing-library/jest-native/extend-expect';
 import React from 'react';
+import { Animated } from 'react-native';
 import { render } from '@testing-library/react-native';
 
 import {
@@ -6,19 +8,50 @@ import {
   setKeyboardVisibleHeight,
 } from 'react-native-keyboard-controller/jest';
 
-import KeyboardAnimation from '../index';
+import { useKeyboardAnimation } from 'react-native-keyboard-controller';
+
+function TestComponent() {
+  const { height } = useKeyboardAnimation();
+
+  return (
+    <Animated.View
+      testID="view"
+      style={{ transform: [{ translateY: height }] }}
+    />
+  );
+}
+
+const KEYBOARD_HEIGHT = 400;
+const INTERMEDIATE_KEYBOARD_HEIGHT = KEYBOARD_HEIGHT / 2;
 
 beforeAll(() => {
-  setKeyboardVisibleHeight(400);
+  setKeyboardVisibleHeight(KEYBOARD_HEIGHT);
 });
 
 describe('unit test sample', () => {
-  it('should match to snapshot', () => {
-    const { update, toJSON } = render(<KeyboardAnimation />);
+  it('should have `0` translate when keyboard is not shown', () => {
+    const { getByTestId } = render(<TestComponent />);
 
-    setKeyboardPosition(200);
-    update(<KeyboardAnimation />);
+    expect(getByTestId('view')).toHaveStyle({ transform: [{ translateY: 0 }] });
+  });
 
-    expect(toJSON()).toMatchSnapshot();
+  it(`should have \`${KEYBOARD_HEIGHT}\` translate when keyboard is not shown`, () => {
+    const { getByTestId } = render(<TestComponent />);
+
+    setKeyboardPosition(KEYBOARD_HEIGHT);
+
+    expect(getByTestId('view')).toHaveStyle({
+      transform: [{ translateY: KEYBOARD_HEIGHT }],
+    });
+  });
+
+  it(`should have \`${INTERMEDIATE_KEYBOARD_HEIGHT}\` translate when keyboard is hiding`, () => {
+    const { getByTestId } = render(<TestComponent />);
+
+    setKeyboardPosition(INTERMEDIATE_KEYBOARD_HEIGHT);
+
+    expect(getByTestId('view')).toHaveStyle({
+      transform: [{ translateY: INTERMEDIATE_KEYBOARD_HEIGHT }],
+    });
   });
 });

@@ -23,7 +23,7 @@ export type KeyboardControllerProps = {
     e: NativeSyntheticEvent<EventWithName<NativeEvent>>
   ) => void;
   // fake prop used to activate reanimated bindings
-  onKeyboardMoveReanimated: (
+  onKeyboardMoveReanimated?: (
     e: NativeSyntheticEvent<EventWithName<NativeEvent>>
   ) => void;
   statusBarTranslucent?: boolean;

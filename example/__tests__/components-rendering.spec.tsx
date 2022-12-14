@@ -1,10 +1,10 @@
 import React from 'react';
-import { render } from '@testing-library/react-native';
+import { View } from 'react-native';
 import {
   KeyboardControllerView,
   KeyboardProvider,
 } from 'react-native-keyboard-controller';
-import { View } from 'react-native';
+import { render } from '@testing-library/react-native';
 
 function KeyboardControllerViewTest() {
   return <KeyboardControllerView statusBarTranslucent />;
