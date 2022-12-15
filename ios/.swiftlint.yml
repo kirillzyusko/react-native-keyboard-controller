@@ -1,5 +1,6 @@
 disabled_rules:
   - trailing_comma
+  - for_where
 
 line_length:
   warning: 120
