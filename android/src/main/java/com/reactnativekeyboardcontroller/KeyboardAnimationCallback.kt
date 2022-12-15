@@ -1,7 +1,6 @@
 package com.reactnativekeyboardcontroller
 
 import android.animation.ValueAnimator
-import android.content.Context
 import android.os.Build
 import android.util.Log
 import android.view.View
@@ -20,14 +19,7 @@ import com.facebook.react.uimanager.events.Event
 import com.facebook.react.uimanager.events.EventDispatcher
 import com.facebook.react.views.view.ReactViewGroup
 import com.reactnativekeyboardcontroller.events.KeyboardTransitionEvent
-
-fun toDp(px: Float, context: Context?): Int {
-  if (context == null) {
-    return 0
-  }
-
-  return (px / context.resources.displayMetrics.density).toInt()
-}
+import com.reactnativekeyboardcontroller.extensions.dp
 
 class KeyboardAnimationCallback(
   val view: ReactViewGroup,
@@ -132,7 +124,7 @@ class KeyboardAnimationCallback(
       Insets.max(it, Insets.NONE)
     }
     val diffY = (diff.bottom - diff.top).toFloat()
-    val height = toDp(diffY, context)
+    val height = diffY.dp
 
     var progress = 0.0
     try {
@@ -168,7 +160,7 @@ class KeyboardAnimationCallback(
     val navigationBar = insets?.getInsets(WindowInsetsCompat.Type.navigationBars())?.bottom ?: 0
 
     // on hide it will be negative value, so we are using max function
-    return Math.max(toDp((keyboardHeight - navigationBar).toFloat(), context), 0)
+    return Math.max((keyboardHeight - navigationBar).toFloat().dp, 0)
   }
 
   private fun sendEventToJS(event: Event<*>) {

@@ -1,4 +1,4 @@
-package com.reactnativekeyboardcontroller
+package com.reactnativekeyboardcontroller.views
 
 import android.annotation.SuppressLint
 import androidx.core.view.WindowCompat

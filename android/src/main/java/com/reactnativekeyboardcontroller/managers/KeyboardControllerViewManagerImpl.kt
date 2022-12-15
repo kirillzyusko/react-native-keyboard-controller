@@ -1,4 +1,4 @@
-package com.reactnativekeyboardcontroller
+package com.reactnativekeyboardcontroller.managers
 
 import android.util.Log
 import androidx.appcompat.widget.FitWindowsLinearLayout
@@ -9,6 +9,9 @@ import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.common.MapBuilder
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.views.view.ReactViewGroup
+import com.reactnativekeyboardcontroller.views.EdgeToEdgeReactViewGroup
+import com.reactnativekeyboardcontroller.KeyboardAnimationCallback
+import com.reactnativekeyboardcontroller.R
 
 class KeyboardControllerViewManagerImpl(reactContext: ReactApplicationContext) {
   private val TAG = KeyboardControllerViewManagerImpl::class.qualifiedName

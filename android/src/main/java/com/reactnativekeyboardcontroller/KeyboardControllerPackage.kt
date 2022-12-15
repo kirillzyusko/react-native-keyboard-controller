@@ -7,6 +7,8 @@ import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.module.model.ReactModuleInfo
 import com.facebook.react.module.model.ReactModuleInfoProvider
 import com.facebook.react.uimanager.ViewManager
+import com.reactnativekeyboardcontroller.modules.KeyboardControllerModuleImpl
+import com.reactnativekeyboardcontroller.modules.StatusBarManagerCompatModuleImpl
 
 class KeyboardControllerPackage : TurboReactPackage() {
   @Nullable
@@ -15,7 +17,7 @@ class KeyboardControllerPackage : TurboReactPackage() {
       KeyboardControllerModuleImpl.NAME -> {
         KeyboardControllerModule(reactContext)
       }
-      StatusBarManagerCompatImpl.NAME -> {
+      StatusBarManagerCompatModuleImpl.NAME -> {
         StatusBarManagerCompatModule(reactContext)
       }
       else -> {
@@ -38,9 +40,9 @@ class KeyboardControllerPackage : TurboReactPackage() {
         false, // isCxxModule
         isTurboModule // isTurboModule
       )
-      moduleInfos[StatusBarManagerCompatImpl.NAME] = ReactModuleInfo(
-        StatusBarManagerCompatImpl.NAME,
-        StatusBarManagerCompatImpl.NAME,
+      moduleInfos[StatusBarManagerCompatModuleImpl.NAME] = ReactModuleInfo(
+        StatusBarManagerCompatModuleImpl.NAME,
+        StatusBarManagerCompatModuleImpl.NAME,
         false, // canOverrideExistingModule
         false, // needsEagerInit
         true, // hasConstants
