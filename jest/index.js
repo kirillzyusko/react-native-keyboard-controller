@@ -1,4 +1,4 @@
-const Animated = require('react-native/Libraries/Animated/Animated');
+import { Animated } from 'react-native';
 
 const values = {
   animated: {
