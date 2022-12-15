@@ -82,7 +82,7 @@ describe('keyboard handler specification', () => {
     jest.advanceTimersByTime(100);
 
     expect(getByTestId('view')).toHaveAnimatedStyle({
-      transform: [{ translateY: 20 }],
+      transform: [{ translateY: 100 }],
     });
   });
 });
