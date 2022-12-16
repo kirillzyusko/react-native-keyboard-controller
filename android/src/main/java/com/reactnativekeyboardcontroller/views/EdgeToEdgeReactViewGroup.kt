@@ -13,7 +13,7 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
     reactContext.currentActivity?.let {
       WindowCompat.setDecorFitsSystemWindows(
         it.window,
-        false
+        false,
       )
     }
   }

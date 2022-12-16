@@ -9,9 +9,9 @@ import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.common.MapBuilder
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.views.view.ReactViewGroup
-import com.reactnativekeyboardcontroller.views.EdgeToEdgeReactViewGroup
 import com.reactnativekeyboardcontroller.KeyboardAnimationCallback
 import com.reactnativekeyboardcontroller.R
+import com.reactnativekeyboardcontroller.views.EdgeToEdgeReactViewGroup
 
 class KeyboardControllerViewManagerImpl(reactContext: ReactApplicationContext) {
   private val TAG = KeyboardControllerViewManagerImpl::class.qualifiedName
@@ -38,15 +38,17 @@ class KeyboardControllerViewManagerImpl(reactContext: ReactApplicationContext) {
       onApplyWindowInsetsListener = { v, insets ->
         val content =
           mReactContext.currentActivity?.window?.decorView?.rootView?.findViewById<FitWindowsLinearLayout>(
-            R.id.action_bar_root
+            R.id.action_bar_root,
           )
         content?.setPadding(
-          0, if (this.isStatusBarTranslucent) 0 else insets?.getInsets(WindowInsetsCompat.Type.systemBars())?.top ?: 0, 0,
-          insets?.getInsets(WindowInsetsCompat.Type.navigationBars())?.bottom ?: 0
+          0,
+          if (this.isStatusBarTranslucent) 0 else insets?.getInsets(WindowInsetsCompat.Type.systemBars())?.top ?: 0,
+          0,
+          insets?.getInsets(WindowInsetsCompat.Type.navigationBars())?.bottom ?: 0,
         )
 
         insets
-      }
+      },
     )
     ViewCompat.setWindowInsetsAnimationCallback(view, callback)
     ViewCompat.setOnApplyWindowInsetsListener(view, callback)

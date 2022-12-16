@@ -27,7 +27,7 @@ class KeyboardAnimationCallback(
   val deferredInsetTypes: Int,
   dispatchMode: Int = DISPATCH_MODE_STOP,
   val context: ReactApplicationContext?,
-  val onApplyWindowInsetsListener: OnApplyWindowInsetsListener
+  val onApplyWindowInsetsListener: OnApplyWindowInsetsListener,
 ) : WindowInsetsAnimationCompat.Callback(dispatchMode), OnApplyWindowInsetsListener {
   private val TAG = KeyboardAnimationCallback::class.qualifiedName
   private var persistentKeyboardHeight = 0
@@ -88,7 +88,7 @@ class KeyboardAnimationCallback(
 
   override fun onStart(
     animation: WindowInsetsAnimationCompat,
-    bounds: WindowInsetsAnimationCompat.BoundsCompat
+    bounds: WindowInsetsAnimationCompat.BoundsCompat,
   ): WindowInsetsAnimationCompat.BoundsCompat {
     isTransitioning = true
     isKeyboardVisible = isKeyboardVisible()
@@ -109,7 +109,7 @@ class KeyboardAnimationCallback(
 
   override fun onProgress(
     insets: WindowInsetsCompat,
-    runningAnimations: List<WindowInsetsAnimationCompat>
+    runningAnimations: List<WindowInsetsAnimationCompat>,
   ): WindowInsetsCompat {
     // onProgress() is called when any of the running animations progress...
 

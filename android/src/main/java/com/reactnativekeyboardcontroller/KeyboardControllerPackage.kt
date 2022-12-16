@@ -38,7 +38,7 @@ class KeyboardControllerPackage : TurboReactPackage() {
         false, // needsEagerInit
         true, // hasConstants
         false, // isCxxModule
-        isTurboModule // isTurboModule
+        isTurboModule, // isTurboModule
       )
       moduleInfos[StatusBarManagerCompatModuleImpl.NAME] = ReactModuleInfo(
         StatusBarManagerCompatModuleImpl.NAME,
@@ -47,7 +47,7 @@ class KeyboardControllerPackage : TurboReactPackage() {
         false, // needsEagerInit
         true, // hasConstants
         false, // isCxxModule
-        isTurboModule // isTurboModule
+        isTurboModule, // isTurboModule
       )
       moduleInfos
     }
