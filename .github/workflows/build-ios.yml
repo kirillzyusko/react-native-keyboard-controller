@@ -23,7 +23,7 @@ on:
 jobs:
   build:
     name: Build iOS Example App
-    runs-on: macOS-latest
+    runs-on: macOS-12
     defaults:
       run:
         working-directory: example/ios
@@ -45,7 +45,7 @@ jobs:
         run: yarn install --frozen-lockfile --cwd ..
 
       - name: Restore buildcache
-        uses: mikehardy/buildcache-action@v1
+        uses: mikehardy/buildcache-action@v2
         continue-on-error: true
 
       - name: Setup Ruby (bundle)
