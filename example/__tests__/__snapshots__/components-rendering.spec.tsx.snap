@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`components rendering should render \`KeyboardControllerView\` 1`] = `
+<KeyboardControllerView
+  statusBarTranslucent={true}
+/>
+`;
+
+exports[`components rendering should render \`KeyboardProvider\` 1`] = `
+<KeyboardProvider
+  statusBarTranslucent={true}
+>
+  <View
+    style={
+      Object {
+        "backgroundColor": "black",
+        "height": 20,
+        "width": 20,
+      }
+    }
+  />
+</KeyboardProvider>
+`;

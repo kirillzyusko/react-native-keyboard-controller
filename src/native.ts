@@ -3,6 +3,7 @@ import { Platform, NativeEventEmitter } from 'react-native';
 import type {
   KeyboardControllerEvents,
   KeyboardControllerModule,
+  KeyboardControllerProps,
   KeyboardEventData,
 } from './types';
 
@@ -53,5 +54,5 @@ export const KeyboardEvents = {
     cb: (e: KeyboardEventData) => void
   ) => eventEmitter.addListener('KeyboardController::' + name, cb),
 };
-export const KeyboardControllerView =
+export const KeyboardControllerView: React.FC<KeyboardControllerProps> =
   require('./specs/KeyboardControllerViewNativeComponent').default;
