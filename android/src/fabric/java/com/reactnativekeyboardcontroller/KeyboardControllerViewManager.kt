@@ -7,6 +7,7 @@ import com.facebook.react.viewmanagers.KeyboardControllerViewManagerDelegate
 import com.facebook.react.viewmanagers.KeyboardControllerViewManagerInterface
 import com.facebook.react.views.view.ReactViewGroup
 import com.facebook.react.views.view.ReactViewManager
+import com.reactnativekeyboardcontroller.managers.KeyboardControllerViewManagerImpl
 
 class KeyboardControllerViewManager(mReactContext: ReactApplicationContext) : ReactViewManager(), KeyboardControllerViewManagerInterface<ReactViewGroup> {
   private val manager = KeyboardControllerViewManagerImpl(mReactContext)

@@ -1,4 +1,4 @@
-package com.reactnativekeyboardcontroller
+package com.reactnativekeyboardcontroller.modules
 
 import android.view.WindowManager
 import com.facebook.react.bridge.ReactApplicationContext

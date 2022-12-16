@@ -5,11 +5,12 @@ import androidx.annotation.RequiresApi
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
+import com.reactnativekeyboardcontroller.modules.StatusBarManagerCompatModuleImpl
 
 class StatusBarManagerCompatModule(private val mReactContext: ReactApplicationContext) : ReactContextBaseJavaModule(mReactContext) {
-  private val module = StatusBarManagerCompatImpl(mReactContext)
+  private val module = StatusBarManagerCompatModuleImpl(mReactContext)
 
-  override fun getName(): String = StatusBarManagerCompatImpl.NAME
+  override fun getName(): String = StatusBarManagerCompatModuleImpl.NAME
 
   @ReactMethod
   private fun setHidden(hidden: Boolean) {

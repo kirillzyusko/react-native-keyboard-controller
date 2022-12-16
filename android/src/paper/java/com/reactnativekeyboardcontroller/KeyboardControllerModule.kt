@@ -3,6 +3,7 @@ package com.reactnativekeyboardcontroller
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
+import com.reactnativekeyboardcontroller.modules.KeyboardControllerModuleImpl
 
 class KeyboardControllerModule(mReactContext: ReactApplicationContext) : ReactContextBaseJavaModule(mReactContext) {
   private val module = KeyboardControllerModuleImpl(mReactContext)

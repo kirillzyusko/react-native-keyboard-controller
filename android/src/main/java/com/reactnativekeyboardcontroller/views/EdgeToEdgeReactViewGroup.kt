@@ -1,4 +1,4 @@
-package com.reactnativekeyboardcontroller
+package com.reactnativekeyboardcontroller.views
 
 import android.annotation.SuppressLint
 import androidx.core.view.WindowCompat
@@ -13,7 +13,7 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
     reactContext.currentActivity?.let {
       WindowCompat.setDecorFitsSystemWindows(
         it.window,
-        false
+        false,
       )
     }
   }

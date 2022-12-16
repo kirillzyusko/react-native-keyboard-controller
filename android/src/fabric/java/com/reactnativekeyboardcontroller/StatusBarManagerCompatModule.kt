@@ -1,11 +1,12 @@
 package com.reactnativekeyboardcontroller
 
 import com.facebook.react.bridge.ReactApplicationContext
+import com.reactnativekeyboardcontroller.modules.StatusBarManagerCompatModuleImpl
 
 class StatusBarManagerCompatModule(private val mReactContext: ReactApplicationContext) : NativeStatusBarManagerCompatSpec(mReactContext) {
-  private val module = StatusBarManagerCompatImpl(mReactContext)
+  private val module = StatusBarManagerCompatModuleImpl(mReactContext)
 
-  override fun getName(): String = StatusBarManagerCompatImpl.NAME
+  override fun getName(): String = StatusBarManagerCompatModuleImpl.NAME
 
   override fun setHidden(hidden: Boolean) {
     module.setHidden(hidden)
