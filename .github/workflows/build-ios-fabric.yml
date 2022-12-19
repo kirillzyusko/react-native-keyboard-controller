@@ -25,7 +25,7 @@ on:
 jobs:
   build:
     name: Build iOS FabricExample App
-    runs-on: macOS-latest
+    runs-on: macOS-12
     defaults:
       run:
         working-directory: FabricExample/ios
@@ -36,7 +36,7 @@ jobs:
         id: fabric-yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"
       - name: Restore node_modules from cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         id: yarn-cache
         with:
           path: ${{ steps.fabric-yarn-cache-dir-path.outputs.dir }}
@@ -47,7 +47,7 @@ jobs:
         run: yarn install --frozen-lockfile --cwd ..
 
       - name: Restore buildcache
-        uses: mikehardy/buildcache-action@v1
+        uses: mikehardy/buildcache-action@v2
         continue-on-error: true
         with:
           cache_key: react-native-keyboard-controller-fabric
@@ -60,7 +60,7 @@ jobs:
           working-directory: FabricExample/ios
 
       - name: Restore Pods cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             FabricExample/ios/Pods
