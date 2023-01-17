@@ -1,0 +1,17 @@
+diff --git a/node_modules/react-native-screens/android/build.gradle b/node_modules/react-native-screens/android/build.gradle
+index 58fe0e4..482478b 100644
+--- a/node_modules/react-native-screens/android/build.gradle
++++ b/node_modules/react-native-screens/android/build.gradle
+@@ -103,11 +103,7 @@ repositories {
+ }
+ 
+ dependencies {
+-    if (isNewArchitectureEnabled()) {
+-        implementation project(":ReactAndroid")
+-    } else {
+-        implementation 'com.facebook.react:react-native:+'
+-    }
++    implementation 'com.facebook.react:react-native:+'
+     implementation 'androidx.appcompat:appcompat:1.1.0'
+     implementation 'androidx.fragment:fragment:1.2.1'
+     implementation 'androidx.coordinatorlayout:coordinatorlayout:1.1.0'
