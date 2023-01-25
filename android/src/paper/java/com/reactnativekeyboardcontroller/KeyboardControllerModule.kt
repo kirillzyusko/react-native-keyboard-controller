@@ -20,11 +20,6 @@ class KeyboardControllerModule(mReactContext: ReactApplicationContext) : ReactCo
     module.setDefaultMode()
   }
 
-  @ReactMethod(isBlockingSynchronousMethod = true)
-  fun registerForScrollEvents(tag: Int) {
-    module.registerForScrollEvents(tag)
-  }
-
   @ReactMethod
   fun addListener(eventName: String?) {
     /* Required for RN built-in Event Emitter Calls. */

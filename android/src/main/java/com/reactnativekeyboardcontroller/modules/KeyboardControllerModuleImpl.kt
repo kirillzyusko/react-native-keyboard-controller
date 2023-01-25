@@ -20,15 +20,6 @@ class KeyboardControllerModuleImpl(private val mReactContext: ReactApplicationCo
     setSoftInputMode(mDefaultMode)
   }
 
-  fun registerForScrollEvents(tag: Int) {
-    val uiManagerModule: UIManagerModule? =
-      mReactContext.getNativeModule(UIManagerModule::class.java)
-    val scrollView = uiManagerModule?.resolveView(tag) as ScrollView
-    scrollView.setOnScrollChangeListener { _: View, scrollX: Int, scrollY: Int, _: Int, oldScrollY: Int ->
-      println("Scrolled to $scrollX, $scrollY $oldScrollY")
-    }
-  }
-
   private fun setSoftInputMode(mode: Int) {
     UiThreadUtil.runOnUiThread {
       mReactContext.currentActivity?.window?.setSoftInputMode(mode)

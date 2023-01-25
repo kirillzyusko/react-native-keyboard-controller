@@ -11,8 +11,13 @@ import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.views.view.ReactViewGroup
 import com.reactnativekeyboardcontroller.KeyboardAnimationController
 import com.reactnativekeyboardcontroller.extensions.copyBoundsInWindow
+import com.reactnativekeyboardcontroller.interpolators.Interpolator
+import com.reactnativekeyboardcontroller.interpolators.IosInterpolator
+import com.reactnativekeyboardcontroller.interpolators.LinearInterpolator
 import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
+
+val interpolators = mapOf("linear" to LinearInterpolator(), "ios" to IosInterpolator())
 
 @SuppressLint("ViewConstructor")
 class KeyboardGestureAreaReactViewGroup(reactContext: ThemedReactContext) : ReactViewGroup(reactContext) {
@@ -20,7 +25,7 @@ class KeyboardGestureAreaReactViewGroup(reactContext: ThemedReactContext) : Reac
   private var lastTouchX = 0f
   private var lastTouchY = 0f
   private var lastWindowY = 0
-  private var interpolator = "linear"
+  private var interpolator: Interpolator = LinearInterpolator()
 
   private val bounds = Rect()
 
@@ -45,6 +50,7 @@ class KeyboardGestureAreaReactViewGroup(reactContext: ThemedReactContext) : Reac
         lastWindowY = bounds.top
       }
       MotionEvent.ACTION_MOVE -> {
+        println("Moved by: ${event.y}")
         // Since the view is likely to be translated/moved as the WindowInsetsAnimation
         // progresses, we need to make sure we account for that change in our touch
         // handling. We do that by keeping track of the view's Y position in the window,
@@ -74,6 +80,7 @@ class KeyboardGestureAreaReactViewGroup(reactContext: ThemedReactContext) : Reac
           if (controller.isInsetAnimationInProgress()) {
             // If we currently have control, we can update the IME insets to 'scroll'
             // the IME in
+            println("DiffY: ${dy.roundToInt()}")
             controller.insetBy(dy.roundToInt())
           } else if (
             !controller.isInsetAnimationRequestPending() &&
@@ -123,7 +130,7 @@ class KeyboardGestureAreaReactViewGroup(reactContext: ThemedReactContext) : Reac
   }
 
   fun setInterpolator(interpolator: String) {
-    this.interpolator = interpolator
+    this.interpolator = interpolators[interpolator] ?: LinearInterpolator()
   }
 
   /**

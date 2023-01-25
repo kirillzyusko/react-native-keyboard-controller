@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { findNodeHandle, TextInput, View } from 'react-native';
 import {
   KeyboardController,
@@ -62,8 +62,11 @@ const useInteractiveKeyboard = (onInteractive: () => void) => {
 function InteractiveKeyboard() {
   const scroll = useSharedValue(0);
   const ref = useAnimatedRef<Reanimated.ScrollView>();
+  // for simplicity purpose let's lock scroll view via state variable
+  // further it can be optimized without re-render/crossing the bridge
+  const [isScrollEnabled, setScrollEnabled] = useState(false);
   const onBecomeInteractive = useWorkletCallback(() => {
-    console.log(ref.current, scroll.value);
+    console.log(111, ref.current, ref(), scroll.value);
     scrollTo(ref, 0, scroll.value, false);
   }, []);
   const { height, progress } = useInteractiveKeyboard(onBecomeInteractive);
@@ -106,28 +109,27 @@ function InteractiveKeyboard() {
         scroll.value = e.contentOffset.y;
       },
     },
-    [ref.current]
+    []
   );
 
   useEffect(() => {
     const tag = findNodeHandle(ref.current);
-    console.log(tag);
-    KeyboardController.registerForScrollEvents(tag);
+    console.log('TAG: ' + tag);
+    // KeyboardController.registerForScrollEvents(tag);
   }, []);
-
-  console.log(ref.current);
 
   return (
     <>
       <View style={styles.container}>
-        <KeyboardGestureArea style={{flex: 1}} interpolator="linear">
+        <KeyboardGestureArea style={{ flex: 1 }} interpolator="linear">
           <Reanimated.ScrollView
             ref={ref}
+            scrollEnabled={isScrollEnabled}
             scrollEventThrottle={16}
             onScroll={handler}
             showsVerticalScrollIndicator={false}
             keyboardDismissMode="interactive"
-            nestedScrollEnabled
+            // nestedScrollEnabled
             style={scrollViewStyle}
           >
             <View style={styles.inverted}>
