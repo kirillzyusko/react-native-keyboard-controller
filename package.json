@@ -70,7 +70,7 @@
     "pod-install": "^0.1.0",
     "prettier": "^2.4.1",
     "react": "18.2.0",
-    "react-native": "0.71.0",
+    "react-native": "0.71.1",
     "react-native-builder-bob": "^0.18.0",
     "react-native-reanimated": "2.10.0",
     "release-it": "^14.2.2",
