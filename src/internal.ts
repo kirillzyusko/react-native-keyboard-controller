@@ -11,6 +11,7 @@ export function useAnimatedKeyboardHandler<
     onKeyboardMoveStart?: (e: NativeEvent, context: TContext) => void;
     onKeyboardMove?: (e: NativeEvent, context: TContext) => void;
     onKeyboardMoveEnd?: (e: NativeEvent, context: TContext) => void;
+    onKeyboardMoveInteractive?: (e: NativeEvent, context: TContext) => void;
   },
   dependencies?: ReadonlyArray<unknown>
 ) {
@@ -19,8 +20,12 @@ export function useAnimatedKeyboardHandler<
   return useEvent(
     (event: EventWithName<NativeEvent>) => {
       'worklet';
-      const { onKeyboardMoveStart, onKeyboardMove, onKeyboardMoveEnd } =
-        handlers;
+      const {
+        onKeyboardMoveStart,
+        onKeyboardMove,
+        onKeyboardMoveEnd,
+        onKeyboardMoveInteractive,
+      } = handlers;
 
       if (
         onKeyboardMoveStart &&
@@ -36,8 +41,20 @@ export function useAnimatedKeyboardHandler<
       if (onKeyboardMoveEnd && event.eventName.endsWith('onKeyboardMoveEnd')) {
         onKeyboardMoveEnd(event, context);
       }
+
+      if (
+        onKeyboardMoveInteractive &&
+        event.eventName.endsWith('onKeyboardMoveInteractive')
+      ) {
+        onKeyboardMoveInteractive(event, context);
+      }
     },
-    ['onKeyboardMoveStart', 'onKeyboardMove', 'onKeyboardMoveEnd'],
+    [
+      'onKeyboardMoveStart',
+      'onKeyboardMove',
+      'onKeyboardMoveEnd',
+      'onKeyboardMoveInteractive',
+    ],
     doDependenciesDiffer
   );
 }

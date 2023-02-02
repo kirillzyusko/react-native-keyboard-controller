@@ -1,19 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { findNodeHandle, TextInput, View } from 'react-native';
 import {
-  KeyboardController,
   KeyboardGestureArea,
   useKeyboardHandler,
-  useReanimatedKeyboardAnimation,
 } from 'react-native-keyboard-controller';
 import Reanimated, {
-  interpolate,
-  scrollTo,
+  runOnJS,
   useAnimatedRef,
-  useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
-  useWorkletCallback,
 } from 'react-native-reanimated';
 
 import Message from '../../../components/Message';
@@ -22,54 +17,49 @@ import styles from './styles';
 
 const AnimatedTextInput = Reanimated.createAnimatedComponent(TextInput);
 
-const useInteractiveKeyboard = (onInteractive: () => void) => {
-  const isShown = useSharedValue(false);
-  const hasBecameInteractive = useSharedValue(false);
+const useKeyboardAnimation = () => {
+  const ref = useAnimatedRef<Reanimated.ScrollView>();
+  // for simplicity purpose let's lock scroll view via state variable
+  // further it can be optimized without re-render/crossing the bridge
+  const [isScrollEnabled, setScrollEnabled] = useState(false);
+
+  const isScrollViewLocked = useSharedValue(false);
   const progress = useSharedValue(0);
   const height = useSharedValue(0);
-
   useKeyboardHandler({
-    onStart: (e) => {
-      'worklet';
-
-      // progress.value = e.progress;
-      // height.value = e.height;
-    },
     onMove: (e) => {
       'worklet';
 
-      // keyboard becomes interactive
-      if (isShown.value && !hasBecameInteractive.value) {
-        hasBecameInteractive.value = true;
-        onInteractive();
+      console.log('onMove');
+
+      if (isScrollViewLocked.value) {
+        runOnJS(setScrollEnabled)(true);
       }
 
+      isScrollViewLocked.value = false;
       progress.value = e.progress;
       height.value = e.height;
     },
-    onEnd: (e) => {
+    onInteractive: (e) => {
       'worklet';
 
-      isShown.value = e.progress !== 0;
+      console.log('onInteractive');
+
+      if (!isScrollViewLocked.value) {
+        runOnJS(setScrollEnabled)(false);
+      }
+
+      isScrollViewLocked.value = true;
       progress.value = e.progress;
       height.value = e.height;
     },
   });
 
-  return { height, progress };
+  return { height, progress, ref, isScrollEnabled };
 };
 
 function InteractiveKeyboard() {
-  const scroll = useSharedValue(0);
-  const ref = useAnimatedRef<Reanimated.ScrollView>();
-  // for simplicity purpose let's lock scroll view via state variable
-  // further it can be optimized without re-render/crossing the bridge
-  const [isScrollEnabled, setScrollEnabled] = useState(false);
-  const onBecomeInteractive = useWorkletCallback(() => {
-    console.log(111, ref.current, ref(), scroll.value);
-    scrollTo(ref, 0, scroll.value, false);
-  }, []);
-  const { height, progress } = useInteractiveKeyboard(onBecomeInteractive);
+  const { ref, height, isScrollEnabled } = useKeyboardAnimation();
 
   const scrollViewStyle = useAnimatedStyle(
     () => ({
@@ -92,25 +82,6 @@ function InteractiveKeyboard() {
     }),
     []
   );
-  const progressViewStyle = useAnimatedStyle(
-    () => ({
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      height: interpolate(progress.value, [0, 1], [0, 100]),
-      width: interpolate(progress.value, [0, 1], [0, 100]),
-      backgroundColor: 'red',
-    }),
-    []
-  );
-  const handler = useAnimatedScrollHandler(
-    {
-      onScroll: (e) => {
-        scroll.value = e.contentOffset.y;
-      },
-    },
-    []
-  );
 
   useEffect(() => {
     const tag = findNodeHandle(ref.current);
@@ -121,15 +92,13 @@ function InteractiveKeyboard() {
   return (
     <>
       <View style={styles.container}>
-        <KeyboardGestureArea style={{ flex: 1 }} interpolator="linear">
+        <KeyboardGestureArea style={styles.content} interpolator="linear">
           <Reanimated.ScrollView
             ref={ref}
             scrollEnabled={isScrollEnabled}
             scrollEventThrottle={16}
-            onScroll={handler}
             showsVerticalScrollIndicator={false}
             keyboardDismissMode="interactive"
-            // nestedScrollEnabled
             style={scrollViewStyle}
           >
             <View style={styles.inverted}>
@@ -142,7 +111,6 @@ function InteractiveKeyboard() {
         </KeyboardGestureArea>
         <AnimatedTextInput style={textInputStyle} />
       </View>
-      {/*<Reanimated.View style={progressViewStyle} />*/}
     </>
   );
 }

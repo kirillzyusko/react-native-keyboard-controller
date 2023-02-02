@@ -15,4 +15,7 @@ export default StyleSheet.create({
       },
     ],
   },
+  content: {
+    flex: 1,
+  },
 });
