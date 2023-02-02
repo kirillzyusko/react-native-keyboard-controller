@@ -74,6 +74,8 @@ class KeyboardControllerViewManagerImpl(private val mReactContext: ReactApplicat
       MapBuilder.of("registrationName", "onKeyboardMoveStart"),
       "topKeyboardMoveEnd",
       MapBuilder.of("registrationName", "onKeyboardMoveEnd"),
+      "topKeyboardMoveInteractive",
+      MapBuilder.of("registrationName", "onKeyboardMoveInteractive"),
     )
 
     return map

@@ -136,7 +136,8 @@ class KeyboardAnimationCallback(
     }
     Log.i(TAG, "DiffY: $diffY $height $progress")
 
-    this.sendEventToJS(KeyboardTransitionEvent(view.id, "topKeyboardMove", height, progress))
+    val event = if (InteractiveKeyboardProvider.isInteractive) "topKeyboardMoveInteractive" else "topKeyboardMove"
+    this.sendEventToJS(KeyboardTransitionEvent(view.id, event, height, progress))
 
     return insets
   }

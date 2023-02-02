@@ -130,6 +130,13 @@ export const KeyboardProvider = ({
 
         broadcast('onEnd', event);
       },
+      onKeyboardMoveInteractive: (event: NativeEvent) => {
+        'worklet';
+
+        // only android for now, since iOS implementation is missing
+        updateSharedValues(event, ['android']);
+        broadcast('onInteractive', event);
+      },
     },
     []
   );
@@ -140,6 +147,7 @@ export const KeyboardProvider = ({
         onKeyboardMoveReanimated={handler}
         onKeyboardMoveStart={Platform.OS === 'ios' ? onKeyboardMove : undefined}
         onKeyboardMove={Platform.OS === 'android' ? onKeyboardMove : undefined}
+        onKeyboardMoveInteractive={onKeyboardMove}
         navigationBarTranslucent={navigationBarTranslucent}
         statusBarTranslucent={statusBarTranslucent}
         style={styles.container}

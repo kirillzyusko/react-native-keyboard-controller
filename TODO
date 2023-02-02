@@ -1,5 +1,7 @@
-- [ ] - onInteractive?
-- [ ] - how to handle onStart/onEnd during interactive dismissing?
+# TODO (bug tracker)
+
+- [x] - onInteractive?
+- [x] - how to handle onStart/onEnd during interactive dismissing? (will be called in the start/end of programmatic animation, when user drags keyboard we will fire `onInteractive`)
 - [ ] - linear animation behavior correct?
 - [ ] - documentation
 - [ ] - iOS implementation

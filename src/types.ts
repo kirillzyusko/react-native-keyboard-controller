@@ -22,6 +22,9 @@ export type KeyboardControllerProps = {
   onKeyboardMoveEnd?: (
     e: NativeSyntheticEvent<EventWithName<NativeEvent>>
   ) => void;
+  onKeyboardMoveInteractive?: (
+    e: NativeSyntheticEvent<EventWithName<NativeEvent>>
+  ) => void;
   // fake prop used to activate reanimated bindings
   onKeyboardMoveReanimated?: (
     e: NativeSyntheticEvent<EventWithName<NativeEvent>>
@@ -61,5 +64,6 @@ export type KeyboardHandler = {
   onStart?: (e: NativeEvent) => void;
   onMove?: (e: NativeEvent) => void;
   onEnd?: (e: NativeEvent) => void;
+  onInteractive?: (e: NativeEvent) => void;
 };
 export type KeyboardHandlers = Handlers<KeyboardHandler>;

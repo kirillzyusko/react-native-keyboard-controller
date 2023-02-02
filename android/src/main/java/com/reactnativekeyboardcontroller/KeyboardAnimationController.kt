@@ -161,6 +161,7 @@ internal class KeyboardAnimationController {
 
     val consumedDy = controller.currentInsets.bottom - coercedBottom
 
+    InteractiveKeyboardProvider.isInteractive = true
     // Finally update the insets in the WindowInsetsAnimationController using
     // setInsetsAndAlpha().
     controller.setInsetsAndAlpha(
@@ -217,6 +218,7 @@ internal class KeyboardAnimationController {
    * Finish the current [WindowInsetsAnimationControllerCompat] immediately.
    */
   fun finish() {
+    InteractiveKeyboardProvider.isInteractive = false
     println("finish")
     val controller = insetsAnimationController
 
