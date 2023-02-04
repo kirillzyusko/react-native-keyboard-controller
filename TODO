@@ -2,12 +2,16 @@
 
 - [x] - onInteractive?
 - [x] - how to handle onStart/onEnd during interactive dismissing? (will be called in the start/end of programmatic animation, when user drags keyboard we will fire `onInteractive`)
-- [ ] - linear animation behavior correct?
-- [ ] - documentation
-- [ ] - iOS implementation
+- [x] - linear animation behavior correct?
+- [-] - documentation <- in separate PR
+- [-] - iOS implementation <- later/in separate PR
 - [x] - swipe frequently up/down and app becomes to consume a lot of CPU resources (because of inverted `ScrollView` - used `180deg` instead of `scaleY: -1`)
+- [x] - implement iOS interpolator (for Android)
 - [ ] - replicate fix with `180deg` instead of `scaleY: -1` for all other code pieces
-- [ ] - implement iOS interpolator
 - [ ] - if user swipes and keyboard becomes invisible - we need to send scroll events back to ScrollView
 - [ ] - if you make fast swipe gesture - app behaves a little bit strange/unexpected;
 - [ ] - swipe keyboard to 50% and release a finger (animation behaves strange, keyboard takes 100% of the height and then animates to the "close" state);
+- [ ] - `ScrollView` lock/unlock - may be not needed, twitches can be because of `fakeView`
+- [ ] - `scrollImeOnScreenWhenNotVisible` and `scrollImeOffScreenWhenVisible` should be configurable via react props?
+- [ ] - linear animation should work the same as in google app example;
+- [ ] - add support for opacity interpolation

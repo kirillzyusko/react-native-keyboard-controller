@@ -19,7 +19,7 @@ const AnimatedTextInput = Reanimated.createAnimatedComponent(TextInput);
 const useKeyboardAnimation = () => {
   // for simplicity purpose let's lock scroll view via state variable
   // further it can be optimized without re-render/crossing the bridge
-  const [isScrollEnabled, setScrollEnabled] = useState(false);
+  const [isScrollEnabled, setScrollEnabled] = useState(true);
 
   const isScrollViewLocked = useSharedValue(false);
   const progress = useSharedValue(0);
@@ -30,9 +30,9 @@ const useKeyboardAnimation = () => {
 
       console.log('onMove', e.height);
 
-      if (isScrollViewLocked.value) {
+      /*if (isScrollViewLocked.value) {
         runOnJS(setScrollEnabled)(true);
-      }
+      }*/
 
       isScrollViewLocked.value = false;
       progress.value = e.progress;
@@ -43,9 +43,9 @@ const useKeyboardAnimation = () => {
 
       console.log('onInteractive', e.height);
 
-      if (!isScrollViewLocked.value) {
+      /*if (!isScrollViewLocked.value) {
         runOnJS(setScrollEnabled)(false);
-      }
+      }*/
 
       isScrollViewLocked.value = true;
       progress.value = e.progress;
@@ -84,7 +84,7 @@ function InteractiveKeyboard() {
   return (
     <>
       <View style={styles.container}>
-        <KeyboardGestureArea style={styles.content} interpolator="linear">
+        <KeyboardGestureArea style={styles.content} interpolator="ios">
           <Reanimated.ScrollView
             scrollEnabled={isScrollEnabled}
             style={scrollViewStyle}

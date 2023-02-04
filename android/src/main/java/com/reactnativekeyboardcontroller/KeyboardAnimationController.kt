@@ -309,6 +309,16 @@ internal class KeyboardAnimationController {
     }
   }
 
+  fun getCurrentKeyboardHeight(): Int {
+    val controller = insetsAnimationController
+      ?: throw IllegalStateException(
+        "Current WindowInsetsAnimationController is null." +
+          "This should only be called if isAnimationInProgress() returns true"
+      )
+
+    return controller.currentInsets.bottom
+  }
+
   private fun onRequestReady(controller: WindowInsetsAnimationControllerCompat) {
     println("onRequestReady")
     // The request is ready, so clear out the pending cancellation signal
