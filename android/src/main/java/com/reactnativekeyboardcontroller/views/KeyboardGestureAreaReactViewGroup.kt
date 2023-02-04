@@ -90,7 +90,9 @@ class KeyboardGestureAreaReactViewGroup(private val reactContext: ThemedReactCon
             println("DiffY: ${dy.roundToInt()}")
             val moveBy = this.interpolator.interpolate(dy.roundToInt(), this.getWindowHeight() - event.rawY.toInt(), controller.getCurrentKeyboardHeight())
 
-            controller.insetBy(moveBy)
+            if (moveBy != 0) {
+              controller.insetBy(moveBy)
+            }
           } else if (
             !controller.isInsetAnimationRequestPending() &&
             shouldStartRequest(
