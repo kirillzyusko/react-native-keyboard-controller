@@ -9,7 +9,6 @@ import com.facebook.react.module.model.ReactModuleInfoProvider
 import com.facebook.react.uimanager.ViewManager
 import com.reactnativekeyboardcontroller.modules.KeyboardControllerModuleImpl
 import com.reactnativekeyboardcontroller.modules.StatusBarManagerCompatModuleImpl
-import java.com.reactnativekeyboardcontroller.KeyboardGestureArea2ViewManager
 
 class KeyboardControllerPackage : TurboReactPackage() {
   @Nullable
@@ -55,6 +54,6 @@ class KeyboardControllerPackage : TurboReactPackage() {
   }
 
   override fun createViewManagers(reactContext: ReactApplicationContext): List<ViewManager<*, *>> {
-    return listOf(KeyboardControllerViewManager(reactContext), KeyboardGestureAreaViewManager(reactContext), KeyboardGestureArea2ViewManager(reactContext))
+    return listOf(KeyboardControllerViewManager(reactContext), KeyboardGestureAreaViewManager(reactContext))
   }
 }
