@@ -28,7 +28,7 @@ const useKeyboardAnimation = () => {
     onMove: (e) => {
       'worklet';
 
-      console.log('onMove');
+      console.log('onMove', e.height);
 
       if (isScrollViewLocked.value) {
         runOnJS(setScrollEnabled)(true);
@@ -41,7 +41,7 @@ const useKeyboardAnimation = () => {
     onInteractive: (e) => {
       'worklet';
 
-      console.log('onInteractive');
+      console.log('onInteractive', e.height);
 
       if (!isScrollViewLocked.value) {
         runOnJS(setScrollEnabled)(false);

@@ -132,6 +132,7 @@ internal class KeyboardAnimationController {
           "This should only be called if isAnimationInProgress() returns true"
       )
 
+    InteractiveKeyboardProvider.isInteractive = true
     // Call updateInsetTo() with the new inset value
     return insetTo(controller.currentInsets.bottom - dy)
   }
@@ -145,6 +146,7 @@ internal class KeyboardAnimationController {
    * @return the distance moved by the inset animation, in pixels
    */
   fun insetTo(inset: Int): Int {
+    println("insetTo $inset")
     val controller = insetsAnimationController
       ?: throw IllegalStateException(
         "Current WindowInsetsAnimationController is null." +
@@ -161,7 +163,6 @@ internal class KeyboardAnimationController {
 
     val consumedDy = controller.currentInsets.bottom - coercedBottom
 
-    InteractiveKeyboardProvider.isInteractive = true
     // Finally update the insets in the WindowInsetsAnimationController using
     // setInsetsAndAlpha().
     controller.setInsetsAndAlpha(
@@ -218,7 +219,6 @@ internal class KeyboardAnimationController {
    * Finish the current [WindowInsetsAnimationControllerCompat] immediately.
    */
   fun finish() {
-    InteractiveKeyboardProvider.isInteractive = false
     println("finish")
     val controller = insetsAnimationController
 
@@ -268,7 +268,7 @@ internal class KeyboardAnimationController {
    * Can be `null` if velocity is not available.
    */
   fun animateToFinish(velocityY: Float? = null) {
-    println("animateToFinish")
+    println("animateToFinish $velocityY")
     val controller = insetsAnimationController
 
     if (controller == null) {
@@ -277,6 +277,8 @@ internal class KeyboardAnimationController {
       pendingRequestCancellationSignal?.cancel()
       return
     }
+
+    InteractiveKeyboardProvider.isInteractive = false
 
     val current = controller.currentInsets.bottom
     val shown = controller.shownStateInsets.bottom
@@ -348,12 +350,15 @@ internal class KeyboardAnimationController {
     visible: Boolean,
     velocityY: Float? = null
   ) {
-    println("animateImeToVisibility")
+    println("animateImeToVisibility $visible $velocityY")
     val controller = insetsAnimationController
       ?: throw IllegalStateException("Controller should not be null")
 
     currentSpringAnimation = springAnimationOf(
-      setter = { insetTo(it.roundToInt()) },
+      setter = {
+        insetTo(it.roundToInt())
+        println("SPRING - MOVE TO: ${it.roundToInt()}")
+               },
       getter = { controller.currentInsets.bottom.toFloat() },
       finalPosition = when {
         visible -> controller.shownStateInsets.bottom.toFloat()
