@@ -5,4 +5,5 @@
 - [ ] - linear animation behavior correct?
 - [ ] - documentation
 - [ ] - iOS implementation
-- [ ] - swipe frequently up/down and app becomes to consume a lot of CPU resources
+- [x] - swipe frequently up/down and app becomes to consume a lot of CPU resources (because of inverted `ScrollView` - used `180deg` instead of `scaleY: -1`)
+- [ ] - replicate fix with `180deg` instead of `scaleY: -1` for all other code pieces
