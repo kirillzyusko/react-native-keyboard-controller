@@ -2,10 +2,17 @@ package com.reactnativekeyboardcontroller.interpolators
 
 class IosInterpolator : Interpolator {
   override fun interpolate(
-    distanceUntilKeyboard: Int,
-    fingerRelativePosition: Int,
-    velocity: Int
-  ): KeyboardAppearanceProperties {
-    return KeyboardAppearanceProperties(1.0f, -Math.min(distanceUntilKeyboard, 0), AnimationDirection.DOWN)
+    dY: Int,
+    absoluteFingerPos: Int,
+    keyboardPosition: Int
+  ): Int {
+    if (
+      absoluteFingerPos <= keyboardPosition // user overscrolled keyboard
+      || dY <= 0 // user scrolls up
+    ) {
+      return dY
+    }
+
+    return 0
   }
 }

@@ -11,10 +11,14 @@ data class KeyboardAppearanceProperties(
 )
 
 interface Interpolator {
-  // arguments:
-  // keyboardHeight, absoluteFingerPosition, screenHeight, velocity, animationDirectionWhenFingerIsReleased
-  // interpolate(distanceUntilKeyboard, fingerRelativePosition)
-  // returns:
-  // dY (position shift), opacity
-  fun interpolate(distanceUntilKeyboard: Int, fingerRelativePosition: Int, velocity: Int): KeyboardAppearanceProperties
+  /**
+   * A function that allows you to control the layout of the keyboard
+   * depending on the position of the finger on the screen.
+   *
+   * @param dY the distance that the finger has moved relative to the previous location.
+   * @param absoluteFingerPosition current position of the finger.
+   * @param keyboardPosition current keyboard position.
+   * @return the distance the keyboard should be moved from its current location.
+   */
+  fun interpolate(dY: Int, absoluteFingerPosition: Int, keyboardPosition: Int): Int
 }

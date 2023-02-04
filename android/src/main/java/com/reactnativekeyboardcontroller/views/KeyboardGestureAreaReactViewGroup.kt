@@ -2,9 +2,12 @@ package com.reactnativekeyboardcontroller.views
 
 import android.annotation.SuppressLint
 import android.graphics.Rect
+import android.os.Build
 import android.view.MotionEvent
 import android.view.VelocityTracker
 import android.view.ViewConfiguration
+import android.view.WindowInsets
+import androidx.annotation.RequiresApi
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.facebook.react.uimanager.ThemedReactContext
@@ -17,15 +20,18 @@ import com.reactnativekeyboardcontroller.interpolators.LinearInterpolator
 import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 
-val interpolators = mapOf("linear" to LinearInterpolator(), "ios" to IosInterpolator())
+val interpolators = mapOf(
+  "linear" to LinearInterpolator(),
+  "ios" to IosInterpolator()
+)
 
 @SuppressLint("ViewConstructor")
-class KeyboardGestureAreaReactViewGroup(reactContext: ThemedReactContext) : ReactViewGroup(reactContext) {
+class KeyboardGestureAreaReactViewGroup(private val reactContext: ThemedReactContext) : ReactViewGroup(reactContext) {
   private var isHandling = false
   private var lastTouchX = 0f
   private var lastTouchY = 0f
   private var lastWindowY = 0
-  private var interpolator: Interpolator = LinearInterpolator()
+  private var interpolator: Interpolator = IosInterpolator()
 
   private val bounds = Rect()
 
@@ -33,6 +39,7 @@ class KeyboardGestureAreaReactViewGroup(reactContext: ThemedReactContext) : Reac
 
   private var velocityTracker: VelocityTracker? = null
 
+  @RequiresApi(Build.VERSION_CODES.R)
   override fun dispatchTouchEvent(event: MotionEvent?): Boolean {
     if (velocityTracker == null) {
       // Obtain a VelocityTracker if we don't have one yet
@@ -81,7 +88,9 @@ class KeyboardGestureAreaReactViewGroup(reactContext: ThemedReactContext) : Reac
             // If we currently have control, we can update the IME insets to 'scroll'
             // the IME in
             println("DiffY: ${dy.roundToInt()}")
-            controller.insetBy(dy.roundToInt())
+            val moveBy = this.interpolator.interpolate(dy.roundToInt(), this.getWindowHeight() - event.rawY.toInt(), controller.getCurrentKeyboardHeight())
+
+            controller.insetBy(moveBy)
           } else if (
             !controller.isInsetAnimationRequestPending() &&
             shouldStartRequest(
@@ -161,5 +170,18 @@ class KeyboardGestureAreaReactViewGroup(reactContext: ThemedReactContext) : Reac
     dy > 0 -> imeVisible && true
     // Otherwise, return false
     else -> false
+  }
+
+  @RequiresApi(Build.VERSION_CODES.R)
+  private fun getWindowHeight(): Int {
+    val metrics = reactContext.currentActivity?.windowManager?.currentWindowMetrics
+    /*val windowInsets = metrics?.windowInsets
+    val insets = windowInsets?.getInsetsIgnoringVisibility(
+      WindowInsets.Type.navigationBars()
+        or WindowInsets.Type.displayCutout()
+    )
+    val insetsHeight = insets!!.top + insets.bottom // TODO: dangerous to use force operator
+    */
+    return metrics?.bounds?.height() ?: 0 // - insetsHeight
   }
 }
