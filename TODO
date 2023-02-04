@@ -7,3 +7,7 @@
 - [ ] - iOS implementation
 - [x] - swipe frequently up/down and app becomes to consume a lot of CPU resources (because of inverted `ScrollView` - used `180deg` instead of `scaleY: -1`)
 - [ ] - replicate fix with `180deg` instead of `scaleY: -1` for all other code pieces
+- [ ] - implement iOS interpolator
+- [ ] - if user swipes and keyboard becomes invisible - we need to send scroll events back to ScrollView
+- [ ] - if you make fast swipe gesture - app behaves a little bit strange/unexpected;
+- [ ] - swipe keyboard to 50% and release a finger (animation behaves strange, keyboard takes 100% of the height and then animates to the "close" state);
