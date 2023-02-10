@@ -9,7 +9,7 @@
     <icon>https://kirillzyusko.github.io/react-native-keyboard-controller/img/favicon.ico</icon>
     <entry>
         <title type="html"><![CDATA[Version 1.4.0 with new hook]]></title>
-        <id>new-hook</id>
+        <id>https://kirillzyusko.github.io/react-native-keyboard-controller/blog/new-hook</id>
         <link href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/new-hook"/>
         <updated>2022-10-15T00:00:00.000Z</updated>
         <summary type="html"><![CDATA[New 1.4.0 release enhance API and adds new useKeyboardHandler hook. While keeping no breaking changes this release (via new hook) adds an ability to have intermediate values on iOS for height and progress values (before it was not possible and it was a restriction of the library).]]></summary>
@@ -24,7 +24,7 @@
     </entry>
     <entry>
         <title type="html"><![CDATA[Version 1.2.0 with new architecture support]]></title>
-        <id>fabric</id>
+        <id>https://kirillzyusko.github.io/react-native-keyboard-controller/blog/fabric</id>
         <link href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/fabric"/>
         <updated>2022-09-22T00:00:00.000Z</updated>
         <summary type="html"><![CDATA[I'm glad to announce, that new upcoming release 1.2.0 brings a support for new react native architecture 😎]]></summary>
@@ -41,7 +41,7 @@
     </entry>
     <entry>
         <title type="html"><![CDATA[React Native meets smooth keyboard animations]]></title>
-        <id>welcome</id>
+        <id>https://kirillzyusko.github.io/react-native-keyboard-controller/blog/welcome</id>
         <link href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/welcome"/>
         <updated>2022-06-22T00:00:00.000Z</updated>
         <summary type="html"><![CDATA[Many flagship applications that are written natively (such as Telegram, Instagram, etc.) use the full power of platform-specific native APIs (iOS, Android) to make transitions between opening/closing the keyboard animated and smooth.]]></summary>
