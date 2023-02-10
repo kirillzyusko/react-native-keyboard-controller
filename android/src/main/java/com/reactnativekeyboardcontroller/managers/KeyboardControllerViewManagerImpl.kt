@@ -13,14 +13,13 @@ import com.reactnativekeyboardcontroller.KeyboardAnimationCallback
 import com.reactnativekeyboardcontroller.R
 import com.reactnativekeyboardcontroller.views.EdgeToEdgeReactViewGroup
 
-class KeyboardControllerViewManagerImpl(reactContext: ReactApplicationContext) {
+class KeyboardControllerViewManagerImpl(private val mReactContext: ReactApplicationContext) {
   private val TAG = KeyboardControllerViewManagerImpl::class.qualifiedName
-  private var mReactContext = reactContext
   private var isStatusBarTranslucent = false
 
   fun createViewInstance(reactContext: ThemedReactContext): ReactViewGroup {
     val view = EdgeToEdgeReactViewGroup(reactContext)
-    val activity = mReactContext.currentActivity
+    val activity = reactContext.currentActivity
 
     if (activity == null) {
       Log.w(TAG, "Can not setup keyboard animation listener, since `currentActivity` is null")
@@ -34,10 +33,10 @@ class KeyboardControllerViewManagerImpl(reactContext: ReactApplicationContext) {
       // We explicitly allow dispatch to continue down to binding.messageHolder's
       // child views, so that step 2.5 below receives the call
       dispatchMode = WindowInsetsAnimationCompat.Callback.DISPATCH_MODE_CONTINUE_ON_SUBTREE,
-      context = mReactContext,
+      context = reactContext,
       onApplyWindowInsetsListener = { v, insets ->
         val content =
-          mReactContext.currentActivity?.window?.decorView?.rootView?.findViewById<FitWindowsLinearLayout>(
+          reactContext.currentActivity?.window?.decorView?.rootView?.findViewById<FitWindowsLinearLayout>(
             R.id.action_bar_root,
           )
         content?.setPadding(
