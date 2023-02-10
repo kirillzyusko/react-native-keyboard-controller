@@ -13,7 +13,6 @@ fun View.requestApplyInsetsWhenAttached() {
   if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT && isAttachedToWindow) {
     // We're already attached, just request as normal
     requestApplyInsets()
-
   } else {
     // We're not attached to the hierarchy, add a listener to request when we are
     addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
