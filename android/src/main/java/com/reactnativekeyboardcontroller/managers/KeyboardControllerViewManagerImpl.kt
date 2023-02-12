@@ -11,6 +11,7 @@ import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.views.view.ReactViewGroup
 import com.reactnativekeyboardcontroller.KeyboardAnimationCallback
 import com.reactnativekeyboardcontroller.R
+import com.reactnativekeyboardcontroller.extensions.requestApplyInsetsWhenAttached
 import com.reactnativekeyboardcontroller.views.EdgeToEdgeReactViewGroup
 
 class KeyboardControllerViewManagerImpl(private val mReactContext: ReactApplicationContext) {
@@ -51,6 +52,7 @@ class KeyboardControllerViewManagerImpl(private val mReactContext: ReactApplicat
     )
     ViewCompat.setWindowInsetsAnimationCallback(view, callback)
     ViewCompat.setOnApplyWindowInsetsListener(view, callback)
+    view.requestApplyInsetsWhenAttached()
 
     return view
   }
