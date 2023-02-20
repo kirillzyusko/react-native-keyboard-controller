@@ -10,12 +10,8 @@
     "test": "jest"
   },
   "dependencies": {
-    "@react-navigation/bottom-tabs": "^6.4.0",
-    "@react-navigation/native": "^6.0.13",
-    "@react-navigation/stack": "^6.3.1",
     "react": "18.2.0",
-    "react-native": "0.71.3",
-    "react-native-toast-message": "^2.1.5"
+    "react-native": "0.71.3"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
