@@ -1,0 +1,48 @@
+def safeAppExtGet(prop, fallback) {
+  def appProject = rootProject.allprojects.find { it.plugins.hasPlugin('com.android.application') }
+  appProject?.ext?.has(prop) ? appProject.ext.get(prop) : fallback
+}
+
+// Let's detect react-native's directory, it will be used to determine RN's version
+// https://github.com/software-mansion/react-native-reanimated/blob/cda4627c3337c33674f05f755b7485165c6caca9/android/build.gradle#L88
+def resolveReactNativeDirectory() {
+  def reactNativeLocation = safeAppExtGet("REACT_NATIVE_NODE_MODULES_DIR", null)
+  if (reactNativeLocation != null) {
+    return file(reactNativeLocation)
+  }
+
+  // monorepo workaround
+  // react-native can be hoisted or in project's own node_modules
+  def reactNativeFromProjectNodeModules = file("${rootProject.projectDir}/../node_modules/react-native")
+  if (reactNativeFromProjectNodeModules.exists()) {
+    return reactNativeFromProjectNodeModules
+  }
+
+  def reactNativeFromNodeModules = file("${projectDir}/../../react-native")
+  if (reactNativeFromNodeModules.exists()) {
+    return reactNativeFromNodeModules
+  }
+
+  throw new GradleException(
+    "${project.name}: unable to resolve react-native location in " +
+    "node_modules. You should project extension property (in app/build.gradle) " +
+    "`REACT_NATIVE_NODE_MODULES_DIR` with path to react-native."
+  )
+}
+
+// https://github.com/software-mansion/react-native-reanimated/blob/cda4627c3337c33674f05f755b7485165c6caca9/android/build.gradle#L199#L205
+def reactNativeRootDir = resolveReactNativeDirectory()
+
+def reactProperties = new Properties()
+file("$reactNativeRootDir/ReactAndroid/gradle.properties").withInputStream { reactProperties.load(it) }
+
+def REACT_NATIVE_VERSION = reactProperties.getProperty("VERSION_NAME")
+def REACT_NATIVE_MINOR_VERSION = REACT_NATIVE_VERSION.startsWith("0.0.0-") ? 1000 : REACT_NATIVE_VERSION.split("\\.")[1].toInteger()
+
+project.ext.resolveReactNativeDirectory = { ->
+  return resolveReactNativeDirectory()
+}
+
+project.ext.shouldConsumeReactNativeFromMavenCentral = { ->
+  return REACT_NATIVE_MINOR_VERSION >= 71
+}
