@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - '.github/workflows/build-android-fabric-example.yml'
+      - '.github/workflows/build-android-fabric.yml'
       - 'android/**'
       - 'FabricExample/android/**'
       - 'yarn.lock'
@@ -13,7 +13,7 @@ on:
       - 'src/specs/**'
   pull_request:
     paths:
-      - '.github/workflows/build-android-fabric-example.yml'
+      - '.github/workflows/build-android-fabric.yml'
       - 'android/**'
       - 'FabricExample/android/**'
       - 'yarn.lock'

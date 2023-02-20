@@ -15,7 +15,7 @@ on:
       - 'android/**'
 
 jobs:
-  lint:
+  ktlint:
     runs-on: ubuntu-latest
     name: Kotlin Lint
     steps:
@@ -41,3 +41,20 @@ jobs:
         run: yarn install --frozen-lockfile --cwd ..
       - name: Run Gradle Lint
         run: ./gradlew lint
+  android-build:
+    runs-on: ubuntu-latest
+    name: 🏗️ Android Build
+    defaults:
+      run:
+        working-directory: ./android
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup JDK 11
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'microsoft'
+          java-version: '11'
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile --cwd ..
+      - name: Run Gradle Lint
+        run: ./gradlew assembleDebug
