@@ -16,7 +16,7 @@ on:
 
 jobs:
   build:
-    name: Build Android Example App
+    name: Build Android
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
