@@ -17,7 +17,7 @@ on:
 jobs:
   swift-lint:
     runs-on: ubuntu-latest
-    name: Swift Lint
+    name: 🔎 Swift Lint
     steps:
       - uses: actions/checkout@v3
       - name: Run SwiftLint GitHub Action (--strict)
@@ -28,7 +28,7 @@ jobs:
           WORKING_DIRECTORY: ios
   format:
     runs-on: macOS-12
-    name: Swift Format
+    name: 📚 Swift Format
     defaults:
       run:
         working-directory: ./ios
@@ -45,7 +45,7 @@ jobs:
         run: git diff --exit-code HEAD
   objc-lint:
     runs-on: macOS-12
-    name: ObjC Lint
+    name: 🔎 ObjC Lint
     steps:
       - uses: actions/checkout@v3
 

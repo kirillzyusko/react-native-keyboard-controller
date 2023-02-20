@@ -17,7 +17,7 @@ on:
 jobs:
   ktlint:
     runs-on: ubuntu-latest
-    name: Kotlin Lint
+    name: 🔎 Kotlin Lint
     steps:
       - uses: actions/checkout@v3
       - uses: touchlab-lab/ktlint-action-setup@1.0.0
@@ -26,7 +26,7 @@ jobs:
       - run: ktlint "android/src/**/*.kt"
   android-lint:
     runs-on: ubuntu-latest
-    name: Android Lint
+    name: 🔎 Android Lint
     defaults:
       run:
         working-directory: ./android
