@@ -49,11 +49,20 @@ type KeyboardProviderProps = {
    * @platform android
    */
   statusBarTranslucent?: boolean;
+  /**
+   * Set the value to `true`, if you use translucent navigation bar on Android.
+   * Defaults to `false`.
+   *
+   * @see https://github.com/kirillzyusko/react-native-keyboard-controller/issues/119
+   * @platform android
+   */
+  navigationBarTranslucent?: boolean;
 };
 
 export const KeyboardProvider = ({
   children,
   statusBarTranslucent,
+  navigationBarTranslucent,
 }: KeyboardProviderProps) => {
   // animated values
   const progress = useAnimatedValue(0);
@@ -131,6 +140,7 @@ export const KeyboardProvider = ({
         onKeyboardMoveReanimated={handler}
         onKeyboardMoveStart={Platform.OS === 'ios' ? onKeyboardMove : undefined}
         onKeyboardMove={Platform.OS === 'android' ? onKeyboardMove : undefined}
+        navigationBarTranslucent={navigationBarTranslucent}
         statusBarTranslucent={statusBarTranslucent}
         style={styles.container}
       >

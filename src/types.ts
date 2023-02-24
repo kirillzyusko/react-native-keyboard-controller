@@ -27,6 +27,7 @@ export type KeyboardControllerProps = {
     e: NativeSyntheticEvent<EventWithName<NativeEvent>>
   ) => void;
   statusBarTranslucent?: boolean;
+  navigationBarTranslucent?: boolean;
 } & ViewProps;
 
 export type KeyboardControllerModule = {
