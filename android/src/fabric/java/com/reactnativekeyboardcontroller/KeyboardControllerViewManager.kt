@@ -3,6 +3,7 @@ package com.reactnativekeyboardcontroller
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.ViewManagerDelegate
+import com.facebook.react.uimanager.annotations.ReactProp
 import com.facebook.react.viewmanagers.KeyboardControllerViewManagerDelegate
 import com.facebook.react.viewmanagers.KeyboardControllerViewManagerInterface
 import com.facebook.react.views.view.ReactViewGroup
@@ -23,10 +24,12 @@ class KeyboardControllerViewManager(mReactContext: ReactApplicationContext) : Re
     return manager.createViewInstance(context)
   }
 
+  @ReactProp(name = "statusBarTranslucent")
   override fun setStatusBarTranslucent(view: ReactViewGroup, value: Boolean) {
     return manager.setStatusBarTranslucent(view, value)
   }
 
+  @ReactProp(name = "navigationBarTranslucent")
   override fun setNavigationBarTranslucent(view: ReactViewGroup, value: Boolean) {
     return manager.setNavigationBarTranslucent(view, value)
   }
