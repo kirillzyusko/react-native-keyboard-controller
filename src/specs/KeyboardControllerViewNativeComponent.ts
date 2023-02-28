@@ -16,6 +16,7 @@ type KeyboardMoveEvent = Readonly<{
 export interface NativeProps extends ViewProps {
   // props
   statusBarTranslucent?: boolean;
+  navigationBarTranslucent?: boolean;
   // callbacks
   onKeyboardMove?: DirectEventHandler<KeyboardMoveEvent>;
   onKeyboardMoveStart?: DirectEventHandler<KeyboardMoveEvent>;

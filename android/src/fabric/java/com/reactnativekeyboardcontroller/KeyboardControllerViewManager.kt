@@ -27,6 +27,10 @@ class KeyboardControllerViewManager(mReactContext: ReactApplicationContext) : Re
     return manager.setStatusBarTranslucent(view, value)
   }
 
+  override fun setNavigationBarTranslucent(view: ReactViewGroup, value: Boolean) {
+    return manager.setNavigationBarTranslucent(view, value)
+  }
+
   override fun getExportedCustomDirectEventTypeConstants(): MutableMap<String, Any> {
     return manager.getExportedCustomDirectEventTypeConstants()
   }

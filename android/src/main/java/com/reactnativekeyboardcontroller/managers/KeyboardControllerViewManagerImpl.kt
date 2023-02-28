@@ -17,6 +17,7 @@ import com.reactnativekeyboardcontroller.views.EdgeToEdgeReactViewGroup
 class KeyboardControllerViewManagerImpl(private val mReactContext: ReactApplicationContext) {
   private val TAG = KeyboardControllerViewManagerImpl::class.qualifiedName
   private var isStatusBarTranslucent = false
+  private var isNavigationBarTranslucent = false
 
   fun createViewInstance(reactContext: ThemedReactContext): ReactViewGroup {
     val view = EdgeToEdgeReactViewGroup(reactContext)
@@ -44,7 +45,7 @@ class KeyboardControllerViewManagerImpl(private val mReactContext: ReactApplicat
           0,
           if (this.isStatusBarTranslucent) 0 else insets?.getInsets(WindowInsetsCompat.Type.systemBars())?.top ?: 0,
           0,
-          insets?.getInsets(WindowInsetsCompat.Type.navigationBars())?.bottom ?: 0,
+          if (this.isNavigationBarTranslucent) 0 else insets?.getInsets(WindowInsetsCompat.Type.navigationBars())?.bottom ?: 0,
         )
 
         insets
@@ -59,6 +60,10 @@ class KeyboardControllerViewManagerImpl(private val mReactContext: ReactApplicat
 
   fun setStatusBarTranslucent(view: ReactViewGroup, isStatusBarTranslucent: Boolean) {
     this.isStatusBarTranslucent = isStatusBarTranslucent
+  }
+
+  fun setNavigationBarTranslucent(view: ReactViewGroup, isNavigationBarTranslucent: Boolean) {
+    this.isNavigationBarTranslucent = isNavigationBarTranslucent
   }
 
   fun getExportedCustomDirectEventTypeConstants(): MutableMap<String, Any> {
