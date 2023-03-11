@@ -9,9 +9,9 @@
 - [x] - implement iOS interpolator (for Android)
 - [x] - replicate fix with `180deg` instead of `scaleY: -1` for all other code pieces
 - [ ] - if user swipes and keyboard becomes invisible - we need to send scroll events back to ScrollView
-- [ ] - if you make fast swipe gesture - app behaves a little bit strange/unexpected;
-- [ ] - swipe keyboard to 50% and release a finger (animation behaves strange, keyboard takes 100% of the height and then animates to the "close" state);
+- [ ] - if you make fast swipe gesture - app behaves a little bit strange/unexpected (because of velocityY > 0 in `animateToFinish`? if user swipes down the value will be > 0, if swipes up < 0);
+- [ ] - swipe keyboard to 50% and release a finger (animation behaves strange, keyboard takes 100% of the height and then animates to the "close" state) - not reproducible on 12/03/2022;
 - [ ] - `ScrollView` lock/unlock - may be not needed, twitches can be because of `fakeView`
-- [ ] - `scrollImeOnScreenWhenNotVisible` and `scrollImeOffScreenWhenVisible` should be configurable via react props?
+- [x] - `scrollImeOnScreenWhenNotVisible` (allowToShowKeyboardWhenInvisible/showKeyboardOnSwipeUpWhenInvisible/controlKeyboardOnSwipeUpWhenInvisible) and `scrollImeOffScreenWhenVisible` (controlKeyboardOnSwipeDownWhenVisible) should be configurable via react props - allowToDismiss/allowToShow::allowToShowKeyboardFromHiddenStateBySwipeUp?
 - [ ] - linear animation should work the same as in google app example;
 - [ ] - add support for opacity interpolation

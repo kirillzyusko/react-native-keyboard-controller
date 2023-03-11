@@ -6,6 +6,8 @@ import {
 } from 'react-native-keyboard-controller';
 import Reanimated, {
   runOnJS,
+  scrollTo,
+  useAnimatedRef,
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
@@ -17,6 +19,7 @@ import styles from './styles';
 const AnimatedTextInput = Reanimated.createAnimatedComponent(TextInput);
 
 const useKeyboardAnimation = () => {
+  const ref = useAnimatedRef<Reanimated.ScrollView>();
   // for simplicity purpose let's lock scroll view via state variable
   // further it can be optimized without re-render/crossing the bridge
   const [isScrollEnabled, setScrollEnabled] = useState(true);
@@ -28,7 +31,7 @@ const useKeyboardAnimation = () => {
     onMove: (e) => {
       'worklet';
 
-      console.log('onMove', e.height);
+      // console.log('onMove', e.height);
 
       /*if (isScrollViewLocked.value) {
         runOnJS(setScrollEnabled)(true);
@@ -41,7 +44,17 @@ const useKeyboardAnimation = () => {
     onInteractive: (e) => {
       'worklet';
 
-      console.log('onInteractive', e.height);
+      // console.log('onInteractive', e.height);
+
+      /*if (e.height === 0 && isScrollViewLocked.value) {
+        console.log("unlock");
+        isScrollViewLocked.value = false;
+        scrollTo(ref, 0, 0, false);
+      } else if (e.height !== 0 && !isScrollViewLocked.value) {
+        console.log("lock");
+        isScrollViewLocked.value = true;
+        scrollTo(ref, 0, 1, false);
+      }*/
 
       /*if (!isScrollViewLocked.value) {
         runOnJS(setScrollEnabled)(false);
@@ -53,7 +66,7 @@ const useKeyboardAnimation = () => {
     },
   });
 
-  return { height, progress, isScrollEnabled };
+  return { height, progress, isScrollEnabled, ref };
 };
 
 function InteractiveKeyboard() {
@@ -84,8 +97,9 @@ function InteractiveKeyboard() {
   return (
     <>
       <View style={styles.container}>
-        <KeyboardGestureArea style={styles.content} interpolator="ios">
+        <KeyboardGestureArea style={styles.content} interpolator="ios" allowToShowKeyboardFromHiddenStateBySwipeUp allowToDragKeyboardFromShownStateBySwipes={false}>
           <Reanimated.ScrollView
+            showsVerticalScrollIndicator={false}
             scrollEnabled={isScrollEnabled}
             style={scrollViewStyle}
           >

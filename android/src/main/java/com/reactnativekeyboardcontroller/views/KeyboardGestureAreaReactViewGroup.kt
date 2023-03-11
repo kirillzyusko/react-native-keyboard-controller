@@ -27,11 +27,15 @@ val interpolators = mapOf(
 
 @SuppressLint("ViewConstructor")
 class KeyboardGestureAreaReactViewGroup(private val reactContext: ThemedReactContext) : ReactViewGroup(reactContext) {
+  // internal state management
   private var isHandling = false
   private var lastTouchX = 0f
   private var lastTouchY = 0f
   private var lastWindowY = 0
+  // react props
   private var interpolator: Interpolator = IosInterpolator()
+  private var scrollKeyboardOnScreenWhenNotVisible = false
+  private var scrollKeyboardOffScreenWhenVisible = true
 
   private val bounds = Rect()
 
@@ -118,8 +122,8 @@ class KeyboardGestureAreaReactViewGroup(private val reactContext: ThemedReactCon
       MotionEvent.ACTION_UP -> {
         velocityTracker?.addMovement(event)
 
-        // Calculate the current velocityY, over 1000 milliseconds
-        velocityTracker?.computeCurrentVelocity(1000)
+        // Calculate the current velocityY, over 500 milliseconds
+        velocityTracker?.computeCurrentVelocity(500)
         val velocityY = velocityTracker?.yVelocity
 
         // If we received a ACTION_UP event, end any current WindowInsetsAnimation passing
@@ -144,6 +148,14 @@ class KeyboardGestureAreaReactViewGroup(private val reactContext: ThemedReactCon
     this.interpolator = interpolators[interpolator] ?: LinearInterpolator()
   }
 
+  fun setScrollKeyboardOnScreenWhenNotVisible(scrollImeOnScreenWhenNotVisible: Boolean) {
+    this.scrollKeyboardOnScreenWhenNotVisible = scrollImeOnScreenWhenNotVisible
+  }
+
+  fun setScrollKeyboardOffScreenWhenVisible(scrollImeOffScreenWhenVisible: Boolean) {
+    this.scrollKeyboardOffScreenWhenVisible = scrollImeOffScreenWhenVisible
+  }
+
   /**
    * Resets all of our internal state.
    */
@@ -166,10 +178,10 @@ class KeyboardGestureAreaReactViewGroup(private val reactContext: ThemedReactCon
   private fun shouldStartRequest(dy: Float, imeVisible: Boolean) = when {
     // If the user is scroll up, return true if scrollImeOnScreenWhenNotVisible is true, and
     // the IME is not currently visible
-    dy < 0 -> !imeVisible && false
+    dy < 0 -> !imeVisible && scrollKeyboardOnScreenWhenNotVisible
     // If the user is scroll down, start the request if scrollImeOffScreenWhenVisible is true,
     // and the IME is currently visible
-    dy > 0 -> imeVisible && true
+    dy > 0 -> imeVisible && scrollKeyboardOffScreenWhenVisible
     // Otherwise, return false
     else -> false
   }
