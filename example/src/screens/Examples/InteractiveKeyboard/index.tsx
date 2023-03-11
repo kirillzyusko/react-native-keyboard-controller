@@ -97,7 +97,7 @@ function InteractiveKeyboard() {
   return (
     <>
       <View style={styles.container}>
-        <KeyboardGestureArea style={styles.content} interpolator="ios" allowToShowKeyboardFromHiddenStateBySwipeUp allowToDragKeyboardFromShownStateBySwipes={false}>
+        <KeyboardGestureArea style={styles.content} interpolator="ios" allowToShowKeyboardFromHiddenStateBySwipeUp>
           <Reanimated.ScrollView
             showsVerticalScrollIndicator={false}
             scrollEnabled={isScrollEnabled}

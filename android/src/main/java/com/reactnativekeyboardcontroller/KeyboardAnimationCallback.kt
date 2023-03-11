@@ -63,7 +63,7 @@ class KeyboardAnimationCallback(
     // having such check allows us not to dispatch unnecessary incorrect events
     // the condition will be executed only when keyboard is opened and changes its size
     // (for example it happens when user changes keyboard type from 'text' to 'emoji' input
-    if (isKeyboardVisible && isKeyboardVisible() && !isTransitioning && Build.VERSION.SDK_INT >= 30) {
+    if (isKeyboardVisible && isKeyboardVisible() && !isTransitioning && Build.VERSION.SDK_INT >= 30 && !InteractiveKeyboardProvider.isInteractive) {
       val keyboardHeight = getCurrentKeyboardHeight()
 
       this.emitEvent("KeyboardController::keyboardWillShow", getEventParams(keyboardHeight))
@@ -134,7 +134,7 @@ class KeyboardAnimationCallback(
     } catch (e: ArithmeticException) {
       // do nothing, send progress as 0
     }
-    Log.i(TAG, "DiffY: $diffY $height $progress")
+    Log.i(TAG, "DiffY: $diffY $height $progress ${InteractiveKeyboardProvider.isInteractive}")
 
     val event = if (InteractiveKeyboardProvider.isInteractive) "topKeyboardMoveInteractive" else "topKeyboardMove"
     this.sendEventToJS(KeyboardTransitionEvent(view.id, event, height, progress))
