@@ -44,8 +44,6 @@ jobs:
           key: ${{ runner.os }}-fabric-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
-      - name: Install node_modules
-        run: yarn install --frozen-lockfile
       - name: Install node_modules for FabricExample/
         run: yarn install --frozen-lockfile --cwd FabricExample
 
@@ -58,7 +56,5 @@ jobs:
           key: ${{ runner.os }}-fabric-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-fabric-gradle-
-      - name: Run Gradle Build for android/
-        run: cd android && ./gradlew assembleDebug --build-cache && cd ..
       - name: Run Gradle Build for FabricExample/android/
         run: cd FabricExample/android && ./gradlew assembleDebug --build-cache -PreactNativeArchitectures=arm64-v8a && cd ../..

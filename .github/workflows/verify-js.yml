@@ -10,7 +10,7 @@ on:
 
 jobs:
   compile:
-    name: Compile TS
+    name: 🔀 Compile TS
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -26,7 +26,7 @@ jobs:
       - name: Run TypeScript
         run: yarn typescript
   lint:
-    name: Lint TS
+    name: 🔎 Lint TS
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -39,7 +39,7 @@ jobs:
       - name: Run Lint
         run: yarn lint
   tests:
-    name: Unit tests
+    name: 📖 Unit tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
