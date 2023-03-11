@@ -83,6 +83,9 @@ internal class KeyboardAnimationController {
     // Keep reference to the onReady callback
     pendingRequestOnReady = onRequestReady
 
+    // update our state manager
+    InteractiveKeyboardProvider.isInteractive = true
+
     // Finally we make a controlWindowInsetsAnimation() request:
     ViewCompat.getWindowInsetsController(view)?.controlWindowInsetsAnimation(
       // We're only catering for IME animations in this listener
