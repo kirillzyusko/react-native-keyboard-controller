@@ -290,7 +290,7 @@ internal class KeyboardAnimationController {
       // If we have a velocity, we can use it's direction to determine
       // the visibility. Upwards == visible
       velocityY != null -> animateImeToVisibility(
-        visible = velocityY > 0,
+        visible = velocityY < 0,
         velocityY = velocityY
       )
       // The current inset matches either the shown/hidden inset, finish() immediately

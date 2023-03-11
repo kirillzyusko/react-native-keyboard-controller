@@ -35,6 +35,17 @@ export type KeyboardControllerProps = {
 
 export type KeyboardGestureAreaProps = {
   interpolator: 'ios' | 'linear';
+  /**
+   * Whether to allow to show a keyboard from dismissed state by swipe up.
+   * Default to `false`.
+   */
+  allowToShowKeyboardFromHiddenStateBySwipeUp?: boolean;
+  /**
+   * Whether to allow to control a keyboard by gestures. The strategy how
+   * it should be controlled is determined by `interpolator` property.
+   * Defaults to `true`.
+   */
+  allowToDragKeyboardFromShownStateBySwipes?: boolean;
 } & ViewProps;
 
 export type KeyboardControllerModule = {

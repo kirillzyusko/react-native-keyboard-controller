@@ -28,6 +28,8 @@ fun View.requestApplyInsetsWhenAttached() {
 
       override fun onViewDetachedFromWindow(v: View) = Unit
     })
+  }
+}
 
 private val tmpIntArr = IntArray(2)
 

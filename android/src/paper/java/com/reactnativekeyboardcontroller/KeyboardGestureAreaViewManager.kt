@@ -20,4 +20,14 @@ class KeyboardGestureAreaViewManager(mReactContext: ReactApplicationContext) : R
   fun setInterpolator(view: KeyboardGestureAreaReactViewGroup, interpolator: String) {
     view.setInterpolator(interpolator)
   }
+
+  @ReactProp(name = "allowToShowKeyboardFromHiddenStateBySwipeUp")
+  fun setScrollKeyboardOnScreenWhenNotVisible(view: KeyboardGestureAreaReactViewGroup, value: Boolean) {
+    view.setScrollKeyboardOnScreenWhenNotVisible(value)
+  }
+
+  @ReactProp(name = "allowToDragKeyboardFromShownStateBySwipes")
+  fun setScrollKeyboardOffScreenWhenVisible(view: KeyboardGestureAreaReactViewGroup, value: Boolean) {
+    view.setScrollKeyboardOffScreenWhenVisible(value)
+  }
 }

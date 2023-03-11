@@ -4,6 +4,8 @@ import codegenNativeComponent from 'react-native/Libraries/Utilities/codegenNati
 
 export interface NativeProps extends ViewProps {
   interpolator: 'linear' | 'ios';
+  allowToShowKeyboardFromHiddenStateBySwipeUp?: boolean;
+  allowToDragKeyboardFromShownStateBySwipes?: boolean;
 }
 
 export default codegenNativeComponent<NativeProps>(
