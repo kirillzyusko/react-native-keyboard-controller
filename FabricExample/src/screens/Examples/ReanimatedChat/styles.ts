@@ -6,6 +6,7 @@ export default StyleSheet.create({
     flex: 1,
   },
   header: {
+    color: 'black',
     marginRight: 12,
   },
   inverted: {
