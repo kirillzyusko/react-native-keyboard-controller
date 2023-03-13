@@ -125,6 +125,7 @@ function InteractiveKeyboard({ navigation }: Props) {
           <Reanimated.ScrollView
             showsVerticalScrollIndicator={false}
             scrollEnabled={isScrollEnabled}
+            keyboardDismissMode="interactive"
             style={scrollViewStyle}
           >
             <View style={styles.inverted}>

@@ -64,12 +64,51 @@ public class KeyboardMovementObserver: NSObject {
       name: UIResponder.keyboardDidHideNotification,
       object: nil
     )
+      NotificationCenter.default.addObserver(
+        self,
+        selector: #selector(windowDidBecomeVisible),
+        name: UIWindow.didBecomeVisibleNotification,
+        object: nil
+      )
   }
 
   @objc public func unmount() {
     // swiftlint:disable notification_center_detachment
     NotificationCenter.default.removeObserver(self)
   }
+    
+    @objc func windowDidBecomeVisible(_ notification: Notification) {
+        print(1111188)
+        /*if (displayLink == nil) {
+            return;
+        }*/
+        
+        let keyboardView = self.findKeyboardView();
+        
+        if (keyboardView == _keyboardView) {
+                return;
+            }
+        
+        _keyboardView = keyboardView;
+        
+        keyboardView?.addObserver(self, forKeyPath: "center", options: .new, context: nil)
+    }
+    
+    @objc public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        
+        
+        if keyPath == "center" {
+            if (displayLink == nil) {
+                setupKeyboardWatcher()
+            }
+            print(777777, _keyboardView?.layer.presentation()?.frame.origin.y)
+            self.updateKeyboardFrame()
+            let age = change?[.newKey] {
+                // print("New age is: \(age)")
+                self.updateKeyboardFrame()
+         }
+        }
+    }
 
   @objc func keyboardWillAppear(_ notification: Notification) {
     if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
@@ -93,7 +132,7 @@ public class KeyboardMovementObserver: NSObject {
     onEvent("onKeyboardMoveStart", 0, 0)
     onNotify("KeyboardController::keyboardWillHide", data)
 
-    // setupKeyboardWatcher()
+    setupKeyboardWatcher()
   }
 
   @objc func keyboardDidAppear(_ notification: Notification) {
@@ -107,7 +146,7 @@ public class KeyboardMovementObserver: NSObject {
       onEvent("onKeyboardMoveEnd", keyboardHeight as NSNumber, 1)
       onNotify("KeyboardController::keyboardDidShow", data)
 
-      // removeKeyboardWatcher()
+      removeKeyboardWatcher()
     }
   }
 
