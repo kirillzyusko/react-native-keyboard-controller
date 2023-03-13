@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { TextInput, View } from 'react-native';
+import { StackScreenProps } from '@react-navigation/stack';
+import React, { useEffect, useState } from 'react';
+import { Text, TextInput, View } from 'react-native';
 import {
   KeyboardGestureArea,
   useKeyboardHandler,
@@ -14,6 +15,7 @@ import Reanimated, {
 
 import Message from '../../../components/Message';
 import { history } from '../../../components/Message/data';
+import { ExamplesStackParamList } from '../../../navigation/ExamplesStack';
 import styles from './styles';
 
 const AnimatedTextInput = Reanimated.createAnimatedComponent(TextInput);
@@ -69,8 +71,26 @@ const useKeyboardAnimation = () => {
   return { height, progress, isScrollEnabled, ref };
 };
 
-function InteractiveKeyboard() {
+type Props = StackScreenProps<ExamplesStackParamList>;
+
+function InteractiveKeyboard({ navigation }: Props) {
+  const [interpolator, setInterpolator] = useState<'ios' | 'linear'>('linear');
   const { height, isScrollEnabled } = useKeyboardAnimation();
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <Text
+          style={styles.header}
+          onPress={() =>
+            setInterpolator(interpolator === 'ios' ? 'linear' : 'ios')
+          }
+        >
+          {interpolator}
+        </Text>
+      ),
+    });
+  }, [interpolator]);
 
   const scrollViewStyle = useAnimatedStyle(
     () => ({
@@ -97,7 +117,11 @@ function InteractiveKeyboard() {
   return (
     <>
       <View style={styles.container}>
-        <KeyboardGestureArea style={styles.content} interpolator="ios" allowToShowKeyboardFromHiddenStateBySwipeUp>
+        <KeyboardGestureArea
+          style={styles.content}
+          interpolator={interpolator}
+          allowToShowKeyboardFromHiddenStateBySwipeUp
+        >
           <Reanimated.ScrollView
             showsVerticalScrollIndicator={false}
             scrollEnabled={isScrollEnabled}

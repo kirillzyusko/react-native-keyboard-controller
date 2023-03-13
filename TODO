@@ -15,3 +15,5 @@
 - [x] - `scrollImeOnScreenWhenNotVisible` (allowToShowKeyboardWhenInvisible/showKeyboardOnSwipeUpWhenInvisible/controlKeyboardOnSwipeUpWhenInvisible) and `scrollImeOffScreenWhenVisible` (controlKeyboardOnSwipeDownWhenVisible) should be configurable via react props - allowToDismiss/allowToShow::allowToShowKeyboardFromHiddenStateBySwipeUp?
 - [ ] - linear animation should work the same as in google app example;
 - [ ] - add support for opacity interpolation
+- [ ] - port changes to fabric architecture;
+- [ ] - clean up documentation by google;
