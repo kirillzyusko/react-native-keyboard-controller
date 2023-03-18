@@ -69,8 +69,30 @@
   );
 }
 
+.code-block-add-line {
+  display: block;
+  margin: 0 calc(-1 * var(--ifm-pre-padding));
+  padding: 0 var(--ifm-pre-padding);
+  border-left: 3px solid;
+}
+
+[data-theme='light'] .code-block-add-line {
+  background-color: #00ff0030;
+  border-left-color: #00ff0090;
+}
+
+[data-theme='dark'] .code-block-add-line {
+  background-color: #FFff0020;
+  border-left-color: #FFff0080;
+}
+
+.description-block {
+  padding-right: 20px;
+}
+
 .grid {
   display: grid;
+  margin-bottom: 20px;
   grid-template-columns: 80% 20%;
 }
 

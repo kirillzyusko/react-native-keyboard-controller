@@ -1,3 +1,7 @@
+---
+sidebar_position: 5
+---
+
 # KeyboardController
 
 `KeyboardController` is an object which has two functions:

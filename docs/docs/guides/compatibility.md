@@ -1,5 +1,5 @@
 ---
-sidebar_position: 3
+sidebar_position: 4
 ---
 
 # Compatibility
@@ -17,7 +17,7 @@ Below you can find a table with supported versions:
 
 :::info
 
-For `Paper` (old) architecture there is no any restrictions. If you found an incompatibility - don't hesitate to open an [issue](https://github.com/kirillzyusko/react-native-keyboard-controller/issues/new?assignees=kirillzyusko&labels=bug&template=bug_report.md&title=). It will help to the project 🙏
+For `Paper` (old) architecture there is no any restrictions. If you found an incompatibility - don't hesitate to open an [issue](https://github.com/kirillzyusko/react-native-keyboard-controller/issues/new?assignees=kirillzyusko&labels=bug&template=bug_report.md&title=). It will help the project 🙏
 
 :::
 

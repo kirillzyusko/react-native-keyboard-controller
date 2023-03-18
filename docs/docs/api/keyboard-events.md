@@ -1,3 +1,7 @@
+---
+sidebar_position: 6
+---
+
 # KeyboardEvents
 
 This library exposes 4 events which are available on all platforms:
