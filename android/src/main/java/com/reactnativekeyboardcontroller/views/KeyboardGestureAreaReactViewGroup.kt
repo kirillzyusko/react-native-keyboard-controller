@@ -6,7 +6,6 @@ import android.os.Build
 import android.view.MotionEvent
 import android.view.VelocityTracker
 import android.view.ViewConfiguration
-import android.view.WindowInsets
 import androidx.annotation.RequiresApi
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -33,7 +32,7 @@ class KeyboardGestureAreaReactViewGroup(private val reactContext: ThemedReactCon
   private var lastTouchY = 0f
   private var lastWindowY = 0
   // react props
-  private var interpolator: Interpolator = IosInterpolator()
+  private var interpolator: Interpolator = LinearInterpolator()
   private var scrollKeyboardOnScreenWhenNotVisible = false
   private var scrollKeyboardOffScreenWhenVisible = true
 
@@ -189,13 +188,7 @@ class KeyboardGestureAreaReactViewGroup(private val reactContext: ThemedReactCon
   @RequiresApi(Build.VERSION_CODES.R)
   private fun getWindowHeight(): Int {
     val metrics = reactContext.currentActivity?.windowManager?.currentWindowMetrics
-    /*val windowInsets = metrics?.windowInsets
-    val insets = windowInsets?.getInsetsIgnoringVisibility(
-      WindowInsets.Type.navigationBars()
-        or WindowInsets.Type.displayCutout()
-    )
-    val insetsHeight = insets!!.top + insets.bottom // TODO: dangerous to use force operator
-    */
+
     return metrics?.bounds?.height() ?: 0 // - insetsHeight
   }
 }
