@@ -35,7 +35,7 @@ const FeatureList: FeatureItem[] = [
     ),
   },
   {
-    title: 'Interactive keyboard (planned)',
+    title: 'Interactive keyboard (WIP)',
     lottie: interactive,
     description: <>Dismiss your keyboard interactively without a hassle</>,
   },
