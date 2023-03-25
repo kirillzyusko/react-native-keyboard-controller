@@ -2,7 +2,7 @@ package com.reactnativekeyboardcontroller.extensions
 
 import android.content.res.Resources
 
-val Float.dp: Int
-  get() = (this / Resources.getSystem().displayMetrics.density).toInt()
-val Float.px: Int
-  get() = (this * Resources.getSystem().displayMetrics.density).toInt()
+val Float.dp: Double
+  get() = (this / Resources.getSystem().displayMetrics.density).toDouble()
+val Float.px: Double
+  get() = (this * Resources.getSystem().displayMetrics.density).toDouble()

@@ -20,6 +20,7 @@ import com.facebook.react.uimanager.events.EventDispatcher
 import com.facebook.react.views.view.ReactViewGroup
 import com.reactnativekeyboardcontroller.events.KeyboardTransitionEvent
 import com.reactnativekeyboardcontroller.extensions.dp
+import kotlin.math.abs
 
 class KeyboardAnimationCallback(
   val view: ReactViewGroup,
@@ -30,7 +31,7 @@ class KeyboardAnimationCallback(
   val onApplyWindowInsetsListener: OnApplyWindowInsetsListener,
 ) : WindowInsetsAnimationCompat.Callback(dispatchMode), OnApplyWindowInsetsListener {
   private val TAG = KeyboardAnimationCallback::class.qualifiedName
-  private var persistentKeyboardHeight = 0
+  private var persistentKeyboardHeight = 0.0
   private var isKeyboardVisible = false
   private var isTransitioning = false
 
@@ -68,10 +69,10 @@ class KeyboardAnimationCallback(
       this.emitEvent("KeyboardController::keyboardWillShow", getEventParams(keyboardHeight))
       this.sendEventToJS(KeyboardTransitionEvent(view.id, "topKeyboardMoveStart", keyboardHeight, 1.0))
 
-      val animation = ValueAnimator.ofInt(this.persistentKeyboardHeight, keyboardHeight)
+      val animation = ValueAnimator.ofFloat(this.persistentKeyboardHeight.toFloat(), keyboardHeight.toFloat())
       animation.addUpdateListener { animator ->
-        val toValue = animator.animatedValue as Int
-        this.sendEventToJS(KeyboardTransitionEvent(view.id, "topKeyboardMove", toValue, toValue.toDouble() / keyboardHeight))
+        val toValue = animator.animatedValue as Float
+        this.sendEventToJS(KeyboardTransitionEvent(view.id, "topKeyboardMove", toValue.toDouble(), toValue.toDouble() / keyboardHeight))
       }
       animation.doOnEnd {
         this.emitEvent("KeyboardController::keyboardDidShow", getEventParams(keyboardHeight))
@@ -128,7 +129,7 @@ class KeyboardAnimationCallback(
 
     var progress = 0.0
     try {
-      progress = Math.abs((height.toDouble() / persistentKeyboardHeight)).let { if (it.isNaN()) 0.0 else it }
+      progress = abs((height / persistentKeyboardHeight)).let { if (it.isNaN()) 0.0 else it }
     } catch (e: ArithmeticException) {
       // do nothing, send progress as 0
     }
@@ -154,13 +155,13 @@ class KeyboardAnimationCallback(
     return insets?.isVisible(WindowInsetsCompat.Type.ime()) ?: false
   }
 
-  private fun getCurrentKeyboardHeight(): Int {
+  private fun getCurrentKeyboardHeight(): Double {
     val insets = ViewCompat.getRootWindowInsets(view)
     val keyboardHeight = insets?.getInsets(WindowInsetsCompat.Type.ime())?.bottom ?: 0
     val navigationBar = insets?.getInsets(WindowInsetsCompat.Type.navigationBars())?.bottom ?: 0
 
     // on hide it will be negative value, so we are using max function
-    return Math.max((keyboardHeight - navigationBar).toFloat().dp, 0)
+    return (keyboardHeight - navigationBar).toFloat().dp.coerceAtLeast(0.0)
   }
 
   private fun sendEventToJS(event: Event<*>) {
@@ -175,9 +176,9 @@ class KeyboardAnimationCallback(
     Log.i(TAG, event)
   }
 
-  private fun getEventParams(height: Int): WritableMap {
+  private fun getEventParams(height: Double): WritableMap {
     val params: WritableMap = Arguments.createMap()
-    params.putInt("height", height)
+    params.putDouble("height", height)
 
     return params
   }

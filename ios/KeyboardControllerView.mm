@@ -52,21 +52,21 @@ using namespace facebook::react;
                   self->_eventEmitter)
                   ->onKeyboardMoveStart(
                       facebook::react::KeyboardControllerViewEventEmitter::OnKeyboardMoveStart{
-                          .height = [height intValue], .progress = [progress floatValue]});
+                          .height = [height doubleValue], .progress = [progress doubleValue]});
             }
             if ([event isEqualToString:@"onKeyboardMove"]) {
               std::dynamic_pointer_cast<const facebook::react::KeyboardControllerViewEventEmitter>(
                   self->_eventEmitter)
                   ->onKeyboardMove(
                       facebook::react::KeyboardControllerViewEventEmitter::OnKeyboardMove{
-                          .height = [height intValue], .progress = [progress floatValue]});
+                          .height = [height doubleValue], .progress = [progress doubleValue]});
             }
             if ([event isEqualToString:@"onKeyboardMoveEnd"]) {
               std::dynamic_pointer_cast<const facebook::react::KeyboardControllerViewEventEmitter>(
                   self->_eventEmitter)
                   ->onKeyboardMoveEnd(
                       facebook::react::KeyboardControllerViewEventEmitter::OnKeyboardMoveEnd{
-                          .height = [height intValue], .progress = [progress floatValue]});
+                          .height = [height doubleValue], .progress = [progress doubleValue]});
             }
           }
 

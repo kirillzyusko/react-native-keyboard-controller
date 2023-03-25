@@ -2,14 +2,13 @@ import type { HostComponent } from 'react-native';
 import type { ViewProps } from 'react-native/Libraries/Components/View/ViewPropTypes';
 import type {
   DirectEventHandler,
-  Float,
-  Int32,
+  Double,
 } from 'react-native/Libraries/Types/CodegenTypes';
 import codegenNativeComponent from 'react-native/Libraries/Utilities/codegenNativeComponent';
 
 type KeyboardMoveEvent = Readonly<{
-  height: Int32;
-  progress: Float;
+  height: Double;
+  progress: Double;
 }>;
 
 export interface NativeProps extends ViewProps {
