@@ -64,13 +64,51 @@ public class KeyboardMovementObserver: NSObject {
       name: UIResponder.keyboardDidHideNotification,
       object: nil
     )
-      NotificationCenter.default.addObserver(
-        self,
-        selector: #selector(windowDidBecomeVisible),
-        name: UIWindow.didBecomeVisibleNotification,
-        object: nil
-      )
+    NotificationCenter.default.addObserver(
+      self,
+      selector: #selector(windowDidBecomeVisible),
+      name: UIWindow.didBecomeVisibleNotification,
+      object: nil
+    )
   }
+    
+    @objc func windowDidBecomeVisible(_ notification: Notification) {
+            print(1111188)
+            /*if (displayLink == nil) {
+                return;
+            }*/
+
+            let keyboardView = self.findKeyboardView();
+
+            if (keyboardView == _keyboardView) {
+                    return;
+                }
+
+            _keyboardView = keyboardView;
+
+            keyboardView?.addObserver(self, forKeyPath: "center", options: .new, context: nil)
+        }
+    
+    @objc public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+
+            if keyPath == "center" {
+                if (displayLink == nil) {
+                    setupKeyboardWatcher()
+                }
+                let keyboardFrameY = ((change?[.newKey]) as! NSValue).cgPointValue.y
+                print(((change?[.newKey]) as! NSValue).cgPointValue.y)
+                print(777777, _keyboardView?.layer.presentation()?.frame.origin.y)
+                let keyboardWindowH = keyboardView?.window?.bounds.size.height ?? 0
+                let keyboardPosition = keyboardWindowH - keyboardFrameY + 168
+                // self.updateKeyboardFrame()
+                /*let age = change?[.newKey] {
+                    // print("New age is: \(age)")
+                    self.updateKeyboardFrame()
+             }*/
+                print(keyboardPosition)
+                onEvent("onKeyboardMoveInteractive", keyboardPosition as NSNumber, 1) // TODO: calculate progress correctly
+            }
+        }
 
   @objc public func unmount() {
     // swiftlint:disable notification_center_detachment
@@ -209,6 +247,6 @@ public class KeyboardMovementObserver: NSObject {
     }
 
     prevKeyboardPosition = keyboardPosition
-    onEvent("onKeyboardMove", keyboardPosition as NSNumber, keyboardPosition / CGFloat(keyboardHeight) as NSNumber)
+    // onEvent("onKeyboardMove", keyboardPosition as NSNumber, keyboardPosition / CGFloat(keyboardHeight) as NSNumber)
   }
 }

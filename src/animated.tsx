@@ -133,8 +133,7 @@ export const KeyboardProvider = ({
       onKeyboardMoveInteractive: (event: NativeEvent) => {
         'worklet';
 
-        // only android for now, since iOS implementation is missing
-        updateSharedValues(event, ['android']);
+        updateSharedValues(event, ['android', 'ios']);
         broadcast('onInteractive', event);
       },
     },
