@@ -93,7 +93,7 @@ public class KeyboardMovementObserver: NSObject {
 
             if keyPath == "center" {
                 if (displayLink == nil) {
-                    setupKeyboardWatcher()
+                    // setupKeyboardWatcher()
                 }
                 let keyboardFrameY = ((change?[.newKey]) as! NSValue).cgPointValue.y
                 print(((change?[.newKey]) as! NSValue).cgPointValue.y)
@@ -114,39 +114,6 @@ public class KeyboardMovementObserver: NSObject {
     // swiftlint:disable notification_center_detachment
     NotificationCenter.default.removeObserver(self)
   }
-    
-    @objc func windowDidBecomeVisible(_ notification: Notification) {
-        print(1111188)
-        /*if (displayLink == nil) {
-            return;
-        }*/
-        
-        let keyboardView = self.findKeyboardView();
-        
-        if (keyboardView == _keyboardView) {
-                return;
-            }
-        
-        _keyboardView = keyboardView;
-        
-        keyboardView?.addObserver(self, forKeyPath: "center", options: .new, context: nil)
-    }
-    
-    @objc public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-        
-        
-        if keyPath == "center" {
-            if (displayLink == nil) {
-                setupKeyboardWatcher()
-            }
-            print(777777, _keyboardView?.layer.presentation()?.frame.origin.y)
-            self.updateKeyboardFrame()
-            let age = change?[.newKey] {
-                // print("New age is: \(age)")
-                self.updateKeyboardFrame()
-         }
-        }
-    }
 
   @objc func keyboardWillAppear(_ notification: Notification) {
     if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
@@ -171,6 +138,9 @@ public class KeyboardMovementObserver: NSObject {
     onNotify("KeyboardController::keyboardWillHide", data)
 
     setupKeyboardWatcher()
+
+    // TODO: remove interactive listener
+    // keyboardView?.removeObserver(self, forKeyPath: "center")
   }
 
   @objc func keyboardDidAppear(_ notification: Notification) {
@@ -184,6 +154,8 @@ public class KeyboardMovementObserver: NSObject {
       onEvent("onKeyboardMoveEnd", keyboardHeight as NSNumber, 1)
       onNotify("KeyboardController::keyboardDidShow", data)
 
+      // keyboardView?.addObserver(self, forKeyPath: "center", options: .new, context: nil)
+        
       removeKeyboardWatcher()
     }
   }
@@ -247,6 +219,6 @@ public class KeyboardMovementObserver: NSObject {
     }
 
     prevKeyboardPosition = keyboardPosition
-    // onEvent("onKeyboardMove", keyboardPosition as NSNumber, keyboardPosition / CGFloat(keyboardHeight) as NSNumber)
+    onEvent("onKeyboardMove", keyboardPosition as NSNumber, keyboardPosition / CGFloat(keyboardHeight) as NSNumber)
   }
 }
