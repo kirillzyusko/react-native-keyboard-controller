@@ -8,6 +8,14 @@
 
 import Foundation
 
+func interpolate(inputRange: [CGFloat], outputRange: [CGFloat], currentValue: CGFloat) -> CGFloat {
+    let inputDiff = inputRange[1] - inputRange[0]
+    let outputDiff = outputRange[1] - outputRange[0]
+    let normalizedValue = (currentValue - inputRange[0]) / inputDiff
+    let interpolatedValue = outputRange[0] + (normalizedValue * outputDiff)
+    return interpolatedValue
+}
+
 @objc(KeyboardMovementObserver)
 public class KeyboardMovementObserver: NSObject {
   // class members
@@ -101,15 +109,15 @@ public class KeyboardMovementObserver: NSObject {
                 print(((change?[.newKey]) as! NSValue).cgPointValue.y)
                 print(777777, _keyboardView?.layer.presentation()?.frame.origin.y, keyboardFrameY)
                 let keyboardWindowH = keyboardView?.window?.bounds.size.height ?? 0
-                // TODO: fix interpolation
-                let keyboardPosition = keyboardWindowH - keyboardFrameY + 168
+                let keyboardPosition = keyboardWindowH - keyboardFrameY
+                let position = interpolate(inputRange: [keyboardHeight/2,-keyboardHeight/2], outputRange: [keyboardHeight, 0], currentValue: keyboardPosition)
                 // self.updateKeyboardFrame()
                 /*let age = change?[.newKey] {
                     // print("New age is: \(age)")
                     self.updateKeyboardFrame()
              }*/
                 print(keyboardPosition)
-                onEvent("onKeyboardMoveInteractive", keyboardPosition as NSNumber, 1) // TODO: calculate progress correctly
+                onEvent("onKeyboardMoveInteractive", position as NSNumber, position / CGFloat(keyboardHeight) as NSNumber)
             }
         }
 
