@@ -91,14 +91,17 @@ public class KeyboardMovementObserver: NSObject {
     
     @objc public override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
 
-            if keyPath == "center" {
-                if (displayLink == nil) {
+        if keyPath == "center" && object as! NSObject == _keyboardView! {
+            if (displayLink != nil || keyboardHeight == 0.0) {
                     // setupKeyboardWatcher()
+                    // TODO: if keyboard is not shown yet or we are currently animating keyboard -> we need to ignore values from KVO
+                    return
                 }
                 let keyboardFrameY = ((change?[.newKey]) as! NSValue).cgPointValue.y
                 print(((change?[.newKey]) as! NSValue).cgPointValue.y)
-                print(777777, _keyboardView?.layer.presentation()?.frame.origin.y)
+                print(777777, _keyboardView?.layer.presentation()?.frame.origin.y, keyboardFrameY)
                 let keyboardWindowH = keyboardView?.window?.bounds.size.height ?? 0
+                // TODO: fix interpolation
                 let keyboardPosition = keyboardWindowH - keyboardFrameY + 168
                 // self.updateKeyboardFrame()
                 /*let age = change?[.newKey] {
@@ -163,6 +166,8 @@ public class KeyboardMovementObserver: NSObject {
   @objc func keyboardDidDisappear() {
     var data = [AnyHashable: Any]()
     data["height"] = 0
+      
+    keyboardHeight = 0.0
 
     onEvent("onKeyboardMoveEnd", 0 as NSNumber, 0)
     onNotify("KeyboardController::keyboardDidHide", data)
@@ -171,6 +176,10 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc func setupKeyboardWatcher() {
+      // TODO: sometimes `will` events can be called multiple times. To avoid double re-creation of listener we are adding this condition (if active link is present, then no need to re-setup a listener)
+      if (displayLink != nil) {
+          return
+      }
     displayLink = CADisplayLink(target: self, selector: #selector(updateKeyboardFrame))
     displayLink?.preferredFramesPerSecond = 120 // will fallback to 60 fps for devices without Pro Motion display
     displayLink?.add(to: .main, forMode: .common)
@@ -206,6 +215,7 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc func updateKeyboardFrame() {
+      print("updateKeyboardFrame")
     if keyboardView == nil {
       return
     }
