@@ -9,6 +9,6 @@ export interface NativeProps extends ViewProps {
   allowToDragKeyboardFromShownStateBySwipes?: boolean;
 }
 
-export default codegenNativeComponent<NativeProps>(
-  'KeyboardGestureArea'
-) as HostComponent<NativeProps>;
+export default codegenNativeComponent<NativeProps>('KeyboardGestureArea', {
+  excludedPlatforms: ['iOS'],
+}) as HostComponent<NativeProps>;
