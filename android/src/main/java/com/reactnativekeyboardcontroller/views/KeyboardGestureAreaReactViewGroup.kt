@@ -21,7 +21,7 @@ import kotlin.math.roundToInt
 
 val interpolators = mapOf(
   "linear" to LinearInterpolator(),
-  "ios" to IosInterpolator()
+  "ios" to IosInterpolator(),
 )
 
 @SuppressLint("ViewConstructor")
@@ -31,6 +31,7 @@ class KeyboardGestureAreaReactViewGroup(private val reactContext: ThemedReactCon
   private var lastTouchX = 0f
   private var lastTouchY = 0f
   private var lastWindowY = 0
+
   // react props
   private var interpolator: Interpolator = LinearInterpolator()
   private var scrollKeyboardOnScreenWhenNotVisible = false
@@ -98,7 +99,7 @@ class KeyboardGestureAreaReactViewGroup(private val reactContext: ThemedReactCon
             shouldStartRequest(
               dy = dy,
               imeVisible = ViewCompat.getRootWindowInsets(this)
-                ?.isVisible(WindowInsetsCompat.Type.ime()) == true
+                ?.isVisible(WindowInsetsCompat.Type.ime()) == true,
             )
           ) {
             // If we don't currently have control (and a request isn't pending),

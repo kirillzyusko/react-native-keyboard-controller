@@ -11,7 +11,8 @@ import com.facebook.react.views.view.ReactViewManager
 import com.reactnativekeyboardcontroller.managers.KeyboardGestureAreaViewManagerImpl
 import com.reactnativekeyboardcontroller.views.KeyboardGestureAreaReactViewGroup
 
-class KeyboardGestureAreaViewManager(mReactContext: ReactApplicationContext) : ReactViewManager(),
+class KeyboardGestureAreaViewManager(mReactContext: ReactApplicationContext) :
+  ReactViewManager(),
   KeyboardGestureAreaManagerInterface<ReactViewGroup> {
   private val manager = KeyboardGestureAreaViewManagerImpl(mReactContext)
   private val mDelegate = KeyboardGestureAreaManagerDelegate(this)
@@ -34,7 +35,7 @@ class KeyboardGestureAreaViewManager(mReactContext: ReactApplicationContext) : R
   @ReactProp(name = "allowToShowKeyboardFromHiddenStateBySwipeUp")
   override fun setAllowToShowKeyboardFromHiddenStateBySwipeUp(
     view: ReactViewGroup,
-    value: Boolean
+    value: Boolean,
   ) {
     manager.setScrollKeyboardOnScreenWhenNotVisible(view as KeyboardGestureAreaReactViewGroup, value)
   }

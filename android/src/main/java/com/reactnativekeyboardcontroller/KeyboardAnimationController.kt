@@ -29,7 +29,7 @@ internal class KeyboardAnimationController {
        */
       override fun onReady(
         controller: WindowInsetsAnimationControllerCompat,
-        types: Int
+        types: Int,
       ) = onRequestReady(controller)
 
       /**
@@ -65,7 +65,7 @@ internal class KeyboardAnimationController {
    */
   fun startControlRequest(
     view: View,
-    onRequestReady: ((WindowInsetsAnimationControllerCompat) -> Unit)? = null
+    onRequestReady: ((WindowInsetsAnimationControllerCompat) -> Unit)? = null,
   ) {
     check(!isInsetAnimationInProgress()) {
       "Animation in progress. Can not start a new request to controlWindowInsetsAnimation()"
@@ -100,7 +100,7 @@ internal class KeyboardAnimationController {
       // A cancellation signal, which allows us to cancel the request to control
       pendingRequestCancellationSignal,
       // The WindowInsetsAnimationControlListener
-      animationControlListener
+      animationControlListener,
     )
   }
 
@@ -129,7 +129,7 @@ internal class KeyboardAnimationController {
     val controller = insetsAnimationController
       ?: throw IllegalStateException(
         "Current WindowInsetsAnimationController is null." +
-          "This should only be called if isAnimationInProgress() returns true"
+          "This should only be called if isAnimationInProgress() returns true",
       )
 
     InteractiveKeyboardProvider.isInteractive = true
@@ -149,7 +149,7 @@ internal class KeyboardAnimationController {
     val controller = insetsAnimationController
       ?: throw IllegalStateException(
         "Current WindowInsetsAnimationController is null." +
-          "This should only be called if isAnimationInProgress() returns true"
+          "This should only be called if isAnimationInProgress() returns true",
       )
 
     val hiddenBottom = controller.hiddenStateInsets.bottom
@@ -172,7 +172,7 @@ internal class KeyboardAnimationController {
       1f,
       // Finally we calculate the animation progress fraction. This value is passed through
       // to any WindowInsetsAnimation.Callbacks, but it is not used by the system.
-      (coercedBottom - startBottom) / (endBottom - startBottom).toFloat()
+      (coercedBottom - startBottom) / (endBottom - startBottom).toFloat(),
     )
 
     return consumedDy
@@ -281,7 +281,7 @@ internal class KeyboardAnimationController {
       // the visibility. Upwards == visible
       velocityY != null -> animateImeToVisibility(
         visible = velocityY < 0,
-        velocityY = velocityY
+        velocityY = velocityY,
       )
       // The current inset matches either the shown/hidden inset, finish() immediately
       current == shown -> controller.finish(true)
@@ -303,7 +303,7 @@ internal class KeyboardAnimationController {
     val controller = insetsAnimationController
       ?: throw IllegalStateException(
         "Current WindowInsetsAnimationController is null." +
-          "This should only be called if isAnimationInProgress() returns true"
+          "This should only be called if isAnimationInProgress() returns true",
       )
 
     return controller.currentInsets.bottom
@@ -346,7 +346,7 @@ internal class KeyboardAnimationController {
    */
   private fun animateImeToVisibility(
     visible: Boolean,
-    velocityY: Float? = null
+    velocityY: Float? = null,
   ) {
     val controller = insetsAnimationController
       ?: throw IllegalStateException("Controller should not be null")
@@ -354,12 +354,12 @@ internal class KeyboardAnimationController {
     currentSpringAnimation = springAnimationOf(
       setter = {
         insetTo(it.roundToInt())
-               },
+      },
       getter = { controller.currentInsets.bottom.toFloat() },
       finalPosition = when {
         visible -> controller.shownStateInsets.bottom.toFloat()
         else -> controller.hiddenStateInsets.bottom.toFloat()
-      }
+      },
     ).withSpringForceProperties {
       // Tweak the damping value, to remove any bounciness.
       dampingRatio = SpringForce.DAMPING_RATIO_NO_BOUNCY
