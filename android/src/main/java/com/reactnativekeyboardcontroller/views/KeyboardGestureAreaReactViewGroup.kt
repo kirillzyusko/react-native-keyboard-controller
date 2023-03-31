@@ -60,12 +60,10 @@ class KeyboardGestureAreaReactViewGroup(private val reactContext: ThemedReactCon
         lastWindowY = bounds.top
       }
       MotionEvent.ACTION_MOVE -> {
-        println("Moved by: ${event.y}")
         // Since the view is likely to be translated/moved as the WindowInsetsAnimation
         // progresses, we need to make sure we account for that change in our touch
         // handling. We do that by keeping track of the view's Y position in the window,
         // and detecting the difference between the current bounds.
-
         this.copyBoundsInWindow(bounds)
         val windowOffsetY = bounds.top - lastWindowY
 
@@ -90,7 +88,6 @@ class KeyboardGestureAreaReactViewGroup(private val reactContext: ThemedReactCon
           if (controller.isInsetAnimationInProgress()) {
             // If we currently have control, we can update the IME insets to 'scroll'
             // the IME in
-            println("DiffY: ${dy.roundToInt()}")
             val moveBy = this.interpolator.interpolate(dy.roundToInt(), this.getWindowHeight() - event.rawY.toInt(), controller.getCurrentKeyboardHeight())
 
             if (moveBy != 0) {
@@ -189,6 +186,6 @@ class KeyboardGestureAreaReactViewGroup(private val reactContext: ThemedReactCon
   private fun getWindowHeight(): Int {
     val metrics = reactContext.currentActivity?.windowManager?.currentWindowMetrics
 
-    return metrics?.bounds?.height() ?: 0 // - insetsHeight
+    return metrics?.bounds?.height() ?: 0
   }
 }

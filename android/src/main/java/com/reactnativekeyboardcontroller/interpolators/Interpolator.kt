@@ -1,15 +1,5 @@
 package com.reactnativekeyboardcontroller.interpolators
 
-enum class AnimationDirection {
-  UP, DOWN
-}
-
-data class KeyboardAppearanceProperties(
-  var opacity: Float,
-  var position: Int,
-  var animationDirectionWhenFingerIsReleased: AnimationDirection
-)
-
 interface Interpolator {
   /**
    * A function that allows you to control the layout of the keyboard

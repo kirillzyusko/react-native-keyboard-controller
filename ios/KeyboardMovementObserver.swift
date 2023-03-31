@@ -93,7 +93,7 @@ public class KeyboardMovementObserver: NSObject {
     onEvent("onKeyboardMoveStart", 0, 0)
     onNotify("KeyboardController::keyboardWillHide", data)
 
-    // setupKeyboardWatcher()
+    setupKeyboardWatcher()
   }
 
   @objc func keyboardDidAppear(_ notification: Notification) {
@@ -107,7 +107,7 @@ public class KeyboardMovementObserver: NSObject {
       onEvent("onKeyboardMoveEnd", keyboardHeight as NSNumber, 1)
       onNotify("KeyboardController::keyboardDidShow", data)
 
-      // removeKeyboardWatcher()
+      removeKeyboardWatcher()
     }
   }
 
@@ -161,9 +161,9 @@ public class KeyboardMovementObserver: NSObject {
       return
     }
 
-    let keyboardFrameY = keyboardView?.layer.presentation()?.frame.origin.y ?? 0
-    let keyboardWindowH = keyboardView?.window?.bounds.size.height ?? 0
-    let keyboardPosition = keyboardWindowH - keyboardFrameY
+    var keyboardFrameY = keyboardView?.layer.presentation()?.frame.origin.y ?? 0
+    var keyboardWindowH = keyboardView?.window?.bounds.size.height ?? 0
+    var keyboardPosition = keyboardWindowH - keyboardFrameY
 
     if keyboardPosition == prevKeyboardPosition || keyboardFrameY == 0 {
       return

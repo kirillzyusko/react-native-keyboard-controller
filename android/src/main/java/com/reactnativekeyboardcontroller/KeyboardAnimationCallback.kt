@@ -91,7 +91,6 @@ class KeyboardAnimationCallback(
     animation: WindowInsetsAnimationCompat,
     bounds: WindowInsetsAnimationCompat.BoundsCompat,
   ): WindowInsetsAnimationCompat.BoundsCompat {
-    println("onStart")
     isTransitioning = true
     isKeyboardVisible = isKeyboardVisible()
     val keyboardHeight = getCurrentKeyboardHeight()

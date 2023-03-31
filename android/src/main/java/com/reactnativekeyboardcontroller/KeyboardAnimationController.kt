@@ -36,7 +36,6 @@ internal class KeyboardAnimationController {
        * If the request is finished, we should reset our internal state
        */
       override fun onFinished(controller: WindowInsetsAnimationControllerCompat) {
-        println("onFinished")
         reset()
       }
 
@@ -44,7 +43,6 @@ internal class KeyboardAnimationController {
        * If the request is cancelled, we should reset our internal state
        */
       override fun onCancelled(controller: WindowInsetsAnimationControllerCompat?) {
-        println("onCancelled")
         reset()
       }
     }
@@ -69,7 +67,6 @@ internal class KeyboardAnimationController {
     view: View,
     onRequestReady: ((WindowInsetsAnimationControllerCompat) -> Unit)? = null
   ) {
-    println("startControlRequest")
     check(!isInsetAnimationInProgress()) {
       "Animation in progress. Can not start a new request to controlWindowInsetsAnimation()"
     }
@@ -149,7 +146,6 @@ internal class KeyboardAnimationController {
    * @return the distance moved by the inset animation, in pixels
    */
   fun insetTo(inset: Int): Int {
-    println("insetTo $inset")
     val controller = insetsAnimationController
       ?: throw IllegalStateException(
         "Current WindowInsetsAnimationController is null." +
@@ -208,7 +204,6 @@ internal class KeyboardAnimationController {
    * the animation, reverting back to the state at the start of the gesture.
    */
   fun cancel() {
-    println("cancel")
     insetsAnimationController?.finish(isImeShownAtStart)
     pendingRequestCancellationSignal?.cancel()
 
@@ -222,11 +217,9 @@ internal class KeyboardAnimationController {
    * Finish the current [WindowInsetsAnimationControllerCompat] immediately.
    */
   fun finish() {
-    println("finish")
     val controller = insetsAnimationController
 
     if (controller == null) {
-      println("finish: pendingRequestCancellationSignal?.cancel()")
       // If we don't currently have a controller, cancel any pending request and return
       pendingRequestCancellationSignal?.cancel()
       return
@@ -235,8 +228,6 @@ internal class KeyboardAnimationController {
     val current = controller.currentInsets.bottom
     val shown = controller.shownStateInsets.bottom
     val hidden = controller.hiddenStateInsets.bottom
-
-    println("finish: $current $shown $hidden")
 
     when (current) {
       // The current inset matches either the shown/hidden inset, finish() immediately
@@ -271,11 +262,9 @@ internal class KeyboardAnimationController {
    * Can be `null` if velocity is not available.
    */
   fun animateToFinish(velocityY: Float? = null) {
-    println("animateToFinish $velocityY")
     val controller = insetsAnimationController
 
     if (controller == null) {
-      println("pendingRequestCancellationSignal?.cancel()")
       // If we don't currently have a controller, cancel any pending request and return
       pendingRequestCancellationSignal?.cancel()
       return
@@ -286,8 +275,6 @@ internal class KeyboardAnimationController {
     val current = controller.currentInsets.bottom
     val shown = controller.shownStateInsets.bottom
     val hidden = controller.hiddenStateInsets.bottom
-
-    println("animateToFinish: $current $shown $hidden")
 
     when {
       // If we have a velocity, we can use it's direction to determine
@@ -323,7 +310,6 @@ internal class KeyboardAnimationController {
   }
 
   private fun onRequestReady(controller: WindowInsetsAnimationControllerCompat) {
-    println("onRequestReady")
     // The request is ready, so clear out the pending cancellation signal
     pendingRequestCancellationSignal = null
     // Store the current WindowInsetsAnimationController
@@ -338,7 +324,6 @@ internal class KeyboardAnimationController {
    * Resets all of our internal state.
    */
   private fun reset() {
-    println("reset")
     // Clear all of our internal state
     insetsAnimationController = null
     pendingRequestCancellationSignal = null
@@ -363,14 +348,12 @@ internal class KeyboardAnimationController {
     visible: Boolean,
     velocityY: Float? = null
   ) {
-    println("animateImeToVisibility $visible $velocityY")
     val controller = insetsAnimationController
       ?: throw IllegalStateException("Controller should not be null")
 
     currentSpringAnimation = springAnimationOf(
       setter = {
         insetTo(it.roundToInt())
-        println("SPRING - MOVE TO: ${it.roundToInt()}")
                },
       getter = { controller.currentInsets.bottom.toFloat() },
       finalPosition = when {
