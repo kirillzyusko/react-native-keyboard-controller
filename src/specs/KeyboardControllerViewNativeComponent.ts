@@ -16,9 +16,10 @@ export interface NativeProps extends ViewProps {
   statusBarTranslucent?: boolean;
   navigationBarTranslucent?: boolean;
   // callbacks
-  onKeyboardMove?: DirectEventHandler<KeyboardMoveEvent>;
   onKeyboardMoveStart?: DirectEventHandler<KeyboardMoveEvent>;
+  onKeyboardMove?: DirectEventHandler<KeyboardMoveEvent>;
   onKeyboardMoveEnd?: DirectEventHandler<KeyboardMoveEvent>;
+  onKeyboardMoveInteractive?: DirectEventHandler<KeyboardMoveEvent>;
 }
 
 export default codegenNativeComponent<NativeProps>(
