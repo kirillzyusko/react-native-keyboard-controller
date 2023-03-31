@@ -1,11 +1,12 @@
 import { StackScreenProps } from '@react-navigation/stack';
 import React, { useEffect, useState } from 'react';
-import { Text, TextInput, View } from 'react-native';
+import { Platform, Text, TextInput, View } from 'react-native';
 import {
   KeyboardGestureArea,
   useKeyboardHandler,
 } from 'react-native-keyboard-controller';
 import Reanimated, {
+  interpolate,
   runOnJS,
   scrollTo,
   useAnimatedRef,
@@ -30,8 +31,17 @@ const useKeyboardAnimation = () => {
   const progress = useSharedValue(0);
   const height = useSharedValue(0);
   useKeyboardHandler({
+    onStart: (e) => {
+      'worklet';
+
+      console.log('onStart', e);
+
+      height.value = e.height;
+    },
     onMove: (e) => {
       'worklet';
+
+      console.log('onMove');
 
       // console.log('onMove', e.height);
 
@@ -45,6 +55,8 @@ const useKeyboardAnimation = () => {
     },
     onInteractive: (e) => {
       'worklet';
+
+      console.log('onInteractive', e);
 
       // console.log('onInteractive', e.height);
 
@@ -65,6 +77,11 @@ const useKeyboardAnimation = () => {
       isScrollViewLocked.value = true;
       progress.value = e.progress;
       height.value = e.height;
+    },
+    onEnd: (e) => {
+      'worklet';
+
+      console.log('onEnd');
     },
   });
 
@@ -94,7 +111,7 @@ function InteractiveKeyboard({ navigation }: Props) {
 
   const scrollViewStyle = useAnimatedStyle(
     () => ({
-      transform: [{ translateY: -height.value }, ...styles.inverted.transform],
+      transform: [...styles.inverted.transform],
     }),
     []
   );
@@ -126,10 +143,10 @@ function InteractiveKeyboard({ navigation }: Props) {
             showsVerticalScrollIndicator={false}
             scrollEnabled={isScrollEnabled}
             keyboardDismissMode="interactive"
+            automaticallyAdjustKeyboardInsets
             style={scrollViewStyle}
           >
             <View style={styles.inverted}>
-              <Reanimated.View style={fakeView} />
               {history.map((message, index) => (
                 <Message key={index} {...message} />
               ))}

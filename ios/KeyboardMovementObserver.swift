@@ -9,12 +9,18 @@
 import Foundation
 
 func interpolate(inputRange: [CGFloat], outputRange: [CGFloat], currentValue: CGFloat) -> CGFloat {
-    let inputDiff = inputRange[1] - inputRange[0]
-    let outputDiff = outputRange[1] - outputRange[0]
-    let normalizedValue = (currentValue - inputRange[0]) / inputDiff
-    let interpolatedValue = outputRange[0] + (normalizedValue * outputDiff)
+    let inputMin = inputRange.min() ?? 0
+    let inputMax = inputRange.max() ?? 1
+    let outputMin = outputRange.min() ?? 0
+    let outputMax = outputRange.max() ?? 1
+    
+    let normalizedValue = (currentValue - inputMin) / (inputMax - inputMin)
+    let interpolatedValue = outputMin + (outputMax - outputMin) * normalizedValue
+    
     return interpolatedValue
 }
+
+
 
 @objc(KeyboardMovementObserver)
 public class KeyboardMovementObserver: NSObject {
@@ -48,6 +54,9 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc public func mount() {
+      print(interpolate(inputRange: [0.0, 50.0, 100.0], outputRange: [0.0, 50.0, 200.0], currentValue: 75.0)) // 150
+      print(interpolate(inputRange: [-100.0, 0, 100.0], outputRange: [0.0, 20.0, 200.0], currentValue: -50.0)) // 10
+      print(interpolate(inputRange: [-100.0, 0, 100.0], outputRange: [0.0, 20.0, 200.0], currentValue: 50)) // 110
     NotificationCenter.default.addObserver(
       self,
       selector: #selector(keyboardWillDisappear),
