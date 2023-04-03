@@ -15,6 +15,7 @@ class KeyboardControllerView: UIView {
   @objc var onKeyboardMoveStart: RCTDirectEventBlock?
   @objc var onKeyboardMove: RCTDirectEventBlock?
   @objc var onKeyboardMoveEnd: RCTDirectEventBlock?
+  @objc var onKeyboardMoveInteractive: RCTDirectEventBlock?
 
   init(frame: CGRect, eventDispatcher: RCTEventDispatcherProtocol) {
     self.eventDispatcher = eventDispatcher
@@ -42,6 +43,7 @@ class KeyboardControllerView: UIView {
   }
 
   func onEvent(event: NSString, height: NSNumber, progress: NSNumber) {
+    print("onEvent \(event) \(height)")
     eventDispatcher.send(
       KeyboardMoveEvent(
         reactTag: reactTag,
