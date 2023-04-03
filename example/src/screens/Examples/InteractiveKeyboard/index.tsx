@@ -82,28 +82,26 @@ function InteractiveKeyboard({ navigation }: Props) {
   );
 
   return (
-    <>
-      <View style={styles.container}>
-        <KeyboardGestureArea
-          style={styles.content}
-          interpolator={interpolator}
-          allowToShowKeyboardFromHiddenStateBySwipeUp
+    <View style={styles.container}>
+      <KeyboardGestureArea
+        style={styles.content}
+        interpolator={interpolator}
+        allowToShowKeyboardFromHiddenStateBySwipeUp
+      >
+        <Reanimated.ScrollView
+          showsVerticalScrollIndicator={false}
+          style={scrollViewStyle}
         >
-          <Reanimated.ScrollView
-            showsVerticalScrollIndicator={false}
-            style={scrollViewStyle}
-          >
-            <View style={styles.inverted}>
-              <Reanimated.View style={fakeView} />
-              {history.map((message, index) => (
-                <Message key={index} {...message} />
-              ))}
-            </View>
-          </Reanimated.ScrollView>
-        </KeyboardGestureArea>
-        <AnimatedTextInput style={textInputStyle} />
-      </View>
-    </>
+          <View style={styles.inverted}>
+            <Reanimated.View style={fakeView} />
+            {history.map((message, index) => (
+              <Message key={index} {...message} />
+            ))}
+          </View>
+        </Reanimated.ScrollView>
+      </KeyboardGestureArea>
+      <AnimatedTextInput style={textInputStyle} />
+    </View>
   );
 }
 
