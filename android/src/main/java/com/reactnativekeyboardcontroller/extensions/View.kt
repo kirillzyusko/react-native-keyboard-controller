@@ -1,7 +1,9 @@
 package com.reactnativekeyboardcontroller.extensions
 
+import android.graphics.Rect
 import android.os.Build
 import android.view.View
+import androidx.annotation.RequiresApi
 
 /**
  * Call this everytime when using [ViewCompat.setOnApplyWindowInsetsListener]
@@ -25,5 +27,24 @@ fun View.requestApplyInsetsWhenAttached() {
 
       override fun onViewDetachedFromWindow(v: View) = Unit
     })
+  }
+}
+
+private val tmpIntArr = IntArray(2)
+
+/**
+ * Function which updates the given [rect] with this view's position and bounds in its window.
+ */
+@RequiresApi(Build.VERSION_CODES.KITKAT)
+fun View.copyBoundsInWindow(rect: Rect) {
+  if (isLaidOut && isAttachedToWindow) {
+    rect.set(0, 0, width, height)
+    getLocationInWindow(tmpIntArr)
+    rect.offset(tmpIntArr[0], tmpIntArr[1])
+  } else {
+    throw IllegalArgumentException(
+      "Can not copy bounds as view is not laid out" +
+        " or attached to window",
+    )
   }
 }

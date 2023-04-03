@@ -63,7 +63,7 @@ class KeyboardAnimationCallback(
     // having such check allows us not to dispatch unnecessary incorrect events
     // the condition will be executed only when keyboard is opened and changes its size
     // (for example it happens when user changes keyboard type from 'text' to 'emoji' input
-    if (isKeyboardVisible && isKeyboardVisible() && !isTransitioning && Build.VERSION.SDK_INT >= 30) {
+    if (isKeyboardVisible && isKeyboardVisible() && !isTransitioning && Build.VERSION.SDK_INT >= 30 && !InteractiveKeyboardProvider.isInteractive) {
       val keyboardHeight = getCurrentKeyboardHeight()
 
       this.emitEvent("KeyboardController::keyboardWillShow", getEventParams(keyboardHeight))
@@ -133,9 +133,10 @@ class KeyboardAnimationCallback(
     } catch (e: ArithmeticException) {
       // do nothing, send progress as 0
     }
-    Log.i(TAG, "DiffY: $diffY $height $progress")
+    Log.i(TAG, "DiffY: $diffY $height $progress ${InteractiveKeyboardProvider.isInteractive}")
 
-    this.sendEventToJS(KeyboardTransitionEvent(view.id, "topKeyboardMove", height, progress))
+    val event = if (InteractiveKeyboardProvider.isInteractive) "topKeyboardMoveInteractive" else "topKeyboardMove"
+    this.sendEventToJS(KeyboardTransitionEvent(view.id, event, height, progress))
 
     return insets
   }
@@ -144,7 +145,19 @@ class KeyboardAnimationCallback(
     super.onEnd(animation)
 
     isTransitioning = false
-    this.persistentKeyboardHeight = getCurrentKeyboardHeight()
+    // if keyboard becomes shown after interactive animation completion
+    // getCurrentKeyboardHeight() will be `0` and isKeyboardVisible will be `false`
+    // it's not correct behavior, so we are handling it here
+    val isKeyboardShown = InteractiveKeyboardProvider.shown
+    if (!isKeyboardShown) {
+      this.persistentKeyboardHeight = getCurrentKeyboardHeight()
+    } else {
+      // if keyboard is shown after interactions and the animation has finished
+      // then we need to reset the state
+      InteractiveKeyboardProvider.shown = false
+    }
+    val isKeyboardVisible = isKeyboardVisible || isKeyboardShown
+
     this.emitEvent("KeyboardController::" + if (!isKeyboardVisible) "keyboardDidHide" else "keyboardDidShow", getEventParams(this.persistentKeyboardHeight))
     this.sendEventToJS(KeyboardTransitionEvent(view.id, "topKeyboardMoveEnd", this.persistentKeyboardHeight, if (!isKeyboardVisible) 0.0 else 1.0))
   }

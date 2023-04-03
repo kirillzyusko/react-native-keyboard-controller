@@ -22,12 +22,30 @@ export type KeyboardControllerProps = {
   onKeyboardMoveEnd?: (
     e: NativeSyntheticEvent<EventWithName<NativeEvent>>
   ) => void;
+  onKeyboardMoveInteractive?: (
+    e: NativeSyntheticEvent<EventWithName<NativeEvent>>
+  ) => void;
   // fake prop used to activate reanimated bindings
   onKeyboardMoveReanimated?: (
     e: NativeSyntheticEvent<EventWithName<NativeEvent>>
   ) => void;
   statusBarTranslucent?: boolean;
   navigationBarTranslucent?: boolean;
+} & ViewProps;
+
+export type KeyboardGestureAreaProps = {
+  interpolator: 'ios' | 'linear';
+  /**
+   * Whether to allow to show a keyboard from dismissed state by swipe up.
+   * Default to `false`.
+   */
+  allowToShowKeyboardFromHiddenStateBySwipeUp?: boolean;
+  /**
+   * Whether to allow to control a keyboard by gestures. The strategy how
+   * it should be controlled is determined by `interpolator` property.
+   * Defaults to `true`.
+   */
+  allowToDragKeyboardFromShownStateBySwipes?: boolean;
 } & ViewProps;
 
 export type KeyboardControllerModule = {
@@ -53,9 +71,10 @@ export type KeyboardEventData = {
 // package types
 
 export type Handlers<T> = Record<string, T | undefined>;
-export type KeyboardHandler = {
-  onStart?: (e: NativeEvent) => void;
-  onMove?: (e: NativeEvent) => void;
-  onEnd?: (e: NativeEvent) => void;
-};
+export type KeyboardHandler = Partial<{
+  onStart: (e: NativeEvent) => void;
+  onMove: (e: NativeEvent) => void;
+  onEnd: (e: NativeEvent) => void;
+  onInteractive: (e: NativeEvent) => void;
+}>;
 export type KeyboardHandlers = Handlers<KeyboardHandler>;

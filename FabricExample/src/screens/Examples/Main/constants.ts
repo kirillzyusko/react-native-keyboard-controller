@@ -24,4 +24,9 @@ export const examples: Example[] = [
     info: ScreenNames.NON_UI_PROPS,
     icons: '🚀',
   },
+  {
+    title: 'Interactive keyboard (WIP)',
+    info: ScreenNames.INTERACTIVE_KEYBOARD,
+    icons: '👆📱',
+  },
 ];

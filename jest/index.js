@@ -28,6 +28,7 @@ const mock = {
   },
   // views
   KeyboardControllerView: 'KeyboardControllerView',
+  KeyboardGestureArea: 'KeyboardGestureArea',
   // providers
   KeyboardProvider: 'KeyboardProvider',
 };
