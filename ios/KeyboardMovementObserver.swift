@@ -103,9 +103,9 @@ public class KeyboardMovementObserver: NSObject {
 
   @objc override public func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context _: UnsafeMutableRawPointer?) {
     if keyPath == "center", object as! NSObject == _keyboardView! {
+      // if we are currently animating keyboard or keyboard is not shown yet -> we need to ignore values from KVO
       if displayLink != nil || keyboardHeight == 0.0 {
         // setupKeyboardWatcher()
-        // TODO: if keyboard is not shown yet or we are currently animating keyboard -> we need to ignore values from KVO
         return
       }
       let keyboardFrameY = (change?[.newKey] as! NSValue).cgPointValue.y
@@ -187,7 +187,9 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc func setupKeyboardWatcher() {
-    // TODO: sometimes `will` events can be called multiple times. To avoid double re-creation of listener we are adding this condition (if active link is present, then no need to re-setup a listener)
+    // sometimes `will` events can be called multiple times.
+    // To avoid double re-creation of listener we are adding this condition
+    // (if active link is present, then no need to re-setup a listener)
     if displayLink != nil {
       return
     }
