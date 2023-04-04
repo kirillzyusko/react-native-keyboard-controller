@@ -12,7 +12,7 @@ Keyboard manager which works in identical way on both iOS and Android.
 - missing `keyboardWillShow` / `keyboardWillHide` events are available on Android 😍
 - module for changing soft input mode on Android 🤔
 - reanimated support 🚀
-- interactive keyboard dismissing (WIP) 👆📱
+- interactive keyboard dismissing (new) 👆📱
 - and more is coming... Stay tuned! 😊
 
 ## Installation
