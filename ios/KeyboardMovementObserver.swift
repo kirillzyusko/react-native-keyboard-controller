@@ -169,8 +169,6 @@ public class KeyboardMovementObserver: NSObject {
       onEvent("onKeyboardMoveEnd", keyboardHeight as NSNumber, 1)
       onNotify("KeyboardController::keyboardDidShow", data)
 
-      // keyboardView?.addObserver(self, forKeyPath: "center", options: .new, context: nil)
-
       removeKeyboardWatcher()
     }
   }
