@@ -20,6 +20,7 @@ func interpolate(inputRange: [CGFloat], outputRange: [CGFloat], currentValue: CG
   return interpolatedValue
 }
 
+// TODO: fast swipe down causes two unexpected onInterective events (15/103/108)
 @objc(KeyboardMovementObserver)
 public class KeyboardMovementObserver: NSObject {
   // class members
@@ -85,11 +86,7 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc func windowDidBecomeVisible(_: Notification) {
-    print(1_111_188)
-    /* if (displayLink == nil) {
-         return;
-     } */
-
+    print("windowDidBecomeVisible")
     let keyboardView = findKeyboardView()
 
     if keyboardView == _keyboardView {
@@ -101,24 +98,25 @@ public class KeyboardMovementObserver: NSObject {
     keyboardView?.addObserver(self, forKeyPath: "center", options: .new, context: nil)
   }
 
-  @objc override public func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context _: UnsafeMutableRawPointer?) {
+  @objc override public func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context ctx: UnsafeMutableRawPointer?) {
     if keyPath == "center", object as! NSObject == _keyboardView! {
       // if we are currently animating keyboard or keyboard is not shown yet -> we need to ignore values from KVO
       if displayLink != nil || keyboardHeight == 0.0 {
-        // setupKeyboardWatcher()
         return
       }
+
       let keyboardFrameY = (change?[.newKey] as! NSValue).cgPointValue.y
-      print((change?[.newKey] as! NSValue).cgPointValue.y)
-      print(777_777, _keyboardView?.layer.presentation()?.frame.origin.y, keyboardFrameY)
       let keyboardWindowH = keyboardView?.window?.bounds.size.height ?? 0
       let keyboardPosition = keyboardWindowH - keyboardFrameY
       let position = interpolate(inputRange: [keyboardHeight / 2, -keyboardHeight / 2], outputRange: [keyboardHeight, 0], currentValue: keyboardPosition)
-      // self.updateKeyboardFrame()
-      /* let age = change?[.newKey] {
-              // print("New age is: \(age)")
-              self.updateKeyboardFrame()
-       } */
+
+      if position == 0 {
+        // it will be triggered before `keyboardWillDisappear` and we don't need to trigger `onInteractive` handler for that
+        // since it will be handled in `keyboardWillDisappear` function
+        return
+      }
+      print("observeValue \(NSDate().timeIntervalSince1970)")
+      print(777_777, _keyboardView?.layer.presentation()?.frame.origin.y, keyboardFrameY, ctx)
       print(keyboardPosition)
       onEvent("onKeyboardMoveInteractive", position as NSNumber, position / CGFloat(keyboardHeight) as NSNumber)
     }
@@ -130,6 +128,7 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc func keyboardWillAppear(_ notification: Notification) {
+    print("keyboardWillAppear")
     if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
       let keyboardHeight = keyboardFrame.cgRectValue.size.height
       self.keyboardHeight = keyboardHeight
@@ -145,6 +144,7 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc func keyboardWillDisappear() {
+    print("keyboardWillDisappear")
     var data = [AnyHashable: Any]()
     data["height"] = 0
 
@@ -158,6 +158,7 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc func keyboardDidAppear(_ notification: Notification) {
+    print("keyboardDidAppear")
     if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
       let keyboardHeight = keyboardFrame.cgRectValue.size.height
       self.keyboardHeight = keyboardHeight
@@ -175,6 +176,7 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc func keyboardDidDisappear() {
+    print("keyboardDidDisappear")
     var data = [AnyHashable: Any]()
     data["height"] = 0
 
@@ -193,6 +195,7 @@ public class KeyboardMovementObserver: NSObject {
     if displayLink != nil {
       return
     }
+    print("setupKeyboardWatcher")
     displayLink = CADisplayLink(target: self, selector: #selector(updateKeyboardFrame))
     displayLink?.preferredFramesPerSecond = 120 // will fallback to 60 fps for devices without Pro Motion display
     displayLink?.add(to: .main, forMode: .common)
