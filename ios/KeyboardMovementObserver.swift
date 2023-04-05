@@ -20,7 +20,7 @@ func interpolate(inputRange: [CGFloat], outputRange: [CGFloat], currentValue: CG
   return interpolatedValue
 }
 
-// TODO: fast swipe down causes two unexpected onInterective events (15/103/108)
+// TODO: fast swipe down causes two unexpected onInteractive events (15/103/108)
 @objc(KeyboardMovementObserver)
 public class KeyboardMovementObserver: NSObject {
   // class members
