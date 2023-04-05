@@ -43,6 +43,7 @@ public class KeyboardMovementObserver: NSObject {
   private var prevKeyboardPosition = 0.0
   private var displayLink: CADisplayLink?
   private var keyboardHeight: CGFloat = 0.0
+  private var shouldIgnoreKVO = false
 
   @objc public init(
     handler: @escaping (NSString, NSNumber, NSNumber) -> Void,
@@ -101,7 +102,7 @@ public class KeyboardMovementObserver: NSObject {
   @objc override public func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context ctx: UnsafeMutableRawPointer?) {
     if keyPath == "center", object as! NSObject == _keyboardView! {
       // if we are currently animating keyboard or keyboard is not shown yet -> we need to ignore values from KVO
-      if displayLink != nil || keyboardHeight == 0.0 {
+      if displayLink != nil || keyboardHeight == 0.0 || shouldIgnoreKVO {
         return
       }
 
@@ -110,6 +111,13 @@ public class KeyboardMovementObserver: NSObject {
       let keyboardPosition = keyboardWindowH - keyboardFrameY
       let position = interpolate(inputRange: [keyboardHeight / 2, -keyboardHeight / 2], outputRange: [keyboardHeight, 0], currentValue: keyboardPosition)
 
+      if position / prevKeyboardPosition > 1.5 {
+        // really corner case - if you swipe fast enoungh in the  end of the swipe
+        // we'll get two semi-random events with incorrect height
+        // we can not emit them, because UI will have flickers
+        shouldIgnoreKVO = true
+        return
+      }
       if position == 0 {
         // it will be triggered before `keyboardWillDisappear` and we don't need to trigger `onInteractive` handler for that
         // since it will be handled in `keyboardWillDisappear` function
@@ -118,6 +126,7 @@ public class KeyboardMovementObserver: NSObject {
       print("observeValue \(NSDate().timeIntervalSince1970)")
       print(777_777, _keyboardView?.layer.presentation()?.frame.origin.y, keyboardFrameY, ctx)
       print(keyboardPosition)
+      prevKeyboardPosition = position
       onEvent("onKeyboardMoveInteractive", position as NSNumber, position / CGFloat(keyboardHeight) as NSNumber)
     }
   }
@@ -162,6 +171,7 @@ public class KeyboardMovementObserver: NSObject {
     if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
       let keyboardHeight = keyboardFrame.cgRectValue.size.height
       self.keyboardHeight = keyboardHeight
+      self.shouldIgnoreKVO = false
 
       var data = [AnyHashable: Any]()
       data["height"] = keyboardHeight
@@ -179,6 +189,7 @@ public class KeyboardMovementObserver: NSObject {
     data["height"] = 0
 
     keyboardHeight = 0.0
+    shouldIgnoreKVO = false
 
     onEvent("onKeyboardMoveEnd", 0 as NSNumber, 0)
     onNotify("KeyboardController::keyboardDidHide", data)
