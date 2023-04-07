@@ -96,18 +96,21 @@ public class KeyboardMovementObserver: NSObject {
     keyboardView?.addObserver(self, forKeyPath: "center", options: .new, context: nil)
   }
 
+  // swiftlint:disable:next block_based_kvo
   @objc override public func observeValue(
     forKeyPath keyPath: String?,
     of object: Any?,
     change: [NSKeyValueChangeKey: Any]?,
     context _: UnsafeMutableRawPointer?
   ) {
+    // swiftlint:disable:next force_cast
     if keyPath == "center", object as! NSObject == _keyboardView! {
       // if we are currently animating keyboard or keyboard is not shown yet -> we need to ignore values from KVO
       if displayLink != nil || keyboardHeight == 0.0 {
         return
       }
 
+      // swiftlint:disable:next force_cast
       let keyboardFrameY = (change?[.newKey] as! NSValue).cgPointValue.y
       let keyboardWindowH = keyboardView?.window?.bounds.size.height ?? 0
       let keyboardPosition = keyboardWindowH - keyboardFrameY
@@ -129,7 +132,7 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc public func unmount() {
-    // swiftlint:disable notification_center_detachment
+    // swiftlint:disable:next notification_center_detachment
     NotificationCenter.default.removeObserver(self)
   }
 
@@ -156,9 +159,6 @@ public class KeyboardMovementObserver: NSObject {
     onNotify("KeyboardController::keyboardWillHide", data)
 
     setupKeyboardWatcher()
-
-    // TODO: remove interactive listener
-    // keyboardView?.removeObserver(self, forKeyPath: "center")
   }
 
   @objc func keyboardDidAppear(_ notification: Notification) {
