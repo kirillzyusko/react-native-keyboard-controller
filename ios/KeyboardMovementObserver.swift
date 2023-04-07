@@ -8,6 +8,18 @@
 
 import Foundation
 
+func interpolate(inputRange: [CGFloat], outputRange: [CGFloat], currentValue: CGFloat) -> CGFloat {
+  let inputMin = inputRange.min() ?? 0
+  let inputMax = inputRange.max() ?? 1
+  let outputMin = outputRange.min() ?? 0
+  let outputMax = outputRange.max() ?? 1
+
+  let normalizedValue = (currentValue - inputMin) / (inputMax - inputMin)
+  let interpolatedValue = outputMin + (outputMax - outputMin) * normalizedValue
+
+  return interpolatedValue
+}
+
 @objc(KeyboardMovementObserver)
 public class KeyboardMovementObserver: NSObject {
   // class members
@@ -64,10 +76,63 @@ public class KeyboardMovementObserver: NSObject {
       name: UIResponder.keyboardDidHideNotification,
       object: nil
     )
+    NotificationCenter.default.addObserver(
+      self,
+      selector: #selector(windowDidBecomeVisible),
+      name: UIWindow.didBecomeVisibleNotification,
+      object: nil
+    )
+  }
+
+  @objc func windowDidBecomeVisible(_: Notification) {
+    let keyboardView = findKeyboardView()
+
+    if keyboardView == _keyboardView {
+      return
+    }
+
+    _keyboardView = keyboardView
+
+    keyboardView?.addObserver(self, forKeyPath: "center", options: .new, context: nil)
+  }
+
+  // swiftlint:disable:next block_based_kvo
+  @objc override public func observeValue(
+    forKeyPath keyPath: String?,
+    of object: Any?,
+    change: [NSKeyValueChangeKey: Any]?,
+    context _: UnsafeMutableRawPointer?
+  ) {
+    // swiftlint:disable:next force_cast
+    if keyPath == "center", object as! NSObject == _keyboardView! {
+      // if we are currently animating keyboard or keyboard is not shown yet -> we need to ignore values from KVO
+      if displayLink != nil || keyboardHeight == 0.0 {
+        return
+      }
+
+      // swiftlint:disable:next force_cast
+      let keyboardFrameY = (change?[.newKey] as! NSValue).cgPointValue.y
+      let keyboardWindowH = keyboardView?.window?.bounds.size.height ?? 0
+      let keyboardPosition = keyboardWindowH - keyboardFrameY
+      let position = interpolate(
+        inputRange: [keyboardHeight / 2, -keyboardHeight / 2],
+        outputRange: [keyboardHeight, 0],
+        currentValue: keyboardPosition
+      )
+
+      if position == 0 {
+        // it will be triggered before `keyboardWillDisappear` and
+        // we don't need to trigger `onInteractive` handler for that
+        // since it will be handled in `keyboardWillDisappear` function
+        return
+      }
+
+      onEvent("onKeyboardMoveInteractive", position as NSNumber, position / CGFloat(keyboardHeight) as NSNumber)
+    }
   }
 
   @objc public func unmount() {
-    // swiftlint:disable notification_center_detachment
+    // swiftlint:disable:next notification_center_detachment
     NotificationCenter.default.removeObserver(self)
   }
 
@@ -115,6 +180,8 @@ public class KeyboardMovementObserver: NSObject {
     var data = [AnyHashable: Any]()
     data["height"] = 0
 
+    keyboardHeight = 0.0
+
     onEvent("onKeyboardMoveEnd", 0 as NSNumber, 0)
     onNotify("KeyboardController::keyboardDidHide", data)
 
@@ -122,6 +189,13 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc func setupKeyboardWatcher() {
+    // sometimes `will` events can be called multiple times.
+    // To avoid double re-creation of listener we are adding this condition
+    // (if active link is present, then no need to re-setup a listener)
+    if displayLink != nil {
+      return
+    }
+
     displayLink = CADisplayLink(target: self, selector: #selector(updateKeyboardFrame))
     displayLink?.preferredFramesPerSecond = 120 // will fallback to 60 fps for devices without Pro Motion display
     displayLink?.add(to: .main, forMode: .common)
@@ -161,9 +235,9 @@ public class KeyboardMovementObserver: NSObject {
       return
     }
 
-    var keyboardFrameY = keyboardView?.layer.presentation()?.frame.origin.y ?? 0
-    var keyboardWindowH = keyboardView?.window?.bounds.size.height ?? 0
-    var keyboardPosition = keyboardWindowH - keyboardFrameY
+    let keyboardFrameY = keyboardView?.layer.presentation()?.frame.origin.y ?? 0
+    let keyboardWindowH = keyboardView?.window?.bounds.size.height ?? 0
+    let keyboardPosition = keyboardWindowH - keyboardFrameY
 
     if keyboardPosition == prevKeyboardPosition || keyboardFrameY == 0 {
       return

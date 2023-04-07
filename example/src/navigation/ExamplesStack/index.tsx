@@ -11,6 +11,7 @@ import StatusBar from '../../screens/Examples/StatusBar';
 import LottieAnimation from '../../screens/Examples/Lottie';
 import NonUIProps from '../../screens/Examples/NonUIProps';
 import InteractiveKeyboard from '../../screens/Examples/InteractiveKeyboard';
+import InteractiveKeyboardIOS from '../../screens/Examples/InteractiveKeyboardIOS';
 
 export type ExamplesStackParamList = {
   [ScreenNames.ANIMATED_EXAMPLE]: undefined;
@@ -21,6 +22,7 @@ export type ExamplesStackParamList = {
   [ScreenNames.LOTTIE]: undefined;
   [ScreenNames.NON_UI_PROPS]: undefined;
   [ScreenNames.INTERACTIVE_KEYBOARD]: undefined;
+  [ScreenNames.INTERACTIVE_KEYBOARD_IOS]: undefined;
 };
 
 const Stack = createStackNavigator<ExamplesStackParamList>();
@@ -50,6 +52,9 @@ const options = {
   },
   [ScreenNames.INTERACTIVE_KEYBOARD]: {
     title: 'Interactive keyboard',
+  },
+  [ScreenNames.INTERACTIVE_KEYBOARD_IOS]: {
+    title: 'Interactive keyboard 🍏',
   },
 };
 
@@ -94,6 +99,11 @@ const ExamplesStack = () => (
       name={ScreenNames.INTERACTIVE_KEYBOARD}
       component={InteractiveKeyboard}
       options={options[ScreenNames.INTERACTIVE_KEYBOARD]}
+    />
+    <Stack.Screen
+      name={ScreenNames.INTERACTIVE_KEYBOARD_IOS}
+      component={InteractiveKeyboardIOS}
+      options={options[ScreenNames.INTERACTIVE_KEYBOARD_IOS]}
     />
   </Stack.Navigator>
 );
