@@ -43,7 +43,6 @@ class KeyboardControllerView: UIView {
   }
 
   func onEvent(event: NSString, height: NSNumber, progress: NSNumber) {
-    print("onEvent \(event) \(height)")
     eventDispatcher.send(
       KeyboardMoveEvent(
         reactTag: reactTag,

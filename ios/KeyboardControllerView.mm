@@ -70,12 +70,11 @@ using namespace facebook::react;
             }
           }
           if ([event isEqualToString:@"onKeyboardMoveInteractive"]) {
-              std::dynamic_pointer_cast<const facebook::react::KeyboardControllerViewEventEmitter>(
-                  self->_eventEmitter)
-                  ->onKeyboardMoveInteractive(
-                      facebook::react::KeyboardControllerViewEventEmitter::onKeyboardMoveInteractive{
-                          .height = [height doubleValue], .progress = [progress doubleValue]});
-            }
+            std::dynamic_pointer_cast<const facebook::react::KeyboardControllerViewEventEmitter>(
+                self->_eventEmitter)
+                ->onKeyboardMoveInteractive(
+                    facebook::react::KeyboardControllerViewEventEmitter::OnKeyboardMoveInteractive{
+                        .height = [height doubleValue], .progress = [progress doubleValue]});
           }
 
           // TODO: use built-in _eventEmitter once NativeAnimated module will use ModernEventemitter

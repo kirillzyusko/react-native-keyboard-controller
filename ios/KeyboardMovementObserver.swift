@@ -96,7 +96,12 @@ public class KeyboardMovementObserver: NSObject {
     keyboardView?.addObserver(self, forKeyPath: "center", options: .new, context: nil)
   }
 
-  @objc override public func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context ctx: UnsafeMutableRawPointer?) {
+  @objc override public func observeValue(
+    forKeyPath keyPath: String?,
+    of object: Any?,
+    change: [NSKeyValueChangeKey: Any]?,
+    context _: UnsafeMutableRawPointer?
+  ) {
     if keyPath == "center", object as! NSObject == _keyboardView! {
       // if we are currently animating keyboard or keyboard is not shown yet -> we need to ignore values from KVO
       if displayLink != nil || keyboardHeight == 0.0 {
@@ -106,10 +111,15 @@ public class KeyboardMovementObserver: NSObject {
       let keyboardFrameY = (change?[.newKey] as! NSValue).cgPointValue.y
       let keyboardWindowH = keyboardView?.window?.bounds.size.height ?? 0
       let keyboardPosition = keyboardWindowH - keyboardFrameY
-      let position = interpolate(inputRange: [keyboardHeight / 2, -keyboardHeight / 2], outputRange: [keyboardHeight, 0], currentValue: keyboardPosition)
+      let position = interpolate(
+        inputRange: [keyboardHeight / 2, -keyboardHeight / 2],
+        outputRange: [keyboardHeight, 0],
+        currentValue: keyboardPosition
+      )
 
       if position == 0 {
-        // it will be triggered before `keyboardWillDisappear` and we don't need to trigger `onInteractive` handler for that
+        // it will be triggered before `keyboardWillDisappear` and
+        // we don't need to trigger `onInteractive` handler for that
         // since it will be handled in `keyboardWillDisappear` function
         return
       }
