@@ -54,7 +54,7 @@ useKeyboardHandler(
 
 The interactive keyboard dismissing works well out-of-box in `react-native` using `InputAccessoryView`. However if you are not satisfied with the usage of `InputAccessoryView` - you can try to utilize the functionality of this library.
 
-For that you'll need to follow a pattern from above and add [`onInteractive`](../api/hooks/use-keyboard-handler/index.mdx#oninteractive) handler if you are using `useKeyboardHandler` hook. If you are using `useKeyboardAnimation` or `useReanimatedKeyboardAnimation` hooks then no extra actions are required - these hooks will update its values automatically.
+For that you'll need to follow a pattern from above and add [`onInteractive`](../api/hooks/use-keyboard-handler/index.mdx#oninteractive) handler if you are using `useKeyboardHandler` hook. If you are using `useKeyboardAnimation` or `useReanimatedKeyboardAnimation` hooks then no extra actions are required - these hooks will update its values automatically, when keyboard gets moved because of interactive dismissal.
 
 ## Full examples
 
