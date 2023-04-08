@@ -10,7 +10,7 @@ export const examples: Example[] = [
   { title: 'Chat', info: ScreenNames.REANIMATED_CHAT, icons: '💬' },
   { title: 'Events', info: ScreenNames.EVENTS, icons: '🎃 📅' },
   {
-    title: 'Aware scroll view (WIP)',
+    title: 'Aware scroll view',
     info: ScreenNames.AWARE_SCROLL_VIEW,
     icons: '🤓',
   },
