@@ -10,7 +10,7 @@ This guide focuses on adding an ability to dismiss keyboard interactively. Below
 
 ### Start point
 
-First of all let's consider a simple example and layout for typical chat application. Of course in real-application layout will be much more complex, but since it's a guide we will consider over-simplified example to get a main idea.
+First of all let's consider a simple example and layout for typical chat application. Of course in real-application layout will be much more complex, but since it's a guide we will consider an over-simplified example to get a main idea.
 
 ```tsx
 <ScrollView>
