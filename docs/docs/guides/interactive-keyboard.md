@@ -10,7 +10,7 @@ This guide focuses on adding an ability to dismiss keyboard interactively. Below
 
 ### Start point
 
-First of all let's consider a simple example and layout for typical chat application.
+First of all let's consider a simple example and layout for typical chat application. Of course in real-application layout will be much more complex, but since it's a guide we will consider over-simplified example to get a main idea.
 
 ```tsx
 <ScrollView>
@@ -52,8 +52,10 @@ useKeyboardHandler(
 
 ## iOS
 
-The interactive keyboard dismissing works well out-of-box in react-native using `InputAccessoryView`, however if you are not satisfied with the usage of `InputAccessoryView` - you can try to utilize the functionality of this library.
+The interactive keyboard dismissing works well out-of-box in `react-native` using `InputAccessoryView`. However if you are not satisfied with the usage of `InputAccessoryView` - you can try to utilize the functionality of this library.
 
-## Full example
+For that you'll need to follow a pattern from above and add [`onInteractive`](../api/hooks/use-keyboard-handler/index.mdx#oninteractive) handler if you are using `useKeyboardHandler` hook. If you are using `useKeyboardAnimation` or `useReanimatedKeyboardAnimation` hooks then no extra actions are required - these hooks will update its values automatically.
 
-To see full example of interactive keyboard handling you may have a look on corresponding [android](https://github.com/kirillzyusko/react-native-keyboard-controller/blob/main/example/src/screens/Examples/InteractiveKeyboard/index.tsx) and [ios](https://github.com/kirillzyusko/react-native-keyboard-controller/blob/main/example/src/screens/Examples/InteractiveKeyboardIOS/index.tsx) example apps.
+## Full examples
+
+To see full examples of interactive keyboard handling you may have a look on corresponding [android](https://github.com/kirillzyusko/react-native-keyboard-controller/blob/main/example/src/screens/Examples/InteractiveKeyboard/index.tsx) and [ios](https://github.com/kirillzyusko/react-native-keyboard-controller/blob/main/example/src/screens/Examples/InteractiveKeyboardIOS/index.tsx) example apps.

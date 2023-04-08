@@ -4,7 +4,7 @@ sidebar_position: 4
 
 # KeyboardGestureArea
 
-`KeyboardGestureArea` allows you to define a region on the screen, where gestures will control keyboard position.
+`KeyboardGestureArea` allows you to define a region on the screen, where gestures will control the keyboard position.
 
 :::info Platform availability
 This component is available only for Android >= 11. For iOS and Android < 11 it will render `React.Fragment`.
