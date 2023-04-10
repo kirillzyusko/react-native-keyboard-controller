@@ -656,7 +656,7 @@ PODS:
   - React-jsinspector (0.71.3)
   - React-logger (0.71.3):
     - glog
-  - react-native-keyboard-controller (1.5.0):
+  - react-native-keyboard-controller (1.5.1):
     - RCT-Folly
     - RCTRequired
     - RCTTypeSafety
@@ -1056,7 +1056,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 515b703d23ffadeac7687bc2d12fb08b90f0aaa1
   React-jsinspector: 9f7c9137605e72ca0343db4cea88006cb94856dd
   React-logger: 957e5dc96d9dbffc6e0f15e0ee4d2b42829ff207
-  react-native-keyboard-controller: 939d17ef93d8b16775dcd058e65332c8fb0c0a5b
+  react-native-keyboard-controller: b95f5df44f7b95d7d2aafb5a176a4a199a40e235
   react-native-safe-area-context: e7e7c502560f89a6a1866af293d1e091f3c7929d
   React-perflogger: af8a3d31546077f42d729b949925cc4549f14def
   React-RCTActionSheet: 57cc5adfefbaaf0aae2cf7e10bccd746f2903673
