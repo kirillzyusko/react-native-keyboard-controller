@@ -86,7 +86,7 @@ function InteractiveKeyboard({ navigation }: Props) {
       <KeyboardGestureArea
         style={styles.content}
         interpolator={interpolator}
-        allowToShowKeyboardFromHiddenStateBySwipeUp
+        showOnSwipeUp
       >
         <Reanimated.ScrollView
           showsVerticalScrollIndicator={false}
