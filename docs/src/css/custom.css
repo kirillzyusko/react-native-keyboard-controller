@@ -77,8 +77,8 @@
 }
 
 [data-theme='light'] .code-block-add-line {
-  background-color: #00ff0030;
-  border-left-color: #00ff0090;
+  background-color: #00ff0020;
+  border-left-color: #00ff0080;
 }
 
 [data-theme='dark'] .code-block-add-line {
