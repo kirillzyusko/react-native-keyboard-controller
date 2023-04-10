@@ -2,11 +2,28 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://kirillzyusko.github.io/react-native-keyboard-controller/blog</id>
     <title>Keyboard Controller Blog</title>
-    <updated>2022-10-15T00:00:00.000Z</updated>
+    <updated>2023-04-10T00:00:00.000Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog"/>
     <subtitle>Keyboard Controller Blog</subtitle>
     <icon>https://kirillzyusko.github.io/react-native-keyboard-controller/img/favicon.ico</icon>
+    <entry>
+        <title type="html"><![CDATA[Interactive keyboard support]]></title>
+        <id>https://kirillzyusko.github.io/react-native-keyboard-controller/blog/interactive-keyboard</id>
+        <link href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/interactive-keyboard"/>
+        <updated>2023-04-10T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[I'm excited to announce that the upcoming release of react-native-keyboard-controller, version 1.5.0, will include a new feature that allows users to control the position of the keyboard on the screen via gestures. This new interactive keyboard feature will make it easier for users to interact with the keyboard in a more natural and intuitive way, improving the overall user experience of your React Native app.]]></summary>
+        <content type="html"><![CDATA[<p>I'm excited to announce that the upcoming release of <code>react-native-keyboard-controller</code>, version <code>1.5.0</code>, will include a new feature that allows users to control the position of the keyboard on the screen via gestures. This new interactive keyboard feature will make it easier for users to interact with the keyboard in a more natural and intuitive way, improving the overall user experience of your React Native app.</p><div style="display:flex;justify-content:center;margin-bottom:20px"><div style="width:400px;height:400px"></div></div><p>The interactive keyboard feature is customizable on Android 🤖, allowing developers to define how the gesture controls the keyboard position and how the view should be animated when the keyboard is moved. This new feature is particularly useful for chat and other apps that require precise control over the position of the keyboard. The addition of this new interactive keyboard feature will further enhance the library's capabilities and provide a more natural and intuitive user experience.</p><p>Stay tuned for more updates and be sure to check out our documentation for more information on how to use this new feature in your React Native app.</p><p>Thank you for choosing <code>react-native-keyboard-controller</code>! 😊</p>]]></content>
+        <author>
+            <name>Kirill Zyusko</name>
+            <uri>https://github.com/kirillzyusko</uri>
+        </author>
+        <category label="react-native" term="react-native"/>
+        <category label="keyboard" term="keyboard"/>
+        <category label="interactive" term="interactive"/>
+        <category label="android" term="android"/>
+        <category label="ios" term="ios"/>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Version 1.4.0 with new hook]]></title>
         <id>https://kirillzyusko.github.io/react-native-keyboard-controller/blog/new-hook</id>
