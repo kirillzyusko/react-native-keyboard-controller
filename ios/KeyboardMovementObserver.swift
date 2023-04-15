@@ -42,6 +42,7 @@ public class KeyboardMovementObserver: NSObject {
   private var prevKeyboardPosition = 0.0
   private var displayLink: CADisplayLink?
   private var keyboardHeight: CGFloat = 0.0
+  private var hasKVObserver = false
 
   @objc public init(
     handler: @escaping (NSString, NSNumber, NSNumber) -> Void,
@@ -82,19 +83,41 @@ public class KeyboardMovementObserver: NSObject {
       name: UIWindow.didBecomeVisibleNotification,
       object: nil
     )
+      NotificationCenter.default.addObserver(
+        self,
+        selector: #selector(windowDidBecomeHidden),
+        name: UIWindow.didBecomeHiddenNotification,
+        object: nil
+      )
   }
-
-  @objc func windowDidBecomeVisible(_: Notification) {
-    let keyboardView = findKeyboardView()
-
-    if keyboardView == _keyboardView {
-      return
+    
+    @objc func windowDidBecomeHidden(_: Notification) {
+        removeKVObserver()
     }
 
-    _keyboardView = keyboardView
-
-    keyboardView?.addObserver(self, forKeyPath: "center", options: .new, context: nil)
+  @objc func windowDidBecomeVisible(_: Notification) {
+      setupKVObserver()
   }
+    
+    private func setupKVObserver() {
+        if (hasKVObserver) {
+            return
+        }
+        
+        if (keyboardView != nil) {
+            hasKVObserver = true
+            keyboardView?.addObserver(self, forKeyPath: "center", options: .new, context: nil)
+        }
+    }
+    
+    private func removeKVObserver() {
+        if (!hasKVObserver) {
+            return
+        }
+        
+        hasKVObserver = false
+        keyboardView?.removeObserver(self, forKeyPath: "center", context: nil)
+    }
 
   // swiftlint:disable:next block_based_kvo
   @objc override public func observeValue(
