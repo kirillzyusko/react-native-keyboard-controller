@@ -156,7 +156,7 @@ class KeyboardAnimationCallback(
       // then we need to reset the state
       InteractiveKeyboardProvider.shown = false
     }
-    val isKeyboardVisible = isKeyboardVisible || isKeyboardShown
+    isKeyboardVisible = isKeyboardVisible || isKeyboardShown
 
     this.emitEvent("KeyboardController::" + if (!isKeyboardVisible) "keyboardDidHide" else "keyboardDidShow", getEventParams(this.persistentKeyboardHeight))
     this.sendEventToJS(KeyboardTransitionEvent(view.id, "topKeyboardMoveEnd", this.persistentKeyboardHeight, if (!isKeyboardVisible) 0.0 else 1.0))
