@@ -83,41 +83,41 @@ public class KeyboardMovementObserver: NSObject {
       name: UIWindow.didBecomeVisibleNotification,
       object: nil
     )
-      NotificationCenter.default.addObserver(
-        self,
-        selector: #selector(windowDidBecomeHidden),
-        name: UIWindow.didBecomeHiddenNotification,
-        object: nil
-      )
+    NotificationCenter.default.addObserver(
+      self,
+      selector: #selector(windowDidBecomeHidden),
+      name: UIWindow.didBecomeHiddenNotification,
+      object: nil
+    )
   }
-    
-    @objc func windowDidBecomeHidden(_: Notification) {
-        removeKVObserver()
-    }
+
+  @objc func windowDidBecomeHidden(_: Notification) {
+    removeKVObserver()
+  }
 
   @objc func windowDidBecomeVisible(_: Notification) {
-      setupKVObserver()
+    setupKVObserver()
   }
-    
-    private func setupKVObserver() {
-        if (hasKVObserver) {
-            return
-        }
-        
-        if (keyboardView != nil) {
-            hasKVObserver = true
-            keyboardView?.addObserver(self, forKeyPath: "center", options: .new, context: nil)
-        }
+
+  private func setupKVObserver() {
+    if hasKVObserver {
+      return
     }
-    
-    private func removeKVObserver() {
-        if (!hasKVObserver) {
-            return
-        }
-        
-        hasKVObserver = false
-        keyboardView?.removeObserver(self, forKeyPath: "center", context: nil)
+
+    if keyboardView != nil {
+      hasKVObserver = true
+      keyboardView?.addObserver(self, forKeyPath: "center", options: .new, context: nil)
     }
+  }
+
+  private func removeKVObserver() {
+    if !hasKVObserver {
+      return
+    }
+
+    hasKVObserver = false
+    keyboardView?.removeObserver(self, forKeyPath: "center", context: nil)
+  }
 
   // swiftlint:disable:next block_based_kvo
   @objc override public func observeValue(
