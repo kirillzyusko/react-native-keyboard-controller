@@ -20,184 +20,273 @@ func interpolate(inputRange: [CGFloat], outputRange: [CGFloat], currentValue: CG
   return interpolatedValue
 }
 
+public extension UIResponder {
+
+    private struct Static {
+        static weak var responder: UIResponder?
+    }
+
+    static func currentFirst() -> UIResponder? {
+        Static.responder = nil
+        UIApplication.shared.sendAction(#selector(UIResponder._trap), to: nil, from: nil, for: nil)
+        return Static.responder
+    }
+
+    @objc private func _trap() {
+        Static.responder = self
+    }
+}
+
+public class FakeInputAccessoryView : UIView {
+    init() {
+        super.init(frame: CGRect(x: 0, y: 0, width: 10, height: 10))
+        self.backgroundColor = UIColor.red
+    }
+    
+    public override func willMove(toSuperview newSuperview: UIView?) {
+        print("willMove")
+        if (self.superview != nil) {
+            print("removeObserver observer")
+            self.superview?.removeObserver(self, forKeyPath: "center", context: nil)
+        }
+        
+        if (newSuperview != nil) {
+            print("addObserver observer")
+            newSuperview?.addObserver(self, forKeyPath: "center", options: .new, context: nil)
+        }
+            
+        super.willMove(toSuperview: newSuperview)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    @objc override public func observeValue(
+      forKeyPath keyPath: String?,
+      of object: Any?,
+      change: [NSKeyValueChangeKey: Any]?,
+      context _: UnsafeMutableRawPointer?
+    ) {
+        let keyboardWindowH = 896.0
+        let keyboardHeight = 356.0
+        
+        /*let keyboardWindowH = 852.0
+        let keyboardHeight = 346.0*/
+        ///
+        let keyboardFrameY = (change?[.newKey] as! NSValue).cgPointValue.y
+        let keyboardPosition = keyboardWindowH - keyboardFrameY
+        let position = interpolate(
+            inputRange: [keyboardHeight / 2, -keyboardHeight / 2],
+          outputRange: [keyboardHeight, 0],
+          currentValue: keyboardPosition
+        )
+        print("observe value  \(position) \(keyboardPosition)")
+    }
+}
+
 @objc(KeyboardMovementObserver)
 public class KeyboardMovementObserver: NSObject {
-  // class members
-  var onEvent: (NSString, NSNumber, NSNumber) -> Void
-  var onNotify: (String, Any) -> Void
-  // progress tracker
-  private var _keyboardView: UIView?
-  private var keyboardView: UIView? {
-    let windowsCount = UIApplication.shared.windows.count
-
-    if _keyboardView == nil || windowsCount != _windowsCount {
-      _keyboardView = findKeyboardView()
-      _windowsCount = windowsCount
+    // class members
+    var onEvent: (NSString, NSNumber, NSNumber) -> Void
+    var onNotify: (String, Any) -> Void
+    // progress tracker
+    private var _keyboardView: UIView?
+    private var keyboardView: UIView? {
+        let windowsCount = UIApplication.shared.windows.count
+        
+        if _keyboardView == nil || windowsCount != _windowsCount {
+            _keyboardView = findKeyboardView()
+            _windowsCount = windowsCount
+        }
+        
+        return _keyboardView
     }
-
-    return _keyboardView
-  }
-
-  private var _windowsCount: Int = 0
-  private var prevKeyboardPosition = 0.0
-  private var displayLink: CADisplayLink?
-  private var keyboardHeight: CGFloat = 0.0
-  private var hasKVObserver = false
-
-  @objc public init(
-    handler: @escaping (NSString, NSNumber, NSNumber) -> Void,
-    onNotify: @escaping (String, Any) -> Void
-  ) {
-    onEvent = handler
-    self.onNotify = onNotify
-  }
-
-  @objc public func mount() {
-    NotificationCenter.default.addObserver(
-      self,
-      selector: #selector(keyboardWillDisappear),
-      name: UIResponder.keyboardWillHideNotification,
-      object: nil
-    )
-    NotificationCenter.default.addObserver(
-      self,
-      selector: #selector(keyboardWillAppear),
-      name: UIResponder.keyboardWillShowNotification,
-      object: nil
-    )
-    NotificationCenter.default.addObserver(
-      self,
-      selector: #selector(keyboardDidAppear),
-      name: UIResponder.keyboardDidShowNotification,
-      object: nil
-    )
-    NotificationCenter.default.addObserver(
-      self,
-      selector: #selector(keyboardDidDisappear),
-      name: UIResponder.keyboardDidHideNotification,
-      object: nil
-    )
-    NotificationCenter.default.addObserver(
-      self,
-      selector: #selector(windowDidBecomeVisible),
-      name: UIWindow.didBecomeVisibleNotification,
-      object: nil
-    )
-    NotificationCenter.default.addObserver(
-      self,
-      selector: #selector(windowDidBecomeHidden),
-      name: UIWindow.didBecomeHiddenNotification,
-      object: nil
-    )
-  }
-
-  @objc func windowDidBecomeHidden(_: Notification) {
-    removeKVObserver()
-  }
-
-  @objc func windowDidBecomeVisible(_: Notification) {
-    setupKVObserver()
-  }
-
-  private func setupKVObserver() {
-    if hasKVObserver {
-      return
+    
+    private var _windowsCount: Int = 0
+    private var prevKeyboardPosition = 0.0
+    private var displayLink: CADisplayLink?
+    private var keyboardHeight: CGFloat = 0.0
+    private var hasKVObserver = false
+    private var hasInputAccessoryObserver = false
+    
+    @objc public init(
+        handler: @escaping (NSString, NSNumber, NSNumber) -> Void,
+        onNotify: @escaping (String, Any) -> Void
+    ) {
+        onEvent = handler
+        self.onNotify = onNotify
     }
-
-    if keyboardView != nil {
-      hasKVObserver = true
-      keyboardView?.addObserver(self, forKeyPath: "center", options: .new, context: nil)
+    
+    @objc public func mount() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillDisappear),
+            name: UIResponder.keyboardWillHideNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillAppear),
+            name: UIResponder.keyboardWillShowNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardDidAppear),
+            name: UIResponder.keyboardDidShowNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardDidDisappear),
+            name: UIResponder.keyboardDidHideNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(windowDidBecomeVisible),
+            name: UIWindow.didBecomeVisibleNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(windowDidBecomeHidden),
+            name: UIWindow.didBecomeHiddenNotification,
+            object: nil
+        )
     }
-  }
-
-  private func removeKVObserver() {
-    if !hasKVObserver {
-      return
+    
+    @objc func windowDidBecomeHidden(_: Notification) {
+        removeKVObserver()
     }
-
-    hasKVObserver = false
-    keyboardView?.removeObserver(self, forKeyPath: "center", context: nil)
-  }
-
-  // swiftlint:disable:next block_based_kvo
-  @objc override public func observeValue(
-    forKeyPath keyPath: String?,
-    of object: Any?,
-    change: [NSKeyValueChangeKey: Any]?,
-    context _: UnsafeMutableRawPointer?
-  ) {
-    // swiftlint:disable:next force_cast
-    if keyPath == "center", object as! NSObject == _keyboardView! {
-      // if we are currently animating keyboard or keyboard is not shown yet -> we need to ignore values from KVO
-      if displayLink != nil || keyboardHeight == 0.0 {
-        return
-      }
-
-      // swiftlint:disable:next force_cast
-      let keyboardFrameY = (change?[.newKey] as! NSValue).cgPointValue.y
-      let keyboardWindowH = keyboardView?.window?.bounds.size.height ?? 0
-      let keyboardPosition = keyboardWindowH - keyboardFrameY
-      let position = interpolate(
-        inputRange: [keyboardHeight / 2, -keyboardHeight / 2],
-        outputRange: [keyboardHeight, 0],
-        currentValue: keyboardPosition
-      )
-
-      if position == 0 {
-        // it will be triggered before `keyboardWillDisappear` and
-        // we don't need to trigger `onInteractive` handler for that
-        // since it will be handled in `keyboardWillDisappear` function
-        return
-      }
-
-      onEvent("onKeyboardMoveInteractive", position as NSNumber, position / CGFloat(keyboardHeight) as NSNumber)
+    
+    @objc func windowDidBecomeVisible(_: Notification) {
+        setupKVObserver()
     }
-  }
-
-  @objc public func unmount() {
-    // swiftlint:disable:next notification_center_detachment
-    NotificationCenter.default.removeObserver(self)
-  }
-
-  @objc func keyboardWillAppear(_ notification: Notification) {
-    if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
-      let keyboardHeight = keyboardFrame.cgRectValue.size.height
-      self.keyboardHeight = keyboardHeight
-
-      var data = [AnyHashable: Any]()
-      data["height"] = keyboardHeight
-
-      onEvent("onKeyboardMoveStart", Float(keyboardHeight) as NSNumber, 1)
-      onNotify("KeyboardController::keyboardWillShow", data)
-
-      setupKeyboardWatcher()
+    
+    private func setupKVObserver() {
+        if hasKVObserver {
+            return
+        }
+        
+        if keyboardView != nil {
+            hasKVObserver = true
+            keyboardView?.addObserver(self, forKeyPath: "center", options: .new, context: nil)
+        }
     }
-  }
-
-  @objc func keyboardWillDisappear() {
-    var data = [AnyHashable: Any]()
-    data["height"] = 0
-
-    onEvent("onKeyboardMoveStart", 0, 0)
-    onNotify("KeyboardController::keyboardWillHide", data)
-
-    setupKeyboardWatcher()
-  }
-
-  @objc func keyboardDidAppear(_ notification: Notification) {
-    if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
-      let keyboardHeight = keyboardFrame.cgRectValue.size.height
-      self.keyboardHeight = keyboardHeight
-
-      var data = [AnyHashable: Any]()
-      data["height"] = keyboardHeight
-
-      onEvent("onKeyboardMoveEnd", keyboardHeight as NSNumber, 1)
-      onNotify("KeyboardController::keyboardDidShow", data)
-
-      removeKeyboardWatcher()
+    
+    private func removeKVObserver() {
+        if !hasKVObserver {
+            return
+        }
+        
+        hasKVObserver = false
+        keyboardView?.removeObserver(self, forKeyPath: "center", context: nil)
     }
-  }
+    
+    // swiftlint:disable:next block_based_kvo
+    @objc override public func observeValue(
+        forKeyPath keyPath: String?,
+        of object: Any?,
+        change: [NSKeyValueChangeKey: Any]?,
+        context _: UnsafeMutableRawPointer?
+    ) {
+        // swiftlint:disable:next force_cast
+        if keyPath == "center", object as! NSObject == _keyboardView! {
+            // if we are currently animating keyboard or keyboard is not shown yet -> we need to ignore values from KVO
+            if displayLink != nil || keyboardHeight == 0.0 {
+                return
+            }
+            
+            // swiftlint:disable:next force_cast
+            let keyboardFrameY = (change?[.newKey] as! NSValue).cgPointValue.y
+            let keyboardWindowH = keyboardView?.window?.bounds.size.height ?? 0
+            let keyboardPosition = keyboardWindowH - keyboardFrameY
+            let position = interpolate(
+                inputRange: [keyboardHeight / 2, -keyboardHeight / 2],
+                outputRange: [keyboardHeight, 0],
+                currentValue: keyboardPosition
+            )
+            
+            if position == 0 {
+                // it will be triggered before `keyboardWillDisappear` and
+                // we don't need to trigger `onInteractive` handler for that
+                // since it will be handled in `keyboardWillDisappear` function
+                return
+            }
+            
+            print("metrics:: \(keyboardWindowH) \(keyboardHeight)")
+            print("observe value2 \(position) \(keyboardPosition)")
+            
+            onEvent("onKeyboardMoveInteractive", position as NSNumber, position / CGFloat(keyboardHeight) as NSNumber)
+        }
+    }
+    
+    @objc public func unmount() {
+        // swiftlint:disable:next notification_center_detachment
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    @objc func keyboardWillAppear(_ notification: Notification) {
+        if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+            let keyboardHeight = keyboardFrame.cgRectValue.size.height
+            self.keyboardHeight = keyboardHeight
+            
+            var data = [AnyHashable: Any]()
+            data["height"] = keyboardHeight
+            
+            onEvent("onKeyboardMoveStart", Float(keyboardHeight) as NSNumber, 1)
+            onNotify("KeyboardController::keyboardWillShow", data)
+            
+            setupKeyboardWatcher()
+        }
+    }
+    
+    @objc func keyboardWillDisappear() {
+        var data = [AnyHashable: Any]()
+        data["height"] = 0
+        
+        onEvent("onKeyboardMoveStart", 0, 0)
+        onNotify("KeyboardController::keyboardWillHide", data)
+        
+        setupKeyboardWatcher()
+    }
+    
+    @objc func keyboardDidAppear(_ notification: Notification) {
+        if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+            let keyboardHeight = keyboardFrame.cgRectValue.size.height
+            self.keyboardHeight = keyboardHeight
+            
+            var data = [AnyHashable: Any]()
+            data["height"] = keyboardHeight
+            
+            onEvent("onKeyboardMoveEnd", keyboardHeight as NSNumber, 1)
+            onNotify("KeyboardController::keyboardDidShow", data)
+            
+            removeKeyboardWatcher()
+            setupInputAccessoryWatcher()
+        }
+    }
+    
+    @objc func setupInputAccessoryWatcher() {
+        if hasInputAccessoryObserver {
+            return
+        }
+        if let activeTextField = UIResponder.currentFirst() as? UITextField {
+            hasInputAccessoryObserver = true
+            let view = FakeInputAccessoryView()
+            var inputAccessoryView = activeTextField.inputAccessoryView
+            if inputAccessoryView == nil {
+                inputAccessoryView = view
+            } else {
+                inputAccessoryView?.addSubview(view)
+            }
+            activeTextField.inputAccessoryView = inputAccessoryView
+            activeTextField.reloadInputViews()
+            print("text input found")
+        }
+    }
 
   @objc func keyboardDidDisappear() {
     var data = [AnyHashable: Any]()
@@ -209,6 +298,8 @@ public class KeyboardMovementObserver: NSObject {
     onNotify("KeyboardController::keyboardDidHide", data)
 
     removeKeyboardWatcher()
+      
+      hasInputAccessoryObserver = false
   }
 
   @objc func setupKeyboardWatcher() {

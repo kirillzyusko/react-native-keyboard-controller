@@ -1,5 +1,5 @@
-import React, { useCallback, useRef } from 'react';
-import { TextInput, View } from 'react-native';
+import React, { useCallback, useRef, useState } from 'react';
+import { Button, InputAccessoryView, Modal, TextInput, View } from 'react-native';
 import { useKeyboardHandler } from 'react-native-keyboard-controller';
 import Reanimated, {
   useAnimatedStyle,
@@ -11,6 +11,8 @@ import { history } from '../../../components/Message/data';
 import styles from './styles';
 
 const AnimatedTextInput = Reanimated.createAnimatedComponent(TextInput);
+
+const inputAccessoryViewID = 'uniqueID';
 
 const useKeyboardAnimation = () => {
   const progress = useSharedValue(0);
@@ -34,6 +36,8 @@ const useKeyboardAnimation = () => {
     },
     onInteractive: (e) => {
       'worklet';
+
+      console.log(e);
 
       progress.value = e.progress;
       height.value = e.height;
@@ -67,6 +71,7 @@ const contentContainerStyle = {
 function InteractiveKeyboard() {
   const ref = useRef<Reanimated.ScrollView>(null);
   const { height } = useKeyboardAnimation();
+  const [visible, setVisible] = useState(false);
 
   const scrollToBottom = useCallback(() => {
     ref.current?.scrollToEnd({ animated: false });
@@ -85,6 +90,22 @@ function InteractiveKeyboard() {
 
   return (
     <View style={styles.container}>
+      <Modal
+        visible={visible}
+        animationType="slide"
+        presentationStyle="formSheet"
+        onRequestClose={() => setVisible(false)}
+      >
+        <TextInput
+          style={{
+            marginTop: 40,
+            width: '100%',
+            height: 50,
+            backgroundColor: 'green',
+          }}
+        />
+      </Modal>
+      <Button title="toggle" onPress={() => setVisible((v) => !v)} />
       <Reanimated.ScrollView
         ref={ref}
         onContentSizeChange={scrollToBottom}
@@ -98,7 +119,10 @@ function InteractiveKeyboard() {
           <Message key={index} {...message} />
         ))}
       </Reanimated.ScrollView>
-      <AnimatedTextInput style={textInputStyle} />
+      <AnimatedTextInput inputAccessoryViewID={inputAccessoryViewID} style={textInputStyle} />
+      {/*<InputAccessoryView nativeID={inputAccessoryViewID}>
+        <View style={{backgroundColor: 'green', width: 50, height: 20}} />
+        </InputAccessoryView>*/}
     </View>
   );
 }
