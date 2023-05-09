@@ -15,7 +15,6 @@ import com.facebook.react.bridge.WritableMap
 import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.UIManagerHelper
-import com.facebook.react.uimanager.events.Event
 import com.facebook.react.uimanager.events.EventDispatcher
 import com.facebook.react.views.view.ReactViewGroup
 import com.reactnativekeyboardcontroller.events.KeyboardTransitionEvent
@@ -67,16 +66,16 @@ class KeyboardAnimationCallback(
       val keyboardHeight = getCurrentKeyboardHeight()
 
       this.emitEvent("KeyboardController::keyboardWillShow", getEventParams(keyboardHeight))
-      this.sendEventToJS(KeyboardTransitionEvent(view.id, "topKeyboardMoveStart", keyboardHeight, 1.0))
+      this.broadcastEventToJS("topKeyboardMoveStart", keyboardHeight, 1.0)
 
       val animation = ValueAnimator.ofFloat(this.persistentKeyboardHeight.toFloat(), keyboardHeight.toFloat())
       animation.addUpdateListener { animator ->
         val toValue = animator.animatedValue as Float
-        this.sendEventToJS(KeyboardTransitionEvent(view.id, "topKeyboardMove", toValue.toDouble(), toValue.toDouble() / keyboardHeight))
+        this.broadcastEventToJS("topKeyboardMove", toValue.toDouble(), toValue.toDouble() / keyboardHeight)
       }
       animation.doOnEnd {
         this.emitEvent("KeyboardController::keyboardDidShow", getEventParams(keyboardHeight))
-        this.sendEventToJS(KeyboardTransitionEvent(view.id, "topKeyboardMoveEnd", keyboardHeight, 1.0))
+        this.broadcastEventToJS("topKeyboardMoveEnd", keyboardHeight, 1.0)
       }
       animation.setDuration(250).startDelay = 0
       animation.start()
@@ -103,7 +102,7 @@ class KeyboardAnimationCallback(
     this.emitEvent("KeyboardController::" + if (!isKeyboardVisible) "keyboardWillHide" else "keyboardWillShow", getEventParams(keyboardHeight))
 
     Log.i(TAG, "HEIGHT:: $keyboardHeight")
-    this.sendEventToJS(KeyboardTransitionEvent(view.id, "topKeyboardMoveStart", keyboardHeight, if (!isKeyboardVisible) 0.0 else 1.0))
+    this.broadcastEventToJS("topKeyboardMoveStart", keyboardHeight, if (!isKeyboardVisible) 0.0 else 1.0)
 
     return super.onStart(animation, bounds)
   }
@@ -136,7 +135,7 @@ class KeyboardAnimationCallback(
     Log.i(TAG, "DiffY: $diffY $height $progress ${InteractiveKeyboardProvider.isInteractive}")
 
     val event = if (InteractiveKeyboardProvider.isInteractive) "topKeyboardMoveInteractive" else "topKeyboardMove"
-    this.sendEventToJS(KeyboardTransitionEvent(view.id, event, height, progress))
+    this.broadcastEventToJS(event, height, progress)
 
     return insets
   }
@@ -159,7 +158,7 @@ class KeyboardAnimationCallback(
     isKeyboardVisible = isKeyboardVisible || isKeyboardShown
 
     this.emitEvent("KeyboardController::" + if (!isKeyboardVisible) "keyboardDidHide" else "keyboardDidShow", getEventParams(this.persistentKeyboardHeight))
-    this.sendEventToJS(KeyboardTransitionEvent(view.id, "topKeyboardMoveEnd", this.persistentKeyboardHeight, if (!isKeyboardVisible) 0.0 else 1.0))
+    this.broadcastEventToJS("topKeyboardMoveEnd", this.persistentKeyboardHeight, if (!isKeyboardVisible) 0.0 else 1.0)
   }
 
   private fun isKeyboardVisible(): Boolean {
@@ -177,10 +176,13 @@ class KeyboardAnimationCallback(
     return (keyboardHeight - navigationBar).toFloat().dp.coerceAtLeast(0.0)
   }
 
-  private fun sendEventToJS(event: Event<*>) {
-    val eventDispatcher: EventDispatcher? =
-      UIManagerHelper.getEventDispatcherForReactTag(context, view.id)
-    eventDispatcher?.dispatchEvent(event)
+  private fun broadcastEventToJS(event: String, height: Double, progress: Double) {
+    for (key in ViewRegistry.hashMap.keys) {
+      println("BROADCAST TO $key")
+      val eventDispatcher: EventDispatcher? =
+        UIManagerHelper.getEventDispatcherForReactTag(ViewRegistry.hashMap[key], key)
+      eventDispatcher?.dispatchEvent(KeyboardTransitionEvent(key, event, height, progress))
+    }
   }
 
   private fun emitEvent(event: String, params: WritableMap) {
