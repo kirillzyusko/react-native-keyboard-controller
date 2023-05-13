@@ -13,6 +13,7 @@ Keyboard manager which works in identical way on both iOS and Android.
 - module for changing soft input mode on Android 🤔
 - reanimated support 🚀
 - interactive keyboard dismissing 👆📱
+- works with any navigation library 🧭
 - and more is coming... Stay tuned! 😊
 
 ## Installation
