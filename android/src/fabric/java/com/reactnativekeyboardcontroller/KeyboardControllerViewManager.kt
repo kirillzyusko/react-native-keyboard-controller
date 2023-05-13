@@ -9,6 +9,7 @@ import com.facebook.react.viewmanagers.KeyboardControllerViewManagerInterface
 import com.facebook.react.views.view.ReactViewGroup
 import com.facebook.react.views.view.ReactViewManager
 import com.reactnativekeyboardcontroller.managers.KeyboardControllerViewManagerImpl
+import com.reactnativekeyboardcontroller.views.EdgeToEdgeReactViewGroup
 
 class KeyboardControllerViewManager(mReactContext: ReactApplicationContext) : ReactViewManager(), KeyboardControllerViewManagerInterface<ReactViewGroup> {
   private val manager = KeyboardControllerViewManagerImpl(mReactContext)
@@ -26,12 +27,12 @@ class KeyboardControllerViewManager(mReactContext: ReactApplicationContext) : Re
 
   @ReactProp(name = "statusBarTranslucent")
   override fun setStatusBarTranslucent(view: ReactViewGroup, value: Boolean) {
-    return manager.setStatusBarTranslucent(view, value)
+    return manager.setStatusBarTranslucent(view as EdgeToEdgeReactViewGroup, value)
   }
 
   @ReactProp(name = "navigationBarTranslucent")
   override fun setNavigationBarTranslucent(view: ReactViewGroup, value: Boolean) {
-    return manager.setNavigationBarTranslucent(view, value)
+    return manager.setNavigationBarTranslucent(view as EdgeToEdgeReactViewGroup, value)
   }
 
   override fun getExportedCustomDirectEventTypeConstants(): MutableMap<String, Any> {
