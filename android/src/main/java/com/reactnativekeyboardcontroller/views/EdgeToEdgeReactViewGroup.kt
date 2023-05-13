@@ -81,25 +81,17 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
     }
 
     eventView = ReactViewGroup(context)
-    val root =
-      activity.window.decorView.rootView.findViewById<FitWindowsLinearLayout>(
-        R.id.action_bar_root,
-      )
-    root.addView(eventView)
+    val root = this.getContentView()
+    root?.addView(eventView)
 
     val callback = KeyboardAnimationCallback(
       view = this,
       persistentInsetTypes = WindowInsetsCompat.Type.systemBars(),
       deferredInsetTypes = WindowInsetsCompat.Type.ime(),
-      // We explicitly allow dispatch to continue down to binding.messageHolder's
-      // child views, so that step 2.5 below receives the call
       dispatchMode = WindowInsetsAnimationCompat.Callback.DISPATCH_MODE_CONTINUE_ON_SUBTREE,
       context = reactContext,
       onApplyWindowInsetsListener = { _, insets ->
-        val content =
-          reactContext.currentActivity?.window?.decorView?.rootView?.findViewById<FitWindowsLinearLayout>(
-            R.id.action_bar_root,
-          )
+        val content = this.getContentView()
         content?.setPadding(
           0,
           if (this.isStatusBarTranslucent) 0 else insets?.getInsets(WindowInsetsCompat.Type.systemBars())?.top ?: 0,
@@ -130,5 +122,11 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
 
   fun setNavigationBarTranslucent(isNavigationBarTranslucent: Boolean) {
     this.isNavigationBarTranslucent = isNavigationBarTranslucent
+  }
+
+  private fun getContentView(): FitWindowsLinearLayout? {
+    return reactContext.currentActivity?.window?.decorView?.rootView?.findViewById(
+      R.id.action_bar_root,
+    )
   }
 }
