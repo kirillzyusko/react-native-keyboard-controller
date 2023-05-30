@@ -20,8 +20,14 @@ func interpolate(inputRange: [CGFloat], outputRange: [CGFloat], currentValue: CG
   return interpolatedValue
 }
 
+class ProgressView: UIView {
+    override class var layerClass: AnyClass {
+        return CAProgressLayer.self
+    }
+}
+
 @objc(KeyboardMovementObserver)
-public class KeyboardMovementObserver: NSObject {
+public class KeyboardMovementObserver: NSObject, CAProgressLayerDelegate {
   // class members
   var onEvent: (NSString, NSNumber, NSNumber) -> Void
   var onNotify: (String, Any) -> Void
@@ -43,14 +49,22 @@ public class KeyboardMovementObserver: NSObject {
   private var displayLink: CADisplayLink?
   private var keyboardHeight: CGFloat = 0.0
   private var hasKVObserver = false
+    
+    private var view: UIView?
 
   @objc public init(
     handler: @escaping (NSString, NSNumber, NSNumber) -> Void,
-    onNotify: @escaping (String, Any) -> Void
+    onNotify: @escaping (String, Any) -> Void,
+    view: UIView
   ) {
     onEvent = handler
     self.onNotify = onNotify
+      self.view = view
   }
+    
+    func progressDidChange(to progress: CGFloat) {
+        onEvent("onKeyboardMoveStart", keyboardHeight * progress as NSNumber, progress as NSNumber)
+    }
 
   @objc public func mount() {
     NotificationCenter.default.addObserver(
@@ -89,6 +103,8 @@ public class KeyboardMovementObserver: NSObject {
       name: UIWindow.didBecomeHiddenNotification,
       object: nil
     )
+     
+      ///////////////////////////////////////////////
   }
 
   @objc func windowDidBecomeHidden(_: Notification) {
@@ -116,7 +132,7 @@ public class KeyboardMovementObserver: NSObject {
     }
 
     hasKVObserver = false
-    keyboardView?.removeObserver(self, forKeyPath: "center", context: nil)
+    _keyboardView?.removeObserver(self, forKeyPath: "center", context: nil)
   }
 
   // swiftlint:disable:next block_based_kvo
@@ -170,6 +186,36 @@ public class KeyboardMovementObserver: NSObject {
       onEvent("onKeyboardMoveStart", Float(keyboardHeight) as NSNumber, 1)
       onNotify("KeyboardController::keyboardWillShow", data)
 
+    /*UIView.animate(withDuration: 0.1, animations: { () -> Void in
+        self.view?.frame.origin.y -= keyboardHeight
+            })*/
+        
+        var animations = [CAAnimation]()
+        
+        let progressAnimation = CASpringAnimation(keyPath: "progress")
+                        progressAnimation.fromValue = 0
+                        progressAnimation.toValue = 1
+                        progressAnimation.duration = 0.5
+                        progressAnimation.damping = 500
+                        progressAnimation.stiffness = 1000
+                        progressAnimation.mass = 3
+                        animations.append(progressAnimation)
+        
+        let newSublayer = CALayer()
+        let screenSize: CGRect = UIScreen.main.bounds
+                    let size = 50.0
+        newSublayer.frame = CGRect(x: 20, y: screenSize.height - size, width: size, height: size)
+        newSublayer.cornerRadius = size / 2
+        newSublayer.backgroundColor = UIColor.green.cgColor
+        self.view?.layer.addSublayer(newSublayer)
+        let progressView = ProgressView(frame: newSublayer.frame)
+                        progressView.layer.delegate = self
+        self.view?.addSubview(progressView)
+        
+        CATransaction.begin()
+                progressView.layer.add(progressAnimation, forKey: nil)
+                CATransaction.commit()
+        
       setupKeyboardWatcher()
     }
   }
@@ -181,6 +227,10 @@ public class KeyboardMovementObserver: NSObject {
     onEvent("onKeyboardMoveStart", 0, 0)
     onNotify("KeyboardController::keyboardWillHide", data)
 
+      UIView.animate(withDuration: 0.1, animations: { () -> Void in
+          self.view?.frame.origin.y += self.keyboardHeight
+      })
+      
     setupKeyboardWatcher()
   }
 

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		08A5DFBD2A1547AE009D81EA /* TAProgressLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A5DFBC2A1547AE009D81EA /* TAProgressLayer.swift */; };
 		F333F8D428996B8D0015B05F /* KeyboardControllerView.mm in Sources */ = {isa = PBXBuildFile; fileRef = F333F8D228996B8D0015B05F /* KeyboardControllerView.mm */; };
 		F359D34F28133C26000B6AFE /* KeyboardControllerModule.mm in Sources */ = {isa = PBXBuildFile; fileRef = F359D34E28133C26000B6AFE /* KeyboardControllerModule.mm */; };
 		F3626A0728B3FE760021B2D9 /* KeyboardMovementObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3626A0628B3FE760021B2D9 /* KeyboardMovementObserver.swift */; };
@@ -27,6 +28,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		08A5DFBC2A1547AE009D81EA /* TAProgressLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TAProgressLayer.swift; sourceTree = "<group>"; };
 		134814201AA4EA6300B7C361 /* libKeyboardController.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libKeyboardController.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3E7B5891CC2AC0600A0062D /* KeyboardControllerViewManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = KeyboardControllerViewManager.mm; sourceTree = "<group>"; };
 		F333F8D128996B1C0015B05F /* KeyboardControllerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KeyboardControllerView.h; sourceTree = "<group>"; };
@@ -62,6 +64,7 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
+				08A5DFBC2A1547AE009D81EA /* TAProgressLayer.swift */,
 				F3F50667289E653B003091D6 /* KeyboardMoveEvent.h */,
 				F3F50668289E653B003091D6 /* KeyboardMoveEvent.m */,
 				F3626A0628B3FE760021B2D9 /* KeyboardMovementObserver.swift */,
@@ -138,6 +141,7 @@
 				F4FF95D7245B92E800C19C63 /* KeyboardControllerViewManager.swift in Sources */,
 				F333F8D428996B8D0015B05F /* KeyboardControllerView.mm in Sources */,
 				F3F50669289E653B003091D6 /* KeyboardMoveEvent.m in Sources */,
+				08A5DFBD2A1547AE009D81EA /* TAProgressLayer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

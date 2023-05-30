@@ -37,7 +37,7 @@ class KeyboardControllerView: UIView {
   override func didMoveToWindow() {
     if window != nil {
       // Added to a window
-      keyboardObserver = KeyboardMovementObserver(handler: onEvent, onNotify: onNotify)
+        keyboardObserver = KeyboardMovementObserver(handler: onEvent, onNotify: onNotify, view: self)
       keyboardObserver?.mount()
     }
   }

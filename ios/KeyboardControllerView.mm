@@ -78,7 +78,7 @@ using namespace facebook::react;
           }
 
           // TODO: use built-in _eventEmitter once NativeAnimated module will use ModernEventemitter
-          RCTBridge *bridge = [RCTBridge currentBridge];
+          /*RCTBridge *bridge = [RCTBridge currentBridge];
           if (bridge) {
             KeyboardMoveEvent *keyboardMoveEvent =
                 [[KeyboardMoveEvent alloc] initWithReactTag:@(self.tag)
@@ -86,11 +86,13 @@ using namespace facebook::react;
                                                      height:height
                                                    progress:progress];
             [bridge.eventDispatcher sendEvent:keyboardMoveEvent];
-          }
+          }*/
         }
         onNotify:^(NSString *event, NSDictionary *data) {
           [KeyboardController.shared sendEvent:event body:data];
-        }];
+        }
+        view: self
+    ];
     [observer mount];
   }
 
