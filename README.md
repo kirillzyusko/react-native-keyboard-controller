@@ -8,7 +8,7 @@ Keyboard manager which works in identical way on both iOS and Android.
 
 ## Key features
 
-- mapping keyboard appearance to animated values 😎
+- mapping keyboard movement to animated values 😎
 - missing `keyboardWillShow` / `keyboardWillHide` events are available on Android 😍
 - module for changing soft input mode on Android 🤔
 - reanimated support 🚀
