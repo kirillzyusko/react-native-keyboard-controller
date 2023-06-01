@@ -13,7 +13,7 @@ Both of them return an object with two properties: `progress` and `height` (depe
 :::
 
 :::caution
-`useReanimatedKeyboardAnimation` works only with `ShareValues`, i.e. it is not compatible with Reanimated v1 API.
+`useReanimatedKeyboardAnimation` works only with `SharedValues`, i.e. it is not compatible with Reanimated v1 API.
 :::
 
 ## Example
