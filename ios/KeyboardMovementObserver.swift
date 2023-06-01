@@ -116,7 +116,7 @@ public class KeyboardMovementObserver: NSObject {
     }
 
     hasKVObserver = false
-    keyboardView?.removeObserver(self, forKeyPath: "center", context: nil)
+    _keyboardView?.removeObserver(self, forKeyPath: "center", context: nil)
   }
 
   // swiftlint:disable:next block_based_kvo
