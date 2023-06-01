@@ -4,10 +4,10 @@ A plain react-native `View` with some additional methods and props. Used interna
 
 ## Props
 
-#### `onKeyboardMove`
+### `onKeyboardMove`
 
 A callback function which is fired every time, when keyboard changes its position on the screen.
 
-#### `statusBarTranslucent`
+### `statusBarTranslucent`
 
 A boolean prop to indicate whether `StatusBar` should be translucent on `Android` or not.

@@ -30,7 +30,7 @@ This library has native code, so it does not work with _Expo Go_ but you can eas
 
 ## Adding provider
 
-In order to use it you'll need to wrap your app with `KeyboardProvider` component. 
+In order to use it you'll need to wrap your app with `KeyboardProvider` component.
 
 :::info Why it's needed?
 
@@ -57,7 +57,6 @@ Congratulations! 🎉 You've just finished installation process. Go to the [next
 ### Incompatible `kotlinVersion` and failed Android builds
 
 Sometimes you may see failed Android builds complaining that your version of kotlin is lower than expected version.
-
 
 `error: module was compiled with an incompatible version of Kotlin. The binary version of its metadata is 1.6.0, expected version is 1.4.1.`
 

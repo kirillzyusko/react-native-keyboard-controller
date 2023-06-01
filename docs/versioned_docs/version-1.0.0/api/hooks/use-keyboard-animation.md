@@ -1,6 +1,7 @@
 # useKeyboardAnimation
 
 `useKeyboardAnimation` is a hook which gives access to two animated values:
+
 - `height` - value which changes between **0** and **keyboardHeight**;
 - `progress` - value which changes between **0** (keyboard closed) and **1** (keyboard opened).
 

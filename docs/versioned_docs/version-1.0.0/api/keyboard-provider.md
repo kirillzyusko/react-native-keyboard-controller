@@ -4,7 +4,7 @@
 
 ## Props
 
-#### `statusBarTranslucent`
+### `statusBarTranslucent`
 
 A boolean prop to indicate whether `StatusBar` should be translucent on `Android` or not.
 
