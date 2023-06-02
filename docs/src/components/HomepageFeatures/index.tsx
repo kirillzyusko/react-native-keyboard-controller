@@ -19,7 +19,7 @@ const FeatureList: FeatureItem[] = [
     lottie: transform,
     description: (
       <>
-        Take an advantage of mapping keyboard appearance to animated values and
+        Take an advantage of mapping keyboard movement to animated values and
         apply any UI transformations that you can imagine 😎
       </>
     ),
