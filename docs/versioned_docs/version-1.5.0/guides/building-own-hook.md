@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+keywords: [react-native-keyboard-controller, react-native keyboard, react hook]
 ---
 
 # Building own hook

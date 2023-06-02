@@ -1,5 +1,6 @@
 ---
 sidebar_position: 2
+keywords: [react-native-keyboard-controller, limitations, important defaults]
 ---
 
 # Platforms capabilities and limitations

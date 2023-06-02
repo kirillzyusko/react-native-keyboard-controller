@@ -1,5 +1,6 @@
 ---
 sidebar_position: 6
+keywords: [react-native-keyboard-controller, events, keyboardWillShow, keyboardWillHide, android, iOS, cross platform]
 ---
 
 # KeyboardEvents

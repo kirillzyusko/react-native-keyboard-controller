@@ -1,5 +1,6 @@
 ---
 sidebar_position: 5
+keywords: [react-native-keyboard-controller, KeyboardController, module, windowSoftInputMode, adjustResize, adjustPan]
 ---
 
 # KeyboardController
