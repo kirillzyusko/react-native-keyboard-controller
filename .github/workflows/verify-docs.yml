@@ -25,3 +25,19 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Build website
         run: yarn build
+  lint:
+    runs-on: ubuntu-latest
+    name: 🔎 Lint Markdown
+    defaults:
+      run:
+        working-directory: ./docs
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+          cache: yarn
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Run Lint
+        run: yarn markdownlint-cli2 "**/*.md" "#node_modules"

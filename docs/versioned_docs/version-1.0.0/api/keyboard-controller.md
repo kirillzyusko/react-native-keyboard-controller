@@ -1,6 +1,7 @@
 # KeyboardController
 
 `KeyboardController` is an object which has two functions:
+
 - `setInputMode` - used to change `windowSoftInputMode` in runtime;
 - `setDefaultMode` - used to restore default `windowSoftInputMode` (which is declared in `AndroidManifest.xml`);
 

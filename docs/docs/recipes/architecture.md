@@ -23,6 +23,7 @@ The library was designed to use a `context` as a global store for animated value
 ## Why custom `KeyboardControllerView` is needed?
 
 Initially I had a choice which approach to use in order to send events about keyboard frames: `EventEmitters` vs `View` with callbacks. I decided to use `View` with callbacks because of several reasons:
+
 - `react-native` core team uses similar approach for `onScroll` event from `ScrollView` component (also I knew, that it's possible to map events from such callbacks to `Animated.Value` and thus reduce bridge usage);
 - to track keyboard frames on Android we need to enter to [edge-to-edge](https://developer.android.com/training/gestures/edge-to-edge) mode and it changes view paddings. Since it's managed through `View` it's easier to change padding of this view.
 - `reanimated` allows to intercept `view` events using theirs `useEvent` hook and move the event handling into worklet runtime. Thus sending events via `view` allows to make an integration with `reanimated` package and handle events/animate everything directly on the UI thread.
