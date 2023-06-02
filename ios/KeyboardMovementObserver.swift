@@ -143,6 +143,20 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc func keyboardWillAppear(_ notification: Notification) {
+      if let firstResponder = UIResponder.current {
+          
+          // do something with `firstResponder`
+          print((firstResponder as! RCTUITextField).superview?.reactTag)
+      }
+      let windows = UIApplication.shared.windows
+      for window in windows {
+          for view in window.subviews {
+              if (view.isFirstResponder) {
+                  print(view)
+              }
+          }
+      }
+
     if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
       tag = UIResponder.current.reactViewTag
       let keyboardHeight = keyboardFrame.cgRectValue.size.height
