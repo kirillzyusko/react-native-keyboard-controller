@@ -1,3 +1,7 @@
+---
+keywords: [react-native-keyboard-controller, useKeyboardAnimation, react-native animated, react hook]
+---
+
 # useKeyboardAnimation
 
 `useKeyboardAnimation` is a hook which gives access to two animated values:

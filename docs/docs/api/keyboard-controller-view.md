@@ -1,5 +1,6 @@
 ---
 sidebar_position: 3
+keywords: [react-native-keyboard-controller, KeyboardControllerView, view]
 ---
 
 # KeyboardControllerView

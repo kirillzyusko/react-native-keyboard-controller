@@ -1,5 +1,7 @@
 ---
 sidebar_position: 3
+description: A testing-guide showing how to write unit-tests using jest
+keywords: [react-native-keyboard-controller, jest, mock, testing]
 ---
 
 # Jest testing guide
