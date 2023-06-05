@@ -3,6 +3,7 @@ slug: fabric
 title: Version 1.2.0 with new architecture support
 authors: [kirill]
 tags: [react-native, release, new architecture, fabric, turbo modules]
+keywords: [react-native-keyboard-controller, react-native, fabric, new architecture, support]
 ---
 
 I'm glad to announce, that new upcoming release `1.2.0` brings a support for new react native architecture 😎
