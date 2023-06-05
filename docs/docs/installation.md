@@ -1,5 +1,7 @@
 ---
 sidebar_position: 1
+description: Guide dedicated to installation process
+keywords: [react-native-keyboard-controller, react-native keyboard, installation, setup, keyboard handling, keyboard animation, keyboard movement, troubleshooting]
 ---
 
 # Installation

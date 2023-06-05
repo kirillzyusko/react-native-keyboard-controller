@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+keywords: [react-native-keyboard-controller, architecture, design principles]
 ---
 
 # Architecture

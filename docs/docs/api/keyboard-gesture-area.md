@@ -1,5 +1,6 @@
 ---
 sidebar_position: 4
+keywords: [react-native-keyboard-controller, KeyboardGestureArea, interactive keyboard, view]
 ---
 
 # KeyboardGestureArea

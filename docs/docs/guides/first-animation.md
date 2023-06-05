@@ -1,5 +1,6 @@
 ---
 sidebar_position: 1
+keywords: [react-native-keyboard-controller, keyboard animation, keyboard handling, keyboard movement]
 ---
 
 # First animation
