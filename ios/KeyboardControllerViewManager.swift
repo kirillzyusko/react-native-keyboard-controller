@@ -22,7 +22,7 @@ class KeyboardControllerView: UIView {
 
   init(frame: CGRect, bridge: RCTBridge) {
     self.bridge = bridge
-    self.eventDispatcher = bridge.eventDispatcher()
+    eventDispatcher = bridge.eventDispatcher()
     super.init(frame: frame)
   }
 
@@ -47,18 +47,18 @@ class KeyboardControllerView: UIView {
   }
 
   func onEvent(event: NSString, height: NSNumber, progress: NSNumber) {
-      // we don't want to send event to JS before the JS thread is ready
-      if ((bridge.value(forKey: "_jsThread") == nil)) {
-          return
-      }
-      eventDispatcher.send(
-        KeyboardMoveEvent(
-          reactTag: reactTag,
-          event: event as String,
-          height: height,
-          progress: progress
-        )
+    // we don't want to send event to JS before the JS thread is ready
+    if bridge.value(forKey: "_jsThread") == nil {
+      return
+    }
+    eventDispatcher.send(
+      KeyboardMoveEvent(
+        reactTag: reactTag,
+        event: event as String,
+        height: height,
+        progress: progress
       )
+    )
   }
 
   func onNotify(event: String, data: Any) {
