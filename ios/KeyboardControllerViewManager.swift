@@ -5,20 +5,24 @@ class KeyboardControllerViewManager: RCTViewManager {
   }
 
   override func view() -> (KeyboardControllerView) {
-    return KeyboardControllerView(frame: CGRect.zero, eventDispatcher: bridge.eventDispatcher())
+    return KeyboardControllerView(frame: CGRect.zero, bridge: bridge)
   }
 }
 
 class KeyboardControllerView: UIView {
+  // internal variables
   private var keyboardObserver: KeyboardMovementObserver?
   private var eventDispatcher: RCTEventDispatcherProtocol
+  private var bridge: RCTBridge
+  // react props
   @objc var onKeyboardMoveStart: RCTDirectEventBlock?
   @objc var onKeyboardMove: RCTDirectEventBlock?
   @objc var onKeyboardMoveEnd: RCTDirectEventBlock?
   @objc var onKeyboardMoveInteractive: RCTDirectEventBlock?
 
-  init(frame: CGRect, eventDispatcher: RCTEventDispatcherProtocol) {
-    self.eventDispatcher = eventDispatcher
+  init(frame: CGRect, bridge: RCTBridge) {
+    self.bridge = bridge
+    self.eventDispatcher = bridge.eventDispatcher()
     super.init(frame: frame)
   }
 
@@ -43,14 +47,18 @@ class KeyboardControllerView: UIView {
   }
 
   func onEvent(event: NSString, height: NSNumber, progress: NSNumber) {
-    eventDispatcher.send(
-      KeyboardMoveEvent(
-        reactTag: reactTag,
-        event: event as String,
-        height: height,
-        progress: progress
+      // we don't want to send event to JS before the JS thread is ready
+      if ((bridge.value(forKey: "_jsThread") == nil)) {
+          return
+      }
+      eventDispatcher.send(
+        KeyboardMoveEvent(
+          reactTag: reactTag,
+          event: event as String,
+          height: height,
+          progress: progress
+        )
       )
-    )
   }
 
   func onNotify(event: String, data: Any) {
