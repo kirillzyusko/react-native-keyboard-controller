@@ -79,7 +79,7 @@ using namespace facebook::react;
 
           // TODO: use built-in _eventEmitter once NativeAnimated module will use ModernEventemitter
           RCTBridge *bridge = [RCTBridge currentBridge];
-          if (bridge) {
+          if (bridge && [bridge valueForKey:@"_jsThread"]) {
             KeyboardMoveEvent *keyboardMoveEvent =
                 [[KeyboardMoveEvent alloc] initWithReactTag:@(self.tag)
                                                       event:event
