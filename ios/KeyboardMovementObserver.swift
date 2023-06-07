@@ -14,6 +14,7 @@ public class KeyboardMovementObserver: NSObject {
   // class members
   var onEvent: (NSString, NSNumber, NSNumber, NSNumber, NSNumber) -> Void
   var onNotify: (String, Any) -> Void
+    // var onEvent2: (NSNumber, NSNumber) -> Void
   // progress tracker
   private var _keyboardView: UIView?
   private var keyboardView: UIView? {
@@ -41,6 +42,7 @@ public class KeyboardMovementObserver: NSObject {
     onNotify: @escaping (String, Any) -> Void
   ) {
     onEvent = handler
+      // onEvent2 = handler2
     self.onNotify = onNotify
   }
 
@@ -143,12 +145,6 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc func keyboardWillAppear(_ notification: Notification) {
-      if let firstResponder = UIResponder.current {
-          
-          // do something with `firstResponder`
-          print((firstResponder as! RCTUITextField).superview?.reactTag)
-      }
-
     if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
       tag = UIResponder.current.reactViewTag
       let keyboardHeight = keyboardFrame.cgRectValue.size.height

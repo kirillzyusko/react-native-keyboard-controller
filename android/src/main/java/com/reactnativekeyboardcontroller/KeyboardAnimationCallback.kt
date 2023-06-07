@@ -85,6 +85,7 @@ class KeyboardAnimationCallback(
     // the condition will be executed only when keyboard is opened and changes its size
     // (for example it happens when user changes keyboard type from 'text' to 'emoji' input
     if (isKeyboardVisible && isKeyboardVisible() && !isTransitioning && Build.VERSION.SDK_INT >= 30 && !InteractiveKeyboardProvider.isInteractive) {
+      println("onApplyWindowInsets")
       val keyboardHeight = getCurrentKeyboardHeight()
       val durationL = 250L
       val duration = durationL.toInt()
@@ -114,6 +115,7 @@ class KeyboardAnimationCallback(
     animation: WindowInsetsAnimationCompat,
     bounds: WindowInsetsAnimationCompat.BoundsCompat,
   ): WindowInsetsAnimationCompat.BoundsCompat {
+    println("onStart:: ${System.currentTimeMillis()}")
     isTransitioning = true
     isKeyboardVisible = isKeyboardVisible()
     duration = animation.durationMillis.toInt()

@@ -1,11 +1,12 @@
 import React from 'react';
-import { TextInput } from 'react-native';
+import { ScrollView, TextInput } from 'react-native';
 import { useResizeMode } from 'react-native-keyboard-controller';
 
 import { randomColor } from '../../../utils';
 
 import KeyboardAwareScrollView from './KeyboardAwareScrollView';
 import { styles } from './styles';
+// import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 export default function AwareScrollView() {
   useResizeMode();
@@ -16,6 +17,7 @@ export default function AwareScrollView() {
         <TextInput
           key={i}
           placeholder={`${i}`}
+          keyboardType={i % 2 === 0 ? 'numeric' : 'default'}
           placeholderTextColor="black"
           style={{
             width: '100%',
