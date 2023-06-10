@@ -1,6 +1,5 @@
 import React, { Component, FC } from 'react';
 import { ScrollViewProps, useWindowDimensions } from 'react-native';
-import { useResizeMode } from 'react-native-keyboard-controller';
 import Reanimated, {
   MeasuredDimensions,
   interpolate,
@@ -18,19 +17,23 @@ import { RefObjectFunction } from 'react-native-reanimated/lib/types/lib/reanima
 
 const BOTTOM_OFFSET = 50;
 
+// iOS: поставил фокус, убрал - нет анимашки как была раньше (когда текст инпутник летит вниз, а потом вверх) :(
+// iOS: поставить фокус на 9-й элемент, потом на 8 - резкий джамп
 const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
   children,
   ...rest
 }) => {
-  useResizeMode();
-
   const scrollViewAnimatedRef = useAnimatedRef<Reanimated.ScrollView>();
-  const { scroll, pause } = useInterruptibleScrollTo(scrollViewAnimatedRef);
   const scrollPosition = useSharedValue(0);
+  const { scroll, pause } = useInterruptibleScrollTo(
+    scrollViewAnimatedRef,
+    scrollPosition
+  );
   const layout = useSharedValue<MeasuredDimensions | null>(null);
   const position = useSharedValue(0);
   const fakeViewHeight = useSharedValue(0);
   const keyboardHeight = useSharedValue(0);
+  const tag = useSharedValue(-1);
 
   const { height } = useWindowDimensions();
 
@@ -52,13 +55,19 @@ const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
   /**
    * Function that will scroll a ScrollView as keyboard gets moving
    */
-  const maybeScroll = useWorkletCallback((e: number) => {
+  const maybeScroll = useWorkletCallback((e: number, animated = false) => {
     fakeViewHeight.value = e;
 
     const visibleRect = height - keyboardHeight.value;
     const point = (layout.value?.pageY || 0) + (layout.value?.height || 0);
-
-    if (visibleRect - point <= BOTTOM_OFFSET) {
+    console.log(layout.value);
+    console.log(
+      123333,
+      visibleRect - point,
+      BOTTOM_OFFSET,
+      keyboardHeight.value - (height - point) + BOTTOM_OFFSET
+    );
+    if (visibleRect - point < BOTTOM_OFFSET) {
       const interpolatedScrollTo = interpolate(
         e,
         [0, keyboardHeight.value],
@@ -66,8 +75,13 @@ const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
       );
       const targetScrollY =
         Math.max(interpolatedScrollTo, 0) + scrollPosition.value;
-
-      scrollTo(scrollViewAnimatedRef, 0, targetScrollY, false);
+      console.log({ interpolatedScrollTo, targetScrollY });
+      if (animated) {
+        // TODO: create common function to calculate `targetScrollY`?
+        scroll(0, targetScrollY);
+      } else {
+        scrollTo(scrollViewAnimatedRef, 0, targetScrollY, false);
+      }
     }
   }, []);
 
@@ -79,27 +93,44 @@ const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
           'onStart',
           new Date().getTime(),
           e.target,
+          e.height,
           keyboardHeight.value
         );
-        // keyboard was closed and will appear
-        if (e.height > 0 && keyboardHeight.value === 0) {
-          // just persist height - later will be used in interpolation
-          keyboardHeight.value = e.height;
+        pause();
+        scrollPosition.value = position.value;
+        if (
+          tag.value !== e.target ||
+          (keyboardHeight.value !== e.height && e.height > 0)
+        ) {
+          tag.value = e.target;
           // save position of focused text input when keyboard starts to move
           layout.value = measureByTag(e.target);
           console.log('UPDATED LAYOUT::', layout.value);
         }
+
+        // keyboard will appear or change its size
+        if (e.height > 0) {
+          // just persist height - later will be used in interpolation
+          keyboardHeight.value = e.height;
+        }
       },
       onMove: (e) => {
         'worklet';
-        console.log('onMove', new Date().getTime(), e.target);
+        console.log('onMove', new Date().getTime(), e.target, e.height);
 
         maybeScroll(e.height);
       },
       onEnd: (e) => {
         'worklet';
-        console.log('onEnd', new Date().getTime(), e.target);
+        console.log('onEnd', new Date().getTime(), e.target, e.height);
         keyboardHeight.value = e.height;
+        scrollPosition.value = position.value;
+
+        if (e.target !== -1 && e.height !== 0) {
+          // just be sure, that view is no overlapped (i.e. focus changed)
+          layout.value = measureByTag(e.target);
+          maybeScroll(e.height, true);
+        }
       },
     },
     [height]
