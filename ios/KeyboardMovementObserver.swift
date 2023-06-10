@@ -8,18 +8,6 @@
 
 import Foundation
 
-func interpolate(inputRange: [CGFloat], outputRange: [CGFloat], currentValue: CGFloat) -> CGFloat {
-  let inputMin = inputRange.min() ?? 0
-  let inputMax = inputRange.max() ?? 1
-  let outputMin = outputRange.min() ?? 0
-  let outputMax = outputRange.max() ?? 1
-
-  let normalizedValue = (currentValue - inputMin) / (inputMax - inputMin)
-  let interpolatedValue = outputMin + (outputMax - outputMin) * normalizedValue
-
-  return interpolatedValue
-}
-
 @objc(KeyboardMovementObserver)
 public class KeyboardMovementObserver: NSObject {
   // class members
@@ -137,7 +125,7 @@ public class KeyboardMovementObserver: NSObject {
       let keyboardFrameY = (change?[.newKey] as! NSValue).cgPointValue.y
       let keyboardWindowH = keyboardView?.window?.bounds.size.height ?? 0
       let keyboardPosition = keyboardWindowH - keyboardFrameY
-      let position = interpolate(
+      let position = CGFloat.interpolate(
         inputRange: [keyboardHeight / 2, -keyboardHeight / 2],
         outputRange: [keyboardHeight, 0],
         currentValue: keyboardPosition
