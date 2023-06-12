@@ -25,7 +25,7 @@ const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
 }) => {
   const scrollViewAnimatedRef = useAnimatedRef<Reanimated.ScrollView>();
   const scrollPosition = useSharedValue(0);
-  const { scroll, pause } = useInterruptibleScrollTo(
+  const { scroll, pause, isScrolling } = useInterruptibleScrollTo(
     scrollViewAnimatedRef,
     scrollPosition
   );
@@ -34,6 +34,7 @@ const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
   const fakeViewHeight = useSharedValue(0);
   const keyboardHeight = useSharedValue(0);
   const tag = useSharedValue(-1);
+  const interpolateFrom = useSharedValue(0);
 
   const { height } = useWindowDimensions();
 
@@ -46,9 +47,9 @@ const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
     []
   );
 
-  const measureByTag = useWorkletCallback((tag: number) => {
+  const measureByTag = useWorkletCallback((viewTag: number) => {
     return measure(
-      (() => tag) as unknown as RefObjectFunction<Component<{}, {}, any>>
+      (() => viewTag) as unknown as RefObjectFunction<Component<{}, {}, any>>
     );
   }, []);
 
@@ -65,12 +66,13 @@ const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
       123333,
       visibleRect - point,
       BOTTOM_OFFSET,
-      keyboardHeight.value - (height - point) + BOTTOM_OFFSET
+      keyboardHeight.value - (height - point) + BOTTOM_OFFSET,
+      interpolateFrom.value
     );
     if (visibleRect - point < BOTTOM_OFFSET) {
       const interpolatedScrollTo = interpolate(
         e,
-        [0, keyboardHeight.value],
+        [interpolateFrom.value, keyboardHeight.value],
         [0, keyboardHeight.value - (height - point) + BOTTOM_OFFSET]
       );
       const targetScrollY =
@@ -96,6 +98,9 @@ const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
           e.height,
           keyboardHeight.value
         );
+        if (keyboardHeight.value !== e.height && e.height > 0) {
+          interpolateFrom.value = keyboardHeight.value;
+        }
         pause();
         scrollPosition.value = position.value;
         if (
