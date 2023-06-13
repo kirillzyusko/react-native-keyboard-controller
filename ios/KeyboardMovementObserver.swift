@@ -11,7 +11,7 @@ import Foundation
 @objc(KeyboardMovementObserver)
 public class KeyboardMovementObserver: NSObject {
   // class members
-  var onEvent: (NSString, NSNumber, NSNumber) -> Void
+  var onEvent: (NSString, NSNumber, NSNumber, NSNumber) -> Void
   var onNotify: (String, Any) -> Void
   // progress tracker
   private var _keyboardView: UIView?
@@ -29,11 +29,13 @@ public class KeyboardMovementObserver: NSObject {
   private var _windowsCount: Int = 0
   private var prevKeyboardPosition = 0.0
   private var displayLink: CADisplayLink?
-  private var keyboardHeight: CGFloat = 0.0
   private var hasKVObserver = false
+  // state variables
+  private var keyboardHeight: CGFloat = 0.0
+  private var duration = 0
 
   @objc public init(
-    handler: @escaping (NSString, NSNumber, NSNumber) -> Void,
+    handler: @escaping (NSString, NSNumber, NSNumber, NSNumber) -> Void,
     onNotify: @escaping (String, Any) -> Void
   ) {
     onEvent = handler
@@ -123,7 +125,7 @@ public class KeyboardMovementObserver: NSObject {
         return
       }
 
-      onEvent("onKeyboardMoveInteractive", position as NSNumber, position / CGFloat(keyboardHeight) as NSNumber)
+      onEvent("onKeyboardMoveInteractive", position as NSNumber, position / CGFloat(keyboardHeight) as NSNumber, 0)
     }
   }
 
@@ -135,12 +137,15 @@ public class KeyboardMovementObserver: NSObject {
   @objc func keyboardWillAppear(_ notification: Notification) {
     if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
       let keyboardHeight = keyboardFrame.cgRectValue.size.height
+      let duration = Int((notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] ?? 0) as! Double * 1000)
       self.keyboardHeight = keyboardHeight
+      self.duration = duration
 
       var data = [AnyHashable: Any]()
       data["height"] = keyboardHeight
+      data["duration"] = duration
 
-      onEvent("onKeyboardMoveStart", Float(keyboardHeight) as NSNumber, 1)
+      onEvent("onKeyboardMoveStart", Float(keyboardHeight) as NSNumber, 1, duration)
       onNotify("KeyboardController::keyboardWillShow", data)
 
       setupKeyboardWatcher()
@@ -240,6 +245,6 @@ public class KeyboardMovementObserver: NSObject {
     }
 
     prevKeyboardPosition = keyboardPosition
-    onEvent("onKeyboardMove", keyboardPosition as NSNumber, keyboardPosition / CGFloat(keyboardHeight) as NSNumber)
+    onEvent("onKeyboardMove", keyboardPosition as NSNumber, keyboardPosition / CGFloat(keyboardHeight) as NSNumber, self.duration)
   }
 }

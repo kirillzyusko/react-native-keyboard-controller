@@ -14,6 +14,7 @@
 - (instancetype)initWithReactTag:(NSNumber *)reactTag
                            event:(NSString *)event
                           height:(NSNumber *)height
-                        progress:(NSNumber *)progress;
+                        progress:(NSNumber *)progress
+                        duration:(NSNumber *)duration;
 
 @end

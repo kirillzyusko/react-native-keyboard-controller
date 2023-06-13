@@ -12,6 +12,7 @@
 @implementation KeyboardMoveEvent {
   NSNumber *_progress;
   NSNumber *_height;
+  NSNumber *_duration;
   uint16_t _coalescingKey;
 }
 
@@ -22,6 +23,7 @@
                            event:(NSString *)event
                           height:(NSNumber *)height
                         progress:(NSNumber *)progress
+                        duration:(NSNumber *)duration
 {
   RCTAssertParam(reactTag);
 
@@ -30,6 +32,7 @@
     _viewTag = reactTag;
     _progress = progress;
     _height = height;
+    _duration = duration;
     _coalescingKey = 0;
   }
   return self;
@@ -47,6 +50,7 @@ RCT_NOT_IMPLEMENTED(-(instancetype)init)
   NSDictionary *body = @{
     @"progress" : _progress,
     @"height" : _height,
+    @"duration": _duration,
   };
 
   return body;
