@@ -146,6 +146,7 @@ public class KeyboardMovementObserver: NSObject {
       var data = [AnyHashable: Any]()
       data["height"] = keyboardHeight
       data["duration"] = duration
+      data["timestamp"] = Date.currentTimeStamp
 
       onEvent("onKeyboardMoveStart", Float(keyboardHeight) as NSNumber, 1, duration as NSNumber)
       onNotify("KeyboardController::keyboardWillShow", data)
@@ -163,6 +164,7 @@ public class KeyboardMovementObserver: NSObject {
     var data = [AnyHashable: Any]()
     data["height"] = 0
     data["duration"] = duration
+    data["timestamp"] = Date.currentTimeStamp
 
     onEvent("onKeyboardMoveStart", 0, 0, duration as NSNumber)
     onNotify("KeyboardController::keyboardWillHide", data)
@@ -182,6 +184,7 @@ public class KeyboardMovementObserver: NSObject {
       var data = [AnyHashable: Any]()
       data["height"] = keyboardHeight
       data["duration"] = duration
+      data["timestamp"] = Date.currentTimeStamp
 
       onEvent("onKeyboardMoveEnd", keyboardHeight as NSNumber, 1, duration as NSNumber)
       onNotify("KeyboardController::keyboardDidShow", data)
@@ -198,6 +201,7 @@ public class KeyboardMovementObserver: NSObject {
     var data = [AnyHashable: Any]()
     data["height"] = 0
     data["duration"] = duration
+    data["timestamp"] = Date.currentTimeStamp
 
     onEvent("onKeyboardMoveEnd", 0 as NSNumber, 0, duration as NSNumber)
     onNotify("KeyboardController::keyboardDidHide", data)

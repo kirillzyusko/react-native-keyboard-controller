@@ -203,6 +203,7 @@ class KeyboardAnimationCallback(
     val params: WritableMap = Arguments.createMap()
     params.putDouble("height", height)
     params.putInt("duration", duration)
+    params.putDouble("timestamp", System.currentTimeMillis().toDouble())
 
     return params
   }
