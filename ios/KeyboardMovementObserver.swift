@@ -145,18 +145,22 @@ public class KeyboardMovementObserver: NSObject {
       data["height"] = keyboardHeight
       data["duration"] = duration
 
-      onEvent("onKeyboardMoveStart", Float(keyboardHeight) as NSNumber, 1, duration)
+      onEvent("onKeyboardMoveStart", Float(keyboardHeight) as NSNumber, 1, duration as NSNumber)
       onNotify("KeyboardController::keyboardWillShow", data)
 
       setupKeyboardWatcher()
     }
   }
 
-  @objc func keyboardWillDisappear() {
+  @objc func keyboardWillDisappear(_ notification: Notification) {
+    let duration = Int((notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] ?? 0) as! Double * 1000)
+    self.duration = duration
+
     var data = [AnyHashable: Any]()
     data["height"] = 0
+    data["duration"] = duration
 
-    onEvent("onKeyboardMoveStart", 0, 0)
+    onEvent("onKeyboardMoveStart", 0, 0, duration as NSNumber)
     onNotify("KeyboardController::keyboardWillHide", data)
 
     setupKeyboardWatcher()
@@ -167,11 +171,13 @@ public class KeyboardMovementObserver: NSObject {
     if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
       let keyboardHeight = keyboardFrame.cgRectValue.size.height
       self.keyboardHeight = keyboardHeight
+      let duration = Int((notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] ?? 0) as! Double * 1000)
 
       var data = [AnyHashable: Any]()
       data["height"] = keyboardHeight
+      data["duration"] = duration
 
-      onEvent("onKeyboardMoveEnd", keyboardHeight as NSNumber, 1)
+      onEvent("onKeyboardMoveEnd", keyboardHeight as NSNumber, 1, duration as NSNumber)
       onNotify("KeyboardController::keyboardDidShow", data)
 
       removeKeyboardWatcher()
@@ -179,11 +185,13 @@ public class KeyboardMovementObserver: NSObject {
     }
   }
 
-  @objc func keyboardDidDisappear() {
+  @objc func keyboardDidDisappear(_ notification: Notification) {
+    let duration = Int((notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] ?? 0) as! Double * 1000)
     var data = [AnyHashable: Any]()
     data["height"] = 0
+    data["duration"] = duration
 
-    onEvent("onKeyboardMoveEnd", 0 as NSNumber, 0)
+    onEvent("onKeyboardMoveEnd", 0 as NSNumber, 0, duration as NSNumber)
     onNotify("KeyboardController::keyboardDidHide", data)
 
     removeKeyboardWatcher()
@@ -245,6 +253,6 @@ public class KeyboardMovementObserver: NSObject {
     }
 
     prevKeyboardPosition = keyboardPosition
-    onEvent("onKeyboardMove", keyboardPosition as NSNumber, keyboardPosition / CGFloat(keyboardHeight) as NSNumber, self.duration)
+    onEvent("onKeyboardMove", keyboardPosition as NSNumber, keyboardPosition / CGFloat(keyboardHeight) as NSNumber, self.duration as NSNumber)
   }
 }
