@@ -65,18 +65,6 @@ public class KeyboardMovementObserver: NSObject {
       name: UIResponder.keyboardDidHideNotification,
       object: nil
     )
-    NotificationCenter.default.addObserver(
-      self,
-      selector: #selector(windowDidBecomeVisible),
-      name: UIWindow.didBecomeVisibleNotification,
-      object: nil
-    )
-    NotificationCenter.default.addObserver(
-      self,
-      selector: #selector(windowDidBecomeHidden),
-      name: UIWindow.didBecomeHiddenNotification,
-      object: nil
-    )
   }
 
   @objc func windowDidBecomeHidden(_: Notification) {
@@ -116,8 +104,8 @@ public class KeyboardMovementObserver: NSObject {
   ) {
     // swiftlint:disable:next force_cast
     if keyPath == "center", object as! NSObject == _keyboardView! {
-      // if we are currently animating keyboard or keyboard is not shown yet -> we need to ignore values from KVO
-      if displayLink != nil || keyboardHeight == 0.0 {
+      // if we are currently animating keyboard -> we need to ignore values from KVO
+      if displayLink != nil {
         return
       }
 
@@ -170,6 +158,7 @@ public class KeyboardMovementObserver: NSObject {
     onNotify("KeyboardController::keyboardWillHide", data)
 
     setupKeyboardWatcher()
+    removeKVObserver()
   }
 
   @objc func keyboardDidAppear(_ notification: Notification) {
@@ -184,14 +173,13 @@ public class KeyboardMovementObserver: NSObject {
       onNotify("KeyboardController::keyboardDidShow", data)
 
       removeKeyboardWatcher()
+      setupKVObserver()
     }
   }
 
   @objc func keyboardDidDisappear() {
     var data = [AnyHashable: Any]()
     data["height"] = 0
-
-    keyboardHeight = 0.0
 
     onEvent("onKeyboardMoveEnd", 0 as NSNumber, 0)
     onNotify("KeyboardController::keyboardDidHide", data)
