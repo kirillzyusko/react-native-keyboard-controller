@@ -35,7 +35,7 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
         onApplyWindowInsetsListener = { v, insets ->
           val content =
             reactContext.currentActivity?.window?.decorView?.rootView?.findViewById<FitWindowsLinearLayout>(
-              R.id.action_bar_root,
+              androidx.appcompat.R.id.action_bar_root,
             )
           content?.setPadding(
             0,
