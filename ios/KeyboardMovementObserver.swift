@@ -67,14 +67,6 @@ public class KeyboardMovementObserver: NSObject {
     )
   }
 
-  @objc func windowDidBecomeHidden(_: Notification) {
-    removeKVObserver()
-  }
-
-  @objc func windowDidBecomeVisible(_: Notification) {
-    setupKVObserver()
-  }
-
   private func setupKVObserver() {
     if hasKVObserver {
       return
