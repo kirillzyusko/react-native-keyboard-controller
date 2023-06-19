@@ -14,7 +14,7 @@
     "@react-navigation/native": "^6.1.6",
     "@react-navigation/stack": "^6.3.16",
     "react": "18.2.0",
-    "react-native": "0.71.3",
+    "react-native": "0.71.11",
     "react-native-gesture-handler": "2.9.0",
     "react-native-keyboard-controller": "link:../",
     "react-native-reanimated": "3.0.2",
@@ -27,7 +27,7 @@
     "@babel/preset-env": "^7.20.0",
     "@babel/runtime": "^7.20.0",
     "@tsconfig/react-native": "^2.0.2",
-    "metro-react-native-babel-preset": "0.73.7",
+    "metro-react-native-babel-preset": "0.73.10",
     "patch-package": "^6.4.7",
     "react-test-renderer": "18.2.0"
   },
