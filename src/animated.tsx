@@ -149,6 +149,7 @@ export const KeyboardProvider = ({
         onKeyboardMoveInteractive={onKeyboardMove}
         navigationBarTranslucent={navigationBarTranslucent}
         statusBarTranslucent={statusBarTranslucent}
+        // @ts-expect-error will be fixed when migrate to REA 3.3.0
         style={styles.container}
       >
         {children}
