@@ -50,7 +50,7 @@ RCT_NOT_IMPLEMENTED(-(instancetype)init)
   NSDictionary *body = @{
     @"progress" : _progress,
     @"height" : _height,
-    @"duration": _duration,
+    @"duration" : _duration,
   };
 
   return body;
