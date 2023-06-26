@@ -14,7 +14,7 @@ public class KeyboardMovementObserver: NSObject {
   // class members
   var onEvent: (NSString, NSNumber, NSNumber, NSNumber, NSNumber) -> Void
   var onNotify: (String, Any) -> Void
-    // var onEvent2: (NSNumber, NSNumber) -> Void
+  // var onEvent2: (NSNumber, NSNumber) -> Void
   // progress tracker
   private var _keyboardView: UIView?
   private var keyboardView: UIView? {
@@ -42,7 +42,7 @@ public class KeyboardMovementObserver: NSObject {
     onNotify: @escaping (String, Any) -> Void
   ) {
     onEvent = handler
-      // onEvent2 = handler2
+    // onEvent2 = handler2
     self.onNotify = onNotify
   }
 
