@@ -50,7 +50,9 @@ Since `onMove` handler on iOS is based on `CADisplayLink` usage - you may need t
 ### Event structure
 
 - `height` - height of the keyboard;
-- `progress` - a value between `0` (closed) and `1` (opened) indicating relative keyboard position.
+- `progress` - a value between `0` (closed) and `1` (opened) indicating relative keyboard position;
+- `duration` - duration of the animation;
+- `target` - tag of the focused `TextInput` (or `-1` if the tag is not found).
 
 ### Handlers
 
