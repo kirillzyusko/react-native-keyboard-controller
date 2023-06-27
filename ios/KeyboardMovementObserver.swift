@@ -103,7 +103,7 @@ public class KeyboardMovementObserver: NSObject {
       // if keyboard height is not equal to its bounds - we can ignore
       // values, since they'll be invalid and will cause UI jumps
       if keyboardView?.bounds.size.height != keyboardHeight {
-         return
+        return
       }
 
       // swiftlint:disable:next force_cast
