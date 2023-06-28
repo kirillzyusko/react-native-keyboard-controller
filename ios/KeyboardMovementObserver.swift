@@ -100,6 +100,11 @@ public class KeyboardMovementObserver: NSObject {
       if displayLink != nil {
         return
       }
+      // if keyboard height is not equal to its bounds - we can ignore
+      // values, since they'll be invalid and will cause UI jumps
+      if keyboardView?.bounds.size.height != keyboardHeight {
+        return
+      }
 
       // swiftlint:disable:next force_cast
       let keyboardFrameY = (change?[.newKey] as! NSValue).cgPointValue.y
