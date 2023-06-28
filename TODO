@@ -1,0 +1,7 @@
+- fabric tests port
+- (x) reanimated 3.3.0 everywhere
+- remove post install scrip from fabric
+- lottie is broken (both iOS/Android)
+- redmi note 5 pro - chat example laggy
+- port lottie to Fabric
+- KeyboardAware/Fabric/Android - freeze/crash
