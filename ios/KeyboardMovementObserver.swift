@@ -208,7 +208,7 @@ public class KeyboardMovementObserver: NSObject {
           if subview.description.hasPrefix("<UIInputSetContainerView") {
             for hostView in subview.subviews {
               if hostView.description.hasPrefix("<UIInputSetHostView") {
-                result = hostView as? UIView
+                result = hostView
                 break
               }
             }
