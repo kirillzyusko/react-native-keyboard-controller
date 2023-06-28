@@ -20,6 +20,11 @@ export const examples: Example[] = [
     icons: '🔋',
   },
   {
+    title: 'Lottie',
+    info: ScreenNames.LOTTIE,
+    icons: '⚠️ 🎞',
+  },
+  {
     title: 'Non UI Props',
     info: ScreenNames.NON_UI_PROPS,
     icons: '🚀',
