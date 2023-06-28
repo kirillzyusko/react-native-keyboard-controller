@@ -58,3 +58,7 @@ jobs:
         run: |
           cd example
           yarn test
+      - name: Run example fabric app tests (verify mocks)
+        run: |
+          cd FabricExample
+          yarn test
