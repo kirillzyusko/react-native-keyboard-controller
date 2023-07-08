@@ -1,0 +1,2 @@
+- (x) keyboard is shown, scroll to top, press button to hide keyboard -> transition without animation (because persistedHeight is updated to 0)
+- (x) keyboard is shown, scroll to top, press button to hide keyboard, open lottie example -> lottie is not reacting on keyboard movement (because InteractiveKeyboard.isInteractive is not resetting to false)

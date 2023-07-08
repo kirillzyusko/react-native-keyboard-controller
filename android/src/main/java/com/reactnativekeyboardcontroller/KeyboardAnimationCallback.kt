@@ -145,12 +145,14 @@ class KeyboardAnimationCallback(
     super.onEnd(animation)
 
     isTransitioning = false
+
+    var keyboardHeight = this.persistentKeyboardHeight
     // if keyboard becomes shown after interactive animation completion
     // getCurrentKeyboardHeight() will be `0` and isKeyboardVisible will be `false`
     // it's not correct behavior, so we are handling it here
     val isKeyboardShown = InteractiveKeyboardProvider.shown
     if (!isKeyboardShown) {
-      this.persistentKeyboardHeight = getCurrentKeyboardHeight()
+      keyboardHeight = getCurrentKeyboardHeight()
     } else {
       // if keyboard is shown after interactions and the animation has finished
       // then we need to reset the state
@@ -158,8 +160,8 @@ class KeyboardAnimationCallback(
     }
     isKeyboardVisible = isKeyboardVisible || isKeyboardShown
 
-    this.emitEvent("KeyboardController::" + if (!isKeyboardVisible) "keyboardDidHide" else "keyboardDidShow", getEventParams(this.persistentKeyboardHeight))
-    this.sendEventToJS(KeyboardTransitionEvent(view.id, "topKeyboardMoveEnd", this.persistentKeyboardHeight, if (!isKeyboardVisible) 0.0 else 1.0))
+    this.emitEvent("KeyboardController::" + if (!isKeyboardVisible) "keyboardDidHide" else "keyboardDidShow", getEventParams(keyboardHeight))
+    this.sendEventToJS(KeyboardTransitionEvent(view.id, "topKeyboardMoveEnd", keyboardHeight, if (!isKeyboardVisible) 0.0 else 1.0))
   }
 
   private fun isKeyboardVisible(): Boolean {
