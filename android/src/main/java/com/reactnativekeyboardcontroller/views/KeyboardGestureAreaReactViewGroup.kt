@@ -131,7 +131,7 @@ class KeyboardGestureAreaReactViewGroup(private val reactContext: ThemedReactCon
           // may throw exception
           !controller.isInsetAnimationInProgress() ||
             this.keyboardHeight != controller.getCurrentKeyboardHeight()
-        // if keyboard was changed after finger movement -> we need to calculate final position
+        // if keyboard height was changed after finger movement -> we need to calculate final position
         // and make an animated transition
         val passedVelocityY = if (isKeyboardPositionChanged) velocityY else null
 
