@@ -284,8 +284,14 @@ internal class KeyboardAnimationController {
         velocityY = velocityY,
       )
       // The current inset matches either the shown/hidden inset, finish() immediately
-      current == shown -> controller.finish(true)
-      current == hidden -> controller.finish(false)
+      current == shown -> {
+        InteractiveKeyboardProvider.shown = true
+        controller.finish(true)
+      }
+      current == hidden -> {
+        InteractiveKeyboardProvider.shown = false
+        controller.finish(false)
+      }
       else -> {
         // Otherwise, we'll look at the current position...
         if (controller.currentFraction >= SCROLL_THRESHOLD) {

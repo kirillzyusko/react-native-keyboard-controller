@@ -31,6 +31,7 @@ class KeyboardGestureAreaReactViewGroup(private val reactContext: ThemedReactCon
   private var lastTouchX = 0f
   private var lastTouchY = 0f
   private var lastWindowY = 0
+  private var keyboardHeight = 0
 
   // react props
   private var interpolator: Interpolator = LinearInterpolator()
@@ -87,6 +88,9 @@ class KeyboardGestureAreaReactViewGroup(private val reactContext: ThemedReactCon
 
         if (isHandling) {
           if (controller.isInsetAnimationInProgress()) {
+            if (keyboardHeight == 0) {
+              this.keyboardHeight = controller.getCurrentKeyboardHeight()
+            }
             // If we currently have control, we can update the IME insets to 'scroll'
             // the IME in
             val moveBy = this.interpolator.interpolate(dy.roundToInt(), this.getWindowHeight() - event.rawY.toInt(), controller.getCurrentKeyboardHeight())
@@ -122,10 +126,18 @@ class KeyboardGestureAreaReactViewGroup(private val reactContext: ThemedReactCon
         // Calculate the current velocityY, over 500 milliseconds
         velocityTracker?.computeCurrentVelocity(500)
         val velocityY = velocityTracker?.yVelocity
+        val isKeyboardPositionChanged =
+          // check `isInsetAnimationInProgress()` before, since direct usage of `getCurrentKeyboardHeight()`
+          // may throw exception
+          !controller.isInsetAnimationInProgress() ||
+            this.keyboardHeight != controller.getCurrentKeyboardHeight()
+        // if keyboard height was changed after finger movement -> we need to calculate final position
+        // and make an animated transition
+        val passedVelocityY = if (isKeyboardPositionChanged) velocityY else null
 
         // If we received a ACTION_UP event, end any current WindowInsetsAnimation passing
         // in the calculated Y velocity
-        controller.animateToFinish(velocityY)
+        controller.animateToFinish(passedVelocityY)
 
         // Reset our touch handling state
         reset()
@@ -162,6 +174,7 @@ class KeyboardGestureAreaReactViewGroup(private val reactContext: ThemedReactCon
     lastTouchX = 0f
     lastTouchY = 0f
     lastWindowY = 0
+    keyboardHeight = 0
     bounds.setEmpty()
 
     velocityTracker?.recycle()
