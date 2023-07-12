@@ -137,7 +137,9 @@ public class KeyboardMovementObserver: NSObject {
   @objc func keyboardWillAppear(_ notification: Notification) {
     if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
       let keyboardHeight = keyboardFrame.cgRectValue.size.height
-      let duration = Int((notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] ?? 0) as! Double * 1000)
+      let duration = Int(
+        (notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double ?? 0) * 1000
+      )
       self.keyboardHeight = keyboardHeight
       self.duration = duration
 
@@ -153,7 +155,9 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc func keyboardWillDisappear(_ notification: Notification) {
-    let duration = Int((notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] ?? 0) as! Double * 1000)
+    let duration = Int(
+      (notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double ?? 0) * 1000
+    )
     self.duration = duration
 
     var data = [AnyHashable: Any]()
@@ -171,7 +175,9 @@ public class KeyboardMovementObserver: NSObject {
     if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
       let keyboardHeight = keyboardFrame.cgRectValue.size.height
       self.keyboardHeight = keyboardHeight
-      let duration = Int((notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] ?? 0) as! Double * 1000)
+      let duration = Int(
+        (notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double ?? 0) * 1000
+      )
 
       var data = [AnyHashable: Any]()
       data["height"] = keyboardHeight
@@ -186,7 +192,9 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc func keyboardDidDisappear(_ notification: Notification) {
-    let duration = Int((notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] ?? 0) as! Double * 1000)
+    let duration = Int(
+      (notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double ?? 0) * 1000
+    )
     var data = [AnyHashable: Any]()
     data["height"] = 0
     data["duration"] = duration
@@ -253,6 +261,11 @@ public class KeyboardMovementObserver: NSObject {
     }
 
     prevKeyboardPosition = keyboardPosition
-    onEvent("onKeyboardMove", keyboardPosition as NSNumber, keyboardPosition / CGFloat(keyboardHeight) as NSNumber, duration as NSNumber)
+    onEvent(
+      "onKeyboardMove",
+      keyboardPosition as NSNumber,
+      keyboardPosition / CGFloat(keyboardHeight) as NSNumber,
+      duration as NSNumber
+    )
   }
 }

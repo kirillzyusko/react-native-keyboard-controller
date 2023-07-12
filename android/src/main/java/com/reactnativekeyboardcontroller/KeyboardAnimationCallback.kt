@@ -168,7 +168,7 @@ class KeyboardAnimationCallback(
     this.emitEvent("KeyboardController::" + if (!isKeyboardVisible) "keyboardDidHide" else "keyboardDidShow", getEventParams(keyboardHeight))
     this.sendEventToJS(KeyboardTransitionEvent(view.id, "topKeyboardMoveEnd", keyboardHeight, if (!isKeyboardVisible) 0.0 else 1.0, duration))
 
-    // reset to initial state because `interactive` event need to have `0` duration
+    // reset to initial state
     duration = 0
   }
 
