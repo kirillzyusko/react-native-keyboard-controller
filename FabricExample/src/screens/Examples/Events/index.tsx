@@ -20,31 +20,35 @@ function EventsListener() {
 
   useEffect(() => {
     const show = KeyboardEvents.addListener('keyboardWillShow', (e) => {
+      const delay = new Date().getTime() - e.timestamp;
       Toast.show({
         type: 'info',
         text1: '⬆️ ⌨️ Keyboard will show',
-        text2: `📲 Height: ${e.height}, duration: ${e.duration}ms`,
+        text2: `📲 Height: ${e.height}, duration: ${e.duration}ms, delay: ${delay}ms`,
       });
     });
     const shown = KeyboardEvents.addListener('keyboardDidShow', (e) => {
+      const delay = new Date().getTime() - e.timestamp;
       Toast.show({
         type: 'success',
         text1: '⌨️ Keyboard is shown',
-        text2: `👋 Height: ${e.height}, duration: ${e.duration}ms`,
+        text2: `👋 Height: ${e.height}, duration: ${e.duration}ms, delay: ${delay}ms`,
       });
     });
     const hide = KeyboardEvents.addListener('keyboardWillHide', (e) => {
+      const delay = new Date().getTime() - e.timestamp;
       Toast.show({
         type: 'info',
         text1: '⬇️ ⌨️ Keyboard will hide',
-        text2: `📲 Height: ${e.height}, duration: ${e.duration}ms`,
+        text2: `📲 Height: ${e.height}, duration: ${e.duration}ms, delay: ${delay}ms`,
       });
     });
     const hid = KeyboardEvents.addListener('keyboardDidHide', (e) => {
+      const delay = new Date().getTime() - e.timestamp;
       Toast.show({
         type: 'error',
         text1: '⌨️ Keyboard is hidden',
-        text2: `🤐 Height: ${e.height}, duration: ${e.duration}ms`,
+        text2: `🤐 Height: ${e.height}, duration: ${e.duration}ms, delay: ${delay}ms`,
       });
     });
 

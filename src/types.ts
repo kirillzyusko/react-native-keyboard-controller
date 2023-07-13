@@ -68,6 +68,7 @@ export type KeyboardControllerEvents =
 export type KeyboardEventData = {
   height: number;
   duration: number;
+  timestamp: number;
 };
 
 // package types
