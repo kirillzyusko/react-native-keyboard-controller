@@ -11,6 +11,7 @@ type KeyboardMoveEvent = Readonly<{
   height: Double;
   progress: Double;
   duration: Int32;
+  target: Int32;
 }>;
 
 export interface NativeProps extends ViewProps {
