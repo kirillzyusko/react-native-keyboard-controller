@@ -127,7 +127,13 @@ public class KeyboardMovementObserver: NSObject {
         return
       }
 
-      onEvent("onKeyboardMoveInteractive", position as NSNumber, position / CGFloat(keyboardHeight) as NSNumber, -1, tag)
+      onEvent(
+        "onKeyboardMoveInteractive",
+        position as NSNumber,
+        position / CGFloat(keyboardHeight) as NSNumber,
+        -1,
+        tag
+      )
     }
   }
 
