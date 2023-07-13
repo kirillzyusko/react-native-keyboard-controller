@@ -5,6 +5,7 @@ import type { NativeSyntheticEvent, ViewProps } from 'react-native';
 export type NativeEvent = {
   progress: number;
   height: number;
+  duration: number;
 };
 export type EventWithName<T> = {
   eventName: string;
@@ -66,6 +67,7 @@ export type KeyboardControllerEvents =
   | 'keyboardDidHide';
 export type KeyboardEventData = {
   height: number;
+  duration: number;
 };
 
 // package types

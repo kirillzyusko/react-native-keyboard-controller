@@ -44,7 +44,8 @@ using namespace facebook::react;
     _props = defaultProps;
 
     observer = [[KeyboardMovementObserver alloc]
-        initWithHandler:^(NSString *event, NSNumber *height, NSNumber *progress) {
+        initWithHandler:^(
+            NSString *event, NSNumber *height, NSNumber *progress, NSNumber *duration) {
           if (self->_eventEmitter) {
             // TODO: use reflection to reduce code duplication?
             if ([event isEqualToString:@"onKeyboardMoveStart"]) {
@@ -52,21 +53,27 @@ using namespace facebook::react;
                   self->_eventEmitter)
                   ->onKeyboardMoveStart(
                       facebook::react::KeyboardControllerViewEventEmitter::OnKeyboardMoveStart{
-                          .height = [height doubleValue], .progress = [progress doubleValue]});
+                          .height = [height doubleValue],
+                          .progress = [progress doubleValue],
+                          .duration = [duration intValue]});
             }
             if ([event isEqualToString:@"onKeyboardMove"]) {
               std::dynamic_pointer_cast<const facebook::react::KeyboardControllerViewEventEmitter>(
                   self->_eventEmitter)
                   ->onKeyboardMove(
                       facebook::react::KeyboardControllerViewEventEmitter::OnKeyboardMove{
-                          .height = [height doubleValue], .progress = [progress doubleValue]});
+                          .height = [height doubleValue],
+                          .progress = [progress doubleValue],
+                          .duration = [duration intValue]});
             }
             if ([event isEqualToString:@"onKeyboardMoveEnd"]) {
               std::dynamic_pointer_cast<const facebook::react::KeyboardControllerViewEventEmitter>(
                   self->_eventEmitter)
                   ->onKeyboardMoveEnd(
                       facebook::react::KeyboardControllerViewEventEmitter::OnKeyboardMoveEnd{
-                          .height = [height doubleValue], .progress = [progress doubleValue]});
+                          .height = [height doubleValue],
+                          .progress = [progress doubleValue],
+                          .duration = [duration intValue]});
             }
           }
           if ([event isEqualToString:@"onKeyboardMoveInteractive"]) {
@@ -74,7 +81,9 @@ using namespace facebook::react;
                 self->_eventEmitter)
                 ->onKeyboardMoveInteractive(
                     facebook::react::KeyboardControllerViewEventEmitter::OnKeyboardMoveInteractive{
-                        .height = [height doubleValue], .progress = [progress doubleValue]});
+                        .height = [height doubleValue],
+                        .progress = [progress doubleValue],
+                        .duration = [duration intValue]});
           }
 
           // TODO: use built-in _eventEmitter once NativeAnimated module will use ModernEventemitter
@@ -84,7 +93,8 @@ using namespace facebook::react;
                 [[KeyboardMoveEvent alloc] initWithReactTag:@(self.tag)
                                                       event:event
                                                      height:height
-                                                   progress:progress];
+                                                   progress:progress
+                                                   duration:duration];
             [bridge.eventDispatcher sendEvent:keyboardMoveEvent];
           }
         }
