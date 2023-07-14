@@ -45,6 +45,10 @@ public extension UIResponder {
 
 public extension Optional where Wrapped == UIResponder {
   var reactViewTag: NSNumber {
-    return (self as? RCTUITextField)?.superview?.reactTag ?? -1
+    #if KEYBOARD_CONTROLLER_NEW_ARCH_ENABLED
+      return ((self as? RCTUITextField)?.superview?.tag ?? -1) as NSNumber
+    #else
+      return (self as? RCTUITextField)?.superview?.reactTag ?? -1
+    #endif
   }
 }

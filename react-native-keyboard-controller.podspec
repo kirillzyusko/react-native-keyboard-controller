@@ -26,7 +26,15 @@ Pod::Spec.new do |s|
     s.pod_target_xcconfig    = {
       "HEADER_SEARCH_PATHS" => "\"$(PODS_ROOT)/boost\"",
       "OTHER_CPLUSPLUSFLAGS" => "-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1",
-      "CLANG_CXX_LANGUAGE_STANDARD" => "c++17"
+      "CLANG_CXX_LANGUAGE_STANDARD" => "c++17",
+      # This is handy when we want to detect if new arch is enabled in Swift code
+      # and can be used like:
+      # #if KEYBOARD_CONTROLLER_NEW_ARCH_ENABLED
+      # // do sth when new arch is enabled
+      # #else
+      # // do sth when old arch is enabled
+      # #endif
+      "OTHER_SWIFT_FLAGS" => "-DKEYBOARD_CONTROLLER_NEW_ARCH_ENABLED"
     }
 
     s.dependency "React-RCTFabric"
