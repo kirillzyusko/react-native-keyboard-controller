@@ -46,7 +46,7 @@ class KeyboardControllerView: UIView {
     }
   }
 
-  func onEvent(event: NSString, height: NSNumber, progress: NSNumber, duration: NSNumber) {
+  func onEvent(event: NSString, height: NSNumber, progress: NSNumber, duration: NSNumber, target: NSNumber) {
     // we don't want to send event to JS before the JS thread is ready
     if bridge.value(forKey: "_jsThread") == nil {
       return
@@ -57,7 +57,8 @@ class KeyboardControllerView: UIView {
         event: event as String,
         height: height,
         progress: progress,
-        duration: duration
+        duration: duration,
+        target: target
       )
     )
   }

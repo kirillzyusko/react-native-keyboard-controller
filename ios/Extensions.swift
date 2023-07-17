@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 public extension CGFloat {
   static func interpolate(inputRange: [CGFloat], outputRange: [CGFloat], currentValue: CGFloat) -> CGFloat {
@@ -25,5 +26,29 @@ public extension CGFloat {
 public extension Date {
   static var currentTimeStamp: Int64 {
     return Int64(Date().timeIntervalSince1970 * 1000)
+  }
+}
+
+public extension UIResponder {
+  private weak static var _currentFirstResponder: UIResponder?
+
+  static var current: UIResponder? {
+    UIResponder._currentFirstResponder = nil
+    UIApplication.shared.sendAction(#selector(findFirstResponder(sender:)), to: nil, from: nil, for: nil)
+    return UIResponder._currentFirstResponder
+  }
+
+  @objc internal func findFirstResponder(sender _: AnyObject) {
+    UIResponder._currentFirstResponder = self
+  }
+}
+
+public extension Optional where Wrapped == UIResponder {
+  var reactViewTag: NSNumber {
+    #if KEYBOARD_CONTROLLER_NEW_ARCH_ENABLED
+      return ((self as? RCTUITextField)?.superview?.tag ?? -1) as NSNumber
+    #else
+      return (self as? RCTUITextField)?.superview?.reactTag ?? -1
+    #endif
   }
 }

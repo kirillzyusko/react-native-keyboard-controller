@@ -13,6 +13,7 @@
   NSNumber *_progress;
   NSNumber *_height;
   NSNumber *_duration;
+  NSNumber *_target;
   uint16_t _coalescingKey;
 }
 
@@ -24,6 +25,7 @@
                           height:(NSNumber *)height
                         progress:(NSNumber *)progress
                         duration:(NSNumber *)duration
+                          target:(NSNumber *)target
 {
   RCTAssertParam(reactTag);
 
@@ -33,6 +35,7 @@
     _progress = progress;
     _height = height;
     _duration = duration;
+    _target = target;
     _coalescingKey = 0;
   }
   return self;
@@ -51,6 +54,7 @@ RCT_NOT_IMPLEMENTED(-(instancetype)init)
     @"progress" : _progress,
     @"height" : _height,
     @"duration" : _duration,
+    @"target" : _target,
   };
 
   return body;

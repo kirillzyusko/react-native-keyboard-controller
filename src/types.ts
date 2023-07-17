@@ -6,6 +6,7 @@ export type NativeEvent = {
   progress: number;
   height: number;
   duration: number;
+  target: number;
 };
 export type EventWithName<T> = {
   eventName: string;
@@ -69,6 +70,7 @@ export type KeyboardEventData = {
   height: number;
   duration: number;
   timestamp: number;
+  target: number;
 };
 
 // package types

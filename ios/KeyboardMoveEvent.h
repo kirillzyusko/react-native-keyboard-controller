@@ -15,6 +15,7 @@
                            event:(NSString *)event
                           height:(NSNumber *)height
                         progress:(NSNumber *)progress
-                        duration:(NSNumber *)duration;
+                        duration:(NSNumber *)duration
+                          target:(NSNumber *)target;
 
 @end

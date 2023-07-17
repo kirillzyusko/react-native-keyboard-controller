@@ -10,6 +10,7 @@ class KeyboardTransitionEvent(
   private val height: Double,
   private val progress: Double,
   private val duration: Int,
+  private val target: Int,
 ) : Event<KeyboardTransitionEvent>(viewId) {
   override fun getEventName() = event
 
@@ -21,6 +22,7 @@ class KeyboardTransitionEvent(
     map.putDouble("progress", progress)
     map.putDouble("height", height)
     map.putInt("duration", duration)
+    map.putInt("target", target)
     rctEventEmitter.receiveEvent(viewTag, eventName, map)
   }
 }
