@@ -20,7 +20,7 @@ All events have following properties:
 type KeyboardEventData = {
   height: number; // height of the keyboard
   duration: number; // duration of the animation
-  timestamp: number; // timestamp of the event in a native thread
+  timestamp: number; // timestamp of the event from native thread
   target: number; // tag of the focused TextInput
 };
 ```
