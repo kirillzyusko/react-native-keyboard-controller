@@ -12,6 +12,19 @@ This library exposes 4 events which are available on all platforms:
 - keyboardDidShow
 - keyboardDidHide
 
+## Event structure
+
+All events have following properties:
+
+```ts
+type KeyboardEventData = {
+  height: number; // height of the keyboard
+  duration: number; // duration of the animation
+  timestamp: number; // timestamp of the event from native thread
+  target: number; // tag of the focused TextInput
+};
+```
+
 ## Example
 
 ```ts
