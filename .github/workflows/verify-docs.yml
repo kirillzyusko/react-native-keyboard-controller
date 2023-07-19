@@ -48,8 +48,8 @@ jobs:
       run:
         working-directory: docs
     steps:
-      - run: echo "PREVIEW_PATH=pr-preview/pr-${{ github.event.number }}" >> "$GITHUB_ENV"
       - uses: actions/checkout@v3
+      - run: echo "PREVIEW_PATH=pr-preview/pr-${{ github.event.number }}" >> "$GITHUB_ENV"
       - uses: actions/setup-node@v3
         with:
           node-version: 16.x
