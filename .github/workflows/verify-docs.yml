@@ -43,11 +43,12 @@ jobs:
         run: yarn markdownlint-cli2 "**/*.md" "#node_modules"
   preview:
     runs-on: ubuntu-latest
-    name: ✅ Deploy preview
+    name: 🛫 Deploy preview
     defaults:
       run:
         working-directory: ./docs
     steps:
+      - run: echo "PREVIEW_PATH=pr-preview/pr-${{ github.event.number }}" >> "$GITHUB_ENV"
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
