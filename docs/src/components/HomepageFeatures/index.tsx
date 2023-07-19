@@ -25,7 +25,7 @@ const FeatureList: FeatureItem[] = [
     ),
   },
   {
-    title: 'Cross platform',
+    title: 'Cross platform!',
     lottie: crossPlatform,
     description: (
       <>
