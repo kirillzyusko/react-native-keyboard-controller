@@ -7,6 +7,11 @@ on:
     paths:
       - '.github/workflows/verify-docs.yml'
       - 'docs/**'
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - closed
 
 jobs:
   build:
