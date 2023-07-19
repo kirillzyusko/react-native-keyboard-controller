@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://kirillzyusko.github.io/react-native-keyboard-controller/blog</id>
+    <title>Keyboard Controller Blog</title>
+    <updated>2023-04-10T00:00:00.000Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog"/>
+    <subtitle>Keyboard Controller Blog</subtitle>
+    <icon>https://kirillzyusko.github.io/react-native-keyboard-controller/img/favicon.ico</icon>
+    <entry>
+        <title type="html"><![CDATA[Interactive keyboard support]]></title>
+        <id>https://kirillzyusko.github.io/react-native-keyboard-controller/blog/interactive-keyboard</id>
+        <link href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/interactive-keyboard"/>
+        <updated>2023-04-10T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[I'm excited to announce that the upcoming release of react-native-keyboard-controller, version 1.5.0, will include a new feature that allows users to control the position of the keyboard on the screen via gestures. This new interactive keyboard feature will make it easier for users to interact with the keyboard in a more natural and intuitive way, improving the overall user experience of your React Native app.]]></summary>
+        <content type="html"><![CDATA[<p>I'm excited to announce that the upcoming release of <code>react-native-keyboard-controller</code>, version <code>1.5.0</code>, will include a new feature that allows users to control the position of the keyboard on the screen via gestures. This new interactive keyboard feature will make it easier for users to interact with the keyboard in a more natural and intuitive way, improving the overall user experience of your React Native app.</p><div style="display:flex;justify-content:center;margin-bottom:20px"><div style="width:400px;height:400px"></div></div><p>The interactive keyboard feature is customizable on Android 🤖, allowing developers to define how the gesture controls the keyboard position and how the view should be animated when the keyboard is moved. This new feature is particularly useful for chat and other apps that require precise control over the position of the keyboard. The addition of this new interactive keyboard feature will further enhance the library's capabilities and provide a more natural and intuitive user experience.</p><p>Stay tuned for more updates and be sure to check out our documentation for more information on how to use this new feature in your React Native app.</p><p>Thank you for choosing <code>react-native-keyboard-controller</code>! 😊</p>]]></content>
+        <author>
+            <name>Kirill Zyusko</name>
+            <uri>https://github.com/kirillzyusko</uri>
+        </author>
+        <category label="react-native" term="react-native"/>
+        <category label="keyboard" term="keyboard"/>
+        <category label="interactive" term="interactive"/>
+        <category label="android" term="android"/>
+        <category label="ios" term="ios"/>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Version 1.4.0 with new hook]]></title>
+        <id>https://kirillzyusko.github.io/react-native-keyboard-controller/blog/new-hook</id>
+        <link href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/new-hook"/>
+        <updated>2022-10-15T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[New 1.4.0 release enhance API and adds new useKeyboardHandler hook. While keeping no breaking changes this release (via new hook) adds an ability to have intermediate values on iOS for height and progress values (before it was not possible and it was a restriction of the library).]]></summary>
+        <content type="html"><![CDATA[<p>New 1.4.0 release enhance API and adds new <code>useKeyboardHandler</code> hook. While keeping no breaking changes this release (via new hook) adds an ability to have intermediate values on iOS for <code>height</code> and <code>progress</code> values (before it was not possible and it was a restriction of the library).</p><p>Also this hooks allow to track keyboard lifecycle and it's better suit for complex animations 😎</p><p>Check out the new documentation for this hook, upgrade library version to <code>1.4.0</code> and start using it today!</p>]]></content>
+        <author>
+            <name>Kirill Zyusko</name>
+            <uri>https://github.com/kirillzyusko</uri>
+        </author>
+        <category label="new hook" term="new hook"/>
+        <category label="iOS" term="iOS"/>
+        <category label="intermediate values" term="intermediate values"/>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Version 1.2.0 with new architecture support]]></title>
+        <id>https://kirillzyusko.github.io/react-native-keyboard-controller/blog/fabric</id>
+        <link href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/fabric"/>
+        <updated>2022-09-22T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[I'm glad to announce, that new upcoming release 1.2.0 brings a support for new react native architecture 😎]]></summary>
+        <content type="html"><![CDATA[<p>I'm glad to announce, that new upcoming release <code>1.2.0</code> brings a support for new react native architecture 😎</p><p>Fortunately this library is backward compatible with old architecture and will be compiled conditionally depending on which architecture you are using. So don't be afraid of updating it to the latest version - it doesn't have any breaking changes!</p><p><img loading="lazy" alt="react native logo" src="/react-native-keyboard-controller/assets/images/react-native-53fe9c4e0ebe3c3ff285c169eaaff011.png" width="1160" height="560" class="img_ev3q"></p><p>The decision to add support for a new architecture (to prioritize a new architecture adoption over other features) was made in order to understand all peculiarities of the new architecture and to discover its possibilities. Hopefully such knowledge can help add new features for the library in the future.</p><p>Obviously, the migration process will take some time for other libraries, so future versions of this library will still support two architectures. When most other open source libraries will be migrated to the new architecture and the new architecture becomes the standard in the react native ecosystem, then support for the old architecture will be removed.</p><p>Stay tuned for future updates! 😊</p>]]></content>
+        <author>
+            <name>Kirill Zyusko</name>
+            <uri>https://github.com/kirillzyusko</uri>
+        </author>
+        <category label="react-native" term="react-native"/>
+        <category label="release" term="release"/>
+        <category label="new architecture" term="new architecture"/>
+        <category label="fabric" term="fabric"/>
+        <category label="turbo modules" term="turbo modules"/>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[React Native meets smooth keyboard animations]]></title>
+        <id>https://kirillzyusko.github.io/react-native-keyboard-controller/blog/welcome</id>
+        <link href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/welcome"/>
+        <updated>2022-06-22T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[Many flagship applications that are written natively (such as Telegram, Instagram, etc.) use the full power of platform-specific native APIs (iOS, Android) to make transitions between opening/closing the keyboard animated and smooth.]]></summary>
+        <content type="html"><![CDATA[<p>Many flagship applications that are written natively (such as <code>Telegram</code>, <code>Instagram</code>, etc.) use the full power of platform-specific native APIs (<code>iOS</code>, <code>Android</code>) to make transitions between opening/closing the keyboard animated and smooth.</p><p>Unfortunately, in <code>react-native</code> this aspect was given little attention and all <code>react-native</code> applications were suffering because of that - animations were rough, you couldn't write cross-platform code because some keyboard events were not available, etc. But with the advent of this library, everything changes... 😎</p><div style="display:flex;justify-content:center;margin-bottom:20px"><div style="width:400px;height:400px"></div></div><p>The purpose of this library was utilizing all power of native API and at the same time provide a universal way in <code>react-native</code> to deal with it (allowing to use some platforms advanced technics if needed). Thus this library allows you to track each keyboard frame movement, and create corresponding reactions (move elements accordingly).</p><p>The first release of this library brings missing <code>keyboardWillShow</code>/<code>keyboardWillHide</code> events on <code>Android</code> making <code>events</code> module fully cross-platform as well as adding a way to use <code>Animated.Value</code> for managing keyboard frames.</p><p>In further releases the API will be enhanced:</p><ul><li>support will be added for interactive keyboard dismissing (on Android)</li><li>the library will be rewritten to new <code>Fabric</code> architecture</li><li>maybe some components, such as <code>KeyboardAvoidingView</code>/<code>KeyboardAwareScrollView</code> will be available here with better performance and animations.</li></ul><p>Stay tuned! 😊</p>]]></content>
+        <author>
+            <name>Kirill Zyusko</name>
+            <uri>https://github.com/kirillzyusko</uri>
+        </author>
+        <category label="react-native" term="react-native"/>
+        <category label="keyboard" term="keyboard"/>
+        <category label="animation" term="animation"/>
+    </entry>
+</feed>
