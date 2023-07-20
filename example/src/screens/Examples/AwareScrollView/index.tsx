@@ -17,6 +17,7 @@ export default function AwareScrollView() {
           key={i}
           placeholder={`${i}`}
           placeholderTextColor="black"
+          keyboardType={i % 2 === 0 ? 'numeric' : 'default'}
           style={{
             width: '100%',
             height: 50,
