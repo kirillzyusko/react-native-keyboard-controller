@@ -4,12 +4,15 @@
 const lightCodeTheme = require('prism-react-renderer/themes/github');
 const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 
+let baseUrl = '/react-native-keyboard-controller/';
+if (process.env.PREVIEW_PATH) baseUrl += process.env.PREVIEW_PATH;
+
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'Keyboard Controller',
   tagline: 'Control each frame of keyboard movement in react native',
   url: 'https://kirillzyusko.github.io',
-  baseUrl: '/react-native-keyboard-controller/',
+  baseUrl: baseUrl,
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',

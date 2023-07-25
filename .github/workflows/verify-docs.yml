@@ -7,6 +7,11 @@ on:
     paths:
       - '.github/workflows/verify-docs.yml'
       - 'docs/**'
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - closed
 
 jobs:
   build:
@@ -41,3 +46,24 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Run Lint
         run: yarn markdownlint-cli2 "**/*.md" "#node_modules"
+  preview:
+    runs-on: ubuntu-latest
+    name: 🛫 Deploy preview
+    defaults:
+      run:
+        working-directory: docs
+    steps:
+      - uses: actions/checkout@v3
+      - run: echo "PREVIEW_PATH=pr-preview/pr-${{ github.event.number }}" >> "$GITHUB_ENV"
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+          cache: yarn
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Build website
+        run: yarn build
+      - name: Deploy preview
+        uses: rossjrw/pr-preview-action@v1
+        with:
+          source-dir: ./docs/build/
