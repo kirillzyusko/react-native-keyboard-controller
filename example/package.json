@@ -15,14 +15,14 @@
     "@react-navigation/native": "^6.1.7",
     "@react-navigation/native-stack": "^6.9.13",
     "@react-navigation/stack": "^6.3.17",
-    "lottie-react-native": "^6.0.0-rc.7",
+    "lottie-react-native": "^6.0.1",
     "react": "18.2.0",
     "react-native": "0.72.0",
     "react-native-gesture-handler": "2.12.0",
     "react-native-keyboard-controller": "link:../",
-    "react-native-reanimated": "3.3.0",
+    "react-native-reanimated": "3.4.1",
     "react-native-safe-area-context": "^4.6.3",
-    "react-native-screens": "^3.22.0",
+    "react-native-screens": "^3.23.0",
     "react-native-toast-message": "^2.1.6"
   },
   "devDependencies": {
