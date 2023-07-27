@@ -89,10 +89,13 @@ const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
    */
   const maybeScroll = useWorkletCallback((e: number, animated = false) => {
     fakeViewHeight.value = e;
-
+    // paper
+    //  LOG  UPDATED LAYOUT:: {"height": 50, "pageX": 0, "pageY": 653, "width": 393, "x": 0, "y": 550}
+    // fabric
+    //  LOG  UPDATED LAYOUT:: {"height": 50, "pageX": 0, "pageY": 550, "width": 393, "x": 0, "y": 550}
     const visibleRect = height - keyboardHeight.value;
     const point = (layout.value?.pageY || 0) + (layout.value?.height || 0);
-
+    console.log(height, keyboardHeight.value, point, layout);
     if (visibleRect - point <= BOTTOM_OFFSET) {
       const interpolatedScrollTo = interpolate(
         e,
