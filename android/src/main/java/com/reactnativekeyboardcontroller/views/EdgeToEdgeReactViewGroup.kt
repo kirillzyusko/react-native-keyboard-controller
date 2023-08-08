@@ -13,9 +13,10 @@ import com.reactnativekeyboardcontroller.KeyboardAnimationCallback
 import com.reactnativekeyboardcontroller.R
 import com.reactnativekeyboardcontroller.extensions.requestApplyInsetsWhenAttached
 
+private val TAG = EdgeToEdgeReactViewGroup::class.qualifiedName
+
 @SuppressLint("ViewConstructor")
 class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : ReactViewGroup(reactContext) {
-  private val TAG = EdgeToEdgeReactViewGroup::class.qualifiedName
   private var isStatusBarTranslucent = false
   private var isNavigationBarTranslucent = false
 

@@ -93,7 +93,11 @@ class KeyboardGestureAreaReactViewGroup(private val reactContext: ThemedReactCon
             }
             // If we currently have control, we can update the IME insets to 'scroll'
             // the IME in
-            val moveBy = this.interpolator.interpolate(dy.roundToInt(), this.getWindowHeight() - event.rawY.toInt(), controller.getCurrentKeyboardHeight())
+            val moveBy = this.interpolator.interpolate(
+              dy.roundToInt(),
+              this.getWindowHeight() - event.rawY.toInt(),
+              controller.getCurrentKeyboardHeight(),
+            )
 
             if (moveBy != 0) {
               controller.insetBy(moveBy)

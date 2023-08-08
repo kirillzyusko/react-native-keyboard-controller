@@ -10,8 +10,9 @@ import androidx.core.view.WindowInsetsControllerCompat
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.UiThreadUtil
 
+private val TAG = StatusBarManagerCompatModuleImpl::class.qualifiedName
+
 class StatusBarManagerCompatModuleImpl(private val mReactContext: ReactApplicationContext) {
-  private val TAG = StatusBarManagerCompatModuleImpl::class.qualifiedName
   private var controller: WindowInsetsControllerCompat? = null
 
   fun setHidden(hidden: Boolean) {
@@ -73,7 +74,10 @@ class StatusBarManagerCompatModuleImpl(private val mReactContext: ReactApplicati
     if (this.controller == null) {
       val activity = mReactContext.currentActivity
       if (activity == null) {
-        Log.w(TAG, "StatusBarManagerCompatModule: can not get `WindowInsetsControllerCompat` because current activity is null.")
+        Log.w(
+          TAG,
+          "StatusBarManagerCompatModule: can not get `WindowInsetsControllerCompat` because current activity is null.",
+        )
         return this.controller
       }
 

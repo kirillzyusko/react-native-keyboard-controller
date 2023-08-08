@@ -3,7 +3,8 @@ package com.reactnativekeyboardcontroller
 import com.facebook.react.bridge.ReactApplicationContext
 import com.reactnativekeyboardcontroller.modules.StatusBarManagerCompatModuleImpl
 
-class StatusBarManagerCompatModule(private val mReactContext: ReactApplicationContext) : NativeStatusBarManagerCompatSpec(mReactContext) {
+class StatusBarManagerCompatModule(mReactContext: ReactApplicationContext) :
+  NativeStatusBarManagerCompatSpec(mReactContext) {
   private val module = StatusBarManagerCompatModuleImpl(mReactContext)
 
   override fun getName(): String = StatusBarManagerCompatModuleImpl.NAME
