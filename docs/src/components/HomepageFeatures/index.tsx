@@ -26,6 +26,11 @@ const FeatureList: FeatureItem[] = [
     ),
   },
   {
+    title: 'Interactive keyboard',
+    lottie: interactive,
+    description: <>Dismiss your keyboard interactively without a hassle</>,
+  },
+  {
     title: 'Cross platform',
     lottie: crossPlatform,
     description: (
@@ -34,11 +39,6 @@ const FeatureList: FeatureItem[] = [
         unified API which works on all platforms.
       </>
     ),
-  },
-  {
-    title: 'Interactive keyboard',
-    lottie: interactive,
-    description: <>Dismiss your keyboard interactively without a hassle</>,
   },
   {
     title: 'Reach metadata',
