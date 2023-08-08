@@ -17,14 +17,21 @@ export type KeyboardAnimationContext = {
   reanimated: ReanimatedContext;
   setHandlers: (handlers: KeyboardHandlers) => void;
 };
+const NOOP = () => {};
+const DEFAULT_SHARED_VALUE: SharedValue<number> = {
+  value: 0,
+  addListener: NOOP,
+  removeListener: NOOP,
+  modify: NOOP,
+};
 const defaultContext: KeyboardAnimationContext = {
   animated: {
     progress: new Animated.Value(0),
     height: new Animated.Value(0),
   },
   reanimated: {
-    progress: { value: 0 },
-    height: { value: 0 },
+    progress: DEFAULT_SHARED_VALUE,
+    height: DEFAULT_SHARED_VALUE,
   },
   setHandlers: () => {},
 };
