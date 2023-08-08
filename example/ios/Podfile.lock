@@ -70,9 +70,9 @@ PODS:
     - FlipperKit/FlipperKitNetworkPlugin
   - fmt (6.2.1)
   - glog (0.3.5)
-  - hermes-engine (0.72.0):
-    - hermes-engine/Pre-built (= 0.72.0)
-  - hermes-engine/Pre-built (0.72.0)
+  - hermes-engine (0.72.3):
+    - hermes-engine/Pre-built (= 0.72.3)
+  - hermes-engine/Pre-built (0.72.3)
   - libevent (2.1.12)
   - lottie-ios (4.2.0)
   - lottie-react-native (6.1.0):
@@ -735,7 +735,7 @@ SPEC CHECKSUMS:
   FlipperKit: 2efad7007d6745a3f95e4034d547be637f89d3f6
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
   glog: 04b94705f318337d7ead9e6d17c019bd9b1f6b1b
-  hermes-engine: c85f703623cb12d7e1d9db91afe53b3ea8aa7219
+  hermes-engine: 10fbd3f62405c41ea07e71973ea61e1878d07322
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   lottie-ios: 809ecf2d460ed650a6aed7aa88b2ec45fab4779c
   lottie-react-native: da5b454084d2f72936f4089e29bbd8fd95c7d493
