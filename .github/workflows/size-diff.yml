@@ -41,6 +41,6 @@ jobs:
           message: |
             | Current size  | Target Size   | Difference               |
             | ------------- | ------------- | ------------------------ |
-            | ${{ NEW_SIZE) }}  | ${{ OLD_SIZE)  }}  | ${{ NEW_SIZE - OLD_SIZE }} |
+            | ${{ steps.new-size.outputs.NEW_SIZE) }}  | ${{ steps.new-size.outputs.OLD_SIZE)  }}  | X |
             
             Release ${{ github.sha }} to <https://pr-${{ github.event.number }}.example.com>
