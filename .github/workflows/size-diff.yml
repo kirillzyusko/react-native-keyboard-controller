@@ -35,7 +35,7 @@ jobs:
           OLD_SIZE: ${{ steps.old-size.outputs.OLD_SIZE }}
         run: |
           echo "DIFF=$((NEW_SIZE - OLD_SIZE))" >> "$GITHUB_OUTPUT"
-          echo "SIGN=$([ $((NEW_SIZE - OLD_SIZE)) > 0 ] && echo "📈" || echo "📉")"
+          echo "SIGN=$([ $((NEW_SIZE - OLD_SIZE)) > 0 ] && echo "📈" || echo "📉")" >> "$GITHUB_OUTPUT"
       - uses: marocchino/sticky-pull-request-comment@v2
         env:
           NEW_SIZE: ${{ steps.new-size.outputs.NEW_SIZE }}
