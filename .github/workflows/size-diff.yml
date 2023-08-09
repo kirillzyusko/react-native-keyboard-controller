@@ -1,0 +1,28 @@
+name: 🧪 Size diff
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/size-diff.yml'
+      - '!example/**'
+      - '!FabricExample/**'
+      - '!docs/**'
+
+jobs:
+  check-diff:
+    name: 🔬 Find npm package size diff
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Build package
+        run: npm pack
+      - name: Checkout to target branch
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.base.ref }}
+      - uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          message: |
+            Release ${{ github.sha }} to <https://pr-${{ github.event.number }}.example.com>
