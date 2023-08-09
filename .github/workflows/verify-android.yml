@@ -60,7 +60,7 @@ jobs:
         run: ./gradlew assembleDebug
   detekt:
     runs-on: ubuntu-latest
-    name: ‼️ Run detekt
+    name: 🧬 Run detekt
     defaults:
       run:
         working-directory: ./android
@@ -75,6 +75,5 @@ jobs:
         run: |
           curl -sSLO https://github.com/detekt/detekt/releases/download/v1.23.1/detekt-cli-1.23.1.zip
           unzip detekt-cli-1.23.1.zip
-          ./detekt-cli-1.23.1/bin/detekt-cli
       - name: Run Detekt
         run: ./detekt-cli-1.23.1/bin/detekt-cli
