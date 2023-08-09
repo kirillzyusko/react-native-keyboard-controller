@@ -7,6 +7,7 @@ on:
       - '!example/**'
       - '!FabricExample/**'
       - '!docs/**'
+      - '!scripts/**'
 
 jobs:
   check-diff:
@@ -16,8 +17,8 @@ jobs:
       - uses: actions/checkout@v3
       - name: Install dependencies
         run: yarn install --frozen-lockfile
-      - name: Build package
-        run: npm pack
+      - name: Calculate size of package
+        run: node scripts/size.js
       - name: Checkout to target branch
         uses: actions/checkout@v3
         with:
