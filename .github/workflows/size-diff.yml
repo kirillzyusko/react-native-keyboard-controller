@@ -44,6 +44,7 @@ jobs:
           SIGN: ${{ steps.diff.outputs.SIGN }}
         with:
           message: |
+            ### 📊 Package size report
             | Current size  | Target Size   | Difference               |
             | ------------- | ------------- | ------------------------ |
             | ${{ env.NEW_SIZE }} bytes | ${{ env.OLD_SIZE }} bytes | ${{ env.DIFF }} bytes ${{ env.SIGN }} |
