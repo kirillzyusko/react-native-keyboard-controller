@@ -20,13 +20,15 @@ class KeyboardControllerModule(mReactContext: ReactApplicationContext) : ReactCo
     module.setDefaultMode()
   }
 
+  @Suppress("detekt:UnusedParameter")
   @ReactMethod
   fun addListener(eventName: String?) {
-    /* Required for RN built-in Event Emitter Calls. */
+    // Required for RN built-in Event Emitter Calls
   }
 
+  @Suppress("detekt:UnusedParameter")
   @ReactMethod
   fun removeListeners(count: Int?) {
-    /* Required for RN built-in Event Emitter Calls. */
+    // Required for RN built-in Event Emitter Calls
   }
 }

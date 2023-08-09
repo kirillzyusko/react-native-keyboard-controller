@@ -24,6 +24,7 @@ val interpolators = mapOf(
   "ios" to IosInterpolator(),
 )
 
+@Suppress("detekt:TooManyFunctions")
 @SuppressLint("ViewConstructor")
 class KeyboardGestureAreaReactViewGroup(private val reactContext: ThemedReactContext) : ReactViewGroup(reactContext) {
   // internal state management
@@ -61,6 +62,7 @@ class KeyboardGestureAreaReactViewGroup(private val reactContext: ThemedReactCon
     return super.dispatchTouchEvent(event)
   }
 
+  // region Props setters
   fun setInterpolator(interpolator: String) {
     this.interpolator = interpolators[interpolator] ?: LinearInterpolator()
   }
@@ -72,8 +74,10 @@ class KeyboardGestureAreaReactViewGroup(private val reactContext: ThemedReactCon
   fun setScrollKeyboardOffScreenWhenVisible(scrollImeOffScreenWhenVisible: Boolean) {
     this.scrollKeyboardOffScreenWhenVisible = scrollImeOffScreenWhenVisible
   }
+  // endregion
 
   // region Handlers
+  @RequiresApi(Build.VERSION_CODES.KITKAT)
   private fun onActionDown(event: MotionEvent) {
     velocityTracker?.addMovement(event)
 
@@ -177,7 +181,7 @@ class KeyboardGestureAreaReactViewGroup(private val reactContext: ThemedReactCon
     // Reset our touch handling state
     reset()
   }
-  //endregion
+  // endregion
 
   /**
    * Resets all of our internal state.
@@ -218,7 +222,7 @@ class KeyboardGestureAreaReactViewGroup(private val reactContext: ThemedReactCon
   }
 
   companion object {
-    // Сalculate the current velocity over 500 milliseconds
+    // Calculate the current velocity over 500 milliseconds
     private const val VELOCITY_UNITS = 500
   }
 }

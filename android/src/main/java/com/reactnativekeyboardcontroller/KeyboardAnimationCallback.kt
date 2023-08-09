@@ -100,17 +100,16 @@ class KeyboardAnimationCallback(
   override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat): WindowInsetsCompat {
     // when keyboard appears values will be (false && true)
     // when keyboard disappears values will be (true && false)
-    // `!isTransitioning` check is needed to avoid calls of `onApplyWindowInsets` during keyboard animation
+    val isKeyboardShown = isKeyboardVisible && isKeyboardVisible()
+    // `isTransitioning` check is needed to avoid calls of `onApplyWindowInsets` during keyboard animation
     // having such check allows us not to dispatch unnecessary incorrect events
     // the condition will be executed only when keyboard is opened and changes its size
     // (for example it happens when user changes keyboard type from 'text' to 'emoji' input
-    if (
-      isKeyboardVisible &&
-      isKeyboardVisible() &&
-      !isTransitioning &&
-      Build.VERSION.SDK_INT >= Build.VERSION_CODES.R &&
-      !InteractiveKeyboardProvider.isInteractive
-    ) {
+    //
+    // `InteractiveKeyboardProvider.isInteractive` detect case when keyboard moves
+    // because of the gesture
+    val isMoving = isTransitioning || InteractiveKeyboardProvider.isInteractive
+    if (isKeyboardShown && !isMoving && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
       val keyboardHeight = getCurrentKeyboardHeight()
       val duration = DEFAULT_ANIMATION_TIME.toInt()
 
@@ -219,7 +218,8 @@ class KeyboardAnimationCallback(
     try {
       progress = abs((height / persistentKeyboardHeight)).let { if (it.isNaN()) 0.0 else it }
     } catch (e: ArithmeticException) {
-      // do nothing, send progress as 0
+      // do nothing, just log an exception send progress as 0
+      Log.w(TAG, "Caught arithmetic exception during `progress` calculation: $e")
     }
     Log.i(TAG, "DiffY: $diffY $height $progress ${InteractiveKeyboardProvider.isInteractive} $viewTagFocused")
 

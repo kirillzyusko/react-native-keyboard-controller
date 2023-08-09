@@ -5,6 +5,7 @@ import com.facebook.react.common.MapBuilder
 import com.facebook.react.uimanager.ThemedReactContext
 import com.reactnativekeyboardcontroller.views.EdgeToEdgeReactViewGroup
 
+@Suppress("detekt:UnusedPrivateProperty")
 class KeyboardControllerViewManagerImpl(mReactContext: ReactApplicationContext) {
   fun createViewInstance(reactContext: ThemedReactContext): EdgeToEdgeReactViewGroup {
     return EdgeToEdgeReactViewGroup(reactContext)

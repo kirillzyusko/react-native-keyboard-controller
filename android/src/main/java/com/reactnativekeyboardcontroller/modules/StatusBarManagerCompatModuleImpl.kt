@@ -50,6 +50,7 @@ class StatusBarManagerCompatModuleImpl(private val mReactContext: ReactApplicati
     }
   }
 
+  @Suppress("detekt:UnusedParameter")
   fun setTranslucent(translucent: Boolean) {
     // the status bar is translucent by default (once you wrapped App in Provider,
     // and EdgeToEdgeReactViewGroup has been mounted and called
