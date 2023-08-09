@@ -42,7 +42,7 @@ class StatusBarManagerCompatModuleImpl(private val mReactContext: ReactApplicati
         colorAnimation.addUpdateListener { animator ->
           window.statusBarColor = animator.animatedValue as Int
         }
-        colorAnimation.setDuration(300).startDelay = 0
+        colorAnimation.setDuration(DEFAULT_ANIMATION_TIME).startDelay = 0
         colorAnimation.start()
       } else {
         window.statusBarColor = color
@@ -91,5 +91,6 @@ class StatusBarManagerCompatModuleImpl(private val mReactContext: ReactApplicati
 
   companion object {
     const val NAME = "StatusBarManagerCompat"
+    private const val DEFAULT_ANIMATION_TIME = 300L
   }
 }
