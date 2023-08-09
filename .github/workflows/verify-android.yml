@@ -58,3 +58,23 @@ jobs:
         run: yarn install --frozen-lockfile --cwd ..
       - name: Run Gradle Lint
         run: ./gradlew assembleDebug
+  detekt:
+    runs-on: ubuntu-latest
+    name: ‼️ Run detekt
+    defaults:
+      run:
+        working-directory: ./android
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup JDK 11
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'microsoft'
+          java-version: '11'
+      - name: Install Detekt
+        run: |
+          curl -sSLO https://github.com/detekt/detekt/releases/download/v1.23.1/detekt-cli-1.23.1.zip
+          unzip detekt-cli-1.23.1.zip
+          ./detekt-cli-1.23.1/bin/detekt-cli
+      - name: Run Detekt
+        run: ./detekt-cli-1.23.1/bin/detekt-cli
