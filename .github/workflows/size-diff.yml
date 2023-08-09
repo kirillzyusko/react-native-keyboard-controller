@@ -28,16 +28,16 @@ jobs:
         id: old-size
         # run: echo "OLD_SIZE=$(node scripts/size.js)" >> "$GITHUB_OUTPUT"
         run: echo "OLD_SIZE=50000" >> "$GITHUB_OUTPUT"
-      - name: Difference
+      - name: Calculate difference
         id: diff
         env:
           NEW_SIZE: ${{ steps.new-size.outputs.NEW_SIZE }}
-          OLD_SIZE: ${{ steps.new-size.outputs.OLD_SIZE }}
+          OLD_SIZE: ${{ steps.old-size.outputs.OLD_SIZE }}
         run: echo "DIFF=$((NEW_SIZE - OLD_SIZE))" >> "$GITHUB_OUTPUT"
       - uses: marocchino/sticky-pull-request-comment@v2
         env:
           NEW_SIZE: ${{ steps.new-size.outputs.NEW_SIZE }}
-          OLD_SIZE: ${{ steps.new-size.outputs.OLD_SIZE }}
+          OLD_SIZE: ${{ steps.old-size.outputs.OLD_SIZE }}
           DIFF: ${{ steps.diff.outputs.DIFF }}
         with:
           message: |
