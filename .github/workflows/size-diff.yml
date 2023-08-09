@@ -27,7 +27,7 @@ jobs:
       - name: Calculate size of package (target)
         id: old-size
         # run: echo "OLD_SIZE=$(node scripts/size.js)" >> "$GITHUB_OUTPUT"
-        run: echo "OLD_SIZE=50000"
+        run: echo "OLD_SIZE=50000" >> "$GITHUB_OUTPUT"
       - name: Difference
         env:
           NEW_SIZE: ${{ steps.new-size.outputs.NEW_SIZE }}
@@ -41,6 +41,4 @@ jobs:
           message: |
             | Current size  | Target Size   | Difference               |
             | ------------- | ------------- | ------------------------ |
-            | ${{ steps.new-size.outputs.NEW_SIZE }}  | ${{ steps.new-size.outputs.OLD_SIZE  }}  | X |
-            
-            Release ${{ github.sha }} to <https://pr-${{ github.event.number }}.example.com>
+            | ${{ steps.new-size.outputs.NEW_SIZE }} bytes | ${{ steps.new-size.outputs.OLD_SIZE }} bytes | ${{ steps.new-size.outputs.NEW_SIZE - steps.new-size.outputs.OLD_SIZE }} |
