@@ -17,12 +17,21 @@ jobs:
       - uses: actions/checkout@v3
       - name: Install dependencies
         run: yarn install --frozen-lockfile
-      - name: Calculate size of package
-        run: node scripts/size.js
+      - name: Calculate size of package (current)
+        id: new-size
+        run: echo "NEW_SIZE=$(node scripts/size.js)" >> "$GITHUB_OUTPUT"
       - name: Checkout to target branch
         uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.base.ref }}
+      - name: Calculate size of package (target)
+        id: old-size
+        run: echo "OLD_SIZE=$(node scripts/size.js)" >> "$GITHUB_OUTPUT"
+      - name: Difference
+        env:
+          NEW_SIZE: ${{ steps.new-size.outputs.NEW_SIZE }}
+          OLD_SIZE: ${{ steps.new-size.outputs.OLD_SIZE }}
+        run: echo "Diff $((NEW_SIZE - OLD_SIZE))"
       - uses: marocchino/sticky-pull-request-comment@v2
         with:
           message: |
