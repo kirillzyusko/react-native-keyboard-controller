@@ -6,7 +6,6 @@ on:
       - 'example/**'
       - 'FabricExample/**'
       - 'docs/**'
-      - 'scripts/**'
 
 jobs:
   check-diff:
