@@ -2,12 +2,11 @@ name: 🧪 Size diff
 
 on:
   pull_request:
-    paths:
-      - '*'
-      - '!example/**'
-      - '!FabricExample/**'
-      - '!docs/**'
-      - '!scripts/**'
+    paths-ignore:
+      - 'example/**'
+      - 'FabricExample/**'
+      - 'docs/**'
+      - 'scripts/**'
 
 jobs:
   check-diff:
