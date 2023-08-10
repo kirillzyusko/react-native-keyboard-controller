@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, TextInput, View } from 'react-native';
+import { Platform, StyleSheet, TextInput, View } from 'react-native';
 import Lottie from 'lottie-react-native';
 import { useKeyboardHandler } from 'react-native-keyboard-controller';
 import Reanimated, {
@@ -60,6 +60,7 @@ function LottieAnimation() {
   return (
     <View style={styles.container}>
       <ReanimatedLottieView
+        renderMode={Platform.OS === 'ios' ? 'SOFTWARE' : 'AUTOMATIC'}
         style={styles.lottie}
         source={LockDebitCardMorph}
         animatedProps={animatedProps}
