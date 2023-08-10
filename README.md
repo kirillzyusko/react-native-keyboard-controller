@@ -1,6 +1,6 @@
 # react-native-keyboard-controller
 
-Keyboard manager which works in identical way on both iOS and Android.
+A Keyboard manager which works in identical way on both iOS and Android.
 
 ## Demonstration
 
