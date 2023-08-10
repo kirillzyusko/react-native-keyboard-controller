@@ -28,7 +28,7 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Calculate size of package (current)
         id: new-size
-        run: echo "NEW_SIZE=$(node scripts/size.js)"
+        run: echo "NEW_SIZE=$(node scripts/size.js)" >> "$GITHUB_OUTPUT"
       - name: Calculate difference
         id: diff
         env:
