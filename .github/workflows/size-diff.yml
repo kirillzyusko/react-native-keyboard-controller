@@ -14,19 +14,19 @@ jobs:
     name: 🔬 Find npm package size diff
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
-      - name: Calculate size of package (current)
-        id: new-size
-        run: echo "NEW_SIZE=$(node scripts/size.js)" >> "$GITHUB_OUTPUT"
       - name: Checkout to target branch
         uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.base.ref }}
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
       - name: Calculate size of package (target)
         id: old-size
         run: echo "OLD_SIZE=$(node scripts/size.js)" >> "$GITHUB_OUTPUT"
+      - uses: actions/checkout@v3
+      - name: Calculate size of package (current)
+        id: new-size
+        run: echo "NEW_SIZE=$(node scripts/size.js)" >> "$GITHUB_OUTPUT"
       - name: Calculate difference
         id: diff
         env:
