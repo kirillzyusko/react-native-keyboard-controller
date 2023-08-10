@@ -26,8 +26,7 @@ jobs:
           ref: ${{ github.event.pull_request.base.ref }}
       - name: Calculate size of package (target)
         id: old-size
-        # run: echo "OLD_SIZE=$(node scripts/size.js)" >> "$GITHUB_OUTPUT"
-        run: echo "OLD_SIZE=50000" >> "$GITHUB_OUTPUT"
+        run: echo "OLD_SIZE=$(node scripts/size.js)" >> "$GITHUB_OUTPUT"
       - name: Calculate difference
         id: diff
         env:
