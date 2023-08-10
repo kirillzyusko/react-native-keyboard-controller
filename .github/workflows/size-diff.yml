@@ -24,6 +24,8 @@ jobs:
         id: old-size
         run: echo "OLD_SIZE=$(node scripts/size.js)" >> "$GITHUB_OUTPUT"
       - uses: actions/checkout@v3
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
       - name: Calculate size of package (current)
         id: new-size
         run: echo "NEW_SIZE=$(node scripts/size.js)"
