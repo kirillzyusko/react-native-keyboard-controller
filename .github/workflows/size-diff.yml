@@ -2,12 +2,10 @@ name: 🧪 Size diff
 
 on:
   pull_request:
-    paths:
-      - '.github/workflows/size-diff.yml'
-      - '!example/**'
-      - '!FabricExample/**'
-      - '!docs/**'
-      - '!scripts/**'
+    paths-ignore:
+      - 'example/**'
+      - 'FabricExample/**'
+      - 'docs/**'
 
 jobs:
   check-diff:

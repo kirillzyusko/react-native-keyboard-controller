@@ -24,6 +24,7 @@ val interpolators = mapOf(
   "ios" to IosInterpolator(),
 )
 
+@Suppress("detekt:TooManyFunctions")
 @SuppressLint("ViewConstructor")
 class KeyboardGestureAreaReactViewGroup(private val reactContext: ThemedReactContext) : ReactViewGroup(reactContext) {
   // internal state management
@@ -52,107 +53,16 @@ class KeyboardGestureAreaReactViewGroup(private val reactContext: ThemedReactCon
     }
 
     when (event?.action) {
-      MotionEvent.ACTION_DOWN -> {
-        velocityTracker?.addMovement(event)
-
-        lastTouchX = event.x
-        lastTouchY = event.y
-
-        this.copyBoundsInWindow(bounds)
-        lastWindowY = bounds.top
-      }
-      MotionEvent.ACTION_MOVE -> {
-        // Since the view is likely to be translated/moved as the WindowInsetsAnimation
-        // progresses, we need to make sure we account for that change in our touch
-        // handling. We do that by keeping track of the view's Y position in the window,
-        // and detecting the difference between the current bounds.
-        this.copyBoundsInWindow(bounds)
-        val windowOffsetY = bounds.top - lastWindowY
-
-        // We then make a copy of the MotionEvent, and offset it with the calculated
-        // windowOffsetY. We can then pass it to the VelocityTracker.
-        val velocityTrackerEvent = MotionEvent.obtain(event)
-        velocityTrackerEvent.offsetLocation(0f, windowOffsetY.toFloat())
-        velocityTracker?.addMovement(velocityTrackerEvent)
-
-        val dx = velocityTrackerEvent.x - lastTouchX
-        val dy = velocityTrackerEvent.y - lastTouchY
-
-        if (!isHandling) {
-          // If we're not currently handling the touch gesture, lets check if we should
-          // start handling, by seeing if the gesture is majorly vertical, and
-          // larger than the touch slop
-          isHandling = dy.absoluteValue > dx.absoluteValue &&
-            dy.absoluteValue >= ViewConfiguration.get(this.context).scaledTouchSlop
-        }
-
-        if (isHandling) {
-          if (controller.isInsetAnimationInProgress()) {
-            if (keyboardHeight == 0) {
-              this.keyboardHeight = controller.getCurrentKeyboardHeight()
-            }
-            // If we currently have control, we can update the IME insets to 'scroll'
-            // the IME in
-            val moveBy = this.interpolator.interpolate(dy.roundToInt(), this.getWindowHeight() - event.rawY.toInt(), controller.getCurrentKeyboardHeight())
-
-            if (moveBy != 0) {
-              controller.insetBy(moveBy)
-            }
-          } else if (
-            !controller.isInsetAnimationRequestPending() &&
-            shouldStartRequest(
-              dy = dy,
-              imeVisible = ViewCompat.getRootWindowInsets(this)
-                ?.isVisible(WindowInsetsCompat.Type.ime()) == true,
-            )
-          ) {
-            // If we don't currently have control (and a request isn't pending),
-            // the IME is not shown, the user is scrolling up, and the view can't
-            // scroll up any more (i.e. over-scrolling), we can start to control
-            // the IME insets
-            controller.startControlRequest(this)
-          }
-
-          // Lastly we record the event X, Y, and view's Y window position, for the
-          // next touch event
-          lastTouchY = event.y
-          lastTouchX = event.x
-          lastWindowY = bounds.top
-        }
-      }
-      MotionEvent.ACTION_UP -> {
-        velocityTracker?.addMovement(event)
-
-        // Calculate the current velocityY, over 500 milliseconds
-        velocityTracker?.computeCurrentVelocity(500)
-        val velocityY = velocityTracker?.yVelocity
-        val isKeyboardPositionChanged =
-          // check `isInsetAnimationInProgress()` before, since direct usage of `getCurrentKeyboardHeight()`
-          // may throw exception
-          !controller.isInsetAnimationInProgress() ||
-            this.keyboardHeight != controller.getCurrentKeyboardHeight()
-        // if keyboard height was changed after finger movement -> we need to calculate final position
-        // and make an animated transition
-        val passedVelocityY = if (isKeyboardPositionChanged) velocityY else null
-
-        // If we received a ACTION_UP event, end any current WindowInsetsAnimation passing
-        // in the calculated Y velocity
-        controller.animateToFinish(passedVelocityY)
-
-        // Reset our touch handling state
-        reset()
-      }
-      MotionEvent.ACTION_CANCEL -> {
-        // If we received a ACTION_CANCEL event, cancel any current WindowInsetsAnimation
-        controller.cancel()
-        // Reset our touch handling state
-        reset()
-      }
+      MotionEvent.ACTION_DOWN -> this.onActionDown(event)
+      MotionEvent.ACTION_MOVE -> this.onActionMove(event)
+      MotionEvent.ACTION_UP -> this.onActionUp(event)
+      MotionEvent.ACTION_CANCEL -> this.onActionCancel()
     }
 
     return super.dispatchTouchEvent(event)
   }
 
+  // region Props setters
   fun setInterpolator(interpolator: String) {
     this.interpolator = interpolators[interpolator] ?: LinearInterpolator()
   }
@@ -164,6 +74,114 @@ class KeyboardGestureAreaReactViewGroup(private val reactContext: ThemedReactCon
   fun setScrollKeyboardOffScreenWhenVisible(scrollImeOffScreenWhenVisible: Boolean) {
     this.scrollKeyboardOffScreenWhenVisible = scrollImeOffScreenWhenVisible
   }
+  // endregion
+
+  // region Handlers
+  @RequiresApi(Build.VERSION_CODES.KITKAT)
+  private fun onActionDown(event: MotionEvent) {
+    velocityTracker?.addMovement(event)
+
+    lastTouchX = event.x
+    lastTouchY = event.y
+
+    this.copyBoundsInWindow(bounds)
+    lastWindowY = bounds.top
+  }
+
+  @RequiresApi(Build.VERSION_CODES.R)
+  private fun onActionMove(event: MotionEvent) {
+    // Since the view is likely to be translated/moved as the WindowInsetsAnimation
+    // progresses, we need to make sure we account for that change in our touch
+    // handling. We do that by keeping track of the view's Y position in the window,
+    // and detecting the difference between the current bounds.
+    this.copyBoundsInWindow(bounds)
+    val windowOffsetY = bounds.top - lastWindowY
+
+    // We then make a copy of the MotionEvent, and offset it with the calculated
+    // windowOffsetY. We can then pass it to the VelocityTracker.
+    val velocityTrackerEvent = MotionEvent.obtain(event)
+    velocityTrackerEvent.offsetLocation(0f, windowOffsetY.toFloat())
+    velocityTracker?.addMovement(velocityTrackerEvent)
+
+    val dx = velocityTrackerEvent.x - lastTouchX
+    val dy = velocityTrackerEvent.y - lastTouchY
+
+    if (!isHandling) {
+      // If we're not currently handling the touch gesture, lets check if we should
+      // start handling, by seeing if the gesture is majorly vertical, and
+      // larger than the touch slop
+      isHandling = dy.absoluteValue > dx.absoluteValue &&
+        dy.absoluteValue >= ViewConfiguration.get(this.context).scaledTouchSlop
+    }
+
+    if (isHandling) {
+      if (controller.isInsetAnimationInProgress()) {
+        if (keyboardHeight == 0) {
+          this.keyboardHeight = controller.getCurrentKeyboardHeight()
+        }
+        // If we currently have control, we can update the IME insets to 'scroll'
+        // the IME in
+        val moveBy = this.interpolator.interpolate(
+          dy.roundToInt(),
+          this.getWindowHeight() - event.rawY.toInt(),
+          controller.getCurrentKeyboardHeight(),
+        )
+
+        if (moveBy != 0) {
+          controller.insetBy(moveBy)
+        }
+      } else if (
+        !controller.isInsetAnimationRequestPending() &&
+        shouldStartRequest(
+          dy = dy,
+          imeVisible = ViewCompat.getRootWindowInsets(this)
+            ?.isVisible(WindowInsetsCompat.Type.ime()) == true,
+        )
+      ) {
+        // If we don't currently have control (and a request isn't pending),
+        // the IME is not shown, the user is scrolling up, and the view can't
+        // scroll up any more (i.e. over-scrolling), we can start to control
+        // the IME insets
+        controller.startControlRequest(this)
+      }
+
+      // Lastly we record the event X, Y, and view's Y window position, for the
+      // next touch event
+      lastTouchY = event.y
+      lastTouchX = event.x
+      lastWindowY = bounds.top
+    }
+  }
+
+  private fun onActionUp(event: MotionEvent) {
+    velocityTracker?.addMovement(event)
+    velocityTracker?.computeCurrentVelocity(VELOCITY_UNITS)
+
+    val velocityY = velocityTracker?.yVelocity
+    val isKeyboardPositionChanged =
+      // check `isInsetAnimationInProgress()` before, since direct usage of `getCurrentKeyboardHeight()`
+      // may throw exception
+      !controller.isInsetAnimationInProgress() ||
+        this.keyboardHeight != controller.getCurrentKeyboardHeight()
+    // if keyboard height was changed after finger movement -> we need to calculate final position
+    // and make an animated transition
+    val passedVelocityY = if (isKeyboardPositionChanged) velocityY else null
+
+    // If we received a ACTION_UP event, end any current WindowInsetsAnimation passing
+    // in the calculated Y velocity
+    controller.animateToFinish(passedVelocityY)
+
+    // Reset our touch handling state
+    reset()
+  }
+
+  private fun onActionCancel() {
+    // If we received a ACTION_CANCEL event, cancel any current WindowInsetsAnimation
+    controller.cancel()
+    // Reset our touch handling state
+    reset()
+  }
+  // endregion
 
   /**
    * Resets all of our internal state.
@@ -201,5 +219,10 @@ class KeyboardGestureAreaReactViewGroup(private val reactContext: ThemedReactCon
     val metrics = reactContext.currentActivity?.windowManager?.currentWindowMetrics
 
     return metrics?.bounds?.height() ?: 0
+  }
+
+  companion object {
+    // Calculate the current velocity over 500 milliseconds
+    private const val VELOCITY_UNITS = 500
   }
 }

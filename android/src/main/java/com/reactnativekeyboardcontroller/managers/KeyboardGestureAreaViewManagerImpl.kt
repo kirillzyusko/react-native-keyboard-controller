@@ -4,6 +4,7 @@ import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.uimanager.ThemedReactContext
 import com.reactnativekeyboardcontroller.views.KeyboardGestureAreaReactViewGroup
 
+@Suppress("detekt:UnusedPrivateProperty")
 class KeyboardGestureAreaViewManagerImpl(mReactContext: ReactApplicationContext) {
   fun createViewInstance(reactContext: ThemedReactContext): KeyboardGestureAreaReactViewGroup {
     return KeyboardGestureAreaReactViewGroup(reactContext)

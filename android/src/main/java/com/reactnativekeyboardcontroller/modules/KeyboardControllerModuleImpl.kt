@@ -5,7 +5,12 @@ import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.UiThreadUtil
 
 class KeyboardControllerModuleImpl(private val mReactContext: ReactApplicationContext) {
-  private val mDefaultMode: Int = mReactContext.currentActivity?.window?.attributes?.softInputMode ?: WindowManager.LayoutParams.SOFT_INPUT_STATE_UNSPECIFIED
+  private val mDefaultMode: Int = mReactContext
+    .currentActivity
+    ?.window
+    ?.attributes
+    ?.softInputMode
+    ?: WindowManager.LayoutParams.SOFT_INPUT_STATE_UNSPECIFIED
 
   fun setInputMode(mode: Int) {
     setSoftInputMode(mode)

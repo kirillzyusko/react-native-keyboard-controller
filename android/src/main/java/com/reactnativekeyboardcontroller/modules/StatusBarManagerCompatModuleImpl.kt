@@ -10,8 +10,9 @@ import androidx.core.view.WindowInsetsControllerCompat
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.UiThreadUtil
 
+private val TAG = StatusBarManagerCompatModuleImpl::class.qualifiedName
+
 class StatusBarManagerCompatModuleImpl(private val mReactContext: ReactApplicationContext) {
-  private val TAG = StatusBarManagerCompatModuleImpl::class.qualifiedName
   private var controller: WindowInsetsControllerCompat? = null
 
   fun setHidden(hidden: Boolean) {
@@ -41,7 +42,7 @@ class StatusBarManagerCompatModuleImpl(private val mReactContext: ReactApplicati
         colorAnimation.addUpdateListener { animator ->
           window.statusBarColor = animator.animatedValue as Int
         }
-        colorAnimation.setDuration(300).startDelay = 0
+        colorAnimation.setDuration(DEFAULT_ANIMATION_TIME).startDelay = 0
         colorAnimation.start()
       } else {
         window.statusBarColor = color
@@ -49,6 +50,7 @@ class StatusBarManagerCompatModuleImpl(private val mReactContext: ReactApplicati
     }
   }
 
+  @Suppress("detekt:UnusedParameter")
   fun setTranslucent(translucent: Boolean) {
     // the status bar is translucent by default (once you wrapped App in Provider,
     // and EdgeToEdgeReactViewGroup has been mounted and called
@@ -73,7 +75,10 @@ class StatusBarManagerCompatModuleImpl(private val mReactContext: ReactApplicati
     if (this.controller == null) {
       val activity = mReactContext.currentActivity
       if (activity == null) {
-        Log.w(TAG, "StatusBarManagerCompatModule: can not get `WindowInsetsControllerCompat` because current activity is null.")
+        Log.w(
+          TAG,
+          "StatusBarManagerCompatModule: can not get `WindowInsetsControllerCompat` because current activity is null.",
+        )
         return this.controller
       }
 
@@ -87,5 +92,6 @@ class StatusBarManagerCompatModuleImpl(private val mReactContext: ReactApplicati
 
   companion object {
     const val NAME = "StatusBarManagerCompat"
+    private const val DEFAULT_ANIMATION_TIME = 300L
   }
 }

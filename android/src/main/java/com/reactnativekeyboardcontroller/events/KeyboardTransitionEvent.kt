@@ -14,7 +14,7 @@ class KeyboardTransitionEvent(
 ) : Event<KeyboardTransitionEvent>(viewId) {
   override fun getEventName() = event
 
-  // TODO: All events for a given view can be coalesced?
+  // All events for a given view can be coalesced?
   override fun getCoalescingKey(): Short = 0
 
   override fun dispatch(rctEventEmitter: RCTEventEmitter) {

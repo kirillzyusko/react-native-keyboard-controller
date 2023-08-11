@@ -23,6 +23,8 @@ import com.reactnativekeyboardcontroller.events.KeyboardTransitionEvent
 import com.reactnativekeyboardcontroller.extensions.dp
 import kotlin.math.abs
 
+private val TAG = KeyboardAnimationCallback::class.qualifiedName
+
 class KeyboardAnimationCallback(
   val view: ReactViewGroup,
   val persistentInsetTypes: Int,
@@ -31,7 +33,6 @@ class KeyboardAnimationCallback(
   val context: ThemedReactContext?,
   val onApplyWindowInsetsListener: OnApplyWindowInsetsListener,
 ) : WindowInsetsAnimationCompat.Callback(dispatchMode), OnApplyWindowInsetsListener {
-  private val TAG = KeyboardAnimationCallback::class.qualifiedName
   private var persistentKeyboardHeight = 0.0
   private var isKeyboardVisible = false
   private var isTransitioning = false
@@ -52,10 +53,29 @@ class KeyboardAnimationCallback(
         if (this.isKeyboardVisible && oldFocus !== null) {
           // imitate iOS behavior and send two instant start/end events containing an info about new tag
           // 1. onStart/onMove/onEnd can be still dispatched after, if keyboard change size (numeric -> alphabetic type)
-          // 2. event should be send only when keyboard is visible, since this event arrives earlier -> `tag` will be 100% included in
-          // onStart/onMove/onEnd lifecycles, but triggering onStart/onEnd several time can bring breaking changes
-          this.sendEventToJS(KeyboardTransitionEvent(view.id, "topKeyboardMoveStart", this.persistentKeyboardHeight, 1.0, 0, viewTagFocused))
-          this.sendEventToJS(KeyboardTransitionEvent(view.id, "topKeyboardMoveEnd", this.persistentKeyboardHeight, 1.0, 0, viewTagFocused))
+          // 2. event should be send only when keyboard is visible, since this event arrives earlier -> `tag` will be
+          // 100% included in onStart/onMove/onEnd lifecycles, but triggering onStart/onEnd several time
+          // can bring breaking changes
+          this.sendEventToJS(
+            KeyboardTransitionEvent(
+              view.id,
+              "topKeyboardMoveStart",
+              this.persistentKeyboardHeight,
+              1.0,
+              0,
+              viewTagFocused,
+            ),
+          )
+          this.sendEventToJS(
+            KeyboardTransitionEvent(
+              view.id,
+              "topKeyboardMoveEnd",
+              this.persistentKeyboardHeight,
+              1.0,
+              0,
+              viewTagFocused,
+            ),
+          )
           this.emitEvent("KeyboardController::keyboardWillShow", getEventParams(this.persistentKeyboardHeight))
           this.emitEvent("KeyboardController::keyboardDidShow", getEventParams(this.persistentKeyboardHeight))
         }
@@ -80,28 +100,59 @@ class KeyboardAnimationCallback(
   override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat): WindowInsetsCompat {
     // when keyboard appears values will be (false && true)
     // when keyboard disappears values will be (true && false)
-    // `!isTransitioning` check is needed to avoid calls of `onApplyWindowInsets` during keyboard animation
+    val isKeyboardShown = isKeyboardVisible && isKeyboardVisible()
+    // `isTransitioning` check is needed to avoid calls of `onApplyWindowInsets` during keyboard animation
     // having such check allows us not to dispatch unnecessary incorrect events
     // the condition will be executed only when keyboard is opened and changes its size
     // (for example it happens when user changes keyboard type from 'text' to 'emoji' input
-    if (isKeyboardVisible && isKeyboardVisible() && !isTransitioning && Build.VERSION.SDK_INT >= 30 && !InteractiveKeyboardProvider.isInteractive) {
+    //
+    // `InteractiveKeyboardProvider.isInteractive` detect case when keyboard moves
+    // because of the gesture
+    val isMoving = isTransitioning || InteractiveKeyboardProvider.isInteractive
+    if (isKeyboardShown && !isMoving && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
       val keyboardHeight = getCurrentKeyboardHeight()
-      val durationL = 250L
-      val duration = durationL.toInt()
+      val duration = DEFAULT_ANIMATION_TIME.toInt()
 
       this.emitEvent("KeyboardController::keyboardWillShow", getEventParams(keyboardHeight))
-      this.sendEventToJS(KeyboardTransitionEvent(view.id, "topKeyboardMoveStart", keyboardHeight, 1.0, duration, viewTagFocused))
+      this.sendEventToJS(
+        KeyboardTransitionEvent(
+          view.id,
+          "topKeyboardMoveStart",
+          keyboardHeight,
+          1.0,
+          duration,
+          viewTagFocused,
+        ),
+      )
 
       val animation = ValueAnimator.ofFloat(this.persistentKeyboardHeight.toFloat(), keyboardHeight.toFloat())
       animation.addUpdateListener { animator ->
         val toValue = animator.animatedValue as Float
-        this.sendEventToJS(KeyboardTransitionEvent(view.id, "topKeyboardMove", toValue.toDouble(), toValue.toDouble() / keyboardHeight, duration, viewTagFocused))
+        this.sendEventToJS(
+          KeyboardTransitionEvent(
+            view.id,
+            "topKeyboardMove",
+            toValue.toDouble(),
+            toValue.toDouble() / keyboardHeight,
+            duration,
+            viewTagFocused,
+          ),
+        )
       }
       animation.doOnEnd {
         this.emitEvent("KeyboardController::keyboardDidShow", getEventParams(keyboardHeight))
-        this.sendEventToJS(KeyboardTransitionEvent(view.id, "topKeyboardMoveEnd", keyboardHeight, 1.0, duration, viewTagFocused))
+        this.sendEventToJS(
+          KeyboardTransitionEvent(
+            view.id,
+            "topKeyboardMoveEnd",
+            keyboardHeight,
+            1.0,
+            duration,
+            viewTagFocused,
+          ),
+        )
       }
-      animation.setDuration(durationL).startDelay = 0
+      animation.setDuration(DEFAULT_ANIMATION_TIME).startDelay = 0
       animation.start()
 
       this.persistentKeyboardHeight = keyboardHeight
@@ -124,10 +175,22 @@ class KeyboardAnimationCallback(
       this.persistentKeyboardHeight = keyboardHeight
     }
 
-    this.emitEvent("KeyboardController::" + if (!isKeyboardVisible) "keyboardWillHide" else "keyboardWillShow", getEventParams(keyboardHeight))
+    this.emitEvent(
+      "KeyboardController::" + if (!isKeyboardVisible) "keyboardWillHide" else "keyboardWillShow",
+      getEventParams(keyboardHeight),
+    )
 
     Log.i(TAG, "HEIGHT:: $keyboardHeight TAG:: $viewTagFocused")
-    this.sendEventToJS(KeyboardTransitionEvent(view.id, "topKeyboardMoveStart", keyboardHeight, if (!isKeyboardVisible) 0.0 else 1.0, duration, viewTagFocused))
+    this.sendEventToJS(
+      KeyboardTransitionEvent(
+        view.id,
+        "topKeyboardMoveStart",
+        keyboardHeight,
+        if (!isKeyboardVisible) 0.0 else 1.0,
+        duration,
+        viewTagFocused,
+      ),
+    )
 
     return super.onStart(animation, bounds)
   }
@@ -155,7 +218,8 @@ class KeyboardAnimationCallback(
     try {
       progress = abs((height / persistentKeyboardHeight)).let { if (it.isNaN()) 0.0 else it }
     } catch (e: ArithmeticException) {
-      // do nothing, send progress as 0
+      // do nothing, just log an exception send progress as 0
+      Log.w(TAG, "Caught arithmetic exception during `progress` calculation: $e")
     }
     Log.i(TAG, "DiffY: $diffY $height $progress ${InteractiveKeyboardProvider.isInteractive} $viewTagFocused")
 
@@ -185,8 +249,20 @@ class KeyboardAnimationCallback(
     }
     isKeyboardVisible = isKeyboardVisible || isKeyboardShown
 
-    this.emitEvent("KeyboardController::" + if (!isKeyboardVisible) "keyboardDidHide" else "keyboardDidShow", getEventParams(keyboardHeight))
-    this.sendEventToJS(KeyboardTransitionEvent(view.id, "topKeyboardMoveEnd", keyboardHeight, if (!isKeyboardVisible) 0.0 else 1.0, duration, viewTagFocused))
+    this.emitEvent(
+      "KeyboardController::" + if (!isKeyboardVisible) "keyboardDidHide" else "keyboardDidShow",
+      getEventParams(keyboardHeight),
+    )
+    this.sendEventToJS(
+      KeyboardTransitionEvent(
+        view.id,
+        "topKeyboardMoveEnd",
+        keyboardHeight,
+        if (!isKeyboardVisible) 0.0 else 1.0,
+        duration,
+        viewTagFocused,
+      ),
+    )
 
     // reset to initial state
     duration = 0
@@ -227,5 +303,9 @@ class KeyboardAnimationCallback(
     params.putInt("target", viewTagFocused)
 
     return params
+  }
+
+  companion object {
+    private const val DEFAULT_ANIMATION_TIME = 250L
   }
 }

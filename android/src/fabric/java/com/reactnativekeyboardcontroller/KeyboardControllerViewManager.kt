@@ -11,7 +11,9 @@ import com.facebook.react.views.view.ReactViewManager
 import com.reactnativekeyboardcontroller.managers.KeyboardControllerViewManagerImpl
 import com.reactnativekeyboardcontroller.views.EdgeToEdgeReactViewGroup
 
-class KeyboardControllerViewManager(mReactContext: ReactApplicationContext) : ReactViewManager(), KeyboardControllerViewManagerInterface<ReactViewGroup> {
+class KeyboardControllerViewManager(mReactContext: ReactApplicationContext) :
+  ReactViewManager(),
+  KeyboardControllerViewManagerInterface<ReactViewGroup> {
   private val manager = KeyboardControllerViewManagerImpl(mReactContext)
   private val mDelegate = KeyboardControllerViewManagerDelegate(this)
 

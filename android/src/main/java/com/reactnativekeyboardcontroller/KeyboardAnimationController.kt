@@ -14,6 +14,7 @@ import androidx.dynamicanimation.animation.springAnimationOf
 import androidx.dynamicanimation.animation.withSpringForceProperties
 import kotlin.math.roundToInt
 
+@Suppress("detekt:TooManyFunctions")
 internal class KeyboardAnimationController {
   private var insetsAnimationController: WindowInsetsAnimationControllerCompat? = null
   private var pendingRequestCancellationSignal: CancellationSignal? = null
@@ -354,6 +355,7 @@ internal class KeyboardAnimationController {
     visible: Boolean,
     velocityY: Float? = null,
   ) {
+    @Suppress("detekt:UseCheckOrError")
     val controller = insetsAnimationController
       ?: throw IllegalStateException("Controller should not be null")
 
