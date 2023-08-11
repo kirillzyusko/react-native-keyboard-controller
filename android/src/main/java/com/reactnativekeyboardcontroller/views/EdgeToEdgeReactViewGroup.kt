@@ -62,6 +62,7 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
     }
   }
 
+  // region View lifecycles
   override fun onAttachedToWindow() {
     super.onAttachedToWindow()
 
@@ -94,9 +95,19 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
         val content = this.getContentView()
         content?.setPadding(
           0,
-          if (this.isStatusBarTranslucent) 0 else insets?.getInsets(WindowInsetsCompat.Type.systemBars())?.top ?: 0,
+          if (this.isStatusBarTranslucent) {
+            0
+          } else {
+            insets?.getInsets(WindowInsetsCompat.Type.systemBars())?.top
+              ?: 0
+          },
           0,
-          if (this.isNavigationBarTranslucent) 0 else insets?.getInsets(WindowInsetsCompat.Type.navigationBars())?.bottom ?: 0,
+          if (this.isNavigationBarTranslucent) {
+            0
+          } else {
+            insets?.getInsets(WindowInsetsCompat.Type.navigationBars())?.bottom
+              ?: 0
+          },
         )
 
         insets
@@ -115,7 +126,9 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
 
     eventView.removeSelf()
   }
+  // endregion
 
+  // region Props setters
   fun setStatusBarTranslucent(isStatusBarTranslucent: Boolean) {
     this.isStatusBarTranslucent = isStatusBarTranslucent
   }
@@ -123,6 +136,7 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
   fun setNavigationBarTranslucent(isNavigationBarTranslucent: Boolean) {
     this.isNavigationBarTranslucent = isNavigationBarTranslucent
   }
+  // endregion
 
   private fun getContentView(): FitWindowsLinearLayout? {
     return reactContext.currentActivity?.window?.decorView?.rootView?.findViewById(
