@@ -1,5 +1,9 @@
-import '@dotlottie/player-component';
 import React from 'react';
+import ExecutionEnvironment from '@docusaurus/ExecutionEnvironment';
+
+if (ExecutionEnvironment.canUseDOM) {
+  require('@dotlottie/player-component');
+}
 
 type Props = {
   src: string;
