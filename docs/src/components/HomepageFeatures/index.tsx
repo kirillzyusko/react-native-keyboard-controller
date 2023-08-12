@@ -1,22 +1,20 @@
 import React from 'react';
-import Lottie from 'lottie-react';
-import interactive from './interactive.json';
-import transform from './transform.json';
-import crossPlatform from './cross-platform.json';
-
 import clsx from 'clsx';
+
+import Lottie from '../Lottie';
+
 import styles from './styles.module.css';
 
 type FeatureItem = {
   title: string;
-  lottie: Record<string, unknown>;
+  lottie: string;
   description: JSX.Element;
 };
 
 const FeatureList: FeatureItem[] = [
   {
     title: 'Track each keyboard frame',
-    lottie: transform,
+    lottie: 'img/transform.lottie',
     description: (
       <>
         Take an advantage of mapping keyboard movement to animated values and
@@ -26,7 +24,7 @@ const FeatureList: FeatureItem[] = [
   },
   {
     title: 'Cross platform',
-    lottie: crossPlatform,
+    lottie: 'img/cross-platform.lottie',
     description: (
       <>
         Library uses all power of each platform capabilities and provides
@@ -36,7 +34,7 @@ const FeatureList: FeatureItem[] = [
   },
   {
     title: 'Interactive keyboard',
-    lottie: interactive,
+    lottie: 'img/interactive.lottie',
     description: <>Dismiss your keyboard interactively without a hassle</>,
   },
 ];
@@ -50,7 +48,7 @@ function Feature({ title, lottie, description }: FeatureItem) {
   return (
     <div className={clsx('col col--4')}>
       <div className="text--center">
-        <Lottie animationData={lottie} style={lottieStyle} loop />
+        <Lottie src={lottie} style={lottieStyle} />
       </div>
       <div className="text--center padding-horiz--md">
         <h3>{title}</h3>

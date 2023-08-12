@@ -10,11 +10,10 @@ Many flagship applications that are written natively (such as `Telegram`, `Insta
 
 Unfortunately, in `react-native` this aspect was given little attention and all `react-native` applications were suffering because of that - animations were rough, you couldn't write cross-platform code because some keyboard events were not available, etc. But with the advent of this library, everything changes... 😎
 
-import Lottie from 'lottie-react';
-import lottie from '../../src/components/HomepageFeatures/transform.json';
+import Lottie from '../../src/components/Lottie';
 
 <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 20 }}>
-<Lottie animationData={lottie} style={{ width: 400, height: 400 }} loop />
+<Lottie src="img/transform.lottie" style={{ width: 400, height: 400 }} />
 </div>
 
 <!--truncate-->
