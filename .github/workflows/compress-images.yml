@@ -1,4 +1,4 @@
-name: 📦 Compress Images
+name: 📦 Compress Docs
 on:
   pull_request:
     # Run Image Actions when JPG, JPEG, PNG or WebP files are added or changed.
