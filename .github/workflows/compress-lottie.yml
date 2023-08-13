@@ -3,7 +3,7 @@ on:
   pull_request:
     paths:
       - '.github/workflows/compress-lottie.yml'
-      - 'docs/**/**.lottie.json'
+      - 'docs/**'
 
 jobs:
   compress-lottie:
