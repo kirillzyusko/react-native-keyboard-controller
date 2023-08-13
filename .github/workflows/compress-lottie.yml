@@ -1,0 +1,20 @@
+name: 📦 Compress Docs
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/compress-lottie.yml'
+      - '**.lottie.json'
+
+jobs:
+  compress-lottie:
+    name: 🎞 Compress images
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Compress Lottie
+      - run: find . -name '*.lottie.json' -exec npx lottie-optim -p 1 -o {} {} \;
+
+      - name: Verify that the lottie hasn't been changed
+        run: git diff --exit-code HEAD
