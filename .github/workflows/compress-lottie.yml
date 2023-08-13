@@ -7,8 +7,8 @@ on:
 
 jobs:
   compress-lottie:
-    name: 🎞 Compress images
+    name: 🎞 Compress lottie
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
