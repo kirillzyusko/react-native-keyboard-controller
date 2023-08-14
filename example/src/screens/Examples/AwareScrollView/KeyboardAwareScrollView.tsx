@@ -27,6 +27,7 @@ const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
   const fakeViewHeight = useSharedValue(0);
   const keyboardHeight = useSharedValue(0);
   const tag = useSharedValue(-1);
+  const interpolateFrom = useSharedValue(0);
 
   const { height } = useWindowDimensions();
 
@@ -47,9 +48,7 @@ const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
   /**
    * Function that will scroll a ScrollView as keyboard gets moving
    */
-  const maybeScroll = useWorkletCallback((e: number) => {
-    'worklet';
-
+  const maybeScroll = useWorkletCallback((e: number, animated = false) => {
     fakeViewHeight.value = e;
 
     const visibleRect = height - keyboardHeight.value;
@@ -58,13 +57,14 @@ const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
     if (visibleRect - point <= BOTTOM_OFFSET) {
       const interpolatedScrollTo = interpolate(
         e,
-        [0, keyboardHeight.value],
+        [interpolateFrom.value, keyboardHeight.value],
         [0, keyboardHeight.value - (height - point) + BOTTOM_OFFSET]
       );
       const targetScrollY =
         Math.max(interpolatedScrollTo, 0) + scrollPosition.value;
 
-      scrollTo(scrollViewAnimatedRef, 0, targetScrollY, false);
+      console.log({ targetScrollY, interpolatedScrollTo });
+      scrollTo(scrollViewAnimatedRef, 0, targetScrollY, animated);
     }
   }, []);
 
@@ -73,17 +73,31 @@ const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
       onStart: (e) => {
         'worklet';
 
+        console.log(
+          'onStart',
+          new Date().getTime(),
+          e.target,
+          e.height,
+          keyboardHeight.value
+        );
+
+        const keyboardWillChangeSize =
+          keyboardHeight.value !== e.height && e.height > 0;
+        const keyboardWillAppear = e.height > 0 && keyboardHeight.value === 0;
+        if (keyboardWillChangeSize) {
+          interpolateFrom.value = keyboardHeight.value;
+        }
+
         // keyboard will appear
-        if (e.height > 0 && keyboardHeight.value === 0) {
+        if (keyboardWillAppear || keyboardWillChangeSize) {
           // persist scroll value
           scrollPosition.value = position.value;
+          // just persist height - later will be used in interpolation
+          keyboardHeight.value = e.height;
         }
 
         // focus was changed
-        if (
-          tag.value !== e.target ||
-          (keyboardHeight.value !== e.height && e.height > 0)
-        ) {
+        if (tag.value !== e.target || keyboardWillChangeSize) {
           tag.value = e.target;
 
           if (tag.value !== -1) {
@@ -92,22 +106,27 @@ const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
             console.log('UPDATED LAYOUT::', layout.value);
           }
         }
-
-        // keyboard will appear or change its size
-        if (e.height > 0) {
-          // just persist height - later will be used in interpolation
-          keyboardHeight.value = e.height;
-        }
       },
       onMove: (e) => {
         'worklet';
+
+        console.log('onMove', new Date().getTime(), e.target, e.height);
 
         maybeScroll(e.height);
       },
       onEnd: (e) => {
         'worklet';
 
+        console.log('onEnd', new Date().getTime(), e.target, e.height);
+
         keyboardHeight.value = e.height;
+        scrollPosition.value = position.value;
+
+        if (e.target !== -1 && e.height !== 0) {
+          // just be sure, that view is no overlapped (i.e. focus changed)
+          layout.value = measureByTag(e.target);
+          maybeScroll(e.height, true);
+        }
       },
     },
     [height]
