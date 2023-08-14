@@ -20,7 +20,7 @@ const ExampleLink: FC<Props> = (props) => {
         <Text style={styles.text}>
           {index}. {title}
         </Text>
-        <Text>{icons}</Text>
+        <Text style={styles.text}>{icons}</Text>
       </View>
     </TouchableOpacity>
   );
