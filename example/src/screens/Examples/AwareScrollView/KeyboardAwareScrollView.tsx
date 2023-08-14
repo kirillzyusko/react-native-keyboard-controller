@@ -16,6 +16,9 @@ import { useSmoothKeyboardHandler } from './useSmoothKeyboardHandler';
 
 const BOTTOM_OFFSET = 50;
 
+/**
+ * 
+ */
 const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
   children,
   ...rest
@@ -28,6 +31,7 @@ const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
   const keyboardHeight = useSharedValue(0);
   const tag = useSharedValue(-1);
   const interpolateFrom = useSharedValue(0);
+  const currentScroll = useSharedValue(0);
 
   const { height } = useWindowDimensions();
 
@@ -62,7 +66,7 @@ const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
       );
       const targetScrollY =
         Math.max(interpolatedScrollTo, 0) + scrollPosition.value;
-
+      console.log(interpolateFrom.value);
       console.log({ targetScrollY, interpolatedScrollTo });
       scrollTo(scrollViewAnimatedRef, 0, targetScrollY, animated);
     }
@@ -84,11 +88,16 @@ const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
         const keyboardWillChangeSize =
           keyboardHeight.value !== e.height && e.height > 0;
         const keyboardWillAppear = e.height > 0 && keyboardHeight.value === 0;
+        const keyboardWillHide = e.height === 0;
         if (keyboardWillChangeSize) {
           interpolateFrom.value = keyboardHeight.value;
         }
 
-        // keyboard will appear
+        if (keyboardWillHide) {
+          interpolateFrom.value = 0;
+          scrollPosition.value = currentScroll.value;
+        }
+
         if (keyboardWillAppear || keyboardWillChangeSize) {
           // persist scroll value
           scrollPosition.value = position.value;
@@ -103,6 +112,9 @@ const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
           if (tag.value !== -1) {
             // save position of focused text input when keyboard starts to move
             layout.value = measureByTag(e.target);
+            // save current scroll position - when keyboard will hide we'll reuse
+            // this value to achieve smooth hide effect
+            currentScroll.value = position.value;
             console.log('UPDATED LAYOUT::', layout.value);
           }
         }
@@ -123,9 +135,11 @@ const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
         scrollPosition.value = position.value;
 
         if (e.target !== -1 && e.height !== 0) {
+          const prevLayout = layout.value;
           // just be sure, that view is no overlapped (i.e. focus changed)
           layout.value = measureByTag(e.target);
           maybeScroll(e.height, true);
+          layout.value = prevLayout;
         }
       },
     },
