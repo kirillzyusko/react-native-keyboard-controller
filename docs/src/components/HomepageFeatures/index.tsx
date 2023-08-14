@@ -1,8 +1,8 @@
 import React from 'react';
 import Lottie from 'lottie-react';
-import interactive from './interactive.json';
-import transform from './transform.json';
-import crossPlatform from './cross-platform.json';
+import interactive from './interactive.lottie.json';
+import transform from './transform.lottie.json';
+import crossPlatform from './cross-platform.lottie.json';
 
 import clsx from 'clsx';
 import styles from './styles.module.css';
