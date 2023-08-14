@@ -3,7 +3,7 @@ import Lottie from 'lottie-react';
 import interactive from './interactive.lottie.json';
 import transform from './transform.lottie.json';
 import crossPlatform from './cross-platform.lottie.json';
-import textInputs from './text-inputs.json';
+import textInputs from './text-inputs.lottie.json';
 
 import clsx from 'clsx';
 import styles from './styles.module.css';
