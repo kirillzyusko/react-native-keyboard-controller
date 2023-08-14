@@ -146,6 +146,7 @@ export const KeyboardProvider = ({
         onKeyboardMoveInteractive={onKeyboardMove}
         navigationBarTranslucent={navigationBarTranslucent}
         statusBarTranslucent={statusBarTranslucent}
+        // @ts-expect-error https://github.com/software-mansion/react-native-reanimated/pull/4923
         style={styles.container}
       >
         {children}
