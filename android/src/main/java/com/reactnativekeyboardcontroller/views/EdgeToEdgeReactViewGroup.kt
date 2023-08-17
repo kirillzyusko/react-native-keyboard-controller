@@ -51,13 +51,26 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
           reactContext.currentActivity?.window?.decorView?.rootView?.findViewById<FitWindowsLinearLayout>(
             androidx.appcompat.R.id.action_bar_root,
           )
-        val params = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT)
+        val params = FrameLayout.LayoutParams(
+          FrameLayout.LayoutParams.MATCH_PARENT,
+          FrameLayout.LayoutParams.MATCH_PARENT,
+        )
 
         params.setMargins(
           0,
-          if (this.isStatusBarTranslucent) 0 else insets?.getInsets(WindowInsetsCompat.Type.systemBars())?.top ?: 0,
+          if (this.isStatusBarTranslucent) {
+            0
+          } else {
+            insets?.getInsets(WindowInsetsCompat.Type.systemBars())?.top
+              ?: 0
+          },
           0,
-          if (this.isNavigationBarTranslucent) 0 else insets?.getInsets(WindowInsetsCompat.Type.navigationBars())?.bottom ?: 0,
+          if (this.isNavigationBarTranslucent) {
+            0
+          } else {
+            insets?.getInsets(WindowInsetsCompat.Type.navigationBars())?.bottom
+              ?: 0
+          },
         )
 
         content?.layoutParams = params
