@@ -6,7 +6,10 @@ import android.os.Looper
 import android.util.Log
 import android.widget.FrameLayout
 import androidx.appcompat.widget.FitWindowsLinearLayout
-import androidx.core.view.*
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsAnimationCompat
+import androidx.core.view.WindowInsetsCompat
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.views.view.ReactViewGroup
 import com.reactnativekeyboardcontroller.KeyboardAnimationCallback
@@ -48,24 +51,13 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
           reactContext.currentActivity?.window?.decorView?.rootView?.findViewById<FitWindowsLinearLayout>(
             androidx.appcompat.R.id.action_bar_root,
           )
-        println(
-          "12121212 ${insets?.getInsets(WindowInsetsCompat.Type.systemBars())?.top}, ${
-            insets?.getInsets(
-              WindowInsetsCompat.Type.navigationBars()
-            )?.bottom
-          }"
-        )
-        val params = FrameLayout.LayoutParams(
-          FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT
-        )
+        val params = FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT)
 
         params.setMargins(
           0,
-          if (this.isStatusBarTranslucent) 0 else insets?.getInsets(WindowInsetsCompat.Type.systemBars())?.top
-            ?: 0,
+          if (this.isStatusBarTranslucent) 0 else insets?.getInsets(WindowInsetsCompat.Type.systemBars())?.top ?: 0,
           0,
-          if (this.isNavigationBarTranslucent) 0 else insets?.getInsets(WindowInsetsCompat.Type.navigationBars())?.bottom
-            ?: 0
+          if (this.isNavigationBarTranslucent) 0 else insets?.getInsets(WindowInsetsCompat.Type.navigationBars())?.bottom ?: 0,
         )
 
         content?.layoutParams = params
