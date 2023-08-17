@@ -14,6 +14,7 @@ import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.views.view.ReactViewGroup
 import com.reactnativekeyboardcontroller.KeyboardAnimationCallback
 import com.reactnativekeyboardcontroller.extensions.requestApplyInsetsWhenAttached
+import com.reactnativekeyboardcontroller.extensions.rootView
 
 private val TAG = EdgeToEdgeReactViewGroup::class.qualifiedName
 
@@ -44,11 +45,11 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
   }
 
   private fun setupWindowInsets() {
-    val v = reactContext.currentActivity?.window?.decorView?.rootView
-    if (v != null) {
-      ViewCompat.setOnApplyWindowInsetsListener(v) { v, insets ->
+    val rootView = reactContext.rootView
+    if (rootView != null) {
+      ViewCompat.setOnApplyWindowInsetsListener(rootView) { v, insets ->
         val content =
-          reactContext.currentActivity?.window?.decorView?.rootView?.findViewById<FitWindowsLinearLayout>(
+          reactContext.rootView?.findViewById<FitWindowsLinearLayout>(
             androidx.appcompat.R.id.action_bar_root,
           )
         val params = FrameLayout.LayoutParams(
