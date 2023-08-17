@@ -34,4 +34,9 @@ export const examples: Example[] = [
     info: ScreenNames.INTERACTIVE_KEYBOARD_IOS,
     icons: '👆📱',
   },
+  {
+    title: 'Native stack',
+    info: ScreenNames.NATIVE_STACK,
+    icons: '⚛️',
+  },
 ];
