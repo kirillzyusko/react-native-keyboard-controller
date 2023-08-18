@@ -31,7 +31,6 @@ class KeyboardAnimationCallback(
   val deferredInsetTypes: Int,
   dispatchMode: Int = DISPATCH_MODE_STOP,
   val context: ThemedReactContext?,
-  val onApplyWindowInsetsListener: OnApplyWindowInsetsListener,
 ) : WindowInsetsAnimationCompat.Callback(dispatchMode), OnApplyWindowInsetsListener {
   private var persistentKeyboardHeight = 0.0
   private var isKeyboardVisible = false
@@ -158,7 +157,7 @@ class KeyboardAnimationCallback(
       this.persistentKeyboardHeight = keyboardHeight
     }
 
-    return onApplyWindowInsetsListener.onApplyWindowInsets(v, insets)
+    return insets
   }
 
   override fun onStart(
