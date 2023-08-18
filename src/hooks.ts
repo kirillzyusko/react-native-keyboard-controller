@@ -1,7 +1,8 @@
 import { DependencyList, useContext, useEffect } from 'react';
 
 import { AnimatedContext, KeyboardContext, ReanimatedContext } from './context';
-import { AndroidSoftInputModes, KeyboardController } from './native';
+import { KeyboardController } from './native';
+import { AndroidSoftInputModes } from './constants';
 import { uuid } from './utils';
 
 import type { KeyboardHandler } from './types';
