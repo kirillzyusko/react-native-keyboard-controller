@@ -4,13 +4,12 @@ import * as NativeAndroidManager from 'react-native/Libraries/Components/StatusB
 
 const getConstants = NativeAndroidManager.default.getConstants;
 
-const RCTStatusBarManagerCompat =
-  require('./specs/NativeStatusBarManagerCompat').default;
-
 // On Android < 11 RN uses legacy API which breaks EdgeToEdge mode in RN, so
 // in order to use library on all available platforms we have to monkey patch
 // default RN implementation and use modern `WindowInsetsControllerCompat`.
 if (Platform.OS === 'android') {
+  const RCTStatusBarManagerCompat =
+    require('./specs/NativeStatusBarManagerCompat').default;
   NativeAndroidManager.default = {
     getConstants,
     setColor(color: number, animated: boolean): void {
