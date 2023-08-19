@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Animated, Platform, StyleSheet, ViewStyle } from 'react-native';
 import Reanimated, { useSharedValue } from 'react-native-reanimated';
 
@@ -61,6 +61,7 @@ export const KeyboardProvider = ({
   statusBarTranslucent,
   navigationBarTranslucent,
 }: KeyboardProviderProps) => {
+  const [enabled, setEnabled] = useState(true);
   // animated values
   const progress = useAnimatedValue(0);
   const height = useAnimatedValue(0);
@@ -69,13 +70,15 @@ export const KeyboardProvider = ({
   const heightSV = useSharedValue(0);
   const { setHandlers, broadcast } = useSharedHandlers<KeyboardHandler>();
   // memo
-  const context = useMemo(
+  const context = useMemo<KeyboardAnimationContext>(
     () => ({
+      enabled,
       animated: { progress: progress, height: Animated.multiply(height, -1) },
       reanimated: { progress: progressSV, height: heightSV },
       setHandlers,
+      setEnabled,
     }),
-    []
+    [enabled]
   );
   const style = useMemo(
     () => [
@@ -140,6 +143,7 @@ export const KeyboardProvider = ({
   return (
     <KeyboardContext.Provider value={context}>
       <KeyboardControllerViewAnimated
+        enabled={enabled}
         onKeyboardMoveReanimated={handler}
         onKeyboardMoveStart={Platform.OS === 'ios' ? onKeyboardMove : undefined}
         onKeyboardMove={Platform.OS === 'android' ? onKeyboardMove : undefined}

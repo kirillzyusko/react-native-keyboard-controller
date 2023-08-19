@@ -59,3 +59,9 @@ export function useKeyboardHandler(
   useResizeMode();
   useGenericKeyboardHandler(handler, deps);
 }
+
+export function useKeyboardController() {
+  const context = useContext(KeyboardContext);
+
+  return { setEnabled: context.setEnabled, enabled: context.enabled };
+}
