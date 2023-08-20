@@ -7,7 +7,7 @@ export default function EnabledDisabled() {
   const { enabled, setEnabled } = useKeyboardController();
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, paddingTop: 50 }}>
       <Button
         title={enabled ? 'Enabled' : 'Disabled'}
         onPress={() => setEnabled(!enabled)}

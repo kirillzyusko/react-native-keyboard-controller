@@ -4,8 +4,10 @@ import android.annotation.SuppressLint
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.WindowInsets
 import android.widget.FrameLayout
 import androidx.appcompat.widget.FitWindowsLinearLayout
+import androidx.core.graphics.Insets
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsAnimationCompat
@@ -19,6 +21,10 @@ import com.reactnativekeyboardcontroller.extensions.rootView
 
 private val TAG = EdgeToEdgeReactViewGroup::class.qualifiedName
 
+// TODO: revert monkey patch when setEnabled(false)
+// TODO: fabric
+// TODO: check how iOS works
+
 @SuppressLint("ViewConstructor")
 class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : ReactViewGroup(reactContext) {
   private var isStatusBarTranslucent = false
@@ -29,64 +35,85 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
     val rootView = reactContext.rootView
     if (rootView != null) {
       ViewCompat.setOnApplyWindowInsetsListener(rootView) { v, insets ->
-        val content = getContentView()
-        val params = FrameLayout.LayoutParams(
-          FrameLayout.LayoutParams.MATCH_PARENT,
-          FrameLayout.LayoutParams.MATCH_PARENT,
-        )
+        // if (active) {
+          val content =
+            reactContext.rootView?.findViewById<FitWindowsLinearLayout>(
+              androidx.appcompat.R.id.action_bar_root,
+            )
+          val params = FrameLayout.LayoutParams(
+            FrameLayout.LayoutParams.MATCH_PARENT,
+            FrameLayout.LayoutParams.MATCH_PARENT,
+          )
+        val statusBarTranslucent = if (this.isStatusBarTranslucent) {
+          0
+        } else {
+          (insets?.getInsets(WindowInsetsCompat.Type.systemBars())?.top
+            ?: 0)
+        }
 
-        params.setMargins(
+          params.setMargins(
+            0,
+            if (this.isStatusBarTranslucent) {
+              0
+            } else {
+              (insets?.getInsets(WindowInsetsCompat.Type.systemBars())?.top
+                ?: 0)
+            },
+            0,
+            if (!active || this.isNavigationBarTranslucent) {
+              0
+            } else {
+              insets?.getInsets(WindowInsetsCompat.Type.navigationBars())?.bottom
+                ?: 0
+            },
+          )
+
+          println("${params.topMargin} ${params.bottomMargin}")
+
+          content?.layoutParams = params
+        // }
+        val defaultInsets = ViewCompat.onApplyWindowInsets(v, insets)
+        val windowInsets =
+          defaultInsets.getInsets(WindowInsetsCompat.Type.statusBars())
+val inset = insets?.getInsets(WindowInsetsCompat.Type.systemBars())
+        /*WindowInsetsCompat
+          .Builder()
+          .setInsets(
+            WindowInsetsCompat.Type.statusBars(),
+            Insets.of(
+              windowInsets.left,
+              0,
+              windowInsets.right,
+              windowInsets.bottom,
+            )
+          )
+          .build()*/
+        // insets.replaceSystemWindowInsets(windowInsets.left, windowInsets.top, windowInsets.right, windowInsets.bottom)
+        /*val inset1 = defaultInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+        WindowInsetsCompat
+          .Builder()
+          .setInsets(
+            WindowInsetsCompat.Type.statusBars(),
+            Insets.of(
+              inset1.left,
+              0,
+              inset1.right,
+              inset1.bottom,
+            )
+          )
+          .build()*/
+
+        defaultInsets.replaceSystemWindowInsets(
+          defaultInsets.systemWindowInsetLeft,
           0,
-          if (this.isStatusBarTranslucent) {
-            0
-          } else {
-            insets?.getInsets(WindowInsetsCompat.Type.systemBars())?.top
-              ?: 0
-          },
-          0,
-          if (this.isNavigationBarTranslucent) {
-            0
-          } else {
-            insets?.getInsets(WindowInsetsCompat.Type.navigationBars())?.bottom
-              ?: 0
-          },
+          defaultInsets.systemWindowInsetRight,
+          defaultInsets.systemWindowInsetBottom
         )
-
-        content?.layoutParams = params
-
-        insets
       }
     }
   }
 
-  private fun bringBackWindowInsets() {
-    val rootView = reactContext.rootView
-    if (rootView != null) {
-      ViewCompat.setOnApplyWindowInsetsListener(rootView, null)
-      ViewCompat.setWindowInsetsAnimationCallback(this, null)
-      ViewCompat.setOnApplyWindowInsetsListener(this, null)
-      val content = reactContext.rootView?.findViewById<FitWindowsLinearLayout>(
-        androidx.appcompat.R.id.action_bar_root,
-      )
-
-      val params = FrameLayout.LayoutParams(
-        FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT
-      )
-      params.setMargins(0, 0, 0, 0)
-      content?.layoutParams = params
-    }
-  }
-
-  private fun enable() {
-    // Handler(Looper.getMainLooper()).post(this::setupWindowInsets)
-    this.setupWindowInsets()
-    reactContext.currentActivity?.let {
-      WindowCompat.setDecorFitsSystemWindows(
-        it.window,
-        false,
-      )
-    }
-
+  private fun setupKeyboardCallbacks() {
     val activity = reactContext.currentActivity
 
     if (activity != null) {
@@ -107,15 +134,49 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
     }
   }
 
+  private fun bringBackWindowInsets() {
+    val rootView = reactContext.rootView
+    if (rootView != null) {
+      // ViewCompat.setOnApplyWindowInsetsListener(rootView, null)
+      val content = reactContext.rootView?.findViewById<FitWindowsLinearLayout>(
+        androidx.appcompat.R.id.action_bar_root,
+      )
+
+      val params = FrameLayout.LayoutParams(
+        FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT
+      )
+      params.setMargins(0, 0, 0, 0)
+      content?.layoutParams = params
+    }
+  }
+
+  private fun removeKeyboardCallbacks() {
+    ViewCompat.setWindowInsetsAnimationCallback(this, null)
+    ViewCompat.setOnApplyWindowInsetsListener(this, null)
+  }
+
+  private fun enable() {
+    // Handler(Looper.getMainLooper()).post(this::setupWindowInsets)
+    reactContext.currentActivity?.let {
+      WindowCompat.setDecorFitsSystemWindows(
+        it.window,
+        false,
+      )
+    }
+    this.setupWindowInsets()
+    this.setupKeyboardCallbacks()
+  }
+
   private fun disable() {
-    this.bringBackWindowInsets()
     // Handler(Looper.getMainLooper()).post(this::bringBackWindowInsets)
     reactContext.currentActivity?.let {
       WindowCompat.setDecorFitsSystemWindows(
         it.window,
-        true, // TODO: statusBarTranslucentDependent?
+        true,
       )
     }
+    // this.bringBackWindowInsets()
+    this.removeKeyboardCallbacks()
   }
 
   fun setStatusBarTranslucent(isStatusBarTranslucent: Boolean) {
