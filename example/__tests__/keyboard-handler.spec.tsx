@@ -64,21 +64,21 @@ describe('keyboard handler specification', () => {
 
     expect(getByTestId('view')).toHaveStyle({ transform: [{ translateY: 0 }] });
 
-    onStart({ height: 100, progress: 1, duration: 250 });
+    onStart({ height: 100, progress: 1, duration: 250, target: 123 });
     jest.advanceTimersByTime(100);
 
     expect(getByTestId('view')).toHaveAnimatedStyle({
       transform: [{ translateY: 100 }],
     });
 
-    onMove({ height: 20, progress: 0.2, duration: 250 });
+    onMove({ height: 20, progress: 0.2, duration: 250, target: 123 });
     jest.advanceTimersByTime(100);
 
     expect(getByTestId('view')).toHaveAnimatedStyle({
       transform: [{ translateY: 20 }],
     });
 
-    onEnd({ height: 100, progress: 1, duration: 250 });
+    onEnd({ height: 100, progress: 1, duration: 250, target: 123 });
     jest.advanceTimersByTime(100);
 
     expect(getByTestId('view')).toHaveAnimatedStyle({
