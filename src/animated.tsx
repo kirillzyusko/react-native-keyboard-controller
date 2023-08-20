@@ -4,7 +4,7 @@ import Reanimated, { useSharedValue } from 'react-native-reanimated';
 
 import { KeyboardContext } from './context';
 import { useSharedHandlers, useAnimatedValue } from './internal';
-import { KeyboardControllerView } from './native';
+import { KeyboardControllerView } from './bindings';
 import { useAnimatedKeyboardHandler } from './reanimated';
 
 import type {

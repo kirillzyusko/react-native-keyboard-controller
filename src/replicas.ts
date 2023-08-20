@@ -10,7 +10,7 @@ import {
 } from 'react-native-reanimated';
 import { useReanimatedKeyboardAnimation } from './hooks';
 
-import { KeyboardController } from './native';
+import { KeyboardController } from './bindings';
 import { AndroidSoftInputModes } from './constants';
 
 const availableOSEventType = Platform.OS === 'ios' ? 'Will' : 'Did';
