@@ -1,22 +1,15 @@
 import { useEvent, useHandler } from 'react-native-reanimated';
 
-import type { EventWithName, NativeEvent } from './types';
+import type { EventWithName, KeyboardHandlerHook, NativeEvent } from './types';
 
-export function useAnimatedKeyboardHandler<
-  TContext extends Record<string, unknown>
->(
-  handlers: {
-    onKeyboardMoveStart?: (e: NativeEvent, context: TContext) => void;
-    onKeyboardMove?: (e: NativeEvent, context: TContext) => void;
-    onKeyboardMoveEnd?: (e: NativeEvent, context: TContext) => void;
-    onKeyboardMoveInteractive?: (e: NativeEvent, context: TContext) => void;
-  },
-  dependencies?: ReadonlyArray<unknown>
-) {
+export const useAnimatedKeyboardHandler: KeyboardHandlerHook<
+  Record<string, unknown>,
+  EventWithName<NativeEvent>
+> = (handlers, dependencies) => {
   const { context, doDependenciesDiffer } = useHandler(handlers, dependencies);
 
   return useEvent(
-    (event: EventWithName<NativeEvent>) => {
+    (event) => {
       'worklet';
       const {
         onKeyboardMoveStart,
@@ -55,4 +48,4 @@ export function useAnimatedKeyboardHandler<
     ],
     doDependenciesDiffer
   );
-}
+};
