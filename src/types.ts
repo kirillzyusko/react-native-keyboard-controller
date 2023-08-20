@@ -1,4 +1,8 @@
-import type { NativeSyntheticEvent, ViewProps } from 'react-native';
+import type {
+  EmitterSubscription,
+  NativeSyntheticEvent,
+  ViewProps,
+} from 'react-native';
 
 // DirectEventHandler events declaration
 
@@ -72,7 +76,12 @@ export type KeyboardEventData = {
   timestamp: number;
   target: number;
 };
-
+export type KeyboardEventsModule = {
+  addListener: (
+    name: KeyboardControllerEvents,
+    cb: (e: KeyboardEventData) => void
+  ) => EmitterSubscription;
+};
 // package types
 
 export type Handlers<T> = Record<string, T | undefined>;
