@@ -1,6 +1,10 @@
-import { DependencyList, useContext, useEffect } from 'react';
+import { DependencyList, useEffect } from 'react';
 
-import { AnimatedContext, KeyboardContext, ReanimatedContext } from './context';
+import {
+  AnimatedContext,
+  ReanimatedContext,
+  useKeyboardContext,
+} from './context';
 import { KeyboardController } from './bindings';
 import { AndroidSoftInputModes } from './constants';
 import { uuid } from './utils';
@@ -19,14 +23,14 @@ export const useResizeMode = () => {
 
 export const useKeyboardAnimation = (): AnimatedContext => {
   useResizeMode();
-  const context = useContext(KeyboardContext);
+  const context = useKeyboardContext();
 
   return context.animated;
 };
 
 export const useReanimatedKeyboardAnimation = (): ReanimatedContext => {
   useResizeMode();
-  const context = useContext(KeyboardContext);
+  const context = useKeyboardContext();
 
   return context.reanimated;
 };
@@ -35,7 +39,7 @@ export function useGenericKeyboardHandler(
   handler: KeyboardHandler,
   deps?: DependencyList
 ) {
-  const context = useContext(KeyboardContext);
+  const context = useKeyboardContext();
 
   useEffect(() => {
     const key = uuid();

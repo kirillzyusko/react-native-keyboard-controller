@@ -1,4 +1,4 @@
-import { createContext } from 'react';
+import { createContext, useContext } from 'react';
 import { Animated } from 'react-native';
 
 import type { SharedValue } from 'react-native-reanimated';
@@ -29,3 +29,14 @@ const defaultContext: KeyboardAnimationContext = {
   setHandlers: () => {},
 };
 export const KeyboardContext = createContext(defaultContext);
+export const useKeyboardContext = () => {
+  const context = useContext(KeyboardContext);
+
+  if (context === defaultContext) {
+    console.warn(
+      "Couldn't find real values for `KeyboardContext`. Are you inside a `KeyboardProvider`?"
+    );
+  }
+
+  return context;
+};
