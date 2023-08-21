@@ -32,9 +32,9 @@ export const KeyboardContext = createContext(defaultContext);
 export const useKeyboardContext = () => {
   const context = useContext(KeyboardContext);
 
-  if (context === defaultContext) {
+  if (__DEV__ && context === defaultContext) {
     console.warn(
-      "Couldn't find real values for `KeyboardContext`. Are you inside a `KeyboardProvider`?"
+      "Couldn't find real values for `KeyboardContext`. Please make sure you're inside of `KeyboardProvider` - otherwise functionality of `react-native-keyboard-controller` will not work."
     );
   }
 
