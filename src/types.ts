@@ -1,7 +1,10 @@
-import type { NativeSyntheticEvent, ViewProps } from 'react-native';
+import type {
+  EmitterSubscription,
+  NativeSyntheticEvent,
+  ViewProps,
+} from 'react-native';
 
 // DirectEventHandler events declaration
-
 export type NativeEvent = {
   progress: number;
   height: number;
@@ -13,7 +16,6 @@ export type EventWithName<T> = {
 } & T;
 
 // native View/Module declarations
-
 export type KeyboardControllerProps = {
   onKeyboardMoveStart?: (
     e: NativeSyntheticEvent<EventWithName<NativeEvent>>
@@ -60,7 +62,6 @@ export type KeyboardControllerModule = {
 };
 
 // Event module declarations
-
 export type KeyboardControllerEvents =
   | 'keyboardWillShow'
   | 'keyboardDidShow'
@@ -72,9 +73,25 @@ export type KeyboardEventData = {
   timestamp: number;
   target: number;
 };
+export type KeyboardEventsModule = {
+  addListener: (
+    name: KeyboardControllerEvents,
+    cb: (e: KeyboardEventData) => void
+  ) => EmitterSubscription;
+};
+
+// reanimated hook declaration
+export type KeyboardHandlerHook<TContext, Event> = (
+  handlers: {
+    onKeyboardMoveStart?: (e: NativeEvent, context: TContext) => void;
+    onKeyboardMove?: (e: NativeEvent, context: TContext) => void;
+    onKeyboardMoveEnd?: (e: NativeEvent, context: TContext) => void;
+    onKeyboardMoveInteractive?: (e: NativeEvent, context: TContext) => void;
+  },
+  dependencies?: ReadonlyArray<unknown>
+) => (e: NativeSyntheticEvent<Event>) => void;
 
 // package types
-
 export type Handlers<T> = Record<string, T | undefined>;
 export type KeyboardHandler = Partial<{
   onStart: (e: NativeEvent) => void;

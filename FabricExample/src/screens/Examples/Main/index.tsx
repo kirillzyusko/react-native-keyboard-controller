@@ -5,7 +5,7 @@ import ExampleLink from './components/ExampleLink';
 import { examples } from './constants';
 import { StyleSheet } from 'react-native';
 import type { StackScreenProps } from '@react-navigation/stack';
-import type { RootStackParamList } from 'example/src/navigation/RootStack';
+import type { RootStackParamList } from '../../../navigation/RootStack';
 
 const styles = StyleSheet.create({
   scrollViewContainer: {
