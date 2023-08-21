@@ -13,9 +13,9 @@ To prevent such behavior you can write own hook based on primitives from this li
 import { useContext, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import {
-  KeyboardContext,
   KeyboardController,
-  AndroidSoftInputModes
+  AndroidSoftInputModes,
+  useKeyboardContext
 } from "react-native-keyboard-controller";
 
 function useKeyboardAnimation() {
@@ -29,7 +29,7 @@ function useKeyboardAnimation() {
     }, [])
   );
 
-  const context = useContext(KeyboardContext);
+  const context = useKeyboardContext();
 
   return context.animated;
 }
