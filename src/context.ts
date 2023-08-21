@@ -1,4 +1,4 @@
-import { createContext, useContext } from 'react';
+import React, { createContext, useContext } from 'react';
 import { Animated } from 'react-native';
 
 import type { SharedValue } from 'react-native-reanimated';
@@ -17,7 +17,7 @@ export type KeyboardAnimationContext = {
   animated: AnimatedContext;
   reanimated: ReanimatedContext;
   setHandlers: (handlers: KeyboardHandlers) => void;
-  setEnabled: (enabled: boolean) => void;
+  setEnabled: React.Dispatch<React.SetStateAction<boolean>>;
 };
 const NOOP = () => {};
 const DEFAULT_SHARED_VALUE: SharedValue<number> = {

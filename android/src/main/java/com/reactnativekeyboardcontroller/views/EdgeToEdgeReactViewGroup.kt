@@ -21,10 +21,6 @@ import com.reactnativekeyboardcontroller.extensions.rootView
 
 private val TAG = EdgeToEdgeReactViewGroup::class.qualifiedName
 
-// TODO: revert monkey patch when setEnabled(false)
-// TODO: fabric
-// TODO: check how iOS works
-
 @SuppressLint("ViewConstructor")
 class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : ReactViewGroup(reactContext) {
   private var isStatusBarTranslucent = false
