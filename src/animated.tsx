@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { Animated, Platform, StyleSheet, ViewStyle } from 'react-native';
 import Reanimated, { useSharedValue } from 'react-native-reanimated';
 
-import { KeyboardContext } from './context';
+import { KeyboardAnimationContext, KeyboardContext } from './context';
 import { useSharedHandlers, useAnimatedValue } from './internal';
 import { KeyboardControllerView } from './bindings';
 import { useAnimatedKeyboardHandler } from './reanimated';
