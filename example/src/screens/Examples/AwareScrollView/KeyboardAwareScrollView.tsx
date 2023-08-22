@@ -17,7 +17,42 @@ import { useSmoothKeyboardHandler } from './useSmoothKeyboardHandler';
 const BOTTOM_OFFSET = 50;
 
 /**
- * 
+ * Everything begins from `onStart` handler. This handler is called every time,
+ * when keyboard changes its size or when focused `TextInput` was changed. In
+ * this handler we are calculating/memoizing values which later will be used
+ * during layout movement. For that we calculate:
+ * - layout of focused field (`layout`) - to understand whether there will be overlap
+ * - previous keyboard size (`previousKeyboardSize`) - used in scroll interpolation
+ * - future keyboard height (`keyboardHeight`) - used in scroll interpolation
+ * - current scroll position (`scrollPosition`) - used to scroll from this point
+ *
+ * Once we've calculated all necessary variables - we can actually start to use them.
+ * It happens in `onMove` handler - this function simply calls `maybeScroll` with
+ * current keyboard frame height. This functions makes the smooth transition.
+ *
+ * When the transition has finished we go to `onEnd` handler. In this handler
+ * we verify, that the current field is not overlapped within a keyboard frame.
+ * For full `onStart`/`onMove`/`onEnd` flow it may look like a redundant thing,
+ * however there could be some cases, when `onMove` is not called:
+ * - on iOS when TextInput was changed - keyboard transition is instant
+ * - on Android when TextInput was changed and keyboard size wasn't changed
+ * So `onEnd` handler handle the case, when `onMove` wasn't triggered.
+ *
+ * ====================================================================================================================+
+ * -----------------------------------------------------Flow chart-----------------------------------------------------+
+ * ====================================================================================================================+
+ *
+ * +============================+       +============================+        +==================================+
+ * +  User Press on TextInput   +   =>  +  Keyboard starts showing   +   =>   + As keyboard moves frame by frame +  =>
+ * +                            +       +       (run `onStart`)      +        +    `onMove` is getting called    +
+ * +============================+       +============================+        +==================================+
+ *
+ *
+ * +============================+       +============================+        +=====================================+
+ * + Keyboard is shown and we   +   =>  +    User moved focus to     +   =>   + Only `onStart`/`onEnd` maybe called +
+ * +    call `onEnd` handler    +       +     another `TextInput`    +        +    (without involving `onMove`)     +
+ * +============================+       +============================+        +=====================================+
+ *
  */
 const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
   children,
@@ -30,8 +65,8 @@ const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
   const fakeViewHeight = useSharedValue(0);
   const keyboardHeight = useSharedValue(0);
   const tag = useSharedValue(-1);
-  const interpolateFrom = useSharedValue(0);
-  const currentScroll = useSharedValue(0);
+  const previousKeyboardSize = useSharedValue(0);
+  const scrollBeforeKeyboardMovement = useSharedValue(0);
 
   const { height } = useWindowDimensions();
 
@@ -61,7 +96,7 @@ const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
     if (visibleRect - point <= BOTTOM_OFFSET) {
       const interpolatedScrollTo = interpolate(
         e,
-        [interpolateFrom.value, keyboardHeight.value],
+        [previousKeyboardSize.value, keyboardHeight.value],
         [0, keyboardHeight.value - (height - point) + BOTTOM_OFFSET]
       );
       const targetScrollY =
@@ -80,12 +115,12 @@ const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
         const keyboardWillAppear = e.height > 0 && keyboardHeight.value === 0;
         const keyboardWillHide = e.height === 0;
         if (keyboardWillChangeSize) {
-          interpolateFrom.value = keyboardHeight.value;
+          previousKeyboardSize.value = keyboardHeight.value;
         }
 
         if (keyboardWillHide) {
-          interpolateFrom.value = 0;
-          scrollPosition.value = currentScroll.value;
+          previousKeyboardSize.value = 0;
+          scrollPosition.value = scrollBeforeKeyboardMovement.value;
         }
 
         if (keyboardWillAppear || keyboardWillChangeSize) {
@@ -104,7 +139,7 @@ const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
             layout.value = measureByTag(e.target);
             // save current scroll position - when keyboard will hide we'll reuse
             // this value to achieve smooth hide effect
-            currentScroll.value = position.value;
+            scrollBeforeKeyboardMovement.value = position.value;
           }
         }
       },
@@ -124,6 +159,8 @@ const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
           // just be sure, that view is no overlapped (i.e. focus changed)
           layout.value = measureByTag(e.target);
           maybeScroll(e.height, true);
+          // do layout substitution back to assure there wil lbe correct
+          // back transition when keyboard hides
           layout.value = prevLayout;
         }
       },
