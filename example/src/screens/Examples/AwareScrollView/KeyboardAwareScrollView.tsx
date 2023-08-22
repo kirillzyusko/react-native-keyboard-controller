@@ -66,8 +66,6 @@ const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
       );
       const targetScrollY =
         Math.max(interpolatedScrollTo, 0) + scrollPosition.value;
-      console.log(interpolateFrom.value);
-      console.log({ targetScrollY, interpolatedScrollTo });
       scrollTo(scrollViewAnimatedRef, 0, targetScrollY, animated);
     }
   }, []);
@@ -76,14 +74,6 @@ const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
     {
       onStart: (e) => {
         'worklet';
-
-        console.log(
-          'onStart',
-          new Date().getTime(),
-          e.target,
-          e.height,
-          keyboardHeight.value
-        );
 
         const keyboardWillChangeSize =
           keyboardHeight.value !== e.height && e.height > 0;
@@ -115,21 +105,16 @@ const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
             // save current scroll position - when keyboard will hide we'll reuse
             // this value to achieve smooth hide effect
             currentScroll.value = position.value;
-            console.log('UPDATED LAYOUT::', layout.value);
           }
         }
       },
       onMove: (e) => {
         'worklet';
 
-        console.log('onMove', new Date().getTime(), e.target, e.height);
-
         maybeScroll(e.height);
       },
       onEnd: (e) => {
         'worklet';
-
-        console.log('onEnd', new Date().getTime(), e.target, e.height);
 
         keyboardHeight.value = e.height;
         scrollPosition.value = position.value;
