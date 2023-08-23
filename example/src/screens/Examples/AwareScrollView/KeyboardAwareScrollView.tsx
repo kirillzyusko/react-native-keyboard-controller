@@ -22,7 +22,7 @@ const BOTTOM_OFFSET = 50;
  * this handler we are calculating/memoizing values which later will be used
  * during layout movement. For that we calculate:
  * - layout of focused field (`layout`) - to understand whether there will be overlap
- * - previous keyboard size (`previousKeyboardSize`) - used in scroll interpolation
+ * - initial keyboard size (`initialKeyboardSize`) - used in scroll interpolation
  * - future keyboard height (`keyboardHeight`) - used in scroll interpolation
  * - current scroll position (`scrollPosition`) - used to scroll from this point
  *
@@ -65,7 +65,7 @@ const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
   const fakeViewHeight = useSharedValue(0);
   const keyboardHeight = useSharedValue(0);
   const tag = useSharedValue(-1);
-  const previousKeyboardSize = useSharedValue(0);
+  const initialKeyboardSize = useSharedValue(0);
   const scrollBeforeKeyboardMovement = useSharedValue(0);
 
   const { height } = useWindowDimensions();
@@ -96,7 +96,7 @@ const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
     if (visibleRect - point <= BOTTOM_OFFSET) {
       const interpolatedScrollTo = interpolate(
         e,
-        [previousKeyboardSize.value, keyboardHeight.value],
+        [initialKeyboardSize.value, keyboardHeight.value],
         [0, keyboardHeight.value - (height - point) + BOTTOM_OFFSET]
       );
       const targetScrollY =
@@ -115,11 +115,12 @@ const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
         const keyboardWillAppear = e.height > 0 && keyboardHeight.value === 0;
         const keyboardWillHide = e.height === 0;
         if (keyboardWillChangeSize) {
-          previousKeyboardSize.value = keyboardHeight.value;
+          initialKeyboardSize.value = keyboardHeight.value;
         }
 
         if (keyboardWillHide) {
-          previousKeyboardSize.value = 0;
+          // on back transition need to interpolate as [0, keyboardHeight]
+          initialKeyboardSize.value = 0;
           scrollPosition.value = scrollBeforeKeyboardMovement.value;
         }
 
