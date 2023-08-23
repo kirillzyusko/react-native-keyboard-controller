@@ -10,12 +10,12 @@ class KeyboardControllerModule(mReactContext: ReactApplicationContext) : ReactCo
 
   override fun getName(): String = KeyboardControllerModuleImpl.NAME
 
-  @ReactMethod(isBlockingSynchronousMethod = true)
+  @ReactMethod
   fun setInputMode(mode: Int) {
     module.setInputMode(mode)
   }
 
-  @ReactMethod(isBlockingSynchronousMethod = true)
+  @ReactMethod
   fun setDefaultMode() {
     module.setDefaultMode()
   }
