@@ -160,7 +160,7 @@ const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
           // just be sure, that view is no overlapped (i.e. focus changed)
           layout.value = measureByTag(e.target);
           maybeScroll(e.height, true);
-          // do layout substitution back to assure there wil lbe correct
+          // do layout substitution back to assure there will be correct
           // back transition when keyboard hides
           layout.value = prevLayout;
         }
