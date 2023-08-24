@@ -1,13 +1,13 @@
 import React from 'react';
-import { TextInput as TextInputRN } from 'react-native';
+import { TextInputProps, TextInput as TextInputRN } from 'react-native';
 import { randomColor } from '../../../utils';
 import { useAwareScrollView } from './context';
 
 type Props = {
   id: number;
-};
+} & TextInputProps;
 
-function TextInput({ id }: Props, forwardRef) {
+function TextInput({ id, ...other }: Props, forwardRef) {
   const { onRef } = useAwareScrollView();
 
   return (
@@ -24,6 +24,7 @@ function TextInput({ id }: Props, forwardRef) {
         backgroundColor: randomColor(),
         marginTop: 50,
       }}
+      {...other}
     />
   );
 }

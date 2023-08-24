@@ -11,7 +11,11 @@ export default function AwareScrollView() {
   return (
     <KeyboardAwareScrollView style={styles.container}>
       {new Array(10).fill(0).map((_, i) => (
-        <TextInput key={i} id={i} />
+        <TextInput
+          key={i}
+          id={i}
+          keyboardType={i % 2 === 0 ? 'numeric' : 'default'}
+        />
       ))}
     </KeyboardAwareScrollView>
   );
