@@ -15,6 +15,8 @@ import { AwareScrollViewProvider, useAwareScrollView } from './context';
 
 const BOTTOM_OFFSET = 50;
 
+type KeyboardAwareScrollViewProps = ScrollViewProps;
+
 /**
  * Everything begins from `onStart` handler. This handler is called every time,
  * when keyboard changes its size or when focused `TextInput` was changed. In
@@ -53,7 +55,7 @@ const BOTTOM_OFFSET = 50;
  * +============================+       +============================+        +=====================================+
  *
  */
-const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
+const KeyboardAwareScrollView: FC<KeyboardAwareScrollViewProps> = ({
   children,
   ...rest
 }) => {
@@ -183,7 +185,7 @@ const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
   );
 };
 
-export default function (props) {
+export default function (props: KeyboardAwareScrollViewProps) {
   return (
     <AwareScrollViewProvider>
       <KeyboardAwareScrollView {...props} />

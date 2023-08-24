@@ -13,7 +13,7 @@ export default function AwareScrollView() {
       {new Array(10).fill(0).map((_, i) => (
         <TextInput
           key={i}
-          id={i}
+          placeholder={`${i}`}
           keyboardType={i % 2 === 0 ? 'numeric' : 'default'}
         />
       ))}

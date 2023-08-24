@@ -1,5 +1,12 @@
-import React, { useContext, useMemo, useRef } from 'react';
-import { findNodeHandle } from 'react-native';
+declare const _IS_FABRIC: boolean;
+import React, {
+  Component,
+  RefObject,
+  useContext,
+  useMemo,
+  useRef,
+} from 'react';
+import { TextInput, findNodeHandle } from 'react-native';
 import {
   useWorkletCallback,
   measure as measureREA,
@@ -7,7 +14,16 @@ import {
 } from 'react-native-reanimated';
 import { useHeaderHeight } from '@react-navigation/elements';
 
-const defaultValue = {
+type KeyboardAwareContext = {
+  handlersRef: {
+    current: Record<string, RefObject<Component>>;
+  };
+  handlers: {
+    value: Record<string, RefObject<Component>>;
+  };
+};
+
+const defaultValue: KeyboardAwareContext = {
   handlersRef: { current: {} },
   handlers: { value: {} },
 };
@@ -18,11 +34,12 @@ export const useAwareScrollView = () => {
   const ctx = useContext(AwareScrollViewContext);
   const headerHeight = useHeaderHeight();
 
-  const onRef = (ref: React.Component) => {
+  const onRef = (ref: TextInput | null) => {
     const viewTag = findNodeHandle(ref);
     if (viewTag) {
-      const viewTagOrShadowNode = global._IS_FABRIC
-        ? ref._internalInstanceHandle.stateNode.node
+      const viewTagOrShadowNode = _IS_FABRIC
+        ? // @ts-expect-error this API doesn't have any types
+          ref._internalInstanceHandle.stateNode.node
         : viewTag;
       ctx.handlersRef.current = {
         ...ctx.handlersRef.current,
@@ -42,10 +59,14 @@ export const useAwareScrollView = () => {
 
       if (ref) {
         const layout = measureREA(ref);
-        return {
-          ...layout,
-          pageY: _IS_FABRIC ? layout?.pageY + headerHeight : layout?.pageY,
-        };
+        if (layout) {
+          return {
+            ...layout,
+            pageY: _IS_FABRIC ? layout.pageY + headerHeight : layout.pageY,
+          };
+        } else {
+          return null;
+        }
       } else {
         return null;
       }
@@ -59,7 +80,9 @@ export const useAwareScrollView = () => {
   };
 };
 
-export const AwareScrollViewProvider = ({ children }) => {
+export const AwareScrollViewProvider: React.FC<React.PropsWithChildren<{}>> = ({
+  children,
+}) => {
   const handlersRef = useRef({});
   const handlers = useSharedValue({});
 

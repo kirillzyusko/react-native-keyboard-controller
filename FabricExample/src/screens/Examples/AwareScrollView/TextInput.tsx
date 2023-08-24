@@ -3,20 +3,17 @@ import { TextInputProps, TextInput as TextInputRN } from 'react-native';
 import { randomColor } from '../../../utils';
 import { useAwareScrollView } from './context';
 
-type Props = {
-  id: number;
-} & TextInputProps;
-
-function TextInput({ id, ...other }: Props, forwardRef) {
+const TextInput = React.forwardRef((props: TextInputProps, forwardRef) => {
   const { onRef } = useAwareScrollView();
 
   return (
     <TextInputRN
-      ref={ref => {
+      ref={(ref) => {
         onRef(ref);
-        forwardRef?.(ref);
+        if (typeof forwardRef === 'function') {
+          forwardRef(ref);
+        }
       }}
-      placeholder={`${id}`}
       placeholderTextColor="black"
       style={{
         width: '100%',
@@ -24,9 +21,9 @@ function TextInput({ id, ...other }: Props, forwardRef) {
         backgroundColor: randomColor(),
         marginTop: 50,
       }}
-      {...other}
+      {...props}
     />
   );
-}
+});
 
-export default React.forwardRef(TextInput);
+export default TextInput;
