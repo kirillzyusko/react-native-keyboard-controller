@@ -3,6 +3,7 @@ import Lottie from 'lottie-react';
 import interactive from './interactive.lottie.json';
 import transform from './transform.lottie.json';
 import crossPlatform from './cross-platform.lottie.json';
+import textInputs from './text-inputs.lottie.json';
 
 import clsx from 'clsx';
 import styles from './styles.module.css';
@@ -25,6 +26,11 @@ const FeatureList: FeatureItem[] = [
     ),
   },
   {
+    title: 'Interactive keyboard',
+    lottie: interactive,
+    description: <>Dismiss your keyboard interactively without a hassle</>,
+  },
+  {
     title: 'Cross platform',
     lottie: crossPlatform,
     description: (
@@ -35,9 +41,14 @@ const FeatureList: FeatureItem[] = [
     ),
   },
   {
-    title: 'Interactive keyboard',
-    lottie: interactive,
-    description: <>Dismiss your keyboard interactively without a hassle</>,
+    title: 'Reach metadata',
+    lottie: textInputs,
+    description: (
+      <>
+        Take a power of enhanced metadata and check how easily you can control
+        each aspect of the keyboard movement
+      </>
+    ),
   },
 ];
 
@@ -48,7 +59,7 @@ const lottieStyle = {
 
 function Feature({ title, lottie, description }: FeatureItem) {
   return (
-    <div className={clsx('col col--4')}>
+    <div className={clsx('col col--3')}>
       <div className="text--center">
         <Lottie animationData={lottie} style={lottieStyle} loop />
       </div>
