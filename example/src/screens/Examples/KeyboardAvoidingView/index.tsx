@@ -11,13 +11,15 @@ import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 import { StackScreenProps } from '@react-navigation/stack';
 import { ExamplesStackParamList } from '../../../navigation/ExamplesStack';
 import styles from './styles';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 type Props = StackScreenProps<ExamplesStackParamList>;
 
 export default function KeyboardAvoidingViewExample({ navigation }: Props) {
-  const [isPackageImplementation, setPackageImplementation] = useState(true);
+  const [isPackageImplementation, setPackageImplementation] = useState(false);
+  const { bottom } = useSafeAreaInsets();
 
-  useEffect(() => {
+  /*useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
         <Text
@@ -28,7 +30,7 @@ export default function KeyboardAvoidingViewExample({ navigation }: Props) {
         </Text>
       ),
     });
-  }, [isPackageImplementation]);
+  }, [isPackageImplementation]);*/
 
   const Container = isPackageImplementation
     ? KeyboardAvoidingView
@@ -37,11 +39,14 @@ export default function KeyboardAvoidingViewExample({ navigation }: Props) {
   return (
     <Container
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={styles.container}
+      style={[styles.container, { backgroundColor: 'red' }]}
     >
-      <View style={styles.inner}>
-        <Text style={styles.header}>Header</Text>
-        <TextInput placeholder="Username" style={styles.textInput} />
+      <View style={[styles.inner, { backgroundColor: 'yellow' }]}>
+        <Text style={[styles.header, { backgroundColor: 'blue' }]}>Header</Text>
+        <TextInput
+          placeholder="Username"
+          style={[styles.textInput, { backgroundColor: 'green' }]}
+        />
         <View style={styles.btnContainer}>
           <Button title="Submit" onPress={() => null} />
         </View>

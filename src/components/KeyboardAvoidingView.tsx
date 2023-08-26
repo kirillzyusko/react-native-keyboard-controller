@@ -107,15 +107,18 @@ const KeyboardAvoidingView = forwardRef<View, React.PropsWithChildren<Props>>(
 
         const keyboardY =
           screenHeight - keyboardHeight - keyboardVerticalOffset;
-
+          console.log({keyboardY, keyboardHeight}, currentFrame.value, keyboardHeight +
+            initialFrame.value.y +
+            initialFrame.value.height -
+            keyboardY -
+            initialFrame.value.height);
         if (behavior === 'height') {
-          return Math.max(
-            keyboardHeight +
-              currentFrame.value.y +
-              currentFrame.value.height -
-              keyboardY -
-              initialFrame.value.height,
-            0
+          return Math.abs(
+            // keyboardHeight +
+            initialFrame.value.y +
+            initialFrame.value.height -
+            keyboardHeight
+              // initialFrame.value.height,
           );
         }
 
@@ -128,12 +131,12 @@ const KeyboardAvoidingView = forwardRef<View, React.PropsWithChildren<Props>>(
 
     const animatedStyle = useAnimatedStyle(() => {
       const keyboardHeight = keyboard.height.value;
-
+console.log(keyboardHeight);
       const bottom = getBackwardCompatibleHeight(keyboardHeight);
 
       // we use `enabled === true` to be 100% compatible with original implementation
       const bottomHeight = enabled === true ? bottom : 0;
-
+console.log({ bottomHeight });
       switch (behavior) {
         case 'height':
           if (bottomHeight > 0) {
@@ -144,7 +147,7 @@ const KeyboardAvoidingView = forwardRef<View, React.PropsWithChildren<Props>>(
           }
 
           return {
-            flex: 0,
+            // flex: 0,
           };
 
         case 'position':

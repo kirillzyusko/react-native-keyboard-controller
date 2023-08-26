@@ -11,7 +11,7 @@ export default StyleSheet.create({
   inner: {
     padding: 24,
     flex: 1,
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
   },
   textInput: {
     height: 40,
