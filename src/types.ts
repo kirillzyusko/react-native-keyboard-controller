@@ -88,7 +88,7 @@ export type KeyboardHandlerHook<TContext, Event> = (
     onKeyboardMoveEnd?: (e: NativeEvent, context: TContext) => void;
     onKeyboardMoveInteractive?: (e: NativeEvent, context: TContext) => void;
   },
-  dependencies?: ReadonlyArray<unknown>
+  dependencies?: unknown[]
 ) => (e: NativeSyntheticEvent<Event>) => void;
 
 // package types

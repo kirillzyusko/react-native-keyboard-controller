@@ -52,9 +52,15 @@ jobs:
           yarn install --frozen-lockfile
           cd example
           yarn install --frozen-lockfile
+          cd ../FabricExample
+          yarn install --frozen-lockfile
       - name: Run lib tests
         run: yarn test src
       - name: Run example app tests (verify mocks)
         run: |
           cd example
+          yarn test
+      - name: Run example fabric app tests (verify mocks)
+        run: |
+          cd FabricExample
           yarn test

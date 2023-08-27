@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#5C5C5C',
   },
   lottie: {
-    width: '100%',
+    width: 200,
     height: 200,
   },
 });
