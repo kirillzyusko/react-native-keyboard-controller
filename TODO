@@ -1,9 +1,0 @@
-- (x) reanimated 3.3.0 everywhere
-- (x) lottie is broken (both iOS/Android)
-- (x) port lottie to Fabric
-- (x) fabric tests port
-- (x) KeyboardAware/Fabric/Android - freeze/crash
-- (x) Lottie/Fabric/iOS - missing lottie image
-- (-) remove post install scrip from fabric
-- KeyboardAware/Fabric/Android - no animation
-- redmi note 5 pro - chat example laggy
