@@ -16,7 +16,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 type Props = StackScreenProps<ExamplesStackParamList>;
 
 export default function KeyboardAvoidingViewExample({ navigation }: Props) {
-  const [isPackageImplementation, setPackageImplementation] = useState(false);
+  const [isPackageImplementation, setPackageImplementation] = useState(true);
   const { bottom } = useSafeAreaInsets();
 
   /*useEffect(() => {

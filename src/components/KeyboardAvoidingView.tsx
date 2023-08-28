@@ -1,7 +1,6 @@
 import React, { forwardRef, useCallback } from 'react';
 import {
   LayoutRectangle,
-  StyleSheet,
   useWindowDimensions,
   View,
   ViewProps,
@@ -9,8 +8,9 @@ import {
 import Reanimated, {
   useAnimatedStyle,
   useWorkletCallback,
-  runOnUI,
   useSharedValue,
+  useDerivedValue,
+  interpolate,
 } from 'react-native-reanimated';
 import { useKeyboardHandler } from '../hooks';
 
@@ -39,21 +39,38 @@ type Props = {
 } & ViewProps;
 
 const useKeyboardAnimation = () => {
+  const heightWhenOpened = useSharedValue(0);
   const height = useSharedValue(0);
+  const progress = useSharedValue(0);
 
   useKeyboardHandler(
     {
+      onStart: (e) => {
+        'worklet';
+
+        if (e.height > 0) {
+          heightWhenOpened.value = e.height;
+        }
+      },
       onMove: (e) => {
         'worklet';
 
+        progress.value = e.progress;
         height.value = e.height;
       },
     },
     []
   );
 
-  return { height };
+  return { height, progress, heightWhenOpened };
 };
+
+const defaultLayout: LayoutRectangle = {
+  x: 0,
+  y: 0,
+  width: 0,
+  height: 0,
+}
 
 /**
  * View that moves out of the way when the keyboard appears by automatically
@@ -68,87 +85,44 @@ const KeyboardAvoidingView = forwardRef<View, React.PropsWithChildren<Props>>(
       enabled = true,
       keyboardVerticalOffset = 0,
       style,
-      onLayout,
+      onLayout: onLayoutProps,
       ...props
     },
     ref
   ) => {
     const initialFrame = useSharedValue<LayoutRectangle | null>(null);
-    const currentFrame = useSharedValue<LayoutRectangle | null>(null);
+    const frame = useDerivedValue(() => initialFrame.value ? initialFrame.value : defaultLayout);
 
     const keyboard = useKeyboardAnimation();
     const { height: screenHeight } = useWindowDimensions();
 
-    const onLayoutWorklet = useWorkletCallback((layout: LayoutRectangle) => {
-      if (initialFrame.value == null) {
-        initialFrame.value = layout;
+    const relativeKeyboardHeight = useWorkletCallback(() => {
+      const keyboardY = screenHeight - keyboard.heightWhenOpened.value - keyboardVerticalOffset;
+
+      return Math.max(frame.value.y + frame.value.height - keyboardY, 0);
+    }, [screenHeight, keyboardVerticalOffset]);
+ 
+    const onLayout = useCallback<NonNullable<ViewProps['onLayout']>>((e) => {
+      if (initialFrame.value === null) {
+        initialFrame.value = e.nativeEvent.layout;
       }
-
-      currentFrame.value = layout;
-    });
-
-    const handleOnLayout = useCallback<NonNullable<ViewProps['onLayout']>>(
-      (event) => {
-        // TODO: runOnUI is needed? Can't update value directly
-        runOnUI(onLayoutWorklet)(event.nativeEvent.layout);
-
-        if (onLayout) {
-          onLayout(event);
-        }
-      },
-      [onLayout]
-    );
-
-    const getBackwardCompatibleHeight = useWorkletCallback(
-      (keyboardHeight: number) => {
-        if (currentFrame.value == null || initialFrame.value == null) {
-          return 0;
-        }
-
-        const keyboardY =
-          screenHeight - keyboardHeight - keyboardVerticalOffset;
-          console.log({keyboardY, keyboardHeight}, currentFrame.value, keyboardHeight +
-            initialFrame.value.y +
-            initialFrame.value.height -
-            keyboardY -
-            initialFrame.value.height);
-        if (behavior === 'height') {
-          return Math.abs(
-            // keyboardHeight +
-            initialFrame.value.y +
-            initialFrame.value.height -
-            keyboardHeight
-              // initialFrame.value.height,
-          );
-        }
-
-        return Math.max(
-          currentFrame.value.y + currentFrame.value.height - keyboardY,
-          0
-        );
-      }
-    );
+      onLayoutProps?.(e);
+    }, [onLayoutProps]); 
 
     const animatedStyle = useAnimatedStyle(() => {
-      const keyboardHeight = keyboard.height.value;
-console.log(keyboardHeight);
-      const bottom = getBackwardCompatibleHeight(keyboardHeight);
-
-      // we use `enabled === true` to be 100% compatible with original implementation
+      const bottom = interpolate(keyboard.progress.value, [0, 1], [0, relativeKeyboardHeight()]);
       const bottomHeight = enabled === true ? bottom : 0;
-console.log({ bottomHeight });
+
       switch (behavior) {
         case 'height':
           if (bottomHeight > 0) {
             return {
-              height: bottomHeight,
+              height: frame.value.height - bottomHeight,
               flex: 0,
             };
           }
 
-          return {
-            // flex: 0,
-          };
+          return {};
 
         case 'position':
           return {
@@ -161,33 +135,21 @@ console.log({ bottomHeight });
         default:
           return {};
       }
-    });
+    }, [behavior, enabled, relativeKeyboardHeight]);
 
     if (behavior === 'position') {
-      return (
-        // @ts-expect-error types mismatches
-        <Reanimated.View
-          ref={ref}
-          onLayout={handleOnLayout}
-          style={style}
-          {...props}
-        >
-          <Reanimated.View
-            // @ts-expect-error include styles in useAnimatedStyle?
-            style={StyleSheet.compose(contentContainerStyle, animatedStyle)}
-          >
-            {children}
-          </Reanimated.View>
+      <View ref={ref} style={style} onLayout={onLayout} {...props}>
+        <Reanimated.View style={[contentContainerStyle, animatedStyle]}>
+          {children}
         </Reanimated.View>
-      );
+      </View>
     }
 
     return (
-      // @ts-expect-error types mismatches
       <Reanimated.View
         ref={ref}
-        onLayout={handleOnLayout}
-        style={!behavior ? style : StyleSheet.compose(style, animatedStyle)}
+        onLayout={onLayout}
+        style={enabled ? [style, animatedStyle] : style}
         {...props}
       >
         {children}

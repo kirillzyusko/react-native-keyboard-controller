@@ -1,0 +1,3 @@
+- [ ] keyboardVerticalOffset
+- [ ] check how keyboard handle size changes
+- [ ] import 'react-native-keyboard-controller/components';
