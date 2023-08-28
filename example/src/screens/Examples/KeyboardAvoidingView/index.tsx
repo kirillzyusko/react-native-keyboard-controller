@@ -39,6 +39,7 @@ export default function KeyboardAvoidingViewExample({ navigation }: Props) {
   return (
     <Container
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      contentContainerStyle={{flex: 1}}
       style={[styles.container, { backgroundColor: 'red' }]}
     >
       <View style={[styles.inner, { backgroundColor: 'yellow' }]}>

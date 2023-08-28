@@ -7,6 +7,7 @@ export default StyleSheet.create({
   },
   container: {
     flex: 1,
+    maxHeight: 600,
   },
   inner: {
     padding: 24,
