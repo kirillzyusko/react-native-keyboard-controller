@@ -19,7 +19,7 @@ export default function KeyboardAvoidingViewExample({ navigation }: Props) {
   const [isPackageImplementation, setPackageImplementation] = useState(true);
   const { bottom } = useSafeAreaInsets();
 
-  /*useEffect(() => {
+  useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
         <Text
@@ -30,7 +30,7 @@ export default function KeyboardAvoidingViewExample({ navigation }: Props) {
         </Text>
       ),
     });
-  }, [isPackageImplementation]);*/
+  }, [isPackageImplementation]);
 
   const Container = isPackageImplementation
     ? KeyboardAvoidingView
@@ -43,7 +43,7 @@ export default function KeyboardAvoidingViewExample({ navigation }: Props) {
       style={[styles.container, { backgroundColor: 'red' }]}
     >
       <View style={[styles.inner, { backgroundColor: 'yellow' }]}>
-        <Text style={[styles.header, { backgroundColor: 'blue' }]}>Header</Text>
+        <Text style={[styles.heading, { backgroundColor: 'blue' }]}>Header</Text>
         <TextInput
           placeholder="Username"
           style={[styles.textInput, { backgroundColor: 'green' }]}

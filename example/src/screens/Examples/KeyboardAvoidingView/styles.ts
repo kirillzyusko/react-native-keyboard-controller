@@ -9,6 +9,10 @@ export default StyleSheet.create({
     flex: 1,
     maxHeight: 600,
   },
+  heading: {
+    fontSize: 36,
+    marginBottom: 48,
+  },
   inner: {
     padding: 24,
     flex: 1,

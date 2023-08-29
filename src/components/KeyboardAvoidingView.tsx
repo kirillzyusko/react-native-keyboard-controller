@@ -101,7 +101,7 @@ const KeyboardAvoidingView = forwardRef<View, React.PropsWithChildren<Props>>(
 
       return Math.max(frame.value.y + frame.value.height - keyboardY, 0);
     }, [screenHeight, keyboardVerticalOffset]);
- 
+
     const onLayout = useCallback<NonNullable<ViewProps['onLayout']>>((e) => {
       if (initialFrame.value === null) {
         initialFrame.value = e.nativeEvent.layout;

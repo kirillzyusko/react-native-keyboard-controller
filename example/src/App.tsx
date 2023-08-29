@@ -10,7 +10,6 @@ import {
 } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import RootStack from './navigation/RootStack';
-import KeyboardAvoidingViewExample from './screens/Examples/KeyboardAvoidingView';
 
 const styles = StyleSheet.create({
   root: {
@@ -22,8 +21,10 @@ export default function App() {
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
       <GestureHandlerRootView style={styles.root}>
-        <KeyboardProvider>
-          <KeyboardAvoidingViewExample />
+        <KeyboardProvider statusBarTranslucent>
+          <NavigationContainer>
+            <RootStack />
+          </NavigationContainer>
         </KeyboardProvider>
       </GestureHandlerRootView>
     </SafeAreaProvider>
