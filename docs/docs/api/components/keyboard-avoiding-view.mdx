@@ -8,7 +8,7 @@ This component will automatically adjust its height, position, or bottom padding
 
 ## Why another `KeyboardAvoidingView` is needed?
 
-This new `KeyboardAvoidingView`` maintains the familiar React Native [API](https://reactnative.dev/docs/keyboardavoidingview) but ensures consistent behavior and animations on both iOS and Android platforms. Unlike the existing solution, which primarily caters to iOS, this component eliminates platform discrepancies, providing a unified user experience. By reproducing the same animations and behaviors on both platforms, it simplifies cross-platform development, meets user expectations for consistency, and enhances code maintainability. Ultimately, it addresses the need for a reliable and uniform keyboard interaction solution across different devices.
+This new `KeyboardAvoidingView` maintains the familiar React Native [API](https://reactnative.dev/docs/keyboardavoidingview) but ensures consistent behavior and animations on both `iOS` and `Android` platforms. Unlike the existing solution, which primarily caters to `iOS`, this component eliminates platform discrepancies, providing a unified user experience. By reproducing the same animations and behaviors on both platforms, it simplifies cross-platform development, meets user expectations for consistency, and enhances code maintainability. Ultimately, it addresses the need for a reliable and uniform keyboard interaction solution across different devices.
 
 Below is a visual difference between the implementations (the animation is 4x times slower for better visual perception).
 
@@ -40,6 +40,12 @@ import after from '../../../src/components/HomepageFeatures/kav-animated.lottie.
     </tr>
   </tbody>
 </table>
+
+:::info Found a bug? Help the project and report it!
+
+If you found any bugs or inconsistent behavior comparing to `react-native` implementation - don't hesitate to open an [issue](https://github.com/kirillzyusko/react-native-keyboard-controller/issues/new?assignees=kirillzyusko&labels=bug&template=bug_report.md&title=). It will help the project 🙏
+
+:::
 
 ## Props
 

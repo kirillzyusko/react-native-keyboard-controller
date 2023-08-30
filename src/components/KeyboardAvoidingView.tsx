@@ -70,7 +70,7 @@ const defaultLayout: LayoutRectangle = {
   y: 0,
   width: 0,
   height: 0,
-}
+};
 
 /**
  * View that moves out of the way when the keyboard appears by automatically
@@ -91,26 +91,36 @@ const KeyboardAvoidingView = forwardRef<View, React.PropsWithChildren<Props>>(
     ref
   ) => {
     const initialFrame = useSharedValue<LayoutRectangle | null>(null);
-    const frame = useDerivedValue(() => initialFrame.value ? initialFrame.value : defaultLayout);
+    const frame = useDerivedValue(() =>
+      initialFrame.value ? initialFrame.value : defaultLayout
+    );
 
     const keyboard = useKeyboardAnimation();
     const { height: screenHeight } = useWindowDimensions();
 
     const relativeKeyboardHeight = useWorkletCallback(() => {
-      const keyboardY = screenHeight - keyboard.heightWhenOpened.value - keyboardVerticalOffset;
+      const keyboardY =
+        screenHeight - keyboard.heightWhenOpened.value - keyboardVerticalOffset;
 
       return Math.max(frame.value.y + frame.value.height - keyboardY, 0);
     }, [screenHeight, keyboardVerticalOffset]);
 
-    const onLayout = useCallback<NonNullable<ViewProps['onLayout']>>((e) => {
-      if (initialFrame.value === null) {
-        initialFrame.value = e.nativeEvent.layout;
-      }
-      onLayoutProps?.(e);
-    }, [onLayoutProps]); 
+    const onLayout = useCallback<NonNullable<ViewProps['onLayout']>>(
+      (e) => {
+        if (initialFrame.value === null) {
+          initialFrame.value = e.nativeEvent.layout;
+        }
+        onLayoutProps?.(e);
+      },
+      [onLayoutProps]
+    );
 
     const animatedStyle = useAnimatedStyle(() => {
-      const bottom = interpolate(keyboard.progress.value, [0, 1], [0, relativeKeyboardHeight()]);
+      const bottom = interpolate(
+        keyboard.progress.value,
+        [0, 1],
+        [0, relativeKeyboardHeight()]
+      );
       const bottomHeight = enabled === true ? bottom : 0;
 
       switch (behavior) {
@@ -138,11 +148,13 @@ const KeyboardAvoidingView = forwardRef<View, React.PropsWithChildren<Props>>(
     }, [behavior, enabled, relativeKeyboardHeight]);
 
     if (behavior === 'position') {
-      <View ref={ref} style={style} onLayout={onLayout} {...props}>
-        <Reanimated.View style={[contentContainerStyle, animatedStyle]}>
-          {children}
-        </Reanimated.View>
-      </View>
+      return (
+        <View ref={ref} style={style} onLayout={onLayout} {...props}>
+          <Reanimated.View style={[contentContainerStyle, animatedStyle]}>
+            {children}
+          </Reanimated.View>
+        </View>
+      );
     }
 
     return (
