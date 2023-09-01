@@ -1,6 +1,12 @@
+# ToDo list
+
 - [x] keyboardVerticalOffset
+- [x] make UI in example project better :)
+
 - [ ] check how keyboard handle size changes
+== Android jumpy behavior - should interpolate based on `height` and interpolate from `initialKeyboardFrame` to `finalKeyboardFrame` (android layout jump, when your keyboard was shown/hidden and then you switch to RN impl)
+
 - [ ] should work on both platforms in the same way as RN implementation
-- [ ] make UI in example project better :)
-- [ ] android layout jump, when your keyboard was shown/hidden and then you switch to RN impl
+== iOS works almost as RN (except the case, when we set content as flex: 1 - for header + text inputs and flex: 1 - for button -> in this case inputs are animating only through the half of the movement (because view is not resizing anymore))
+
 - [ ] import 'react-native-keyboard-controller/components';

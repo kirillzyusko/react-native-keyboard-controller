@@ -11,24 +11,40 @@ export default StyleSheet.create({
   content: {
     flex: 1,
     maxHeight: 600,
+    // backgroundColor: 'grey',
   },
   heading: {
     fontSize: 36,
     marginBottom: 48,
+    fontWeight: '600',
+    // backgroundColor: 'blue',
   },
   inner: {
     padding: 24,
     flex: 1,
     justifyContent: 'space-between',
+    // backgroundColor: 'pink',
   },
   textInput: {
-    height: 40,
+    height: 45,
     borderColor: '#000000',
-    borderBottomWidth: 1,
+    borderWidth: 1,
+    borderRadius: 10,
     marginBottom: 36,
+    paddingLeft: 10,
+    // backgroundColor: 'green',
   },
-  btnContainer: {
-    backgroundColor: 'white',
+  button: {
     marginTop: 12,
+    height: 45,
+    borderRadius: 10,
+    backgroundColor: 'rgb(40, 64, 147)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  text: {
+    fontWeight: '500',
+    fontSize: 16,
+    color: 'white',
   },
 });

@@ -159,9 +159,10 @@ const KeyboardAvoidingView = forwardRef<View, React.PropsWithChildren<Props>>(
 
     return (
       <Reanimated.View
+        // @ts-expect-error because `ref` from reanimated is not compatible with react-native
         ref={ref}
         onLayout={onLayout}
-        style={enabled ? [style, animatedStyle] : style}
+        style={enabled ? [style, animatedStyle] : [style]}
         {...props}
       >
         {children}

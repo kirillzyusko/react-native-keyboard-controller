@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Button,
   Platform,
   KeyboardAvoidingView as RNKeyboardAvoidingView,
   Text,
   TextInput,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
@@ -38,20 +38,18 @@ export default function KeyboardAvoidingViewExample({ navigation }: Props) {
     <Container
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       contentContainerStyle={styles.container}
-      keyboardVerticalOffset={50}
-      style={[styles.content, { backgroundColor: 'red' }]}
+      keyboardVerticalOffset={100}
+      style={styles.content}
     >
-      <View style={[styles.inner, { backgroundColor: 'yellow' }]}>
-        <Text style={[styles.heading, { backgroundColor: 'blue' }]}>
-          Header
-        </Text>
-        <TextInput
-          placeholder="Username"
-          style={[styles.textInput, { backgroundColor: 'green' }]}
-        />
-        <View style={styles.btnContainer}>
-          <Button title="Submit" onPress={() => null} />
+      <View style={styles.inner}>
+        <Text style={styles.heading}>Header</Text>
+        <View>
+          <TextInput placeholder="Username" style={styles.textInput} />
+          <TextInput placeholder="Password" style={styles.textInput} />
         </View>
+        <TouchableOpacity style={styles.button}>
+          <Text style={styles.text}>Submit</Text>
+        </TouchableOpacity>
       </View>
     </Container>
   );
