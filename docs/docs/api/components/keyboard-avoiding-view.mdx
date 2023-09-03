@@ -10,40 +10,17 @@ This component will automatically adjust its height, position, or bottom padding
 
 This new `KeyboardAvoidingView` maintains the familiar React Native [API](https://reactnative.dev/docs/keyboardavoidingview) but ensures consistent behavior and animations on both `iOS` and `Android` platforms. Unlike the existing solution, which primarily caters to `iOS`, this component eliminates platform discrepancies, providing a unified user experience. By reproducing the same animations and behaviors on both platforms, it simplifies cross-platform development, meets user expectations for consistency, and enhances code maintainability. Ultimately, it addresses the need for a reliable and uniform keyboard interaction solution across different devices.
 
-Below is a visual difference between the implementations (the animation is 4x times slower for better visual perception).
+Below is a visual difference between the implementations (the animation is _**4x**_ times slower for better visual perception).
 
-import Lottie from 'lottie-react';
-import before from '../../../src/components/HomepageFeatures/kav.lottie.json';
-import after from '../../../src/components/HomepageFeatures/kav-animated.lottie.json';
+import KeyboardAvoidingViewComparison from '../../../src/components/KeyboardAvoidingViewComparison'
 
-<table>
-  <tbody>
-    <tr style={{border: 'none'}}>
-      <td style={{border: 'none'}}>
-        <Lottie animationData={before} style={{ width: 400, height: 400 }} loop />
-      </td>
-      <td style={{border: 'none'}}>
-        <Lottie animationData={after} style={{ width: 400, height: 400 }} loop />
-      </td>
-    </tr>
-    <tr style={{backgroundColor: '#00000000', border: 'none'}}>
-      <td style={{border: 'none', maxWidth: 400, textAlign: 'center'}}>
-        <i>
-          Default <code>react-native</code> implementation on Android
-        </i>
-      </td>
-      <td style={{border: 'none', maxWidth: 400, textAlign: 'center'}}>
-        <i>
-          Implementation from <code>react-native-keyboard-controller</code> with better animations
-        </i>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<KeyboardAvoidingViewComparison />
 
 :::info Found a bug? Help the project and report it!
 
 If you found any bugs or inconsistent behavior comparing to `react-native` implementation - don't hesitate to open an [issue](https://github.com/kirillzyusko/react-native-keyboard-controller/issues/new?assignees=kirillzyusko&labels=bug&template=bug_report.md&title=). It will help the project 🙏
+
+Also if there is any well-known problems in original `react-native` implementation which can not be fixed for a long time and they are present in this implementation as well - also feel free to submit an [issue](https://github.com/kirillzyusko/react-native-keyboard-controller/issues/new?assignees=kirillzyusko&labels=bug&template=bug_report.md&title=). Let's make this world better together 😎
 
 :::
 

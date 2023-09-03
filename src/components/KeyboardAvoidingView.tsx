@@ -91,9 +91,7 @@ const KeyboardAvoidingView = forwardRef<View, React.PropsWithChildren<Props>>(
     ref
   ) => {
     const initialFrame = useSharedValue<LayoutRectangle | null>(null);
-    const frame = useDerivedValue(() =>
-      initialFrame.value ? initialFrame.value : defaultLayout
-    );
+    const frame = useDerivedValue(() => initialFrame.value || defaultLayout);
 
     const keyboard = useKeyboardAnimation();
     const { height: screenHeight } = useWindowDimensions();

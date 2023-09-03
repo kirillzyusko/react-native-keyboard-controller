@@ -14,6 +14,7 @@ export default StyleSheet.create({
     // backgroundColor: 'grey',
   },
   heading: {
+    color: 'black',
     fontSize: 36,
     marginBottom: 48,
     fontWeight: '600',
