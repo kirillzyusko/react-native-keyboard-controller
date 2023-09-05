@@ -22,7 +22,7 @@ class KeyboardControllerView: UIView {
   // react props
   @objc var enabled: ObjCBool = true {
     didSet {
-      if (enabled.boolValue) {
+      if enabled.boolValue {
         keyboardObserver?.mount()
       } else {
         keyboardObserver?.unmount()
