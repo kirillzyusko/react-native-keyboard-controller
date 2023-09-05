@@ -1,13 +1,9 @@
 package com.reactnativekeyboardcontroller.views
 
 import android.annotation.SuppressLint
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
-import android.view.WindowInsets
 import android.widget.FrameLayout
 import androidx.appcompat.widget.FitWindowsLinearLayout
-import androidx.core.graphics.Insets
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsAnimationCompat
@@ -15,7 +11,6 @@ import androidx.core.view.WindowInsetsCompat
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.views.view.ReactViewGroup
 import com.reactnativekeyboardcontroller.KeyboardAnimationCallback
-import com.reactnativekeyboardcontroller.extensions.removeSelf
 import com.reactnativekeyboardcontroller.extensions.requestApplyInsetsWhenAttached
 import com.reactnativekeyboardcontroller.extensions.rootView
 
@@ -23,55 +18,60 @@ private val TAG = EdgeToEdgeReactViewGroup::class.qualifiedName
 
 @SuppressLint("ViewConstructor")
 class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : ReactViewGroup(reactContext) {
+  // props
   private var isStatusBarTranslucent = false
   private var isNavigationBarTranslucent = false
   private var active = false
+
+  // internal class members
+  private var eventView: ReactViewGroup? = null
 
   private fun setupWindowInsets() {
     val rootView = reactContext.rootView
     if (rootView != null) {
       ViewCompat.setOnApplyWindowInsetsListener(rootView) { v, insets ->
         // if (active) {
-          val content =
-            reactContext.rootView?.findViewById<FitWindowsLinearLayout>(
-              androidx.appcompat.R.id.action_bar_root,
-            )
-          val params = FrameLayout.LayoutParams(
-            FrameLayout.LayoutParams.MATCH_PARENT,
-            FrameLayout.LayoutParams.MATCH_PARENT,
-          )
+        val content = getContentView()
+        val params = FrameLayout.LayoutParams(
+          FrameLayout.LayoutParams.MATCH_PARENT,
+          FrameLayout.LayoutParams.MATCH_PARENT,
+        )
         val statusBarTranslucent = if (this.isStatusBarTranslucent) {
           0
         } else {
-          (insets?.getInsets(WindowInsetsCompat.Type.systemBars())?.top
-            ?: 0)
+          (
+            insets?.getInsets(WindowInsetsCompat.Type.systemBars())?.top
+              ?: 0
+            )
         }
 
-          params.setMargins(
-            0,
-            if (this.isStatusBarTranslucent) {
-              0
-            } else {
-              (insets?.getInsets(WindowInsetsCompat.Type.systemBars())?.top
-                ?: 0)
-            },
-            0,
-            if (!active || this.isNavigationBarTranslucent) {
-              0
-            } else {
-              insets?.getInsets(WindowInsetsCompat.Type.navigationBars())?.bottom
+        params.setMargins(
+          0,
+          if (this.isStatusBarTranslucent) {
+            0
+          } else {
+            (
+              insets?.getInsets(WindowInsetsCompat.Type.systemBars())?.top
                 ?: 0
-            },
-          )
+              )
+          },
+          0,
+          if (!active || this.isNavigationBarTranslucent) {
+            0
+          } else {
+            insets?.getInsets(WindowInsetsCompat.Type.navigationBars())?.bottom
+              ?: 0
+          },
+        )
 
-          println("${params.topMargin} ${params.bottomMargin}")
+        println("${params.topMargin} ${params.bottomMargin}")
 
-          content?.layoutParams = params
+        content?.layoutParams = params
         // }
         val defaultInsets = ViewCompat.onApplyWindowInsets(v, insets)
         val windowInsets =
           defaultInsets.getInsets(WindowInsetsCompat.Type.statusBars())
-val inset = insets?.getInsets(WindowInsetsCompat.Type.systemBars())
+        val inset = insets?.getInsets(WindowInsetsCompat.Type.systemBars())
         /*WindowInsetsCompat
           .Builder()
           .setInsets(
@@ -103,7 +103,7 @@ val inset = insets?.getInsets(WindowInsetsCompat.Type.systemBars())
           defaultInsets.systemWindowInsetLeft,
           0,
           defaultInsets.systemWindowInsetRight,
-          defaultInsets.systemWindowInsetBottom
+          defaultInsets.systemWindowInsetBottom,
         )
       }
     }
@@ -113,6 +113,10 @@ val inset = insets?.getInsets(WindowInsetsCompat.Type.systemBars())
     val activity = reactContext.currentActivity
 
     if (activity != null) {
+      eventView = ReactViewGroup(context)
+      val root = this.getContentView()
+      root?.addView(eventView)
+
       val callback = KeyboardAnimationCallback(
         view = this,
         persistentInsetTypes = WindowInsetsCompat.Type.systemBars(),
@@ -122,9 +126,12 @@ val inset = insets?.getInsets(WindowInsetsCompat.Type.systemBars())
         dispatchMode = WindowInsetsAnimationCompat.Callback.DISPATCH_MODE_CONTINUE_ON_SUBTREE,
         context = reactContext,
       )
-      ViewCompat.setWindowInsetsAnimationCallback(this, callback)
-      ViewCompat.setOnApplyWindowInsetsListener(this, callback)
-      this.requestApplyInsetsWhenAttached()
+      
+      eventView?.let {
+        ViewCompat.setWindowInsetsAnimationCallback(it, callback)
+        ViewCompat.setOnApplyWindowInsetsListener(it, callback)
+        it.requestApplyInsetsWhenAttached()
+      }
     } else {
       Log.w(TAG, "Can not setup keyboard animation listener, since `currentActivity` is null")
     }
@@ -134,12 +141,11 @@ val inset = insets?.getInsets(WindowInsetsCompat.Type.systemBars())
     val rootView = reactContext.rootView
     if (rootView != null) {
       // ViewCompat.setOnApplyWindowInsetsListener(rootView, null)
-      val content = reactContext.rootView?.findViewById<FitWindowsLinearLayout>(
-        androidx.appcompat.R.id.action_bar_root,
-      )
+      val content = getContentView()
 
       val params = FrameLayout.LayoutParams(
-        FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT
+        FrameLayout.LayoutParams.MATCH_PARENT,
+        FrameLayout.LayoutParams.MATCH_PARENT,
       )
       params.setMargins(0, 0, 0, 0)
       content?.layoutParams = params
@@ -147,8 +153,9 @@ val inset = insets?.getInsets(WindowInsetsCompat.Type.systemBars())
   }
 
   private fun removeKeyboardCallbacks() {
-    ViewCompat.setWindowInsetsAnimationCallback(this, null)
-    ViewCompat.setOnApplyWindowInsetsListener(this, null)
+    // ViewCompat.setWindowInsetsAnimationCallback(this, null)
+    // ViewCompat.setOnApplyWindowInsetsListener(this, null)
+    eventView.removeSelf()
   }
 
   private fun enable() {
@@ -175,6 +182,7 @@ val inset = insets?.getInsets(WindowInsetsCompat.Type.systemBars())
     this.removeKeyboardCallbacks()
   }
 
+  // region Props setters
   fun setStatusBarTranslucent(isStatusBarTranslucent: Boolean) {
     this.isStatusBarTranslucent = isStatusBarTranslucent
   }
@@ -191,5 +199,12 @@ val inset = insets?.getInsets(WindowInsetsCompat.Type.systemBars())
     } else {
       this.disable()
     }
+  }
+  // endregion
+
+  private fun getContentView(): FitWindowsLinearLayout? {
+    return reactContext.currentActivity?.window?.decorView?.rootView?.findViewById(
+      androidx.appcompat.R.id.action_bar_root,
+    )
   }
 }

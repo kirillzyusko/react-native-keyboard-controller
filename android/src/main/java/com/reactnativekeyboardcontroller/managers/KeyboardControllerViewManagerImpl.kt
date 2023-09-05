@@ -12,7 +12,7 @@ class KeyboardControllerViewManagerImpl(mReactContext: ReactApplicationContext) 
   }
 
   fun setEnabled(view: EdgeToEdgeReactViewGroup, enabled: Boolean) {
-    view.setActive(enabled);
+    view.setActive(enabled)
   }
 
   fun setStatusBarTranslucent(view: EdgeToEdgeReactViewGroup, isStatusBarTranslucent: Boolean) {
