@@ -13,6 +13,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.views.view.ReactViewGroup
 import com.reactnativekeyboardcontroller.KeyboardAnimationCallback
+import com.reactnativekeyboardcontroller.extensions.removeSelf
 import com.reactnativekeyboardcontroller.extensions.requestApplyInsetsWhenAttached
 import com.reactnativekeyboardcontroller.extensions.rootView
 
@@ -22,36 +23,72 @@ private val TAG = EdgeToEdgeReactViewGroup::class.qualifiedName
 class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : ReactViewGroup(reactContext) {
   private var isStatusBarTranslucent = false
   private var isNavigationBarTranslucent = false
+  private var eventView: ReactViewGroup? = null
 
-  init {
+  // region View lifecycles
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+
     val activity = reactContext.currentActivity
-
-    if (activity != null) {
-      val callback = KeyboardAnimationCallback(
-        view = this,
-        persistentInsetTypes = WindowInsetsCompat.Type.systemBars(),
-        deferredInsetTypes = WindowInsetsCompat.Type.ime(),
-        // We explicitly allow dispatch to continue down to binding.messageHolder's
-        // child views, so that step 2.5 below receives the call
-        dispatchMode = WindowInsetsAnimationCompat.Callback.DISPATCH_MODE_CONTINUE_ON_SUBTREE,
-        context = reactContext,
-      )
-      ViewCompat.setWindowInsetsAnimationCallback(this, callback)
-      ViewCompat.setOnApplyWindowInsetsListener(this, callback)
-      this.requestApplyInsetsWhenAttached()
-    } else {
+    if (activity == null) {
       Log.w(TAG, "Can not setup keyboard animation listener, since `currentActivity` is null")
+      return
     }
+
+    Handler(Looper.getMainLooper()).post(this::setupWindowInsets)
+    WindowCompat.setDecorFitsSystemWindows(
+      activity.window,
+      false,
+    )
+
+    eventView = ReactViewGroup(context)
+    val root = this.getContentView()
+    root?.addView(eventView)
+
+    val callback = KeyboardAnimationCallback(
+      view = this,
+      persistentInsetTypes = WindowInsetsCompat.Type.systemBars(),
+      deferredInsetTypes = WindowInsetsCompat.Type.ime(),
+      dispatchMode = WindowInsetsAnimationCompat.Callback.DISPATCH_MODE_CONTINUE_ON_SUBTREE,
+      context = reactContext,
+    )
+
+    eventView?.let {
+      ViewCompat.setWindowInsetsAnimationCallback(it, callback)
+      ViewCompat.setOnApplyWindowInsetsListener(it, callback)
+      it.requestApplyInsetsWhenAttached()
+    }
+  }
+
+  override fun onDetachedFromWindow() {
+    super.onDetachedFromWindow()
+
+    eventView.removeSelf()
+  }
+  // endregion
+
+  // region Props setters
+  fun setStatusBarTranslucent(isStatusBarTranslucent: Boolean) {
+    this.isStatusBarTranslucent = isStatusBarTranslucent
+  }
+
+  fun setNavigationBarTranslucent(isNavigationBarTranslucent: Boolean) {
+    this.isNavigationBarTranslucent = isNavigationBarTranslucent
+  }
+  // endregion
+
+  // region Private functions/class helpers
+  private fun getContentView(): FitWindowsLinearLayout? {
+    return reactContext.currentActivity?.window?.decorView?.rootView?.findViewById(
+      androidx.appcompat.R.id.action_bar_root,
+    )
   }
 
   private fun setupWindowInsets() {
     val rootView = reactContext.rootView
     if (rootView != null) {
       ViewCompat.setOnApplyWindowInsetsListener(rootView) { v, insets ->
-        val content =
-          reactContext.rootView?.findViewById<FitWindowsLinearLayout>(
-            androidx.appcompat.R.id.action_bar_root,
-          )
+        val content = getContentView()
         val params = FrameLayout.LayoutParams(
           FrameLayout.LayoutParams.MATCH_PARENT,
           FrameLayout.LayoutParams.MATCH_PARENT,
@@ -80,24 +117,5 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
       }
     }
   }
-
-  override fun onAttachedToWindow() {
-    super.onAttachedToWindow()
-
-    Handler(Looper.getMainLooper()).post(this::setupWindowInsets)
-    reactContext.currentActivity?.let {
-      WindowCompat.setDecorFitsSystemWindows(
-        it.window,
-        false,
-      )
-    }
-  }
-
-  fun setStatusBarTranslucent(isStatusBarTranslucent: Boolean) {
-    this.isStatusBarTranslucent = isStatusBarTranslucent
-  }
-
-  fun setNavigationBarTranslucent(isNavigationBarTranslucent: Boolean) {
-    this.isNavigationBarTranslucent = isNavigationBarTranslucent
-  }
+  // endregion
 }
