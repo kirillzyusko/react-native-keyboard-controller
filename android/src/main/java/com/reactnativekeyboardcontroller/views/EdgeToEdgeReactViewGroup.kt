@@ -13,6 +13,7 @@ import com.facebook.react.views.view.ReactViewGroup
 import com.reactnativekeyboardcontroller.KeyboardAnimationCallback
 import com.reactnativekeyboardcontroller.extensions.requestApplyInsetsWhenAttached
 import com.reactnativekeyboardcontroller.extensions.rootView
+import com.reactnativekeyboardcontroller.extensions.removeSelf
 
 private val TAG = EdgeToEdgeReactViewGroup::class.qualifiedName
 
@@ -25,7 +26,29 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
 
   // internal class members
   private var eventView: ReactViewGroup? = null
+  private var wasAttached = false
 
+  // region View lifecycles
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+
+    if (!wasAttached) {
+      // skip logic with callback re-creation if it was first render/mount
+      wasAttached = true
+      return
+    }
+
+    this.setupKeyboardCallbacks()
+  }
+
+  override fun onDetachedFromWindow() {
+    super.onDetachedFromWindow()
+
+    this.removeKeyboardCallbacks()
+  }
+  // endregion
+
+  // region State manager helpers
   private fun setupWindowInsets() {
     val rootView = reactContext.rootView
     if (rootView != null) {
@@ -126,7 +149,7 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
         dispatchMode = WindowInsetsAnimationCompat.Callback.DISPATCH_MODE_CONTINUE_ON_SUBTREE,
         context = reactContext,
       )
-      
+
       eventView?.let {
         ViewCompat.setWindowInsetsAnimationCallback(it, callback)
         ViewCompat.setOnApplyWindowInsetsListener(it, callback)
@@ -157,7 +180,9 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
     // ViewCompat.setOnApplyWindowInsetsListener(this, null)
     eventView.removeSelf()
   }
+  // endregion
 
+  // region State managers
   private fun enable() {
     // Handler(Looper.getMainLooper()).post(this::setupWindowInsets)
     reactContext.currentActivity?.let {
@@ -181,6 +206,7 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
     // this.bringBackWindowInsets()
     this.removeKeyboardCallbacks()
   }
+  // endregion
 
   // region Props setters
   fun setStatusBarTranslucent(isStatusBarTranslucent: Boolean) {
@@ -192,6 +218,7 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
   }
 
   fun setActive(active: Boolean) {
+    println("setActive $active ${this.id}")
     this.active = active
 
     if (active) {

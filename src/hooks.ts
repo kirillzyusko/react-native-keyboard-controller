@@ -61,7 +61,7 @@ export function useKeyboardHandler(
 }
 
 export function useKeyboardController() {
-  const context = useContext(KeyboardContext);
+  const context = useKeyboardContext();
 
   return { setEnabled: context.setEnabled, enabled: context.enabled };
 }
