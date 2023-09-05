@@ -93,7 +93,7 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
           defaultInsets.systemWindowInsetLeft,
           if (this.isStatusBarTranslucent) 0 else defaultInsets.systemWindowInsetTop,
           defaultInsets.systemWindowInsetRight,
-          if (this.isNavigationBarTranslucent) 0 else defaultInsets.systemWindowInsetBottom
+          defaultInsets.systemWindowInsetBottom
         )
       }
     }

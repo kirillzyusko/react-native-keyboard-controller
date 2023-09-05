@@ -2,4 +2,5 @@
 - revert monkey patch when setEnabled(false)
 - test react-native-integration
 - native-stack breaks correct enabling/disabling
-- maybe need to remove all listeners on disable?
+- maybe need to remove all listeners on disable (onApplyWindowInset on rootView)?
+- test `navigationBatTranslucent` prop
