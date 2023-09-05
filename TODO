@@ -1,3 +1,5 @@
 - port to fabric (both iOS and Android)
 - revert monkey patch when setEnabled(false)
 - test react-native-integration
+- native-stack breaks correct enabling/disabling
+- maybe need to remove all listeners on disable?

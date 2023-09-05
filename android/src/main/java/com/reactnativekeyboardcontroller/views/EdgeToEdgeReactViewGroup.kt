@@ -1,6 +1,8 @@
 package com.reactnativekeyboardcontroller.views
 
 import android.annotation.SuppressLint
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.widget.FrameLayout
 import androidx.appcompat.widget.FitWindowsLinearLayout
@@ -17,6 +19,7 @@ import com.reactnativekeyboardcontroller.extensions.rootView
 
 private val TAG = EdgeToEdgeReactViewGroup::class.qualifiedName
 
+@Suppress("detekt:TooManyFunctions")
 @SuppressLint("ViewConstructor")
 class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : ReactViewGroup(reactContext) {
   // props
@@ -53,24 +56,17 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
     val rootView = reactContext.rootView
     if (rootView != null) {
       ViewCompat.setOnApplyWindowInsetsListener(rootView) { v, insets ->
-        // if (active) {
         val content = getContentView()
         val params = FrameLayout.LayoutParams(
           FrameLayout.LayoutParams.MATCH_PARENT,
           FrameLayout.LayoutParams.MATCH_PARENT,
         )
-        val statusBarTranslucent = if (this.isStatusBarTranslucent) {
-          0
-        } else {
-          (
-            insets?.getInsets(WindowInsetsCompat.Type.systemBars())?.top
-              ?: 0
-            )
-        }
 
+        val shouldApplyZeroPaddingTop = !active || this.isStatusBarTranslucent
+        val shouldApplyZeroPaddingBottom = !active || this.isNavigationBarTranslucent
         params.setMargins(
           0,
-          if (this.isStatusBarTranslucent) {
+          if (shouldApplyZeroPaddingTop) {
             0
           } else {
             (
@@ -79,7 +75,7 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
               )
           },
           0,
-          if (!active || this.isNavigationBarTranslucent) {
+          if (shouldApplyZeroPaddingBottom) {
             0
           } else {
             insets?.getInsets(WindowInsetsCompat.Type.navigationBars())?.bottom
@@ -90,43 +86,14 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
         println("${params.topMargin} ${params.bottomMargin}")
 
         content?.layoutParams = params
-        // }
+
         val defaultInsets = ViewCompat.onApplyWindowInsets(v, insets)
-        val windowInsets =
-          defaultInsets.getInsets(WindowInsetsCompat.Type.statusBars())
-        val inset = insets?.getInsets(WindowInsetsCompat.Type.systemBars())
-        /*WindowInsetsCompat
-          .Builder()
-          .setInsets(
-            WindowInsetsCompat.Type.statusBars(),
-            Insets.of(
-              windowInsets.left,
-              0,
-              windowInsets.right,
-              windowInsets.bottom,
-            )
-          )
-          .build()*/
-        // insets.replaceSystemWindowInsets(windowInsets.left, windowInsets.top, windowInsets.right, windowInsets.bottom)
-        /*val inset1 = defaultInsets.getInsets(WindowInsetsCompat.Type.systemBars())
-        WindowInsetsCompat
-          .Builder()
-          .setInsets(
-            WindowInsetsCompat.Type.statusBars(),
-            Insets.of(
-              inset1.left,
-              0,
-              inset1.right,
-              inset1.bottom,
-            )
-          )
-          .build()*/
 
         defaultInsets.replaceSystemWindowInsets(
           defaultInsets.systemWindowInsetLeft,
-          0,
+          if (this.isStatusBarTranslucent) 0 else defaultInsets.systemWindowInsetTop,
           defaultInsets.systemWindowInsetRight,
-          defaultInsets.systemWindowInsetBottom,
+          if (this.isNavigationBarTranslucent) 0 else defaultInsets.systemWindowInsetBottom
         )
       }
     }
@@ -176,8 +143,6 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
   }
 
   private fun removeKeyboardCallbacks() {
-    // ViewCompat.setWindowInsetsAnimationCallback(this, null)
-    // ViewCompat.setOnApplyWindowInsetsListener(this, null)
     eventView.removeSelf()
   }
   // endregion
@@ -218,7 +183,6 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
   }
 
   fun setActive(active: Boolean) {
-    println("setActive $active ${this.id}")
     this.active = active
 
     if (active) {
