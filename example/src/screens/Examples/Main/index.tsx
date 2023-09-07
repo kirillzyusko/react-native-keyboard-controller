@@ -9,7 +9,6 @@ import type { RootStackParamList } from '../../../navigation/RootStack';
 
 const styles = StyleSheet.create({
   scrollViewContainer: {
-    flex: 1,
     paddingVertical: 10,
     paddingHorizontal: 8,
   },
