@@ -32,6 +32,7 @@ class KeyboardAnimationCallback(
   dispatchMode: Int = DISPATCH_MODE_STOP,
   val context: ThemedReactContext?,
 ) : WindowInsetsAnimationCompat.Callback(dispatchMode), OnApplyWindowInsetsListener {
+  private val surfaceId = UIManagerHelper.getSurfaceId(view)
   private var persistentKeyboardHeight = 0.0
   private var isKeyboardVisible = false
   private var isTransitioning = false
@@ -57,6 +58,7 @@ class KeyboardAnimationCallback(
           // can bring breaking changes
           this.sendEventToJS(
             KeyboardTransitionEvent(
+              surfaceId,
               view.id,
               "topKeyboardMoveStart",
               this.persistentKeyboardHeight,
@@ -67,6 +69,7 @@ class KeyboardAnimationCallback(
           )
           this.sendEventToJS(
             KeyboardTransitionEvent(
+              surfaceId,
               view.id,
               "topKeyboardMoveEnd",
               this.persistentKeyboardHeight,
@@ -115,6 +118,7 @@ class KeyboardAnimationCallback(
       this.emitEvent("KeyboardController::keyboardWillShow", getEventParams(keyboardHeight))
       this.sendEventToJS(
         KeyboardTransitionEvent(
+          surfaceId,
           view.id,
           "topKeyboardMoveStart",
           keyboardHeight,
@@ -129,6 +133,7 @@ class KeyboardAnimationCallback(
         val toValue = animator.animatedValue as Float
         this.sendEventToJS(
           KeyboardTransitionEvent(
+            surfaceId,
             view.id,
             "topKeyboardMove",
             toValue.toDouble(),
@@ -142,6 +147,7 @@ class KeyboardAnimationCallback(
         this.emitEvent("KeyboardController::keyboardDidShow", getEventParams(keyboardHeight))
         this.sendEventToJS(
           KeyboardTransitionEvent(
+            surfaceId,
             view.id,
             "topKeyboardMoveEnd",
             keyboardHeight,
@@ -182,6 +188,7 @@ class KeyboardAnimationCallback(
     Log.i(TAG, "HEIGHT:: $keyboardHeight TAG:: $viewTagFocused")
     this.sendEventToJS(
       KeyboardTransitionEvent(
+        surfaceId,
         view.id,
         "topKeyboardMoveStart",
         keyboardHeight,
@@ -223,7 +230,7 @@ class KeyboardAnimationCallback(
     Log.i(TAG, "DiffY: $diffY $height $progress ${InteractiveKeyboardProvider.isInteractive} $viewTagFocused")
 
     val event = if (InteractiveKeyboardProvider.isInteractive) "topKeyboardMoveInteractive" else "topKeyboardMove"
-    this.sendEventToJS(KeyboardTransitionEvent(view.id, event, height, progress, duration, viewTagFocused))
+    this.sendEventToJS(KeyboardTransitionEvent(surfaceId, view.id, event, height, progress, duration, viewTagFocused))
 
     return insets
   }
@@ -254,6 +261,7 @@ class KeyboardAnimationCallback(
     )
     this.sendEventToJS(
       KeyboardTransitionEvent(
+        surfaceId,
         view.id,
         "topKeyboardMoveEnd",
         keyboardHeight,
