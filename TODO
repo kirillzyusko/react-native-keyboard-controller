@@ -8,10 +8,11 @@
 == [ ] Android jumpy behavior - should interpolate based on `height` and interpolate from `initialKeyboardFrame` to `finalKeyboardFrame`
 
 - [ ] should work on both platforms in the same way as RN implementation
-== [ ] iOS works almost as RN (except the case, when we set content as flex: 1 - for header + text inputs and flex: 1 - for button -> in this case inputs are animating only through the half of the movement (because view is not resizing anymore))
+== [-] iOS works almost as RN (except the case, when we set content as flex: 1 - for header + text inputs and flex: 1 - for button -> in this case inputs are animating only through the half of the movement (because view is not resizing anymore))
 == [ ] android layout jump, when your keyboard was shown/hidden and then you switch to RN impl
 
 - [ ] import 'react-native-keyboard-controller/components';
-- [ ] make KeyboardAvoidingView folder and place different files there -> hooks, constants, KeyboardAvoidingView, etc.
+- [x] make KeyboardAvoidingView folder and place different files there -> hooks, constants, KeyboardAvoidingView, etc.
 - [ ] useSmoothKeyboardHandler instead of useKeyboardHandler
 - [ ] port example to Fabric
+- [ ] update initialFrameHeight when keyboard is not shown
