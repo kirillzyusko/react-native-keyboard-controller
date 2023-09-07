@@ -44,4 +44,9 @@ export const examples: Example[] = [
     info: ScreenNames.NATIVE_STACK,
     icons: '⚛️',
   },
+  {
+    title: 'KeyboardAvoidingView',
+    info: ScreenNames.KEYBOARD_AVOIDING_VIEW,
+    icons: '😶',
+  },
 ];
