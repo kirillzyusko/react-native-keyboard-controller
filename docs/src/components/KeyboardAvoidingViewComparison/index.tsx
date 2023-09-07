@@ -16,7 +16,7 @@ const labels = {
   backgroundColor: '#00000000',
 };
 
-export default function HomepageFeatures(): JSX.Element {
+export default function KeyboardAvoidingViewComparison(): JSX.Element {
   return (
     <table>
       <tbody>
