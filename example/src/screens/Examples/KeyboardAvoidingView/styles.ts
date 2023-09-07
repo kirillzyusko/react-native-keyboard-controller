@@ -11,20 +11,17 @@ export default StyleSheet.create({
   content: {
     flex: 1,
     maxHeight: 600,
-    // backgroundColor: 'grey',
   },
   heading: {
     color: 'black',
     fontSize: 36,
     marginBottom: 48,
     fontWeight: '600',
-    // backgroundColor: 'blue',
   },
   inner: {
     padding: 24,
     flex: 1,
     justifyContent: 'space-between',
-    // backgroundColor: 'pink',
   },
   textInput: {
     height: 45,
@@ -33,7 +30,6 @@ export default StyleSheet.create({
     borderRadius: 10,
     marginBottom: 36,
     paddingLeft: 10,
-    // backgroundColor: 'green',
   },
   button: {
     marginTop: 12,
