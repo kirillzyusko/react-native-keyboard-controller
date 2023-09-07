@@ -1,3 +1,1 @@
-import KeyboardAvoidingView from './KeyboardAvoidingView';
-
-export { KeyboardAvoidingView };
+export { default as KeyboardAvoidingView } from './KeyboardAvoidingView';

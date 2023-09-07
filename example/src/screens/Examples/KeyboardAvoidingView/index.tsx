@@ -24,7 +24,7 @@ export default function KeyboardAvoidingViewExample({ navigation }: Props) {
           style={styles.header}
           onPress={() => setPackageImplementation((value) => !value)}
         >
-          {`${isPackageImplementation ? 'Package' : 'RN'}`}
+          {isPackageImplementation ? 'Package' : 'RN'}
         </Text>
       ),
     });

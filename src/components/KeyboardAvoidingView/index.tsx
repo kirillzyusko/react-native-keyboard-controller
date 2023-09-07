@@ -1,4 +1,4 @@
-import React, { forwardRef, useCallback } from 'react';
+import React, { forwardRef, useCallback, useMemo } from 'react';
 import {
   LayoutRectangle,
   useWindowDimensions,
@@ -92,7 +92,7 @@ const KeyboardAvoidingView = forwardRef<View, React.PropsWithChildren<Props>>(
         [0, 1],
         [0, relativeKeyboardHeight()]
       );
-      const bottomHeight = enabled === true ? bottom : 0;
+      const bottomHeight = enabled ? bottom : 0;
 
       switch (behavior) {
         case 'height':
@@ -106,9 +106,7 @@ const KeyboardAvoidingView = forwardRef<View, React.PropsWithChildren<Props>>(
           return {};
 
         case 'position':
-          return {
-            bottom: bottomHeight,
-          };
+          return { bottom: bottomHeight };
 
         case 'padding':
           return { paddingBottom: bottomHeight };
@@ -117,13 +115,17 @@ const KeyboardAvoidingView = forwardRef<View, React.PropsWithChildren<Props>>(
           return {};
       }
     }, [behavior, enabled, relativeKeyboardHeight]);
+    const isPositionBehavior = behavior === 'position';
+    const containerStyle = isPositionBehavior ? contentContainerStyle : style;
+    const combinedStyles = useMemo(
+      () => [containerStyle, animatedStyle],
+      [containerStyle, animatedStyle]
+    );
 
-    if (behavior === 'position') {
+    if (isPositionBehavior) {
       return (
         <View ref={ref} style={style} onLayout={onLayout} {...props}>
-          <Reanimated.View style={[contentContainerStyle, animatedStyle]}>
-            {children}
-          </Reanimated.View>
+          <Reanimated.View style={combinedStyles}>{children}</Reanimated.View>
         </View>
       );
     }
@@ -133,7 +135,7 @@ const KeyboardAvoidingView = forwardRef<View, React.PropsWithChildren<Props>>(
         // @ts-expect-error because `ref` from reanimated is not compatible with react-native
         ref={ref}
         onLayout={onLayout}
-        style={enabled ? [style, animatedStyle] : [style]}
+        style={combinedStyles}
         {...props}
       >
         {children}

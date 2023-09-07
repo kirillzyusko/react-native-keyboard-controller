@@ -8,6 +8,4 @@ export * from './hooks';
 export * from './constants';
 export * from './types';
 
-import { KeyboardAvoidingView } from './components';
-
-export { KeyboardAvoidingView };
+export { KeyboardAvoidingView } from './components';
