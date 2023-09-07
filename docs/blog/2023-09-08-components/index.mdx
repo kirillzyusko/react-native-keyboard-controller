@@ -1,0 +1,45 @@
+---
+slug: components
+title: Introducing KeyboardAvoidingView - Elevating Your React Native UI Experience
+authors: [kirill]
+tags: [react-native, keyboard, avoiding view]
+keywords: [react-native-keyboard-controller, keyboard, keyboard avoiding view, avoiding view, KeyboardAvoidingView]
+---
+
+I'm glad to announce the upcoming release of `react-native-keyboard-controller`, a library designed to enhance your React Native app's user experience. This release marks a significant milestone as I introduce a powerful new feature: the `KeyboardAvoidingView`. But that's not all – I have exciting plans to expand the collection of pre-built components to simplify handling keyboard insets even further.
+
+<!-- I'm glad to announce that upcoming release finally exposes pre-built components for handling keyboard insets. In this release I've added only one well-known `KeyboardAvoidingView`, but later I'll add more components, such as `KeyboardAwareScrollView`, `StickyFooter` etc. -->
+
+import KeyboardAvoidingViewComparison from '../../src/components/KeyboardAvoidingViewComparison';
+
+<KeyboardAvoidingViewComparison />
+
+<!-- truncate -->
+
+## A Better Way to Handle Keyboard Insets
+
+One of the common challenges React Native developers face is handling the keyboard's appearance and disappearance gracefully. It's especially important when you want your app to look and feel polished on both `iOS` and `Android` devices. While the built-in `KeyboardAvoidingView` component in React Native works well for `iOS`, it doesn't provide the same level of smoothness and consistency on `Android`.
+
+I have been hard at work, and in this upcoming release, I'm thrilled to unveil the enhanced `KeyboardAvoidingView`. With this component, you can achieve a seamless keyboard animation experience across both major platforms – `iOS` and `Android`.
+
+## Features of `KeyboardAvoidingView`
+
+### Platform-agnostic Animation
+
+With the new `KeyboardAvoidingView`, you can say goodbye to platform-specific workarounds. This component is designed to work harmoniously on both `iOS` and `Android`, ensuring a consistent user experience throughout your app.
+
+### Smoother Animations
+
+The enhanced `KeyboardAvoidingView` offers smoother and more natural animations when the keyboard appears or disappears. This means your UI elements will gracefully adjust to accommodate the keyboard, preventing awkward overlaps and ensuring your users can interact with your app seamlessly.
+
+### Customization
+
+I understand that one size doesn't fit all. That's why I've made it easy to customize the behavior of the `KeyboardAvoidingView` to match your app's specific requirements. Tailor it to your liking and ensure your UI maintains its aesthetics while responding intelligently to the keyboard.
+
+## What's Coming Next
+
+While I'm excited to introduce the `KeyboardAvoidingView` in this release, my commitment to making your React Native development experience smoother doesn't stop here. I have big plans to expand the library with more pre-built components designed to simplify complex tasks related to keyboard handling.
+
+In the pipeline, you can look forward to components like `KeyboardAwareScrollView` for effortlessly managing scroll views, `StickyFooter` for keeping crucial UI elements in view, and much more. My goal is to provide you with a comprehensive toolkit for creating exceptional user interfaces in React Native.
+
+Stay tuned for future updates and releases as I continue to enhance the `react-native-keyboard-controller` library. Follow me on [Twitter](https://twitter.com/ziusko) and [GitHub](https://github.com/kirillzyusko) for updates. Thank you for your support! 😊
