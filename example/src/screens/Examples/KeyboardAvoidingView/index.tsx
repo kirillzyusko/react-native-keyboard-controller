@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Platform,
   KeyboardAvoidingView as RNKeyboardAvoidingView,
   Text,
   TextInput,
@@ -36,7 +35,7 @@ export default function KeyboardAvoidingViewExample({ navigation }: Props) {
 
   return (
     <Container
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      behavior="padding"
       contentContainerStyle={styles.container}
       keyboardVerticalOffset={100}
       style={styles.content}
@@ -44,8 +43,16 @@ export default function KeyboardAvoidingViewExample({ navigation }: Props) {
       <View style={styles.inner}>
         <Text style={styles.heading}>Header</Text>
         <View>
-          <TextInput placeholder="Username" style={styles.textInput} />
-          <TextInput placeholder="Password" style={styles.textInput} />
+          <TextInput
+            placeholder="Username"
+            placeholderTextColor="#7C7C7C"
+            style={styles.textInput}
+          />
+          <TextInput
+            placeholder="Password"
+            placeholderTextColor="#7C7C7C"
+            style={styles.textInput}
+          />
         </View>
         <TouchableOpacity style={styles.button}>
           <Text style={styles.text}>Submit</Text>
