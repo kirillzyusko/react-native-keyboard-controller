@@ -1,8 +1,6 @@
 package com.reactnativekeyboardcontroller.views
 
 import android.annotation.SuppressLint
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.widget.FrameLayout
 import androidx.appcompat.widget.FitWindowsLinearLayout
@@ -29,15 +27,15 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
 
   // internal class members
   private var eventView: ReactViewGroup? = null
-  private var wasAttached = false
+  private var wasMounted = false
 
   // region View lifecycles
   override fun onAttachedToWindow() {
     super.onAttachedToWindow()
 
-    if (!wasAttached) {
+    if (!wasMounted) {
       // skip logic with callback re-creation if it was first render/mount
-      wasAttached = true
+      wasMounted = true
       return
     }
 
@@ -83,8 +81,6 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
           },
         )
 
-        println("${params.topMargin} ${params.bottomMargin}")
-
         content?.layoutParams = params
 
         val defaultInsets = ViewCompat.onApplyWindowInsets(v, insets)
@@ -93,9 +89,18 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
           defaultInsets.systemWindowInsetLeft,
           if (this.isStatusBarTranslucent) 0 else defaultInsets.systemWindowInsetTop,
           defaultInsets.systemWindowInsetRight,
-          defaultInsets.systemWindowInsetBottom
+          defaultInsets.systemWindowInsetBottom,
         )
       }
+    }
+  }
+
+  private fun goToEdgeToEdge(edgeToEdge: Boolean) {
+    reactContext.currentActivity?.let {
+      WindowCompat.setDecorFitsSystemWindows(
+        it.window,
+        !edgeToEdge,
+      )
     }
   }
 
@@ -111,8 +116,6 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
         view = this,
         persistentInsetTypes = WindowInsetsCompat.Type.systemBars(),
         deferredInsetTypes = WindowInsetsCompat.Type.ime(),
-        // We explicitly allow dispatch to continue down to binding.messageHolder's
-        // child views, so that step 2.5 below receives the call
         dispatchMode = WindowInsetsAnimationCompat.Callback.DISPATCH_MODE_CONTINUE_ON_SUBTREE,
         context = reactContext,
       )
@@ -127,48 +130,27 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
     }
   }
 
-  private fun bringBackWindowInsets() {
-    val rootView = reactContext.rootView
-    if (rootView != null) {
-      // ViewCompat.setOnApplyWindowInsetsListener(rootView, null)
-      val content = getContentView()
-
-      val params = FrameLayout.LayoutParams(
-        FrameLayout.LayoutParams.MATCH_PARENT,
-        FrameLayout.LayoutParams.MATCH_PARENT,
-      )
-      params.setMargins(0, 0, 0, 0)
-      content?.layoutParams = params
-    }
-  }
-
   private fun removeKeyboardCallbacks() {
     eventView.removeSelf()
+  }
+
+  private fun getContentView(): FitWindowsLinearLayout? {
+    return reactContext.currentActivity?.window?.decorView?.rootView?.findViewById(
+      androidx.appcompat.R.id.action_bar_root,
+    )
   }
   // endregion
 
   // region State managers
   private fun enable() {
-    // Handler(Looper.getMainLooper()).post(this::setupWindowInsets)
-    reactContext.currentActivity?.let {
-      WindowCompat.setDecorFitsSystemWindows(
-        it.window,
-        false,
-      )
-    }
+    this.goToEdgeToEdge(true)
     this.setupWindowInsets()
     this.setupKeyboardCallbacks()
   }
 
   private fun disable() {
-    // Handler(Looper.getMainLooper()).post(this::bringBackWindowInsets)
-    reactContext.currentActivity?.let {
-      WindowCompat.setDecorFitsSystemWindows(
-        it.window,
-        true,
-      )
-    }
-    // this.bringBackWindowInsets()
+    this.goToEdgeToEdge(false)
+    this.setupWindowInsets()
     this.removeKeyboardCallbacks()
   }
   // endregion
@@ -192,10 +174,4 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
     }
   }
   // endregion
-
-  private fun getContentView(): FitWindowsLinearLayout? {
-    return reactContext.currentActivity?.window?.decorView?.rootView?.findViewById(
-      androidx.appcompat.R.id.action_bar_root,
-    )
-  }
 }
