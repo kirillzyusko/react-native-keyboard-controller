@@ -8,6 +8,11 @@ export const examples: Example[] = [
     icons: '😍⌨️',
   },
   { title: 'Chat', info: ScreenNames.REANIMATED_CHAT, icons: '💬' },
+  {
+    title: 'Chat flatlist',
+    info: ScreenNames.REANIMATED_CHAT_FLATLIST,
+    icons: '💬',
+  },
   { title: 'Events', info: ScreenNames.EVENTS, icons: '🎃 📅' },
   {
     title: 'Aware scroll view',
