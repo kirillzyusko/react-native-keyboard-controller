@@ -1,20 +1,15 @@
-import React from 'react';
 import { FlatList, ListRenderItem, TextInput, View } from 'react-native';
 import { useReanimatedKeyboardAnimation } from 'react-native-keyboard-controller';
-import { useAnimatedStyle } from 'react-native-reanimated';
+import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 
 import Message from '../../../components/Message';
 import { history } from '../../../components/Message/data';
 
-import type { StackScreenProps } from '@react-navigation/stack';
-import Animated from 'react-native-reanimated';
+import { useCallback } from 'react';
 import { MessageProps } from '../../../components/Message/types';
-import type { ExamplesStackParamList } from '../../../navigation/ExamplesStack';
 import styles from './styles';
 
-type Props = StackScreenProps<ExamplesStackParamList>;
-
-function ReanimatedChatFlatlist({ navigation }: Props) {
+function ReanimatedChatFlatlist() {
   const { height } = useReanimatedKeyboardAnimation();
 
   const fakeView = useAnimatedStyle(
@@ -24,9 +19,12 @@ function ReanimatedChatFlatlist({ navigation }: Props) {
     []
   );
 
-  const renderItem: ListRenderItem<MessageProps> = ({ item, index }) => {
-    return <Message key={index} {...item} />;
-  };
+  const renderItem: ListRenderItem<MessageProps> = useCallback(
+    ({ item, index }) => {
+      return <Message key={index} {...item} />;
+    },
+    []
+  );
 
   return (
     <View style={styles.container}>
@@ -34,7 +32,7 @@ function ReanimatedChatFlatlist({ navigation }: Props) {
         inverted
         initialNumToRender={15}
         contentContainerStyle={styles.contentContainer}
-        data={history}
+        data={history.reverse()}
         renderItem={renderItem}
       />
       <TextInput style={styles.textInput} />
