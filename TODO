@@ -1,7 +1,7 @@
-- port to fabric (both iOS and Android)
-- revert monkey patch when setEnabled(false)
-- test react-native-integration
+- (x) port to fabric (both iOS and Android)
+- (x) revert monkey patch when setEnabled(false)
 - (x) native-stack breaks correct enabling/disabling <- setup insets listener on `disable`
+- test react-native-integration
 - maybe need to remove all listeners on disable (onApplyWindowInset on rootView)?
 - test `navigationBatTranslucent` prop
 - iOS props initialization mechanism (paper - set props first (initialize on mount), fabric - set props after component creation (updateProps))

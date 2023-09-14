@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Animated, Platform, StyleSheet, ViewStyle } from 'react-native';
 import Reanimated, { useSharedValue } from 'react-native-reanimated';
 
@@ -12,6 +12,7 @@ import type {
   KeyboardHandler,
   NativeEvent,
 } from './types';
+import { applyMonkeyPatch, revertMonkeyPatch } from './monkey-patch';
 
 const KeyboardControllerViewAnimated = Reanimated.createAnimatedComponent(
   Animated.createAnimatedComponent(
@@ -139,6 +140,14 @@ export const KeyboardProvider = ({
     },
     []
   );
+  // effects
+  useEffect(() => {
+    if (enabled) {
+      applyMonkeyPatch();
+    } else {
+      revertMonkeyPatch();
+    }
+  }, [enabled]);
 
   return (
     <KeyboardContext.Provider value={context}>
