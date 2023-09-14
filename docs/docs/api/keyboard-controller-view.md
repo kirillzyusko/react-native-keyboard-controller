@@ -35,4 +35,4 @@ A boolean prop to indicate whether [NavigationBar](https://m2.material.io/design
 
 ### `enabled`
 
-A boolean prop indicating whether the view is active or not. If it's enabled it moves application in [edge-to-edge](https://developer.android.com/training/gestures/edge-to-edge) on Android, setup keyboard callbacks. When disabled - moves app away from [edge-to-edge](https://developer.android.com/training/gestures/edge-to-edge), removes keyboard listeners.
+A boolean prop indicating whether the view is active or not. If it's `true` then it moves application to [edge-to-edge](https://developer.android.com/training/gestures/edge-to-edge) mode on Android and setup keyboard callbacks. When `false` - moves app away from [edge-to-edge](https://developer.android.com/training/gestures/edge-to-edge) and removes keyboard listeners.
