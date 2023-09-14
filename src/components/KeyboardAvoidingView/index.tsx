@@ -11,6 +11,7 @@ import Reanimated, {
   useSharedValue,
   useDerivedValue,
   interpolate,
+  runOnUI,
 } from 'react-native-reanimated';
 import { useKeyboardAnimation } from './hooks';
 
@@ -76,11 +77,14 @@ const KeyboardAvoidingView = forwardRef<View, React.PropsWithChildren<Props>>(
       return Math.max(frame.value.y + frame.value.height - keyboardY, 0);
     }, [screenHeight, keyboardVerticalOffset]);
 
+    const onLayoutWorklet = useWorkletCallback((layout: LayoutRectangle) => {
+      if (keyboard.isClosed.value) {
+        initialFrame.value = layout;
+      }
+    });
     const onLayout = useCallback<NonNullable<ViewProps['onLayout']>>(
       (e) => {
-        if (initialFrame.value === null) {
-          initialFrame.value = e.nativeEvent.layout;
-        }
+        runOnUI(onLayoutWorklet)(e.nativeEvent.layout);
         onLayoutProps?.(e);
       },
       [onLayoutProps]
