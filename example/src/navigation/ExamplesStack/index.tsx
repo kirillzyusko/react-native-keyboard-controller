@@ -14,6 +14,7 @@ import InteractiveKeyboard from '../../screens/Examples/InteractiveKeyboard';
 import InteractiveKeyboardIOS from '../../screens/Examples/InteractiveKeyboardIOS';
 import NativeStack from '../NestedStack';
 import KeyboardAvoidingViewExample from '../../screens/Examples/KeyboardAvoidingView';
+import ReanimatedChatFlatlist from '../../screens/Examples/ReanimatedChatFlatlist';
 
 export type ExamplesStackParamList = {
   [ScreenNames.ANIMATED_EXAMPLE]: undefined;
@@ -37,6 +38,9 @@ const options = {
   },
   [ScreenNames.REANIMATED_CHAT]: {
     title: 'Chat',
+  },
+  [ScreenNames.REANIMATED_CHAT_FLATLIST]: {
+    title: 'Chat Flatlist',
   },
   [ScreenNames.EVENTS]: {
     title: 'Events',
@@ -78,6 +82,11 @@ const ExamplesStack = () => (
     <Stack.Screen
       name={ScreenNames.REANIMATED_CHAT}
       component={ReanimatedChat}
+      options={options[ScreenNames.REANIMATED_CHAT]}
+    />
+    <Stack.Screen
+      name={ScreenNames.REANIMATED_CHAT_FLATLIST}
+      component={ReanimatedChatFlatlist}
       options={options[ScreenNames.REANIMATED_CHAT]}
     />
     <Stack.Screen
