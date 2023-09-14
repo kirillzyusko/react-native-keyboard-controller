@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   KeyboardAvoidingView as RNKeyboardAvoidingView,
+  KeyboardAvoidingViewProps,
   Text,
   TextInput,
   TouchableOpacity,
@@ -13,21 +14,38 @@ import styles from './styles';
 
 type Props = StackScreenProps<ExamplesStackParamList>;
 
+type Behavior = KeyboardAvoidingViewProps['behavior'];
+const behaviors: Behavior[] = ['padding', 'height', 'position'];
+
 export default function KeyboardAvoidingViewExample({ navigation }: Props) {
+  const [behavior, setBehavior] = useState<Behavior>(behaviors[0]);
   const [isPackageImplementation, setPackageImplementation] = useState(true);
 
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <Text
-          style={styles.header}
-          onPress={() => setPackageImplementation((value) => !value)}
-        >
-          {isPackageImplementation ? 'Package' : 'RN'}
-        </Text>
+        <View style={styles.row}>
+          <Text
+            style={styles.header}
+            onPress={() => setPackageImplementation((value) => !value)}
+          >
+            {isPackageImplementation ? 'Package' : 'RN'}
+          </Text>
+          <Text
+            style={styles.header}
+            onPress={() => {
+              const index = behaviors.indexOf(behavior);
+              setBehavior(
+                behaviors[index === behaviors.length - 1 ? 0 : index + 1]
+              );
+            }}
+          >
+            {behavior}
+          </Text>
+        </View>
       ),
     });
-  }, [isPackageImplementation]);
+  }, [isPackageImplementation, behavior]);
 
   const Container = isPackageImplementation
     ? KeyboardAvoidingView
@@ -35,7 +53,7 @@ export default function KeyboardAvoidingViewExample({ navigation }: Props) {
 
   return (
     <Container
-      behavior="height"
+      behavior={behavior}
       contentContainerStyle={styles.container}
       keyboardVerticalOffset={100}
       style={styles.content}
