@@ -32,3 +32,7 @@ A boolean prop to indicate whether `StatusBar` should be translucent on `Android
 ### `navigationBarTranslucent`
 
 A boolean prop to indicate whether [NavigationBar](https://m2.material.io/design/platform-guidance/android-bars.html#android-navigation-bar) should be translucent on `Android` or not.
+
+### `enabled`
+
+A boolean prop indicating whether the view is active or not. If it's enabled it moves application in [edge-to-edge](https://developer.android.com/training/gestures/edge-to-edge) on Android, setup keyboard callbacks. When disabled - moves app away from [edge-to-edge](https://developer.android.com/training/gestures/edge-to-edge), removes keyboard listeners.
