@@ -35,7 +35,7 @@ export default function KeyboardAvoidingViewExample({ navigation }: Props) {
 
   return (
     <Container
-      behavior="padding"
+      behavior="height"
       contentContainerStyle={styles.container}
       keyboardVerticalOffset={100}
       style={styles.content}

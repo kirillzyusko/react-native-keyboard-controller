@@ -5,6 +5,7 @@ export const useKeyboardAnimation = () => {
   const heightWhenOpened = useSharedValue(0);
   const height = useSharedValue(0);
   const progress = useSharedValue(0);
+  const isClosed = useSharedValue(true);
 
   useKeyboardHandler(
     {
@@ -12,6 +13,7 @@ export const useKeyboardAnimation = () => {
         'worklet';
 
         if (e.height > 0) {
+          isClosed.value = false;
           heightWhenOpened.value = e.height;
         }
       },
@@ -21,9 +23,14 @@ export const useKeyboardAnimation = () => {
         progress.value = e.progress;
         height.value = e.height;
       },
+      onEnd: (e) => {
+        'worklet';
+
+        isClosed.value = e.height === 0;
+      },
     },
     []
   );
 
-  return { height, progress, heightWhenOpened };
+  return { height, progress, heightWhenOpened, isClosed };
 };

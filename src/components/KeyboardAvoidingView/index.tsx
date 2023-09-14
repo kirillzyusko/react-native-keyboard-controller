@@ -96,7 +96,7 @@ const KeyboardAvoidingView = forwardRef<View, React.PropsWithChildren<Props>>(
 
       switch (behavior) {
         case 'height':
-          if (bottomHeight > 0) {
+          if (!keyboard.isClosed.value) {
             return {
               height: frame.value.height - bottomHeight,
               flex: 0,
