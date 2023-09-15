@@ -8,6 +8,9 @@ export default StyleSheet.create({
   container: {
     flex: 1,
   },
+  row: {
+    flexDirection: 'row',
+  },
   content: {
     flex: 1,
     maxHeight: 600,
