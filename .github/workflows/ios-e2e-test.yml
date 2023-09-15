@@ -1,0 +1,52 @@
+name: 🛠 iOS e2e tests
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/ios-e2e-test.yml'
+      - 'react-native-keyboard-controller.podspec'
+      - 'package.json'
+      - 'ios/**'
+      - 'example/**'
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: macos-12
+    timeout-minutes: 60
+    env:
+      WORKING_DIRECTORY: example
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+      - name: Use Node.js 18
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'yarn'
+      - name: Get Xcode version
+        run: xcodebuild -version
+      - name: Install AppleSimulatorUtils
+        run: brew tap wix/brew && brew install applesimutils
+      - name: Install root dependencies
+        run: yarn
+      - name: Install example project dependencies
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: yarn
+      - name: Install pods
+        working-directory: ${{ env.WORKING_DIRECTORY }}/ios
+        run: pod install
+      - name: Build app
+        working-directory: detox
+        run: detox build --configuration example.ios.sim.release
+      - name: Use software keyboard
+        run: defaults write com.apple.iphonesimulator ConnectHardwareKeyboard -bool NO  
+      - name: Test app
+        working-directory: detox
+        run: detox test --configuration example.ios.sim.release --take-screenshots failing
+      - uses: actions/upload-artifact@v3
+        if: ${{ failure() }}
+        with:
+          name: ios-fail-screen-shoots
+          path: ${{ env.WORKING_DIRECTORY }}/artifacts
