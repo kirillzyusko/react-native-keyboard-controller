@@ -30,10 +30,12 @@ jobs:
       - name: Install AppleSimulatorUtils
         run: brew tap wix/brew && brew install applesimutils
       - name: Install root dependencies
-        run: yarn
+        run: yarn install
       - name: Install example project dependencies
         working-directory: ${{ env.WORKING_DIRECTORY }}
         run: yarn
+      - name: Install detox dependencies
+        run: yarn install --cwd detox
       - name: Install pods
         working-directory: ${{ env.WORKING_DIRECTORY }}/ios
         run: pod install
