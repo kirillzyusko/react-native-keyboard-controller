@@ -4,6 +4,8 @@
   "description": "Set of E2E tests for react-native-keyboard-controller package",
   "main": "index.js",
   "scripts": {
+    "build-example:ios": "detox build --configuration example.ios.sim.release",
+    "test-example:ios": "detox test --configuration example.ios.sim.release --take-screenshots failing",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
