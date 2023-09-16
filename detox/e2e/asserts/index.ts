@@ -70,7 +70,7 @@ const checkIsScreenShotMatch = (
 
 async function expectBitmapsToBeEqual(
   screenName: string,
-  acceptableDiffPercent = 1
+  acceptableDiffPercent = 0.1
 ): Promise<void> {
   const platform = device.getPlatform();
   const deviceName = parseDeviceName(device.name);
