@@ -51,4 +51,4 @@ jobs:
         if: ${{ failure() }}
         with:
           name: ios-fail-screen-shoots
-          path: ${{ env.WORKING_DIRECTORY }}/artifacts
+          path: detox/artifacts
