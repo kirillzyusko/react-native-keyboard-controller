@@ -40,7 +40,7 @@ jobs:
       - name: Install detox dependencies
         run: yarn install --cwd detox
       - name: Build app
-        working-directory: ${{ env.WORKING_DIRECTORY }}
+        working-directory: detox
         run: yarn build-example:android
       - name: Run emulator and tests
         uses: reactivecircus/android-emulator-runner@v2.28.0
