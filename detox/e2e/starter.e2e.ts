@@ -1,5 +1,5 @@
 import { expectBitmapsToBeEqual } from './asserts';
-import { typeText, waitAndTap, waitForElementById } from './helpers';
+import { delay, typeText, waitAndTap, waitForElementById } from './helpers';
 import setDemoMode from './utils/setDemoMode';
 
 describe('Example', () => {
@@ -14,12 +14,17 @@ describe('Example', () => {
   });
 
   it('should have expected state when keyboard is opened', async () => {
-    await typeText('keyboard_animation_text_input', '');
+    await waitAndTap('keyboard_animation_text_input');
     await expectBitmapsToBeEqual('KeyboardAnimationKeyboardIsShown');
   });
 
   it('should have expected state when keyboard is closed', async () => {
-    await typeText('keyboard_animation_text_input', '\n');
+    if (device.getPlatform() === 'android') {
+      await device.pressBack();
+      await delay(1000);
+    } else {
+      await typeText('keyboard_animation_text_input', '\n');
+    }
     await expectBitmapsToBeEqual('KeyboardAnimationKeyboardIsHidden');
   });
 });

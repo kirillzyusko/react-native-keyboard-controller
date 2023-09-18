@@ -1,11 +1,11 @@
-name: 🛠 iOS e2e tests
+name: 🛠 Android e2e tests
 on:
   pull_request:
     paths:
-      - '.github/workflows/ios-e2e-test.yml'
+      - '.github/workflows/android-e2e-test.yml'
       - 'react-native-keyboard-controller.podspec'
       - 'package.json'
-      - 'ios/**'
+      - 'android/**'
       - 'example/**'
   push:
     branches:
@@ -26,10 +26,12 @@ jobs:
         with:
           node-version: 18
           cache: 'yarn'
-      - name: Get Xcode version
-        run: xcodebuild -version
-      - name: Install AppleSimulatorUtils
-        run: brew tap wix/brew && brew install applesimutils
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'zulu'
+          cache: 'gradle'
       - name: Install root dependencies
         run: yarn install
       - name: Install example project dependencies
@@ -37,17 +39,22 @@ jobs:
         run: yarn
       - name: Install detox dependencies
         run: yarn install --cwd detox
-      - name: Install pods
-        working-directory: ${{ env.WORKING_DIRECTORY }}/ios
-        run: pod install
       - name: Build app
-        working-directory: detox
-        run: yarn build-example:ios
-      - name: Use software keyboard
-        run: defaults write com.apple.iphonesimulator ConnectHardwareKeyboard -bool NO  
-      - name: Test app
-        working-directory: detox
-        run: yarn test-example:ios
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: yarn build-example:android
+      - name: Run emulator and tests
+        uses: reactivecircus/android-emulator-runner@v2.28.0
+        with:
+          working-directory: detox
+          api-level: 31
+          target: default
+          profile: pixel_2
+          ram-size: '4096M'
+          disk-size: '10G'
+          disable-animations: false
+          avd-name: e2e_emulator
+          arch: x86_64
+          script: yarn test-example:android
       - uses: actions/upload-artifact@v3
         if: ${{ failure() }}
         with:
