@@ -21,6 +21,12 @@ By default this library stretches to full screen (`edge-to-edge` mode) and statu
 
 A boolean prop to indicate whether [NavigationBar](https://m2.material.io/design/platform-guidance/android-bars.html#android-navigation-bar) should be translucent on `Android` or not.
 
+### `enabled`
+
+A boolean prop indicating whether the module is enabled. It indicate only initial state, i. e. if you try to change this prop after component mount it will not have any effect. To change the property in runtime use [useKeyboardController](./hooks/module/use-keyboard-controller.md) hook and `setEnabled` method. Defaults to `true`.
+
+Could be useful to set it to `false` if you want to activate the module only on specific screens.
+
 ## Example
 
 ```tsx

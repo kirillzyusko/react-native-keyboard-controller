@@ -55,14 +55,22 @@ type KeyboardProviderProps = {
    * @platform android
    */
   navigationBarTranslucent?: boolean;
+  /**
+   * A boolean prop indicating whether the module is enabled. It indicate only initial state,
+   * i. e. if you try to change this prop after component mount it will not have any effect.
+   * To change the property in runtime use `useKeyboardController` hook and `setEnabled` method.
+   * Defaults to `true`.
+   */
+  enabled?: boolean;
 };
 
 export const KeyboardProvider = ({
   children,
   statusBarTranslucent,
   navigationBarTranslucent,
+  enabled: initiallyEnabled = true,
 }: KeyboardProviderProps) => {
-  const [enabled, setEnabled] = useState(true);
+  const [enabled, setEnabled] = useState(initiallyEnabled);
   // animated values
   const progress = useAnimatedValue(0);
   const height = useAnimatedValue(0);
