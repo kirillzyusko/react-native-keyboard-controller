@@ -110,10 +110,25 @@ using namespace facebook::react;
         onNotify:^(NSString *event, NSDictionary *data) {
           [KeyboardController.shared sendEvent:event body:data];
         }];
-    [observer mount];
   }
 
   return self;
+}
+
+- (void)updateProps:(Props::Shared const &)props oldProps:(Props::Shared const &)oldProps
+{
+  const auto &oldViewProps = *std::static_pointer_cast<const KeyboardControllerViewProps>(_props);
+  const auto &newViewProps = *std::static_pointer_cast<const KeyboardControllerViewProps>(props);
+
+  if (newViewProps.enabled != oldViewProps.enabled) {
+    if (newViewProps.enabled) {
+      [observer mount];
+    } else {
+      [observer unmount];
+    }
+  }
+
+  [super updateProps:props oldProps:oldProps];
 }
 
 Class<RCTComponentViewProtocol> KeyboardControllerViewCls(void)

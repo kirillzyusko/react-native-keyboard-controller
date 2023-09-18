@@ -1,8 +1,8 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Animated, Platform, StyleSheet, ViewStyle } from 'react-native';
 import Reanimated, { useSharedValue } from 'react-native-reanimated';
 
-import { KeyboardContext } from './context';
+import { KeyboardAnimationContext, KeyboardContext } from './context';
 import { useSharedHandlers, useAnimatedValue } from './internal';
 import { KeyboardControllerView } from './bindings';
 import { useAnimatedKeyboardHandler } from './reanimated';
@@ -12,6 +12,7 @@ import type {
   KeyboardHandler,
   NativeEvent,
 } from './types';
+import { applyMonkeyPatch, revertMonkeyPatch } from './monkey-patch';
 
 const KeyboardControllerViewAnimated = Reanimated.createAnimatedComponent(
   Animated.createAnimatedComponent(
@@ -54,13 +55,22 @@ type KeyboardProviderProps = {
    * @platform android
    */
   navigationBarTranslucent?: boolean;
+  /**
+   * A boolean prop indicating whether the module is enabled. It indicate only initial state,
+   * i. e. if you try to change this prop after component mount it will not have any effect.
+   * To change the property in runtime use `useKeyboardController` hook and `setEnabled` method.
+   * Defaults to `true`.
+   */
+  enabled?: boolean;
 };
 
 export const KeyboardProvider = ({
   children,
   statusBarTranslucent,
   navigationBarTranslucent,
+  enabled: initiallyEnabled = true,
 }: KeyboardProviderProps) => {
+  const [enabled, setEnabled] = useState(initiallyEnabled);
   // animated values
   const progress = useAnimatedValue(0);
   const height = useAnimatedValue(0);
@@ -69,13 +79,15 @@ export const KeyboardProvider = ({
   const heightSV = useSharedValue(0);
   const { setHandlers, broadcast } = useSharedHandlers<KeyboardHandler>();
   // memo
-  const context = useMemo(
+  const context = useMemo<KeyboardAnimationContext>(
     () => ({
+      enabled,
       animated: { progress: progress, height: Animated.multiply(height, -1) },
       reanimated: { progress: progressSV, height: heightSV },
       setHandlers,
+      setEnabled,
     }),
-    []
+    [enabled]
   );
   const style = useMemo(
     () => [
@@ -136,10 +148,19 @@ export const KeyboardProvider = ({
     },
     []
   );
+  // effects
+  useEffect(() => {
+    if (enabled) {
+      applyMonkeyPatch();
+    } else {
+      revertMonkeyPatch();
+    }
+  }, [enabled]);
 
   return (
     <KeyboardContext.Provider value={context}>
       <KeyboardControllerViewAnimated
+        enabled={enabled}
         onKeyboardMoveReanimated={handler}
         onKeyboardMoveStart={Platform.OS === 'ios' ? onKeyboardMove : undefined}
         onKeyboardMove={Platform.OS === 'android' ? onKeyboardMove : undefined}

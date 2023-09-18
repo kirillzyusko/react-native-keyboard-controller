@@ -17,6 +17,7 @@ export type EventWithName<T> = {
 
 // native View/Module declarations
 export type KeyboardControllerProps = {
+  enabled?: boolean;
   onKeyboardMoveStart?: (
     e: NativeSyntheticEvent<EventWithName<NativeEvent>>
   ) => void;

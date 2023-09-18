@@ -14,6 +14,7 @@ import InteractiveKeyboard from '../../screens/Examples/InteractiveKeyboard';
 import InteractiveKeyboardIOS from '../../screens/Examples/InteractiveKeyboardIOS';
 import NativeStack from '../NestedStack';
 import KeyboardAvoidingViewExample from '../../screens/Examples/KeyboardAvoidingView';
+import EnabledDisabled from '../../screens/Examples/EnabledDisabled';
 
 export type ExamplesStackParamList = {
   [ScreenNames.ANIMATED_EXAMPLE]: undefined;
@@ -27,6 +28,7 @@ export type ExamplesStackParamList = {
   [ScreenNames.INTERACTIVE_KEYBOARD_IOS]: undefined;
   [ScreenNames.NATIVE_STACK]: undefined;
   [ScreenNames.KEYBOARD_AVOIDING_VIEW]: undefined;
+  [ScreenNames.ENABLED_DISABLED]: undefined;
 };
 
 const Stack = createStackNavigator<ExamplesStackParamList>();
@@ -65,6 +67,9 @@ const options = {
   },
   [ScreenNames.KEYBOARD_AVOIDING_VIEW]: {
     title: 'KeyboardAvoidingView',
+  },
+  [ScreenNames.ENABLED_DISABLED]: {
+    title: 'Enabled/disabled',
   },
 };
 
@@ -124,6 +129,11 @@ const ExamplesStack = () => (
       name={ScreenNames.KEYBOARD_AVOIDING_VIEW}
       component={KeyboardAvoidingViewExample}
       options={options[ScreenNames.KEYBOARD_AVOIDING_VIEW]}
+    />
+    <Stack.Screen
+      name={ScreenNames.ENABLED_DISABLED}
+      component={EnabledDisabled}
+      options={options[ScreenNames.ENABLED_DISABLED]}
     />
   </Stack.Navigator>
 );

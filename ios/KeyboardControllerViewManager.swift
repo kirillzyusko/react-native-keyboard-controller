@@ -14,11 +14,21 @@ class KeyboardControllerView: UIView {
   private var keyboardObserver: KeyboardMovementObserver?
   private var eventDispatcher: RCTEventDispatcherProtocol
   private var bridge: RCTBridge
-  // react props
+  // react callbacks
   @objc var onKeyboardMoveStart: RCTDirectEventBlock?
   @objc var onKeyboardMove: RCTDirectEventBlock?
   @objc var onKeyboardMoveEnd: RCTDirectEventBlock?
   @objc var onKeyboardMoveInteractive: RCTDirectEventBlock?
+  // react props
+  @objc var enabled: ObjCBool = true {
+    didSet {
+      if enabled.boolValue {
+        keyboardObserver?.mount()
+      } else {
+        keyboardObserver?.unmount()
+      }
+    }
+  }
 
   init(frame: CGRect, bridge: RCTBridge) {
     self.bridge = bridge

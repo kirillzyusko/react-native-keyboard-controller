@@ -37,6 +37,11 @@ class KeyboardControllerViewManager(mReactContext: ReactApplicationContext) :
     return manager.setNavigationBarTranslucent(view as EdgeToEdgeReactViewGroup, value)
   }
 
+  @ReactProp(name = "enabled")
+  override fun setEnabled(view: ReactViewGroup, value: Boolean) {
+    return manager.setEnabled(view as EdgeToEdgeReactViewGroup, value)
+  }
+
   override fun getExportedCustomDirectEventTypeConstants(): MutableMap<String, Any> {
     return manager.getExportedCustomDirectEventTypeConstants()
   }

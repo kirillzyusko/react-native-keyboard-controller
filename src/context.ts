@@ -1,4 +1,4 @@
-import { createContext, useContext } from 'react';
+import React, { createContext, useContext } from 'react';
 import { Animated } from 'react-native';
 
 import type { SharedValue } from 'react-native-reanimated';
@@ -13,9 +13,11 @@ export type ReanimatedContext = {
   height: SharedValue<number>;
 };
 export type KeyboardAnimationContext = {
+  enabled: boolean;
   animated: AnimatedContext;
   reanimated: ReanimatedContext;
   setHandlers: (handlers: KeyboardHandlers) => void;
+  setEnabled: React.Dispatch<React.SetStateAction<boolean>>;
 };
 const NOOP = () => {};
 const DEFAULT_SHARED_VALUE: SharedValue<number> = {
@@ -25,6 +27,7 @@ const DEFAULT_SHARED_VALUE: SharedValue<number> = {
   modify: NOOP,
 };
 const defaultContext: KeyboardAnimationContext = {
+  enabled: true,
   animated: {
     progress: new Animated.Value(0),
     height: new Animated.Value(0),
@@ -33,7 +36,8 @@ const defaultContext: KeyboardAnimationContext = {
     progress: DEFAULT_SHARED_VALUE,
     height: DEFAULT_SHARED_VALUE,
   },
-  setHandlers: () => {},
+  setHandlers: NOOP,
+  setEnabled: NOOP,
 };
 export const KeyboardContext = createContext(defaultContext);
 export const useKeyboardContext = () => {

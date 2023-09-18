@@ -54,4 +54,9 @@ export const examples: Example[] = [
     info: ScreenNames.KEYBOARD_AVOIDING_VIEW,
     icons: '😶',
   },
+  {
+    title: 'Enabled/disabled',
+    info: ScreenNames.ENABLED_DISABLED,
+    icons: '💡',
+  },
 ];
