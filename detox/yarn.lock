@@ -1041,10 +1041,10 @@ detect-newline@^3.0.0:
   resolved "https://registry.yarnpkg.com/detect-newline/-/detect-newline-3.1.0.tgz#576f5dfc63ae1a192ff192d8ad3af6308991b651"
   integrity sha512-TLz+x/vEXm/Y7P7wn1EJFNLxYpUD4TgMosxY6fAVJUnJMbupHBOncxyWUG9OpTaH9EBD7uFI5LfEgmMOc54DsA==
 
-detox@^20.12.0:
-  version "20.12.0"
-  resolved "https://registry.yarnpkg.com/detox/-/detox-20.12.0.tgz#28fa9f53cf2c7f323b7b933ccb23393f214bd8d7"
-  integrity sha512-tZ4Jm4tqBszyaz5lfLgUuzl+ODtYDqoJbYmy4RC9uyHbWf6b0GYXLP+Vsd4R51Gu2XYcTRu6k7rCLwR7qxdoig==
+detox@^20.12.1:
+  version "20.12.1"
+  resolved "https://registry.yarnpkg.com/detox/-/detox-20.12.1.tgz#2d2d52abcecb214e8bb587ce4a0157da271ae480"
+  integrity sha512-qe56xeqRTE3v6WVKBKqiXtqlj0ZcnklbFlzyQAcICOCXWNZvRjtXZhKyBq0PzKjxInH1RajjsEJQWe5iYVX/9Q==
   dependencies:
     ajv "^8.6.3"
     bunyan "^1.8.12"
@@ -2650,6 +2650,11 @@ v8-to-istanbul@^9.0.1:
     "@jridgewell/trace-mapping" "^0.3.12"
     "@types/istanbul-lib-coverage" "^2.0.1"
     convert-source-map "^1.6.0"
+
+wait-for-expect@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/wait-for-expect/-/wait-for-expect-3.0.2.tgz#d2f14b2f7b778c9b82144109c8fa89ceaadaa463"
+  integrity sha512-cfS1+DZxuav1aBYbaO/kE06EOS8yRw7qOFoD3XtjTkYvCvh3zUvNST8DXK/nPaeqIzIv3P3kL3lRJn8iwOiSag==
 
 walker@^1.0.8:
   version "1.0.8"

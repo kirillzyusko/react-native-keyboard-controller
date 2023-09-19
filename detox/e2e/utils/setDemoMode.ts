@@ -23,7 +23,6 @@ export default async function setDemoMode(): Promise<void> {
       'adb shell am broadcast -a com.android.systemui.demo -e command battery -e plugged false -e level 100'
     );
   } else {
-    // @ts-expect-error TS doesn't declare support for this method
     await device.setStatusBar({
       time: '12:00',
       dataNetwork: 'wifi',

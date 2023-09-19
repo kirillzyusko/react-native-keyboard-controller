@@ -100,6 +100,10 @@ async function expectBitmapsToBeEqual(
     acceptableDiffPercent
   );
 
+  console.debug(
+    colors.green(`Screenshot '${screenName}' has ${percentDiff}% pixel diff!`)
+  );
+
   if (!matched) {
     const SCREEN_DIFF_IMAGE_PATH = `artifacts/${screenName}-diff.png`;
 
