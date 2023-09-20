@@ -1,2 +1,3 @@
-- [ ] setStatusBar doesn't work
-- [ ] test buttler APK (Android)
+- [-] setStatusBar doesn't work
+- [x] test buttler APK (Android)
+- [ ] proper build caching (iOS, Android)
