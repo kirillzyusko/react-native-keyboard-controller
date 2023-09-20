@@ -56,13 +56,13 @@ jobs:
         with:
           working-directory: detox
           api-level: 28
-          target: google_apis_playstore
+          target: google_apis
           profile: pixel_2
           ram-size: '4096M'
           disk-size: '10G'
           disable-animations: false
           avd-name: e2e_emulator
-          arch: x86_64
+          arch: x86
           script: yarn test-example:android
       - uses: actions/upload-artifact@v3
         if: ${{ failure() }}
