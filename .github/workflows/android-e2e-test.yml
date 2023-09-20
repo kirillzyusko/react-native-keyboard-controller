@@ -46,7 +46,7 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2.28.0
         with:
           working-directory: detox
-          api-level: 31
+          api-level: 28
           target: default
           profile: pixel_2
           ram-size: '4096M'
