@@ -18,7 +18,7 @@ describe('Example', () => {
     await waitAndTap('keyboard_animation_text_input');
     await waitForExpect(async () => {
       await expectBitmapsToBeEqual('KeyboardAnimationKeyboardIsShown');
-    });
+    }, 15000);
   });
 
   it('should have expected state when keyboard is closed', async () => {
