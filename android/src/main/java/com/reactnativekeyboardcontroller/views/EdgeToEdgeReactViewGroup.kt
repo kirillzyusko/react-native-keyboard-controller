@@ -1,6 +1,8 @@
 package com.reactnativekeyboardcontroller.views
 
 import android.annotation.SuppressLint
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.widget.FrameLayout
 import androidx.appcompat.widget.FitWindowsLinearLayout
@@ -45,7 +47,11 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
   override fun onDetachedFromWindow() {
     super.onDetachedFromWindow()
 
-    this.removeKeyboardCallbacks()
+    // we need to remove view asynchronously from `onDetachedFromWindow` method
+    // otherwise we may face NPE when app is getting opened via universal link
+    // see https://github.com/kirillzyusko/react-native-keyboard-controller/issues/242
+    // for more details
+    Handler(Looper.getMainLooper()).post { this.removeKeyboardCallbacks() }
   }
   // endregion
 

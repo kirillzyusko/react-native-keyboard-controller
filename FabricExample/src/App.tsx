@@ -1,7 +1,7 @@
 import 'react-native-gesture-handler';
 
 import * as React from 'react';
-import { StyleSheet } from 'react-native';
+import { ActivityIndicator, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import {
@@ -17,12 +17,30 @@ const styles = StyleSheet.create({
   },
 });
 
+const linking = {
+  prefixes: ['https://rnkcfabricexample.com', 'rnkcfabricexample://'],
+  config: {
+    initialRouteName: 'EXAMPLES_STACK' as const,
+    screens: {
+      EXAMPLES_STACK: {
+        path: 'examples',
+        screens: {
+          ANIMATED_EXAMPLE: {
+            path: 'animated',
+          },
+        },
+      },
+    },
+  },
+};
+const spinner = <ActivityIndicator color="blue" size="large" />;
+
 export default function App() {
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
       <GestureHandlerRootView style={styles.root}>
         <KeyboardProvider statusBarTranslucent>
-          <NavigationContainer>
+          <NavigationContainer linking={linking} fallback={spinner}>
             <RootStack />
           </NavigationContainer>
         </KeyboardProvider>
