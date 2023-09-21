@@ -23,7 +23,7 @@ module.exports = {
     'example.android.debug': {
       type: 'android.apk',
       binaryPath: '../example/android/app/build/outputs/apk/debug/app-debug.apk',
-      build: 'cd ../example/android && ./gradlew assembleDebug assembleAndroidTest -DtestBuildType=debug',
+      build: 'cd ../example/android && ./gradlew assembleDebug assembleAndroidTest -DtestBuildType=debug --build-cache',
       reversePorts: [
         8081
       ]
@@ -31,7 +31,7 @@ module.exports = {
     'example.android.release': {
       type: 'android.apk',
       binaryPath: '../example/android/app/build/outputs/apk/release/app-release.apk',
-      build: 'cd ../example/android && ./gradlew assembleRelease assembleAndroidTest -DtestBuildType=release'
+      build: 'cd ../example/android && ./gradlew assembleRelease assembleAndroidTest -DtestBuildType=release --build-cache'
     }
   },
   devices: {
