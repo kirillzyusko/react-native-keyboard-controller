@@ -25,7 +25,6 @@ export default function AwareScrollViewStickyFooter() {
       <KeyboardAwareScrollView
         style={styles.container}
         bottomOffset={footerHeight}
-        contentContainerStyle={{ flexGrow: 1 }}
         keyboardShouldPersistTaps="handled"
       >
         {new Array(10).fill(0).map((_, i) => (

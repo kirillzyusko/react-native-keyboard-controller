@@ -1,5 +1,5 @@
 import React, { memo, useMemo, type ReactNode } from 'react';
-import { View, ViewProps, type ViewStyle } from 'react-native';
+import { ViewProps, type ViewStyle } from 'react-native';
 import { useReanimatedKeyboardAnimation } from 'react-native-keyboard-controller';
 import Animated, {
   interpolate,
@@ -26,11 +26,6 @@ export const StickyFooter = memo(
     const { bottom } = useSafeAreaInsets();
 
     const actionBarAnimatedStyles = useAnimatedStyle(() => {
-      /**
-       * Height is a negative value, so we need to add it to the bottom inset. If
-       * we didn't, when the keyboard is shown, the box would be ${bottomPadding} pixels
-       * above the keyboard.
-       */
       const translateY = interpolate(progress.value, [0, 1], [0, height.value]);
 
       /**
@@ -56,7 +51,6 @@ export const StickyFooter = memo(
           bottom: 0,
           left: 0,
           right: 0,
-          backgroundColor: 'black', // just here to help debug
         },
         actionBarAnimatedStyles,
       ],
