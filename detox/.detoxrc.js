@@ -13,12 +13,12 @@ module.exports = {
     'example.ios.debug': {
       type: 'ios.app',
       binaryPath: '../example/ios/build/Build/Products/Debug-iphonesimulator/KeyboardControllerExample.app',
-      build: 'xcodebuild -workspace ../example/ios/KeyboardControllerExample.xcworkspace -scheme KeyboardControllerExample -configuration Debug -sdk iphonesimulator -derivedDataPath ../example/ios/build'
+      build: 'xcodebuild CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ -workspace ../example/ios/KeyboardControllerExample.xcworkspace -scheme KeyboardControllerExample -configuration Debug -sdk iphonesimulator -derivedDataPath ../example/ios/build'
     },
     'example.ios.release': {
       type: 'ios.app',
       binaryPath: '../example/ios/build/Build/Products/Release-iphonesimulator/KeyboardControllerExample.app',
-      build: 'xcodebuild -workspace ../example/ios/KeyboardControllerExample.xcworkspace -scheme KeyboardControllerExample -configuration Release -sdk iphonesimulator -derivedDataPath ../example/ios/build'
+      build: 'xcodebuild CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ -workspace ../example/ios/KeyboardControllerExample.xcworkspace -scheme KeyboardControllerExample -configuration Release -sdk iphonesimulator -derivedDataPath ../example/ios/build'
     },
     'example.android.debug': {
       type: 'android.apk',

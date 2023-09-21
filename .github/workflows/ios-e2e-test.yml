@@ -18,7 +18,6 @@ jobs:
     timeout-minutes: 60
     env:
       WORKING_DIRECTORY: example
-      BUILDCACHE_DIR: example/ios # specify a specific directory to grab a cache
     concurrency:
         group: ios-e2e-${{ github.ref }}
         cancel-in-progress: true
