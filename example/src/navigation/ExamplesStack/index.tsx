@@ -16,12 +16,14 @@ import NativeStack from '../NestedStack';
 import KeyboardAvoidingViewExample from '../../screens/Examples/KeyboardAvoidingView';
 import ReanimatedChatFlatlist from '../../screens/Examples/ReanimatedChatFlatlist';
 import EnabledDisabled from '../../screens/Examples/EnabledDisabled';
+import AwareScrollViewStickyFooter from '../../screens/Examples/AwareScrollViewStickyFooter';
 
 export type ExamplesStackParamList = {
   [ScreenNames.ANIMATED_EXAMPLE]: undefined;
   [ScreenNames.REANIMATED_CHAT]: undefined;
   [ScreenNames.EVENTS]: undefined;
   [ScreenNames.AWARE_SCROLL_VIEW]: undefined;
+  [ScreenNames.AWARE_SCROLL_VIEW_STICKY_FOOTER]: undefined;
   [ScreenNames.STATUS_BAR]: undefined;
   [ScreenNames.LOTTIE]: undefined;
   [ScreenNames.NON_UI_PROPS]: undefined;
@@ -49,6 +51,9 @@ const options = {
   },
   [ScreenNames.AWARE_SCROLL_VIEW]: {
     title: 'Aware scroll view',
+  },
+  [ScreenNames.AWARE_SCROLL_VIEW_STICKY_FOOTER]: {
+    title: 'Aware scroll view sticky footer',
   },
   [ScreenNames.STATUS_BAR]: {
     headerShown: false,
@@ -103,6 +108,11 @@ const ExamplesStack = () => (
       name={ScreenNames.AWARE_SCROLL_VIEW}
       component={AwareScrollView}
       options={options[ScreenNames.AWARE_SCROLL_VIEW]}
+    />
+    <Stack.Screen
+      name={ScreenNames.AWARE_SCROLL_VIEW_STICKY_FOOTER}
+      component={AwareScrollViewStickyFooter}
+      options={options[ScreenNames.AWARE_SCROLL_VIEW_STICKY_FOOTER]}
     />
     <Stack.Screen
       name={ScreenNames.STATUS_BAR}
