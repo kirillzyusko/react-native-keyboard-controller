@@ -30,9 +30,9 @@ console.log(enabled);
 setEnabled(false);
 ```
 
-In this example, we're importing the `useKeyboardController` hook from the `react-native-keyboard-controller` library. This hook returns `setEnabled` method (which you can use it to disable keyboard management for a specific screen) and `enabled` variable (indicating whether the module is active now or not).
+In this example, we're importing the `useKeyboardController` hook from the `react-native-keyboard-controller` library. This hook returns `setEnabled` method (which you can use to disable keyboard management for a specific screen) and `enabled` variable (indicating whether the module is active now or not).
 
-When you disable the module using `setEnabled(false)`, the screen will fallback to the default `Android` behavior, automatically resizing based on `AndroidManifest` preferences. This level of control allows you to tailor the keyboard experience to your app's unique needs on a per-screen basis.
+When you disable the module using `setEnabled(false)`, the screen will fallback to the default `Android` behavior, automatically resizing based on `AndroidManifest` preferences (`android:windowSoftInputMode`). This level of control allows you to tailor the keyboard experience to your app's unique needs on a per-screen basis.
 
 ### Use Cases for `setEnabled`
 
