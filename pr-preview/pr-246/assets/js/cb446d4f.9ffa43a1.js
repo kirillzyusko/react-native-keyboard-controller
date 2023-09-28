@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[7410],{6680:e=>{e.exports=JSON.parse('{"label":"new architecture","permalink":"/react-native-keyboard-controller/pr-preview/pr-246/blog/tags/new-architecture","allTagsPath":"/react-native-keyboard-controller/pr-preview/pr-246/blog/tags","count":1}')}}]);
