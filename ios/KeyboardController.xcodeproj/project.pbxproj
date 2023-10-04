@@ -53,6 +53,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		084AEEBF2ACDFBF1001A3069 /* events */ = {
+			isa = PBXGroup;
+			children = (
+				F3F50667289E653B003091D6 /* KeyboardMoveEvent.h */,
+				F3F50668289E653B003091D6 /* KeyboardMoveEvent.m */,
+			);
+			path = events;
+			sourceTree = "<group>";
+		};
+		084AEEC02ACDFC2A001A3069 /* observers */ = {
+			isa = PBXGroup;
+			children = (
+				F3626A0628B3FE760021B2D9 /* KeyboardMovementObserver.swift */,
+			);
+			path = observers;
+			sourceTree = "<group>";
+		};
 		134814211AA4EA7D00B7C361 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -64,10 +81,9 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
+				084AEEC02ACDFC2A001A3069 /* observers */,
+				084AEEBF2ACDFBF1001A3069 /* events */,
 				0807071D2A34807B00C05A19 /* Extensions.swift */,
-				F3F50667289E653B003091D6 /* KeyboardMoveEvent.h */,
-				F3F50668289E653B003091D6 /* KeyboardMoveEvent.m */,
-				F3626A0628B3FE760021B2D9 /* KeyboardMovementObserver.swift */,
 				F333F8D228996B8D0015B05F /* KeyboardControllerView.mm */,
 				F333F8D128996B1C0015B05F /* KeyboardControllerView.h */,
 				F359D35028133C6F000B6AFE /* KeyboardControllerModule-Header.h */,
