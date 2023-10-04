@@ -1,10 +1,6 @@
 import React, { forwardRef, useCallback, useMemo } from 'react';
-import {
-  LayoutRectangle,
-  useWindowDimensions,
-  View,
-  ViewProps,
-} from 'react-native';
+import type { LayoutRectangle, ViewProps } from 'react-native';
+import { useWindowDimensions, View } from 'react-native';
 import Reanimated, {
   useAnimatedStyle,
   useWorkletCallback,

@@ -1,10 +1,8 @@
-import { DependencyList, useEffect } from 'react';
+import type { DependencyList } from 'react';
+import { useEffect } from 'react';
 
-import {
-  AnimatedContext,
-  ReanimatedContext,
-  useKeyboardContext,
-} from './context';
+import type { AnimatedContext, ReanimatedContext } from './context';
+import { useKeyboardContext } from './context';
 import { KeyboardController } from './bindings';
 import { AndroidSoftInputModes } from './constants';
 import { uuid } from './utils';

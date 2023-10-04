@@ -1,4 +1,5 @@
-import { EmitterSubscription, View } from 'react-native';
+import type { EmitterSubscription } from 'react-native';
+import { View } from 'react-native';
 import type {
   KeyboardControllerModule,
   KeyboardControllerProps,

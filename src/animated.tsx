@@ -1,8 +1,10 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Animated, Platform, StyleSheet, ViewStyle } from 'react-native';
+import type { ViewStyle } from 'react-native';
+import { Animated, Platform, StyleSheet } from 'react-native';
 import Reanimated, { useSharedValue } from 'react-native-reanimated';
 
-import { KeyboardAnimationContext, KeyboardContext } from './context';
+import type { KeyboardAnimationContext } from './context';
+import { KeyboardContext } from './context';
 import { useSharedHandlers, useAnimatedValue } from './internal';
 import { KeyboardControllerView } from './bindings';
 import { useAnimatedKeyboardHandler } from './reanimated';

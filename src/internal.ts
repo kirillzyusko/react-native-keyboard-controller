@@ -15,7 +15,9 @@ import type { Handlers, NativeEvent } from './types';
  *  onEvent2: () => {},
  * }
  */
-export function useSharedHandlers<T extends Record<string, Function>>() {
+export function useSharedHandlers<
+  T extends Record<string, (event: NativeEvent) => void>
+>() {
   const handlers = useSharedValue<Handlers<T>>({});
   const jsHandlers = useRef<Handlers<T>>({});
 
