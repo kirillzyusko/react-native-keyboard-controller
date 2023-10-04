@@ -2,7 +2,7 @@ import type { TurboModule } from 'react-native';
 import { TurboModuleRegistry } from 'react-native';
 
 export interface Spec extends TurboModule {
-  readonly getConstants: () => object;
+  readonly getConstants: () => {};
 
   setHidden(hidden: boolean): void;
   setColor(color: number, animated: boolean): void;

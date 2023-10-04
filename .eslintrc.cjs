@@ -28,6 +28,22 @@ module.exports = {
     ],
     '@typescript-eslint/no-var-requires': 'warn',
   },
+  overrides: [
+    {
+      files: ['src/specs/**'],
+      rules: {
+        '@typescript-eslint/ban-types': [
+          'error',
+          {
+            extendDefaults: true,
+            types: {
+              '{}': false,
+            },
+          },
+        ],
+      },
+    },
+  ],
   env: {
     'react-native/react-native': true,
     'jest/globals': true,
