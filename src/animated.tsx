@@ -1,20 +1,20 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import type { ViewStyle } from 'react-native';
 import { Animated, Platform, StyleSheet } from 'react-native';
 import Reanimated, { useSharedValue } from 'react-native-reanimated';
 
-import type { KeyboardAnimationContext } from './context';
-import { KeyboardContext } from './context';
-import { useSharedHandlers, useAnimatedValue } from './internal';
 import { KeyboardControllerView } from './bindings';
+import { KeyboardContext } from './context';
+import { useAnimatedValue, useSharedHandlers } from './internal';
+import { applyMonkeyPatch, revertMonkeyPatch } from './monkey-patch';
 import { useAnimatedKeyboardHandler } from './reanimated';
 
+import type { KeyboardAnimationContext } from './context';
 import type {
   KeyboardControllerProps,
   KeyboardHandler,
   NativeEvent,
 } from './types';
-import { applyMonkeyPatch, revertMonkeyPatch } from './monkey-patch';
+import type { ViewStyle } from 'react-native';
 
 const KeyboardControllerViewAnimated = Reanimated.createAnimatedComponent(
   Animated.createAnimatedComponent(

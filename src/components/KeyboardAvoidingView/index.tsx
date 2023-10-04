@@ -1,15 +1,17 @@
 import React, { forwardRef, useCallback, useMemo } from 'react';
-import type { LayoutRectangle, ViewProps } from 'react-native';
-import { useWindowDimensions, View } from 'react-native';
+import { View, useWindowDimensions } from 'react-native';
 import Reanimated, {
-  useAnimatedStyle,
-  useWorkletCallback,
-  useSharedValue,
-  useDerivedValue,
   interpolate,
   runOnUI,
+  useAnimatedStyle,
+  useDerivedValue,
+  useSharedValue,
+  useWorkletCallback,
 } from 'react-native-reanimated';
+
 import { useKeyboardAnimation } from './hooks';
+
+import type { LayoutRectangle, ViewProps } from 'react-native';
 
 type Props = {
   /**

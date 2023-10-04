@@ -1,13 +1,25 @@
 module.exports = {
   root: true,
-  parser: '@typescript-eslint/parser',
-  plugins: ['@typescript-eslint', 'react', 'react-native', 'jest'],
+  plugins: ['@typescript-eslint', 'react', 'react-native', 'jest', 'import'],
   extends: [
     '@react-native',
     'prettier',
+    'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:jest/recommended',
+    'plugin:import/typescript',
   ],
+  settings: {
+    'import/parsers': {
+      '@typescript-eslint/parser': ['.ts', '.tsx'],
+    },
+    'import/resolver': {
+      typescript: {
+        alwaysTryTypes: true,
+        project: '<root>/tsconfig.json',
+      },
+    },
+  },
   rules: {
     'prettier/prettier': [
       'error',
@@ -27,6 +39,37 @@ module.exports = {
       { prefer: 'type-imports' },
     ],
     '@typescript-eslint/no-var-requires': 'warn',
+    // import
+    'sort-imports': [
+      'error',
+      {
+        // sort destructure imports
+        ignoreCase: false,
+        ignoreDeclarationSort: true,
+        ignoreMemberSort: false,
+        memberSyntaxSortOrder: ['none', 'all', 'single', 'multiple'],
+        allowSeparatedGroups: true,
+      },
+    ],
+    'import/order': [
+      'error',
+      {
+        'groups': [
+          'builtin',
+          'external',
+          'internal',
+          'parent',
+          'sibling',
+          'index',
+          'type',
+        ],
+        'alphabetize': {
+          order: 'asc',
+          caseInsensitive: true,
+        },
+        'newlines-between': 'always',
+      },
+    ],
   },
   overrides: [
     {

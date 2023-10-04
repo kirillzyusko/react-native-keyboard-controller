@@ -1,4 +1,4 @@
-import { useRef, useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { Animated, Easing, Keyboard, Platform } from 'react-native';
 import {
   runOnUI,
@@ -8,10 +8,10 @@ import {
   useWorkletCallback,
   withSpring,
 } from 'react-native-reanimated';
-import { useReanimatedKeyboardAnimation } from './hooks';
 
 import { KeyboardController } from './bindings';
 import { AndroidSoftInputModes } from './constants';
+import { useReanimatedKeyboardAnimation } from './hooks';
 
 const availableOSEventType = Platform.OS === 'ios' ? 'Will' : 'Did';
 

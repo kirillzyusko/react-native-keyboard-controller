@@ -1,4 +1,4 @@
-import { Platform, NativeEventEmitter } from 'react-native';
+import { NativeEventEmitter, Platform } from 'react-native';
 
 import type {
   KeyboardControllerModule,
