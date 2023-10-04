@@ -1,8 +1,9 @@
-import React, { createContext, useContext } from 'react';
+import { createContext, useContext } from 'react';
 import { Animated } from 'react-native';
 
-import type { SharedValue } from 'react-native-reanimated';
 import type { KeyboardHandlers } from './types';
+import type React from 'react';
+import type { SharedValue } from 'react-native-reanimated';
 
 export type AnimatedContext = {
   progress: Animated.Value;

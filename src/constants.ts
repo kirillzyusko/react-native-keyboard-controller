@@ -12,6 +12,8 @@ export enum AndroidSoftInputModes {
   SOFT_INPUT_STATE_ALWAYS_VISIBLE = 5,
   SOFT_INPUT_STATE_HIDDEN = 2,
   SOFT_INPUT_STATE_UNCHANGED = 1,
+  // temporarily disable this rule to avoid breaking changes.
+  // eslint-disable-next-line @typescript-eslint/no-duplicate-enum-values
   SOFT_INPUT_STATE_UNSPECIFIED = 0,
   SOFT_INPUT_STATE_VISIBLE = 4,
 }

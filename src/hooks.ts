@@ -1,15 +1,13 @@
-import { DependencyList, useEffect } from 'react';
+import { useEffect } from 'react';
 
-import {
-  AnimatedContext,
-  ReanimatedContext,
-  useKeyboardContext,
-} from './context';
 import { KeyboardController } from './bindings';
 import { AndroidSoftInputModes } from './constants';
+import { useKeyboardContext } from './context';
 import { uuid } from './utils';
 
+import type { AnimatedContext, ReanimatedContext } from './context';
 import type { KeyboardHandler } from './types';
+import type { DependencyList } from 'react';
 
 export const useResizeMode = () => {
   useEffect(() => {

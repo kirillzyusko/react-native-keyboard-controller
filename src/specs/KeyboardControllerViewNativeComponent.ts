@@ -1,3 +1,5 @@
+import codegenNativeComponent from 'react-native/Libraries/Utilities/codegenNativeComponent';
+
 import type { HostComponent } from 'react-native';
 import type { ViewProps } from 'react-native/Libraries/Components/View/ViewPropTypes';
 import type {
@@ -5,7 +7,6 @@ import type {
   Double,
   Int32,
 } from 'react-native/Libraries/Types/CodegenTypes';
-import codegenNativeComponent from 'react-native/Libraries/Utilities/codegenNativeComponent';
 
 type KeyboardMoveEvent = Readonly<{
   height: Double;
