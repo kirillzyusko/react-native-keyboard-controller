@@ -11,6 +11,8 @@ jobs:
   check-diff:
     name: 🔬 Find npm package size diff
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
     steps:
       - name: Checkout to target branch
         uses: actions/checkout@v3
