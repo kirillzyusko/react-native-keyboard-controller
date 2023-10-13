@@ -1,4 +1,4 @@
-package com.reactnativekeyboardcontroller
+package com.reactnativekeyboardcontroller.listeners
 
 import android.animation.ValueAnimator
 import android.os.Build
@@ -19,6 +19,7 @@ import com.facebook.react.uimanager.events.Event
 import com.facebook.react.uimanager.events.EventDispatcher
 import com.facebook.react.views.textinput.ReactEditText
 import com.facebook.react.views.view.ReactViewGroup
+import com.reactnativekeyboardcontroller.InteractiveKeyboardProvider
 import com.reactnativekeyboardcontroller.events.KeyboardTransitionEvent
 import com.reactnativekeyboardcontroller.extensions.dp
 import kotlin.math.abs
@@ -128,7 +129,8 @@ class KeyboardAnimationCallback(
         ),
       )
 
-      val animation = ValueAnimator.ofFloat(this.persistentKeyboardHeight.toFloat(), keyboardHeight.toFloat())
+      val animation =
+        ValueAnimator.ofFloat(this.persistentKeyboardHeight.toFloat(), keyboardHeight.toFloat())
       animation.addUpdateListener { animator ->
         val toValue = animator.animatedValue as Float
         this.sendEventToJS(
@@ -227,10 +229,23 @@ class KeyboardAnimationCallback(
       // do nothing, just log an exception send progress as 0
       Log.w(TAG, "Caught arithmetic exception during `progress` calculation: $e")
     }
-    Log.i(TAG, "DiffY: $diffY $height $progress ${InteractiveKeyboardProvider.isInteractive} $viewTagFocused")
+    Log.i(
+      TAG,
+      "DiffY: $diffY $height $progress ${InteractiveKeyboardProvider.isInteractive} $viewTagFocused",
+    )
 
     val event = if (InteractiveKeyboardProvider.isInteractive) "topKeyboardMoveInteractive" else "topKeyboardMove"
-    this.sendEventToJS(KeyboardTransitionEvent(surfaceId, view.id, event, height, progress, duration, viewTagFocused))
+    this.sendEventToJS(
+      KeyboardTransitionEvent(
+        surfaceId,
+        view.id,
+        event,
+        height,
+        progress,
+        duration,
+        viewTagFocused,
+      ),
+    )
 
     return insets
   }

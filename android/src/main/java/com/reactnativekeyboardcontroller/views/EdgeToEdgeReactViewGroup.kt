@@ -12,10 +12,11 @@ import androidx.core.view.WindowInsetsAnimationCompat
 import androidx.core.view.WindowInsetsCompat
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.views.view.ReactViewGroup
-import com.reactnativekeyboardcontroller.KeyboardAnimationCallback
 import com.reactnativekeyboardcontroller.extensions.removeSelf
 import com.reactnativekeyboardcontroller.extensions.requestApplyInsetsWhenAttached
 import com.reactnativekeyboardcontroller.extensions.rootView
+import com.reactnativekeyboardcontroller.listeners.FocusedInputLayoutObserver
+import com.reactnativekeyboardcontroller.listeners.KeyboardAnimationCallback
 
 private val TAG = EdgeToEdgeReactViewGroup::class.qualifiedName
 
@@ -131,6 +132,9 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
         ViewCompat.setOnApplyWindowInsetsListener(it, callback)
         it.requestApplyInsetsWhenAttached()
       }
+
+      // TODO: destroy? + KeyboardAnimationCallback destroy?
+      FocusedInputLayoutObserver(view = this, context = reactContext)
     } else {
       Log.w(TAG, "Can not setup keyboard animation listener, since `currentActivity` is null")
     }

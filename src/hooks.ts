@@ -63,3 +63,9 @@ export function useKeyboardController() {
 
   return { setEnabled: context.setEnabled, enabled: context.enabled };
 }
+
+export function useReanimatedFocusedInput() {
+  const context = useKeyboardContext();
+
+  return context.layout;
+}

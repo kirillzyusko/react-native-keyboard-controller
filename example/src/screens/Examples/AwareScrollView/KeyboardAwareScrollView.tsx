@@ -1,5 +1,6 @@
 import React, { Component, FC } from 'react';
 import { ScrollViewProps, useWindowDimensions } from 'react-native';
+import { useReanimatedFocusedInput } from 'react-native-keyboard-controller';
 import Reanimated, {
   MeasuredDimensions,
   interpolate,
@@ -67,6 +68,7 @@ const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
   const tag = useSharedValue(-1);
   const initialKeyboardSize = useSharedValue(0);
   const scrollBeforeKeyboardMovement = useSharedValue(0);
+  const input = useReanimatedFocusedInput();
 
   const { height } = useWindowDimensions();
 
@@ -91,7 +93,7 @@ const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
     fakeViewHeight.value = e;
 
     const visibleRect = height - keyboardHeight.value;
-    const point = (layout.value?.pageY || 0) + (layout.value?.height || 0);
+    const point = (layout.value?.absoluteY || 0) + (layout.value?.height || 0);
 
     if (visibleRect - point <= BOTTOM_OFFSET) {
       const interpolatedScrollTo = interpolate(
@@ -137,7 +139,8 @@ const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
 
           if (tag.value !== -1) {
             // save position of focused text input when keyboard starts to move
-            layout.value = measureByTag(e.target);
+            layout.value = input.value?.layout;
+            console.log(121212, height, layout.value, measureByTag(e.target));
             // save current scroll position - when keyboard will hide we'll reuse
             // this value to achieve smooth hide effect
             scrollBeforeKeyboardMovement.value = position.value;

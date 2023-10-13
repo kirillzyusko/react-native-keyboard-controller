@@ -15,6 +15,18 @@ type KeyboardMoveEvent = Readonly<{
   target: Int32;
 }>;
 
+type FocusedInputLayoutChangedEvent = Readonly<{
+  target: Int32;
+  layout: {
+    x: Int32;
+    y: Int32;
+    width: Int32;
+    height: Int32;
+    absoluteX: Int32;
+    absoluteY: Int32;
+  };
+}>;
+
 export interface NativeProps extends ViewProps {
   // props
   enabled?: boolean;
@@ -25,6 +37,7 @@ export interface NativeProps extends ViewProps {
   onKeyboardMove?: DirectEventHandler<KeyboardMoveEvent>;
   onKeyboardMoveEnd?: DirectEventHandler<KeyboardMoveEvent>;
   onKeyboardMoveInteractive?: DirectEventHandler<KeyboardMoveEvent>;
+  onFocusedInputLayoutChanged?: DirectEventHandler<FocusedInputLayoutChangedEvent>;
 }
 
 export default codegenNativeComponent<NativeProps>(

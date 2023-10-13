@@ -9,6 +9,7 @@
 // This guard prevent the code from being compiled in the old architecture
 #ifdef RCT_NEW_ARCH_ENABLED
 #import "KeyboardControllerView.h"
+#import "FocusedInputLayoutChangedEvent.h"
 #import "KeyboardMoveEvent.h"
 #import "react_native_keyboard_controller-Swift.h"
 
@@ -29,7 +30,8 @@ using namespace facebook::react;
 @end
 
 @implementation KeyboardControllerView {
-  KeyboardMovementObserver *observer;
+  KeyboardMovementObserver *keyboardObserver;
+  FocusedInputLayoutObserver *inputObserver;
 }
 
 + (ComponentDescriptorProvider)componentDescriptorProvider
@@ -43,7 +45,39 @@ using namespace facebook::react;
     static const auto defaultProps = std::make_shared<const KeyboardControllerViewProps>();
     _props = defaultProps;
 
-    observer = [[KeyboardMovementObserver alloc]
+    inputObserver = [[FocusedInputLayoutObserver alloc] initWithHandler:^(NSDictionary *event) {
+      if (self->_eventEmitter) {
+        int target = [event[@"target"] integerValue];
+        int absoluteY = [event[@"layout"][@"absoluteY"] integerValue];
+        int absoulteX = [event[@"layout"][@"absoluteX"] integerValue];
+        int y = [event[@"layout"][@"y"] integerValue];
+        int x = [event[@"layout"][@"x"] integerValue];
+        int width = [event[@"layout"][@"width"] integerValue];
+        int height = [event[@"layout"][@"height"] integerValue];
+
+        std::dynamic_pointer_cast<const facebook::react::KeyboardControllerViewEventEmitter>(
+            self->_eventEmitter)
+            ->onFocusedInputLayoutChanged(
+                facebook::react::KeyboardControllerViewEventEmitter::OnFocusedInputLayoutChanged{
+                    .target = target,
+                    .layout = facebook::react::KeyboardControllerViewEventEmitter::
+                        OnFocusedInputLayoutChangedLayout{
+                            .absoluteY = absoluteY,
+                            .absoluteX = absoulteX,
+                            .height = height,
+                            .width = width,
+                            .x = x,
+                            .y = y}});
+        // TODO: use built-in _eventEmitter once NativeAnimated module will use ModernEventemitter
+        RCTBridge *bridge = [RCTBridge currentBridge];
+        if (bridge && [bridge valueForKey:@"_jsThread"]) {
+          FocusedInputLayoutChangedEvent *inputChangedEvent =
+              [[FocusedInputLayoutChangedEvent alloc] initWithReactTag:@(self.tag) event:event];
+          [bridge.eventDispatcher sendEvent:inputChangedEvent];
+        }
+      }
+    }];
+    keyboardObserver = [[KeyboardMovementObserver alloc]
         initWithHandler:^(
             NSString *event,
             NSNumber *height,
@@ -122,9 +156,11 @@ using namespace facebook::react;
 
   if (newViewProps.enabled != oldViewProps.enabled) {
     if (newViewProps.enabled) {
-      [observer mount];
+      [inputObserver mount];
+      [keyboardObserver mount];
     } else {
-      [observer unmount];
+      [inputObserver unmount];
+      [keyboardObserver unmount];
     }
   }
 

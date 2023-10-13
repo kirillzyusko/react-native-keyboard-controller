@@ -1,29 +1,23 @@
 import React from 'react';
 import { TextInputProps, TextInput as TextInputRN } from 'react-native';
 import { randomColor } from '../../../utils';
-import { useAwareScrollView } from './context';
 
-const TextInput = React.forwardRef((props: TextInputProps, forwardRef) => {
-  const { onRef } = useAwareScrollView();
-
+const TextInput = (props: TextInputProps) => {
   return (
     <TextInputRN
-      ref={(ref) => {
-        onRef(ref);
-        if (typeof forwardRef === 'function') {
-          forwardRef(ref);
-        }
-      }}
       placeholderTextColor="black"
       style={{
         width: '100%',
-        height: 50,
+        minHeight: 50,
+        maxHeight: 200,
         backgroundColor: randomColor(),
         marginTop: 50,
       }}
+      multiline
+      numberOfLines={10}
       {...props}
     />
   );
-});
+};
 
 export default TextInput;
