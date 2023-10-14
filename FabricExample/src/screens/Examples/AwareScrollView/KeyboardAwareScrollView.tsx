@@ -111,6 +111,8 @@ const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
           keyboardHeight.value !== e.height && e.height > 0;
         const keyboardWillAppear = e.height > 0 && keyboardHeight.value === 0;
         const keyboardWillHide = e.height === 0;
+        const focusWasChanged = tag.value !== e.target || keyboardWillChangeSize;
+
         if (keyboardWillChangeSize) {
           initialKeyboardSize.value = keyboardHeight.value;
         }
@@ -121,14 +123,12 @@ const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
           scrollPosition.value = scrollBeforeKeyboardMovement.value;
         }
 
-        if (keyboardWillAppear || keyboardWillChangeSize) {
+        if (keyboardWillAppear || keyboardWillChangeSize || focusWasChanged) {
           // persist scroll value
           scrollPosition.value = position.value;
           // just persist height - later will be used in interpolation
           keyboardHeight.value = e.height;
         }
-
-        const focusWasChanged = tag.value !== e.target || keyboardWillChangeSize;
 
         if (focusWasChanged && e.target !== -1) {
           console.log("focus was changed -> scrolling");
@@ -162,18 +162,16 @@ const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
   );
 
   useAnimatedReaction(() => input.value, (current, previous) => {
-    // console.log({current, previous});
     if (current?.target === previous?.target && current?.layout.height !== previous?.layout.height) {
       console.log("TextInput grows");
       scrollPosition.value += maybeScroll(keyboardHeight.value, true) || 0;
-      // persist scroll value
-      // scrollPosition.value = position.value;
     }
   }, []);
 
   const view = useAnimatedStyle(
     () => ({
-      height: fakeViewHeight.value,
+      // TODO: take `contentContainerStyle` into consideration?
+      paddingBottom: keyboardHeight.value,
     }),
     []
   );
@@ -184,9 +182,10 @@ const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
       {...rest}
       onScroll={onScroll}
       scrollEventThrottle={16}
-      contentContainerStyle={{paddingBottom: 336}}
     >
-      {children}
+      <Reanimated.View style={view}>
+        {children}
+      </Reanimated.View>
     </Reanimated.ScrollView>
   );
 };

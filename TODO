@@ -3,13 +3,18 @@
 - (x) restore TextInput switching functionality
 - (x) detect and scroll TextInput grows
 - (x) remove old code from fabric/unify examples
+- (x) "grow" is not scrolling on the extended height after few clicks <- update scrollPosition after maybeScroll
+- (?) focus -> change focus -> blur ==> movement of content is very small
+- (?) when dispatching focusInput -> compare by height? because keyboardWillShow triggers when user types first letter <- we anyway plan to update layout when user types letters?
+- (x) contentContainerStyle -> paddingBottom should depend on keyboard size <- added additional view
+- (x) focus on 3, focus on 5 -> scroll looks strange <- persist scroll on tag changes as well
 - scrollResponderScrollNativeHandleToKeyboard
 - think about renaming FocusedInputLayoutChangedObserver -> FocusedInputObserver
-- (?) focus -> change focus -> blur ==> movement of content is very small
+- 
 - send `null` when there is no input in focus
-- "grow" is not scrolling on the extended height after few clicks <- update scrollPosition after maybeScroll
-- when dispatching focusInput -> compare by height? because keyboardWillShow triggers when user types first letter
-- focus on 3, focus on 5 -> scroll looks strange
-- jest -> add new mocks
+- jest -> add new mocks + new unit tests
 - improve events precision (int -> float, pageY, width точно float или double)
-- contentContainerStyle -> paddingBottom should depend on keyboard size
+- const {update} = useReanimatedFocusedInput(); <- requires REA3
+- crash on every file changes AwareScrollView/hot reload
+- console.log("focus was changed -> scrolling") (even when keyboard appears)
+- focus on field -> type any symbol -> close keyboard => no back transition animation

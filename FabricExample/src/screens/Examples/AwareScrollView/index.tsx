@@ -10,7 +10,6 @@ export default function AwareScrollView() {
   useResizeMode();
 
   return (
-    <View style={{flex: 1}}>
     <KeyboardAwareScrollView>
       {new Array(10).fill(0).map((_, i) => (
         <TextInput
@@ -20,6 +19,5 @@ export default function AwareScrollView() {
         />
       ))}
     </KeyboardAwareScrollView>
-    </View>
   );
 }
