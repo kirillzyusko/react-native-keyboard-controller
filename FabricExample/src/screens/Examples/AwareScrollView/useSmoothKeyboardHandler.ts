@@ -1,7 +1,7 @@
 import { Platform } from 'react-native';
 import {
   Easing,
-  useDerivedValue,
+  useAnimatedReaction,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
@@ -37,8 +37,11 @@ export const useSmoothKeyboardHandler: typeof useKeyboardHandler = (
   const persistedHeight = useSharedValue(0);
   const animatedKeyboardHeight = useSharedValue(0);
 
-  useDerivedValue(() => {
-    if (!IS_ANDROID_ELEVEN_OR_HIGHER_OR_IOS) {
+  useAnimatedReaction(
+    () => {
+      if (IS_ANDROID_ELEVEN_OR_HIGHER_OR_IOS) {
+        return;
+      }
       const event = {
         // it'll be always 250, since we're running animation via `withTiming` where
         // duration in config (TELEGRAM_ANDROID_TIMING_CONFIG.duration) = 250ms
@@ -47,14 +50,21 @@ export const useSmoothKeyboardHandler: typeof useKeyboardHandler = (
         height: animatedKeyboardHeight.value,
         progress: animatedKeyboardHeight.value / persistedHeight.value,
       };
-      handler.onMove?.(event);
+      return event;
+    },
+    (evt) => {
+      if (!evt) {
+        return;
+      }
+      handler.onMove?.(evt);
 
       // dispatch `onEnd`
       if (animatedKeyboardHeight.value === persistedHeight.value) {
-        handler.onEnd?.(event);
+        handler.onEnd?.(evt);
       }
-    }
-  }, []);
+    },
+    [handler]
+  );
 
   useKeyboardHandler(
     {
