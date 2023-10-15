@@ -18,12 +18,12 @@ type KeyboardMoveEvent = Readonly<{
 type FocusedInputLayoutChangedEvent = Readonly<{
   target: Int32;
   layout: {
-    x: Int32;
-    y: Int32;
-    width: Int32;
-    height: Int32;
-    absoluteX: Int32;
-    absoluteY: Int32;
+    x: Double;
+    y: Double;
+    width: Double;
+    height: Double;
+    absoluteX: Double;
+    absoluteY: Double;
   };
 }>;
 

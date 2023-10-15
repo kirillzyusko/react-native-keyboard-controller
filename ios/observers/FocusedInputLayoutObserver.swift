@@ -16,7 +16,7 @@ public class FocusedInputLayoutObserver: NSObject {
   // input tracking
   private var currentInput: UIView?
   private var hasKVObserver = false
-  private var lastEventDispatched: [AnyHashable : Any] = [:]
+  private var lastEventDispatched: [AnyHashable: Any] = [:]
 
   @objc public init(
     handler: @escaping (NSDictionary) -> Void
@@ -72,7 +72,7 @@ public class FocusedInputLayoutObserver: NSObject {
       ],
     ]
     // TODO: compare by height? because keyboardWillShow triggers when user types first letter
-    if (NSDictionary(dictionary: data).isEqual(to: lastEventDispatched)) {
+    if NSDictionary(dictionary: data).isEqual(to: lastEventDispatched) {
       return
     }
 

@@ -48,12 +48,12 @@ using namespace facebook::react;
     inputObserver = [[FocusedInputLayoutObserver alloc] initWithHandler:^(NSDictionary *event) {
       if (self->_eventEmitter) {
         int target = [event[@"target"] integerValue];
-        int absoluteY = [event[@"layout"][@"absoluteY"] integerValue];
-        int absoulteX = [event[@"layout"][@"absoluteX"] integerValue];
-        int y = [event[@"layout"][@"y"] integerValue];
-        int x = [event[@"layout"][@"x"] integerValue];
-        int width = [event[@"layout"][@"width"] integerValue];
-        int height = [event[@"layout"][@"height"] integerValue];
+        double absoluteY = [event[@"layout"][@"absoluteY"] doubleValue];
+        double absoulteX = [event[@"layout"][@"absoluteX"] doubleValue];
+        double y = [event[@"layout"][@"y"] doubleValue];
+        double x = [event[@"layout"][@"x"] doubleValue];
+        double width = [event[@"layout"][@"width"] doubleValue];
+        double height = [event[@"layout"][@"height"] doubleValue];
 
         std::dynamic_pointer_cast<const facebook::react::KeyboardControllerViewEventEmitter>(
             self->_eventEmitter)

@@ -130,7 +130,7 @@ const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
           keyboardHeight.value = e.height;
         }
 
-        if (focusWasChanged && e.target !== -1) {
+        if (focusWasChanged && e.target !== -1 && !keyboardWillAppear) {
           console.log("focus was changed -> scrolling");
           maybeScroll(e.height, true);
         }

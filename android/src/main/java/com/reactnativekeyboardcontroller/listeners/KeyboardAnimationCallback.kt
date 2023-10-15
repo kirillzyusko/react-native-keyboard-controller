@@ -15,12 +15,11 @@ import com.facebook.react.bridge.WritableMap
 import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.UIManagerHelper
-import com.facebook.react.uimanager.events.Event
-import com.facebook.react.uimanager.events.EventDispatcher
 import com.facebook.react.views.textinput.ReactEditText
 import com.facebook.react.views.view.ReactViewGroup
 import com.reactnativekeyboardcontroller.InteractiveKeyboardProvider
 import com.reactnativekeyboardcontroller.events.KeyboardTransitionEvent
+import com.reactnativekeyboardcontroller.extensions.dispatchEvent
 import com.reactnativekeyboardcontroller.extensions.dp
 import kotlin.math.abs
 
@@ -57,7 +56,8 @@ class KeyboardAnimationCallback(
           // 2. event should be send only when keyboard is visible, since this event arrives earlier -> `tag` will be
           // 100% included in onStart/onMove/onEnd lifecycles, but triggering onStart/onEnd several time
           // can bring breaking changes
-          this.sendEventToJS(
+          context.dispatchEvent(
+            view.id,
             KeyboardTransitionEvent(
               surfaceId,
               view.id,
@@ -68,7 +68,8 @@ class KeyboardAnimationCallback(
               viewTagFocused,
             ),
           )
-          this.sendEventToJS(
+          context.dispatchEvent(
+            view.id,
             KeyboardTransitionEvent(
               surfaceId,
               view.id,
@@ -117,7 +118,8 @@ class KeyboardAnimationCallback(
       val duration = DEFAULT_ANIMATION_TIME.toInt()
 
       this.emitEvent("KeyboardController::keyboardWillShow", getEventParams(keyboardHeight))
-      this.sendEventToJS(
+      context.dispatchEvent(
+        view.id,
         KeyboardTransitionEvent(
           surfaceId,
           view.id,
@@ -133,7 +135,8 @@ class KeyboardAnimationCallback(
         ValueAnimator.ofFloat(this.persistentKeyboardHeight.toFloat(), keyboardHeight.toFloat())
       animation.addUpdateListener { animator ->
         val toValue = animator.animatedValue as Float
-        this.sendEventToJS(
+        context.dispatchEvent(
+          view.id,
           KeyboardTransitionEvent(
             surfaceId,
             view.id,
@@ -147,7 +150,8 @@ class KeyboardAnimationCallback(
       }
       animation.doOnEnd {
         this.emitEvent("KeyboardController::keyboardDidShow", getEventParams(keyboardHeight))
-        this.sendEventToJS(
+        context.dispatchEvent(
+          view.id,
           KeyboardTransitionEvent(
             surfaceId,
             view.id,
@@ -188,7 +192,8 @@ class KeyboardAnimationCallback(
     )
 
     Log.i(TAG, "HEIGHT:: $keyboardHeight TAG:: $viewTagFocused")
-    this.sendEventToJS(
+    context.dispatchEvent(
+      view.id,
       KeyboardTransitionEvent(
         surfaceId,
         view.id,
@@ -235,7 +240,8 @@ class KeyboardAnimationCallback(
     )
 
     val event = if (InteractiveKeyboardProvider.isInteractive) "topKeyboardMoveInteractive" else "topKeyboardMove"
-    this.sendEventToJS(
+    context.dispatchEvent(
+      view.id,
       KeyboardTransitionEvent(
         surfaceId,
         view.id,
@@ -274,7 +280,8 @@ class KeyboardAnimationCallback(
       "KeyboardController::" + if (!isKeyboardVisible) "keyboardDidHide" else "keyboardDidShow",
       getEventParams(keyboardHeight),
     )
-    this.sendEventToJS(
+    context.dispatchEvent(
+      view.id,
       KeyboardTransitionEvent(
         surfaceId,
         view.id,
@@ -303,12 +310,6 @@ class KeyboardAnimationCallback(
 
     // on hide it will be negative value, so we are using max function
     return (keyboardHeight - navigationBar).toFloat().dp.coerceAtLeast(0.0)
-  }
-
-  private fun sendEventToJS(event: Event<*>) {
-    val eventDispatcher: EventDispatcher? =
-      UIManagerHelper.getEventDispatcherForReactTag(context, view.id)
-    eventDispatcher?.dispatchEvent(event)
   }
 
   private fun emitEvent(event: String, params: WritableMap) {

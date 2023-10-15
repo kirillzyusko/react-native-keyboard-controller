@@ -8,13 +8,52 @@
 - (?) when dispatching focusInput -> compare by height? because keyboardWillShow triggers when user types first letter <- we anyway plan to update layout when user types letters?
 - (x) contentContainerStyle -> paddingBottom should depend on keyboard size <- added additional view
 - (x) focus on 3, focus on 5 -> scroll looks strange <- persist scroll on tag changes as well
+- (x) jest -> add new mocks + new unit tests
+- (x) improve events precision (int -> float, pageY, width точно float или double)
+- (x) console.log("focus was changed -> scrolling") (even when keyboard appears) <- `!keyboardWillAppear` condition added
 - scrollResponderScrollNativeHandleToKeyboard
 - think about renaming FocusedInputLayoutChangedObserver -> FocusedInputObserver
 - 
 - send `null` when there is no input in focus
-- jest -> add new mocks + new unit tests
-- improve events precision (int -> float, pageY, width точно float или double)
 - const {update} = useReanimatedFocusedInput(); <- requires REA3
 - crash on every file changes AwareScrollView/hot reload
-- console.log("focus was changed -> scrolling") (even when keyboard appears)
 - focus on field -> type any symbol -> close keyboard => no back transition animation
+- android - dispatch event when keyboard changes size
+- enable hook under feature flag?
+
+```
+KeyboardTransitionEventData(
+                event = "topKeyboardMoveStart",
+                height = this.persistentKeyboardHeight,
+                progress = 1.0,
+                duration = 0,
+                target = viewTagFocused
+              ),
+
+data class KeyboardTransitionEventData(
+  val event: String,
+  val height: Double,
+  val progress: Double,
+  val duration: Int,
+  val target: Int,
+)
+
+@Suppress("detekt:LongParameterList")
+class KeyboardTransitionEvent(
+  surfaceId: Int,
+  viewId: Int,
+  private val data: KeyboardTransitionEventData,
+) : Event<KeyboardTransitionEvent>(surfaceId, viewId) {
+  override fun getEventName() = data.event
+
+  // All events for a given view can be coalesced?
+  override fun getCoalescingKey(): Short = 0
+
+  override fun getEventData(): WritableMap? = Arguments.createMap().apply {
+    putDouble("progress", data.progress)
+    putDouble("height", data.height)
+    putInt("duration", data.duration)
+    putInt("target", data.target)
+  }
+}
+```

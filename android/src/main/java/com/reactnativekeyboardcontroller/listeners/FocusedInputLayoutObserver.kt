@@ -3,11 +3,10 @@ package com.reactnativekeyboardcontroller.listeners
 import android.view.View.OnLayoutChangeListener
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.UIManagerHelper
-import com.facebook.react.uimanager.events.Event
-import com.facebook.react.uimanager.events.EventDispatcher
 import com.facebook.react.views.textinput.ReactEditText
 import com.facebook.react.views.view.ReactViewGroup
 import com.reactnativekeyboardcontroller.events.FocusedInputLayoutChangedEvent
+import com.reactnativekeyboardcontroller.extensions.dispatchEvent
 import com.reactnativekeyboardcontroller.extensions.dp
 import com.reactnativekeyboardcontroller.extensions.screenLocation
 
@@ -42,13 +41,19 @@ class FocusedInputLayoutObserver(val view: ReactViewGroup, private val context: 
     val input = lastFocusedInput ?: return
 
     val (x, y) = input.screenLocation
-    this.sendEventToJS(FocusedInputLayoutChangedEvent(surfaceId, view.id, input.x.dp.toInt(), input.y.dp.toInt(), input.width.toFloat().dp.toInt(), input.height.toFloat().dp.toInt(), x.toFloat().dp.toInt(), y.toFloat().dp.toInt(), input.id))
-  }
-
-  // TODO: remove code duplication
-  private fun sendEventToJS(event: Event<*>) {
-    val eventDispatcher: EventDispatcher? =
-      UIManagerHelper.getEventDispatcherForReactTag(context, view.id)
-    eventDispatcher?.dispatchEvent(event)
+    context.dispatchEvent(
+      view.id,
+      FocusedInputLayoutChangedEvent(
+        surfaceId,
+        view.id,
+        input.x.dp,
+        input.y.dp,
+        input.width.toFloat().dp,
+        input.height.toFloat().dp,
+        x.toFloat().dp,
+        y.toFloat().dp,
+        input.id,
+      ),
+    )
   }
 }

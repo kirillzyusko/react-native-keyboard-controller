@@ -10,6 +10,19 @@ const values = {
     height: { value: 0 },
   },
 };
+const focusedInput = {
+  value: {
+    target: 1,
+    layout: {
+      x: 0,
+      y: 0,
+      width: 200,
+      height: 40,
+      absoluteX: 0,
+      absoluteY: 100,
+    },
+  },
+};
 
 const mock = {
   // hooks
@@ -18,6 +31,7 @@ const mock = {
   useResizeMode: jest.fn(),
   useGenericKeyboardHandler: jest.fn(),
   useKeyboardHandler: jest.fn(),
+  useReanimatedFocusedInput: jest.fn().mockReturnValue(focusedInput),
   // modules
   KeyboardController: {
     setInputMode: jest.fn(),

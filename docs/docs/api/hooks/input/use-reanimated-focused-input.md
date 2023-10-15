@@ -18,16 +18,16 @@ The value from `useReanimatedFocusedInput` will be always updated before keyboar
 
 ## Event structure
 
-Value from this hook is returning as `SharedValue`. The returned data has next structure:
+Value from this hook is returned as `SharedValue`. The returned data has next structure:
 
 ```ts
 type KeyboardEventData = {
   target: number; // tag of the focused TextInput
-  layout: {
+  layout: { // layout of the focused TextInput
     x: number; // `x` coordinate inside the parent component
     y: number; // `y` coordinate inside the parent component
-    width: number; // width of the TextInput
-    height: number; // height of the TextInput
+    width: number; // `width` of the TextInput
+    height: number; // `height` of the TextInput
     absoluteX: number; // `x` coordinate on the screen
     absoluteY: number; // `y` coordinate on the screen 
   };

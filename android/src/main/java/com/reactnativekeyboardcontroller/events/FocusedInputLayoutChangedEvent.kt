@@ -7,12 +7,12 @@ import com.facebook.react.uimanager.events.Event
 class FocusedInputLayoutChangedEvent(
   surfaceId: Int,
   viewId: Int,
-  private val x: Int,
-  private val y: Int,
-  private val width: Int,
-  private val height: Int,
-  private val absoluteX: Int,
-  private val absoluteY: Int,
+  private val x: Double,
+  private val y: Double,
+  private val width: Double,
+  private val height: Double,
+  private val absoluteX: Double,
+  private val absoluteY: Double,
   private val target: Int,
 ) : Event<KeyboardTransitionEvent>(surfaceId, viewId) {
   override fun getEventName() = "topFocusedInputLayoutChanged"
@@ -25,12 +25,12 @@ class FocusedInputLayoutChangedEvent(
     putMap(
       "layout",
       Arguments.createMap().apply {
-        putInt("x", x)
-        putInt("y", y)
-        putInt("width", width)
-        putInt("height", height)
-        putInt("absoluteX", absoluteX)
-        putInt("absoluteY", absoluteY)
+        putDouble("x", x)
+        putDouble("y", y)
+        putDouble("width", width)
+        putDouble("height", height)
+        putDouble("absoluteX", absoluteX)
+        putDouble("absoluteY", absoluteY)
       },
     )
   }
