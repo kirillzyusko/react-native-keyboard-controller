@@ -11,49 +11,22 @@
 - (x) jest -> add new mocks + new unit tests
 - (x) improve events precision (int -> float, pageY, width точно float или double)
 - (x) console.log("focus was changed -> scrolling") (even when keyboard appears) <- `!keyboardWillAppear` condition added
+- (x) focus on field -> type any symbol -> close keyboard => no back transition animation <- memoize layout in local `layout` variable
+- (x) android - dispatch event when keyboard changes size
+- (x) be sure that after switching enabled/disabled several times only one event gets dispatched <- only single listener should be active (open app, disable/enable, focus input)
+- (x) do not generate colors randomly (to cover by e2e tests later)
 - scrollResponderScrollNativeHandleToKeyboard
 - think about renaming FocusedInputLayoutChangedObserver -> FocusedInputObserver
 - 
 - send `null` when there is no input in focus
 - const {update} = useReanimatedFocusedInput(); <- requires REA3
 - crash on every file changes AwareScrollView/hot reload
-- focus on field -> type any symbol -> close keyboard => no back transition animation
-- android - dispatch event when keyboard changes size
 - enable hook under feature flag?
-
-```
-KeyboardTransitionEventData(
-                event = "topKeyboardMoveStart",
-                height = this.persistentKeyboardHeight,
-                progress = 1.0,
-                duration = 0,
-                target = viewTagFocused
-              ),
-
-data class KeyboardTransitionEventData(
-  val event: String,
-  val height: Double,
-  val progress: Double,
-  val duration: Int,
-  val target: Int,
-)
-
-@Suppress("detekt:LongParameterList")
-class KeyboardTransitionEvent(
-  surfaceId: Int,
-  viewId: Int,
-  private val data: KeyboardTransitionEventData,
-) : Event<KeyboardTransitionEvent>(surfaceId, viewId) {
-  override fun getEventName() = data.event
-
-  // All events for a given view can be coalesced?
-  override fun getCoalescingKey(): Short = 0
-
-  override fun getEventData(): WritableMap? = Arguments.createMap().apply {
-    putDouble("progress", data.progress)
-    putDouble("height", data.height)
-    putInt("duration", data.duration)
-    putInt("target", data.target)
-  }
-}
-```
+- test paper/fabric iOS/Android
+- open app -> focus on 8/9 fields -> content is not moving
+- 8 -> 9 transitions (9 field is covered by keyboard)
+- android: keyboard resize pushes content significantly
+- sometimes `paddingBottom` is getting kind of freezed (i. e. keyboard is hidden, but padding is still present)
+- replicate example to paper
+- `y` on Android and from measure are diffferent
+- focus on 3, then on 5 -> grow text input -> first grow scroll into incorrect position

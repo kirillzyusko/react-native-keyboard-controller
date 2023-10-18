@@ -1,11 +1,13 @@
 package com.reactnativekeyboardcontroller.listeners
 
 import android.view.View.OnLayoutChangeListener
+import android.view.ViewTreeObserver.OnGlobalFocusChangeListener
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.UIManagerHelper
 import com.facebook.react.views.textinput.ReactEditText
 import com.facebook.react.views.view.ReactViewGroup
 import com.reactnativekeyboardcontroller.events.FocusedInputLayoutChangedEvent
+import com.reactnativekeyboardcontroller.events.FocusedInputLayoutChangedEventData
 import com.reactnativekeyboardcontroller.extensions.dispatchEvent
 import com.reactnativekeyboardcontroller.extensions.dp
 import com.reactnativekeyboardcontroller.extensions.screenLocation
@@ -16,44 +18,59 @@ class FocusedInputLayoutObserver(val view: ReactViewGroup, private val context: 
 
   // state variables
   private var lastFocusedInput: ReactEditText? = null
+  private var lastEventDispatched: FocusedInputLayoutChangedEventData? = null
 
   // listeners
   private val layoutListener =
     OnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
-      this.updateJSValue()
+      this.syncUpLayout()
     }
-
-  init {
-    view.viewTreeObserver.addOnGlobalFocusChangeListener { oldFocus, newFocus ->
-      if (newFocus is ReactEditText) {
-        lastFocusedInput = newFocus
-        newFocus.addOnLayoutChangeListener(layoutListener)
-        this.updateJSValue()
-      }
-      if (newFocus == null) {
-        lastFocusedInput?.removeOnLayoutChangeListener(layoutListener)
-        lastFocusedInput = null
-      }
+  private val focusListener = OnGlobalFocusChangeListener { oldFocus, newFocus ->
+    // unfocused or focused was changed
+    if (newFocus == null || oldFocus != null) {
+      lastFocusedInput?.removeOnLayoutChangeListener(layoutListener)
+      lastFocusedInput = null
+    }
+    if (newFocus is ReactEditText) {
+      lastFocusedInput = newFocus
+      newFocus.addOnLayoutChangeListener(layoutListener)
+      this.syncUpLayout()
     }
   }
 
-  private fun updateJSValue() {
+  init {
+    view.viewTreeObserver.addOnGlobalFocusChangeListener(focusListener)
+  }
+
+  fun syncUpLayout() {
     val input = lastFocusedInput ?: return
 
     val (x, y) = input.screenLocation
-    context.dispatchEvent(
-      view.id,
-      FocusedInputLayoutChangedEvent(
-        surfaceId,
-        view.id,
-        input.x.dp,
-        input.y.dp,
-        input.width.toFloat().dp,
-        input.height.toFloat().dp,
-        x.toFloat().dp,
-        y.toFloat().dp,
-        input.id,
-      ),
+    val event = FocusedInputLayoutChangedEventData(
+      x = input.x.dp,
+      y = input.y.dp,
+      width = input.width.toFloat().dp,
+      height = input.height.toFloat().dp,
+      absoluteX = x.toFloat().dp,
+      absoluteY = y.toFloat().dp,
+      target = input.id,
     )
+
+    if (event != lastEventDispatched) {
+      lastEventDispatched = event
+      context.dispatchEvent(
+        view.id,
+        FocusedInputLayoutChangedEvent(
+          surfaceId,
+          view.id,
+          event = event,
+        ),
+      )
+      println("DISPATCH $id")
+    }
+  }
+
+  fun destroy() {
+    view.viewTreeObserver.removeOnGlobalFocusChangeListener(focusListener)
   }
 }

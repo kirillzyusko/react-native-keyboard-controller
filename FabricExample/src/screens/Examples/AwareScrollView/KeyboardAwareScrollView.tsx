@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import { ScrollViewProps, useWindowDimensions } from 'react-native';
-import { useReanimatedFocusedInput } from 'react-native-keyboard-controller';
+import { FocusedInputLayoutChangedEvent, useReanimatedFocusedInput } from 'react-native-keyboard-controller';
 import Reanimated, {
   interpolate,
   scrollTo,
@@ -66,6 +66,7 @@ const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
   const initialKeyboardSize = useSharedValue(0);
   const scrollBeforeKeyboardMovement = useSharedValue(0);
   const input = useReanimatedFocusedInput();
+  const layout = useSharedValue<FocusedInputLayoutChangedEvent>(null);
 
   const { height } = useWindowDimensions();
 
@@ -85,7 +86,7 @@ const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
     fakeViewHeight.value = e;
 
     const visibleRect = height - keyboardHeight.value;
-    const point = (input.value?.layout.absoluteY || 0) + (input.value?.layout.height || 0);
+    const point = (layout.value?.layout.absoluteY || 0) + (layout.value?.layout.height || 0);
 
     if (visibleRect - point <= BOTTOM_OFFSET) {
       const interpolatedScrollTo = interpolate(
@@ -130,20 +131,22 @@ const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
           keyboardHeight.value = e.height;
         }
 
-        if (focusWasChanged && e.target !== -1 && !keyboardWillAppear) {
-          console.log("focus was changed -> scrolling");
-          maybeScroll(e.height, true);
-        }
-
         // focus was changed
         if (focusWasChanged) {
           tag.value = e.target;
 
           if (tag.value !== -1) {
+            // save position of focused text input when keyboard starts to move
+            layout.value = input.value;
             // save current scroll position - when keyboard will hide we'll reuse
             // this value to achieve smooth hide effect
             scrollBeforeKeyboardMovement.value = position.value;
           }
+        }
+
+        if (focusWasChanged && e.target !== -1 && !keyboardWillAppear) {
+          console.log("focus was changed -> scrolling");
+          maybeScroll(e.height, true);
         }
       },
       onMove: (e) => {
@@ -164,7 +167,11 @@ const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
   useAnimatedReaction(() => input.value, (current, previous) => {
     if (current?.target === previous?.target && current?.layout.height !== previous?.layout.height) {
       console.log("TextInput grows");
+      const prevLayout = layout.value;
+
+      layout.value = input.value;
       scrollPosition.value += maybeScroll(keyboardHeight.value, true) || 0;
+      layout.value = prevLayout;
     }
   }, []);
 

@@ -15,7 +15,6 @@ import com.facebook.react.views.view.ReactViewGroup
 import com.reactnativekeyboardcontroller.extensions.removeSelf
 import com.reactnativekeyboardcontroller.extensions.requestApplyInsetsWhenAttached
 import com.reactnativekeyboardcontroller.extensions.rootView
-import com.reactnativekeyboardcontroller.listeners.FocusedInputLayoutObserver
 import com.reactnativekeyboardcontroller.listeners.KeyboardAnimationCallback
 
 private val TAG = EdgeToEdgeReactViewGroup::class.qualifiedName
@@ -31,6 +30,7 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
   // internal class members
   private var eventView: ReactViewGroup? = null
   private var wasMounted = false
+  private var callback: KeyboardAnimationCallback? = null
 
   // region View lifecycles
   override fun onAttachedToWindow() {
@@ -48,11 +48,7 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
   override fun onDetachedFromWindow() {
     super.onDetachedFromWindow()
 
-    // we need to remove view asynchronously from `onDetachedFromWindow` method
-    // otherwise we may face NPE when app is getting opened via universal link
-    // see https://github.com/kirillzyusko/react-native-keyboard-controller/issues/242
-    // for more details
-    Handler(Looper.getMainLooper()).post { this.removeKeyboardCallbacks() }
+    this.removeKeyboardCallbacks()
   }
   // endregion
 
@@ -119,7 +115,7 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
       val root = this.getContentView()
       root?.addView(eventView)
 
-      val callback = KeyboardAnimationCallback(
+      callback = KeyboardAnimationCallback(
         view = this,
         persistentInsetTypes = WindowInsetsCompat.Type.systemBars(),
         deferredInsetTypes = WindowInsetsCompat.Type.ime(),
@@ -132,16 +128,25 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
         ViewCompat.setOnApplyWindowInsetsListener(it, callback)
         it.requestApplyInsetsWhenAttached()
       }
-
-      // TODO: destroy? + KeyboardAnimationCallback destroy?
-      FocusedInputLayoutObserver(view = this, context = reactContext)
     } else {
       Log.w(TAG, "Can not setup keyboard animation listener, since `currentActivity` is null")
     }
   }
 
   private fun removeKeyboardCallbacks() {
-    eventView.removeSelf()
+    callback?.destroy()
+
+    // TODO: from setActive(false) maybe need to remove synchronously?
+    // capture view into closure, because if `onDetachedFromWindow` and `onAttachedToWindow`
+    // dispatched synchronously after each other (open application on Fabric), then `.post`
+    // will destroy just newly created view (if we have a reference via `this`)
+    // and we'll have a memory leak or zombie-view
+    val view = eventView
+    // we need to remove view asynchronously from `onDetachedFromWindow` method
+    // otherwise we may face NPE when app is getting opened via universal link
+    // see https://github.com/kirillzyusko/react-native-keyboard-controller/issues/242
+    // for more details
+    Handler(Looper.getMainLooper()).post { view.removeSelf() }
   }
 
   private fun getContentView(): FitWindowsLinearLayout? {

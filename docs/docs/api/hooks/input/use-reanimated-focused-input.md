@@ -9,7 +9,7 @@ Hook that returns an information about `TextInput` that currently has a focus.
 Hook will update its value in next cases:
 
 - when keyboard changes its size (appears, disappears, changes size because of different input mode);
-- when focused was changed from one `TextInput` to another;
+- when focus was changed from one `TextInput` to another;
 - when `layout` of focused input was changed.
 
 :::info Events order

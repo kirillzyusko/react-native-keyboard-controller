@@ -47,14 +47,14 @@ public class FocusedInputLayoutObserver: NSObject {
     removeKVObserver()
     currentInput = (UIResponder.current as? UIView)?.superview as UIView?
     setupKVObserver()
-    updateJSValue()
+    syncUpLayout()
   }
 
   @objc func keyboardWillHide(_: Notification) {
     removeKVObserver()
   }
 
-  @objc func updateJSValue() {
+  @objc func syncUpLayout() {
     let responder = UIResponder.current
     // TODO: to get a real tag/layout need to use a superview - maybe return UIResponder.current as superview?
     let focusedInput = (responder as? UIView)?.superview
@@ -111,7 +111,7 @@ public class FocusedInputLayoutObserver: NSObject {
       // layout values
       DispatchQueue.main.async {
         print("KVObserver")
-        self.updateJSValue()
+        self.syncUpLayout()
       }
     }
   }

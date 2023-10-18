@@ -4,6 +4,7 @@ import android.animation.ValueAnimator
 import android.os.Build
 import android.util.Log
 import android.view.View
+import android.view.ViewTreeObserver.OnGlobalFocusChangeListener
 import androidx.core.animation.doOnEnd
 import androidx.core.graphics.Insets
 import androidx.core.view.OnApplyWindowInsetsListener
@@ -33,11 +34,56 @@ class KeyboardAnimationCallback(
   val context: ThemedReactContext?,
 ) : WindowInsetsAnimationCompat.Callback(dispatchMode), OnApplyWindowInsetsListener {
   private val surfaceId = UIManagerHelper.getSurfaceId(view)
+
+  // state variables
   private var persistentKeyboardHeight = 0.0
   private var isKeyboardVisible = false
   private var isTransitioning = false
   private var duration = 0
   private var viewTagFocused = -1
+
+  // listeners
+  private val focusListener = OnGlobalFocusChangeListener { oldFocus, newFocus ->
+    if (newFocus is ReactEditText) {
+      viewTagFocused = newFocus.id
+
+      // keyboard is visible and focus has been changed
+      if (this.isKeyboardVisible && oldFocus !== null) {
+        // imitate iOS behavior and send two instant start/end events containing an info about new tag
+        // 1. onStart/onMove/onEnd can be still dispatched after, if keyboard change size (numeric -> alphabetic type)
+        // 2. event should be send only when keyboard is visible, since this event arrives earlier -> `tag` will be
+        // 100% included in onStart/onMove/onEnd lifecycles, but triggering onStart/onEnd several time
+        // can bring breaking changes
+        context.dispatchEvent(
+          view.id,
+          KeyboardTransitionEvent(
+            surfaceId,
+            view.id,
+            "topKeyboardMoveStart",
+            this.persistentKeyboardHeight,
+            1.0,
+            0,
+            viewTagFocused,
+          ),
+        )
+        context.dispatchEvent(
+          view.id,
+          KeyboardTransitionEvent(
+            surfaceId,
+            view.id,
+            "topKeyboardMoveEnd",
+            this.persistentKeyboardHeight,
+            1.0,
+            0,
+            viewTagFocused,
+          ),
+        )
+        this.emitEvent("KeyboardController::keyboardWillShow", getEventParams(this.persistentKeyboardHeight))
+        this.emitEvent("KeyboardController::keyboardDidShow", getEventParams(this.persistentKeyboardHeight))
+      }
+    }
+  }
+  private var layoutObserver: FocusedInputLayoutObserver? = null
 
   init {
     require(persistentInsetTypes and deferredInsetTypes == 0) {
@@ -45,46 +91,8 @@ class KeyboardAnimationCallback(
         " same WindowInsetsCompat.Type values"
     }
 
-    view.viewTreeObserver.addOnGlobalFocusChangeListener { oldFocus, newFocus ->
-      if (newFocus is ReactEditText) {
-        viewTagFocused = newFocus.id
-
-        // keyboard is visible and focus has been changed
-        if (this.isKeyboardVisible && oldFocus !== null) {
-          // imitate iOS behavior and send two instant start/end events containing an info about new tag
-          // 1. onStart/onMove/onEnd can be still dispatched after, if keyboard change size (numeric -> alphabetic type)
-          // 2. event should be send only when keyboard is visible, since this event arrives earlier -> `tag` will be
-          // 100% included in onStart/onMove/onEnd lifecycles, but triggering onStart/onEnd several time
-          // can bring breaking changes
-          context.dispatchEvent(
-            view.id,
-            KeyboardTransitionEvent(
-              surfaceId,
-              view.id,
-              "topKeyboardMoveStart",
-              this.persistentKeyboardHeight,
-              1.0,
-              0,
-              viewTagFocused,
-            ),
-          )
-          context.dispatchEvent(
-            view.id,
-            KeyboardTransitionEvent(
-              surfaceId,
-              view.id,
-              "topKeyboardMoveEnd",
-              this.persistentKeyboardHeight,
-              1.0,
-              0,
-              viewTagFocused,
-            ),
-          )
-          this.emitEvent("KeyboardController::keyboardWillShow", getEventParams(this.persistentKeyboardHeight))
-          this.emitEvent("KeyboardController::keyboardDidShow", getEventParams(this.persistentKeyboardHeight))
-        }
-      }
-    }
+    layoutObserver = FocusedInputLayoutObserver(view = view, context = context)
+    view.viewTreeObserver.addOnGlobalFocusChangeListener(focusListener)
   }
 
   /**
@@ -117,6 +125,7 @@ class KeyboardAnimationCallback(
       val keyboardHeight = getCurrentKeyboardHeight()
       val duration = DEFAULT_ANIMATION_TIME.toInt()
 
+      layoutObserver?.syncUpLayout()
       this.emitEvent("KeyboardController::keyboardWillShow", getEventParams(keyboardHeight))
       context.dispatchEvent(
         view.id,
@@ -186,6 +195,7 @@ class KeyboardAnimationCallback(
       this.persistentKeyboardHeight = keyboardHeight
     }
 
+    layoutObserver?.syncUpLayout()
     this.emitEvent(
       "KeyboardController::" + if (!isKeyboardVisible) "keyboardWillHide" else "keyboardWillShow",
       getEventParams(keyboardHeight),
@@ -295,6 +305,11 @@ class KeyboardAnimationCallback(
 
     // reset to initial state
     duration = 0
+  }
+
+  fun destroy() {
+    view.viewTreeObserver.removeOnGlobalFocusChangeListener(focusListener)
+    layoutObserver?.destroy()
   }
 
   private fun isKeyboardVisible(): Boolean {
