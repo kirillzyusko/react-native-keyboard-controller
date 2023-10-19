@@ -52,6 +52,7 @@ public class FocusedInputLayoutObserver: NSObject {
   }
 
   @objc public func unmount() {
+    // swiftlint:disable:next notification_center_detachment
     NotificationCenter.default.removeObserver(self)
   }
 
@@ -117,12 +118,14 @@ public class FocusedInputLayoutObserver: NSObject {
     currentInput?.removeObserver(self, forKeyPath: "center", context: nil)
   }
 
+  // swiftlint:disable:next block_based_kvo
   @objc override public func observeValue(
     forKeyPath keyPath: String?,
     of object: Any?,
     change _: [NSKeyValueChangeKey: Any]?,
     context _: UnsafeMutableRawPointer?
   ) {
+    // swiftlint:disable:next force_cast
     if keyPath == "center", object as! NSObject == currentInput! {
       // we need to read layout in next frame, otherwise we'll get old
       // layout values
