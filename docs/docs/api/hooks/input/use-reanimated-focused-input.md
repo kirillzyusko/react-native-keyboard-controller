@@ -4,7 +4,7 @@ keywords: [react-native-keyboard-controller, useReanimatedFocusedInput, react-na
 
 # useReanimatedFocusedInput
 
-Hook that returns an information about `TextInput` that currently has a focus.
+Hook that returns an information about `TextInput` that currently has a focus. Returns `null` if no input has focus.
 
 Hook will update its value in next cases:
 
@@ -18,7 +18,7 @@ The value from `useReanimatedFocusedInput` will be always updated before keyboar
 
 ## Event structure
 
-Value from this hook is returned as `SharedValue`. The returned data has next structure:
+The `input` property from this hook is returned as `SharedValue`. The returned data has next structure:
 
 ```ts
 type KeyboardEventData = {
@@ -37,7 +37,7 @@ type KeyboardEventData = {
 ## Example
 
 ```tsx
-const input = useReanimatedFocusedInput();
+const {input} = useReanimatedFocusedInput();
 ```
 
 Also have a look on [example](https://github.com/kirillzyusko/react-native-keyboard-controller/tree/main/example) app for more comprehensive usage.

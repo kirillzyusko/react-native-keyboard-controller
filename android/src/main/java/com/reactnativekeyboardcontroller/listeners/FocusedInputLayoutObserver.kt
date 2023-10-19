@@ -12,13 +12,23 @@ import com.reactnativekeyboardcontroller.extensions.dispatchEvent
 import com.reactnativekeyboardcontroller.extensions.dp
 import com.reactnativekeyboardcontroller.extensions.screenLocation
 
+val noFocusedInputEvent = FocusedInputLayoutChangedEventData(
+  x = 0.0,
+  y = 0.0,
+  width = 0.0,
+  height = 0.0,
+  absoluteX = 0.0,
+  absoluteY = 0.0,
+  target = -1,
+)
+
 class FocusedInputLayoutObserver(val view: ReactViewGroup, private val context: ThemedReactContext?) {
   // constructor variables
   private val surfaceId = UIManagerHelper.getSurfaceId(view)
 
   // state variables
   private var lastFocusedInput: ReactEditText? = null
-  private var lastEventDispatched: FocusedInputLayoutChangedEventData? = null
+  private var lastEventDispatched: FocusedInputLayoutChangedEventData = noFocusedInputEvent
 
   // listeners
   private val layoutListener =
@@ -35,6 +45,10 @@ class FocusedInputLayoutObserver(val view: ReactViewGroup, private val context: 
       lastFocusedInput = newFocus
       newFocus.addOnLayoutChangeListener(layoutListener)
       this.syncUpLayout()
+    }
+    // unfocused
+    if (newFocus == null) {
+      dispatchEventToJS(noFocusedInputEvent)
     }
   }
 
@@ -56,6 +70,14 @@ class FocusedInputLayoutObserver(val view: ReactViewGroup, private val context: 
       target = input.id,
     )
 
+    dispatchEventToJS(event)
+  }
+
+  fun destroy() {
+    view.viewTreeObserver.removeOnGlobalFocusChangeListener(focusListener)
+  }
+
+  private fun dispatchEventToJS(event: FocusedInputLayoutChangedEventData) {
     if (event != lastEventDispatched) {
       lastEventDispatched = event
       context.dispatchEvent(
@@ -66,11 +88,6 @@ class FocusedInputLayoutObserver(val view: ReactViewGroup, private val context: 
           event = event,
         ),
       )
-      println("DISPATCH $id")
     }
-  }
-
-  fun destroy() {
-    view.viewTreeObserver.removeOnGlobalFocusChangeListener(focusListener)
   }
 }

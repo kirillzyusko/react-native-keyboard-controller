@@ -83,7 +83,7 @@ export const KeyboardProvider = ({
   // shared values
   const progressSV = useSharedValue(0);
   const heightSV = useSharedValue(0);
-  const layout = useSharedValue<FocusedInputLayoutChangedEvent>(null);
+  const layout = useSharedValue<FocusedInputLayoutChangedEvent | null>(null);
   const { setHandlers, broadcast } = useSharedHandlers<KeyboardHandler>();
   // memo
   const context = useMemo<KeyboardAnimationContext>(
@@ -161,7 +161,13 @@ export const KeyboardProvider = ({
       onFocusedInputLayoutChanged: (e) => {
         'worklet';
 
-        layout.value = e;
+        if (e.target !== -1) {
+          layout.value = e;
+        } else {
+          layout.value = null;
+        }
+
+        console.log('useFocusedInputHandler', layout.value);
       },
     },
     []

@@ -15,18 +15,20 @@
 - (x) android - dispatch event when keyboard changes size
 - (x) be sure that after switching enabled/disabled several times only one event gets dispatched <- only single listener should be active (open app, disable/enable, focus input)
 - (x) do not generate colors randomly (to cover by e2e tests later)
+- (x) send `null` when there is no input in focus
+- (x) replicate example to paper
+- (-) open app -> focus on 8/9 fields -> content is not moving <- fabric specific? paper works like a charm
+- (-) const {update} = useReanimatedFocusedInput(); <- change signature of the method in advance? requires REA3
 - scrollResponderScrollNativeHandleToKeyboard
 - think about renaming FocusedInputLayoutChangedObserver -> FocusedInputObserver
 - 
-- send `null` when there is no input in focus
-- const {update} = useReanimatedFocusedInput(); <- requires REA3
-- crash on every file changes AwareScrollView/hot reload
+- crash on every file changes AwareScrollView/hot reload <- only if body of worklet changed? fabric specific?
 - enable hook under feature flag?
 - test paper/fabric iOS/Android
-- open app -> focus on 8/9 fields -> content is not moving
 - 8 -> 9 transitions (9 field is covered by keyboard)
 - android: keyboard resize pushes content significantly
 - sometimes `paddingBottom` is getting kind of freezed (i. e. keyboard is hidden, but padding is still present)
-- replicate example to paper
-- `y` on Android and from measure are diffferent
+- `y` on Android and from measure are different
 - focus on 3, then on 5 -> grow text input -> first grow scroll into incorrect position
+- remove all println/console.log/TODO/etc.
+- paper: focus on 5, unfocus -> no back transition <- keyboardHeight back to `0` too early (should be in end handler)

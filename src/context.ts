@@ -17,7 +17,7 @@ export type KeyboardAnimationContext = {
   enabled: boolean;
   animated: AnimatedContext;
   reanimated: ReanimatedContext;
-  layout: SharedValue<FocusedInputLayoutChangedEvent>;
+  layout: SharedValue<FocusedInputLayoutChangedEvent | null>;
   setHandlers: (handlers: KeyboardHandlers) => void;
   setEnabled: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -29,7 +29,9 @@ const withSharedValue = <T>(value: T): SharedValue<T> => ({
   modify: NOOP,
 });
 const DEFAULT_SHARED_VALUE = withSharedValue(0);
-const DEFAULT_LAYOUT = withSharedValue<FocusedInputLayoutChangedEvent>(null);
+const DEFAULT_LAYOUT = withSharedValue<FocusedInputLayoutChangedEvent | null>(
+  null
+);
 const defaultContext: KeyboardAnimationContext = {
   enabled: true,
   animated: {

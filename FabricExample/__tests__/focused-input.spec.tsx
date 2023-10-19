@@ -6,7 +6,7 @@ import { render } from '@testing-library/react-native';
 import { useReanimatedFocusedInput } from 'react-native-keyboard-controller';
 
 function RectangleWithFocusedInputLayout() {
-  const input = useReanimatedFocusedInput();
+  const { input } = useReanimatedFocusedInput();
   const style = useAnimatedStyle(
     () => {
       const layout = input.value?.layout;
@@ -36,17 +36,19 @@ describe('`useReanimatedFocusedInput` mocking', () => {
     });
 
     (useReanimatedFocusedInput as jest.Mock).mockReturnValue({
-      value: {
-        target: 2,
-        layout: {
-          x: 10,
-          y: 100,
-          width: 190,
-          height: 80,
-          absoluteX: 100,
-          absoluteY: 200,
+      input: {
+        value: {
+          target: 2,
+          layout: {
+            x: 10,
+            y: 100,
+            width: 190,
+            height: 80,
+            absoluteX: 100,
+            absoluteY: 200,
+          },
         },
-      },
+      }
     });
     update(<RectangleWithFocusedInputLayout />);
 

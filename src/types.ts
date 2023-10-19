@@ -21,7 +21,7 @@ export type FocusedInputLayoutChangedEvent = {
     absoluteX: number;
     absoluteY: number;
   };
-} | null;
+};
 export type EventWithName<T> = {
   eventName: string;
 } & T;

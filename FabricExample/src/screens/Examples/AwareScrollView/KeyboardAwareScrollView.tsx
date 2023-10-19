@@ -60,13 +60,12 @@ const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
   const scrollViewAnimatedRef = useAnimatedRef<Reanimated.ScrollView>();
   const scrollPosition = useSharedValue(0);
   const position = useSharedValue(0);
-  const fakeViewHeight = useSharedValue(0);
   const keyboardHeight = useSharedValue(0);
   const tag = useSharedValue(-1);
   const initialKeyboardSize = useSharedValue(0);
   const scrollBeforeKeyboardMovement = useSharedValue(0);
-  const input = useReanimatedFocusedInput();
-  const layout = useSharedValue<FocusedInputLayoutChangedEvent>(null);
+  const { input } = useReanimatedFocusedInput();
+  const layout = useSharedValue<FocusedInputLayoutChangedEvent | null>(null);
 
   const { height } = useWindowDimensions();
 
@@ -82,9 +81,7 @@ const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
   /**
    * Function that will scroll a ScrollView as keyboard gets moving
    */
-  const maybeScroll = useWorkletCallback((e: number, animated = false) => {
-    fakeViewHeight.value = e;
-
+  const maybeScroll = useWorkletCallback((e: number, animated: boolean = false) => {
     const visibleRect = height - keyboardHeight.value;
     const point = (layout.value?.layout.absoluteY || 0) + (layout.value?.layout.height || 0);
 

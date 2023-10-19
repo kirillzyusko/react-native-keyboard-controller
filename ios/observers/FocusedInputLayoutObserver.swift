@@ -9,6 +9,18 @@
 import Foundation
 import UIKit
 
+let noFocusedInputEvent: [String: Any] = [
+  "target": -1,
+  "layout": [
+    "absoluteX": 0,
+    "absoluteY": 0,
+    "width": 0,
+    "height": 0,
+    "x": 0,
+    "y": 0,
+  ],
+]
+
 @objc(FocusedInputLayoutObserver)
 public class FocusedInputLayoutObserver: NSObject {
   // class members
@@ -16,7 +28,7 @@ public class FocusedInputLayoutObserver: NSObject {
   // input tracking
   private var currentInput: UIView?
   private var hasKVObserver = false
-  private var lastEventDispatched: [AnyHashable: Any] = [:]
+  private var lastEventDispatched: [AnyHashable: Any] = noFocusedInputEvent
 
   @objc public init(
     handler: @escaping (NSDictionary) -> Void
@@ -52,6 +64,7 @@ public class FocusedInputLayoutObserver: NSObject {
 
   @objc func keyboardWillHide(_: Notification) {
     removeKVObserver()
+    dispatchEventToJS(data: noFocusedInputEvent)
   }
 
   @objc func syncUpLayout() {
@@ -71,7 +84,11 @@ public class FocusedInputLayoutObserver: NSObject {
         "y": focusedInput?.frame.origin.y,
       ],
     ]
-    // TODO: compare by height? because keyboardWillShow triggers when user types first letter
+
+    dispatchEventToJS(data: data)
+  }
+
+  private func dispatchEventToJS(data: [String: Any]) {
     if NSDictionary(dictionary: data).isEqual(to: lastEventDispatched) {
       return
     }
