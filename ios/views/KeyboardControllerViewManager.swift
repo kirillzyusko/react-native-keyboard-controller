@@ -3,6 +3,50 @@ class KeyboardControllerViewManager: RCTViewManager {
   override class func requiresMainQueueSetup() -> Bool {
     return false
   }
+    
+    @objc(syncUpFocusedInput:)
+        public func syncUpFocusedInput(_ reactTag: NSNumber) {
+            /*guard let view = self.viewRegistry_DEPRECATED?[reactTag] as? KeyboardControllerView else {
+                if RCT_DEBUG == 1 {
+                    print("Invalid view returned from registry, expecting KeyboardControllerView")
+                }
+                return
+            }*/
+
+            // let a = self.bridge.uiManager.view(forReactTag: reactTag)
+            // view.inputObserver?.syncUpLayout()
+            /*self.bridge.uiManager.addUIBlock { _, viewRegistry in
+                        guard let view = viewRegistry?[reactTag] as? KeyboardControllerView else {
+                            if RCT_DEBUG == 1 {
+                                print("Invalid view returned from registry, expecting KeyboardControllerView")
+                            }
+                            return
+                        }
+
+                        view.inputObserver?.syncUpLayout()
+                    }*/
+            /*if let rootView = UIApplication.shared.keyWindow?.rootViewController?.view {
+                  // Access the view using its tag
+                let reactView = rootView.viewWithTag(Int(reactTag))
+                  print(reactView)
+                  
+                } else {
+                  // reject("VIEW_NOT_FOUND", "Root view not found", nil)
+                }*/
+            print(Date.currentTimeStamp)
+            bridge.eventDispatcher().send(FocusedInputLayoutChangedEvent(reactTag: reactTag, event: [
+                "target": reactTag,
+                "layout": [
+                  "absoluteX": -2,
+                  "absoluteY": 300,
+                  "width": -2,
+                  "height": 50,
+                  "x": -1,
+                  "y": -1,
+                ],
+            ] as NSObject))
+            print(Date.currentTimeStamp)
+        }
 
   override func view() -> (KeyboardControllerView) {
     return KeyboardControllerView(frame: CGRect.zero, bridge: bridge)
@@ -12,7 +56,8 @@ class KeyboardControllerViewManager: RCTViewManager {
 class KeyboardControllerView: UIView {
   // internal variables
   private var keyboardObserver: KeyboardMovementObserver?
-  private var inputObserver: FocusedInputLayoutObserver?
+  // TODO: not internal anymore?
+  public var inputObserver: FocusedInputLayoutObserver?
   private var eventDispatcher: RCTEventDispatcherProtocol
   private var bridge: RCTBridge
   // react callbacks

@@ -1,8 +1,9 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
 import { ScrollViewProps, useWindowDimensions } from 'react-native';
 import { FocusedInputLayoutChangedEvent, useReanimatedFocusedInput } from 'react-native-keyboard-controller';
 import Reanimated, {
   interpolate,
+  runOnJS,
   scrollTo,
   useAnimatedReaction,
   useAnimatedRef,
@@ -64,7 +65,7 @@ const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
   const tag = useSharedValue(-1);
   const initialKeyboardSize = useSharedValue(0);
   const scrollBeforeKeyboardMovement = useSharedValue(0);
-  const { input } = useReanimatedFocusedInput();
+  const { input, update } = useReanimatedFocusedInput();
   const layout = useSharedValue<FocusedInputLayoutChangedEvent | null>(null);
 
   const { height } = useWindowDimensions();
@@ -77,14 +78,16 @@ const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
     },
     []
   );
-
+  useEffect(() => {
+    update();
+  }, []);
   /**
    * Function that will scroll a ScrollView as keyboard gets moving
    */
   const maybeScroll = useWorkletCallback((e: number, animated: boolean = false) => {
     const visibleRect = height - keyboardHeight.value;
     const point = (layout.value?.layout.absoluteY || 0) + (layout.value?.layout.height || 0);
-
+console.log({point});
     if (visibleRect - point <= BOTTOM_OFFSET) {
       const interpolatedScrollTo = interpolate(
         e,
@@ -104,6 +107,10 @@ const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
     {
       onStart: (e) => {
         'worklet';
+
+        // runOnJS(update)();
+console.log("UPDATE", new Date().getTime());
+        update();
 
         const keyboardWillChangeSize =
           keyboardHeight.value !== e.height && e.height > 0;
@@ -133,6 +140,7 @@ const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
           tag.value = e.target;
 
           if (tag.value !== -1) {
+            console.log("save layout");
             // save position of focused text input when keyboard starts to move
             layout.value = input.value;
             // save current scroll position - when keyboard will hide we'll reuse

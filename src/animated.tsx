@@ -1,8 +1,8 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Animated, Platform, StyleSheet } from 'react-native';
-import Reanimated, { useSharedValue } from 'react-native-reanimated';
+import Reanimated, { dispatchCommand, useAnimatedRef, useSharedValue, useWorkletCallback } from 'react-native-reanimated';
 
-import { KeyboardControllerView } from './bindings';
+import { KeyboardControllerView, KeyboardControllerViewCommands } from './bindings';
 import { KeyboardContext } from './context';
 import { useAnimatedValue, useSharedHandlers } from './internal';
 import { applyMonkeyPatch, revertMonkeyPatch } from './monkey-patch';
@@ -76,6 +76,7 @@ export const KeyboardProvider = ({
   navigationBarTranslucent,
   enabled: initiallyEnabled = true,
 }: KeyboardProviderProps) => {
+  const ref = useAnimatedRef();
   const [enabled, setEnabled] = useState(initiallyEnabled);
   // animated values
   const progress = useAnimatedValue(0);
@@ -85,6 +86,12 @@ export const KeyboardProvider = ({
   const heightSV = useSharedValue(0);
   const layout = useSharedValue<FocusedInputLayoutChangedEvent | null>(null);
   const { setHandlers, broadcast } = useSharedHandlers<KeyboardHandler>();
+  // commands
+  const syncUpFocusedInput = useWorkletCallback(() => {
+    console.log("syncUpFocusedInput");
+    dispatchCommand(ref, 'syncUpFocusedInput');
+    // KeyboardControllerViewCommands.syncUpFocusedInput(ref.current);
+  }, []);
   // memo
   const context = useMemo<KeyboardAnimationContext>(
     () => ({
@@ -92,6 +99,7 @@ export const KeyboardProvider = ({
       animated: { progress: progress, height: Animated.multiply(height, -1) },
       reanimated: { progress: progressSV, height: heightSV },
       layout,
+      update: syncUpFocusedInput,
       setHandlers,
       setEnabled,
     }),
@@ -184,6 +192,7 @@ export const KeyboardProvider = ({
   return (
     <KeyboardContext.Provider value={context}>
       <KeyboardControllerViewAnimated
+        ref={ref}
         enabled={enabled}
         onKeyboardMoveReanimated={keyboardHandler}
         onKeyboardMoveStart={Platform.OS === 'ios' ? onKeyboardMove : undefined}

@@ -14,4 +14,7 @@ RCT_EXPORT_VIEW_PROPERTY(onKeyboardMoveInteractive, RCTDirectEventBlock);
 /// input callbacks
 RCT_EXPORT_VIEW_PROPERTY(onFocusedInputLayoutChanged, RCTDirectEventBlock);
 
+// commands
+RCT_EXTERN_METHOD(syncUpFocusedInput:(nonnull NSNumber *)reactTag);
+
 @end

@@ -60,7 +60,7 @@ public class FocusedInputLayoutObserver: NSObject {
     removeKVObserver()
     currentInput = (UIResponder.current as? UIView)?.superview as UIView?
     setupKVObserver()
-    syncUpLayout()
+    // syncUpLayout()
   }
 
   @objc func keyboardWillHide(_: Notification) {

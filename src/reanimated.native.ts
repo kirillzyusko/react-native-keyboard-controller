@@ -66,7 +66,7 @@ export const useFocusedInputHandler: FocusedInputHandlerHook<
     (event) => {
       'worklet';
       const { onFocusedInputLayoutChanged } = handlers;
-
+      console.log("onFocusedInputLayoutChanged", new Date().getTime());
       if (
         onFocusedInputLayoutChanged &&
         event.eventName.endsWith('onFocusedInputLayoutChanged')

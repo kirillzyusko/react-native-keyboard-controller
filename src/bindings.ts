@@ -22,3 +22,6 @@ export const KeyboardControllerView =
   View as unknown as React.FC<KeyboardControllerProps>;
 export const KeyboardGestureArea =
   View as unknown as React.FC<KeyboardGestureAreaProps>;
+export const KeyboardControllerViewCommands = {
+  syncUpFocusedInput: NOOP,
+};
