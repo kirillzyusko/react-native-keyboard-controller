@@ -70,7 +70,6 @@ public class FocusedInputLayoutObserver: NSObject {
 
   @objc func syncUpLayout() {
     let responder = UIResponder.current
-    // TODO: to get a real tag/layout need to use a superview - maybe return UIResponder.current as superview?
     let focusedInput = (responder as? UIView)?.superview
     let globalFrame = focusedInput?.globalFrame
 
@@ -130,7 +129,6 @@ public class FocusedInputLayoutObserver: NSObject {
       // we need to read layout in next frame, otherwise we'll get old
       // layout values
       DispatchQueue.main.async {
-        print("KVObserver")
         self.syncUpLayout()
       }
     }

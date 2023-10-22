@@ -136,7 +136,6 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
   private fun removeKeyboardCallbacks() {
     callback?.destroy()
 
-    // TODO: from setActive(false) maybe need to remove synchronously?
     // capture view into closure, because if `onDetachedFromWindow` and `onAttachedToWindow`
     // dispatched synchronously after each other (open application on Fabric), then `.post`
     // will destroy just newly created view (if we have a reference via `this`)

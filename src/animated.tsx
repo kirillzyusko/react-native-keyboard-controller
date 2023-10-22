@@ -166,8 +166,6 @@ export const KeyboardProvider = ({
         } else {
           layout.value = null;
         }
-
-        console.log('useFocusedInputHandler', layout.value);
       },
     },
     []

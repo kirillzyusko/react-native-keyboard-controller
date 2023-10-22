@@ -9,7 +9,7 @@ export default function AwareScrollView() {
   useResizeMode();
 
   return (
-    <KeyboardAwareScrollView style={styles.container}>
+    <KeyboardAwareScrollView style={styles.container} contentContainerStyle={styles.content}>
       {new Array(10).fill(0).map((_, i) => (
         <TextInput
           key={i}
