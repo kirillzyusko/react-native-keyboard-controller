@@ -1,0 +1,41 @@
+---
+keywords: [react-native-keyboard-controller, KeyboardAwareScrollView, keyboard aware view, aware scroll view]
+---
+
+# KeyboardAwareScrollView
+
+import Lottie from 'lottie-react';
+import lottie from '../../../src/components/HomepageFeatures/text-inputs.lottie.json';
+
+<div style={{ display: 'flex', justifyContent: 'center', marginBottom: 20 }}>
+<Lottie animationData={lottie} style={{ width: 400, height: 400 }} loop />
+</div>
+
+## Comparison
+
+### Agenda
+
+- ✅ - Yes
+- ❌ - No
+- 🟠 - Partially/with some restrictions/conditionally
+
+||react-native-avoid-soft-input|react-native-keyboard-aware-scroll-view|react-native-keyboard-manager|react-native-keyboard-controller|
+|-----|-----|-----|-----|-----|
+|Respects keyboard animation|🟠 <sup><small>1</small></sup>|❌|✅|✅|
+|JS implementation|❌|✅|❌|🟠 <sup><small>2</small></sup>|
+|Reacts on focused input layout changes|❌|❌|✅|✅|
+|Reacts on focus changes|✅|✅|✅|✅|
+|AutoScroll when user types and input in non visible area|❌|❌|?|🟠 <sup><small>3</small></sup>|
+|Android support|✅|✅|❌|✅|
+|Maintained|✅|❌|✅|✅|
+|Support Fabric (new) architecture|✅|🟠 <sup><small>4</small></sup>|❌|✅|
+
+> <sup>1</sup> respects <b>only</b> on <b>iOS</b>
+
+> <sup>2</sup> <code>KeyboardAwareScrollViewView</code> is implemented in JS, but some hooks (<code>useKeyboardHandler</code> and <code>useReanimatedFocusedInput</code>) exposed from native code
+
+> <sup>3</sup> not implemented yet, but planned 😉
+
+> <sup>4</sup> since it's JS based solution it supports new architecture, but it uses <b>deprecated</b> API.
+
+- sticky footer support?
