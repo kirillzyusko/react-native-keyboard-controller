@@ -12,6 +12,7 @@ class KeyboardControllerViewManager: RCTViewManager {
 class KeyboardControllerView: UIView {
   // internal variables
   private var keyboardObserver: KeyboardMovementObserver?
+  private var inputObserver: FocusedInputLayoutObserver?
   private var eventDispatcher: RCTEventDispatcherProtocol
   private var bridge: RCTBridge
   // react callbacks
@@ -23,8 +24,10 @@ class KeyboardControllerView: UIView {
   @objc var enabled: ObjCBool = true {
     didSet {
       if enabled.boolValue {
+        inputObserver?.mount()
         keyboardObserver?.mount()
       } else {
+        inputObserver?.unmount()
         keyboardObserver?.unmount()
       }
     }
@@ -44,6 +47,7 @@ class KeyboardControllerView: UIView {
   override func willMove(toWindow newWindow: UIWindow?) {
     if newWindow == nil {
       // Will be removed from a window
+      inputObserver?.unmount()
       keyboardObserver?.unmount()
     }
   }
@@ -51,9 +55,19 @@ class KeyboardControllerView: UIView {
   override func didMoveToWindow() {
     if window != nil {
       // Added to a window
+      inputObserver = FocusedInputLayoutObserver(handler: onInput)
+      inputObserver?.mount()
       keyboardObserver = KeyboardMovementObserver(handler: onEvent, onNotify: onNotify)
       keyboardObserver?.mount()
     }
+  }
+
+  func onInput(event: NSObject) {
+    // we don't want to send event to JS before the JS thread is ready
+    if bridge.value(forKey: "_jsThread") == nil {
+      return
+    }
+    eventDispatcher.send(FocusedInputLayoutChangedEvent(reactTag: reactTag, event: event))
   }
 
   func onEvent(event: NSString, height: NSNumber, progress: NSNumber, duration: NSNumber, target: NSNumber) {

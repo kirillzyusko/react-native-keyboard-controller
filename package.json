@@ -41,6 +41,7 @@
     "react-native",
     "keyboard",
     "animation",
+    "focused input",
     "ios",
     "android"
   ],

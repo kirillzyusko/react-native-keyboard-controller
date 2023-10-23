@@ -1,9 +1,10 @@
 import React, { FC } from 'react';
 import { ScrollViewProps, useWindowDimensions } from 'react-native';
+import { FocusedInputLayoutChangedEvent, useReanimatedFocusedInput } from 'react-native-keyboard-controller';
 import Reanimated, {
-  MeasuredDimensions,
   interpolate,
   scrollTo,
+  useAnimatedReaction,
   useAnimatedRef,
   useAnimatedScrollHandler,
   useAnimatedStyle,
@@ -11,11 +12,8 @@ import Reanimated, {
   useWorkletCallback,
 } from 'react-native-reanimated';
 import { useSmoothKeyboardHandler } from './useSmoothKeyboardHandler';
-import { AwareScrollViewProvider, useAwareScrollView } from './context';
 
 const BOTTOM_OFFSET = 50;
-
-type KeyboardAwareScrollViewProps = ScrollViewProps;
 
 /**
  * Everything begins from `onStart` handler. This handler is called every time,
@@ -55,22 +53,21 @@ type KeyboardAwareScrollViewProps = ScrollViewProps;
  * +============================+       +============================+        +=====================================+
  *
  */
-const KeyboardAwareScrollView: FC<KeyboardAwareScrollViewProps> = ({
+const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
   children,
   ...rest
 }) => {
   const scrollViewAnimatedRef = useAnimatedRef<Reanimated.ScrollView>();
   const scrollPosition = useSharedValue(0);
   const position = useSharedValue(0);
-  const layout = useSharedValue<MeasuredDimensions | null>(null);
-  const fakeViewHeight = useSharedValue(0);
   const keyboardHeight = useSharedValue(0);
   const tag = useSharedValue(-1);
   const initialKeyboardSize = useSharedValue(0);
   const scrollBeforeKeyboardMovement = useSharedValue(0);
+  const { input } = useReanimatedFocusedInput();
+  const layout = useSharedValue<FocusedInputLayoutChangedEvent | null>(null);
 
   const { height } = useWindowDimensions();
-  const { measure } = useAwareScrollView();
 
   const onScroll = useAnimatedScrollHandler(
     {
@@ -84,10 +81,9 @@ const KeyboardAwareScrollView: FC<KeyboardAwareScrollViewProps> = ({
   /**
    * Function that will scroll a ScrollView as keyboard gets moving
    */
-  const maybeScroll = useWorkletCallback((e: number, animated = false) => {
-    fakeViewHeight.value = e;
+  const maybeScroll = useWorkletCallback((e: number, animated: boolean = false) => {
     const visibleRect = height - keyboardHeight.value;
-    const point = (layout.value?.pageY || 0) + (layout.value?.height || 0);
+    const point = (layout.value?.layout.absoluteY || 0) + (layout.value?.layout.height || 0);
 
     if (visibleRect - point <= BOTTOM_OFFSET) {
       const interpolatedScrollTo = interpolate(
@@ -98,7 +94,11 @@ const KeyboardAwareScrollView: FC<KeyboardAwareScrollViewProps> = ({
       const targetScrollY =
         Math.max(interpolatedScrollTo, 0) + scrollPosition.value;
       scrollTo(scrollViewAnimatedRef, 0, targetScrollY, animated);
+
+      return interpolatedScrollTo;
     }
+
+    return 0;
   }, []);
 
   useSmoothKeyboardHandler(
@@ -110,6 +110,8 @@ const KeyboardAwareScrollView: FC<KeyboardAwareScrollViewProps> = ({
           keyboardHeight.value !== e.height && e.height > 0;
         const keyboardWillAppear = e.height > 0 && keyboardHeight.value === 0;
         const keyboardWillHide = e.height === 0;
+        const focusWasChanged = (tag.value !== e.target && e.target !== -1) || keyboardWillChangeSize;
+
         if (keyboardWillChangeSize) {
           initialKeyboardSize.value = keyboardHeight.value;
         }
@@ -120,7 +122,7 @@ const KeyboardAwareScrollView: FC<KeyboardAwareScrollViewProps> = ({
           scrollPosition.value = scrollBeforeKeyboardMovement.value;
         }
 
-        if (keyboardWillAppear || keyboardWillChangeSize) {
+        if (keyboardWillAppear || keyboardWillChangeSize || focusWasChanged) {
           // persist scroll value
           scrollPosition.value = position.value;
           // just persist height - later will be used in interpolation
@@ -128,16 +130,20 @@ const KeyboardAwareScrollView: FC<KeyboardAwareScrollViewProps> = ({
         }
 
         // focus was changed
-        if (tag.value !== e.target || keyboardWillChangeSize) {
+        if (focusWasChanged) {
           tag.value = e.target;
 
-          if (tag.value !== -1) {
-            // save position of focused text input when keyboard starts to move
-            layout.value = measure(e.target);
-            // save current scroll position - when keyboard will hide we'll reuse
-            // this value to achieve smooth hide effect
-            scrollBeforeKeyboardMovement.value = position.value;
-          }
+          // save position of focused text input when keyboard starts to move
+          layout.value = input.value;
+          // save current scroll position - when keyboard will hide we'll reuse
+          // this value to achieve smooth hide effect
+          scrollBeforeKeyboardMovement.value = position.value;
+        }
+
+        if (focusWasChanged && !keyboardWillAppear) {
+          // update position on scroll value, so `onEnd` handler 
+          // will pick up correct values
+          position.value += maybeScroll(e.height, true);
         }
       },
       onMove: (e) => {
@@ -150,24 +156,24 @@ const KeyboardAwareScrollView: FC<KeyboardAwareScrollViewProps> = ({
 
         keyboardHeight.value = e.height;
         scrollPosition.value = position.value;
-
-        if (e.target !== -1 && e.height !== 0) {
-          const prevLayout = layout.value;
-          // just be sure, that view is no overlapped (i.e. focus changed)
-          layout.value = measure(e.target);
-          maybeScroll(e.height, true);
-          // do layout substitution back to assure there will be correct
-          // back transition when keyboard hides
-          layout.value = prevLayout;
-        }
       },
     },
     [height]
   );
 
+  useAnimatedReaction(() => input.value, (current, previous) => {
+    if (current?.target === previous?.target && current?.layout.height !== previous?.layout.height) {
+      const prevLayout = layout.value;
+
+      layout.value = input.value;
+      scrollPosition.value += maybeScroll(keyboardHeight.value, true);
+      layout.value = prevLayout;
+    }
+  }, []);
+
   const view = useAnimatedStyle(
     () => ({
-      height: fakeViewHeight.value,
+      paddingBottom: keyboardHeight.value,
     }),
     []
   );
@@ -179,16 +185,11 @@ const KeyboardAwareScrollView: FC<KeyboardAwareScrollViewProps> = ({
       onScroll={onScroll}
       scrollEventThrottle={16}
     >
-      {children}
-      <Reanimated.View style={view} />
+      <Reanimated.View style={view}>
+        {children}
+      </Reanimated.View>
     </Reanimated.ScrollView>
   );
 };
 
-export default function (props: KeyboardAwareScrollViewProps) {
-  return (
-    <AwareScrollViewProvider>
-      <KeyboardAwareScrollView {...props} />
-    </AwareScrollViewProvider>
-  );
-}
+export default KeyboardAwareScrollView;

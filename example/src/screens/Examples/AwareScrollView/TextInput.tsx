@@ -7,7 +7,7 @@ const TextInput = (props: TextInputProps) => {
       placeholderTextColor="#6c6c6c"
       style={styles.container}
       multiline
-      numberOfLines={10}
+      numberOfLines={2}
       {...props}
       placeholder={`${props.placeholder} (${props.keyboardType === 'default' ? 'text' : 'numeric'})`}
     />

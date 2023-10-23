@@ -6,9 +6,12 @@
 RCT_EXPORT_VIEW_PROPERTY(enabled, BOOL)
 
 // callbacks
+/// keyboard callbacks
 RCT_EXPORT_VIEW_PROPERTY(onKeyboardMoveStart, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onKeyboardMove, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onKeyboardMoveEnd, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onKeyboardMoveInteractive, RCTDirectEventBlock);
+/// input callbacks
+RCT_EXPORT_VIEW_PROPERTY(onFocusedInputLayoutChanged, RCTDirectEventBlock);
 
 @end

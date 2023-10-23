@@ -48,3 +48,10 @@ fun View.copyBoundsInWindow(rect: Rect) {
     )
   }
 }
+
+val View.screenLocation get(): IntArray {
+  val point = IntArray(2)
+  getLocationOnScreen(point)
+
+  return point
+}

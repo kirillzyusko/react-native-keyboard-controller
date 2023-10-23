@@ -6,10 +6,14 @@ import { KeyboardControllerView } from './bindings';
 import { KeyboardContext } from './context';
 import { useAnimatedValue, useSharedHandlers } from './internal';
 import { applyMonkeyPatch, revertMonkeyPatch } from './monkey-patch';
-import { useAnimatedKeyboardHandler } from './reanimated';
+import {
+  useAnimatedKeyboardHandler,
+  useFocusedInputHandler,
+} from './reanimated';
 
 import type { KeyboardAnimationContext } from './context';
 import type {
+  FocusedInputLayoutChangedEvent,
   KeyboardControllerProps,
   KeyboardHandler,
   NativeEvent,
@@ -79,6 +83,7 @@ export const KeyboardProvider = ({
   // shared values
   const progressSV = useSharedValue(0);
   const heightSV = useSharedValue(0);
+  const layout = useSharedValue<FocusedInputLayoutChangedEvent | null>(null);
   const { setHandlers, broadcast } = useSharedHandlers<KeyboardHandler>();
   // memo
   const context = useMemo<KeyboardAnimationContext>(
@@ -86,6 +91,7 @@ export const KeyboardProvider = ({
       enabled,
       animated: { progress: progress, height: Animated.multiply(height, -1) },
       reanimated: { progress: progressSV, height: heightSV },
+      layout,
       setHandlers,
       setEnabled,
     }),
@@ -122,7 +128,7 @@ export const KeyboardProvider = ({
       heightSV.value = -event.height;
     }
   };
-  const handler = useAnimatedKeyboardHandler(
+  const keyboardHandler = useAnimatedKeyboardHandler(
     {
       onKeyboardMoveStart: (event: NativeEvent) => {
         'worklet';
@@ -150,6 +156,20 @@ export const KeyboardProvider = ({
     },
     []
   );
+  const inputHandler = useFocusedInputHandler(
+    {
+      onFocusedInputLayoutChanged: (e) => {
+        'worklet';
+
+        if (e.target !== -1) {
+          layout.value = e;
+        } else {
+          layout.value = null;
+        }
+      },
+    },
+    []
+  );
   // effects
   useEffect(() => {
     if (enabled) {
@@ -163,10 +183,11 @@ export const KeyboardProvider = ({
     <KeyboardContext.Provider value={context}>
       <KeyboardControllerViewAnimated
         enabled={enabled}
-        onKeyboardMoveReanimated={handler}
+        onKeyboardMoveReanimated={keyboardHandler}
         onKeyboardMoveStart={Platform.OS === 'ios' ? onKeyboardMove : undefined}
         onKeyboardMove={Platform.OS === 'android' ? onKeyboardMove : undefined}
         onKeyboardMoveInteractive={onKeyboardMove}
+        onFocusedInputLayoutChangedReanimated={inputHandler}
         navigationBarTranslucent={navigationBarTranslucent}
         statusBarTranslucent={statusBarTranslucent}
         // @ts-expect-error https://github.com/software-mansion/react-native-reanimated/pull/4923

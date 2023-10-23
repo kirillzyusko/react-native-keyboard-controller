@@ -11,6 +11,17 @@ export type NativeEvent = {
   duration: number;
   target: number;
 };
+export type FocusedInputLayoutChangedEvent = {
+  target: number;
+  layout: {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    absoluteX: number;
+    absoluteY: number;
+  };
+};
 export type EventWithName<T> = {
   eventName: string;
 } & T;
@@ -30,9 +41,15 @@ export type KeyboardControllerProps = {
   onKeyboardMoveInteractive?: (
     e: NativeSyntheticEvent<EventWithName<NativeEvent>>
   ) => void;
-  // fake prop used to activate reanimated bindings
+  onFocusedInputLayoutChanged?: (
+    e: NativeSyntheticEvent<EventWithName<FocusedInputLayoutChangedEvent>>
+  ) => void;
+  // fake props used to activate reanimated bindings
   onKeyboardMoveReanimated?: (
     e: NativeSyntheticEvent<EventWithName<NativeEvent>>
+  ) => void;
+  onFocusedInputLayoutChangedReanimated?: (
+    e: NativeSyntheticEvent<EventWithName<FocusedInputLayoutChangedEvent>>
   ) => void;
   statusBarTranslucent?: boolean;
   navigationBarTranslucent?: boolean;
@@ -88,6 +105,15 @@ export type KeyboardHandlerHook<TContext, Event> = (
     onKeyboardMove?: (e: NativeEvent, context: TContext) => void;
     onKeyboardMoveEnd?: (e: NativeEvent, context: TContext) => void;
     onKeyboardMoveInteractive?: (e: NativeEvent, context: TContext) => void;
+  },
+  dependencies?: unknown[]
+) => (e: NativeSyntheticEvent<Event>) => void;
+export type FocusedInputHandlerHook<TContext, Event> = (
+  handlers: {
+    onFocusedInputLayoutChanged?: (
+      e: FocusedInputLayoutChangedEvent,
+      context: TContext
+    ) => void;
   },
   dependencies?: unknown[]
 ) => (e: NativeSyntheticEvent<Event>) => void;

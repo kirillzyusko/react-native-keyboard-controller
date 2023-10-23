@@ -1,6 +1,12 @@
 import { useEvent, useHandler } from 'react-native-reanimated';
 
-import type { EventWithName, KeyboardHandlerHook, NativeEvent } from './types';
+import type {
+  EventWithName,
+  FocusedInputHandlerHook,
+  FocusedInputLayoutChangedEvent,
+  KeyboardHandlerHook,
+  NativeEvent,
+} from './types';
 
 export const useAnimatedKeyboardHandler: KeyboardHandlerHook<
   Record<string, unknown>,
@@ -46,6 +52,29 @@ export const useAnimatedKeyboardHandler: KeyboardHandlerHook<
       'onKeyboardMoveEnd',
       'onKeyboardMoveInteractive',
     ],
+    doDependenciesDiffer
+  );
+};
+
+export const useFocusedInputHandler: FocusedInputHandlerHook<
+  Record<string, unknown>,
+  EventWithName<FocusedInputLayoutChangedEvent>
+> = (handlers, dependencies) => {
+  const { context, doDependenciesDiffer } = useHandler(handlers, dependencies);
+
+  return useEvent(
+    (event) => {
+      'worklet';
+      const { onFocusedInputLayoutChanged } = handlers;
+
+      if (
+        onFocusedInputLayoutChanged &&
+        event.eventName.endsWith('onFocusedInputLayoutChanged')
+      ) {
+        onFocusedInputLayoutChanged(event, context);
+      }
+    },
+    ['onFocusedInputLayoutChanged'],
     doDependenciesDiffer
   );
 };

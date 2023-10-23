@@ -14,6 +14,7 @@ Keyboard manager which works in identical way on both iOS and Android.
 - reanimated support 🚀
 - interactive keyboard dismissing 👆📱
 - re-worked prebuilt components (such as `KeyboardAvoidingView`) 📚
+- easy focused input information retrieval 📝 🔮
 - works with any navigation library 🧭
 - and more is coming... Stay tuned! 😊
 

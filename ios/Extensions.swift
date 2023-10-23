@@ -52,3 +52,10 @@ public extension Optional where Wrapped == UIResponder {
     #endif
   }
 }
+
+public extension UIView {
+  var globalFrame: CGRect? {
+    let rootView = UIApplication.shared.keyWindow?.rootViewController?.view
+    return superview?.convert(frame, to: rootView)
+  }
+}
