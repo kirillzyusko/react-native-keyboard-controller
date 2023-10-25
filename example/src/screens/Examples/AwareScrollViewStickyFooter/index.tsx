@@ -5,18 +5,20 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { randomColor } from '../../../utils';
 
-import KeyboardAwareScrollView from './KeyboardAwareScrollView';
+import KeyboardAwareScrollView from '../../../components/AwareScrollView';
 import { StickyFooter } from './StickyFooter';
 import { styles } from './styles';
 
 export default function AwareScrollViewStickyFooter() {
   useResizeMode();
 
-  const { bottom } = useSafeAreaInsets();
-
+  // const { bottom } = useSafeAreaInsets();
+  // console.log(bottom);
+const bottom = 34;
   const [footerHeight, setFooterHeight] = useState(0);
 
   const handleLayout = useCallback((evt: LayoutChangeEvent) => {
+    console.log(evt.nativeEvent.layout.height);
     setFooterHeight(evt.nativeEvent.layout.height);
   }, []);
 

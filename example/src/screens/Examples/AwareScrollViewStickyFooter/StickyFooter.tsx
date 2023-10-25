@@ -19,7 +19,7 @@ export interface StickyFooterProps extends Pick<ViewProps, 'onLayout'> {
 export const StickyFooter = memo(
   ({
     children,
-    bottomOffsetWhenKeyboardIsClosed,
+    bottomOffsetWhenKeyboardIsClosed = 0,
     ...props
   }: StickyFooterProps) => {
     const { height, progress } = useReanimatedKeyboardAnimation();
@@ -35,7 +35,7 @@ export const StickyFooter = memo(
       const paddingBottom = interpolate(
         progress.value,
         [0, 1],
-        [bottomOffsetWhenKeyboardIsClosed ?? 0, 0]
+        [bottomOffsetWhenKeyboardIsClosed, 0]
       );
 
       return {
