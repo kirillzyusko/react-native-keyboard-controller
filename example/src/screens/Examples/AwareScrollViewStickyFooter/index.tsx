@@ -12,13 +12,10 @@ import { styles } from './styles';
 export default function AwareScrollViewStickyFooter() {
   useResizeMode();
 
-  // const { bottom } = useSafeAreaInsets();
-  // console.log(bottom);
-const bottom = 34;
+  const { bottom } = useSafeAreaInsets();
   const [footerHeight, setFooterHeight] = useState(0);
 
   const handleLayout = useCallback((evt: LayoutChangeEvent) => {
-    console.log(evt.nativeEvent.layout.height);
     setFooterHeight(evt.nativeEvent.layout.height);
   }, []);
 
