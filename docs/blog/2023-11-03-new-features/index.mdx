@@ -1,0 +1,56 @@
+---
+slug: new-features
+title: Introducing the New Features in react-native-keyboard-controller
+authors: [kirill]
+tags: [react-native, keyboard, new hook, sticky view]
+keywords: [react-native-keyboard-controller, keyboard, keyboard sticky view, sticky view, KeyboardStickyView, focused input, focused input layout, useReanimatedFocusedInput]
+---
+
+# Introducing the New Features in react-native-keyboard-controller
+
+I'm excited to announce the latest release of `react-native-keyboard-controller`! This update brings two powerful new features to help you manage the keyboard behavior in your React Native applications. Whether you're building a simple form or a complex UI, these additions will make your life easier 😎
+
+import Lottie from 'lottie-react';
+import lottie from '../../docs/api/components/keyboard-sticky-view/ksv.lottie.json';
+
+<div style={{ display: 'flex', justifyContent: 'center', marginBottom: 20 }}>
+<Lottie animationData={lottie} style={{ width: 400, height: 400 }} loop />
+</div>
+
+<!-- truncate -->
+
+## The features of this release
+
+### `KeyboardStickyView`
+
+`KeyboardStickyView` is a new component that simplifies handling keyboard interactions in your React Native applications. With this component, you can easily ensure that the content inside remains visible, accessible and is sticky to the keyboard movement. Here are some of the key features:
+
+- **Auto-Adjustment**: The `KeyboardStickyView` automatically adjusts the position of your UI components when the keyboard is displayed, ensuring that your content inside a container remains visible.
+- **Customizable Behavior**: You have full control over how the UI adjusts when the keyboard is shown or hidden. You can specify `offset` property and it'll automatically interpolate values based on keyboard animation to make the transition seamless.
+- **Universal Compatibility**: Whether your users are on Android or iOS, `KeyboardStickyView` ensures that your content remains accessible and visible, even when the keyboard appears. No more platform-specific quirks; it just works.
+- **Custom Content**: The flexibility of `KeyboardStickyView` shines as you can place any content inside it. It's perfect for multi-step flows, chats, or any scenario where you need buttons and widgets to remain easily accessible when the keyboard is up.
+- **Effortless Integration**: Implementing `KeyboardStickyView` in your app is a breeze. Just wrap your UI elements within this component, and it takes care of the rest. It automatically adjusts the position of your UI components as the keyboard is shown or hidden.
+
+### `useReanimatedFocusedInput` hook
+
+This hook represents a significant evolution from the features introduced in the `1.6.0` release. In `1.6.0`, a new `target` property was introduced to fetch the layout of the currently focused `TextInput`. While it served its purpose, it came with a set of challenges:
+
+- **Complex Setup on Fabric Architecture**: Setting up this feature on the new Fabric architecture posed complications, including the use of deprecated APIs like `findNodeHandle`.
+- **Inconsistencies Across Architectures**: The measurements could sometimes yield different results depending on the underlying architecture in use.
+- **Inability to Detect Layout Changes**: It lacked the ability to detect layout changes for the focused `TextInput` within the library's ecosystem.
+
+Considering these challenges, the decision was made to enhance the library's capabilities and introduce a new hook that simplifies interactions with the API while addressing the issues mentioned above. And thus, I present to you...🥁
+
+The new `useReanimatedFocusedInput` hook 😎. This hook eliminates the need for integrating or using third-party elements, ensuring consistent functionality across all platforms and architectures. Its standout feature is its ability to detect events crucial for building robust keyboard handling, even beyond direct keyboard interactions, such as the detection of layout changes.
+
+With `useReanimatedFocusedInput`, I've created a more streamlined and versatile solution to meet your needs.
+
+## Enhance Your React Native App Today
+
+The latest features in `react-native-keyboard-controller` are designed to simplify keyboard interactions and add visual appeal to your React Native applications. Whether you need to ensure your content remains visible when the keyboard is active or want to create stunning animations, this update has got you covered.
+
+To get started, update your package to the latest version of `react-native-keyboard-controller`, and dive into the documentation to see these features in action.
+
+I look forward to hearing your feedback and suggestions. Feel free to reach out to me or create GitHub [issues](https://github.com/kirillzyusko/react-native-keyboard-controller/issues). Happy coding!
+
+Stay tuned for future updates and releases as I continue to enhance the `react-native-keyboard-controller` library. Follow me on [Twitter](https://twitter.com/ziusko) and [GitHub](https://github.com/kirillzyusko) for updates. Thank you for your support! 😊
