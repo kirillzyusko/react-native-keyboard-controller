@@ -1,0 +1,10 @@
+- (x) input changes color when keyboard appear/disappear <- on layout on inner view
+- (x) export `KeyboardStickyView`/`StickyKeyboardView`/`StickyFooter` component from src
+- (x) write documentation
+- (x) mention in readme/package.json
+- (x) design a multifunctional API
+- (x) draw lottie animation (re-use existing one? for KAV?)
+- test StickyFooter on chat examples
+- test how keyboard changes size
+- use common TextInput component - same as usual KeyboardAwareScrollView example
+- port example to Fabric
