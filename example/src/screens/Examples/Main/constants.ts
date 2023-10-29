@@ -22,7 +22,7 @@ export const examples: Example[] = [
   {
     title: 'Aware scroll view sticky footer',
     info: ScreenNames.AWARE_SCROLL_VIEW_STICKY_FOOTER,
-    icons: '🤓🤓',
+    icons: '🤓🩹',
   },
   {
     title: 'Status Bar',

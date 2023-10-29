@@ -5,9 +5,8 @@ export const styles = StyleSheet.create({
     flexGrow: 1,
   },
   pageContainer: {
-    ...StyleSheet.absoluteFillObject,
+    flex: 1,
   },
-
   footer: {
     backgroundColor: 'green',
     alignItems: 'center',

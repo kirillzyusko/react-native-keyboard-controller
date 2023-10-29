@@ -6,4 +6,4 @@ export * from './hooks';
 export * from './constants';
 export * from './types';
 
-export { KeyboardAvoidingView } from './components';
+export { KeyboardAvoidingView, KeyboardStickyView } from './components';

@@ -1,12 +1,11 @@
 import React, { useCallback, useState } from 'react';
 import { LayoutChangeEvent, TextInput, View, Text, Button } from 'react-native';
-import { useResizeMode } from 'react-native-keyboard-controller';
+import { useResizeMode, KeyboardStickyView } from 'react-native-keyboard-controller';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { randomColor } from '../../../utils';
 
 import KeyboardAwareScrollView from '../../../components/AwareScrollView';
-import { StickyFooter } from './StickyFooter';
 import { styles } from './styles';
 
 export default function AwareScrollViewStickyFooter() {
@@ -20,10 +19,10 @@ export default function AwareScrollViewStickyFooter() {
   }, []);
 
   return (
-    <View style={[styles.pageContainer, { paddingBottom: footerHeight }]}>
+    <View style={[styles.pageContainer, { paddingBottom: bottom }]}>
       <KeyboardAwareScrollView
         style={styles.container}
-        bottomOffset={footerHeight}
+        bottomOffset={footerHeight + 50}
         keyboardShouldPersistTaps="handled"
       >
         {new Array(10).fill(0).map((_, i) => (
@@ -41,15 +40,17 @@ export default function AwareScrollViewStickyFooter() {
           />
         ))}
       </KeyboardAwareScrollView>
-      <StickyFooter
-        onLayout={handleLayout}
-        bottomOffsetWhenKeyboardIsClosed={bottom}
+      {/*<KeyboardStickyView
+        offset={{closed: 0, opened: bottom }}
       >
-        <View style={styles.footer}>
+        <View onLayout={handleLayout} style={styles.footer}>
           <Text style={styles.footerText}>A mocked sticky footer</Text>
           <Button title="Click me" />
         </View>
-      </StickyFooter>
+          </KeyboardStickyView>*/}
+      <KeyboardStickyView offset={{closed: -50, opened: bottom - 25}}>
+        <View style={{position: 'absolute', bottom: 0, right: 30, justifyContent: "flex-end", width: 60, height: 60, borderRadius: 30, backgroundColor: "#002099"}} />
+      </KeyboardStickyView>
     </View>
   );
 }
