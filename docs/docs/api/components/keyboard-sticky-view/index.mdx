@@ -13,6 +13,10 @@ import lottie from './ksv.lottie.json';
 <Lottie animationData={lottie} style={{ width: 400, height: 400 }} loop />
 </div>
 
+:::info `KeyboardAvoidingView` vs `KeyboardStickyView`
+Unlike [KeyboardAvoidingView](../keyboard-avoiding-view.mdx) the `KeyboardStickyView` just moves the content along with keyboard and not resizing the inner view. Try to compare animations of `KeyboardStickyView` and `KeyboardAvoidingView` to see a difference in details on how it works and which component is suitable for your needs.
+:::
+
 ## Example
 
 ```tsx
