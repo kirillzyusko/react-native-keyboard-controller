@@ -3,6 +3,10 @@ import { StyleSheet } from 'react-native';
 export const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
+    paddingHorizontal: 16,
+  },
+  content: {
+    paddingTop: 50,
   },
   pageContainer: {
     flex: 1,
