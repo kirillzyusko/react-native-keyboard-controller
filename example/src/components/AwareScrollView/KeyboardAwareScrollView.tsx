@@ -13,7 +13,9 @@ import Reanimated, {
 } from 'react-native-reanimated';
 import { useSmoothKeyboardHandler } from './useSmoothKeyboardHandler';
 
-const BOTTOM_OFFSET = 50;
+type KeyboardAwareScrollViewProps = {
+  bottomOffset?: number;
+} & ScrollViewProps;
 
 /**
  * Everything begins from `onStart` handler. This handler is called every time,
@@ -53,8 +55,9 @@ const BOTTOM_OFFSET = 50;
  * +============================+       +============================+        +=====================================+
  *
  */
-const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
+const KeyboardAwareScrollView: FC<KeyboardAwareScrollViewProps> = ({
   children,
+  bottomOffset = 0,
   ...rest
 }) => {
   const scrollViewAnimatedRef = useAnimatedRef<Reanimated.ScrollView>();
@@ -85,11 +88,11 @@ const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
     const visibleRect = height - keyboardHeight.value;
     const point = (layout.value?.layout.absoluteY || 0) + (layout.value?.layout.height || 0);
 
-    if (visibleRect - point <= BOTTOM_OFFSET) {
+    if (visibleRect - point <= bottomOffset) {
       const interpolatedScrollTo = interpolate(
         e,
         [initialKeyboardSize.value, keyboardHeight.value],
-        [0, keyboardHeight.value - (height - point) + BOTTOM_OFFSET]
+        [0, keyboardHeight.value - (height - point) + bottomOffset]
       );
       const targetScrollY =
         Math.max(interpolatedScrollTo, 0) + scrollPosition.value;
@@ -99,7 +102,7 @@ const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
     }
 
     return 0;
-  }, []);
+  }, [bottomOffset]);
 
   useSmoothKeyboardHandler(
     {
@@ -158,7 +161,7 @@ const KeyboardAwareScrollView: FC<ScrollViewProps> = ({
         scrollPosition.value = position.value;
       },
     },
-    [height]
+    [height, maybeScroll]
   );
 
   useAnimatedReaction(() => input.value, (current, previous) => {

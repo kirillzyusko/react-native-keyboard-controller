@@ -1,0 +1,37 @@
+---
+keywords: [react-native-keyboard-controller, KeyboardStickyView, keyboard sticky view, keyboard sticky footer, sticky view, sticky footer, keyboard, android]
+---
+
+# KeyboardStickyView
+
+A `KeyboardStickyView` component seamlessly ensures that a designated view sticks to the keyboard's movements, maintaining visibility and interaction. Use it when you want to enhance the user experience by preventing important UI elements from being obscured by the keyboard, creating a smooth and user-friendly interface in your React Native application.
+
+import Lottie from 'lottie-react';
+import lottie from './ksv.lottie.json';
+
+<div style={{ display: 'flex', justifyContent: 'center', marginBottom: 20 }}>
+<Lottie animationData={lottie} style={{ width: 400, height: 400 }} loop />
+</div>
+
+:::info `KeyboardAvoidingView` vs `KeyboardStickyView`
+Unlike [KeyboardAvoidingView](../keyboard-avoiding-view.mdx) the `KeyboardStickyView` just moves the content along with keyboard and not resizing the inner view. Try to compare animations of `KeyboardStickyView` and `KeyboardAvoidingView` to see a difference in details on how it works and which component is suitable for your needs.
+:::
+
+## Example
+
+```tsx
+const offset = { closed: 0, opened: 20 };
+
+<KeyboardStickyView offset={offset}>
+  <Footer />
+</KeyboardStickyView>
+```
+
+## Props
+
+### offset
+
+An object containing next properties:
+
+- **closed** - additional offset to the view when keyboard is closed. Default value is `0`.
+- **opened** - additional offset to the view when keyboard is opened. Default value is `0`.

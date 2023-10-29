@@ -20,6 +20,11 @@ export const examples: Example[] = [
     icons: '🤓',
   },
   {
+    title: 'Aware scroll view sticky footer',
+    info: ScreenNames.AWARE_SCROLL_VIEW_STICKY_FOOTER,
+    icons: '🤓🩹',
+  },
+  {
     title: 'Status Bar',
     info: ScreenNames.STATUS_BAR,
     icons: '🔋',
