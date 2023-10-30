@@ -6,16 +6,20 @@ keywords: [react-native-keyboard-controller, KeyboardStickyView, keyboard sticky
 
 A `KeyboardStickyView` component seamlessly ensures that a designated view sticks to the keyboard's movements, maintaining visibility and interaction. Use it when you want to enhance the user experience by preventing important UI elements from being obscured by the keyboard, creating a smooth and user-friendly interface in your React Native application.
 
-import Lottie from 'lottie-react';
-import lottie from './ksv.lottie.json';
-
-<div style={{ display: 'flex', justifyContent: 'center', marginBottom: 20 }}>
-<Lottie animationData={lottie} style={{ width: 400, height: 400 }} loop />
-</div>
-
 :::info `KeyboardAvoidingView` vs `KeyboardStickyView`
 Unlike [KeyboardAvoidingView](../keyboard-avoiding-view.mdx) the `KeyboardStickyView` just moves the content along with keyboard and not resizing the inner view. Try to compare animations of `KeyboardStickyView` and `KeyboardAvoidingView` to see a difference in details on how it works and which component is suitable for your needs.
 :::
+
+import ksv from './ksv.lottie.json';
+import kav from '../../../../src/components/KeyboardAvoidingViewComparison/kav-animated.lottie.json';
+import ComparisonTable from '../../../../src/components/ComparisonTable';
+
+<ComparisonTable
+  leftLottie={ksv}
+  rightLottie={kav}
+  leftText={<i><code>KeyboardStickyView</code> - only footer is moving (container is not resized)</i>}
+  rightText={<i><code>KeyboardAvoidingView</code> - entire container is getting resized</i>}
+/>
 
 ## Example
 
