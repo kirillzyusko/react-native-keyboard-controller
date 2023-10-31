@@ -1,0 +1,43 @@
+name: Argos CI Screenshots
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/argos.yml'
+      - 'docs/**'
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/argos.yml'
+      - 'docs/**'
+
+jobs:
+  take-screenshots:
+    runs-on: ubuntu-latest
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+      cancel-in-progress: true
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Install Playwright browsers
+        run: yarn playwright install --with-deps chromium
+
+      - name: Build the website
+        run: yarn docusaurus build
+
+      - name: Take screenshots with Playwright
+        run: yarn playwright test
+
+      - name: Upload screenshots to Argos
+        run: yarn argos upload ./screenshots
