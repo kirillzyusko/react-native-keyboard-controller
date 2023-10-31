@@ -17,3 +17,7 @@ img[src$='.gif'],
 .docusaurus-mermaid-container {
   display: none;
 }
+/* Lottie files are animated */
+.lottie {
+  display: none;
+}
