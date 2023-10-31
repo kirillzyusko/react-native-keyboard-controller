@@ -18,6 +18,9 @@ jobs:
     concurrency:
       group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
       cancel-in-progress: true
+    defaults:
+      run:
+        working-directory: ./docs
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
@@ -28,7 +31,7 @@ jobs:
           node-version: 18
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile --cwd docs
+        run: yarn install --frozen-lockfile
 
       - name: Install Playwright browsers
         run: yarn playwright install --with-deps chromium
