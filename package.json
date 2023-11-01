@@ -42,6 +42,7 @@
     "keyboard",
     "animation",
     "focused input",
+    "avoiding view",
     "sticky view",
     "ios",
     "android"
