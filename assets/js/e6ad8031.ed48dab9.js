@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[2394],{4842:e=>{e.exports=JSON.parse('{"permalink":"/react-native-keyboard-controller/blog/tags/new-hook","page":1,"postsPerPage":10,"totalPages":1,"totalCount":1,"blogDescription":"Blog","blogTitle":"Blog"}')}}]);
