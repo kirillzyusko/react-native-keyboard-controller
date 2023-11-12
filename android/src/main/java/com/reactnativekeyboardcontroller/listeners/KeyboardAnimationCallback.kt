@@ -133,8 +133,6 @@ class KeyboardAnimationCallback(
     val isKeyboardSizeEqual = this.persistentKeyboardHeight == keyboardHeight
 
     if (isKeyboardFullyVisible && !isKeyboardSizeEqual && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-      val duration = DEFAULT_ANIMATION_TIME.toInt()
-
       layoutObserver?.syncUpLayout()
       this.emitEvent("KeyboardController::keyboardWillShow", getEventParams(keyboardHeight))
       context.dispatchEvent(
@@ -145,7 +143,7 @@ class KeyboardAnimationCallback(
           "topKeyboardMoveStart",
           keyboardHeight,
           1.0,
-          duration,
+          DEFAULT_ANIMATION_TIME,
           viewTagFocused,
         ),
       )
@@ -162,7 +160,7 @@ class KeyboardAnimationCallback(
             "topKeyboardMove",
             toValue.toDouble(),
             toValue.toDouble() / keyboardHeight,
-            duration,
+            DEFAULT_ANIMATION_TIME,
             viewTagFocused,
           ),
         )
@@ -177,12 +175,12 @@ class KeyboardAnimationCallback(
             "topKeyboardMoveEnd",
             keyboardHeight,
             1.0,
-            duration,
+            DEFAULT_ANIMATION_TIME,
             viewTagFocused,
           ),
         )
       }
-      animation.setDuration(DEFAULT_ANIMATION_TIME).startDelay = 0
+      animation.setDuration(DEFAULT_ANIMATION_TIME.toLong()).startDelay = 0
       animation.start()
 
       this.persistentKeyboardHeight = keyboardHeight
@@ -354,6 +352,6 @@ class KeyboardAnimationCallback(
   }
 
   companion object {
-    private const val DEFAULT_ANIMATION_TIME = 250L
+    private const val DEFAULT_ANIMATION_TIME = 250
   }
 }
