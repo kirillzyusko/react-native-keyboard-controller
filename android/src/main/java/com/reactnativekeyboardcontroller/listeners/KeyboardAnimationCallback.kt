@@ -110,6 +110,7 @@ class KeyboardAnimationCallback(
    * - we dispatch `keyboardDidShow` (onEnd).
    */
   override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat): WindowInsetsCompat {
+    val keyboardHeight = getCurrentKeyboardHeight()
     // when keyboard appears values will be (false && true)
     // when keyboard disappears values will be (true && false)
     val isKeyboardShown = isKeyboardVisible && isKeyboardVisible()
@@ -121,6 +122,7 @@ class KeyboardAnimationCallback(
     // `InteractiveKeyboardProvider.isInteractive` detect case when keyboard moves
     // because of the gesture
     val isMoving = isTransitioning || InteractiveKeyboardProvider.isInteractive
+    val isKeyboardFullyVisible = isKeyboardShown && !isMoving
     // when keyboard is opened and we trigger a transition from screen A to screen B,
     // then this method is getting called and we start dispatching events, and later original
     // `onStart`/`onProgress`/`onEnd` emitting their events (since keyboard is closing) and we
@@ -128,9 +130,9 @@ class KeyboardAnimationCallback(
     //
     // but in general this check is a must because we are detecting keyboard size changes
     // in this method
-    val keyboardHeight = getCurrentKeyboardHeight()
     val isKeyboardSizeEqual = this.persistentKeyboardHeight == keyboardHeight
-    if (isKeyboardShown && !isMoving && !isKeyboardSizeEqual && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+
+    if (isKeyboardFullyVisible && !isKeyboardSizeEqual && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
       val duration = DEFAULT_ANIMATION_TIME.toInt()
 
       layoutObserver?.syncUpLayout()
