@@ -110,6 +110,7 @@ class KeyboardAnimationCallback(
    * - we dispatch `keyboardDidShow` (onEnd).
    */
   override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat): WindowInsetsCompat {
+    val keyboardHeight = getCurrentKeyboardHeight()
     // when keyboard appears values will be (false && true)
     // when keyboard disappears values will be (true && false)
     val isKeyboardShown = isKeyboardVisible && isKeyboardVisible()
@@ -121,10 +122,17 @@ class KeyboardAnimationCallback(
     // `InteractiveKeyboardProvider.isInteractive` detect case when keyboard moves
     // because of the gesture
     val isMoving = isTransitioning || InteractiveKeyboardProvider.isInteractive
-    if (isKeyboardShown && !isMoving && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-      val keyboardHeight = getCurrentKeyboardHeight()
-      val duration = DEFAULT_ANIMATION_TIME.toInt()
+    val isKeyboardFullyVisible = isKeyboardShown && !isMoving
+    // when keyboard is opened and we trigger a transition from screen A to screen B,
+    // then this method is getting called and we start dispatching events, and later original
+    // `onStart`/`onProgress`/`onEnd` emitting their events (since keyboard is closing) and we
+    // are getting race conditions.
+    //
+    // but in general this check is a must because we are detecting keyboard size changes
+    // in this method
+    val isKeyboardSizeEqual = this.persistentKeyboardHeight == keyboardHeight
 
+    if (isKeyboardFullyVisible && !isKeyboardSizeEqual && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
       layoutObserver?.syncUpLayout()
       this.emitEvent("KeyboardController::keyboardWillShow", getEventParams(keyboardHeight))
       context.dispatchEvent(
@@ -135,7 +143,7 @@ class KeyboardAnimationCallback(
           "topKeyboardMoveStart",
           keyboardHeight,
           1.0,
-          duration,
+          DEFAULT_ANIMATION_TIME,
           viewTagFocused,
         ),
       )
@@ -152,7 +160,7 @@ class KeyboardAnimationCallback(
             "topKeyboardMove",
             toValue.toDouble(),
             toValue.toDouble() / keyboardHeight,
-            duration,
+            DEFAULT_ANIMATION_TIME,
             viewTagFocused,
           ),
         )
@@ -167,12 +175,12 @@ class KeyboardAnimationCallback(
             "topKeyboardMoveEnd",
             keyboardHeight,
             1.0,
-            duration,
+            DEFAULT_ANIMATION_TIME,
             viewTagFocused,
           ),
         )
       }
-      animation.setDuration(DEFAULT_ANIMATION_TIME).startDelay = 0
+      animation.setDuration(DEFAULT_ANIMATION_TIME.toLong()).startDelay = 0
       animation.start()
 
       this.persistentKeyboardHeight = keyboardHeight
@@ -344,6 +352,6 @@ class KeyboardAnimationCallback(
   }
 
   companion object {
-    private const val DEFAULT_ANIMATION_TIME = 250L
+    private const val DEFAULT_ANIMATION_TIME = 250
   }
 }
