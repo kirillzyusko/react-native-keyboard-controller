@@ -44,17 +44,16 @@ class KeyboardControllerView: UIView {
     fatalError("init(coder:) has not been implemented")
   }
 
-  override func willMove(toWindow newWindow: UIWindow?) {
-    if newWindow == nil {
-      // Will be removed from a window
+  // for mounting/unmounting observers for lifecycle events we're using willMove(toSuperview) method (not willMove(toWindow))
+  // for more information see https://github.com/kirillzyusko/react-native-keyboard-controller/issues/271
+  override func willMove(toSuperview newSuperview: UIView?) {
+    super.willMove(toSuperview: newSuperview)
+
+    if newSuperview == nil {
+      // The view is about to be removed from its superview (destroyed)
       inputObserver?.unmount()
       keyboardObserver?.unmount()
-    }
-  }
-
-  override func didMoveToWindow() {
-    if window != nil {
-      // Added to a window
+    } else {
       inputObserver = FocusedInputLayoutObserver(handler: onInput)
       inputObserver?.mount()
       keyboardObserver = KeyboardMovementObserver(handler: onEvent, onNotify: onNotify)
