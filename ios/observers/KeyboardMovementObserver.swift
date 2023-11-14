@@ -31,6 +31,7 @@ public class KeyboardMovementObserver: NSObject {
   private var prevKeyboardPosition = 0.0
   private var displayLink: CADisplayLink?
   private var hasKVObserver = false
+  private var isMounted = false
   // state variables
   private var keyboardHeight: CGFloat = 0.0
   private var duration = 0
@@ -45,6 +46,12 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc public func mount() {
+    if isMounted {
+      return
+    }
+
+    isMounted = true
+
     NotificationCenter.default.addObserver(
       self,
       selector: #selector(keyboardWillDisappear),
@@ -138,6 +145,7 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc public func unmount() {
+    isMounted = false
     // swiftlint:disable:next notification_center_detachment
     NotificationCenter.default.removeObserver(self)
   }
