@@ -156,15 +156,34 @@ using namespace facebook::react;
 
   if (newViewProps.enabled != oldViewProps.enabled) {
     if (newViewProps.enabled) {
-      [inputObserver mount];
-      [keyboardObserver mount];
+      [self mount];
     } else {
-      [inputObserver unmount];
-      [keyboardObserver unmount];
+      [self unmount];
     }
   }
 
   [super updateProps:props oldProps:oldProps];
+}
+
+- (void)willMoveToSuperview:(UIView *)newSuperview
+{
+  if (newSuperview == nil) {
+    [self unmount];
+  } else {
+    [self mount];
+  }
+}
+
+- (void)mount
+{
+  [inputObserver mount];
+  [keyboardObserver mount];
+}
+
+- (void)unmount
+{
+  [inputObserver unmount];
+  [keyboardObserver unmount];
 }
 
 Class<RCTComponentViewProtocol> KeyboardControllerViewCls(void)

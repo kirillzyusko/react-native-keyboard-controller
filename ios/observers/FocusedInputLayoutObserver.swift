@@ -25,6 +25,8 @@ let noFocusedInputEvent: [String: Any] = [
 public class FocusedInputLayoutObserver: NSObject {
   // class members
   var onEvent: (NSDictionary) -> Void
+  // state variables
+  private var isMounted = false
   // input tracking
   private var currentInput: UIView?
   private var hasKVObserver = false
@@ -37,6 +39,12 @@ public class FocusedInputLayoutObserver: NSObject {
   }
 
   @objc public func mount() {
+    if isMounted {
+      return
+    }
+
+    isMounted = true
+
     NotificationCenter.default.addObserver(
       self,
       selector: #selector(keyboardWillShow),
@@ -52,6 +60,7 @@ public class FocusedInputLayoutObserver: NSObject {
   }
 
   @objc public func unmount() {
+    isMounted = false
     // swiftlint:disable:next notification_center_detachment
     NotificationCenter.default.removeObserver(self)
   }

@@ -24,11 +24,9 @@ class KeyboardControllerView: UIView {
   @objc var enabled: ObjCBool = true {
     didSet {
       if enabled.boolValue {
-        inputObserver?.mount()
-        keyboardObserver?.mount()
+        mount()
       } else {
-        inputObserver?.unmount()
-        keyboardObserver?.unmount()
+        unmount()
       }
     }
   }
@@ -37,6 +35,8 @@ class KeyboardControllerView: UIView {
     self.bridge = bridge
     eventDispatcher = bridge.eventDispatcher()
     super.init(frame: frame)
+    inputObserver = FocusedInputLayoutObserver(handler: onInput)
+    keyboardObserver = KeyboardMovementObserver(handler: onEvent, onNotify: onNotify)
   }
 
   @available(*, unavailable)
@@ -44,21 +44,17 @@ class KeyboardControllerView: UIView {
     fatalError("init(coder:) has not been implemented")
   }
 
-  override func willMove(toWindow newWindow: UIWindow?) {
-    if newWindow == nil {
-      // Will be removed from a window
-      inputObserver?.unmount()
-      keyboardObserver?.unmount()
-    }
-  }
+  // for mounting/unmounting observers for lifecycle events we're using willMove(toSuperview) method
+  // not willMove(toWindow)
+  // see https://github.com/kirillzyusko/react-native-keyboard-controller/issues/271
+  override func willMove(toSuperview newSuperview: UIView?) {
+    super.willMove(toSuperview: newSuperview)
 
-  override func didMoveToWindow() {
-    if window != nil {
-      // Added to a window
-      inputObserver = FocusedInputLayoutObserver(handler: onInput)
-      inputObserver?.mount()
-      keyboardObserver = KeyboardMovementObserver(handler: onEvent, onNotify: onNotify)
-      keyboardObserver?.mount()
+    if newSuperview == nil {
+      // The view is about to be removed from its superview (destroyed)
+      unmount()
+    } else {
+      mount()
     }
   }
 
@@ -89,5 +85,15 @@ class KeyboardControllerView: UIView {
 
   func onNotify(event: String, data: Any) {
     KeyboardController.shared()?.sendEvent(event, body: data)
+  }
+
+  private func mount() {
+    inputObserver?.mount()
+    keyboardObserver?.mount()
+  }
+
+  private func unmount() {
+    inputObserver?.unmount()
+    keyboardObserver?.unmount()
   }
 }
