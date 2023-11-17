@@ -273,7 +273,7 @@ class KeyboardAnimationCallback(
    * In the method below we recreate the logic that used when keyboard appear/disappear:
    * - we dispatch `keyboardWillShow` (onStart);
    * - we dispatch change height/progress as animated values (onProgress);
-   * - we dispatch `keyboardDidShow` (onEnd). 
+   * - we dispatch `keyboardDidShow` (onEnd).
    */
   private fun onKeyboardResized(keyboardHeight: Double) {
     if (this.animation?.isRunning == true) {
