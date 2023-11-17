@@ -22,7 +22,7 @@ Keyboard manager which works in identical way on both iOS and Android.
 
 Install `react-native-keyboard-controller` package from npm:
 
-```sh
+```shell
 yarn add react-native-keyboard-controller
 # or
 npm install react-native-keyboard-controller --save
