@@ -41,6 +41,7 @@ class KeyboardAnimationCallback(
   private var isTransitioning = false
   private var duration = 0
   private var viewTagFocused = -1
+  private var animation: ValueAnimator? = null
 
   // listeners
   private val focusListener = OnGlobalFocusChangeListener { oldFocus, newFocus ->
@@ -133,6 +134,7 @@ class KeyboardAnimationCallback(
     val isKeyboardSizeEqual = this.persistentKeyboardHeight == keyboardHeight
 
     if (isKeyboardFullyVisible && !isKeyboardSizeEqual && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+      Log.i(TAG, "onApplyWindowInsets ${this.persistentKeyboardHeight} -> ${keyboardHeight}")
       layoutObserver?.syncUpLayout()
       this.emitEvent("KeyboardController::keyboardWillShow", getEventParams(keyboardHeight))
       context.dispatchEvent(
@@ -179,9 +181,12 @@ class KeyboardAnimationCallback(
             viewTagFocused,
           ),
         )
+        this.animation = null
       }
       animation.setDuration(DEFAULT_ANIMATION_TIME.toLong()).startDelay = 0
+      this.animation?.cancel()
       animation.start()
+      this.animation = animation
 
       this.persistentKeyboardHeight = keyboardHeight
     }
