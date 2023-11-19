@@ -41,6 +41,7 @@ class KeyboardAnimationCallback(
   private var isTransitioning = false
   private var duration = 0
   private var viewTagFocused = -1
+  private var animation: ValueAnimator? = null
 
   // listeners
   private val focusListener = OnGlobalFocusChangeListener { oldFocus, newFocus ->
@@ -104,10 +105,6 @@ class KeyboardAnimationCallback(
    * behavior should be consistent across all versions of platform. To level the difference we
    * have to implement `onApplyWindowInsets` listener and simulate onStart/onProgress/onEnd
    * events when keyboard changes its size.
-   * In the method below we fully recreate the logic that is implemented on old android versions:
-   * - we dispatch `keyboardWillShow` (onStart);
-   * - we dispatch change height/progress as animated values (onProgress);
-   * - we dispatch `keyboardDidShow` (onEnd).
    */
   override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat): WindowInsetsCompat {
     val keyboardHeight = getCurrentKeyboardHeight()
@@ -133,57 +130,9 @@ class KeyboardAnimationCallback(
     val isKeyboardSizeEqual = this.persistentKeyboardHeight == keyboardHeight
 
     if (isKeyboardFullyVisible && !isKeyboardSizeEqual && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+      Log.i(TAG, "onApplyWindowInsets: ${this.persistentKeyboardHeight} -> $keyboardHeight")
       layoutObserver?.syncUpLayout()
-      this.emitEvent("KeyboardController::keyboardWillShow", getEventParams(keyboardHeight))
-      context.dispatchEvent(
-        view.id,
-        KeyboardTransitionEvent(
-          surfaceId,
-          view.id,
-          "topKeyboardMoveStart",
-          keyboardHeight,
-          1.0,
-          DEFAULT_ANIMATION_TIME,
-          viewTagFocused,
-        ),
-      )
-
-      val animation =
-        ValueAnimator.ofFloat(this.persistentKeyboardHeight.toFloat(), keyboardHeight.toFloat())
-      animation.addUpdateListener { animator ->
-        val toValue = animator.animatedValue as Float
-        context.dispatchEvent(
-          view.id,
-          KeyboardTransitionEvent(
-            surfaceId,
-            view.id,
-            "topKeyboardMove",
-            toValue.toDouble(),
-            toValue.toDouble() / keyboardHeight,
-            DEFAULT_ANIMATION_TIME,
-            viewTagFocused,
-          ),
-        )
-      }
-      animation.doOnEnd {
-        this.emitEvent("KeyboardController::keyboardDidShow", getEventParams(keyboardHeight))
-        context.dispatchEvent(
-          view.id,
-          KeyboardTransitionEvent(
-            surfaceId,
-            view.id,
-            "topKeyboardMoveEnd",
-            keyboardHeight,
-            1.0,
-            DEFAULT_ANIMATION_TIME,
-            viewTagFocused,
-          ),
-        )
-      }
-      animation.setDuration(DEFAULT_ANIMATION_TIME.toLong()).startDelay = 0
-      animation.start()
-
-      this.persistentKeyboardHeight = keyboardHeight
+      this.onKeyboardResized(keyboardHeight)
     }
 
     return insets
@@ -318,6 +267,78 @@ class KeyboardAnimationCallback(
   fun destroy() {
     view.viewTreeObserver.removeOnGlobalFocusChangeListener(focusListener)
     layoutObserver?.destroy()
+  }
+
+  /*
+   * In the method below we recreate the logic that used when keyboard appear/disappear:
+   * - we dispatch `keyboardWillShow` (onStart);
+   * - we dispatch change height/progress as animated values (onProgress);
+   * - we dispatch `keyboardDidShow` (onEnd).
+   */
+  private fun onKeyboardResized(keyboardHeight: Double) {
+    if (this.animation?.isRunning == true) {
+      Log.i(TAG, "onKeyboardResized -> cancelling animation that is in progress")
+      // if animation is in progress, then we are:
+      // - removing listeners (update, onEnd)
+      // - updating `persistentKeyboardHeight` to latest animated value
+      // - cancelling animation to free up CPU resources
+      this.animation?.removeAllListeners()
+      this.persistentKeyboardHeight = (this.animation?.animatedValue as Float).toDouble()
+      this.animation?.cancel()
+    }
+
+    this.emitEvent("KeyboardController::keyboardWillShow", getEventParams(keyboardHeight))
+    context.dispatchEvent(
+      view.id,
+      KeyboardTransitionEvent(
+        surfaceId,
+        view.id,
+        "topKeyboardMoveStart",
+        keyboardHeight,
+        1.0,
+        DEFAULT_ANIMATION_TIME,
+        viewTagFocused,
+      ),
+    )
+
+    val animation =
+      ValueAnimator.ofFloat(this.persistentKeyboardHeight.toFloat(), keyboardHeight.toFloat())
+    animation.addUpdateListener { animator ->
+      val toValue = animator.animatedValue as Float
+      context.dispatchEvent(
+        view.id,
+        KeyboardTransitionEvent(
+          surfaceId,
+          view.id,
+          "topKeyboardMove",
+          toValue.toDouble(),
+          toValue.toDouble() / keyboardHeight,
+          DEFAULT_ANIMATION_TIME,
+          viewTagFocused,
+        ),
+      )
+    }
+    animation.doOnEnd {
+      this.emitEvent("KeyboardController::keyboardDidShow", getEventParams(keyboardHeight))
+      context.dispatchEvent(
+        view.id,
+        KeyboardTransitionEvent(
+          surfaceId,
+          view.id,
+          "topKeyboardMoveEnd",
+          keyboardHeight,
+          1.0,
+          DEFAULT_ANIMATION_TIME,
+          viewTagFocused,
+        ),
+      )
+      this.animation = null
+    }
+    animation.setDuration(DEFAULT_ANIMATION_TIME.toLong()).startDelay = 0
+    animation.start()
+
+    this.animation = animation
+    this.persistentKeyboardHeight = keyboardHeight
   }
 
   private fun isKeyboardVisible(): Boolean {
