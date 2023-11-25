@@ -84,7 +84,7 @@ class KeyboardAnimationCallback(
       }
     }
   }
-  private var layoutObserver: FocusedInputLayoutObserver? = null
+  private var layoutObserver: FocusedInputObserver? = null
 
   init {
     require(persistentInsetTypes and deferredInsetTypes == 0) {
@@ -92,7 +92,7 @@ class KeyboardAnimationCallback(
         " same WindowInsetsCompat.Type values"
     }
 
-    layoutObserver = FocusedInputLayoutObserver(view = view, context = context)
+    layoutObserver = FocusedInputObserver(view = view, context = context)
     view.viewTreeObserver.addOnGlobalFocusChangeListener(focusListener)
   }
 

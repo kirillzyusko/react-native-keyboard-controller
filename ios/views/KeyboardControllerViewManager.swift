@@ -12,7 +12,7 @@ class KeyboardControllerViewManager: RCTViewManager {
 class KeyboardControllerView: UIView {
   // internal variables
   private var keyboardObserver: KeyboardMovementObserver?
-  private var inputObserver: FocusedInputLayoutObserver?
+  private var inputObserver: FocusedInputObserver?
   private var eventDispatcher: RCTEventDispatcherProtocol
   private var bridge: RCTBridge
   // react callbacks
@@ -35,7 +35,7 @@ class KeyboardControllerView: UIView {
     self.bridge = bridge
     eventDispatcher = bridge.eventDispatcher()
     super.init(frame: frame)
-    inputObserver = FocusedInputLayoutObserver(handler: onInput)
+    inputObserver = FocusedInputObserver(handler: onInput)
     keyboardObserver = KeyboardMovementObserver(handler: onEvent, onNotify: onNotify)
   }
 

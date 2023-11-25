@@ -31,7 +31,7 @@ using namespace facebook::react;
 
 @implementation KeyboardControllerView {
   KeyboardMovementObserver *keyboardObserver;
-  FocusedInputLayoutObserver *inputObserver;
+  FocusedInputObserver *inputObserver;
 }
 
 + (ComponentDescriptorProvider)componentDescriptorProvider
@@ -45,7 +45,7 @@ using namespace facebook::react;
     static const auto defaultProps = std::make_shared<const KeyboardControllerViewProps>();
     _props = defaultProps;
 
-    inputObserver = [[FocusedInputLayoutObserver alloc] initWithHandler:^(NSDictionary *event) {
+    inputObserver = [[FocusedInputObserver alloc] initWithHandler:^(NSDictionary *event) {
       if (self->_eventEmitter) {
         int target = [event[@"target"] integerValue];
         double absoluteY = [event[@"layout"][@"absoluteY"] doubleValue];

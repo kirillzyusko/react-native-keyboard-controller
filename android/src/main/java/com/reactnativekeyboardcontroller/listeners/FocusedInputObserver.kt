@@ -22,7 +22,7 @@ val noFocusedInputEvent = FocusedInputLayoutChangedEventData(
   target = -1,
 )
 
-class FocusedInputLayoutObserver(val view: ReactViewGroup, private val context: ThemedReactContext?) {
+class FocusedInputObserver(val view: ReactViewGroup, private val context: ThemedReactContext?) {
   // constructor variables
   private val surfaceId = UIManagerHelper.getSurfaceId(view)
 

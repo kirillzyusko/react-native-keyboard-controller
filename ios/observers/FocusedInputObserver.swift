@@ -1,5 +1,5 @@
 //
-//  FocusedInputLayoutObserver.swift
+//  FocusedInputObserver.swift
 //  KeyboardController
 //
 //  Created by Kiryl Ziusko on 05/10/2023.
@@ -21,8 +21,8 @@ let noFocusedInputEvent: [String: Any] = [
   ],
 ]
 
-@objc(FocusedInputLayoutObserver)
-public class FocusedInputLayoutObserver: NSObject {
+@objc(FocusedInputObserver)
+public class FocusedInputObserver: NSObject {
   // class members
   var onEvent: (NSDictionary) -> Void
   // state variables
