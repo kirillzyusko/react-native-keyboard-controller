@@ -22,6 +22,9 @@ export type FocusedInputLayoutChangedEvent = {
     absoluteY: number;
   };
 };
+export type FocusedInputTextChangedEvent = {
+  text: string;
+};
 export type EventWithName<T> = {
   eventName: string;
 } & T;
@@ -43,6 +46,9 @@ export type KeyboardControllerProps = {
   ) => void;
   onFocusedInputLayoutChanged?: (
     e: NativeSyntheticEvent<EventWithName<FocusedInputLayoutChangedEvent>>
+  ) => void;
+  onFocusedInputTextChanged?: (
+    e: NativeSyntheticEvent<EventWithName<FocusedInputTextChangedEvent>>
   ) => void;
   // fake props used to activate reanimated bindings
   onKeyboardMoveReanimated?: (
@@ -127,3 +133,7 @@ export type KeyboardHandler = Partial<{
   onInteractive: (e: NativeEvent) => void;
 }>;
 export type KeyboardHandlers = Handlers<KeyboardHandler>;
+export type FocusedInputHandler = Partial<{
+  onChangeText: (e: FocusedInputTextChangedEvent) => void;
+}>;
+export type FocusedInputHandlers = Handlers<FocusedInputHandler>;

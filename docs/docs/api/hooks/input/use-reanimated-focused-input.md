@@ -10,7 +10,8 @@ Hook will update its value in next cases:
 
 - when keyboard changes its size (appears, disappears, changes size because of different input mode);
 - when focus was changed from one `TextInput` to another;
-- when `layout` of focused input was changed.
+- when `layout` of focused input was changed;
+- when user types a text;
 
 :::info Events order
 The value from `useReanimatedFocusedInput` will be always updated before keyboard events, so you can safely read values in `onStart` handler and be sure they are up-to-date.
@@ -37,7 +38,11 @@ type KeyboardEventData = {
 ## Example
 
 ```tsx
-const {input} = useReanimatedFocusedInput();
+const {input} = useReanimatedFocusedInput({
+  onChangeText: ({text}) => {
+    // ...
+  }
+});
 ```
 
 Also have a look on [example](https://github.com/kirillzyusko/react-native-keyboard-controller/tree/main/example) app for more comprehensive usage.

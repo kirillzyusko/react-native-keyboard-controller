@@ -1,10 +1,10 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Animated, Platform, StyleSheet } from 'react-native';
 import Reanimated, { useSharedValue } from 'react-native-reanimated';
 
 import { KeyboardControllerView } from './bindings';
 import { KeyboardContext } from './context';
-import { useAnimatedValue, useSharedHandlers } from './internal';
+import { useAnimatedValue, useHandlers, useSharedHandlers } from './internal';
 import { applyMonkeyPatch, revertMonkeyPatch } from './monkey-patch';
 import {
   useAnimatedKeyboardHandler,
@@ -76,6 +76,9 @@ export const KeyboardProvider = ({
   navigationBarTranslucent,
   enabled: initiallyEnabled = true,
 }: KeyboardProviderProps) => {
+  // refs
+  const { setHandlers: setJSHandlers, broadcast: broadcastJS } = useHandlers();
+  // state
   const [enabled, setEnabled] = useState(initiallyEnabled);
   // animated values
   const progress = useAnimatedValue(0);
@@ -93,6 +96,7 @@ export const KeyboardProvider = ({
       reanimated: { progress: progressSV, height: heightSV },
       layout,
       setHandlers,
+      setJSHandlers,
       setEnabled,
     }),
     [enabled]
@@ -119,6 +123,13 @@ export const KeyboardProvider = ({
       ),
     []
   );
+  // callbacks
+  const onFocusedInputTextChanged = useCallback<
+    NonNullable<KeyboardControllerProps['onFocusedInputTextChanged']>
+  >((e) => {
+    broadcastJS('onChangeText', e.nativeEvent);
+    console.log(e.nativeEvent);
+  }, []);
   // handlers
   const updateSharedValues = (event: NativeEvent, platforms: string[]) => {
     'worklet';
@@ -188,6 +199,7 @@ export const KeyboardProvider = ({
         onKeyboardMove={Platform.OS === 'android' ? onKeyboardMove : undefined}
         onKeyboardMoveInteractive={onKeyboardMove}
         onFocusedInputLayoutChangedReanimated={inputHandler}
+        onFocusedInputTextChanged={onFocusedInputTextChanged}
         navigationBarTranslucent={navigationBarTranslucent}
         statusBarTranslucent={statusBarTranslucent}
         style={styles.container}

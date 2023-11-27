@@ -2,7 +2,11 @@ import { useCallback, useRef } from 'react';
 import { Animated } from 'react-native';
 import { useSharedValue } from 'react-native-reanimated';
 
-import type { Handlers, NativeEvent } from './types';
+import type {
+  FocusedInputTextChangedEvent,
+  Handlers,
+  NativeEvent,
+} from './types';
 
 /**
  * Hook for storing worklet handlers (objects with keys, where values are worklets).
@@ -45,6 +49,28 @@ export function useSharedHandlers<
 
     Object.keys(handlers.value).forEach((key) =>
       handlers.value[key]?.[type]?.(event)
+    );
+  };
+
+  return { setHandlers, broadcast };
+}
+
+// TODO: think on how to reduce code duplication?
+export function useHandlers<
+  T extends Record<string, (event: FocusedInputTextChangedEvent) => void>
+>() {
+  const handlers = useRef<Handlers<T>>({});
+
+  const setHandlers = useCallback((handler: Handlers<T>) => {
+    handlers.current = {
+      ...handlers.current,
+      ...handler,
+    };
+  }, []);
+
+  const broadcast = (type: keyof T, event: FocusedInputTextChangedEvent) => {
+    Object.keys(handlers.current).forEach((key) =>
+      handlers.current[key]?.[type]?.(event)
     );
   };
 

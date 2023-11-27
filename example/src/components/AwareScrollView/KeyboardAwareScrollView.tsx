@@ -3,6 +3,7 @@ import { ScrollViewProps, useWindowDimensions } from 'react-native';
 import { FocusedInputLayoutChangedEvent, useReanimatedFocusedInput } from 'react-native-keyboard-controller';
 import Reanimated, {
   interpolate,
+  runOnUI,
   scrollTo,
   useAnimatedReaction,
   useAnimatedRef,
@@ -66,7 +67,13 @@ const KeyboardAwareScrollView: FC<KeyboardAwareScrollViewProps> = ({
   const tag = useSharedValue(-1);
   const initialKeyboardSize = useSharedValue(0);
   const scrollBeforeKeyboardMovement = useSharedValue(0);
-  const { input } = useReanimatedFocusedInput();
+  const { input } = useReanimatedFocusedInput({
+    onChangeText: ({text}) => {
+      console.log("component", {text});
+      // TODO: debounce
+      runOnUI(syncUpLayoutAndMaybeScroll)();
+    }
+  });
   const layout = useSharedValue<FocusedInputLayoutChangedEvent | null>(null);
 
   const { height } = useWindowDimensions();
@@ -88,7 +95,7 @@ const KeyboardAwareScrollView: FC<KeyboardAwareScrollViewProps> = ({
 
     const visibleRect = height - keyboardHeight.value;
     const point = (layout.value?.layout.absoluteY || 0) + (layout.value?.layout.height || 0);
-
+console.log({layout: layout.value});
     if (visibleRect - point <= bottomOffset) {
       const interpolatedScrollTo = interpolate(
         e,
@@ -104,6 +111,11 @@ const KeyboardAwareScrollView: FC<KeyboardAwareScrollViewProps> = ({
 
     return 0;
   }, [bottomOffset]);
+  const syncUpLayoutAndMaybeScroll = useWorkletCallback(() => {
+    // TODO: keyboard is shown -> move text input to keyboard -> start typing -> it has a different position than after keyboard animation
+    layout.value = input.value;
+    maybeScroll(keyboardHeight.value, true);
+  }, []);
 
   useSmoothKeyboardHandler(
     {
