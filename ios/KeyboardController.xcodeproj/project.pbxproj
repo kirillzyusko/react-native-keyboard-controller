@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		0807071E2A34807B00C05A19 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0807071D2A34807B00C05A19 /* Extensions.swift */; };
+		083FB9852B15171600C0EFF0 /* TextChangeObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 083FB9842B15171600C0EFF0 /* TextChangeObserver.swift */; };
+		083FB9872B15174C00C0EFF0 /* FocusedInputTextChangedEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 083FB9862B15174C00C0EFF0 /* FocusedInputTextChangedEvent.m */; };
 		084AEEC62ACF49A8001A3069 /* FocusedInputLayoutChangedEvent.m in Sources */ = {isa = PBXBuildFile; fileRef = 084AEEC52ACF49A8001A3069 /* FocusedInputLayoutChangedEvent.m */; };
 		084AEEC82ACF4AB2001A3069 /* FocusedInputObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 084AEEC72ACF4AB2001A3069 /* FocusedInputObserver.swift */; };
 		F333F8D428996B8D0015B05F /* KeyboardControllerView.mm in Sources */ = {isa = PBXBuildFile; fileRef = F333F8D228996B8D0015B05F /* KeyboardControllerView.mm */; };
@@ -31,6 +33,9 @@
 
 /* Begin PBXFileReference section */
 		0807071D2A34807B00C05A19 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		083FB9842B15171600C0EFF0 /* TextChangeObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextChangeObserver.swift; sourceTree = "<group>"; };
+		083FB9862B15174C00C0EFF0 /* FocusedInputTextChangedEvent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FocusedInputTextChangedEvent.m; sourceTree = "<group>"; };
+		083FB9892B15177C00C0EFF0 /* FocusedInputTextChangedEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FocusedInputTextChangedEvent.h; sourceTree = "<group>"; };
 		084AEEC22ACF479A001A3069 /* FocusedInputLayoutChangedEvent.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FocusedInputLayoutChangedEvent.h; sourceTree = "<group>"; };
 		084AEEC52ACF49A8001A3069 /* FocusedInputLayoutChangedEvent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FocusedInputLayoutChangedEvent.m; sourceTree = "<group>"; };
 		084AEEC72ACF4AB2001A3069 /* FocusedInputObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusedInputObserver.swift; sourceTree = "<group>"; };
@@ -65,6 +70,8 @@
 				F3F50668289E653B003091D6 /* KeyboardMoveEvent.m */,
 				084AEEC22ACF479A001A3069 /* FocusedInputLayoutChangedEvent.h */,
 				084AEEC52ACF49A8001A3069 /* FocusedInputLayoutChangedEvent.m */,
+				083FB9892B15177C00C0EFF0 /* FocusedInputTextChangedEvent.h */,
+				083FB9862B15174C00C0EFF0 /* FocusedInputTextChangedEvent.m */,
 			);
 			path = events;
 			sourceTree = "<group>";
@@ -74,6 +81,7 @@
 			children = (
 				F3626A0628B3FE760021B2D9 /* KeyboardMovementObserver.swift */,
 				084AEEC72ACF4AB2001A3069 /* FocusedInputObserver.swift */,
+				083FB9842B15171600C0EFF0 /* TextChangeObserver.swift */,
 			);
 			path = observers;
 			sourceTree = "<group>";
@@ -176,6 +184,8 @@
 				F4FF95D7245B92E800C19C63 /* KeyboardControllerViewManager.swift in Sources */,
 				F333F8D428996B8D0015B05F /* KeyboardControllerView.mm in Sources */,
 				F3F50669289E653B003091D6 /* KeyboardMoveEvent.m in Sources */,
+				083FB9852B15171600C0EFF0 /* TextChangeObserver.swift in Sources */,
+				083FB9872B15174C00C0EFF0 /* FocusedInputTextChangedEvent.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

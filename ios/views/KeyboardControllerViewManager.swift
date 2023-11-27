@@ -16,10 +16,14 @@ class KeyboardControllerView: UIView {
   private var eventDispatcher: RCTEventDispatcherProtocol
   private var bridge: RCTBridge
   // react callbacks
+  /// keyboard
   @objc var onKeyboardMoveStart: RCTDirectEventBlock?
   @objc var onKeyboardMove: RCTDirectEventBlock?
   @objc var onKeyboardMoveEnd: RCTDirectEventBlock?
   @objc var onKeyboardMoveInteractive: RCTDirectEventBlock?
+  /// focused input
+  @objc var onFocusedInputLayoutChanged: RCTDirectEventBlock?
+  @objc var onFocusedInputTextChanged: RCTDirectEventBlock?
   // react props
   @objc var enabled: ObjCBool = true {
     didSet {
@@ -35,7 +39,7 @@ class KeyboardControllerView: UIView {
     self.bridge = bridge
     eventDispatcher = bridge.eventDispatcher()
     super.init(frame: frame)
-    inputObserver = FocusedInputObserver(handler: onInput)
+    inputObserver = FocusedInputObserver(onLayoutChangedHandler: onLayoutChanged, onTextChangedHandler: onTextChanged)
     keyboardObserver = KeyboardMovementObserver(handler: onEvent, onNotify: onNotify)
   }
 
@@ -58,19 +62,21 @@ class KeyboardControllerView: UIView {
     }
   }
 
-  func onInput(event: NSObject) {
-    // we don't want to send event to JS before the JS thread is ready
-    if bridge.value(forKey: "_jsThread") == nil {
-      return
-    }
+  func onLayoutChanged(event: NSObject) {
+    guard isJSThreadReady() else { return }
+
     eventDispatcher.send(FocusedInputLayoutChangedEvent(reactTag: reactTag, event: event))
   }
 
+  func onTextChanged(text: String) {
+    guard isJSThreadReady() else { return }
+
+    eventDispatcher.send(FocusedInputTextChangedEvent(reactTag: reactTag, text: text))
+  }
+
   func onEvent(event: NSString, height: NSNumber, progress: NSNumber, duration: NSNumber, target: NSNumber) {
-    // we don't want to send event to JS before the JS thread is ready
-    if bridge.value(forKey: "_jsThread") == nil {
-      return
-    }
+    guard isJSThreadReady() else { return }
+
     eventDispatcher.send(
       KeyboardMoveEvent(
         reactTag: reactTag,
@@ -95,5 +101,10 @@ class KeyboardControllerView: UIView {
   private func unmount() {
     inputObserver?.unmount()
     keyboardObserver?.unmount()
+  }
+
+  private func isJSThreadReady() -> Bool {
+    // we don't want to send event to JS before the JS thread is ready
+    return bridge.value(forKey: "_jsThread") != nil
   }
 }

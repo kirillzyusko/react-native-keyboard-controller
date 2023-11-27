@@ -128,7 +128,7 @@ export const KeyboardProvider = ({
     NonNullable<KeyboardControllerProps['onFocusedInputTextChanged']>
   >((e) => {
     broadcastJS('onChangeText', e.nativeEvent);
-    console.log(e.nativeEvent);
+    console.log('onChangeText', e.nativeEvent);
   }, []);
   // handlers
   const updateSharedValues = (event: NativeEvent, platforms: string[]) => {

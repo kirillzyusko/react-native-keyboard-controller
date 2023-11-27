@@ -95,7 +95,7 @@ const KeyboardAwareScrollView: FC<KeyboardAwareScrollViewProps> = ({
 
     const visibleRect = height - keyboardHeight.value;
     const point = (layout.value?.layout.absoluteY || 0) + (layout.value?.layout.height || 0);
-console.log({layout: layout.value});
+    console.log("maybeScroll", {layout: layout.value});
     if (visibleRect - point <= bottomOffset) {
       const interpolatedScrollTo = interpolate(
         e,
@@ -113,6 +113,7 @@ console.log({layout: layout.value});
   }, [bottomOffset]);
   const syncUpLayoutAndMaybeScroll = useWorkletCallback(() => {
     // TODO: keyboard is shown -> move text input to keyboard -> start typing -> it has a different position than after keyboard animation
+    scrollPosition.value = position.value;
     layout.value = input.value;
     maybeScroll(keyboardHeight.value, true);
   }, []);
