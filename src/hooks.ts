@@ -6,7 +6,7 @@ import { useKeyboardContext } from './context';
 import { uuid } from './utils';
 
 import type { AnimatedContext, ReanimatedContext } from './context';
-import type { FocusedInputHandlers, KeyboardHandler } from './types';
+import type { FocusedInputHandler, KeyboardHandler } from './types';
 import type { DependencyList } from 'react';
 
 export const useResizeMode = () => {
@@ -64,19 +64,23 @@ export function useKeyboardController() {
   return { setEnabled: context.setEnabled, enabled: context.enabled };
 }
 
-export function useReanimatedFocusedInput(handler: FocusedInputHandlers) {
+export function useReanimatedFocusedInput(
+  handler?: FocusedInputHandler,
+  deps?: DependencyList
+) {
   const context = useKeyboardContext();
 
   useEffect(() => {
-    const key = uuid();
+    if (handler) {
+      const key = uuid();
 
-    context.setJSHandlers({ [key]: handler });
+      context.setJSHandlers({ [key]: handler });
 
-    return () => {
-      context.setJSHandlers({ [key]: undefined });
-    };
-    // TODO: or pass array of arguments as 2-nd param?
-  }, [handler]);
+      return () => {
+        context.setJSHandlers({ [key]: undefined });
+      };
+    }
+  }, deps);
 
   return { input: context.layout };
 }

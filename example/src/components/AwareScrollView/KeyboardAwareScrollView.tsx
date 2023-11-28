@@ -72,8 +72,8 @@ const KeyboardAwareScrollView: FC<KeyboardAwareScrollViewProps> = ({
       console.log("component", {text});
       // TODO: debounce
       runOnUI(syncUpLayoutAndMaybeScroll)();
-    }
-  });
+    },
+  }, []);
   const layout = useSharedValue<FocusedInputLayoutChangedEvent | null>(null);
 
   const { height } = useWindowDimensions();

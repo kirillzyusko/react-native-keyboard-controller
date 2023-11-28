@@ -42,7 +42,7 @@ const {input} = useReanimatedFocusedInput({
   onChangeText: ({text}) => {
     // ...
   }
-});
+}, []);
 ```
 
 Also have a look on [example](https://github.com/kirillzyusko/react-native-keyboard-controller/tree/main/example) app for more comprehensive usage.
