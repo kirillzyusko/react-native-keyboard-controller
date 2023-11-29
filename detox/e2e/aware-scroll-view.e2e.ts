@@ -1,7 +1,7 @@
 import waitForExpect from 'wait-for-expect';
 
 import { expectBitmapsToBeEqual } from './asserts';
-import { waitAndReplace, waitAndTap, waitAndType } from './helpers';
+import { tap, waitAndReplace, waitAndTap, waitAndType } from './helpers';
 import setDemoMode from './utils/setDemoMode';
 
 const BLINKING_CURSOR = 0.35;
@@ -47,8 +47,8 @@ describe('AwareScrollView test cases', () => {
   });
 
   it('should scroll back when keyboard dismissed', async () => {
-    // tap outside of input to close a keyboard
-    await waitAndTap('TextInput#4', { x: 0, y: -10 });
+    // tap outside to close a keyboard
+    await tap('aware_scroll_view_container', { x: 0, y: 100 });
     await waitForExpect(async () => {
       await expectBitmapsToBeEqual(
         'AwareScrollViewKeyboardClosed',
