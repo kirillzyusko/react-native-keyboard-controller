@@ -59,7 +59,7 @@ export const useSmoothKeyboardHandler: typeof useKeyboardHandler = (
       handler.onMove?.(evt);
 
       // dispatch `onEnd`
-      if (animatedKeyboardHeight.value === persistedHeight.value) {
+      if (evt.height === persistedHeight.value) {
         handler.onEnd?.(evt);
       }
     },
