@@ -8,6 +8,7 @@ const TextInput = (props: TextInputProps) => {
       style={styles.container}
       multiline
       numberOfLines={2}
+      testID={props.placeholder}
       {...props}
       placeholder={`${props.placeholder} (${props.keyboardType === 'default' ? 'text' : 'numeric'})`}
     />

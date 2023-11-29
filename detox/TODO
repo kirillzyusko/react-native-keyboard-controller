@@ -5,4 +5,4 @@
 - [ ] separate assets for local testing only (Android, with google play)
 - [ ] test with keyboard resize
 - [ ] test for disabled/enabled functionality
-- [ ] tests for AwareScrollView
+- [x] tests for AwareScrollView

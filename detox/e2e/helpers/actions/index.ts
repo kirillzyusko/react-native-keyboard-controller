@@ -7,13 +7,13 @@ const TIMEOUT_FOR_LONG_OPERATIONS = 30000;
 export const delay = (ms: number): Promise<void> =>
   new Promise((resolve) => setTimeout(resolve, ms));
 
-export const tap = async (id: string): Promise<void> => {
+export const tap = async (id: string, point?: Detox.Point2D): Promise<void> => {
   console.debug(
     '---------------------------------\n',
     'Tap on element with id: ',
     colors.magenta(id)
   );
-  await element(by.id(id)).tap();
+  await element(by.id(id)).tap(point);
 };
 
 // Not used yet. Will be used later
@@ -65,9 +65,12 @@ export const swipeUp = async (id: string): Promise<void> => {
   await element(by.id(id)).swipe('up', 'fast', 1, NaN, 0.85);
 };
 
-export const waitAndTap = async (id: string): Promise<void> => {
+export const waitAndTap = async (
+  id: string,
+  point?: Detox.Point2D
+): Promise<void> => {
   await waitForElementById(id, TIMEOUT_FOR_LONG_OPERATIONS);
-  await tap(id);
+  await tap(id, point);
 };
 
 export const waitAndType = async (id: string, text: string): Promise<void> => {
