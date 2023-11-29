@@ -1,4 +1,5 @@
 import waitForExpect from 'wait-for-expect';
+
 import { expectBitmapsToBeEqual } from './asserts';
 import { typeText, waitAndTap, waitForElementById } from './helpers';
 import setDemoMode from './utils/setDemoMode';
