@@ -4,5 +4,5 @@
 - [ ] matrix strategy for Android
 - [ ] separate assets for local testing only (Android, with google play)
 - [ ] test with keyboard resize
-- [ ] test for disabled/enabled functionality
+- [x] test for disabled/enabled functionality
 - [x] tests for AwareScrollView

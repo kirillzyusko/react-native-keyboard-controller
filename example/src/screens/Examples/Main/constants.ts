@@ -34,6 +34,7 @@ export const examples: Example[] = [
   },
   {
     title: 'Aware scroll view sticky footer',
+    testID: 'aware_scroll_view_sticky_footer',
     info: ScreenNames.AWARE_SCROLL_VIEW_STICKY_FOOTER,
     icons: '🤓🩹',
   },
@@ -81,6 +82,7 @@ export const examples: Example[] = [
   },
   {
     title: 'Enabled/disabled',
+    testID: 'enabled_disabled',
     info: ScreenNames.ENABLED_DISABLED,
     icons: '💡',
   },

@@ -11,6 +11,7 @@ export default function EnabledDisabled() {
       <Button
         title={enabled ? 'Enabled' : 'Disabled'}
         onPress={() => setEnabled(!enabled)}
+        testID='toggle_button'
       />
       <KeyboardAnimationTemplate />
     </View>

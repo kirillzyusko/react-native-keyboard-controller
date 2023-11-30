@@ -104,5 +104,13 @@ export const scrollDownUntilElementIsVisible = async (
   await waitFor(element(by.id(elementId)))
     .toBeVisible()
     .whileElement(by.id(scrollViewId))
-    .scroll(50, 'down');
+    .scroll(100, 'down');
+};
+
+export const closeKeyboard = async (textInputId: string) => {
+  if (device.getPlatform() === 'android') {
+    await device.pressBack();
+  } else {
+    await typeText(textInputId, '\n');
+  }
 };
