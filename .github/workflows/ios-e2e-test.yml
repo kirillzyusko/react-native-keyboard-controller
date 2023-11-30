@@ -7,6 +7,8 @@ on:
       - 'package.json'
       - 'ios/**'
       - 'example/**'
+      - 'detox/**'
+      - 'src/**'
   push:
     branches:
       - main
