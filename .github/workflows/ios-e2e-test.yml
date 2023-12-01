@@ -7,7 +7,7 @@ on:
       - 'package.json'
       - 'ios/**'
       - 'example/**'
-      - 'detox/**'
+      - 'e2e/**'
       - 'src/**'
   push:
     branches:
@@ -38,13 +38,13 @@ jobs:
       - name: Install example project dependencies
         working-directory: ${{ env.WORKING_DIRECTORY }}
         run: yarn
-      - name: Install detox dependencies
-        run: yarn install --cwd detox
+      - name: Install e2e dependencies
+        run: yarn install --cwd e2e
       - name: Restore buildcache
         uses: mikehardy/buildcache-action@v2
         continue-on-error: true
         with:
-          cache_key: react-native-keyboard-controller-detox
+          cache_key: react-native-keyboard-controller-e2e
       - name: Restore Pods cache
         uses: actions/cache@v3
         with:
@@ -59,15 +59,15 @@ jobs:
         working-directory: ${{ env.WORKING_DIRECTORY }}/ios
         run: pod install
       - name: Build app
-        working-directory: detox
+        working-directory: e2e
         run: yarn build-example:ios
       - name: Use software keyboard
         run: defaults write com.apple.iphonesimulator ConnectHardwareKeyboard -bool NO  
       - name: Test app
-        working-directory: detox
+        working-directory: e2e
         run: yarn test-example:ios
       - uses: actions/upload-artifact@v3
         if: ${{ failure() }}
         with:
           name: ios-fail-screen-shoots
-          path: detox/artifacts
+          path: e2e/artifacts

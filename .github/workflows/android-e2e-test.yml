@@ -6,7 +6,7 @@ on:
       - 'package.json'
       - 'android/**'
       - 'example/**'
-      - 'detox/**'
+      - 'e2e/**'
       - 'src/**'
   push:
     branches:
@@ -48,24 +48,24 @@ jobs:
         run: yarn install
       - name: Install node_modules for example/
         run: yarn install --frozen-lockfile --cwd example
-      - name: Install detox dependencies
-        run: yarn install --cwd detox
+      - name: Install e2e dependencies
+        run: yarn install --cwd e2e
       - name: Restore Gradle cache
         uses: actions/cache@v3
         with:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: ${{ runner.os }}-detox-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          key: ${{ runner.os }}-e2e-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
-            ${{ runner.os }}-detox-gradle-
+            ${{ runner.os }}-e2e-gradle-
       - name: Build app
-        working-directory: detox
+        working-directory: e2e
         run: yarn build-example:android
       - name: Run emulator and tests
         uses: reactivecircus/android-emulator-runner@v2.28.0
         with:
-          working-directory: detox
+          working-directory: e2e
           api-level: 31
           target: google_apis
           profile: Galaxy Nexus
@@ -79,4 +79,4 @@ jobs:
         if: ${{ failure() }}
         with:
           name: android-fail-screen-shoots
-          path: detox/artifacts
+          path: e2e/artifacts
