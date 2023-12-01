@@ -1,8 +1,0 @@
-- [-] setStatusBar doesn't work
-- [x] test buttler APK (Android)
-- [x] proper build caching (iOS, Android)
-- [ ] matrix strategy for Android
-- [ ] separate assets for local testing only (Android, with google play)
-- [ ] test with keyboard resize
-- [x] test for disabled/enabled functionality
-- [x] tests for AwareScrollView
