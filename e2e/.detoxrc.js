@@ -52,7 +52,7 @@ module.exports = {
       device: {
         avdName: 'e2e_emulator'
       },
-      // utilBinaryPaths: ["apks/test-butler-app-2.2.1.apk"]
+      utilBinaryPaths: ["apks/test-butler-app-2.2.1.apk"]
     }
   },
   configurations: {
