@@ -10,12 +10,16 @@ type Props = {
 } & Example;
 
 const ExampleLink: FC<Props> = (props) => {
-  const { onPress, title, info, icons, index } = props;
+  const { onPress, title, testID, info, icons, index } = props;
 
   const onCardPress = useCallback(() => onPress(info), [onPress]);
 
   return (
-    <TouchableOpacity onPress={onCardPress} style={styles.container}>
+    <TouchableOpacity
+      testID={testID}
+      onPress={onCardPress}
+      style={styles.container}
+    >
       <View style={styles.row}>
         <Text style={styles.text}>
           {index}. {title}
