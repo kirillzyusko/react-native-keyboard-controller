@@ -74,7 +74,7 @@ async function expectBitmapsToBeEqual(
 ): Promise<void> {
   const platform = device.getPlatform();
   const deviceName = parseDeviceName(device.name);
-  const SCREENS_DIR = `e2e/assets/${platform}/${deviceName}`;
+  const SCREENS_DIR = `kit/assets/${platform}/${deviceName}`;
 
   const tempImagePath = await device.takeScreenshot(screenName);
 
