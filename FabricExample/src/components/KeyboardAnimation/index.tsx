@@ -32,6 +32,7 @@ export default function KeyboardAnimation() {
       </View>
       <View>
         <TextInput
+          testID="keyboard_animation_text_input"
           style={{
             width: 200,
             marginTop: 50,

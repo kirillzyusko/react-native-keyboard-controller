@@ -25,7 +25,7 @@ buildscript {
 allprojects {
     repositories {
         maven {
-            url("$rootDir/../../detox/node_modules/detox/Detox-android")
+            url("$rootDir/../../e2e/node_modules/detox/Detox-android")
         }
     }
  }
