@@ -1136,34 +1136,20 @@ PODS:
     - React-Codegen
     - React-RCTFabric
     - ReactCommon/turbomodule/core
-  - RNReanimated (3.4.2):
-    - DoubleConversion
-    - FBLazyVector
-    - glog
+  - RNReanimated (3.6.0):
     - hermes-engine
-    - RCT-Folly
+    - RCT-Folly (= 2021.07.22.00)
     - RCTRequired
     - RCTTypeSafety
-    - React-callinvoker
     - React-Codegen
     - React-Core
-    - React-Core/DevSupport
-    - React-Core/RCTWebSocket
-    - React-CoreModules
-    - React-cxxreact
-    - React-hermes
-    - React-jsi
-    - React-jsiexecutor
-    - React-jsinspector
-    - React-RCTActionSheet
-    - React-RCTAnimation
-    - React-RCTBlob
+    - React-debug
+    - React-Fabric
+    - React-graphics
+    - React-NativeModulesApple
     - React-RCTFabric
-    - React-RCTImage
-    - React-RCTLinking
-    - React-RCTNetwork
-    - React-RCTSettings
-    - React-RCTText
+    - React-utils
+    - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
   - RNScreens (3.24.0):
@@ -1443,7 +1429,7 @@ SPEC CHECKSUMS:
   ReactCommon: 4b2bdcb50a3543e1c2b2849ad44533686610826d
   RNCMaskedView: 949696f25ec596bfc697fc88e6f95cf0c79669b6
   RNGestureHandler: 0f92ab218707c97810df75609886828ee1b7c5e3
-  RNReanimated: 5008fe999d57038a1c5c1163044854d453f41b98
+  RNReanimated: 15ab4086545443227c5c08d09b423e0a97eeea99
   RNScreens: e114ddbc9b91fbde662870c4256196ab0833314b
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
   Yoga: 3efc43e0d48686ce2e8c60f99d4e6bd349aff981
