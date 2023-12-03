@@ -1,11 +1,10 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { Animated, Easing, Keyboard, Platform } from 'react-native';
 import {
   runOnUI,
   useAnimatedReaction,
   useDerivedValue,
   useSharedValue,
-  useWorkletCallback,
   withSpring,
 } from 'react-native-reanimated';
 
@@ -111,7 +110,9 @@ export const useReanimatedKeyboardAnimationReplica = () => {
 
   const progress = useDerivedValue(() => height.value / heightEvent.value);
 
-  const handler = useWorkletCallback((_height: number) => {
+  const handler = useCallback((_height: number) => {
+    'worklet';
+
     heightEvent.value = _height;
   }, []);
 

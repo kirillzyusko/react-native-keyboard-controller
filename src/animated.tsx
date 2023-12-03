@@ -190,7 +190,6 @@ export const KeyboardProvider = ({
         onFocusedInputLayoutChangedReanimated={inputHandler}
         navigationBarTranslucent={navigationBarTranslucent}
         statusBarTranslucent={statusBarTranslucent}
-        // @ts-expect-error https://github.com/software-mansion/react-native-reanimated/pull/4923
         style={styles.container}
       >
         {children}
