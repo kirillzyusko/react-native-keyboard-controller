@@ -1136,7 +1136,7 @@ PODS:
     - React-Codegen
     - React-RCTFabric
     - ReactCommon/turbomodule/core
-  - RNReanimated (3.6.0):
+  - RNReanimated (3.6.1):
     - hermes-engine
     - RCT-Folly (= 2021.07.22.00)
     - RCTRequired
@@ -1429,7 +1429,7 @@ SPEC CHECKSUMS:
   ReactCommon: 4b2bdcb50a3543e1c2b2849ad44533686610826d
   RNCMaskedView: 949696f25ec596bfc697fc88e6f95cf0c79669b6
   RNGestureHandler: 0f92ab218707c97810df75609886828ee1b7c5e3
-  RNReanimated: 15ab4086545443227c5c08d09b423e0a97eeea99
+  RNReanimated: 6caa64a3a8f5c540cf1d519a79566b735baf2a27
   RNScreens: e114ddbc9b91fbde662870c4256196ab0833314b
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
   Yoga: 3efc43e0d48686ce2e8c60f99d4e6bd349aff981
