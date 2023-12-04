@@ -48,12 +48,7 @@ const KeyboardStickyView = forwardRef<
     );
 
     return (
-      <Reanimated.View
-        // @ts-expect-error because `ref` from reanimated is not compatible with react-native
-        ref={ref}
-        style={styles}
-        {...props}
-      >
+      <Reanimated.View ref={ref} style={styles} {...props}>
         {children}
       </Reanimated.View>
     );

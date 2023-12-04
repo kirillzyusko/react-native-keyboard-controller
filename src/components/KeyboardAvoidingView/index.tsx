@@ -6,7 +6,6 @@ import Reanimated, {
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
-  useWorkletCallback,
 } from 'react-native-reanimated';
 
 import { useKeyboardAnimation } from './hooks';
@@ -68,18 +67,22 @@ const KeyboardAvoidingView = forwardRef<View, React.PropsWithChildren<Props>>(
     const keyboard = useKeyboardAnimation();
     const { height: screenHeight } = useWindowDimensions();
 
-    const relativeKeyboardHeight = useWorkletCallback(() => {
+    const relativeKeyboardHeight = useCallback(() => {
+      'worklet';
+
       const keyboardY =
         screenHeight - keyboard.heightWhenOpened.value - keyboardVerticalOffset;
 
       return Math.max(frame.value.y + frame.value.height - keyboardY, 0);
     }, [screenHeight, keyboardVerticalOffset]);
 
-    const onLayoutWorklet = useWorkletCallback((layout: LayoutRectangle) => {
+    const onLayoutWorklet = useCallback((layout: LayoutRectangle) => {
+      'worklet';
+
       if (keyboard.isClosed.value) {
         initialFrame.value = layout;
       }
-    });
+    }, []);
     const onLayout = useCallback<NonNullable<ViewProps['onLayout']>>(
       (e) => {
         runOnUI(onLayoutWorklet)(e.nativeEvent.layout);
@@ -134,7 +137,6 @@ const KeyboardAvoidingView = forwardRef<View, React.PropsWithChildren<Props>>(
 
     return (
       <Reanimated.View
-        // @ts-expect-error because `ref` from reanimated is not compatible with react-native
         ref={ref}
         onLayout={onLayout}
         style={combinedStyles}

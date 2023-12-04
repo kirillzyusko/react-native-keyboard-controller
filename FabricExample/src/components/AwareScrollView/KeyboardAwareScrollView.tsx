@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useCallback } from 'react';
 import { ScrollViewProps, useWindowDimensions } from 'react-native';
 import { FocusedInputLayoutChangedEvent, useReanimatedFocusedInput } from 'react-native-keyboard-controller';
 import Reanimated, {
@@ -9,7 +9,6 @@ import Reanimated, {
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
-  useWorkletCallback,
 } from 'react-native-reanimated';
 import { useSmoothKeyboardHandler } from './useSmoothKeyboardHandler';
 
@@ -84,7 +83,9 @@ const KeyboardAwareScrollView: FC<KeyboardAwareScrollViewProps> = ({
   /**
    * Function that will scroll a ScrollView as keyboard gets moving
    */
-  const maybeScroll = useWorkletCallback((e: number, animated: boolean = false) => {
+  const maybeScroll = useCallback((e: number, animated: boolean = false) => {
+    'worklet';
+
     const visibleRect = height - keyboardHeight.value;
     const point = (layout.value?.layout.absoluteY || 0) + (layout.value?.layout.height || 0);
 
