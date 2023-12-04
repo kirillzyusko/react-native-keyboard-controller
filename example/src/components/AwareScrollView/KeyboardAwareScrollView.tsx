@@ -111,7 +111,9 @@ const KeyboardAwareScrollView: FC<KeyboardAwareScrollViewProps> = ({
 
     return 0;
   }, [bottomOffset]);
-  const syncUpLayoutAndMaybeScroll = useWorkletCallback(() => {
+  const syncUpLayoutAndMaybeScroll = useCallback(() => {
+    'worklet';
+  
     // TODO: keyboard is shown -> move text input to keyboard -> start typing -> it has a different position than after keyboard animation
     scrollPosition.value = position.value;
     layout.value = input.value;
