@@ -14,11 +14,19 @@ public class TextChangeObserver {
       return
     }
     if let textField = input as? UITextField {
-      observer = NotificationCenter.default.addObserver(forName: UITextField.textDidChangeNotification, object: textField, queue: nil) { _ in
+      observer = NotificationCenter.default.addObserver(
+        forName: UITextField.textDidChangeNotification,
+        object: textField,
+        queue: nil
+      ) { _ in
         handler(textField.text)
       }
     } else if let textView = input as? UITextView {
-      observer = NotificationCenter.default.addObserver(forName: UITextView.textDidChangeNotification, object: textView, queue: nil) { _ in
+      observer = NotificationCenter.default.addObserver(
+        forName: UITextView.textDidChangeNotification,
+        object: textView,
+        queue: nil
+      ) { _ in
         handler(textView.text)
       }
     }

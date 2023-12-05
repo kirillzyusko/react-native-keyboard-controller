@@ -39,15 +39,15 @@ class FocusedInputObserver(val view: ReactViewGroup, private val context: Themed
       this.syncUpLayout()
     }
   private val textListener = object : TextWatcher {
-    override fun afterTextChanged(s: Editable?) {
-    }
+    @Suppress("detekt:EmptyFunctionBlock")
+    override fun afterTextChanged(s: Editable?) {}
 
-    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-    }
+    @Suppress("detekt:EmptyFunctionBlock")
+    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
     override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-      // TODO: for some reasons called two times
-      println(s.toString())
+      // this callback for some reasons called two times, but it's relatively safe
+      // because RN will coalesce these events into a single one
       syncUpLayout()
       context.dispatchEvent(
         view.id,
