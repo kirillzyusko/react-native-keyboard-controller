@@ -54,7 +54,7 @@ export type KeyboardControllerProps = {
   onKeyboardMoveReanimated?: (
     e: NativeSyntheticEvent<EventWithName<NativeEvent>>
   ) => void;
-  onFocusedInputLayoutChangedReanimated?: (
+  onFocusedInputReanimated?: (
     e: NativeSyntheticEvent<EventWithName<FocusedInputLayoutChangedEvent>>
   ) => void;
   statusBarTranslucent?: boolean;
@@ -118,6 +118,10 @@ export type FocusedInputHandlerHook<TContext, Event> = (
   handlers: {
     onFocusedInputLayoutChanged?: (
       e: FocusedInputLayoutChangedEvent,
+      context: TContext
+    ) => void;
+    onFocusedInputTextChanged?: (
+      e: FocusedInputTextChangedEvent,
       context: TContext
     ) => void;
   },

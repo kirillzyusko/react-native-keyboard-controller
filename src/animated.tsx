@@ -1,10 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Animated, Platform, StyleSheet } from 'react-native';
 import Reanimated, { useSharedValue } from 'react-native-reanimated';
 
 import { KeyboardControllerView } from './bindings';
 import { KeyboardContext } from './context';
-import { useAnimatedValue, useHandlers, useSharedHandlers } from './internal';
+import { useAnimatedValue, useSharedHandlers } from './internal';
 import { applyMonkeyPatch, revertMonkeyPatch } from './monkey-patch';
 import {
   useAnimatedKeyboardHandler,
@@ -13,6 +13,7 @@ import {
 
 import type { KeyboardAnimationContext } from './context';
 import type {
+  FocusedInputHandler,
   FocusedInputLayoutChangedEvent,
   KeyboardControllerProps,
   KeyboardHandler,
@@ -76,8 +77,6 @@ export const KeyboardProvider = ({
   navigationBarTranslucent,
   enabled: initiallyEnabled = true,
 }: KeyboardProviderProps) => {
-  // refs
-  const { setHandlers: setJSHandlers, broadcast: broadcastJS } = useHandlers();
   // state
   const [enabled, setEnabled] = useState(initiallyEnabled);
   // animated values
@@ -87,7 +86,10 @@ export const KeyboardProvider = ({
   const progressSV = useSharedValue(0);
   const heightSV = useSharedValue(0);
   const layout = useSharedValue<FocusedInputLayoutChangedEvent | null>(null);
-  const { setHandlers, broadcast } = useSharedHandlers<KeyboardHandler>();
+  const [setKeyboardHandlers, broadcastKeyboardEvents] =
+    useSharedHandlers<KeyboardHandler>();
+  const [setInputHandlers, broadcastInputEvents] =
+    useSharedHandlers<FocusedInputHandler>();
   // memo
   const context = useMemo<KeyboardAnimationContext>(
     () => ({
@@ -95,8 +97,8 @@ export const KeyboardProvider = ({
       animated: { progress: progress, height: Animated.multiply(height, -1) },
       reanimated: { progress: progressSV, height: heightSV },
       layout,
-      setHandlers,
-      setJSHandlers,
+      setKeyboardHandlers,
+      setInputHandlers,
       setEnabled,
     }),
     [enabled]
@@ -123,13 +125,6 @@ export const KeyboardProvider = ({
       ),
     []
   );
-  // callbacks
-  const onFocusedInputTextChanged = useCallback<
-    NonNullable<KeyboardControllerProps['onFocusedInputTextChanged']>
-  >((e) => {
-    broadcastJS('onChangeText', e.nativeEvent);
-    console.log('onChangeText', e.nativeEvent);
-  }, []);
   // handlers
   const updateSharedValues = (event: NativeEvent, platforms: string[]) => {
     'worklet';
@@ -144,25 +139,25 @@ export const KeyboardProvider = ({
       onKeyboardMoveStart: (event: NativeEvent) => {
         'worklet';
 
-        broadcast('onStart', event);
+        broadcastKeyboardEvents('onStart', event);
         updateSharedValues(event, ['ios']);
       },
       onKeyboardMove: (event: NativeEvent) => {
         'worklet';
 
-        broadcast('onMove', event);
+        broadcastKeyboardEvents('onMove', event);
         updateSharedValues(event, ['android']);
       },
       onKeyboardMoveEnd: (event: NativeEvent) => {
         'worklet';
 
-        broadcast('onEnd', event);
+        broadcastKeyboardEvents('onEnd', event);
       },
       onKeyboardMoveInteractive: (event: NativeEvent) => {
         'worklet';
 
         updateSharedValues(event, ['android', 'ios']);
-        broadcast('onInteractive', event);
+        broadcastKeyboardEvents('onInteractive', event);
       },
     },
     []
@@ -177,6 +172,11 @@ export const KeyboardProvider = ({
         } else {
           layout.value = null;
         }
+      },
+      onFocusedInputTextChanged: (e) => {
+        'worklet';
+
+        broadcastInputEvents('onChangeText', e);
       },
     },
     []
@@ -198,8 +198,7 @@ export const KeyboardProvider = ({
         onKeyboardMoveStart={Platform.OS === 'ios' ? onKeyboardMove : undefined}
         onKeyboardMove={Platform.OS === 'android' ? onKeyboardMove : undefined}
         onKeyboardMoveInteractive={onKeyboardMove}
-        onFocusedInputLayoutChangedReanimated={inputHandler}
-        onFocusedInputTextChanged={onFocusedInputTextChanged}
+        onFocusedInputReanimated={inputHandler}
         navigationBarTranslucent={navigationBarTranslucent}
         statusBarTranslucent={statusBarTranslucent}
         style={styles.container}

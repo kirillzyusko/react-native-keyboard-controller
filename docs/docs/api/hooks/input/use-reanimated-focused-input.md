@@ -40,6 +40,8 @@ type KeyboardEventData = {
 ```tsx
 const {input} = useReanimatedFocusedInput({
   onChangeText: ({text}) => {
+    'worklet';
+
     // ...
   }
 }, []);

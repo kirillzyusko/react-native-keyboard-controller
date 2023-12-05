@@ -42,10 +42,10 @@ export function useGenericKeyboardHandler(
   useEffect(() => {
     const key = uuid();
 
-    context.setHandlers({ [key]: handler });
+    context.setKeyboardHandlers({ [key]: handler });
 
     return () => {
-      context.setHandlers({ [key]: undefined });
+      context.setKeyboardHandlers({ [key]: undefined });
     };
   }, deps);
 }
@@ -71,15 +71,13 @@ export function useReanimatedFocusedInput(
   const context = useKeyboardContext();
 
   useEffect(() => {
-    if (handler) {
-      const key = uuid();
+    const key = uuid();
 
-      context.setJSHandlers({ [key]: handler });
+    context.setInputHandlers({ [key]: handler });
 
-      return () => {
-        context.setJSHandlers({ [key]: undefined });
-      };
-    }
+    return () => {
+      context.setInputHandlers({ [key]: undefined });
+    };
   }, deps);
 
   return { input: context.layout };

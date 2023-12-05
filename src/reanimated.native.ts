@@ -65,7 +65,8 @@ export const useFocusedInputHandler: FocusedInputHandlerHook<
   return useEvent(
     (event) => {
       'worklet';
-      const { onFocusedInputLayoutChanged } = handlers;
+      const { onFocusedInputLayoutChanged, onFocusedInputTextChanged } =
+        handlers;
 
       if (
         onFocusedInputLayoutChanged &&
@@ -73,8 +74,15 @@ export const useFocusedInputHandler: FocusedInputHandlerHook<
       ) {
         onFocusedInputLayoutChanged(event, context);
       }
+
+      if (
+        onFocusedInputTextChanged &&
+        event.eventName.endsWith('onFocusedInputTextChanged')
+      ) {
+        onFocusedInputTextChanged(event, context);
+      }
     },
-    ['onFocusedInputLayoutChanged'],
+    ['onFocusedInputLayoutChanged', 'onFocusedInputTextChanged'],
     doDependenciesDiffer
   );
 };
