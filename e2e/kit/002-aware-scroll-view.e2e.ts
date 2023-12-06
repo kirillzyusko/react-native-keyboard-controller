@@ -1,7 +1,13 @@
 import waitForExpect from 'wait-for-expect';
 
 import { expectBitmapsToBeEqual } from './asserts';
-import { tap, waitAndReplace, waitAndTap, waitAndType } from './helpers';
+import {
+  tap,
+  typeText,
+  waitAndReplace,
+  waitAndTap,
+  waitAndType,
+} from './helpers';
 import setDemoMode from './utils/setDemoMode';
 
 const BLINKING_CURSOR = 0.35;
@@ -46,7 +52,7 @@ describe('AwareScrollView test cases', () => {
 
   it('should auto-scroll when user types a text', async () => {
     await element(by.id('TextInput#4')).swipe('down', 'slow', 0.15);
-    await waitAndType('TextInput#4', '1');
+    await typeText('TextInput#4', '1');
     await waitForExpect(async () => {
       await expectBitmapsToBeEqual(
         'AwareScrollViewTextChanged',
