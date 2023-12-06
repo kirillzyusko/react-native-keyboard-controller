@@ -104,8 +104,7 @@ public class FocusedInputObserver: NSObject {
 
   private func onTextChanged(text: String?) {
     syncUpLayout()
-    // TODO: test numeric/single-line/multi-line + fabric
-    print("Text changed \(text)")
+
     if let string = text {
       onTextChangedHandler(string)
     }
