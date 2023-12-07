@@ -8,7 +8,8 @@ import { useAnimatedValue, useSharedHandlers } from './internal';
 import { applyMonkeyPatch, revertMonkeyPatch } from './monkey-patch';
 import {
   useAnimatedKeyboardHandler,
-  useFocusedInputHandler,
+  useFocusedInputLayoutHandler,
+  useFocusedInputTextHandler,
 } from './reanimated';
 
 import type { KeyboardAnimationContext } from './context';
@@ -162,7 +163,7 @@ export const KeyboardProvider = ({
     },
     []
   );
-  const inputHandler = useFocusedInputHandler(
+  const inputLayoutHandler = useFocusedInputLayoutHandler(
     {
       onFocusedInputLayoutChanged: (e) => {
         'worklet';
@@ -173,6 +174,11 @@ export const KeyboardProvider = ({
           layout.value = null;
         }
       },
+    },
+    []
+  );
+  const inputTextHandler = useFocusedInputTextHandler(
+    {
       onFocusedInputTextChanged: (e) => {
         'worklet';
 
@@ -198,7 +204,8 @@ export const KeyboardProvider = ({
         onKeyboardMoveStart={Platform.OS === 'ios' ? onKeyboardMove : undefined}
         onKeyboardMove={Platform.OS === 'android' ? onKeyboardMove : undefined}
         onKeyboardMoveInteractive={onKeyboardMove}
-        onFocusedInputReanimated={inputHandler}
+        onFocusedInputLayoutReanimated={inputLayoutHandler}
+        onFocusedInputTextReanimated={inputTextHandler}
         navigationBarTranslucent={navigationBarTranslucent}
         statusBarTranslucent={statusBarTranslucent}
         style={styles.container}

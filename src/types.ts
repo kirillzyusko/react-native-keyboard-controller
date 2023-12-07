@@ -31,7 +31,7 @@ export type EventWithName<T> = {
 
 // native View/Module declarations
 export type KeyboardControllerProps = {
-  enabled?: boolean;
+  // callback props
   onKeyboardMoveStart?: (
     e: NativeSyntheticEvent<EventWithName<NativeEvent>>
   ) => void;
@@ -54,11 +54,16 @@ export type KeyboardControllerProps = {
   onKeyboardMoveReanimated?: (
     e: NativeSyntheticEvent<EventWithName<NativeEvent>>
   ) => void;
-  onFocusedInputReanimated?: (
+  onFocusedInputLayoutReanimated?: (
     e: NativeSyntheticEvent<EventWithName<FocusedInputLayoutChangedEvent>>
   ) => void;
+  onFocusedInputTextReanimated?: (
+    e: NativeSyntheticEvent<EventWithName<FocusedInputTextChangedEvent>>
+  ) => void;
+  // props
   statusBarTranslucent?: boolean;
   navigationBarTranslucent?: boolean;
+  enabled?: boolean;
 } & ViewProps;
 
 export type KeyboardGestureAreaProps = {
@@ -114,12 +119,17 @@ export type KeyboardHandlerHook<TContext, Event> = (
   },
   dependencies?: unknown[]
 ) => (e: NativeSyntheticEvent<Event>) => void;
-export type FocusedInputHandlerHook<TContext, Event> = (
+export type FocusedInputLayoutHandlerHook<TContext, Event> = (
   handlers: {
     onFocusedInputLayoutChanged?: (
       e: FocusedInputLayoutChangedEvent,
       context: TContext
     ) => void;
+  },
+  dependencies?: unknown[]
+) => (e: NativeSyntheticEvent<Event>) => void;
+export type FocusedInputTextHandlerHook<TContext, Event> = (
+  handlers: {
     onFocusedInputTextChanged?: (
       e: FocusedInputTextChangedEvent,
       context: TContext

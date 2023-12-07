@@ -2,8 +2,10 @@ import { useEvent, useHandler } from 'react-native-reanimated';
 
 import type {
   EventWithName,
-  FocusedInputHandlerHook,
   FocusedInputLayoutChangedEvent,
+  FocusedInputLayoutHandlerHook,
+  FocusedInputTextChangedEvent,
+  FocusedInputTextHandlerHook,
   KeyboardHandlerHook,
   NativeEvent,
 } from './types';
@@ -56,7 +58,7 @@ export const useAnimatedKeyboardHandler: KeyboardHandlerHook<
   );
 };
 
-export const useFocusedInputHandler: FocusedInputHandlerHook<
+export const useFocusedInputLayoutHandler: FocusedInputLayoutHandlerHook<
   Record<string, unknown>,
   EventWithName<FocusedInputLayoutChangedEvent>
 > = (handlers, dependencies) => {
@@ -65,8 +67,7 @@ export const useFocusedInputHandler: FocusedInputHandlerHook<
   return useEvent(
     (event) => {
       'worklet';
-      const { onFocusedInputLayoutChanged, onFocusedInputTextChanged } =
-        handlers;
+      const { onFocusedInputLayoutChanged } = handlers;
 
       if (
         onFocusedInputLayoutChanged &&
@@ -74,6 +75,22 @@ export const useFocusedInputHandler: FocusedInputHandlerHook<
       ) {
         onFocusedInputLayoutChanged(event, context);
       }
+    },
+    ['onFocusedInputLayoutChanged'],
+    doDependenciesDiffer
+  );
+};
+
+export const useFocusedInputTextHandler: FocusedInputTextHandlerHook<
+  Record<string, unknown>,
+  EventWithName<FocusedInputTextChangedEvent>
+> = (handlers, dependencies) => {
+  const { context, doDependenciesDiffer } = useHandler(handlers, dependencies);
+
+  return useEvent(
+    (event) => {
+      'worklet';
+      const { onFocusedInputTextChanged } = handlers;
 
       if (
         onFocusedInputTextChanged &&
@@ -82,7 +99,7 @@ export const useFocusedInputHandler: FocusedInputHandlerHook<
         onFocusedInputTextChanged(event, context);
       }
     },
-    ['onFocusedInputLayoutChanged', 'onFocusedInputTextChanged'],
+    ['onFocusedInputTextChanged'],
     doDependenciesDiffer
   );
 };
