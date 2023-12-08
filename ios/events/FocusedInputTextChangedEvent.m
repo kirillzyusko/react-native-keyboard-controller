@@ -21,8 +21,7 @@
 
 @synthesize viewTag = _viewTag;
 
-- (instancetype)initWithReactTag:(NSNumber *)reactTag
-                            text:(NSString *)text
+- (instancetype)initWithReactTag:(NSNumber *)reactTag text:(NSString *)text
 {
   RCTAssertParam(reactTag);
 

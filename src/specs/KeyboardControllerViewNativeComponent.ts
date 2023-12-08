@@ -27,17 +27,24 @@ type FocusedInputLayoutChangedEvent = Readonly<{
   };
 }>;
 
+type FocusedInputTextChangedEvent = Readonly<{
+  text: string;
+}>;
+
 export interface NativeProps extends ViewProps {
   // props
   enabled?: boolean;
   statusBarTranslucent?: boolean;
   navigationBarTranslucent?: boolean;
   // callbacks
+  /// keyboard
   onKeyboardMoveStart?: DirectEventHandler<KeyboardMoveEvent>;
   onKeyboardMove?: DirectEventHandler<KeyboardMoveEvent>;
   onKeyboardMoveEnd?: DirectEventHandler<KeyboardMoveEvent>;
   onKeyboardMoveInteractive?: DirectEventHandler<KeyboardMoveEvent>;
+  /// focused input
   onFocusedInputLayoutChanged?: DirectEventHandler<FocusedInputLayoutChangedEvent>;
+  onFocusedInputTextChanged?: DirectEventHandler<FocusedInputTextChangedEvent>;
 }
 
 export default codegenNativeComponent<NativeProps>(

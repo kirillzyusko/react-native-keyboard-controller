@@ -105,6 +105,25 @@ const KeyboardAwareScrollView: FC<KeyboardAwareScrollViewProps> = ({
     return 0;
   }, [bottomOffset]);
 
+  useReanimatedFocusedInput({
+    onChangeText: ({text}) => {
+      'worklet';
+
+      // if typing a text caused layout shift, then we need to ignore this handler
+      // because this event will be handled in `useAnimatedReaction` below
+      if (layout.value?.layout.height !== input.value?.layout.height) {
+        return;
+      }
+
+      // TODO: debounce
+      // TODO: keyboard is shown -> move text input to keyboard -> start typing -> it has a different position than after keyboard animation
+      console.log("component", {text});
+      scrollPosition.value = position.value;
+      layout.value = input.value;
+      maybeScroll(keyboardHeight.value, true);
+    },
+  }, []);
+
   useSmoothKeyboardHandler(
     {
       onStart: (e) => {

@@ -11,7 +11,6 @@
 
 @interface FocusedInputTextChangedEvent : NSObject <RCTEvent>
 
-- (instancetype)initWithReactTag:(NSNumber *)reactTag
-                            text:(NSString *)text;
+- (instancetype)initWithReactTag:(NSNumber *)reactTag text:(NSString *)text;
 
 @end
