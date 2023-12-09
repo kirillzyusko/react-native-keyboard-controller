@@ -64,7 +64,13 @@ export function useKeyboardController() {
   return { setEnabled: context.setEnabled, enabled: context.enabled };
 }
 
-export function useReanimatedFocusedInput(
+export function useReanimatedFocusedInput() {
+  const context = useKeyboardContext();
+
+  return { input: context.layout };
+}
+
+export function useFocusedInputHandler(
   handler?: FocusedInputHandler,
   deps?: DependencyList
 ) {
@@ -79,6 +85,4 @@ export function useReanimatedFocusedInput(
       context.setInputHandlers({ [key]: undefined });
     };
   }, deps);
-
-  return { input: context.layout };
 }

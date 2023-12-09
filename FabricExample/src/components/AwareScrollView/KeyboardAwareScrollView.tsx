@@ -1,6 +1,10 @@
 import React, { FC, useCallback } from 'react';
 import { ScrollViewProps, useWindowDimensions } from 'react-native';
-import { FocusedInputLayoutChangedEvent, useReanimatedFocusedInput } from 'react-native-keyboard-controller';
+import {
+  FocusedInputLayoutChangedEvent,
+  useFocusedInputHandler,
+  useReanimatedFocusedInput
+} from 'react-native-keyboard-controller';
 import Reanimated, {
   interpolate,
   scrollTo,
@@ -105,7 +109,7 @@ const KeyboardAwareScrollView: FC<KeyboardAwareScrollViewProps> = ({
     return 0;
   }, [bottomOffset]);
 
-  useReanimatedFocusedInput({
+  useFocusedInputHandler({
     onChangeText: ({text}) => {
       'worklet';
 
