@@ -1,6 +1,5 @@
 package com.reactnativekeyboardcontroller.listeners
 
-import android.text.Editable
 import android.text.TextWatcher
 import android.view.View.OnLayoutChangeListener
 import android.view.ViewTreeObserver.OnGlobalFocusChangeListener
