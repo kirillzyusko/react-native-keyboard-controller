@@ -54,10 +54,10 @@ export type KeyboardControllerProps = {
   onKeyboardMoveReanimated?: (
     e: NativeSyntheticEvent<EventWithName<NativeEvent>>
   ) => void;
-  onFocusedInputLayoutReanimated?: (
+  onFocusedInputLayoutChangedReanimated?: (
     e: NativeSyntheticEvent<EventWithName<FocusedInputLayoutChangedEvent>>
   ) => void;
-  onFocusedInputTextReanimated?: (
+  onFocusedInputTextChangedReanimated?: (
     e: NativeSyntheticEvent<EventWithName<FocusedInputTextChangedEvent>>
   ) => void;
   // props

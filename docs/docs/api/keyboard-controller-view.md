@@ -25,6 +25,14 @@ A callback function which is fired every time, when user drags keyboard.
 
 A callback function which is fired when keyboard finished a transition from one to another state (from closed to open, for example).
 
+### `onFocusedInputLayoutChanged`
+
+A callback function which is fired when layout of focused input gets changed.
+
+### `onFocusedInputTextChanged`
+
+A callback function which is fired every time when user changes a text (types/deletes symbols).
+
 ### `statusBarTranslucent`
 
 A boolean prop to indicate whether `StatusBar` should be translucent on `Android` or not.
