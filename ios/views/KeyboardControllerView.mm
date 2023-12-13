@@ -89,6 +89,8 @@ using namespace facebook::react;
                     facebook::react::KeyboardControllerViewEventEmitter::OnFocusedInputTextChanged{
                         .text = std::string([text UTF8String])});
 
+            // TODO: use built-in _eventEmitter once NativeAnimated module will use
+            // ModernEventemitter
             RCTBridge *bridge = [RCTBridge currentBridge];
             if (bridge && [bridge valueForKey:@"_jsThread"]) {
               FocusedInputTextChangedEvent *textChangedEvent =

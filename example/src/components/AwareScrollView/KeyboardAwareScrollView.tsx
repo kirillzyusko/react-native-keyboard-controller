@@ -113,10 +113,8 @@ const KeyboardAwareScrollView: FC<KeyboardAwareScrollViewProps> = ({
     if (absoluteY < 0) {
       const positionOnScreen = visibleRect - inputHeight - bottomOffset;
       const topOfScreen = scrollPosition.value + absoluteY;
-      scrollTo(scrollViewAnimatedRef, 0, topOfScreen - positionOnScreen, animated);
 
-      // TODO: return correct value
-      return -1;
+      scrollTo(scrollViewAnimatedRef, 0, topOfScreen - positionOnScreen, animated);
     }
 
     return 0;
