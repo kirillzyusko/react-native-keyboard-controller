@@ -11,6 +11,7 @@ import com.facebook.react.views.view.ReactViewGroup
 import com.reactnativekeyboardcontroller.events.FocusedInputLayoutChangedEvent
 import com.reactnativekeyboardcontroller.events.FocusedInputLayoutChangedEventData
 import com.reactnativekeyboardcontroller.events.FocusedInputTextChangedEvent
+import com.reactnativekeyboardcontroller.extensions.addOnTextChangedListener
 import com.reactnativekeyboardcontroller.extensions.dispatchEvent
 import com.reactnativekeyboardcontroller.extensions.dp
 import com.reactnativekeyboardcontroller.extensions.screenLocation
@@ -32,45 +33,36 @@ class FocusedInputObserver(val view: ReactViewGroup, private val context: Themed
   // state variables
   private var lastFocusedInput: ReactEditText? = null
   private var lastEventDispatched: FocusedInputLayoutChangedEventData = noFocusedInputEvent
+  private var textWatcher: TextWatcher? = null
 
   // listeners
   private val layoutListener =
     OnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
       this.syncUpLayout()
     }
-  private val textListener = object : TextWatcher {
-    @Suppress("detekt:EmptyFunctionBlock")
-    override fun afterTextChanged(s: Editable?) {}
-
-    @Suppress("detekt:EmptyFunctionBlock")
-    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-      // this callback for some reasons called two times, but it's relatively safe
-      // because RN will coalesce these events into a single one
-      syncUpLayout()
-      context.dispatchEvent(
+  private val textListener: (String) -> Unit = { text ->
+    syncUpLayout()
+    context.dispatchEvent(
+      view.id,
+      FocusedInputTextChangedEvent(
+        surfaceId,
         view.id,
-        FocusedInputTextChangedEvent(
-          surfaceId,
-          view.id,
-          text = s.toString(),
-        ),
-      )
-    }
+        text = text,
+      ),
+    )
   }
   private val focusListener = OnGlobalFocusChangeListener { oldFocus, newFocus ->
     // unfocused or focused was changed
     if (newFocus == null || oldFocus != null) {
       lastFocusedInput?.removeOnLayoutChangeListener(layoutListener)
-      lastFocusedInput?.removeTextChangedListener(textListener)
+      lastFocusedInput?.removeTextChangedListener(textWatcher)
       lastFocusedInput = null
     }
     if (newFocus is ReactEditText) {
       lastFocusedInput = newFocus
       newFocus.addOnLayoutChangeListener(layoutListener)
       this.syncUpLayout()
-      newFocus.addTextChangedListener(textListener)
+      textWatcher = newFocus.addOnTextChangedListener(textListener)
     }
     // unfocused
     if (newFocus == null) {
