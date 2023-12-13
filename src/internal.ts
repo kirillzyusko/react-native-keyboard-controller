@@ -2,7 +2,13 @@ import { useCallback, useRef } from 'react';
 import { Animated } from 'react-native';
 import { useSharedValue } from 'react-native-reanimated';
 
-import type { Handlers, NativeEvent } from './types';
+import type { Handlers } from './types';
+
+type UntypedHandler = Record<string, (event: never) => void>;
+type SharedHandlersReturnType<T extends UntypedHandler> = [
+  (handler: Handlers<T>) => void,
+  <K extends keyof T>(type: K, event: Parameters<T[K]>[0]) => void
+];
 
 /**
  * Hook for storing worklet handlers (objects with keys, where values are worklets).
@@ -16,8 +22,8 @@ import type { Handlers, NativeEvent } from './types';
  * }
  */
 export function useSharedHandlers<
-  T extends Record<string, (event: NativeEvent) => void>
->() {
+  T extends UntypedHandler
+>(): SharedHandlersReturnType<T> {
   const handlers = useSharedValue<Handlers<T>>({});
   const jsHandlers = useRef<Handlers<T>>({});
 
@@ -40,15 +46,18 @@ export function useSharedHandlers<
     };
     updateSharedHandlers();
   }, []);
-  const broadcast = (type: keyof T, event: NativeEvent) => {
+  const broadcast = <K extends keyof T>(
+    type: K,
+    event: Parameters<T[K]>[0]
+  ) => {
     'worklet';
 
-    Object.keys(handlers.value).forEach((key) =>
-      handlers.value[key]?.[type]?.(event)
-    );
+    Object.keys(handlers.value).forEach((key) => {
+      handlers.value[key]?.[type]?.(event);
+    });
   };
 
-  return { setHandlers, broadcast };
+  return [setHandlers, broadcast];
 }
 
 /**

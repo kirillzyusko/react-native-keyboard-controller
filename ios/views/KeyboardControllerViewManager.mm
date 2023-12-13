@@ -13,5 +13,6 @@ RCT_EXPORT_VIEW_PROPERTY(onKeyboardMoveEnd, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onKeyboardMoveInteractive, RCTDirectEventBlock);
 /// input callbacks
 RCT_EXPORT_VIEW_PROPERTY(onFocusedInputLayoutChanged, RCTDirectEventBlock);
+RCT_EXPORT_VIEW_PROPERTY(onFocusedInputTextChanged, RCTDirectEventBlock);
 
 @end

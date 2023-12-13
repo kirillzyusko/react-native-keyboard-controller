@@ -1,7 +1,11 @@
 import { createContext, useContext } from 'react';
 import { Animated } from 'react-native';
 
-import type { FocusedInputLayoutChangedEvent, KeyboardHandlers } from './types';
+import type {
+  FocusedInputHandlers,
+  FocusedInputLayoutChangedEvent,
+  KeyboardHandlers,
+} from './types';
 import type React from 'react';
 import type { SharedValue } from 'react-native-reanimated';
 
@@ -18,7 +22,8 @@ export type KeyboardAnimationContext = {
   animated: AnimatedContext;
   reanimated: ReanimatedContext;
   layout: SharedValue<FocusedInputLayoutChangedEvent | null>;
-  setHandlers: (handlers: KeyboardHandlers) => void;
+  setKeyboardHandlers: (handlers: KeyboardHandlers) => void;
+  setInputHandlers: (handlers: FocusedInputHandlers) => void;
   setEnabled: React.Dispatch<React.SetStateAction<boolean>>;
 };
 const NOOP = () => {};
@@ -43,7 +48,8 @@ const defaultContext: KeyboardAnimationContext = {
     height: DEFAULT_SHARED_VALUE,
   },
   layout: DEFAULT_LAYOUT,
-  setHandlers: NOOP,
+  setKeyboardHandlers: NOOP,
+  setInputHandlers: NOOP,
   setEnabled: NOOP,
 };
 export const KeyboardContext = createContext(defaultContext);

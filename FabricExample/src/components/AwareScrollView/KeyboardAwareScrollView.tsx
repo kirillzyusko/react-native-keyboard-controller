@@ -1,6 +1,11 @@
-import React, { FC, useCallback } from 'react';
+import React, { FC, useCallback, useMemo } from 'react';
 import { ScrollViewProps, useWindowDimensions } from 'react-native';
-import { FocusedInputLayoutChangedEvent, useReanimatedFocusedInput } from 'react-native-keyboard-controller';
+import {
+  FocusedInputLayoutChangedEvent,
+  FocusedInputTextChangedEvent,
+  useFocusedInputHandler,
+  useReanimatedFocusedInput
+} from 'react-native-keyboard-controller';
 import Reanimated, {
   interpolate,
   scrollTo,
@@ -11,6 +16,7 @@ import Reanimated, {
   useSharedValue,
 } from 'react-native-reanimated';
 import { useSmoothKeyboardHandler } from './useSmoothKeyboardHandler';
+import { debounce } from './utils';
 
 type KeyboardAwareScrollViewProps = {
   bottomOffset?: number;
@@ -87,8 +93,10 @@ const KeyboardAwareScrollView: FC<KeyboardAwareScrollViewProps> = ({
     'worklet';
 
     const visibleRect = height - keyboardHeight.value;
-    const point = (layout.value?.layout.absoluteY || 0) + (layout.value?.layout.height || 0);
-
+    const absoluteY = layout.value?.layout.absoluteY || 0;
+    const inputHeight = layout.value?.layout.height || 0;
+    const point = absoluteY + inputHeight;
+    
     if (visibleRect - point <= bottomOffset) {
       const interpolatedScrollTo = interpolate(
         e,
@@ -102,8 +110,39 @@ const KeyboardAwareScrollView: FC<KeyboardAwareScrollViewProps> = ({
       return interpolatedScrollTo;
     }
 
+    if (absoluteY < 0) {
+      const positionOnScreen = visibleRect - inputHeight - bottomOffset;
+      const topOfScreen = scrollPosition.value + absoluteY;
+
+      scrollTo(scrollViewAnimatedRef, 0, topOfScreen - positionOnScreen, animated);
+    }
+
     return 0;
   }, [bottomOffset]);
+
+  const onChangeText = useCallback(() => {
+    'worklet';
+
+    // if typing a text caused layout shift, then we need to ignore this handler
+    // because this event will be handled in `useAnimatedReaction` below
+    if (layout.value?.layout.height !== input.value?.layout.height) {
+      return;
+    }
+
+    const prevScrollPosition = scrollPosition.value;
+    const prevLayout = layout.value;
+
+    scrollPosition.value = position.value;
+    layout.value = input.value;
+    maybeScroll(keyboardHeight.value, true);
+    scrollPosition.value = prevScrollPosition;
+    layout.value = prevLayout;
+  }, [maybeScroll]);
+  const onChangeTextHandler = useMemo(() => debounce(onChangeText, 200), [onChangeText]);
+
+  useFocusedInputHandler({
+    onChangeText: onChangeTextHandler,
+  }, [onChangeTextHandler]);
 
   useSmoothKeyboardHandler(
     {

@@ -1,7 +1,9 @@
 import type {
   EventWithName,
-  FocusedInputHandlerHook,
   FocusedInputLayoutChangedEvent,
+  FocusedInputLayoutHandlerHook,
+  FocusedInputTextChangedEvent,
+  FocusedInputTextHandlerHook,
   KeyboardHandlerHook,
   NativeEvent,
 } from './types';
@@ -11,7 +13,11 @@ export const useAnimatedKeyboardHandler: KeyboardHandlerHook<
   Record<string, unknown>,
   EventWithName<NativeEvent>
 > = NOOP;
-export const useFocusedInputHandler: FocusedInputHandlerHook<
+export const useFocusedInputLayoutHandler: FocusedInputLayoutHandlerHook<
   Record<string, unknown>,
   EventWithName<FocusedInputLayoutChangedEvent>
+> = NOOP;
+export const useFocusedInputTextHandler: FocusedInputTextHandlerHook<
+  Record<string, unknown>,
+  EventWithName<FocusedInputTextChangedEvent>
 > = NOOP;

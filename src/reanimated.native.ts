@@ -2,8 +2,10 @@ import { useEvent, useHandler } from 'react-native-reanimated';
 
 import type {
   EventWithName,
-  FocusedInputHandlerHook,
   FocusedInputLayoutChangedEvent,
+  FocusedInputLayoutHandlerHook,
+  FocusedInputTextChangedEvent,
+  FocusedInputTextHandlerHook,
   KeyboardHandlerHook,
   NativeEvent,
 } from './types';
@@ -56,7 +58,7 @@ export const useAnimatedKeyboardHandler: KeyboardHandlerHook<
   );
 };
 
-export const useFocusedInputHandler: FocusedInputHandlerHook<
+export const useFocusedInputLayoutHandler: FocusedInputLayoutHandlerHook<
   Record<string, unknown>,
   EventWithName<FocusedInputLayoutChangedEvent>
 > = (handlers, dependencies) => {
@@ -75,6 +77,29 @@ export const useFocusedInputHandler: FocusedInputHandlerHook<
       }
     },
     ['onFocusedInputLayoutChanged'],
+    doDependenciesDiffer
+  );
+};
+
+export const useFocusedInputTextHandler: FocusedInputTextHandlerHook<
+  Record<string, unknown>,
+  EventWithName<FocusedInputTextChangedEvent>
+> = (handlers, dependencies) => {
+  const { context, doDependenciesDiffer } = useHandler(handlers, dependencies);
+
+  return useEvent(
+    (event) => {
+      'worklet';
+      const { onFocusedInputTextChanged } = handlers;
+
+      if (
+        onFocusedInputTextChanged &&
+        event.eventName.endsWith('onFocusedInputTextChanged')
+      ) {
+        onFocusedInputTextChanged(event, context);
+      }
+    },
+    ['onFocusedInputTextChanged'],
     doDependenciesDiffer
   );
 };

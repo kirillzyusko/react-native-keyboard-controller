@@ -24,18 +24,23 @@ let noFocusedInputEvent: [String: Any] = [
 @objc(FocusedInputObserver)
 public class FocusedInputObserver: NSObject {
   // class members
-  var onEvent: (NSDictionary) -> Void
+  var onLayoutChangedHandler: (NSDictionary) -> Void
+  var onTextChangedHandler: (String) -> Void
   // state variables
   private var isMounted = false
   // input tracking
   private var currentInput: UIView?
-  private var hasKVObserver = false
+  private var hasObservers = false
   private var lastEventDispatched: [AnyHashable: Any] = noFocusedInputEvent
+  // observers
+  private let textChangeObserver = TextChangeObserver()
 
   @objc public init(
-    handler: @escaping (NSDictionary) -> Void
+    onLayoutChangedHandler: @escaping (NSDictionary) -> Void,
+    onTextChangedHandler: @escaping (String) -> Void
   ) {
-    onEvent = handler
+    self.onLayoutChangedHandler = onLayoutChangedHandler
+    self.onTextChangedHandler = onTextChangedHandler
   }
 
   @objc public func mount() {
@@ -66,14 +71,14 @@ public class FocusedInputObserver: NSObject {
   }
 
   @objc func keyboardWillShow(_: Notification) {
-    removeKVObserver()
+    removeObservers()
     currentInput = (UIResponder.current as? UIView)?.superview as UIView?
-    setupKVObserver()
+    setupObservers()
     syncUpLayout()
   }
 
   @objc func keyboardWillHide(_: Notification) {
-    removeKVObserver()
+    removeObservers()
     dispatchEventToJS(data: noFocusedInputEvent)
   }
 
@@ -97,33 +102,43 @@ public class FocusedInputObserver: NSObject {
     dispatchEventToJS(data: data)
   }
 
+  private func onTextChanged(text: String?) {
+    syncUpLayout()
+
+    if let string = text {
+      onTextChangedHandler(string)
+    }
+  }
+
   private func dispatchEventToJS(data: [String: Any]) {
     if NSDictionary(dictionary: data).isEqual(to: lastEventDispatched) {
       return
     }
 
     lastEventDispatched = data
-    onEvent(data as NSDictionary)
+    onLayoutChangedHandler(data as NSDictionary)
   }
 
-  private func setupKVObserver() {
-    if hasKVObserver {
+  private func setupObservers() {
+    if hasObservers {
       return
     }
 
     if currentInput != nil {
-      hasKVObserver = true
+      hasObservers = true
       currentInput?.addObserver(self, forKeyPath: "center", options: .new, context: nil)
+      textChangeObserver.observeTextChanges(for: UIResponder.current, handler: onTextChanged)
     }
   }
 
-  private func removeKVObserver() {
-    if !hasKVObserver {
+  private func removeObservers() {
+    if !hasObservers {
       return
     }
 
-    hasKVObserver = false
+    hasObservers = false
     currentInput?.removeObserver(self, forKeyPath: "center", context: nil)
+    textChangeObserver.removeObserver()
   }
 
   // swiftlint:disable:next block_based_kvo

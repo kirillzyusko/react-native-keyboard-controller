@@ -5,6 +5,8 @@ import { device } from 'detox';
 import pixelmatch from 'pixelmatch';
 import { PNG } from 'pngjs';
 
+import { delay } from '../helpers';
+
 const parseDeviceName = (name: string) =>
   name.split('(').pop()?.replace(')', '');
 const getDirFromFilePath = (path: string) =>
@@ -76,6 +78,9 @@ async function expectBitmapsToBeEqual(
   const deviceName = parseDeviceName(device.name);
   const SCREENS_DIR = `kit/assets/${platform}/${deviceName}`;
 
+  // better to wait 1s to be sure all scroll indicators etc are hidden
+  // and then take a screenshot and compare it (because it's expensive operation)
+  await delay(1000);
   const tempImagePath = await device.takeScreenshot(screenName);
 
   const expectedImagePath = `${SCREENS_DIR}/${screenName}.png`;

@@ -22,13 +22,16 @@ export type FocusedInputLayoutChangedEvent = {
     absoluteY: number;
   };
 };
+export type FocusedInputTextChangedEvent = {
+  text: string;
+};
 export type EventWithName<T> = {
   eventName: string;
 } & T;
 
 // native View/Module declarations
 export type KeyboardControllerProps = {
-  enabled?: boolean;
+  // callback props
   onKeyboardMoveStart?: (
     e: NativeSyntheticEvent<EventWithName<NativeEvent>>
   ) => void;
@@ -44,6 +47,9 @@ export type KeyboardControllerProps = {
   onFocusedInputLayoutChanged?: (
     e: NativeSyntheticEvent<EventWithName<FocusedInputLayoutChangedEvent>>
   ) => void;
+  onFocusedInputTextChanged?: (
+    e: NativeSyntheticEvent<EventWithName<FocusedInputTextChangedEvent>>
+  ) => void;
   // fake props used to activate reanimated bindings
   onKeyboardMoveReanimated?: (
     e: NativeSyntheticEvent<EventWithName<NativeEvent>>
@@ -51,8 +57,13 @@ export type KeyboardControllerProps = {
   onFocusedInputLayoutChangedReanimated?: (
     e: NativeSyntheticEvent<EventWithName<FocusedInputLayoutChangedEvent>>
   ) => void;
+  onFocusedInputTextChangedReanimated?: (
+    e: NativeSyntheticEvent<EventWithName<FocusedInputTextChangedEvent>>
+  ) => void;
+  // props
   statusBarTranslucent?: boolean;
   navigationBarTranslucent?: boolean;
+  enabled?: boolean;
 } & ViewProps;
 
 export type KeyboardGestureAreaProps = {
@@ -108,10 +119,19 @@ export type KeyboardHandlerHook<TContext, Event> = (
   },
   dependencies?: unknown[]
 ) => (e: NativeSyntheticEvent<Event>) => void;
-export type FocusedInputHandlerHook<TContext, Event> = (
+export type FocusedInputLayoutHandlerHook<TContext, Event> = (
   handlers: {
     onFocusedInputLayoutChanged?: (
       e: FocusedInputLayoutChangedEvent,
+      context: TContext
+    ) => void;
+  },
+  dependencies?: unknown[]
+) => (e: NativeSyntheticEvent<Event>) => void;
+export type FocusedInputTextHandlerHook<TContext, Event> = (
+  handlers: {
+    onFocusedInputTextChanged?: (
+      e: FocusedInputTextChangedEvent,
       context: TContext
     ) => void;
   },
@@ -127,3 +147,7 @@ export type KeyboardHandler = Partial<{
   onInteractive: (e: NativeEvent) => void;
 }>;
 export type KeyboardHandlers = Handlers<KeyboardHandler>;
+export type FocusedInputHandler = Partial<{
+  onChangeText: (e: FocusedInputTextChangedEvent) => void;
+}>;
+export type FocusedInputHandlers = Handlers<FocusedInputHandler>;

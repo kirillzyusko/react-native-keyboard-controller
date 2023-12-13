@@ -8,11 +8,13 @@ import { useAnimatedValue, useSharedHandlers } from './internal';
 import { applyMonkeyPatch, revertMonkeyPatch } from './monkey-patch';
 import {
   useAnimatedKeyboardHandler,
-  useFocusedInputHandler,
+  useFocusedInputLayoutHandler,
+  useFocusedInputTextHandler,
 } from './reanimated';
 
 import type { KeyboardAnimationContext } from './context';
 import type {
+  FocusedInputHandler,
   FocusedInputLayoutChangedEvent,
   KeyboardControllerProps,
   KeyboardHandler,
@@ -76,6 +78,7 @@ export const KeyboardProvider = ({
   navigationBarTranslucent,
   enabled: initiallyEnabled = true,
 }: KeyboardProviderProps) => {
+  // state
   const [enabled, setEnabled] = useState(initiallyEnabled);
   // animated values
   const progress = useAnimatedValue(0);
@@ -84,7 +87,10 @@ export const KeyboardProvider = ({
   const progressSV = useSharedValue(0);
   const heightSV = useSharedValue(0);
   const layout = useSharedValue<FocusedInputLayoutChangedEvent | null>(null);
-  const { setHandlers, broadcast } = useSharedHandlers<KeyboardHandler>();
+  const [setKeyboardHandlers, broadcastKeyboardEvents] =
+    useSharedHandlers<KeyboardHandler>();
+  const [setInputHandlers, broadcastInputEvents] =
+    useSharedHandlers<FocusedInputHandler>();
   // memo
   const context = useMemo<KeyboardAnimationContext>(
     () => ({
@@ -92,7 +98,8 @@ export const KeyboardProvider = ({
       animated: { progress: progress, height: Animated.multiply(height, -1) },
       reanimated: { progress: progressSV, height: heightSV },
       layout,
-      setHandlers,
+      setKeyboardHandlers,
+      setInputHandlers,
       setEnabled,
     }),
     [enabled]
@@ -133,30 +140,30 @@ export const KeyboardProvider = ({
       onKeyboardMoveStart: (event: NativeEvent) => {
         'worklet';
 
-        broadcast('onStart', event);
+        broadcastKeyboardEvents('onStart', event);
         updateSharedValues(event, ['ios']);
       },
       onKeyboardMove: (event: NativeEvent) => {
         'worklet';
 
-        broadcast('onMove', event);
+        broadcastKeyboardEvents('onMove', event);
         updateSharedValues(event, ['android']);
       },
       onKeyboardMoveEnd: (event: NativeEvent) => {
         'worklet';
 
-        broadcast('onEnd', event);
+        broadcastKeyboardEvents('onEnd', event);
       },
       onKeyboardMoveInteractive: (event: NativeEvent) => {
         'worklet';
 
         updateSharedValues(event, ['android', 'ios']);
-        broadcast('onInteractive', event);
+        broadcastKeyboardEvents('onInteractive', event);
       },
     },
     []
   );
-  const inputHandler = useFocusedInputHandler(
+  const inputLayoutHandler = useFocusedInputLayoutHandler(
     {
       onFocusedInputLayoutChanged: (e) => {
         'worklet';
@@ -166,6 +173,16 @@ export const KeyboardProvider = ({
         } else {
           layout.value = null;
         }
+      },
+    },
+    []
+  );
+  const inputTextHandler = useFocusedInputTextHandler(
+    {
+      onFocusedInputTextChanged: (e) => {
+        'worklet';
+
+        broadcastInputEvents('onChangeText', e);
       },
     },
     []
@@ -187,7 +204,8 @@ export const KeyboardProvider = ({
         onKeyboardMoveStart={Platform.OS === 'ios' ? onKeyboardMove : undefined}
         onKeyboardMove={Platform.OS === 'android' ? onKeyboardMove : undefined}
         onKeyboardMoveInteractive={onKeyboardMove}
-        onFocusedInputLayoutChangedReanimated={inputHandler}
+        onFocusedInputLayoutChangedReanimated={inputLayoutHandler}
+        onFocusedInputTextChangedReanimated={inputTextHandler}
         navigationBarTranslucent={navigationBarTranslucent}
         statusBarTranslucent={statusBarTranslucent}
         style={styles.container}

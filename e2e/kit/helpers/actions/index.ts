@@ -53,7 +53,7 @@ export const typeText = async (id: string, text: string): Promise<void> => {
     colors.yellow(text)
   );
 
-  await element(by.id(id)).typeText(`${text}\n`);
+  await element(by.id(id)).typeText(text);
 };
 
 export const swipeUp = async (id: string): Promise<void> => {
