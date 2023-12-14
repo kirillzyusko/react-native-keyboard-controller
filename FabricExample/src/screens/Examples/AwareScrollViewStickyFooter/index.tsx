@@ -1,11 +1,10 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { LayoutChangeEvent, View, Text, Button } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
-import { useResizeMode, KeyboardStickyView } from 'react-native-keyboard-controller';
+import { KeyboardAwareScrollView, KeyboardStickyView } from 'react-native-keyboard-controller';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ExamplesStackParamList } from '../../../navigation/ExamplesStack';
-import KeyboardAwareScrollView from '../../../components/AwareScrollView';
 import TextInput from '../../../components/TextInput';
 import { styles } from './styles';
 
@@ -15,8 +14,6 @@ const variants = ['v1', 'v2', 'v3'] as const;
 type Variant = typeof variants[number];
 
 export default function AwareScrollViewStickyFooter({ navigation }: Props) {
-  useResizeMode();
-
   const { bottom } = useSafeAreaInsets();
   const [footerHeight, setFooterHeight] = useState(0);
   const [variant, setVariant] = useState<Variant>("v1");
