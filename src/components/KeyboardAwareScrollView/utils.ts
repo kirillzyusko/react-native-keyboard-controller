@@ -1,4 +1,7 @@
-export const debounce = <F extends (...args: Parameters<F>) => ReturnType<F>>(worklet: F, wait = 0) => {
+export const debounce = <F extends (...args: Parameters<F>) => ReturnType<F>>(
+  worklet: F,
+  wait = 0
+) => {
   'worklet';
 
   const value = {
@@ -19,5 +22,5 @@ export const debounce = <F extends (...args: Parameters<F>) => ReturnType<F>>(wo
     value.time = t;
 
     return worklet(...args);
-  }
+  };
 };

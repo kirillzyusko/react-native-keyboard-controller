@@ -5,6 +5,7 @@ import {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
+
 import { useKeyboardHandler } from 'react-native-keyboard-controller';
 
 const IS_ANDROID_ELEVEN_OR_HIGHER =
