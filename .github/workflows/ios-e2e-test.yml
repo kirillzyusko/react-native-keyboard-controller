@@ -41,6 +41,17 @@ jobs:
         run: xcodebuild -version
       - name: Install AppleSimulatorUtils
         run: brew tap wix/brew && brew install applesimutils
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
+      - name: Restore node_modules from cache
+        uses: actions/cache@v3
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
       - name: Install root dependencies
         run: yarn install
       - name: Install example project dependencies

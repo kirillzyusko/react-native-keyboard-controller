@@ -53,8 +53,9 @@ jobs:
             ${{ runner.os }}-yarn-
       - name: Install root dependencies
         run: yarn install
-      - name: Install node_modules for example/
-        run: yarn install --frozen-lockfile --cwd example
+      - name: Install example project dependencies
+        working-directory: ${{ env.WORKING_DIRECTORY }}
+        run: yarn
       - name: Install e2e dependencies
         run: yarn install --cwd e2e
       - name: Restore Gradle cache
