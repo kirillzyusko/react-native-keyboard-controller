@@ -6,6 +6,9 @@ import {
   useKeyboardHandler,
 } from 'react-native-keyboard-controller';
 import Reanimated, {
+  scrollTo,
+  useAnimatedRef,
+  useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
@@ -17,7 +20,7 @@ import styles from './styles';
 
 const AnimatedTextInput = Reanimated.createAnimatedComponent(TextInput);
 
-const useKeyboardAnimation = () => {
+const useKeyboardAnimation = ({ref, scroll}) => {
   const progress = useSharedValue(0);
   const height = useSharedValue(0);
   useKeyboardHandler({
@@ -30,6 +33,8 @@ const useKeyboardAnimation = () => {
     onInteractive: (e) => {
       'worklet';
 
+      scrollTo(ref, 0, scroll.value, false);
+
       progress.value = e.progress;
       height.value = e.height;
     },
@@ -41,8 +46,16 @@ const useKeyboardAnimation = () => {
 type Props = StackScreenProps<ExamplesStackParamList>;
 
 function InteractiveKeyboard({ navigation }: Props) {
+  const aRef = useAnimatedRef();
+  const scroll = useSharedValue(0);
   const [interpolator, setInterpolator] = useState<'ios' | 'linear'>('linear');
-  const { height } = useKeyboardAnimation();
+  const { height } = useKeyboardAnimation({ref: aRef, scroll: scroll});
+
+  const onScroll = useAnimatedScrollHandler({
+    onScroll: (e) => {
+      scroll.value = e.contentOffset.y;
+    },
+  })
 
   useEffect(() => {
     navigation.setOptions({
@@ -76,7 +89,8 @@ function InteractiveKeyboard({ navigation }: Props) {
   );
   const fakeView = useAnimatedStyle(
     () => ({
-      height: height.value,
+      // TODO: don't update when onInteractive is fired
+      // height: height.value,
     }),
     []
   );
@@ -89,6 +103,8 @@ function InteractiveKeyboard({ navigation }: Props) {
         showOnSwipeUp
       >
         <Reanimated.ScrollView
+          ref={aRef}
+          onScroll={onScroll}
           showsVerticalScrollIndicator={false}
           style={scrollViewStyle}
         >
