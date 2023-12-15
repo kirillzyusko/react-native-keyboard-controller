@@ -33,7 +33,10 @@ const config = {
     extraNodeModules: modules.reduce((acc, name) => {
       acc[name] = path.join(__dirname, "node_modules", name);
       return acc;
-    }, {}),
+    }, {
+      // required from RN 0.73
+      'react-native-keyboard-controller': path.join(__dirname, 'node_modules', 'react-native-keyboard-controller'),
+    }),
   },
 };
 
