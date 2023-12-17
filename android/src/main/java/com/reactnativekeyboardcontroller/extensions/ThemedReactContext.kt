@@ -2,7 +2,6 @@ package com.reactnativekeyboardcontroller.extensions
 
 import android.util.Log
 import android.view.View
-
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.facebook.react.uimanager.ThemedReactContext
