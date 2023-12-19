@@ -22,6 +22,7 @@ import com.reactnativekeyboardcontroller.InteractiveKeyboardProvider
 import com.reactnativekeyboardcontroller.events.KeyboardTransitionEvent
 import com.reactnativekeyboardcontroller.extensions.dispatchEvent
 import com.reactnativekeyboardcontroller.extensions.dp
+import com.reactnativekeyboardcontroller.extensions.isKeyboardAnimation
 import kotlin.math.abs
 
 private val TAG = KeyboardAnimationCallback::class.qualifiedName
@@ -142,6 +143,10 @@ class KeyboardAnimationCallback(
     animation: WindowInsetsAnimationCompat,
     bounds: WindowInsetsAnimationCompat.BoundsCompat,
   ): WindowInsetsAnimationCompat.BoundsCompat {
+    if (!animation.isKeyboardAnimation) {
+      return bounds
+    }
+
     isTransitioning = true
     isKeyboardVisible = isKeyboardVisible()
     duration = animation.durationMillis.toInt()
@@ -180,6 +185,9 @@ class KeyboardAnimationCallback(
     runningAnimations: List<WindowInsetsAnimationCompat>,
   ): WindowInsetsCompat {
     // onProgress() is called when any of the running animations progress...
+
+    // ignore non-keyboard animation
+    runningAnimations.find { it.isKeyboardAnimation } ?: return insets
 
     // First we get the insets which are potentially deferred
     val typesInset = insets.getInsets(deferredInsetTypes)
@@ -225,6 +233,10 @@ class KeyboardAnimationCallback(
 
   override fun onEnd(animation: WindowInsetsAnimationCompat) {
     super.onEnd(animation)
+
+    if (!animation.isKeyboardAnimation) {
+      return
+    }
 
     isTransitioning = false
     duration = animation.durationMillis.toInt()
