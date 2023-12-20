@@ -941,7 +941,7 @@ PODS:
   - React-jsinspector (0.72.4)
   - React-logger (0.72.4):
     - glog
-  - react-native-keyboard-controller (1.9.5):
+  - react-native-keyboard-controller (1.10.0):
     - RCT-Folly
     - RCTRequired
     - RCTTypeSafety
