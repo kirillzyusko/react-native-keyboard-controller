@@ -39,6 +39,7 @@ const mock = {
   KeyboardController: {
     setInputMode: jest.fn(),
     setDefaultMode: jest.fn(),
+    dismiss: jest.fn(),
   },
   KeyboardEvents: {
     addListener: jest.fn(() => ({ remove: jest.fn() })),

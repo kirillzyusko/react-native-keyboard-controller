@@ -16,6 +16,10 @@ class KeyboardControllerModule(mReactContext: ReactApplicationContext) : NativeK
     module.setDefaultMode()
   }
 
+  override fun dismiss() {
+    module.dismiss()
+  }
+
   override fun addListener(eventName: String?) {
     /* Required for RN built-in Event Emitter Calls. */
   }

@@ -61,6 +61,17 @@ RCT_EXPORT_METHOD(setInputMode : (nonnull NSNumber *)mode)
 {
 }
 
+#ifdef RCT_NEW_ARCH_ENABLED
+- (void)dismiss
+#else
+RCT_EXPORT_METHOD(dismiss)
+#endif
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [[UIApplication sharedApplication] sendAction:@selector(resignFirstResponder) to:nil from:nil forEvent:nil];
+    });
+}
+
 + (KeyboardController *)shared
 {
   return shared;
