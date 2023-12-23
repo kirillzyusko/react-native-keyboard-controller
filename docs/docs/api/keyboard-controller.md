@@ -32,3 +32,9 @@ This method is used to hide the keyboard. It triggers the dismissal of the keybo
 ```ts
 KeyboardController.dismiss();
 ```
+
+:::info What is the difference comparing to `react-native` implementation?
+The equivalent method from `react-native` relies on specific internal components, such as `TextInput`, and may not work as intended if a custom input component is used.
+
+In contrast, the described method enables keyboard dismissal for any focused input, extending functionality beyond the limitations of the default implementation.
+:::
