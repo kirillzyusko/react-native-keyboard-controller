@@ -80,4 +80,10 @@ export const examples: Example[] = [
     info: ScreenNames.ENABLED_DISABLED,
     icons: '💡',
   },
+  {
+    title: 'Close',
+    testID: 'close',
+    info: ScreenNames.CLOSE,
+    icons: '❌',
+  },
 ];

@@ -20,6 +20,11 @@ class KeyboardControllerModule(mReactContext: ReactApplicationContext) : ReactCo
     module.setDefaultMode()
   }
 
+  @ReactMethod
+  fun dismiss() {
+    module.dismiss()
+  }
+
   @Suppress("detekt:UnusedParameter")
   @ReactMethod
   fun addListener(eventName: String?) {

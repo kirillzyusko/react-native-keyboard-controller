@@ -16,6 +16,7 @@ import NativeStack from '../NestedStack';
 import KeyboardAvoidingViewExample from '../../screens/Examples/KeyboardAvoidingView';
 import EnabledDisabled from '../../screens/Examples/EnabledDisabled';
 import AwareScrollViewStickyFooter from '../../screens/Examples/AwareScrollViewStickyFooter';
+import CloseScreen from '../../screens/Examples/Close';
 
 export type ExamplesStackParamList = {
   [ScreenNames.ANIMATED_EXAMPLE]: undefined;
@@ -31,6 +32,7 @@ export type ExamplesStackParamList = {
   [ScreenNames.NATIVE_STACK]: undefined;
   [ScreenNames.KEYBOARD_AVOIDING_VIEW]: undefined;
   [ScreenNames.ENABLED_DISABLED]: undefined;
+  [ScreenNames.CLOSE]: undefined;
 };
 
 const Stack = createStackNavigator<ExamplesStackParamList>();
@@ -75,6 +77,9 @@ const options = {
   },
   [ScreenNames.ENABLED_DISABLED]: {
     title: 'Enabled/disabled',
+  },
+  [ScreenNames.CLOSE]: {
+    title: 'Close keyboard',
   },
 };
 
@@ -144,6 +149,11 @@ const ExamplesStack = () => (
       name={ScreenNames.ENABLED_DISABLED}
       component={EnabledDisabled}
       options={options[ScreenNames.ENABLED_DISABLED]}
+    />
+    <Stack.Screen
+      name={ScreenNames.CLOSE}
+      component={CloseScreen}
+      options={options[ScreenNames.CLOSE]}
     />
   </Stack.Navigator>
 );

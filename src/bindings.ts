@@ -12,6 +12,7 @@ const NOOP = () => {};
 export const KeyboardController: KeyboardControllerModule = {
   setDefaultMode: NOOP,
   setInputMode: NOOP,
+  dismiss: NOOP,
   addListener: NOOP,
   removeListeners: NOOP,
 };
