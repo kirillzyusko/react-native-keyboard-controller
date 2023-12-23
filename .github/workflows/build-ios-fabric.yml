@@ -17,6 +17,7 @@ on:
       - main
     paths:
       - '.github/workflows/build-ios-fabric.yml'
+      - 'react-native-keyboard-controller.podspec'
       - 'ios/**'
       - 'FabricExample/ios/**'
       - 'yarn.lock'
