@@ -1,6 +1,15 @@
 ---
 sidebar_position: 6
-keywords: [react-native-keyboard-controller, events, keyboardWillShow, keyboardWillHide, android, iOS, cross platform]
+keywords:
+  [
+    react-native-keyboard-controller,
+    events,
+    keyboardWillShow,
+    keyboardWillHide,
+    android,
+    iOS,
+    cross platform,
+  ]
 ---
 
 # KeyboardEvents
@@ -28,10 +37,10 @@ type KeyboardEventData = {
 ## Example
 
 ```ts
-import { KeyboardEvents } from "react-native-keyboard-controller";
+import { KeyboardEvents } from 'react-native-keyboard-controller';
 
 useEffect(() => {
-  const show = KeyboardEvents.addListener("keyboardWillShow", (e) => {
+  const show = KeyboardEvents.addListener('keyboardWillShow', (e) => {
     // place your code here
   });
 

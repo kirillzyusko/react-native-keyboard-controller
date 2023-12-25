@@ -1,7 +1,17 @@
 ---
 sidebar_position: 1
 description: Guide dedicated to installation process
-keywords: [react-native-keyboard-controller, react-native keyboard, installation, setup, keyboard handling, keyboard animation, keyboard movement, troubleshooting]
+keywords:
+  [
+    react-native-keyboard-controller,
+    react-native keyboard,
+    installation,
+    setup,
+    keyboard handling,
+    keyboard animation,
+    keyboard movement,
+    troubleshooting,
+  ]
 ---
 
 # Installation
@@ -44,11 +54,7 @@ If you are bothered why it's needed, you can read more about it in [architecture
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 
 export default function App() {
-  return (
-    <KeyboardProvider>
-      // your code here
-    </KeyboardProvider>
-  );
+  return <KeyboardProvider>// your code here</KeyboardProvider>;
 }
 ```
 

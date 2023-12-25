@@ -9,13 +9,13 @@ Default hooks may not perfectly fit in your app, because it changes/restores `so
 To prevent such behavior you can write own hook based on primitives from this library. The implementation may look like:
 
 ```ts
-import { useContext, useCallback } from "react";
-import { useFocusEffect } from "@react-navigation/native";
+import { useContext, useCallback } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import {
   KeyboardContext,
   KeyboardController,
-  AndroidSoftInputModes
-} from "react-native-keyboard-controller";
+  AndroidSoftInputModes,
+} from 'react-native-keyboard-controller';
 
 function useKeyboardAnimation() {
   useFocusEffect(

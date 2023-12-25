@@ -5,7 +5,7 @@ import * as fs from 'fs';
 // Docusaurus generates a build/sitemap.xml file for you!
 export function extractSitemapPathnames(sitemapPath: string): string[] {
   const sitemap = fs.readFileSync(sitemapPath).toString();
-  const $ = cheerio.load(sitemap, {xmlMode: true});
+  const $ = cheerio.load(sitemap, { xmlMode: true });
   const urls: string[] = [];
   $('loc').each(function handleLoc() {
     urls.push($(this).text());

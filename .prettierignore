@@ -1,0 +1,10 @@
+*.lottie.json
+
+lib/
+node_modules/
+Pods/
+
+example/android/app/build/
+example/ios/build/
+FabricExample/android/app/build/
+FabricExample/ios/build/

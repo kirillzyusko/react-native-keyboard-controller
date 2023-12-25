@@ -27,6 +27,7 @@
     "!**/__mocks__"
   ],
   "scripts": {
+    "format": "prettier '**/*' --ignore-unknown --write",
     "test": "jest",
     "typescript": "tsc --noEmit --project tsconfig.build.json",
     "lint": "eslint --quiet \"**/*.{js,ts,tsx}\"",

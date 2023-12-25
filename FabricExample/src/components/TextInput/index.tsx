@@ -1,5 +1,9 @@
 import React from 'react';
-import { StyleSheet, TextInputProps, TextInput as TextInputRN } from 'react-native';
+import {
+  StyleSheet,
+  TextInputProps,
+  TextInput as TextInputRN,
+} from 'react-native';
 
 const TextInput = (props: TextInputProps) => {
   return (
@@ -10,7 +14,9 @@ const TextInput = (props: TextInputProps) => {
       numberOfLines={10}
       testID={props.placeholder}
       {...props}
-      placeholder={`${props.placeholder} (${props.keyboardType === 'default' ? 'text' : 'numeric'})`}
+      placeholder={`${props.placeholder} (${
+        props.keyboardType === 'default' ? 'text' : 'numeric'
+      })`}
     />
   );
 };

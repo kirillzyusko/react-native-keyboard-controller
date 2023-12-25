@@ -1,5 +1,17 @@
 ---
-keywords: [react-native, react native, react-native-keyboard-controller, useFocusedInputHandler, onTextChanged, onChangeText, input interceptor, react-native-reanimated, worklet, react hook]
+keywords:
+  [
+    react-native,
+    react native,
+    react-native-keyboard-controller,
+    useFocusedInputHandler,
+    onTextChanged,
+    onChangeText,
+    input interceptor,
+    react-native-reanimated,
+    worklet,
+    react hook,
+  ]
 ---
 
 # useFocusedInputHandler
@@ -9,11 +21,14 @@ keywords: [react-native, react native, react-native-keyboard-controller, useFocu
 ## Example
 
 ```ts
-useFocusedInputHandler({
-  onChangeText: ({text}) => {
-    'worklet';
-  }
-}, []);
+useFocusedInputHandler(
+  {
+    onChangeText: ({ text }) => {
+      'worklet';
+    },
+  },
+  []
+);
 ```
 
 ### Handlers

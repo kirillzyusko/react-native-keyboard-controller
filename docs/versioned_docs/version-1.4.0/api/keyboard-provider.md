@@ -19,13 +19,11 @@ A boolean prop to indicate whether [NavigationBar](https://m2.material.io/design
 ## Example
 
 ```tsx
-import { KeyboardProvider } from "react-native-keyboard-controller";
+import { KeyboardProvider } from 'react-native-keyboard-controller';
 
 const App = () => {
   return (
-    <KeyboardProvider>
-      {/* other components in your tree */}
-    </KeyboardProvider>
+    <KeyboardProvider>{/* other components in your tree */}</KeyboardProvider>
   );
-}
+};
 ```

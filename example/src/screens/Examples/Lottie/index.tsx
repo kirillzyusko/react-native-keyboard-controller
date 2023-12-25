@@ -9,7 +9,7 @@ import Reanimated, {
 } from 'react-native-reanimated';
 
 // animation is taken from lottie public animations: https://lottiefiles.com/46216-lock-debit-card-morph
-import LockDebitCardMorph from './animation.json';
+import LockDebitCardMorph from './animation.lottie.json';
 
 const styles = StyleSheet.create({
   container: {

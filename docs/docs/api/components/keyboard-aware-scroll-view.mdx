@@ -1,5 +1,11 @@
 ---
-keywords: [react-native-keyboard-controller, KeyboardAwareScrollView, keyboard aware view, aware scroll view]
+keywords:
+  [
+    react-native-keyboard-controller,
+    KeyboardAwareScrollView,
+    keyboard aware view,
+    aware scroll view,
+  ]
 ---
 
 # KeyboardAwareScrollView
@@ -8,7 +14,7 @@ import Lottie from 'lottie-react';
 import lottie from '@site/src/components/HomepageFeatures/text-inputs.lottie.json';
 
 <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 20 }}>
-<Lottie animationData={lottie} style={{ width: 400, height: 400 }} loop />
+  <Lottie animationData={lottie} style={{ width: 400, height: 400 }} loop />
 </div>
 
 `ScrollView` that effortlessly handles keyboard appearance, automatically scrolls to focused `TextInput` and provides a native-like performance.
@@ -19,24 +25,32 @@ Current `react-native` ecosystem has a plenty of solutions that solves the probl
 
 Below is a table with the most important functions and their support in various implementations:
 
-||[react-native-avoid-soft-input](https://mateusz1913.github.io/react-native-avoid-softinput/)|[react-native-keyboard-aware-scroll-view](https://github.com/APSL/react-native-keyboard-aware-scroll-view)|[react-native-keyboard-manager](https://github.com/douglasjunior/react-native-keyboard-manager)|[react-native-keyboard-controller](./keyboard-aware-scroll-view.mdx)|
-|-----|-----|-----|-----|-----|
-|Respects keyboard animation|🟠 <sup><small>1</small></sup>|❌|✅|✅|
-|JS implementation|❌|✅|❌|🟠 <sup><small>2</small></sup>|
-|Reacts on focused input layout changes|❌|❌|🟠 <sup><small>3</small></sup>|✅|
-|Reacts on focus changes|✅|✅|✅|✅|
-|Auto-scroll when user is typing and input in non visible area|❌|❌|🟠 <sup><small>3</small></sup>|✅|
-|Android support|✅|✅|❌|✅|
-|Maintained|✅|❌|✅|✅|
-|Support Fabric (new) architecture|✅|🟠 <sup><small>4</small></sup>|❌|✅|
+|                                                               | [react-native-avoid-soft-input](https://mateusz1913.github.io/react-native-avoid-softinput/) | [react-native-keyboard-aware-scroll-view](https://github.com/APSL/react-native-keyboard-aware-scroll-view) | [react-native-keyboard-manager](https://github.com/douglasjunior/react-native-keyboard-manager) | [react-native-keyboard-controller](./keyboard-aware-scroll-view.mdx) |
+| ------------------------------------------------------------- | -------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| Respects keyboard animation                                   | 🟠 <sup><small>1</small></sup>                                                               | ❌                                                                                                         | ✅                                                                                              | ✅                                                                   |
+| JS implementation                                             | ❌                                                                                           | ✅                                                                                                         | ❌                                                                                              | 🟠 <sup><small>2</small></sup>                                       |
+| Reacts on focused input layout changes                        | ❌                                                                                           | ❌                                                                                                         | 🟠 <sup><small>3</small></sup>                                                                  | ✅                                                                   |
+| Reacts on focus changes                                       | ✅                                                                                           | ✅                                                                                                         | ✅                                                                                              | ✅                                                                   |
+| Auto-scroll when user is typing and input in non visible area | ❌                                                                                           | ❌                                                                                                         | 🟠 <sup><small>3</small></sup>                                                                  | ✅                                                                   |
+| Android support                                               | ✅                                                                                           | ✅                                                                                                         | ❌                                                                                              | ✅                                                                   |
+| Maintained                                                    | ✅                                                                                           | ❌                                                                                                         | ✅                                                                                              | ✅                                                                   |
+| Support Fabric (new) architecture                             | ✅                                                                                           | 🟠 <sup><small>4</small></sup>                                                                             | ❌                                                                                              | ✅                                                                   |
 
 > <sup>1</sup> <b>only</b> on <b>iOS</b>
 
-> <sup>2</sup> <code>KeyboardAwareScrollView</code> is implemented in JS, but some hooks (<code>useKeyboardHandler</code>/<code>useReanimatedFocusedInput</code>/<code>useFocusedInputHandler</code>) exposed from native code
+> <sup>2</sup> <code>KeyboardAwareScrollView</code> is implemented in JS, but some
+> hooks (<code>useKeyboardHandler</code>/<code>useReanimatedFocusedInput</code>/<code>
+>   useFocusedInputHandler
+> </code>) exposed from native code
 
-> <sup>3</sup> achievable with <code>KeyboardManager.reloadLayoutIfNeeded()</code> usage in appropriate <code>TextInput</code> callbacks (<code>onLayout</code>/<code>onChangeText</code>)
+> <sup>3</sup> achievable with <code>
+>   KeyboardManager.reloadLayoutIfNeeded()
+> </code> usage in appropriate <code>TextInput</code> callbacks (<code>
+>   onLayout
+> </code>/<code>onChangeText</code>)
 
-> <sup>4</sup> since it's JS based solution it supports new architecture, but it uses <b>deprecated</b> API.
+> <sup>4</sup> since it's JS based solution it supports new architecture, but it
+> uses <b>deprecated</b> API.
 
 ## Props
 
@@ -52,7 +66,11 @@ The distance between keyboard and focused `TextInput` when keyboard is shown.
 
 ```tsx
 import React from 'react';
-import { StyleSheet, TextInputProps, TextInput as TextInputRN } from 'react-native';
+import {
+  StyleSheet,
+  TextInputProps,
+  TextInput as TextInputRN,
+} from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
 
 const TextInput = (props: TextInputProps) => {
@@ -64,7 +82,9 @@ const TextInput = (props: TextInputProps) => {
       numberOfLines={2}
       testID={props.placeholder}
       {...props}
-      placeholder={`${props.placeholder} (${props.keyboardType === 'default' ? 'text' : 'numeric'})`}
+      placeholder={`${props.placeholder} (${
+        props.keyboardType === 'default' ? 'text' : 'numeric'
+      })`}
     />
   );
 };

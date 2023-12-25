@@ -42,11 +42,7 @@ If you are bothered why it's needed, you can read more about it in [architecture
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 
 export default function App() {
-  return (
-    <KeyboardProvider>
-      // your code here
-    </KeyboardProvider>
-  );
+  return <KeyboardProvider>// your code here</KeyboardProvider>;
 }
 ```
 

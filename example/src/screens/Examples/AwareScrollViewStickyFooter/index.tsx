@@ -1,7 +1,10 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { LayoutChangeEvent, View, Text, Button } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
-import { KeyboardAwareScrollView, KeyboardStickyView } from 'react-native-keyboard-controller';
+import {
+  KeyboardAwareScrollView,
+  KeyboardStickyView,
+} from 'react-native-keyboard-controller';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ExamplesStackParamList } from '../../../navigation/ExamplesStack';
@@ -11,18 +14,24 @@ import { styles } from './styles';
 type Props = StackScreenProps<ExamplesStackParamList>;
 
 const variants = ['v1', 'v2', 'v3'] as const;
-type Variant = typeof variants[number];
+type Variant = (typeof variants)[number];
 
 export default function AwareScrollViewStickyFooter({ navigation }: Props) {
   const { bottom } = useSafeAreaInsets();
   const [footerHeight, setFooterHeight] = useState(0);
-  const [variant, setVariant] = useState<Variant>("v1");
+  const [variant, setVariant] = useState<Variant>('v1');
 
   const handleLayout = useCallback((evt: LayoutChangeEvent) => {
     setFooterHeight(evt.nativeEvent.layout.height);
   }, []);
-  const offset = useMemo(() => ({closed: 0, opened: variant === "v1" ? 0 : bottom }), [bottom, variant]);
-  const offsetV3 = useMemo(() => ({closed: -50, opened: bottom - 25}), [bottom]);
+  const offset = useMemo(
+    () => ({ closed: 0, opened: variant === 'v1' ? 0 : bottom }),
+    [bottom, variant]
+  );
+  const offsetV3 = useMemo(
+    () => ({ closed: -50, opened: bottom - 25 }),
+    [bottom]
+  );
 
   useEffect(() => {
     navigation.setOptions({
@@ -31,9 +40,7 @@ export default function AwareScrollViewStickyFooter({ navigation }: Props) {
           style={styles.header}
           onPress={() => {
             const index = variants.indexOf(variant);
-            setVariant(
-              variants[index === variants.length - 1 ? 0 : index + 1]
-            );
+            setVariant(variants[index === variants.length - 1 ? 0 : index + 1]);
           }}
         >
           {variant}
@@ -42,10 +49,15 @@ export default function AwareScrollViewStickyFooter({ navigation }: Props) {
     });
   }, [variant]);
 
-  const v1v2 = variant === "v1" || variant === "v2";
+  const v1v2 = variant === 'v1' || variant === 'v2';
 
   return (
-    <View style={[styles.pageContainer, { paddingBottom: variant === "v1" ? 0 : bottom }]}>
+    <View
+      style={[
+        styles.pageContainer,
+        { paddingBottom: variant === 'v1' ? 0 : bottom },
+      ]}
+    >
       <KeyboardAwareScrollView
         style={styles.container}
         contentContainerStyle={styles.content}
@@ -68,7 +80,7 @@ export default function AwareScrollViewStickyFooter({ navigation }: Props) {
           </View>
         </KeyboardStickyView>
       )}
-      {variant === "v3" && (
+      {variant === 'v3' && (
         <KeyboardStickyView offset={offsetV3}>
           <View style={styles.circle} />
         </KeyboardStickyView>

@@ -24,7 +24,10 @@ const ExampleMain = ({ navigation }: Props) => {
   );
 
   return (
-    <ScrollView testID='main_scroll_view' contentContainerStyle={styles.scrollViewContainer}>
+    <ScrollView
+      testID="main_scroll_view"
+      contentContainerStyle={styles.scrollViewContainer}
+    >
       {examples.map((example, index) => (
         <ExampleLink
           key={example.title}

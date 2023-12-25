@@ -2,4 +2,3 @@ default: true
 
 # Disable checks for line length
 MD013: false
-

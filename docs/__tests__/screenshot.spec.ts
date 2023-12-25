@@ -1,7 +1,7 @@
 import * as fs from 'fs';
-import {test} from '@playwright/test';
-import {argosScreenshot} from '@argos-ci/playwright';
-import {extractSitemapPathnames, pathnameToArgosName} from './utils';
+import { test } from '@playwright/test';
+import { argosScreenshot } from '@argos-ci/playwright';
+import { extractSitemapPathnames, pathnameToArgosName } from './utils';
 
 // Constants
 const siteUrl = 'http://localhost:3000';
@@ -17,14 +17,14 @@ function waitForDocusaurusHydration() {
 }
 
 function screenshotPathname(pathname: string) {
-  test(`pathname ${pathname}`, async ({page}) => {
+  test(`pathname ${pathname}`, async ({ page }) => {
     const url = siteUrl + pathname;
     await page.goto(url);
     // Wait for hydration, requires Docusaurus v2.4.3+
     // Docusaurus adds a <html data-has-hydrated="true"> once hydrated
     // See https://github.com/facebook/docusaurus/pull/9256
     // await page.waitForFunction(waitForDocusaurusHydration);
-    await page.addStyleTag({content: stylesheet});
+    await page.addStyleTag({ content: stylesheet });
     await argosScreenshot(page, pathnameToArgosName(pathname));
   });
 }
@@ -34,8 +34,9 @@ function isNotVersionedDocsPathname(pathname: string): boolean {
 }
 
 test.describe('Docusaurus site screenshots', () => {
-  const pathnames = extractSitemapPathnames(sitemapPath)
-    .filter(isNotVersionedDocsPathname);
+  const pathnames = extractSitemapPathnames(sitemapPath).filter(
+    isNotVersionedDocsPathname
+  );
   console.log('Pathnames to screenshot:', pathnames);
   pathnames.forEach(screenshotPathname);
 });

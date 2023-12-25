@@ -11,7 +11,7 @@
 import {
   KeyboardController,
   AndroidSoftInputModes,
-} from "react-native-keyboard-controller";
+} from 'react-native-keyboard-controller';
 
 export const useResizeMode = () => {
   useEffect(() => {

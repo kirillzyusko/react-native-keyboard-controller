@@ -27,11 +27,11 @@ export const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 0,
     right: 30,
-    justifyContent: "flex-end",
+    justifyContent: 'flex-end',
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: "#002099",
+    backgroundColor: '#002099',
   },
   header: {
     color: 'black',

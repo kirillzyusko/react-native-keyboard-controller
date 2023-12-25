@@ -1,6 +1,14 @@
 ---
 sidebar_position: 5
-keywords: [react-native-keyboard-controller, KeyboardController, module, windowSoftInputMode, adjustResize, adjustPan]
+keywords:
+  [
+    react-native-keyboard-controller,
+    KeyboardController,
+    module,
+    windowSoftInputMode,
+    adjustResize,
+    adjustPan,
+  ]
 ---
 
 # KeyboardController
@@ -16,7 +24,7 @@ keywords: [react-native-keyboard-controller, KeyboardController, module, windowS
 import {
   KeyboardController,
   AndroidSoftInputModes,
-} from "react-native-keyboard-controller";
+} from 'react-native-keyboard-controller';
 
 export const useResizeMode = () => {
   useEffect(() => {

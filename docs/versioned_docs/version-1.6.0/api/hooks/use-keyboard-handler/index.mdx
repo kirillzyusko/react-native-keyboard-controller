@@ -1,5 +1,16 @@
 ---
-keywords: [react-native-keyboard-controller, useKeyboardHandler, onStart, onMove, onInteractive, onEnd, react-native-reanimated, worklet, react hook]
+keywords:
+  [
+    react-native-keyboard-controller,
+    useKeyboardHandler,
+    onStart,
+    onMove,
+    onInteractive,
+    onEnd,
+    react-native-reanimated,
+    worklet,
+    react hook,
+  ]
 ---
 
 import CodeBlock from '@theme/CodeBlock';
@@ -45,6 +56,7 @@ Since `onMove` handler on iOS is based on `CADisplayLink` usage - you may need t
 +	<key>CADisableMinimumFrameDurationOnPhone</key>
 +	<true/>
 ```
+
 :::
 
 ### Event structure
@@ -59,10 +71,8 @@ Since `onMove` handler on iOS is based on `CADisplayLink` usage - you may need t
 #### `onStart`
 
 export const onStartCode = (
-  <CodeBlock
-    language="ts"
-  >
-{`useKeyboardHandler(
+  <CodeBlock language="ts">
+    {`useKeyboardHandler(
   {
     onStart: (e) => {
       'worklet';
@@ -76,28 +86,27 @@ export const onStartCode = (
 
 <div className="grid">
   <div className="description-block">
-    This function is called before the keyboard movement starts. <code>height</code> and <code>progress</code> values will have <b>destination</b> values, i. e. if keyboard was closed but will appear - these values will have a values like "keyboard is already opened" (<code>progress</code> will be equal to <code>1</code> and <code>height</code> will have non-zero value).
-    <br/>
-    <br/>
-    <div className="desktop">
-      {onStartCode}
-    </div>
+    This function is called before the keyboard movement starts.{' '}
+    <code>height</code> and <code>progress</code> values will have{' '}
+    <b>destination</b> values, i. e. if keyboard was closed but will appear -
+    these values will have a values like "keyboard is already opened" (
+    <code>progress</code> will be equal to <code>1</code> and{' '}
+    <code>height</code> will have non-zero value).
+    <br />
+    <br />
+    <div className="desktop">{onStartCode}</div>
   </div>
   <div>
     <img src={require('./start.png').default} />
   </div>
 </div>
-<div className="mobile">
-  {onStartCode}
-</div>
+<div className="mobile">{onStartCode}</div>
 
 #### `onMove`
 
 export const onMoveCode = (
-  <CodeBlock
-      language="ts"
-    >
-      {`useKeyboardHandler(
+  <CodeBlock language="ts">
+    {`useKeyboardHandler(
   {
     onMove: (e) => {
       'worklet';
@@ -107,25 +116,22 @@ export const onMoveCode = (
   },
   []
 );`}
-    </CodeBlock>
+  </CodeBlock>
 );
 
 <div className="grid">
   <div className="description-block">
-    This function will be called every frame when the keyboard changes its position.
-    <br/>
-    <br/>
-    <div className="desktop">
-      {onMoveCode}
-    </div>
+    This function will be called every frame when the keyboard changes its
+    position.
+    <br />
+    <br />
+    <div className="desktop">{onMoveCode}</div>
   </div>
   <div>
     <img src={require('./move.png').default} />
   </div>
 </div>
-<div className="mobile">
-  {onMoveCode}
-</div>
+<div className="mobile">{onMoveCode}</div>
 
 :::info Not precise values
 There is no corresponding events in iOS for this hook. So values will not be perfectly synchronized with the keyboard.
@@ -136,10 +142,8 @@ The same is applied to Android < 11 - these OS versions don't have API for getti
 #### `onInteractive`
 
 export const onInteractiveCode = (
-  <CodeBlock
-      language="ts"
-    >
-      {`useKeyboardHandler(
+  <CodeBlock language="ts">
+    {`useKeyboardHandler(
   {
     onInteractive: (e) => {
       'worklet';
@@ -149,28 +153,27 @@ export const onInteractiveCode = (
   },
   []
 );`}
-    </CodeBlock>
+  </CodeBlock>
 );
 
 <div className="grid">
   <div className="description-block">
-    This function will be called every frame when user changes position of the keyboard by the drag.
+    This function will be called every frame when user changes position of the
+    keyboard by the drag.
     <br />
     <br />
-    If finger is released and keyboard animates to its final destination, then the standard <code>onStart</code>/<code>onMove</code>/<code>onEnd</code> lifecycles will be triggered.
-    <br/>
-    <br/>
-    <div className="desktop">
-      {onInteractiveCode}
-    </div>
+    If finger is released and keyboard animates to its final destination, then the
+    standard <code>onStart</code>/<code>onMove</code>/<code>onEnd</code> lifecycles
+    will be triggered.
+    <br />
+    <br />
+    <div className="desktop">{onInteractiveCode}</div>
   </div>
   <div>
     <img src={require('./interactive.png').default} />
   </div>
 </div>
-<div className="mobile">
-  {onInteractiveCode}
-</div>
+<div className="mobile">{onInteractiveCode}</div>
 
 :::info Event availability
 This event is available only on Android >= 11. To receive it you need to use [KeyboardGestureArea](./../keyboard-gesture-area).
@@ -181,10 +184,8 @@ On iOS you need to specify `keyboardDismissMode="interactive"` on your `ScrollVi
 #### `onEnd`
 
 export const onEndCode = (
-  <CodeBlock
-      language="ts"
-    >
-      {`useKeyboardHandler(
+  <CodeBlock language="ts">
+    {`useKeyboardHandler(
   {
     onEnd: (e) => {
       'worklet';
@@ -194,23 +195,20 @@ export const onEndCode = (
   },
   []
 );`}
-    </CodeBlock>
+  </CodeBlock>
 );
 
 <div className="grid">
   <div className="description-block">
-    This function will be called when the keyboard has completed its movement. The event will contain <b>current</b> keyboard metrics.
-    <br/>
-    <br/>
-    <div className="desktop">
-      {onEndCode}
-    </div>
+    This function will be called when the keyboard has completed its movement.
+    The event will contain <b>current</b> keyboard metrics.
+    <br />
+    <br />
+    <div className="desktop">{onEndCode}</div>
   </div>
   <div>
     <img src={require('./end.png').default} />
   </div>
 </div>
 
-<div className="mobile">
-  {onEndCode}
-</div>
+<div className="mobile">{onEndCode}</div>

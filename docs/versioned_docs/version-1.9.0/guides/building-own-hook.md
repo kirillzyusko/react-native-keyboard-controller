@@ -18,13 +18,13 @@ Sometimes in deep stacks it may be important to have different `softInputMode` p
 To prevent such behavior you can write own hook based on primitives from this library. The implementation may look like:
 
 ```ts
-import { useContext, useCallback } from "react";
-import { useFocusEffect } from "@react-navigation/native";
+import { useContext, useCallback } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import {
   KeyboardController,
   AndroidSoftInputModes,
-  useKeyboardContext
-} from "react-native-keyboard-controller";
+  useKeyboardContext,
+} from 'react-native-keyboard-controller';
 
 function useKeyboardAnimation() {
   useFocusEffect(

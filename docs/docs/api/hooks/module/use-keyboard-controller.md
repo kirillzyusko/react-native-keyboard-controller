@@ -1,5 +1,12 @@
 ---
-keywords: [react-native-keyboard-controller, useKeyboardController, enabled, disabled, setEnabled]
+keywords:
+  [
+    react-native-keyboard-controller,
+    useKeyboardController,
+    enabled,
+    disabled,
+    setEnabled,
+  ]
 ---
 
 # useKeyboardController
@@ -20,7 +27,7 @@ Consider to use [KeyboardAvoidingView](../../components/keyboard-avoiding-view.m
 ## Example
 
 ```tsx
-import { useKeyboardController } from "react-native-keyboard-controller";
+import { useKeyboardController } from 'react-native-keyboard-controller';
 
 const { enabled, setEnabled } = useKeyboardController();
 
@@ -36,7 +43,7 @@ import {
   KeyboardController,
   KeyboardContext,
   AndroidSoftInputModes,
-} from "react-native-keyboard-controller";
+} from 'react-native-keyboard-controller';
 
 class KeyboardAnimation extends React.PureComponent {
   // 1. use context value

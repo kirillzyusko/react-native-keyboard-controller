@@ -1,6 +1,17 @@
 ---
 sidebar_position: 5
-keywords: [react-native-keyboard-controller, react-native, KeyboardController, module, dismiss, dismiss keyboard, windowSoftInputMode, adjustResize, adjustPan]
+keywords:
+  [
+    react-native-keyboard-controller,
+    react-native,
+    KeyboardController,
+    module,
+    dismiss,
+    dismiss keyboard,
+    windowSoftInputMode,
+    adjustResize,
+    adjustPan,
+  ]
 ---
 
 # KeyboardController

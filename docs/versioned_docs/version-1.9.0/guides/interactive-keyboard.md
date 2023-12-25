@@ -1,6 +1,12 @@
 ---
 sidebar_position: 3
-keywords: [react-native-keyboard-controller, interactive keyboard, dismiss keyboard via gesture, control keyboard position]
+keywords:
+  [
+    react-native-keyboard-controller,
+    interactive keyboard,
+    dismiss keyboard via gesture,
+    control keyboard position,
+  ]
 ---
 
 # Interactive Keyboard
@@ -31,7 +37,7 @@ In order to recognize all gestures on a `ScrollView` we need to wrap a `ScrollVi
   <ScrollView>
     <Messages />
   </ScrollView>
-// add-new-code
+  // add-new-code
 </KeyboardGestureArea>
 ```
 
@@ -45,7 +51,7 @@ useKeyboardHandler(
     onInteractive: (e) => {
       'worklet';
       // your handler for interactive keyboard movement
-    }
+    },
   },
   []
 );

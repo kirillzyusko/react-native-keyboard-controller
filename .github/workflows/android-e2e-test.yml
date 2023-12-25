@@ -27,8 +27,8 @@ jobs:
     env:
       WORKING_DIRECTORY: example
     concurrency:
-        group: android-e2e-${{ github.ref }}
-        cancel-in-progress: true
+      group: android-e2e-${{ github.ref }}
+      cancel-in-progress: true
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3

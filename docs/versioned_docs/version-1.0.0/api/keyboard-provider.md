@@ -15,13 +15,11 @@ By default this library stretches to full screen (`edge-to-edge` mode) and statu
 ## Example
 
 ```tsx
-import { KeyboardProvider } from "react-native-keyboard-controller";
+import { KeyboardProvider } from 'react-native-keyboard-controller';
 
 const App = () => {
   return (
-    <KeyboardProvider>
-      {/* other components in your tree */}
-    </KeyboardProvider>
+    <KeyboardProvider>{/* other components in your tree */}</KeyboardProvider>
   );
-}
+};
 ```

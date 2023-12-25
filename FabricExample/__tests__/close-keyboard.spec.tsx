@@ -7,8 +7,8 @@ import { KeyboardController } from 'react-native-keyboard-controller';
 function CloseKeyboard() {
   return (
     <Button
-      title='Close keyboard'
-      testID='close_keyboard'
+      title="Close keyboard"
+      testID="close_keyboard"
       onPress={() => KeyboardController.dismiss()}
     />
   );

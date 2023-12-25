@@ -16,8 +16,8 @@ export default function KeyboardAvoidingViewComparison(): JSX.Element {
       }
       rightText={
         <i>
-          Implementation from <code>react-native-keyboard-controller</code>{' '}
-          with better animations
+          Implementation from <code>react-native-keyboard-controller</code> with
+          better animations
         </i>
       }
     />
