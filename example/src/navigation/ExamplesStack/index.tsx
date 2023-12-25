@@ -22,6 +22,7 @@ import CloseScreen from '../../screens/Examples/Close';
 export type ExamplesStackParamList = {
   [ScreenNames.ANIMATED_EXAMPLE]: undefined;
   [ScreenNames.REANIMATED_CHAT]: undefined;
+  [ScreenNames.REANIMATED_CHAT_FLATLIST]: undefined;
   [ScreenNames.EVENTS]: undefined;
   [ScreenNames.AWARE_SCROLL_VIEW]: undefined;
   [ScreenNames.AWARE_SCROLL_VIEW_STICKY_FOOTER]: undefined;

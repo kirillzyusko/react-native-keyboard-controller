@@ -9,24 +9,24 @@ import { ScreenNames } from '../../constants/screenNames';
 import KeyboardAnimation from '../../screens/Examples/KeyboardAnimation';
 
 export type NativeStackParamList = {
-  [ScreenNames.NATIVE_STACK]: {};
+  [ScreenNames.NATIVE]: {};
 };
 
 const Stack = createNativeStackNavigator<NativeStackParamList>();
 
 const options: Record<string, NativeStackNavigationOptions> = {
-  [ScreenNames.NATIVE_STACK]: {
+  [ScreenNames.NATIVE]: {
     headerShown: false,
     statusBarTranslucent: true,
   },
 };
 
 const NativeStack = () => (
-  <Stack.Navigator initialRouteName={ScreenNames.NATIVE_STACK}>
+  <Stack.Navigator initialRouteName={ScreenNames.NATIVE}>
     <Stack.Screen
-      name={ScreenNames.NATIVE_STACK}
+      name={ScreenNames.NATIVE}
       component={KeyboardAnimation}
-      options={options[ScreenNames.NATIVE_STACK]}
+      options={options[ScreenNames.NATIVE]}
     />
   </Stack.Navigator>
 );
