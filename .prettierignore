@@ -1,11 +1,14 @@
-*.lottie.json
-
 Pods/
 docs/.docusaurus/
 lib/
 node_modules/
 
+*.lottie.json
+
 example/android/app/build/
 example/ios/build/
+example/src/**/Lottie/*.json
+
 FabricExample/android/app/build/
 FabricExample/ios/build/
+FabricExample/src/**/Lottie/*.json
