@@ -1,6 +1,6 @@
+import Lottie from "lottie-react-native";
 import React from "react";
 import { Platform, StyleSheet, TextInput, View } from "react-native";
-import Lottie from "lottie-react-native";
 import { useKeyboardHandler } from "react-native-keyboard-controller";
 import Reanimated, {
   interpolate,

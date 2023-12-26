@@ -8,6 +8,7 @@ import Reanimated, {
 
 import Message from "../../../components/Message";
 import { history } from "../../../components/Message/data";
+
 import styles from "./styles";
 
 const AnimatedTextInput = Reanimated.createAnimatedComponent(TextInput);

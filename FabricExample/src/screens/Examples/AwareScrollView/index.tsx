@@ -2,6 +2,7 @@ import React from "react";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 
 import TextInput from "../../../components/TextInput";
+
 import { styles } from "./styles";
 
 export default function AwareScrollView() {

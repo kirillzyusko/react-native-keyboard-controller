@@ -1,8 +1,8 @@
 // @ts-check
 // Note: type annotations allow type checking and IDEs autocompletion
 
-const lightCodeTheme = require("prism-react-renderer/themes/github");
 const darkCodeTheme = require("prism-react-renderer/themes/dracula");
+const lightCodeTheme = require("prism-react-renderer/themes/github");
 
 let baseUrl = "/react-native-keyboard-controller/";
 if (process.env.PREVIEW_PATH) baseUrl += process.env.PREVIEW_PATH;

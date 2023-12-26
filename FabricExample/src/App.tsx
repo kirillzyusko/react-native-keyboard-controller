@@ -1,14 +1,15 @@
 import "react-native-gesture-handler";
 
+import { NavigationContainer } from "@react-navigation/native";
 import * as React from "react";
 import { ActivityIndicator, StyleSheet } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 import {
   SafeAreaProvider,
   initialWindowMetrics,
 } from "react-native-safe-area-context";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+
 import RootStack from "./navigation/RootStack";
 
 const styles = StyleSheet.create({

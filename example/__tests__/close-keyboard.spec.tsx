@@ -1,7 +1,6 @@
+import { fireEvent, render } from "@testing-library/react-native";
 import React from "react";
 import { Button } from "react-native";
-import { fireEvent, render } from "@testing-library/react-native";
-
 import { KeyboardController } from "react-native-keyboard-controller";
 
 function CloseKeyboard() {

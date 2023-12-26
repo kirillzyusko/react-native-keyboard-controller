@@ -1,11 +1,14 @@
-import { ScreenNames } from "../../../constants/screenNames";
 import React, { useCallback } from "react";
+import { StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
+
+import { ScreenNames } from "../../../constants/screenNames";
+
 import ExampleLink from "./components/ExampleLink";
 import { examples } from "./constants";
-import { StyleSheet } from "react-native";
-import type { StackScreenProps } from "@react-navigation/stack";
+
 import type { RootStackParamList } from "../../../navigation/RootStack";
+import type { StackScreenProps } from "@react-navigation/stack";
 
 const styles = StyleSheet.create({
   scrollViewContainer: {

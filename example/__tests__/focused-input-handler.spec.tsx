@@ -1,15 +1,14 @@
 import "@testing-library/jest-native/extend-expect";
-import React, { useState } from "react";
-import { runOnJS } from "react-native-reanimated";
 import { act, render } from "@testing-library/react-native";
+import React, { useState } from "react";
+import { Text } from "react-native";
+import { useFocusedInputHandler } from "react-native-keyboard-controller";
+import { runOnJS } from "react-native-reanimated";
 
-import {
+import type {
   FocusedInputHandler,
   FocusedInputTextChangedEvent,
-  useFocusedInputHandler,
-  useReanimatedFocusedInput,
 } from "react-native-keyboard-controller";
-import { Text } from "react-native";
 
 function WhatUserTyped() {
   const [text, setText] = useState("");

@@ -1,8 +1,9 @@
 import React from "react";
 
-import before from "./kav.lottie.json";
-import after from "./kav-animated.lottie.json";
 import ComparisonTable from "../ComparisonTable";
+
+import after from "./kav-animated.lottie.json";
+import before from "./kav.lottie.json";
 
 export default function KeyboardAvoidingViewComparison(): JSX.Element {
   return (

@@ -4,6 +4,7 @@ import {
   useKeyboardAnimation,
   useKeyboardAnimationReplica,
 } from "react-native-keyboard-controller";
+
 import styles from "./styles";
 
 export default function KeyboardAnimation() {

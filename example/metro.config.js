@@ -1,7 +1,9 @@
 const path = require("path");
-const exclusionList = require("metro-config/src/defaults/exclusionList");
+
 const { getDefaultConfig, mergeConfig } = require("@react-native/metro-config");
 const escape = require("escape-string-regexp");
+const exclusionList = require("metro-config/src/defaults/exclusionList");
+
 const pack = require("../package.json");
 
 const root = path.resolve(__dirname, "..");

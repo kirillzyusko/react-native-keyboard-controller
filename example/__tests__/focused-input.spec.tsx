@@ -1,9 +1,8 @@
 import "@testing-library/jest-native/extend-expect";
-import React from "react";
-import Reanimated, { useAnimatedStyle } from "react-native-reanimated";
 import { render } from "@testing-library/react-native";
-
+import React from "react";
 import { useReanimatedFocusedInput } from "react-native-keyboard-controller";
+import Reanimated, { useAnimatedStyle } from "react-native-reanimated";
 
 function RectangleWithFocusedInputLayout() {
   const { input } = useReanimatedFocusedInput();

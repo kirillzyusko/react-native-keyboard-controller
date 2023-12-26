@@ -1,8 +1,7 @@
 import "@testing-library/jest-native/extend-expect";
+import { render } from "@testing-library/react-native";
 import React from "react";
 import { Animated } from "react-native";
-import { render } from "@testing-library/react-native";
-
 import { useKeyboardAnimation } from "react-native-keyboard-controller";
 
 function TestComponent() {

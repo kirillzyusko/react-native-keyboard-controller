@@ -1,4 +1,3 @@
-import { StackScreenProps } from "@react-navigation/stack";
 import React, { useEffect, useState } from "react";
 import { Text, TextInput, View } from "react-native";
 import {
@@ -12,8 +11,11 @@ import Reanimated, {
 
 import Message from "../../../components/Message";
 import { history } from "../../../components/Message/data";
-import { ExamplesStackParamList } from "../../../navigation/ExamplesStack";
+
 import styles from "./styles";
+
+import type { ExamplesStackParamList } from "../../../navigation/ExamplesStack";
+import type { StackScreenProps } from "@react-navigation/stack";
 
 const AnimatedTextInput = Reanimated.createAnimatedComponent(TextInput);
 

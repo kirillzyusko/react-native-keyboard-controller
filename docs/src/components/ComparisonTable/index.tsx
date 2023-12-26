@@ -1,5 +1,7 @@
-import React, { CSSProperties } from "react";
 import Lottie from "lottie-react";
+import React from "react";
+
+import type { CSSProperties } from "react";
 
 const withoutBorders = { border: "none" };
 const lottieView = { paddingLeft: "20%", paddingRight: "20%" };

@@ -1,5 +1,6 @@
-import * as cheerio from "cheerio";
 import * as fs from "fs";
+
+import * as cheerio from "cheerio";
 
 // Extract a list of pathnames, given a fs path to a sitemap.xml file
 // Docusaurus generates a build/sitemap.xml file for you!

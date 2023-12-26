@@ -6,17 +6,17 @@ global.ReanimatedDataMock = {
 };
 
 import "@testing-library/jest-native/extend-expect";
+import { render } from "@testing-library/react-native";
 import React from "react";
+import { useKeyboardHandler } from "react-native-keyboard-controller";
 import Reanimated, {
   useAnimatedStyle,
   useSharedValue,
 } from "react-native-reanimated";
-import { render } from "@testing-library/react-native";
 
-import {
+import type {
   KeyboardHandler,
   NativeEvent,
-  useKeyboardHandler,
 } from "react-native-keyboard-controller";
 
 function TestComponent() {

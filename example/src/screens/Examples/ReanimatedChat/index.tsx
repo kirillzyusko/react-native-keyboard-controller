@@ -8,11 +8,12 @@ import Reanimated, {
 
 import Message from "../../../components/Message";
 import { history } from "../../../components/Message/data";
+
 import { useTelegramTransitions } from "./hooks";
 import styles from "./styles";
 
-import type { StackScreenProps } from "@react-navigation/stack";
 import type { ExamplesStackParamList } from "../../../navigation/ExamplesStack";
+import type { StackScreenProps } from "@react-navigation/stack";
 
 const AnimatedTextInput = Reanimated.createAnimatedComponent(TextInput);
 

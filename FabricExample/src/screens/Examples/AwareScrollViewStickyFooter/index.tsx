@@ -1,15 +1,18 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { LayoutChangeEvent, View, Text, Button } from "react-native";
-import { StackScreenProps } from "@react-navigation/stack";
+import { Button, Text, View } from "react-native";
 import {
   KeyboardAwareScrollView,
   KeyboardStickyView,
 } from "react-native-keyboard-controller";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { ExamplesStackParamList } from "../../../navigation/ExamplesStack";
 import TextInput from "../../../components/TextInput";
+
 import { styles } from "./styles";
+
+import type { ExamplesStackParamList } from "../../../navigation/ExamplesStack";
+import type { StackScreenProps } from "@react-navigation/stack";
+import type { LayoutChangeEvent } from "react-native";
 
 type Props = StackScreenProps<ExamplesStackParamList>;
 

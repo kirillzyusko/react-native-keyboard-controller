@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import { View, StatusBar, StatusBarStyle, Button } from "react-native";
+import { Button, StatusBar, View } from "react-native";
 
 import KeyboardAnimationTemplate from "../../../components/KeyboardAnimation";
 import { randomColor } from "../../../utils";
+
+import type { StatusBarStyle } from "react-native";
 
 export default function StatusBarManipulation() {
   const [color, setColor] = useState("#00FF0000");

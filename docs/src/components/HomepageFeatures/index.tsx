@@ -1,12 +1,12 @@
-import React from "react";
-import Lottie from "lottie-react";
-import interactive from "./interactive.lottie.json";
-import transform from "./transform.lottie.json";
-import crossPlatform from "./cross-platform.lottie.json";
-import textInputs from "./text-inputs.lottie.json";
-
 import clsx from "clsx";
+import Lottie from "lottie-react";
+import React from "react";
+
+import crossPlatform from "./cross-platform.lottie.json";
+import interactive from "./interactive.lottie.json";
 import styles from "./styles.module.css";
+import textInputs from "./text-inputs.lottie.json";
+import transform from "./transform.lottie.json";
 
 type FeatureItem = {
   title: string;

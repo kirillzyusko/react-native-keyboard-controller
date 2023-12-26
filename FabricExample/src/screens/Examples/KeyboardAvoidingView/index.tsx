@@ -1,16 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   KeyboardAvoidingView as RNKeyboardAvoidingView,
-  KeyboardAvoidingViewProps,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
 import { KeyboardAvoidingView } from "react-native-keyboard-controller";
-import { StackScreenProps } from "@react-navigation/stack";
-import { ExamplesStackParamList } from "../../../navigation/ExamplesStack";
+
 import styles from "./styles";
+
+import type { ExamplesStackParamList } from "../../../navigation/ExamplesStack";
+import type { StackScreenProps } from "@react-navigation/stack";
+import type { KeyboardAvoidingViewProps } from "react-native";
 
 type Props = StackScreenProps<ExamplesStackParamList>;
 

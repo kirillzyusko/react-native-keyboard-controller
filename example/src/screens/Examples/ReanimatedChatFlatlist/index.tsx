@@ -1,13 +1,15 @@
 import React from "react";
-import { FlatList, ListRenderItem, TextInput, View } from "react-native";
+import { FlatList, TextInput, View } from "react-native";
 import { useReanimatedKeyboardAnimation } from "react-native-keyboard-controller";
 import Animated, { useAnimatedStyle } from "react-native-reanimated";
 
 import Message from "../../../components/Message";
 import { history } from "../../../components/Message/data";
-import { MessageProps } from "../../../components/Message/types";
 
 import styles from "./styles";
+
+import type { MessageProps } from "../../../components/Message/types";
+import type { ListRenderItem } from "react-native";
 
 const reversedMessages = [...history].reverse();
 

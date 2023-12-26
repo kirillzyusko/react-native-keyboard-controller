@@ -1,6 +1,7 @@
 import React from "react";
 import { Button, View } from "react-native";
 import { useKeyboardController } from "react-native-keyboard-controller";
+
 import KeyboardAnimationTemplate from "../../../components/KeyboardAnimation";
 
 export default function EnabledDisabled() {
