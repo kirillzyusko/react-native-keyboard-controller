@@ -13,15 +13,16 @@ import androidx.core.view.WindowInsetsAnimationCompat
 import androidx.core.view.WindowInsetsCompat
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.WritableMap
-import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.UIManagerHelper
 import com.facebook.react.views.textinput.ReactEditText
 import com.facebook.react.views.view.ReactViewGroup
 import com.reactnativekeyboardcontroller.InteractiveKeyboardProvider
 import com.reactnativekeyboardcontroller.events.KeyboardTransitionEvent
+import com.reactnativekeyboardcontroller.events.KeyboardTransitionEventData
 import com.reactnativekeyboardcontroller.extensions.dispatchEvent
 import com.reactnativekeyboardcontroller.extensions.dp
+import com.reactnativekeyboardcontroller.extensions.emitEvent
 import com.reactnativekeyboardcontroller.extensions.isKeyboardAnimation
 import kotlin.math.abs
 
@@ -43,6 +44,7 @@ class KeyboardAnimationCallback(
   private var duration = 0
   private var viewTagFocused = -1
   private var animation: ValueAnimator? = null
+  private var lastEventDispatched: KeyboardTransitionEventData? = null
 
   // listeners
   private val focusListener = OnGlobalFocusChangeListener { oldFocus, newFocus ->
@@ -56,11 +58,8 @@ class KeyboardAnimationCallback(
         // 2. event should be send only when keyboard is visible, since this event arrives earlier -> `tag` will be
         // 100% included in onStart/onMove/onEnd lifecycles, but triggering onStart/onEnd several time
         // can bring breaking changes
-        context.dispatchEvent(
-          view.id,
-          KeyboardTransitionEvent(
-            surfaceId,
-            view.id,
+        this.dispatchEventToJS(
+          KeyboardTransitionEventData(
             "topKeyboardMoveStart",
             this.persistentKeyboardHeight,
             1.0,
@@ -68,11 +67,8 @@ class KeyboardAnimationCallback(
             viewTagFocused,
           ),
         )
-        context.dispatchEvent(
-          view.id,
-          KeyboardTransitionEvent(
-            surfaceId,
-            view.id,
+        this.dispatchEventToJS(
+          KeyboardTransitionEventData(
             "topKeyboardMoveEnd",
             this.persistentKeyboardHeight,
             1.0,
@@ -80,8 +76,8 @@ class KeyboardAnimationCallback(
             viewTagFocused,
           ),
         )
-        this.emitEvent("KeyboardController::keyboardWillShow", getEventParams(this.persistentKeyboardHeight))
-        this.emitEvent("KeyboardController::keyboardDidShow", getEventParams(this.persistentKeyboardHeight))
+        context.emitEvent("KeyboardController::keyboardWillShow", getEventParams(this.persistentKeyboardHeight))
+        context.emitEvent("KeyboardController::keyboardDidShow", getEventParams(this.persistentKeyboardHeight))
       }
     }
   }
@@ -158,17 +154,14 @@ class KeyboardAnimationCallback(
     }
 
     layoutObserver?.syncUpLayout()
-    this.emitEvent(
+    context.emitEvent(
       "KeyboardController::" + if (!isKeyboardVisible) "keyboardWillHide" else "keyboardWillShow",
       getEventParams(keyboardHeight),
     )
 
     Log.i(TAG, "HEIGHT:: $keyboardHeight TAG:: $viewTagFocused")
-    context.dispatchEvent(
-      view.id,
-      KeyboardTransitionEvent(
-        surfaceId,
-        view.id,
+    this.dispatchEventToJS(
+      KeyboardTransitionEventData(
         "topKeyboardMoveStart",
         keyboardHeight,
         if (!isKeyboardVisible) 0.0 else 1.0,
@@ -215,11 +208,8 @@ class KeyboardAnimationCallback(
     )
 
     val event = if (InteractiveKeyboardProvider.isInteractive) "topKeyboardMoveInteractive" else "topKeyboardMove"
-    context.dispatchEvent(
-      view.id,
-      KeyboardTransitionEvent(
-        surfaceId,
-        view.id,
+    this.dispatchEventToJS(
+      KeyboardTransitionEventData(
         event,
         height,
         progress,
@@ -255,15 +245,12 @@ class KeyboardAnimationCallback(
     }
     isKeyboardVisible = isKeyboardVisible || isKeyboardShown
 
-    this.emitEvent(
+    context.emitEvent(
       "KeyboardController::" + if (!isKeyboardVisible) "keyboardDidHide" else "keyboardDidShow",
       getEventParams(keyboardHeight),
     )
-    context.dispatchEvent(
-      view.id,
-      KeyboardTransitionEvent(
-        surfaceId,
-        view.id,
+    this.dispatchEventToJS(
+      KeyboardTransitionEventData(
         "topKeyboardMoveEnd",
         keyboardHeight,
         if (!isKeyboardVisible) 0.0 else 1.0,
@@ -299,12 +286,9 @@ class KeyboardAnimationCallback(
       this.animation?.cancel()
     }
 
-    this.emitEvent("KeyboardController::keyboardWillShow", getEventParams(keyboardHeight))
-    context.dispatchEvent(
-      view.id,
-      KeyboardTransitionEvent(
-        surfaceId,
-        view.id,
+    context.emitEvent("KeyboardController::keyboardWillShow", getEventParams(keyboardHeight))
+    this.dispatchEventToJS(
+      KeyboardTransitionEventData(
         "topKeyboardMoveStart",
         keyboardHeight,
         1.0,
@@ -317,11 +301,8 @@ class KeyboardAnimationCallback(
       ValueAnimator.ofFloat(this.persistentKeyboardHeight.toFloat(), keyboardHeight.toFloat())
     animation.addUpdateListener { animator ->
       val toValue = animator.animatedValue as Float
-      context.dispatchEvent(
-        view.id,
-        KeyboardTransitionEvent(
-          surfaceId,
-          view.id,
+      this.dispatchEventToJS(
+        KeyboardTransitionEventData(
           "topKeyboardMove",
           toValue.toDouble(),
           toValue.toDouble() / keyboardHeight,
@@ -331,12 +312,9 @@ class KeyboardAnimationCallback(
       )
     }
     animation.doOnEnd {
-      this.emitEvent("KeyboardController::keyboardDidShow", getEventParams(keyboardHeight))
-      context.dispatchEvent(
-        view.id,
-        KeyboardTransitionEvent(
-          surfaceId,
-          view.id,
+      context.emitEvent("KeyboardController::keyboardDidShow", getEventParams(keyboardHeight))
+      this.dispatchEventToJS(
+        KeyboardTransitionEventData(
           "topKeyboardMoveEnd",
           keyboardHeight,
           1.0,
@@ -368,12 +346,6 @@ class KeyboardAnimationCallback(
     return (keyboardHeight - navigationBar).toFloat().dp.coerceAtLeast(0.0)
   }
 
-  private fun emitEvent(event: String, params: WritableMap) {
-    context?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)?.emit(event, params)
-
-    Log.i(TAG, event)
-  }
-
   private fun getEventParams(height: Double): WritableMap {
     val params: WritableMap = Arguments.createMap()
     params.putDouble("height", height)
@@ -382,6 +354,20 @@ class KeyboardAnimationCallback(
     params.putInt("target", viewTagFocused)
 
     return params
+  }
+
+  private fun dispatchEventToJS(event: KeyboardTransitionEventData) {
+    if (event != lastEventDispatched) {
+      lastEventDispatched = event
+      context.dispatchEvent(
+        view.id,
+        KeyboardTransitionEvent(
+          surfaceId,
+          view.id,
+          data = event,
+        ),
+      )
+    }
   }
 
   companion object {
