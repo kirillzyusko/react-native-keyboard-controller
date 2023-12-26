@@ -1,18 +1,18 @@
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
-import { KeyboardController } from './bindings';
-import { AndroidSoftInputModes } from './constants';
-import { useKeyboardContext } from './context';
-import { uuid } from './utils';
+import { KeyboardController } from "./bindings";
+import { AndroidSoftInputModes } from "./constants";
+import { useKeyboardContext } from "./context";
+import { uuid } from "./utils";
 
-import type { AnimatedContext, ReanimatedContext } from './context';
-import type { FocusedInputHandler, KeyboardHandler } from './types';
-import type { DependencyList } from 'react';
+import type { AnimatedContext, ReanimatedContext } from "./context";
+import type { FocusedInputHandler, KeyboardHandler } from "./types";
+import type { DependencyList } from "react";
 
 export const useResizeMode = () => {
   useEffect(() => {
     KeyboardController.setInputMode(
-      AndroidSoftInputModes.SOFT_INPUT_ADJUST_RESIZE
+      AndroidSoftInputModes.SOFT_INPUT_ADJUST_RESIZE,
     );
 
     return () => KeyboardController.setDefaultMode();
@@ -35,7 +35,7 @@ export const useReanimatedKeyboardAnimation = (): ReanimatedContext => {
 
 export function useGenericKeyboardHandler(
   handler: KeyboardHandler,
-  deps?: DependencyList
+  deps?: DependencyList,
 ) {
   const context = useKeyboardContext();
 
@@ -52,7 +52,7 @@ export function useGenericKeyboardHandler(
 
 export function useKeyboardHandler(
   handler: KeyboardHandler,
-  deps?: DependencyList
+  deps?: DependencyList,
 ) {
   useResizeMode();
   useGenericKeyboardHandler(handler, deps);
@@ -72,7 +72,7 @@ export function useReanimatedFocusedInput() {
 
 export function useFocusedInputHandler(
   handler?: FocusedInputHandler,
-  deps?: DependencyList
+  deps?: DependencyList,
 ) {
   const context = useKeyboardContext();
 

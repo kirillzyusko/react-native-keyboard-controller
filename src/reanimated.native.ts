@@ -1,4 +1,4 @@
-import { useEvent, useHandler } from 'react-native-reanimated';
+import { useEvent, useHandler } from "react-native-reanimated";
 
 import type {
   EventWithName,
@@ -8,7 +8,7 @@ import type {
   FocusedInputTextHandlerHook,
   KeyboardHandlerHook,
   NativeEvent,
-} from './types';
+} from "./types";
 
 export const useAnimatedKeyboardHandler: KeyboardHandlerHook<
   Record<string, unknown>,
@@ -18,7 +18,7 @@ export const useAnimatedKeyboardHandler: KeyboardHandlerHook<
 
   return useEvent(
     (event) => {
-      'worklet';
+      "worklet";
       const {
         onKeyboardMoveStart,
         onKeyboardMove,
@@ -28,33 +28,33 @@ export const useAnimatedKeyboardHandler: KeyboardHandlerHook<
 
       if (
         onKeyboardMoveStart &&
-        event.eventName.endsWith('onKeyboardMoveStart')
+        event.eventName.endsWith("onKeyboardMoveStart")
       ) {
         onKeyboardMoveStart(event, context);
       }
 
-      if (onKeyboardMove && event.eventName.endsWith('onKeyboardMove')) {
+      if (onKeyboardMove && event.eventName.endsWith("onKeyboardMove")) {
         onKeyboardMove(event, context);
       }
 
-      if (onKeyboardMoveEnd && event.eventName.endsWith('onKeyboardMoveEnd')) {
+      if (onKeyboardMoveEnd && event.eventName.endsWith("onKeyboardMoveEnd")) {
         onKeyboardMoveEnd(event, context);
       }
 
       if (
         onKeyboardMoveInteractive &&
-        event.eventName.endsWith('onKeyboardMoveInteractive')
+        event.eventName.endsWith("onKeyboardMoveInteractive")
       ) {
         onKeyboardMoveInteractive(event, context);
       }
     },
     [
-      'onKeyboardMoveStart',
-      'onKeyboardMove',
-      'onKeyboardMoveEnd',
-      'onKeyboardMoveInteractive',
+      "onKeyboardMoveStart",
+      "onKeyboardMove",
+      "onKeyboardMoveEnd",
+      "onKeyboardMoveInteractive",
     ],
-    doDependenciesDiffer
+    doDependenciesDiffer,
   );
 };
 
@@ -66,18 +66,18 @@ export const useFocusedInputLayoutHandler: FocusedInputLayoutHandlerHook<
 
   return useEvent(
     (event) => {
-      'worklet';
+      "worklet";
       const { onFocusedInputLayoutChanged } = handlers;
 
       if (
         onFocusedInputLayoutChanged &&
-        event.eventName.endsWith('onFocusedInputLayoutChanged')
+        event.eventName.endsWith("onFocusedInputLayoutChanged")
       ) {
         onFocusedInputLayoutChanged(event, context);
       }
     },
-    ['onFocusedInputLayoutChanged'],
-    doDependenciesDiffer
+    ["onFocusedInputLayoutChanged"],
+    doDependenciesDiffer,
   );
 };
 
@@ -89,17 +89,17 @@ export const useFocusedInputTextHandler: FocusedInputTextHandlerHook<
 
   return useEvent(
     (event) => {
-      'worklet';
+      "worklet";
       const { onFocusedInputTextChanged } = handlers;
 
       if (
         onFocusedInputTextChanged &&
-        event.eventName.endsWith('onFocusedInputTextChanged')
+        event.eventName.endsWith("onFocusedInputTextChanged")
       ) {
         onFocusedInputTextChanged(event, context);
       }
     },
-    ['onFocusedInputTextChanged'],
-    doDependenciesDiffer
+    ["onFocusedInputTextChanged"],
+    doDependenciesDiffer,
   );
 };

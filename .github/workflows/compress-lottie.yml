@@ -2,8 +2,8 @@ name: 📦 Compress Docs
 on:
   pull_request:
     paths:
-      - '.github/workflows/compress-lottie.yml'
-      - '**.lottie.json'
+      - ".github/workflows/compress-lottie.yml"
+      - "**.lottie.json"
 
 jobs:
   compress-lottie:

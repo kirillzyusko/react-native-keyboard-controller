@@ -30,7 +30,7 @@ Could be useful to set it to `false` if you want to activate the module only on 
 ## Example
 
 ```tsx
-import { KeyboardProvider } from 'react-native-keyboard-controller';
+import { KeyboardProvider } from "react-native-keyboard-controller";
 
 const App = () => {
   return (

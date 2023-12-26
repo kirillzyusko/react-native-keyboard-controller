@@ -4,13 +4,13 @@ on:
   push:
     branches: [main]
     paths:
-      - '.github/workflows/docs-e2e.yml'
-      - 'docs/**'
+      - ".github/workflows/docs-e2e.yml"
+      - "docs/**"
   pull_request:
     branches: [main]
     paths:
-      - '.github/workflows/docs-e2e.yml'
-      - 'docs/**'
+      - ".github/workflows/docs-e2e.yml"
+      - "docs/**"
 
 jobs:
   take-screenshots:

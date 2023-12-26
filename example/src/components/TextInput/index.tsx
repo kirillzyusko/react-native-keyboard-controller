@@ -1,9 +1,9 @@
-import React from 'react';
+import React from "react";
 import {
   StyleSheet,
   TextInputProps,
   TextInput as TextInputRN,
-} from 'react-native';
+} from "react-native";
 
 const TextInput = (props: TextInputProps) => {
   return (
@@ -15,7 +15,7 @@ const TextInput = (props: TextInputProps) => {
       testID={props.placeholder}
       {...props}
       placeholder={`${props.placeholder} (${
-        props.keyboardType === 'default' ? 'text' : 'numeric'
+        props.keyboardType === "default" ? "text" : "numeric"
       })`}
     />
   );
@@ -23,15 +23,15 @@ const TextInput = (props: TextInputProps) => {
 
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
+    width: "100%",
     minHeight: 50,
     maxHeight: 200,
     marginBottom: 50,
-    borderColor: 'black',
+    borderColor: "black",
     borderWidth: 2,
     marginRight: 160,
     borderRadius: 10,
-    color: 'black',
+    color: "black",
     paddingHorizontal: 12,
   },
 });

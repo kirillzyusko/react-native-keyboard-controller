@@ -24,12 +24,12 @@ keywords:
 import {
   KeyboardController,
   AndroidSoftInputModes,
-} from 'react-native-keyboard-controller';
+} from "react-native-keyboard-controller";
 
 export const useResizeMode = () => {
   useEffect(() => {
     KeyboardController.setInputMode(
-      AndroidSoftInputModes.SOFT_INPUT_ADJUST_RESIZE
+      AndroidSoftInputModes.SOFT_INPUT_ADJUST_RESIZE,
     );
 
     return () => KeyboardController.setDefaultMode();

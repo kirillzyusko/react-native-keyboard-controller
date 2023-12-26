@@ -1,14 +1,14 @@
-import React, { useCallback, useRef } from 'react';
-import { TextInput, View } from 'react-native';
-import { useKeyboardHandler } from 'react-native-keyboard-controller';
+import React, { useCallback, useRef } from "react";
+import { TextInput, View } from "react-native";
+import { useKeyboardHandler } from "react-native-keyboard-controller";
 import Reanimated, {
   useAnimatedStyle,
   useSharedValue,
-} from 'react-native-reanimated';
+} from "react-native-reanimated";
 
-import Message from '../../../components/Message';
-import { history } from '../../../components/Message/data';
-import styles from './styles';
+import Message from "../../../components/Message";
+import { history } from "../../../components/Message/data";
+import styles from "./styles";
 
 const AnimatedTextInput = Reanimated.createAnimatedComponent(TextInput);
 
@@ -18,7 +18,7 @@ const useKeyboardAnimation = () => {
   const shouldUseOnMoveHandler = useSharedValue(false);
   useKeyboardHandler({
     onStart: (e) => {
-      'worklet';
+      "worklet";
 
       // i. e. the keyboard was under interactive gesture, and will be showed
       // again. Since iOS will not schedule layout animation for that we can't
@@ -33,13 +33,13 @@ const useKeyboardAnimation = () => {
       height.value = e.height;
     },
     onInteractive: (e) => {
-      'worklet';
+      "worklet";
 
       progress.value = e.progress;
       height.value = e.height;
     },
     onMove: (e) => {
-      'worklet';
+      "worklet";
 
       if (shouldUseOnMoveHandler.value) {
         progress.value = e.progress;
@@ -47,7 +47,7 @@ const useKeyboardAnimation = () => {
       }
     },
     onEnd: (e) => {
-      'worklet';
+      "worklet";
 
       height.value = e.height;
       progress.value = e.progress;
@@ -74,13 +74,13 @@ function InteractiveKeyboard() {
 
   const textInputStyle = useAnimatedStyle(
     () => ({
-      position: 'absolute',
+      position: "absolute",
       height: TEXT_INPUT_HEIGHT,
-      width: '100%',
-      backgroundColor: '#BCBCBC',
+      width: "100%",
+      backgroundColor: "#BCBCBC",
       transform: [{ translateY: -height.value }],
     }),
-    []
+    [],
   );
 
   return (

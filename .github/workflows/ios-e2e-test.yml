@@ -2,24 +2,24 @@ name: 🛠 iOS e2e tests
 on:
   pull_request:
     paths:
-      - '.github/workflows/ios-e2e-test.yml'
-      - 'react-native-keyboard-controller.podspec'
-      - 'package.json'
-      - 'ios/**'
-      - 'example/**'
-      - 'e2e/**'
-      - 'src/**'
+      - ".github/workflows/ios-e2e-test.yml"
+      - "react-native-keyboard-controller.podspec"
+      - "package.json"
+      - "ios/**"
+      - "example/**"
+      - "e2e/**"
+      - "src/**"
   push:
     branches:
       - main
     paths:
-      - '.github/workflows/ios-e2e-test.yml'
-      - 'react-native-keyboard-controller.podspec'
-      - 'package.json'
-      - 'ios/**'
-      - 'example/**'
-      - 'e2e/**'
-      - 'src/**'
+      - ".github/workflows/ios-e2e-test.yml"
+      - "react-native-keyboard-controller.podspec"
+      - "package.json"
+      - "ios/**"
+      - "example/**"
+      - "e2e/**"
+      - "src/**"
 
 jobs:
   test:
@@ -36,7 +36,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16.x
-          cache: 'yarn'
+          cache: "yarn"
       - name: Get Xcode version
         run: xcodebuild -version
       - name: Install AppleSimulatorUtils

@@ -1,8 +1,8 @@
-import React, { FC, useCallback } from 'react';
-import { TouchableOpacity, Text, View } from 'react-native';
-import type { Example } from '../../types';
-import type { ScreenNames } from '../../../../../constants/screenNames';
-import styles from './styles';
+import React, { FC, useCallback } from "react";
+import { TouchableOpacity, Text, View } from "react-native";
+import type { Example } from "../../types";
+import type { ScreenNames } from "../../../../../constants/screenNames";
+import styles from "./styles";
 
 type Props = {
   onPress: (info: ScreenNames) => void;

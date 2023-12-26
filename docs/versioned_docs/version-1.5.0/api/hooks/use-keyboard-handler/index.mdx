@@ -13,7 +13,7 @@ keywords:
   ]
 ---
 
-import CodeBlock from '@theme/CodeBlock';
+import CodeBlock from "@theme/CodeBlock";
 
 # useKeyboardHandler
 
@@ -25,19 +25,19 @@ import CodeBlock from '@theme/CodeBlock';
 useKeyboardHandler(
   {
     onStart: (e) => {
-      'worklet';
+      "worklet";
     },
     onMove: (e) => {
-      'worklet';
+      "worklet";
     },
     onInteractive: (e) => {
-      'worklet';
+      "worklet";
     },
     onEnd: (e) => {
-      'worklet';
+      "worklet";
     },
   },
-  []
+  [],
 );
 ```
 
@@ -84,18 +84,18 @@ export const onStartCode = (
 
 <div className="grid">
   <div className="description-block">
-    This function is called before the keyboard movement starts.{' '}
-    <code>height</code> and <code>progress</code> values will have{' '}
+    This function is called before the keyboard movement starts.{" "}
+    <code>height</code> and <code>progress</code> values will have{" "}
     <b>destination</b> values, i. e. if keyboard was closed but will appear -
     these values will have a values like "keyboard is already opened" (
-    <code>progress</code> will be equal to <code>1</code> and{' '}
+    <code>progress</code> will be equal to <code>1</code> and{" "}
     <code>height</code> will have non-zero value).
     <br />
     <br />
     <div className="desktop">{onStartCode}</div>
   </div>
   <div>
-    <img src={require('./start.png').default} />
+    <img src={require("./start.png").default} />
   </div>
 </div>
 <div className="mobile">{onStartCode}</div>
@@ -126,7 +126,7 @@ export const onMoveCode = (
     <div className="desktop">{onMoveCode}</div>
   </div>
   <div>
-    <img src={require('./move.png').default} />
+    <img src={require("./move.png").default} />
   </div>
 </div>
 <div className="mobile">{onMoveCode}</div>
@@ -168,7 +168,7 @@ export const onInteractiveCode = (
     <div className="desktop">{onInteractiveCode}</div>
   </div>
   <div>
-    <img src={require('./interactive.png').default} />
+    <img src={require("./interactive.png").default} />
   </div>
 </div>
 <div className="mobile">{onInteractiveCode}</div>
@@ -205,7 +205,7 @@ export const onEndCode = (
     <div className="desktop">{onEndCode}</div>
   </div>
   <div>
-    <img src={require('./end.png').default} />
+    <img src={require("./end.png").default} />
   </div>
 </div>
 

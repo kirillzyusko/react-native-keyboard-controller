@@ -1,8 +1,8 @@
-import React from 'react';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
+import React from "react";
+import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 
-import TextInput from '../../../components/TextInput';
-import { styles } from './styles';
+import TextInput from "../../../components/TextInput";
+import { styles } from "./styles";
 
 export default function AwareScrollView() {
   return (
@@ -16,7 +16,7 @@ export default function AwareScrollView() {
         <TextInput
           key={i}
           placeholder={`TextInput#${i}`}
-          keyboardType={i % 2 === 0 ? 'numeric' : 'default'}
+          keyboardType={i % 2 === 0 ? "numeric" : "default"}
         />
       ))}
     </KeyboardAwareScrollView>

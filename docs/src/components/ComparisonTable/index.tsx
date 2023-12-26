@@ -1,16 +1,16 @@
-import React, { CSSProperties } from 'react';
-import Lottie from 'lottie-react';
+import React, { CSSProperties } from "react";
+import Lottie from "lottie-react";
 
-const withoutBorders = { border: 'none' };
-const lottieView = { paddingLeft: '20%', paddingRight: '20%' };
+const withoutBorders = { border: "none" };
+const lottieView = { paddingLeft: "20%", paddingRight: "20%" };
 const label: CSSProperties = {
   ...withoutBorders,
   maxWidth: 400,
-  textAlign: 'center',
+  textAlign: "center",
 };
 const labels = {
   ...withoutBorders,
-  backgroundColor: '#00000000',
+  backgroundColor: "#00000000",
 };
 
 type Props = {

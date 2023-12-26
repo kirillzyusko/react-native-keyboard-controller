@@ -1,18 +1,18 @@
-import { useCallback, useEffect, useMemo, useRef } from 'react';
-import { Animated, Easing, Keyboard, Platform } from 'react-native';
+import { useCallback, useEffect, useMemo, useRef } from "react";
+import { Animated, Easing, Keyboard, Platform } from "react-native";
 import {
   runOnUI,
   useAnimatedReaction,
   useDerivedValue,
   useSharedValue,
   withSpring,
-} from 'react-native-reanimated';
+} from "react-native-reanimated";
 
-import { KeyboardController } from './bindings';
-import { AndroidSoftInputModes } from './constants';
-import { useReanimatedKeyboardAnimation } from './hooks';
+import { KeyboardController } from "./bindings";
+import { AndroidSoftInputModes } from "./constants";
+import { useReanimatedKeyboardAnimation } from "./hooks";
 
-const availableOSEventType = Platform.OS === 'ios' ? 'Will' : 'Did';
+const availableOSEventType = Platform.OS === "ios" ? "Will" : "Did";
 
 // cubic-bezier(.17,.67,.34,.94)
 export const defaultAndroidEasing = Easing.bezier(0.4, 0.0, 0.2, 1);
@@ -37,12 +37,12 @@ export const useKeyboardAnimationReplica = (): KeyboardAnimation => {
       height: height.current,
       progress: progress.current,
     }),
-    []
+    [],
   );
 
   useEffect(() => {
     KeyboardController.setInputMode(
-      AndroidSoftInputModes.SOFT_INPUT_ADJUST_RESIZE
+      AndroidSoftInputModes.SOFT_INPUT_ADJUST_RESIZE,
     );
 
     return () => KeyboardController.setDefaultMode();
@@ -59,7 +59,7 @@ export const useKeyboardAnimationReplica = (): KeyboardAnimation => {
         }).start();
 
         return () => listener.remove();
-      }
+      },
     );
   }, []);
   useEffect(() => {
@@ -74,7 +74,7 @@ export const useKeyboardAnimationReplica = (): KeyboardAnimation => {
         }).start();
 
         return () => listener.remove();
-      }
+      },
     );
   }, []);
 
@@ -111,7 +111,7 @@ export const useReanimatedKeyboardAnimationReplica = () => {
   const progress = useDerivedValue(() => height.value / heightEvent.value);
 
   const handler = useCallback((_height: number) => {
-    'worklet';
+    "worklet";
 
     heightEvent.value = _height;
   }, []);
@@ -128,14 +128,14 @@ export const useReanimatedKeyboardAnimationReplica = () => {
         height.value = withSpring(_keyboardHeight, IOS_SPRING_CONFIG);
       }
     },
-    []
+    [],
   );
 
   useEffect(() => {
-    const show = Keyboard.addListener('keyboardWillShow', (e) => {
+    const show = Keyboard.addListener("keyboardWillShow", (e) => {
       runOnUI(handler)(-e.endCoordinates.height);
     });
-    const hide = Keyboard.addListener('keyboardWillHide', () => {
+    const hide = Keyboard.addListener("keyboardWillHide", () => {
       runOnUI(handler)(0);
     });
 
@@ -149,6 +149,6 @@ export const useReanimatedKeyboardAnimationReplica = () => {
 };
 
 export const useGradualKeyboardAnimation =
-  Platform.OS === 'ios'
+  Platform.OS === "ios"
     ? useReanimatedKeyboardAnimationReplica
     : useReanimatedKeyboardAnimation;

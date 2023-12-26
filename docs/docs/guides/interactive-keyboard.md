@@ -49,11 +49,11 @@ Basically `useKeyboardAnimation`/`useReanimatedKeyboardAnimation` will update an
 useKeyboardHandler(
   {
     onInteractive: (e) => {
-      'worklet';
+      "worklet";
       // your handler for interactive keyboard movement
     },
   },
-  []
+  [],
 );
 ```
 

@@ -1,9 +1,9 @@
-import '@testing-library/jest-native/extend-expect';
-import React from 'react';
-import Reanimated, { useAnimatedStyle } from 'react-native-reanimated';
-import { render } from '@testing-library/react-native';
+import "@testing-library/jest-native/extend-expect";
+import React from "react";
+import Reanimated, { useAnimatedStyle } from "react-native-reanimated";
+import { render } from "@testing-library/react-native";
 
-import { useReanimatedFocusedInput } from 'react-native-keyboard-controller';
+import { useReanimatedFocusedInput } from "react-native-keyboard-controller";
 
 function RectangleWithFocusedInputLayout() {
   const { input } = useReanimatedFocusedInput();
@@ -21,11 +21,11 @@ function RectangleWithFocusedInputLayout() {
   return <Reanimated.View testID="view" style={style} />;
 }
 
-describe('`useReanimatedFocusedInput` mocking', () => {
-  it('should have different styles depends on `useReanimatedFocusedInput`', () => {
+describe("`useReanimatedFocusedInput` mocking", () => {
+  it("should have different styles depends on `useReanimatedFocusedInput`", () => {
     const { getByTestId, update } = render(<RectangleWithFocusedInputLayout />);
 
-    expect(getByTestId('view')).toHaveStyle({
+    expect(getByTestId("view")).toHaveStyle({
       top: 0,
       left: 0,
       width: 200,
@@ -49,7 +49,7 @@ describe('`useReanimatedFocusedInput` mocking', () => {
     });
     update(<RectangleWithFocusedInputLayout />);
 
-    expect(getByTestId('view')).toHaveStyle({
+    expect(getByTestId("view")).toHaveStyle({
       top: 100,
       left: 10,
       width: 190,

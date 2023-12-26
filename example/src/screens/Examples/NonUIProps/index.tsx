@@ -1,12 +1,12 @@
-import React from 'react';
-import { View } from 'react-native';
-import { TextInput } from 'react-native-gesture-handler';
-import { useKeyboardHandler } from 'react-native-keyboard-controller';
+import React from "react";
+import { View } from "react-native";
+import { TextInput } from "react-native-gesture-handler";
+import { useKeyboardHandler } from "react-native-keyboard-controller";
 import Reanimated, {
   interpolate,
   useAnimatedStyle,
   useSharedValue,
-} from 'react-native-reanimated';
+} from "react-native-reanimated";
 
 function useGradualKeyboardAnimation() {
   const height = useSharedValue(0);
@@ -15,19 +15,19 @@ function useGradualKeyboardAnimation() {
   useKeyboardHandler(
     {
       onMove: (e) => {
-        'worklet';
+        "worklet";
 
         height.value = e.height;
         progress.value = e.progress;
       },
       onEnd: (e) => {
-        'worklet';
+        "worklet";
 
         height.value = e.height;
         progress.value = progress.value;
       },
     },
-    []
+    [],
   );
 
   return { height, progress };
@@ -38,7 +38,7 @@ function NonUIProps() {
 
   const rStyle = useAnimatedStyle(() => {
     return {
-      backgroundColor: 'gray',
+      backgroundColor: "gray",
       height: height.value,
       width: interpolate(progress.value, [0, 1], [100, 200]),
     };
@@ -47,7 +47,7 @@ function NonUIProps() {
   return (
     <View style={{ flex: 1 }}>
       <TextInput
-        style={{ width: '100%', height: 50, backgroundColor: 'red' }}
+        style={{ width: "100%", height: 50, backgroundColor: "red" }}
       />
       <Reanimated.View style={rStyle} />
     </View>

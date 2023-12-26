@@ -1,15 +1,15 @@
 export const debounce = <F extends (...args: Parameters<F>) => ReturnType<F>>(
   worklet: F,
-  wait = 0
+  wait = 0,
 ) => {
-  'worklet';
+  "worklet";
 
   const value = {
     time: 0,
   };
 
   return (...args: Parameters<F>): ReturnType<F> | void => {
-    'worklet';
+    "worklet";
 
     const t = Date.now();
     const now = t - value.time;

@@ -39,7 +39,7 @@ If you are bothered why it's needed, you can read more about it in [architecture
 :::
 
 ```tsx
-import { KeyboardProvider } from 'react-native-keyboard-controller';
+import { KeyboardProvider } from "react-native-keyboard-controller";
 
 export default function App() {
   return <KeyboardProvider>{/* your code here */}</KeyboardProvider>;

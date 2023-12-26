@@ -1,5 +1,15 @@
 ---
-keywords: [react-native-keyboard-controller, KeyboardStickyView, keyboard sticky view, keyboard sticky footer, sticky view, sticky footer, keyboard, android]
+keywords:
+  [
+    react-native-keyboard-controller,
+    KeyboardStickyView,
+    keyboard sticky view,
+    keyboard sticky footer,
+    sticky view,
+    sticky footer,
+    keyboard,
+    android,
+  ]
 ---
 
 # KeyboardStickyView
@@ -10,15 +20,24 @@ A `KeyboardStickyView` component seamlessly ensures that a designated view stick
 Unlike [KeyboardAvoidingView](../keyboard-avoiding-view.mdx) the `KeyboardStickyView` just moves the content along with keyboard and not resizing the inner view. Try to compare animations of `KeyboardStickyView` and `KeyboardAvoidingView` to see a difference in details on how it works and which component is suitable for your needs.
 :::
 
-import ksv from './ksv.lottie.json';
-import kav from '@site/src/components/KeyboardAvoidingViewComparison/kav-animated.lottie.json';
-import ComparisonTable from '@site/src/components/ComparisonTable';
+import ksv from "./ksv.lottie.json";
+import kav from "@site/src/components/KeyboardAvoidingViewComparison/kav-animated.lottie.json";
+import ComparisonTable from "@site/src/components/ComparisonTable";
 
 <ComparisonTable
   leftLottie={ksv}
   rightLottie={kav}
-  leftText={<i><code>KeyboardStickyView</code> - only footer is moving (container is not resized)</i>}
-  rightText={<i><code>KeyboardAvoidingView</code> - entire container is getting resized</i>}
+  leftText={
+    <i>
+      <code>KeyboardStickyView</code> - only footer is moving (container is not
+      resized)
+    </i>
+  }
+  rightText={
+    <i>
+      <code>KeyboardAvoidingView</code> - entire container is getting resized
+    </i>
+  }
 />
 
 ## Example
@@ -28,7 +47,7 @@ const offset = { closed: 0, opened: 20 };
 
 <KeyboardStickyView offset={offset}>
   <Footer />
-</KeyboardStickyView>
+</KeyboardStickyView>;
 ```
 
 ## Props

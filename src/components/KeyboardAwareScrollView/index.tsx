@@ -1,5 +1,5 @@
-import React, { useCallback, useMemo } from 'react';
-import { useWindowDimensions } from 'react-native';
+import React, { useCallback, useMemo } from "react";
+import { useWindowDimensions } from "react-native";
 import Reanimated, {
   interpolate,
   scrollTo,
@@ -8,19 +8,19 @@ import Reanimated, {
   useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
-} from 'react-native-reanimated';
+} from "react-native-reanimated";
 
 import {
   useFocusedInputHandler,
   useReanimatedFocusedInput,
-} from 'react-native-keyboard-controller';
+} from "react-native-keyboard-controller";
 
-import { useSmoothKeyboardHandler } from './useSmoothKeyboardHandler';
-import { debounce } from './utils';
+import { useSmoothKeyboardHandler } from "./useSmoothKeyboardHandler";
+import { debounce } from "./utils";
 
-import type { FC } from 'react';
-import type { ScrollViewProps } from 'react-native';
-import type { FocusedInputLayoutChangedEvent } from 'react-native-keyboard-controller';
+import type { FC } from "react";
+import type { ScrollViewProps } from "react-native";
+import type { FocusedInputLayoutChangedEvent } from "react-native-keyboard-controller";
 
 type KeyboardAwareScrollViewProps = {
   bottomOffset?: number;
@@ -87,7 +87,7 @@ const KeyboardAwareScrollView: FC<KeyboardAwareScrollViewProps> = ({
         position.value = e.contentOffset.y;
       },
     },
-    []
+    [],
   );
 
   /**
@@ -95,7 +95,7 @@ const KeyboardAwareScrollView: FC<KeyboardAwareScrollViewProps> = ({
    */
   const maybeScroll = useCallback(
     (e: number, animated: boolean = false) => {
-      'worklet';
+      "worklet";
 
       const visibleRect = height - keyboardHeight.value;
       const absoluteY = layout.value?.layout.absoluteY || 0;
@@ -106,7 +106,7 @@ const KeyboardAwareScrollView: FC<KeyboardAwareScrollViewProps> = ({
         const interpolatedScrollTo = interpolate(
           e,
           [initialKeyboardSize.value, keyboardHeight.value],
-          [0, keyboardHeight.value - (height - point) + bottomOffset]
+          [0, keyboardHeight.value - (height - point) + bottomOffset],
         );
         const targetScrollY =
           Math.max(interpolatedScrollTo, 0) + scrollPosition.value;
@@ -123,17 +123,17 @@ const KeyboardAwareScrollView: FC<KeyboardAwareScrollViewProps> = ({
           scrollViewAnimatedRef,
           0,
           topOfScreen - positionOnScreen,
-          animated
+          animated,
         );
       }
 
       return 0;
     },
-    [bottomOffset]
+    [bottomOffset],
   );
 
   const onChangeText = useCallback(() => {
-    'worklet';
+    "worklet";
 
     // if typing a text caused layout shift, then we need to ignore this handler
     // because this event will be handled in `useAnimatedReaction` below
@@ -152,20 +152,20 @@ const KeyboardAwareScrollView: FC<KeyboardAwareScrollViewProps> = ({
   }, [maybeScroll]);
   const onChangeTextHandler = useMemo(
     () => debounce(onChangeText, 200),
-    [onChangeText]
+    [onChangeText],
   );
 
   useFocusedInputHandler(
     {
       onChangeText: onChangeTextHandler,
     },
-    [onChangeTextHandler]
+    [onChangeTextHandler],
   );
 
   useSmoothKeyboardHandler(
     {
       onStart: (e) => {
-        'worklet';
+        "worklet";
 
         const keyboardWillChangeSize =
           keyboardHeight.value !== e.height && e.height > 0;
@@ -209,18 +209,18 @@ const KeyboardAwareScrollView: FC<KeyboardAwareScrollViewProps> = ({
         }
       },
       onMove: (e) => {
-        'worklet';
+        "worklet";
 
         maybeScroll(e.height);
       },
       onEnd: (e) => {
-        'worklet';
+        "worklet";
 
         keyboardHeight.value = e.height;
         scrollPosition.value = position.value;
       },
     },
-    [height, maybeScroll]
+    [height, maybeScroll],
   );
 
   useAnimatedReaction(
@@ -237,14 +237,14 @@ const KeyboardAwareScrollView: FC<KeyboardAwareScrollViewProps> = ({
         layout.value = prevLayout;
       }
     },
-    []
+    [],
   );
 
   const view = useAnimatedStyle(
     () => ({
       paddingBottom: keyboardHeight.value,
     }),
-    []
+    [],
   );
 
   return (

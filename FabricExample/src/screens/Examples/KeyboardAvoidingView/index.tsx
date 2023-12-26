@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   KeyboardAvoidingView as RNKeyboardAvoidingView,
   KeyboardAvoidingViewProps,
@@ -6,16 +6,16 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-} from 'react-native';
-import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
-import { StackScreenProps } from '@react-navigation/stack';
-import { ExamplesStackParamList } from '../../../navigation/ExamplesStack';
-import styles from './styles';
+} from "react-native";
+import { KeyboardAvoidingView } from "react-native-keyboard-controller";
+import { StackScreenProps } from "@react-navigation/stack";
+import { ExamplesStackParamList } from "../../../navigation/ExamplesStack";
+import styles from "./styles";
 
 type Props = StackScreenProps<ExamplesStackParamList>;
 
-type Behavior = KeyboardAvoidingViewProps['behavior'];
-const behaviors: Behavior[] = ['padding', 'height', 'position'];
+type Behavior = KeyboardAvoidingViewProps["behavior"];
+const behaviors: Behavior[] = ["padding", "height", "position"];
 
 export default function KeyboardAvoidingViewExample({ navigation }: Props) {
   const [behavior, setBehavior] = useState<Behavior>(behaviors[0]);
@@ -29,14 +29,14 @@ export default function KeyboardAvoidingViewExample({ navigation }: Props) {
             style={styles.header}
             onPress={() => setPackageImplementation((value) => !value)}
           >
-            {isPackageImplementation ? 'Package' : 'RN'}
+            {isPackageImplementation ? "Package" : "RN"}
           </Text>
           <Text
             style={styles.header}
             onPress={() => {
               const index = behaviors.indexOf(behavior);
               setBehavior(
-                behaviors[index === behaviors.length - 1 ? 0 : index + 1]
+                behaviors[index === behaviors.length - 1 ? 0 : index + 1],
               );
             }}
           >

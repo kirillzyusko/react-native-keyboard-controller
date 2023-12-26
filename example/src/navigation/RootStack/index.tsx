@@ -1,9 +1,9 @@
-import React from 'react';
+import React from "react";
 
-import { createStackNavigator } from '@react-navigation/stack';
-import { ScreenNames } from '../../constants/screenNames';
-import ExamplesStack from '../ExamplesStack';
-import ExampleMain from '../../screens/Examples/Main';
+import { createStackNavigator } from "@react-navigation/stack";
+import { ScreenNames } from "../../constants/screenNames";
+import ExamplesStack from "../ExamplesStack";
+import ExampleMain from "../../screens/Examples/Main";
 
 export type RootStackParamList = {
   [ScreenNames.EXAMPLES]: undefined;
@@ -14,7 +14,7 @@ const Stack = createStackNavigator<RootStackParamList>();
 
 const options = {
   [ScreenNames.EXAMPLES_STACK]: { headerShown: false },
-  [ScreenNames.EXAMPLES]: { title: 'Examples' },
+  [ScreenNames.EXAMPLES]: { title: "Examples" },
 };
 
 const RootStack = () => (

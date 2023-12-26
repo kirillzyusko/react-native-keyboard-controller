@@ -24,10 +24,10 @@ keywords:
 useFocusedInputHandler(
   {
     onChangeText: ({ text }) => {
-      'worklet';
+      "worklet";
     },
   },
-  []
+  [],
 );
 ```
 

@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
-import { View, StatusBar, StatusBarStyle, Button } from 'react-native';
+import React, { useState } from "react";
+import { View, StatusBar, StatusBarStyle, Button } from "react-native";
 
-import KeyboardAnimationTemplate from '../../../components/KeyboardAnimation';
-import { randomColor } from '../../../utils';
+import KeyboardAnimationTemplate from "../../../components/KeyboardAnimation";
+import { randomColor } from "../../../utils";
 
 export default function StatusBarManipulation() {
-  const [color, setColor] = useState('#00FF0000');
-  const [barStyle, setBarStyle] = useState<StatusBarStyle>('light-content');
+  const [color, setColor] = useState("#00FF0000");
+  const [barStyle, setBarStyle] = useState<StatusBarStyle>("light-content");
   const [hidden, setHidden] = useState(false);
   const [animated, setAnimated] = useState(true);
 
   return (
-    <View style={{ flex: 1, backgroundColor: 'pink' }}>
+    <View style={{ flex: 1, backgroundColor: "pink" }}>
       <StatusBar
         backgroundColor={color}
         barStyle={barStyle}
@@ -21,7 +21,7 @@ export default function StatusBarManipulation() {
       />
       <KeyboardAnimationTemplate />
       <Button
-        title={`Set ${hidden ? 'shown' : 'hidden'}`}
+        title={`Set ${hidden ? "shown" : "hidden"}`}
         onPress={() => setHidden(!hidden)}
       />
       <Button
@@ -29,14 +29,14 @@ export default function StatusBarManipulation() {
         onPress={() => setColor(`${randomColor()}`)}
       />
       <Button
-        title={`Set ${!animated ? '' : 'not'} animated`}
+        title={`Set ${!animated ? "" : "not"} animated`}
         onPress={() => setAnimated(!animated)}
       />
       <Button
         title={`Change ${barStyle}`}
         onPress={() =>
           setBarStyle(
-            barStyle === 'light-content' ? 'dark-content' : 'light-content'
+            barStyle === "light-content" ? "dark-content" : "light-content",
           )
         }
       />

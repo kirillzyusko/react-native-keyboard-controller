@@ -1,27 +1,27 @@
-import React, { forwardRef, useCallback, useMemo } from 'react';
-import { View, useWindowDimensions } from 'react-native';
+import React, { forwardRef, useCallback, useMemo } from "react";
+import { View, useWindowDimensions } from "react-native";
 import Reanimated, {
   interpolate,
   runOnUI,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
-} from 'react-native-reanimated';
+} from "react-native-reanimated";
 
-import { useKeyboardAnimation } from './hooks';
+import { useKeyboardAnimation } from "./hooks";
 
-import type { LayoutRectangle, ViewProps } from 'react-native';
+import type { LayoutRectangle, ViewProps } from "react-native";
 
 type Props = {
   /**
    * Specify how to react to the presence of the keyboard.
    */
-  behavior?: 'height' | 'position' | 'padding';
+  behavior?: "height" | "position" | "padding";
 
   /**
    * Style of the content container when `behavior` is 'position'.
    */
-  contentContainerStyle?: ViewProps['style'];
+  contentContainerStyle?: ViewProps["style"];
 
   /**
    * Controls whether this `KeyboardAvoidingView` instance should take effect.
@@ -59,7 +59,7 @@ const KeyboardAvoidingView = forwardRef<View, React.PropsWithChildren<Props>>(
       onLayout: onLayoutProps,
       ...props
     },
-    ref
+    ref,
   ) => {
     const initialFrame = useSharedValue<LayoutRectangle | null>(null);
     const frame = useDerivedValue(() => initialFrame.value || defaultLayout);
@@ -68,7 +68,7 @@ const KeyboardAvoidingView = forwardRef<View, React.PropsWithChildren<Props>>(
     const { height: screenHeight } = useWindowDimensions();
 
     const relativeKeyboardHeight = useCallback(() => {
-      'worklet';
+      "worklet";
 
       const keyboardY =
         screenHeight - keyboard.heightWhenOpened.value - keyboardVerticalOffset;
@@ -77,30 +77,30 @@ const KeyboardAvoidingView = forwardRef<View, React.PropsWithChildren<Props>>(
     }, [screenHeight, keyboardVerticalOffset]);
 
     const onLayoutWorklet = useCallback((layout: LayoutRectangle) => {
-      'worklet';
+      "worklet";
 
       if (keyboard.isClosed.value) {
         initialFrame.value = layout;
       }
     }, []);
-    const onLayout = useCallback<NonNullable<ViewProps['onLayout']>>(
+    const onLayout = useCallback<NonNullable<ViewProps["onLayout"]>>(
       (e) => {
         runOnUI(onLayoutWorklet)(e.nativeEvent.layout);
         onLayoutProps?.(e);
       },
-      [onLayoutProps]
+      [onLayoutProps],
     );
 
     const animatedStyle = useAnimatedStyle(() => {
       const bottom = interpolate(
         keyboard.progress.value,
         [0, 1],
-        [0, relativeKeyboardHeight()]
+        [0, relativeKeyboardHeight()],
       );
       const bottomHeight = enabled ? bottom : 0;
 
       switch (behavior) {
-        case 'height':
+        case "height":
           if (!keyboard.isClosed.value) {
             return {
               height: frame.value.height - bottomHeight,
@@ -110,21 +110,21 @@ const KeyboardAvoidingView = forwardRef<View, React.PropsWithChildren<Props>>(
 
           return {};
 
-        case 'position':
+        case "position":
           return { bottom: bottomHeight };
 
-        case 'padding':
+        case "padding":
           return { paddingBottom: bottomHeight };
 
         default:
           return {};
       }
     }, [behavior, enabled, relativeKeyboardHeight]);
-    const isPositionBehavior = behavior === 'position';
+    const isPositionBehavior = behavior === "position";
     const containerStyle = isPositionBehavior ? contentContainerStyle : style;
     const combinedStyles = useMemo(
       () => [containerStyle, animatedStyle],
-      [containerStyle, animatedStyle]
+      [containerStyle, animatedStyle],
     );
 
     if (isPositionBehavior) {
@@ -145,7 +145,7 @@ const KeyboardAvoidingView = forwardRef<View, React.PropsWithChildren<Props>>(
         {children}
       </Reanimated.View>
     );
-  }
+  },
 );
 
 export default KeyboardAvoidingView;

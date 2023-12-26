@@ -6,7 +6,7 @@ import type {
   FocusedInputTextHandlerHook,
   KeyboardHandlerHook,
   NativeEvent,
-} from './types';
+} from "./types";
 
 const NOOP = () => () => {};
 export const useAnimatedKeyboardHandler: KeyboardHandlerHook<

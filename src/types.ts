@@ -2,7 +2,7 @@ import type {
   EmitterSubscription,
   NativeSyntheticEvent,
   ViewProps,
-} from 'react-native';
+} from "react-native";
 
 // DirectEventHandler events declaration
 export type NativeEvent = {
@@ -33,32 +33,32 @@ export type EventWithName<T> = {
 export type KeyboardControllerProps = {
   // callback props
   onKeyboardMoveStart?: (
-    e: NativeSyntheticEvent<EventWithName<NativeEvent>>
+    e: NativeSyntheticEvent<EventWithName<NativeEvent>>,
   ) => void;
   onKeyboardMove?: (
-    e: NativeSyntheticEvent<EventWithName<NativeEvent>>
+    e: NativeSyntheticEvent<EventWithName<NativeEvent>>,
   ) => void;
   onKeyboardMoveEnd?: (
-    e: NativeSyntheticEvent<EventWithName<NativeEvent>>
+    e: NativeSyntheticEvent<EventWithName<NativeEvent>>,
   ) => void;
   onKeyboardMoveInteractive?: (
-    e: NativeSyntheticEvent<EventWithName<NativeEvent>>
+    e: NativeSyntheticEvent<EventWithName<NativeEvent>>,
   ) => void;
   onFocusedInputLayoutChanged?: (
-    e: NativeSyntheticEvent<EventWithName<FocusedInputLayoutChangedEvent>>
+    e: NativeSyntheticEvent<EventWithName<FocusedInputLayoutChangedEvent>>,
   ) => void;
   onFocusedInputTextChanged?: (
-    e: NativeSyntheticEvent<EventWithName<FocusedInputTextChangedEvent>>
+    e: NativeSyntheticEvent<EventWithName<FocusedInputTextChangedEvent>>,
   ) => void;
   // fake props used to activate reanimated bindings
   onKeyboardMoveReanimated?: (
-    e: NativeSyntheticEvent<EventWithName<NativeEvent>>
+    e: NativeSyntheticEvent<EventWithName<NativeEvent>>,
   ) => void;
   onFocusedInputLayoutChangedReanimated?: (
-    e: NativeSyntheticEvent<EventWithName<FocusedInputLayoutChangedEvent>>
+    e: NativeSyntheticEvent<EventWithName<FocusedInputLayoutChangedEvent>>,
   ) => void;
   onFocusedInputTextChangedReanimated?: (
-    e: NativeSyntheticEvent<EventWithName<FocusedInputTextChangedEvent>>
+    e: NativeSyntheticEvent<EventWithName<FocusedInputTextChangedEvent>>,
   ) => void;
   // props
   statusBarTranslucent?: boolean;
@@ -67,7 +67,7 @@ export type KeyboardControllerProps = {
 } & ViewProps;
 
 export type KeyboardGestureAreaProps = {
-  interpolator: 'ios' | 'linear';
+  interpolator: "ios" | "linear";
   /**
    * Whether to allow to show a keyboard from dismissed state by swipe up.
    * Default to `false`.
@@ -94,10 +94,10 @@ export type KeyboardControllerModule = {
 
 // Event module declarations
 export type KeyboardControllerEvents =
-  | 'keyboardWillShow'
-  | 'keyboardDidShow'
-  | 'keyboardWillHide'
-  | 'keyboardDidHide';
+  | "keyboardWillShow"
+  | "keyboardDidShow"
+  | "keyboardWillHide"
+  | "keyboardDidHide";
 export type KeyboardEventData = {
   height: number;
   duration: number;
@@ -107,7 +107,7 @@ export type KeyboardEventData = {
 export type KeyboardEventsModule = {
   addListener: (
     name: KeyboardControllerEvents,
-    cb: (e: KeyboardEventData) => void
+    cb: (e: KeyboardEventData) => void,
   ) => EmitterSubscription;
 };
 
@@ -119,25 +119,25 @@ export type KeyboardHandlerHook<TContext, Event> = (
     onKeyboardMoveEnd?: (e: NativeEvent, context: TContext) => void;
     onKeyboardMoveInteractive?: (e: NativeEvent, context: TContext) => void;
   },
-  dependencies?: unknown[]
+  dependencies?: unknown[],
 ) => (e: NativeSyntheticEvent<Event>) => void;
 export type FocusedInputLayoutHandlerHook<TContext, Event> = (
   handlers: {
     onFocusedInputLayoutChanged?: (
       e: FocusedInputLayoutChangedEvent,
-      context: TContext
+      context: TContext,
     ) => void;
   },
-  dependencies?: unknown[]
+  dependencies?: unknown[],
 ) => (e: NativeSyntheticEvent<Event>) => void;
 export type FocusedInputTextHandlerHook<TContext, Event> = (
   handlers: {
     onFocusedInputTextChanged?: (
       e: FocusedInputTextChangedEvent,
-      context: TContext
+      context: TContext,
     ) => void;
   },
-  dependencies?: unknown[]
+  dependencies?: unknown[],
 ) => (e: NativeSyntheticEvent<Event>) => void;
 
 // package types

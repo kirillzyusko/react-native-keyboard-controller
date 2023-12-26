@@ -18,7 +18,7 @@
 }
 
 /* For readability concerns, you should choose a lighter palette in dark mode. */
-[data-theme='dark'] {
+[data-theme="dark"] {
   --ifm-color-primary: #00b2e7;
   --ifm-color-primary-dark: #00acd7;
   --ifm-color-primary-darker: #00d2e2;
@@ -29,7 +29,7 @@
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
 }
 
-[data-theme='light'] .DocSearch {
+[data-theme="light"] .DocSearch {
   /* --docsearch-primary-color: var(--ifm-color-primary); */
   /* --docsearch-text-color: var(--ifm-font-color-base); */
   --docsearch-muted-color: var(--ifm-color-secondary-darkest);
@@ -47,7 +47,7 @@
   --docsearch-footer-background: var(--ifm-color-white);
 }
 
-[data-theme='dark'] .DocSearch {
+[data-theme="dark"] .DocSearch {
   --docsearch-text-color: var(--ifm-font-color-base);
   --docsearch-muted-color: var(--ifm-color-secondary-darkest);
   --docsearch-container-background: rgba(47, 55, 69, 0.7);
@@ -76,12 +76,12 @@
   border-left: 3px solid;
 }
 
-[data-theme='light'] .code-block-add-line {
+[data-theme="light"] .code-block-add-line {
   background-color: #00ff0020;
   border-left-color: #00ff0080;
 }
 
-[data-theme='dark'] .code-block-add-line {
+[data-theme="dark"] .code-block-add-line {
   background-color: #ffff0020;
   border-left-color: #ffff0080;
 }

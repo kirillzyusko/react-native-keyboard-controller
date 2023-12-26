@@ -1,11 +1,11 @@
-import { ScreenNames } from '../../../constants/screenNames';
-import React, { useCallback } from 'react';
-import { ScrollView } from 'react-native-gesture-handler';
-import ExampleLink from './components/ExampleLink';
-import { examples } from './constants';
-import { StyleSheet } from 'react-native';
-import type { StackScreenProps } from '@react-navigation/stack';
-import type { RootStackParamList } from '../../../navigation/RootStack';
+import { ScreenNames } from "../../../constants/screenNames";
+import React, { useCallback } from "react";
+import { ScrollView } from "react-native-gesture-handler";
+import ExampleLink from "./components/ExampleLink";
+import { examples } from "./constants";
+import { StyleSheet } from "react-native";
+import type { StackScreenProps } from "@react-navigation/stack";
+import type { RootStackParamList } from "../../../navigation/RootStack";
 
 const styles = StyleSheet.create({
   scrollViewContainer: {
@@ -20,7 +20,7 @@ const ExampleMain = ({ navigation }: Props) => {
   const onExamplePress = useCallback(
     (info: ScreenNames) =>
       navigation.navigate(ScreenNames.EXAMPLES_STACK, { screen: info }),
-    []
+    [],
   );
 
   return (

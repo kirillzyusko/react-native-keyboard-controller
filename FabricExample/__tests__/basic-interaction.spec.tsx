@@ -1,9 +1,9 @@
-import '@testing-library/jest-native/extend-expect';
-import React from 'react';
-import { Animated } from 'react-native';
-import { render } from '@testing-library/react-native';
+import "@testing-library/jest-native/extend-expect";
+import React from "react";
+import { Animated } from "react-native";
+import { render } from "@testing-library/react-native";
 
-import { useKeyboardAnimation } from 'react-native-keyboard-controller';
+import { useKeyboardAnimation } from "react-native-keyboard-controller";
 
 function TestComponent() {
   const { height } = useKeyboardAnimation();
@@ -16,11 +16,11 @@ function TestComponent() {
   );
 }
 
-describe('basic keyboard interaction', () => {
-  it('should have different styles depends on position', () => {
+describe("basic keyboard interaction", () => {
+  it("should have different styles depends on position", () => {
     const { getByTestId, update } = render(<TestComponent />);
 
-    expect(getByTestId('view')).toHaveStyle({ transform: [{ translateY: 0 }] });
+    expect(getByTestId("view")).toHaveStyle({ transform: [{ translateY: 0 }] });
 
     (useKeyboardAnimation as jest.Mock).mockReturnValue({
       height: new Animated.Value(150),
@@ -28,7 +28,7 @@ describe('basic keyboard interaction', () => {
     });
     update(<TestComponent />);
 
-    expect(getByTestId('view')).toHaveStyle({
+    expect(getByTestId("view")).toHaveStyle({
       transform: [{ translateY: 150 }],
     });
 
@@ -38,7 +38,7 @@ describe('basic keyboard interaction', () => {
     });
     update(<TestComponent />);
 
-    expect(getByTestId('view')).toHaveStyle({
+    expect(getByTestId("view")).toHaveStyle({
       transform: [{ translateY: 300 }],
     });
   });

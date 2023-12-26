@@ -5,8 +5,8 @@ on:
     branches:
       - main
     paths:
-      - '.github/workflows/verify-docs.yml'
-      - 'docs/**'
+      - ".github/workflows/verify-docs.yml"
+      - "docs/**"
     types:
       - opened
       - reopened

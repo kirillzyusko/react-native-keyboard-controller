@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { Text, TextInput, View } from 'react-native';
-import { useReanimatedKeyboardAnimation } from 'react-native-keyboard-controller';
+import React, { useEffect, useState } from "react";
+import { Text, TextInput, View } from "react-native";
+import { useReanimatedKeyboardAnimation } from "react-native-keyboard-controller";
 import Reanimated, {
   useAnimatedStyle,
   useDerivedValue,
-} from 'react-native-reanimated';
+} from "react-native-reanimated";
 
-import Message from '../../../components/Message';
-import { history } from '../../../components/Message/data';
-import { useTelegramTransitions } from './hooks';
-import styles from './styles';
+import Message from "../../../components/Message";
+import { history } from "../../../components/Message/data";
+import { useTelegramTransitions } from "./hooks";
+import styles from "./styles";
 
-import type { StackScreenProps } from '@react-navigation/stack';
-import type { ExamplesStackParamList } from '../../../navigation/ExamplesStack';
+import type { StackScreenProps } from "@react-navigation/stack";
+import type { ExamplesStackParamList } from "../../../navigation/ExamplesStack";
 
 const AnimatedTextInput = Reanimated.createAnimatedComponent(TextInput);
 
@@ -27,7 +27,7 @@ function ReanimatedChat({ navigation }: Props) {
           style={styles.header}
           onPress={() => setTGTransition((value) => !value)}
         >
-          {`Switch to ${isTGTransition ? 'Platform' : 'Telegram'}`}
+          {`Switch to ${isTGTransition ? "Platform" : "Telegram"}`}
         </Text>
       ),
     });
@@ -37,29 +37,29 @@ function ReanimatedChat({ navigation }: Props) {
   const { height: platform } = useReanimatedKeyboardAnimation();
   const height = useDerivedValue(
     () => (isTGTransition ? telegram.value : platform.value),
-    [isTGTransition]
+    [isTGTransition],
   );
 
   const scrollViewStyle = useAnimatedStyle(
     () => ({
       transform: [{ translateY: height.value }, ...styles.inverted.transform],
     }),
-    []
+    [],
   );
   const textInputStyle = useAnimatedStyle(
     () => ({
       height: 50,
-      width: '100%',
-      backgroundColor: '#BCBCBC',
+      width: "100%",
+      backgroundColor: "#BCBCBC",
       transform: [{ translateY: height.value }],
     }),
-    []
+    [],
   );
   const fakeView = useAnimatedStyle(
     () => ({
       height: Math.abs(height.value),
     }),
-    []
+    [],
   );
 
   return (

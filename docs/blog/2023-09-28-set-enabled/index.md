@@ -19,7 +19,7 @@ The star feature of `react-native-keyboard-controller` version `1.8.0` is the in
 Using the `setEnabled` method is incredibly straightforward. Here's a quick example of how to integrate it into your React Native project:
 
 ```tsx
-import { useKeyboardController } from 'react-native-keyboard-controller';
+import { useKeyboardController } from "react-native-keyboard-controller";
 
 const { enabled, setEnabled } = useKeyboardController();
 

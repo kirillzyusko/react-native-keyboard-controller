@@ -8,7 +8,7 @@
 ## Example
 
 ```tsx
-import { useReanimatedKeyboardAnimation } from 'react-native-keyboard-controller';
+import { useReanimatedKeyboardAnimation } from "react-native-keyboard-controller";
 
 const { height, progress } = useReanimatedKeyboardAnimation();
 ```
@@ -22,7 +22,7 @@ import {
   KeyboardController,
   KeyboardContext,
   AndroidSoftInputModes,
-} from 'react-native-keyboard-controller';
+} from "react-native-keyboard-controller";
 
 class KeyboardAnimation extends React.PureComponent {
   // 1. use context value
@@ -32,7 +32,7 @@ class KeyboardAnimation extends React.PureComponent {
     // 2. set input mode for android to `adjustResize`
     // (can be omitted if you already have `adjustResize` in `AndroidManifest.xml`)
     KeyboardController.setInputMode(
-      AndroidSoftInputModes.SOFT_INPUT_ADJUST_RESIZE
+      AndroidSoftInputModes.SOFT_INPUT_ADJUST_RESIZE,
     );
   }
 

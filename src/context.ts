@@ -1,13 +1,13 @@
-import { createContext, useContext } from 'react';
-import { Animated } from 'react-native';
+import { createContext, useContext } from "react";
+import { Animated } from "react-native";
 
 import type {
   FocusedInputHandlers,
   FocusedInputLayoutChangedEvent,
   KeyboardHandlers,
-} from './types';
-import type React from 'react';
-import type { SharedValue } from 'react-native-reanimated';
+} from "./types";
+import type React from "react";
+import type { SharedValue } from "react-native-reanimated";
 
 export type AnimatedContext = {
   progress: Animated.Value;
@@ -35,7 +35,7 @@ const withSharedValue = <T>(value: T): SharedValue<T> => ({
 });
 const DEFAULT_SHARED_VALUE = withSharedValue(0);
 const DEFAULT_LAYOUT = withSharedValue<FocusedInputLayoutChangedEvent | null>(
-  null
+  null,
 );
 const defaultContext: KeyboardAnimationContext = {
   enabled: true,
@@ -58,7 +58,7 @@ export const useKeyboardContext = () => {
 
   if (__DEV__ && context === defaultContext) {
     console.warn(
-      "Couldn't find real values for `KeyboardContext`. Please make sure you're inside of `KeyboardProvider` - otherwise functionality of `react-native-keyboard-controller` will not work."
+      "Couldn't find real values for `KeyboardContext`. Please make sure you're inside of `KeyboardProvider` - otherwise functionality of `react-native-keyboard-controller` will not work.",
     );
   }
 

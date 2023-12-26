@@ -1,12 +1,12 @@
-import React from 'react';
-import Lottie from 'lottie-react';
-import interactive from './interactive.lottie.json';
-import transform from './transform.lottie.json';
-import crossPlatform from './cross-platform.lottie.json';
-import textInputs from './text-inputs.lottie.json';
+import React from "react";
+import Lottie from "lottie-react";
+import interactive from "./interactive.lottie.json";
+import transform from "./transform.lottie.json";
+import crossPlatform from "./cross-platform.lottie.json";
+import textInputs from "./text-inputs.lottie.json";
 
-import clsx from 'clsx';
-import styles from './styles.module.css';
+import clsx from "clsx";
+import styles from "./styles.module.css";
 
 type FeatureItem = {
   title: string;
@@ -16,7 +16,7 @@ type FeatureItem = {
 
 const FeatureList: FeatureItem[] = [
   {
-    title: 'Track each keyboard frame',
+    title: "Track each keyboard frame",
     lottie: transform,
     description: (
       <>
@@ -26,12 +26,12 @@ const FeatureList: FeatureItem[] = [
     ),
   },
   {
-    title: 'Interactive keyboard',
+    title: "Interactive keyboard",
     lottie: interactive,
     description: <>Dismiss your keyboard interactively without a hassle</>,
   },
   {
-    title: 'Cross platform',
+    title: "Cross platform",
     lottie: crossPlatform,
     description: (
       <>
@@ -41,7 +41,7 @@ const FeatureList: FeatureItem[] = [
     ),
   },
   {
-    title: 'Reach metadata',
+    title: "Reach metadata",
     lottie: textInputs,
     description: (
       <>
@@ -59,7 +59,7 @@ const lottieStyle = {
 
 function Feature({ title, lottie, description }: FeatureItem) {
   return (
-    <div className={clsx('col col--3')}>
+    <div className={clsx("col col--3")}>
       <div className="text--center">
         <Lottie
           className="lottie"
