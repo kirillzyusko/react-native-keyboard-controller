@@ -17,7 +17,7 @@ export const KeyboardController: KeyboardControllerModule = {
   removeListeners: NOOP,
 };
 export const KeyboardEvents: KeyboardEventsModule = {
-  addListener: () => ({ remove: NOOP }) as EmitterSubscription,
+  addListener: () => ({ remove: NOOP } as EmitterSubscription),
 };
 export const KeyboardControllerView =
   View as unknown as React.FC<KeyboardControllerProps>;

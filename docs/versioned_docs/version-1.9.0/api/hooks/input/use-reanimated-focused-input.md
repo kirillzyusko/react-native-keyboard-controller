@@ -30,8 +30,8 @@ The `input` property from this hook is returned as `SharedValue`. The returned d
 
 ```ts
 type FocusedInputLayoutChangedEvent = {
-  // tag of the focused TextInput
-  target: number;
+  target: number; // tag of the focused TextInput
+
   // layout of the focused TextInput
   layout: {
     x: number; // `x` coordinate inside the parent component
