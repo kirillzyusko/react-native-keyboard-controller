@@ -24,6 +24,7 @@ function useGradualKeyboardAnimation() {
         "worklet";
 
         height.value = e.height;
+        progress.value = e.progress;
       },
     },
     [],
