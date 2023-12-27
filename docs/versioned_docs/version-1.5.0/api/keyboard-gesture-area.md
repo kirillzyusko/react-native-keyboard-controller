@@ -38,6 +38,8 @@ A boolean prop which allows to customize interactive keyboard behavior. If set t
 
 ```tsx
 <KeyboardGestureArea interpolator="ios">
-  <ScrollView>{/* The other components in your tree */}</ScrollView>
+  <ScrollView>
+    {/* The other UI components of application in your tree */}
+  </ScrollView>
 </KeyboardGestureArea>
 ```
