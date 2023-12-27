@@ -5,10 +5,14 @@ node_modules/
 
 *.lottie.json
 
+example/android/build/
 example/android/app/build/
 example/ios/build/
 example/src/**/Lottie/*.json
 
-FabricExample/android/app/build/
+FabricExample/android/build/
+FabricExample/android/app/
 FabricExample/ios/build/
 FabricExample/src/**/Lottie/*.json
+
+android/build/
