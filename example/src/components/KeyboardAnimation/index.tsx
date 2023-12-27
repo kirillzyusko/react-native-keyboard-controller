@@ -1,10 +1,11 @@
-import React from 'react';
-import { Animated, TextInput, View } from 'react-native';
+import React from "react";
+import { Animated, TextInput, View } from "react-native";
 import {
   useKeyboardAnimation,
   useKeyboardAnimationReplica,
-} from 'react-native-keyboard-controller';
-import styles from './styles';
+} from "react-native-keyboard-controller";
+
+import styles from "./styles";
 
 export default function KeyboardAnimation() {
   const { height, progress } = useKeyboardAnimation();
@@ -17,7 +18,7 @@ export default function KeyboardAnimation() {
           style={{
             width: 50,
             height: 50,
-            backgroundColor: 'green',
+            backgroundColor: "green",
             borderRadius: 25,
             transform: [
               {
@@ -37,7 +38,7 @@ export default function KeyboardAnimation() {
             width: 200,
             marginTop: 50,
             height: 50,
-            backgroundColor: 'yellow',
+            backgroundColor: "yellow",
           }}
         />
         <View style={[styles.row, styles.center]}>
@@ -45,7 +46,7 @@ export default function KeyboardAnimation() {
             style={{
               width: 50,
               height: 50,
-              backgroundColor: 'red',
+              backgroundColor: "red",
               borderRadius: 25,
               transform: [{ translateY: height }],
             }}
@@ -54,7 +55,7 @@ export default function KeyboardAnimation() {
             style={{
               width: 50,
               height: 50,
-              backgroundColor: 'blue',
+              backgroundColor: "blue",
               borderRadius: 25,
               transform: [{ translateY: heightReplica }],
             }}

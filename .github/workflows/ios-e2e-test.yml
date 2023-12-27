@@ -2,24 +2,24 @@ name: 🛠 iOS e2e tests
 on:
   pull_request:
     paths:
-      - '.github/workflows/ios-e2e-test.yml'
-      - 'react-native-keyboard-controller.podspec'
-      - 'package.json'
-      - 'ios/**'
-      - 'example/**'
-      - 'e2e/**'
-      - 'src/**'
+      - ".github/workflows/ios-e2e-test.yml"
+      - "react-native-keyboard-controller.podspec"
+      - "package.json"
+      - "ios/**"
+      - "example/**"
+      - "e2e/**"
+      - "src/**"
   push:
     branches:
       - main
     paths:
-      - '.github/workflows/ios-e2e-test.yml'
-      - 'react-native-keyboard-controller.podspec'
-      - 'package.json'
-      - 'ios/**'
-      - 'example/**'
-      - 'e2e/**'
-      - 'src/**'
+      - ".github/workflows/ios-e2e-test.yml"
+      - "react-native-keyboard-controller.podspec"
+      - "package.json"
+      - "ios/**"
+      - "example/**"
+      - "e2e/**"
+      - "src/**"
 
 jobs:
   test:
@@ -29,14 +29,14 @@ jobs:
     env:
       WORKING_DIRECTORY: example
     concurrency:
-        group: ios-e2e-${{ github.ref }}
-        cancel-in-progress: true
+      group: ios-e2e-${{ github.ref }}
+      cancel-in-progress: true
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: 16.x
-          cache: 'yarn'
+          node-version: 18.x
+          cache: "yarn"
       - name: Get Xcode version
         run: xcodebuild -version
       - name: Install AppleSimulatorUtils
@@ -81,7 +81,7 @@ jobs:
         working-directory: e2e
         run: yarn build-example:ios
       - name: Use software keyboard
-        run: defaults write com.apple.iphonesimulator ConnectHardwareKeyboard -bool NO  
+        run: defaults write com.apple.iphonesimulator ConnectHardwareKeyboard -bool NO
       - name: Test app
         working-directory: e2e
         run: yarn test-example:ios

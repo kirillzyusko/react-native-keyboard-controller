@@ -9,10 +9,14 @@ function CloseScreen() {
         onPress={() => KeyboardController.dismiss()}
         testID="close_keyboard_button"
       />
-      <TextInput style={styles.input} placeholder="Touch to open the keyboard..." placeholderTextColor="#7C7C7C" />
+      <TextInput
+        style={styles.input}
+        placeholder="Touch to open the keyboard..."
+        placeholderTextColor="#7C7C7C"
+      />
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   input: {
@@ -21,7 +25,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: "#3C3C3C",
     borderRadius: 8,
-    alignSelf: 'center',
+    alignSelf: "center",
     paddingHorizontal: 8,
     marginTop: 16,
   },

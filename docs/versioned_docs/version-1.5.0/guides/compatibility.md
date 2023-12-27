@@ -1,7 +1,8 @@
 ---
 sidebar_position: 4
 description: Compatibility of library with different react-native versions and architectures
-keywords: [react-native-keyboard-controller, compatibility, react-native versions]
+keywords:
+  [react-native-keyboard-controller, compatibility, react-native versions]
 ---
 
 # Compatibility
@@ -12,10 +13,10 @@ Starting from `1.2.0` this library adds support for a new architecture called `F
 
 Below you can find a table with supported versions:
 
-|library version|react-native version|
-|-------|--------------------|
-|1.3.0+ | 0.70.0+            |
-|1.2.0+ | 0.69.0+            |
+| library version | react-native version |
+| --------------- | -------------------- |
+| 1.3.0+          | 0.70.0+              |
+| 1.2.0+          | 0.69.0+              |
 
 :::info
 

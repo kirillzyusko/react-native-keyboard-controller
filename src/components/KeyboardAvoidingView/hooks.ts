@@ -1,6 +1,6 @@
-import { useSharedValue } from 'react-native-reanimated';
+import { useSharedValue } from "react-native-reanimated";
 
-import { useKeyboardHandler } from '../../hooks';
+import { useKeyboardHandler } from "../../hooks";
 
 export const useKeyboardAnimation = () => {
   const heightWhenOpened = useSharedValue(0);
@@ -11,7 +11,7 @@ export const useKeyboardAnimation = () => {
   useKeyboardHandler(
     {
       onStart: (e) => {
-        'worklet';
+        "worklet";
 
         if (e.height > 0) {
           isClosed.value = false;
@@ -19,18 +19,18 @@ export const useKeyboardAnimation = () => {
         }
       },
       onMove: (e) => {
-        'worklet';
+        "worklet";
 
         progress.value = e.progress;
         height.value = e.height;
       },
       onEnd: (e) => {
-        'worklet';
+        "worklet";
 
         isClosed.value = e.height === 0;
       },
     },
-    []
+    [],
   );
 
   return { height, progress, heightWhenOpened, isClosed };

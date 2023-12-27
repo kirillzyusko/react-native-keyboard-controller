@@ -5,20 +5,20 @@ on:
     branches:
       - main
     paths:
-      - '.github/workflows/build-android-fabric.yml'
-      - 'android/**'
-      - 'FabricExample/android/**'
-      - 'yarn.lock'
-      - 'FabricExample/yarn.lock'
-      - 'src/specs/**'
+      - ".github/workflows/build-android-fabric.yml"
+      - "android/**"
+      - "FabricExample/android/**"
+      - "yarn.lock"
+      - "FabricExample/yarn.lock"
+      - "src/specs/**"
   pull_request:
     paths:
-      - '.github/workflows/build-android-fabric.yml'
-      - 'android/**'
-      - 'FabricExample/android/**'
-      - 'yarn.lock'
-      - 'FabricExample/yarn.lock'
-      - 'src/specs/**'
+      - ".github/workflows/build-android-fabric.yml"
+      - "android/**"
+      - "FabricExample/android/**"
+      - "yarn.lock"
+      - "FabricExample/yarn.lock"
+      - "src/specs/**"
 
 jobs:
   build:
@@ -30,8 +30,8 @@ jobs:
       - name: Setup JDK 11
         uses: actions/setup-java@v3
         with:
-          distribution: 'microsoft'
-          java-version: '11'
+          distribution: "microsoft"
+          java-version: "11"
 
       - name: Get yarn cache directory path
         id: fabric-yarn-cache-dir-path

@@ -1,5 +1,11 @@
 ---
-keywords: [react-native-keyboard-controller, useKeyboardAnimation, react-native animated, react hook]
+keywords:
+  [
+    react-native-keyboard-controller,
+    useKeyboardAnimation,
+    react-native animated,
+    react hook,
+  ]
 ---
 
 # useKeyboardAnimation
@@ -35,7 +41,9 @@ class KeyboardAnimation extends React.PureComponent {
   componentDidMount() {
     // 2. set input mode for android to `adjustResize`
     // (can be omitted if you already have `adjustResize` in `AndroidManifest.xml`)
-    KeyboardController.setInputMode(AndroidSoftInputModes.SOFT_INPUT_ADJUST_RESIZE);
+    KeyboardController.setInputMode(
+      AndroidSoftInputModes.SOFT_INPUT_ADJUST_RESIZE,
+    );
   }
 
   componentWillUnmount() {

@@ -20,8 +20,8 @@ import { KeyboardProvider } from "react-native-keyboard-controller";
 const App = () => {
   return (
     <KeyboardProvider>
-      {/* other components in your tree */}
+      {/* The other components in your tree */}
     </KeyboardProvider>
   );
-}
+};
 ```

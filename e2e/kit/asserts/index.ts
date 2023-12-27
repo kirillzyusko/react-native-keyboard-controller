@@ -1,16 +1,16 @@
-import fs from 'fs';
+import fs from "fs";
 
-import colors from 'colors/safe';
-import { device } from 'detox';
-import pixelmatch from 'pixelmatch';
-import { PNG } from 'pngjs';
+import colors from "colors/safe";
+import { device } from "detox";
+import pixelmatch from "pixelmatch";
+import { PNG } from "pngjs";
 
-import { delay } from '../helpers';
+import { delay } from "../helpers";
 
 const parseDeviceName = (name: string) =>
-  name.split('(').pop()?.replace(')', '');
+  name.split("(").pop()?.replace(")", "");
 const getDirFromFilePath = (path: string) =>
-  path.substring(0, path.lastIndexOf('/'));
+  path.substring(0, path.lastIndexOf("/"));
 
 const writeToFile = (path: string, buffer: Buffer, onWrite?: () => void) => {
   const dir = getDirFromFilePath(path);
@@ -30,7 +30,7 @@ const writeToFile = (path: string, buffer: Buffer, onWrite?: () => void) => {
 const readFromFileOrCreateNew = (
   path: string,
   buffer: Buffer,
-  onWrite: () => void
+  onWrite: () => void,
 ): Buffer => {
   let bitmapBuffer;
 
@@ -46,7 +46,7 @@ const readFromFileOrCreateNew = (
 const checkIsScreenShotMatch = (
   expectedBitmapBuffer: Buffer,
   bitmapBuffer: Buffer,
-  acceptableDiffPercent: number
+  acceptableDiffPercent: number,
 ): { matched: boolean; percentDiff: string; diff: PNG } => {
   const img1 = PNG.sync.read(expectedBitmapBuffer);
   const img2 = PNG.sync.read(bitmapBuffer);
@@ -61,7 +61,7 @@ const checkIsScreenShotMatch = (
     diff.data,
     width,
     height,
-    { threshold: 0.1 }
+    { threshold: 0.1 },
   );
   const percentDiff = ((diffPixels / totalPixels) * 100).toFixed(2);
 
@@ -72,7 +72,7 @@ const checkIsScreenShotMatch = (
 
 async function expectBitmapsToBeEqual(
   screenName: string,
-  acceptableDiffPercent = 0.1
+  acceptableDiffPercent = 0.1,
 ): Promise<void> {
   const platform = device.getPlatform();
   const deviceName = parseDeviceName(device.name);
@@ -89,24 +89,24 @@ async function expectBitmapsToBeEqual(
   const onWrite = () =>
     console.debug(
       colors.green(
-        `Generated an image for the '${screenName}' screen on the path '${SCREENS_DIR}'`
-      )
+        `Generated an image for the '${screenName}' screen on the path '${SCREENS_DIR}'`,
+      ),
     );
 
   const bitmapBuffer = readFromFileOrCreateNew(
     expectedImagePath,
     expectedBitmapBuffer,
-    onWrite
+    onWrite,
   );
 
   const { diff, matched, percentDiff } = checkIsScreenShotMatch(
     expectedBitmapBuffer,
     bitmapBuffer,
-    acceptableDiffPercent
+    acceptableDiffPercent,
   );
 
   console.debug(
-    colors.green(`Screenshot '${screenName}' has ${percentDiff}% pixel diff!`)
+    colors.green(`Screenshot '${screenName}' has ${percentDiff}% pixel diff!`),
   );
 
   if (!matched) {
@@ -115,7 +115,7 @@ async function expectBitmapsToBeEqual(
     writeToFile(SCREEN_DIFF_IMAGE_PATH, PNG.sync.write(diff));
 
     throw new Error(
-      `Expected image at ${tempImagePath} to match to image at ${expectedImagePath}, but it had ${percentDiff}% pixel diff!`
+      `Expected image at ${tempImagePath} to match to image at ${expectedImagePath}, but it had ${percentDiff}% pixel diff!`,
     );
   }
 }

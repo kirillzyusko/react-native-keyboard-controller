@@ -1,15 +1,16 @@
-import 'react-native-gesture-handler';
+import "react-native-gesture-handler";
 
-import * as React from 'react';
-import { ActivityIndicator, StyleSheet } from 'react-native';
-import { NavigationContainer } from '@react-navigation/native';
-import { KeyboardProvider } from 'react-native-keyboard-controller';
+import { NavigationContainer } from "@react-navigation/native";
+import * as React from "react";
+import { ActivityIndicator, StyleSheet } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { KeyboardProvider } from "react-native-keyboard-controller";
 import {
   SafeAreaProvider,
   initialWindowMetrics,
-} from 'react-native-safe-area-context';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import RootStack from './navigation/RootStack';
+} from "react-native-safe-area-context";
+
+import RootStack from "./navigation/RootStack";
 
 const styles = StyleSheet.create({
   root: {
@@ -18,15 +19,15 @@ const styles = StyleSheet.create({
 });
 
 const linking = {
-  prefixes: ['https://rnkcfabricexample.com', 'rnkcfabricexample://'],
+  prefixes: ["https://rnkcfabricexample.com", "rnkcfabricexample://"],
   config: {
-    initialRouteName: 'EXAMPLES_STACK' as const,
+    initialRouteName: "EXAMPLES_STACK" as const,
     screens: {
       EXAMPLES_STACK: {
-        path: 'examples',
+        path: "examples",
         screens: {
           ANIMATED_EXAMPLE: {
-            path: 'animated',
+            path: "animated",
           },
         },
       },

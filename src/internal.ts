@@ -1,13 +1,13 @@
-import { useCallback, useRef } from 'react';
-import { Animated } from 'react-native';
-import { useSharedValue } from 'react-native-reanimated';
+import { useCallback, useRef } from "react";
+import { Animated } from "react-native";
+import { useSharedValue } from "react-native-reanimated";
 
-import type { Handlers } from './types';
+import type { Handlers } from "./types";
 
 type UntypedHandler = Record<string, (event: never) => void>;
 type SharedHandlersReturnType<T extends UntypedHandler> = [
   (handler: Handlers<T>) => void,
-  <K extends keyof T>(type: K, event: Parameters<T[K]>[0]) => void
+  <K extends keyof T>(type: K, event: Parameters<T[K]>[0]) => void,
 ];
 
 /**
@@ -22,7 +22,7 @@ type SharedHandlersReturnType<T extends UntypedHandler> = [
  * }
  */
 export function useSharedHandlers<
-  T extends UntypedHandler
+  T extends UntypedHandler,
 >(): SharedHandlersReturnType<T> {
   const handlers = useSharedValue<Handlers<T>>({});
   const jsHandlers = useRef<Handlers<T>>({});
@@ -48,9 +48,9 @@ export function useSharedHandlers<
   }, []);
   const broadcast = <K extends keyof T>(
     type: K,
-    event: Parameters<T[K]>[0]
+    event: Parameters<T[K]>[0],
   ) => {
-    'worklet';
+    "worklet";
 
     Object.keys(handlers.value).forEach((key) => {
       handlers.value[key]?.[type]?.(event);
@@ -71,7 +71,7 @@ export function useSharedHandlers<
  */
 export function useAnimatedValue(
   initialValue: number,
-  config?: Animated.AnimatedConfig
+  config?: Animated.AnimatedConfig,
 ): Animated.Value {
   const ref = useRef<Animated.Value | null>(null);
 

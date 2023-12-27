@@ -5,12 +5,12 @@ on:
     branches:
       - main
     paths:
-      - '.github/workflows/verify-cpp.yml'
-      - 'android/src/main/**'
+      - ".github/workflows/verify-cpp.yml"
+      - "android/src/main/**"
   pull_request:
     paths:
-      - '.github/workflows/verify-cpp.yml'
-      - 'android/src/main/**'
+      - ".github/workflows/verify-cpp.yml"
+      - "android/src/main/**"
 
 jobs:
   lint:

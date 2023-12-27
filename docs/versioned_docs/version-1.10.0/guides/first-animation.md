@@ -1,6 +1,12 @@
 ---
 sidebar_position: 1
-keywords: [react-native-keyboard-controller, keyboard animation, keyboard handling, keyboard movement]
+keywords:
+  [
+    react-native-keyboard-controller,
+    keyboard animation,
+    keyboard handling,
+    keyboard movement,
+  ]
 ---
 
 # First animation
@@ -22,15 +28,15 @@ Both of them return an object with two properties: `progress` and `height` (depe
 To see how to use these hooks let's consider example below (for more comprehensive usage you may find an [example](https://github.com/kirillzyusko/react-native-keyboard-controller/tree/main/example) app useful):
 
 ```tsx
-import React from 'react';
-import { Animated, StyleSheet, TextInput, View } from 'react-native';
-import { useKeyboardAnimation } from 'react-native-keyboard-controller';
+import React from "react";
+import { Animated, StyleSheet, TextInput, View } from "react-native";
+import { useKeyboardAnimation } from "react-native-keyboard-controller";
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'flex-end',
+    alignItems: "center",
+    justifyContent: "flex-end",
   },
   box: {
     width: 60,
@@ -38,7 +44,7 @@ const styles = StyleSheet.create({
     marginVertical: 20,
   },
   row: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
 });
 
@@ -58,7 +64,7 @@ export default function KeyboardAnimation() {
           style={{
             width: 50,
             height: 50,
-            backgroundColor: '#17fc03',
+            backgroundColor: "#17fc03",
             borderRadius: 15,
             // 2. we can apply any transformations we want
             transform: [{ translateY: height }, { scale }],
@@ -67,10 +73,10 @@ export default function KeyboardAnimation() {
       </View>
       <TextInput
         style={{
-          width: '100%',
+          width: "100%",
           marginTop: 50,
           height: 50,
-          backgroundColor: 'yellow',
+          backgroundColor: "yellow",
         }}
       />
     </View>

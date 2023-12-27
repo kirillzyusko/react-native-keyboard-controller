@@ -1,5 +1,12 @@
 ---
-keywords: [react-native-keyboard-controller, KeyboardAvoidingView, keyboard avoiding view, avoid keyboard, android]
+keywords:
+  [
+    react-native-keyboard-controller,
+    KeyboardAvoidingView,
+    keyboard avoiding view,
+    avoid keyboard,
+    android,
+  ]
 ---
 
 # KeyboardAvoidingView
@@ -12,7 +19,7 @@ This new `KeyboardAvoidingView` maintains the familiar React Native [API](https:
 
 Below is a visual difference between the implementations (the animation is _**4x**_ times slower for better visual perception).
 
-import KeyboardAvoidingViewComparison from '@site/src/components/KeyboardAvoidingViewComparison'
+import KeyboardAvoidingViewComparison from "@site/src/components/KeyboardAvoidingViewComparison";
 
 <KeyboardAvoidingViewComparison />
 
@@ -27,20 +34,20 @@ Also if there is any well-known problems in original `react-native` implementati
 ## Example
 
 ```tsx
-import React from 'react';
+import React from "react";
 import {
   Text,
   TextInput,
   TouchableOpacity,
   View,
   StyleSheet,
-} from 'react-native';
-import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
+} from "react-native";
+import { KeyboardAvoidingView } from "react-native-keyboard-controller";
 
 export default function KeyboardAvoidingViewExample() {
   return (
     <KeyboardAvoidingView
-      behavior={'padding'}
+      behavior={"padding"}
       contentContainerStyle={styles.container}
       keyboardVerticalOffset={100}
       style={styles.content}
@@ -70,16 +77,16 @@ const styles = StyleSheet.create({
   heading: {
     fontSize: 36,
     marginBottom: 48,
-    fontWeight: '600',
+    fontWeight: "600",
   },
   inner: {
     padding: 24,
     flex: 1,
-    justifyContent: 'space-between',
+    justifyContent: "space-between",
   },
   textInput: {
     height: 45,
-    borderColor: '#000000',
+    borderColor: "#000000",
     borderWidth: 1,
     borderRadius: 10,
     marginBottom: 36,
@@ -89,14 +96,14 @@ const styles = StyleSheet.create({
     marginTop: 12,
     height: 45,
     borderRadius: 10,
-    backgroundColor: 'rgb(40, 64, 147)',
-    justifyContent: 'center',
-    alignItems: 'center',
+    backgroundColor: "rgb(40, 64, 147)",
+    justifyContent: "center",
+    alignItems: "center",
   },
   text: {
-    fontWeight: '500',
+    fontWeight: "500",
     fontSize: 16,
-    color: 'white',
+    color: "white",
   },
 });
 ```

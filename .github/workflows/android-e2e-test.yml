@@ -2,22 +2,22 @@ name: 🛠 Android e2e tests
 on:
   pull_request:
     paths:
-      - '.github/workflows/android-e2e-test.yml'
-      - 'package.json'
-      - 'android/**'
-      - 'example/**'
-      - 'e2e/**'
-      - 'src/**'
+      - ".github/workflows/android-e2e-test.yml"
+      - "package.json"
+      - "android/**"
+      - "example/**"
+      - "e2e/**"
+      - "src/**"
   push:
     branches:
       - main
     paths:
-      - '.github/workflows/android-e2e-test.yml'
-      - 'package.json'
-      - 'android/**'
-      - 'example/**'
-      - 'e2e/**'
-      - 'src/**'
+      - ".github/workflows/android-e2e-test.yml"
+      - "package.json"
+      - "android/**"
+      - "example/**"
+      - "e2e/**"
+      - "src/**"
 
 jobs:
   test:
@@ -27,19 +27,19 @@ jobs:
     env:
       WORKING_DIRECTORY: example
     concurrency:
-        group: android-e2e-${{ github.ref }}
-        cancel-in-progress: true
+      group: android-e2e-${{ github.ref }}
+      cancel-in-progress: true
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: 16.x
-          cache: 'yarn'
+          node-version: 18.x
+          cache: "yarn"
       - name: Setup JDK 11
         uses: actions/setup-java@v3
         with:
-          distribution: 'microsoft'
-          java-version: '11'
+          distribution: "microsoft"
+          java-version: "11"
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
@@ -77,8 +77,8 @@ jobs:
           api-level: 28
           target: default
           profile: pixel_2
-          ram-size: '4096M'
-          disk-size: '10G'
+          ram-size: "4096M"
+          disk-size: "10G"
           disable-animations: false
           avd-name: e2e_emulator
           arch: x86_64

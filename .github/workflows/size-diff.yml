@@ -3,9 +3,9 @@ name: 🧪 Size diff
 on:
   pull_request:
     paths-ignore:
-      - 'example/**'
-      - 'FabricExample/**'
-      - 'docs/**'
+      - "example/**"
+      - "FabricExample/**"
+      - "docs/**"
 
 jobs:
   check-diff:

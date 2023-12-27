@@ -1,6 +1,12 @@
 ---
 sidebar_position: 4
-keywords: [react-native-keyboard-controller, KeyboardGestureArea, interactive keyboard, view]
+keywords:
+  [
+    react-native-keyboard-controller,
+    KeyboardGestureArea,
+    interactive keyboard,
+    view,
+  ]
 ---
 
 # KeyboardGestureArea
@@ -33,7 +39,7 @@ A boolean prop which allows to customize interactive keyboard behavior. If set t
 ```tsx
 <KeyboardGestureArea interpolator="ios">
   <ScrollView>
-    {/* other components in your tree */}
+    {/* The other UI components of application in your tree */}
   </ScrollView>
 </KeyboardGestureArea>
 ```

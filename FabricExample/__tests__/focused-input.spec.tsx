@@ -1,34 +1,30 @@
-import '@testing-library/jest-native/extend-expect';
-import React from 'react';
-import Reanimated, { useAnimatedStyle } from 'react-native-reanimated';
-import { render } from '@testing-library/react-native';
-
-import { useReanimatedFocusedInput } from 'react-native-keyboard-controller';
+import "@testing-library/jest-native/extend-expect";
+import { render } from "@testing-library/react-native";
+import React from "react";
+import { useReanimatedFocusedInput } from "react-native-keyboard-controller";
+import Reanimated, { useAnimatedStyle } from "react-native-reanimated";
 
 function RectangleWithFocusedInputLayout() {
   const { input } = useReanimatedFocusedInput();
-  const style = useAnimatedStyle(
-    () => {
-      const layout = input.value?.layout;
+  const style = useAnimatedStyle(() => {
+    const layout = input.value?.layout;
 
-      return {
-        top: layout?.y,
-        left: layout?.x,
-        height: layout?.height,
-        width: layout?.width,
-      };
-    },
-    []
-  );
+    return {
+      top: layout?.y,
+      left: layout?.x,
+      height: layout?.height,
+      width: layout?.width,
+    };
+  }, []);
 
   return <Reanimated.View testID="view" style={style} />;
 }
 
-describe('`useReanimatedFocusedInput` mocking', () => {
-  it('should have different styles depends on `useReanimatedFocusedInput`', () => {
+describe("`useReanimatedFocusedInput` mocking", () => {
+  it("should have different styles depends on `useReanimatedFocusedInput`", () => {
     const { getByTestId, update } = render(<RectangleWithFocusedInputLayout />);
 
-    expect(getByTestId('view')).toHaveStyle({ 
+    expect(getByTestId("view")).toHaveStyle({
       top: 0,
       left: 0,
       width: 200,
@@ -48,15 +44,15 @@ describe('`useReanimatedFocusedInput` mocking', () => {
             absoluteY: 200,
           },
         },
-      }
+      },
     });
     update(<RectangleWithFocusedInputLayout />);
 
-    expect(getByTestId('view')).toHaveStyle({
-        top: 100,
-        left: 10,
-        width: 190,
-        height: 80,
+    expect(getByTestId("view")).toHaveStyle({
+      top: 100,
+      left: 10,
+      width: 190,
+      height: 80,
     });
   });
 });

@@ -2,17 +2,38 @@
 slug: release-1-10
 title: New release features, a year overview
 authors: [kirill]
-tags: [react-native, keyboard, focused text input, keyboard aware scroll view, dismiss]
-keywords: [react-native-keyboard-controller, keyboard, focused text input, onChangeText, changed text, dismiss, keyboard aware scroll view]
+tags:
+  [
+    react-native,
+    keyboard,
+    focused text input,
+    keyboard aware scroll view,
+    dismiss,
+  ]
+keywords:
+  [
+    react-native-keyboard-controller,
+    keyboard,
+    focused text input,
+    onChangeText,
+    changed text,
+    dismiss,
+    keyboard aware scroll view,
+  ]
 ---
 
 I'm thrilled to announce the latest release, version `1.10.0`, of `react-native-keyboard-controller`! Packed with new functionalities and improvements, this update aims to enhance your React Native development experience.
 
-import Lottie from 'lottie-react';
-import lottie from '../../src/components/HomepageFeatures/text-inputs.lottie.json';
+import Lottie from "lottie-react";
+import lottie from "../../src/components/HomepageFeatures/text-inputs.lottie.json";
 
-<div style={{ display: 'flex', justifyContent: 'center', marginBottom: 20 }}>
-<Lottie className="lottie" animationData={lottie} style={{ width: 400, height: 400 }} loop />
+<div style={{ display: "flex", justifyContent: "center", marginBottom: 20 }}>
+  <Lottie
+    className="lottie"
+    animationData={lottie}
+    style={{ width: 400, height: 400 }}
+    loop
+  />
 </div>
 
 <!-- truncate -->
@@ -24,13 +45,16 @@ import lottie from '../../src/components/HomepageFeatures/text-inputs.lottie.jso
 Introducing the `useFocusedInputHandler` hook! This powerful addition empowers developers to manage focused input with unparalleled ease. The hook comes with a straightforward signature:
 
 ```ts
-useFocusedInputHandler({
-  onChangeText: ({ text }) => {
-    'worklet';
-    
-    // Your custom logic here
-  }
-}, []);
+useFocusedInputHandler(
+  {
+    onChangeText: ({ text }) => {
+      "worklet";
+
+      // Your custom logic here
+    },
+  },
+  [],
+);
 ```
 
 Whenever you are building your own avoiding solution or tracking user activity this hook can be a perfect fit for your needs!

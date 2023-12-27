@@ -1,15 +1,13 @@
-import React from 'react';
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import React from "react";
 
-import {
-  createNativeStackNavigator,
-  NativeStackNavigationOptions,
-} from '@react-navigation/native-stack';
+import { ScreenNames } from "../../constants/screenNames";
+import KeyboardAnimation from "../../screens/Examples/KeyboardAnimation";
 
-import { ScreenNames } from '../../constants/screenNames';
-import KeyboardAnimation from '../../screens/Examples/KeyboardAnimation';
+import type { NativeStackNavigationOptions } from "@react-navigation/native-stack";
 
 export type NativeStackParamList = {
-  [ScreenNames.NATIVE]: {};
+  [ScreenNames.NATIVE]: undefined;
 };
 
 const Stack = createNativeStackNavigator<NativeStackParamList>();

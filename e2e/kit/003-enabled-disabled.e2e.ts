@@ -1,58 +1,58 @@
-import waitForExpect from 'wait-for-expect';
+import waitForExpect from "wait-for-expect";
 
-import { expectBitmapsToBeEqual } from './asserts';
+import { expectBitmapsToBeEqual } from "./asserts";
 import {
   closeKeyboard,
   scrollDownUntilElementIsVisible,
   waitAndTap,
   waitForElementById,
-} from './helpers';
-import setDemoMode from './utils/setDemoMode';
+} from "./helpers";
+import setDemoMode from "./utils/setDemoMode";
 
-describe('Example', () => {
+describe("Example", () => {
   beforeAll(async () => {
     await setDemoMode();
     await device.launchApp();
   });
 
-  it('should navigate to `Enabled/disabled` screen', async () => {
+  it("should navigate to `Enabled/disabled` screen", async () => {
     await scrollDownUntilElementIsVisible(
-      'main_scroll_view',
-      'enabled_disabled'
+      "main_scroll_view",
+      "enabled_disabled",
     );
-    await waitAndTap('enabled_disabled');
-    await waitForElementById('keyboard_animation_text_input');
+    await waitAndTap("enabled_disabled");
+    await waitForElementById("keyboard_animation_text_input");
   });
 
-  it('should have expected state when enabled and keyboard is opened', async () => {
-    await waitAndTap('keyboard_animation_text_input');
+  it("should have expected state when enabled and keyboard is opened", async () => {
+    await waitAndTap("keyboard_animation_text_input");
     await waitForExpect(async () => {
-      await expectBitmapsToBeEqual('EnabledKeyboardIsShown');
+      await expectBitmapsToBeEqual("EnabledKeyboardIsShown");
     });
   });
 
-  it('should have expected state when enabled and keyboard is closed', async () => {
-    await closeKeyboard('keyboard_animation_text_input');
+  it("should have expected state when enabled and keyboard is closed", async () => {
+    await closeKeyboard("keyboard_animation_text_input");
     await waitForExpect(async () => {
-      await expectBitmapsToBeEqual('EnabledKeyboardIsHidden');
+      await expectBitmapsToBeEqual("EnabledKeyboardIsHidden");
     });
   });
 
-  it('should disable module', async () => {
-    await waitAndTap('toggle_button');
+  it("should disable module", async () => {
+    await waitAndTap("toggle_button");
   });
 
-  it('should have expected state when disabled and keyboard is opened', async () => {
-    await waitAndTap('keyboard_animation_text_input');
+  it("should have expected state when disabled and keyboard is opened", async () => {
+    await waitAndTap("keyboard_animation_text_input");
     await waitForExpect(async () => {
-      await expectBitmapsToBeEqual('DisabledKeyboardIsShown');
+      await expectBitmapsToBeEqual("DisabledKeyboardIsShown");
     });
   });
 
-  it('should have expected state when disabled and keyboard is closed', async () => {
-    await closeKeyboard('keyboard_animation_text_input');
+  it("should have expected state when disabled and keyboard is closed", async () => {
+    await closeKeyboard("keyboard_animation_text_input");
     await waitForExpect(async () => {
-      await expectBitmapsToBeEqual('DisabledKeyboardIsHidden');
+      await expectBitmapsToBeEqual("DisabledKeyboardIsHidden");
     });
   });
 });

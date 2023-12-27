@@ -1,5 +1,12 @@
 ---
-keywords: [react-native-keyboard-controller, useKeyboardController, enabled, disabled, setEnabled]
+keywords:
+  [
+    react-native-keyboard-controller,
+    useKeyboardController,
+    enabled,
+    disabled,
+    setEnabled,
+  ]
 ---
 
 # useKeyboardController

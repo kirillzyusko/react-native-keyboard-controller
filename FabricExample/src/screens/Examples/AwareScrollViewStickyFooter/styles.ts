@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
   container: {
@@ -12,19 +12,19 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
   footer: {
-    backgroundColor: 'green',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: "green",
+    alignItems: "center",
+    justifyContent: "center",
     padding: 20,
-    width: '100%',
+    width: "100%",
     gap: 10,
   },
   footerText: {
-    color: 'white',
-    fontWeight: 'bold',
+    color: "white",
+    fontWeight: "bold",
   },
   circle: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
     right: 30,
     justifyContent: "flex-end",
@@ -34,7 +34,7 @@ export const styles = StyleSheet.create({
     backgroundColor: "#002099",
   },
   header: {
-    color: 'black',
+    color: "black",
     paddingRight: 12,
   },
 });

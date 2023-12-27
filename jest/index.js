@@ -1,4 +1,4 @@
-import { Animated } from 'react-native';
+import { Animated } from "react-native";
 
 const values = {
   animated: {
@@ -45,10 +45,10 @@ const mock = {
     addListener: jest.fn(() => ({ remove: jest.fn() })),
   },
   // views
-  KeyboardControllerView: 'KeyboardControllerView',
-  KeyboardGestureArea: 'KeyboardGestureArea',
+  KeyboardControllerView: "KeyboardControllerView",
+  KeyboardGestureArea: "KeyboardGestureArea",
   // providers
-  KeyboardProvider: 'KeyboardProvider',
+  KeyboardProvider: "KeyboardProvider",
 };
 
 module.exports = mock;

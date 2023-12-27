@@ -1,12 +1,12 @@
-import { View } from 'react-native';
+import { View } from "react-native";
 
 import type {
   KeyboardControllerModule,
   KeyboardControllerProps,
   KeyboardEventsModule,
   KeyboardGestureAreaProps,
-} from './types';
-import type { EmitterSubscription } from 'react-native';
+} from "./types";
+import type { EmitterSubscription } from "react-native";
 
 const NOOP = () => {};
 export const KeyboardController: KeyboardControllerModule = {

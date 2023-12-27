@@ -50,7 +50,9 @@
       "json",
       "node"
     ],
-    "setupFiles": ["./jestSetup.js"],
+    "setupFiles": [
+      "./jestSetup.js"
+    ],
     "transformIgnorePatterns": [
       "node_modules/(?!(jest-)?@?react-native|@react-native-community|@react-navigation)"
     ],

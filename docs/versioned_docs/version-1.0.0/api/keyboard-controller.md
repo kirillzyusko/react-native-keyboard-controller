@@ -16,7 +16,7 @@ import {
 export const useResizeMode = () => {
   useEffect(() => {
     KeyboardController.setInputMode(
-      AndroidSoftInputModes.SOFT_INPUT_ADJUST_RESIZE
+      AndroidSoftInputModes.SOFT_INPUT_ADJUST_RESIZE,
     );
 
     return () => KeyboardController.setDefaultMode();

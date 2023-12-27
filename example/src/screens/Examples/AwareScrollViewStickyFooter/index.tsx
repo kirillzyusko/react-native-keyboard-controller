@@ -1,17 +1,23 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { LayoutChangeEvent, View, Text, Button } from 'react-native';
-import { StackScreenProps } from '@react-navigation/stack';
-import { KeyboardAwareScrollView, KeyboardStickyView } from 'react-native-keyboard-controller';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { Button, Text, View } from "react-native";
+import {
+  KeyboardAwareScrollView,
+  KeyboardStickyView,
+} from "react-native-keyboard-controller";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { ExamplesStackParamList } from '../../../navigation/ExamplesStack';
-import TextInput from '../../../components/TextInput';
-import { styles } from './styles';
+import TextInput from "../../../components/TextInput";
+
+import { styles } from "./styles";
+
+import type { ExamplesStackParamList } from "../../../navigation/ExamplesStack";
+import type { StackScreenProps } from "@react-navigation/stack";
+import type { LayoutChangeEvent } from "react-native";
 
 type Props = StackScreenProps<ExamplesStackParamList>;
 
-const variants = ['v1', 'v2', 'v3'] as const;
-type Variant = typeof variants[number];
+const variants = ["v1", "v2", "v3"] as const;
+type Variant = (typeof variants)[number];
 
 export default function AwareScrollViewStickyFooter({ navigation }: Props) {
   const { bottom } = useSafeAreaInsets();
@@ -21,8 +27,14 @@ export default function AwareScrollViewStickyFooter({ navigation }: Props) {
   const handleLayout = useCallback((evt: LayoutChangeEvent) => {
     setFooterHeight(evt.nativeEvent.layout.height);
   }, []);
-  const offset = useMemo(() => ({closed: 0, opened: variant === "v1" ? 0 : bottom }), [bottom, variant]);
-  const offsetV3 = useMemo(() => ({closed: -50, opened: bottom - 25}), [bottom]);
+  const offset = useMemo(
+    () => ({ closed: 0, opened: variant === "v1" ? 0 : bottom }),
+    [bottom, variant],
+  );
+  const offsetV3 = useMemo(
+    () => ({ closed: -50, opened: bottom - 25 }),
+    [bottom],
+  );
 
   useEffect(() => {
     navigation.setOptions({
@@ -31,9 +43,7 @@ export default function AwareScrollViewStickyFooter({ navigation }: Props) {
           style={styles.header}
           onPress={() => {
             const index = variants.indexOf(variant);
-            setVariant(
-              variants[index === variants.length - 1 ? 0 : index + 1]
-            );
+            setVariant(variants[index === variants.length - 1 ? 0 : index + 1]);
           }}
         >
           {variant}
@@ -45,7 +55,12 @@ export default function AwareScrollViewStickyFooter({ navigation }: Props) {
   const v1v2 = variant === "v1" || variant === "v2";
 
   return (
-    <View style={[styles.pageContainer, { paddingBottom: variant === "v1" ? 0 : bottom }]}>
+    <View
+      style={[
+        styles.pageContainer,
+        { paddingBottom: variant === "v1" ? 0 : bottom },
+      ]}
+    >
       <KeyboardAwareScrollView
         style={styles.container}
         contentContainerStyle={styles.content}
@@ -56,7 +71,7 @@ export default function AwareScrollViewStickyFooter({ navigation }: Props) {
           <TextInput
             key={i}
             placeholder={`TextInput#${i}`}
-            keyboardType={i % 2 === 0 ? 'numeric' : 'default'}
+            keyboardType={i % 2 === 0 ? "numeric" : "default"}
           />
         ))}
       </KeyboardAwareScrollView>

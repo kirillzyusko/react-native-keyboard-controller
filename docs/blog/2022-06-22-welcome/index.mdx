@@ -10,11 +10,16 @@ Many flagship applications that are written natively (such as `Telegram`, `Insta
 
 Unfortunately, in `react-native` this aspect was given little attention and all `react-native` applications were suffering because of that - animations were rough, you couldn't write cross-platform code because some keyboard events were not available, etc. But with the advent of this library, everything changes... 😎
 
-import Lottie from 'lottie-react';
-import lottie from '../../src/components/HomepageFeatures/transform.lottie.json';
+import Lottie from "lottie-react";
+import lottie from "../../src/components/HomepageFeatures/transform.lottie.json";
 
-<div style={{ display: 'flex', justifyContent: 'center', marginBottom: 20 }}>
-<Lottie className="lottie" animationData={lottie} style={{ width: 400, height: 400 }} loop />
+<div style={{ display: "flex", justifyContent: "center", marginBottom: 20 }}>
+  <Lottie
+    className="lottie"
+    animationData={lottie}
+    style={{ width: 400, height: 400 }}
+    loop
+  />
 </div>
 
 <!--truncate-->
@@ -24,6 +29,7 @@ The purpose of this library was utilizing all power of native API and at the sam
 The first release of this library brings missing `keyboardWillShow`/`keyboardWillHide` events on `Android` making `events` module fully cross-platform as well as adding a way to use `Animated.Value` for managing keyboard frames.
 
 In further releases the API will be enhanced:
+
 - support will be added for interactive keyboard dismissing (on Android)
 - the library will be rewritten to new `Fabric` architecture
 - maybe some components, such as `KeyboardAvoidingView`/`KeyboardAwareScrollView` will be available here with better performance and animations.

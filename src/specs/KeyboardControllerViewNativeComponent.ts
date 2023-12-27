@@ -1,12 +1,12 @@
-import codegenNativeComponent from 'react-native/Libraries/Utilities/codegenNativeComponent';
+import codegenNativeComponent from "react-native/Libraries/Utilities/codegenNativeComponent";
 
-import type { HostComponent } from 'react-native';
-import type { ViewProps } from 'react-native/Libraries/Components/View/ViewPropTypes';
+import type { HostComponent } from "react-native";
+import type { ViewProps } from "react-native/Libraries/Components/View/ViewPropTypes";
 import type {
   DirectEventHandler,
   Double,
   Int32,
-} from 'react-native/Libraries/Types/CodegenTypes';
+} from "react-native/Libraries/Types/CodegenTypes";
 
 type KeyboardMoveEvent = Readonly<{
   height: Double;
@@ -48,5 +48,5 @@ export interface NativeProps extends ViewProps {
 }
 
 export default codegenNativeComponent<NativeProps>(
-  'KeyboardControllerView'
+  "KeyboardControllerView",
 ) as HostComponent<NativeProps>;

@@ -1,5 +1,13 @@
 ---
-keywords: [react-native-keyboard-controller, useReanimatedFocusedInput, react-native-reanimated, react hook, focused input, layout]
+keywords:
+  [
+    react-native-keyboard-controller,
+    useReanimatedFocusedInput,
+    react-native-reanimated,
+    react hook,
+    focused input,
+    layout,
+  ]
 ---
 
 # useReanimatedFocusedInput
@@ -24,13 +32,15 @@ The `input` property from this hook is returned as `SharedValue`. The returned d
 ```ts
 type FocusedInputLayoutChangedEvent = {
   target: number; // tag of the focused TextInput
-  layout: { // layout of the focused TextInput
+
+  // layout of the focused TextInput
+  layout: {
     x: number; // `x` coordinate inside the parent component
     y: number; // `y` coordinate inside the parent component
     width: number; // `width` of the TextInput
     height: number; // `height` of the TextInput
     absoluteX: number; // `x` coordinate on the screen
-    absoluteY: number; // `y` coordinate on the screen 
+    absoluteY: number; // `y` coordinate on the screen
   };
 };
 ```
@@ -38,7 +48,7 @@ type FocusedInputLayoutChangedEvent = {
 ## Example
 
 ```tsx
-const {input} = useReanimatedFocusedInput();
+const { input } = useReanimatedFocusedInput();
 ```
 
 Also have a look on [example](https://github.com/kirillzyusko/react-native-keyboard-controller/tree/main/example) app for more comprehensive usage.
