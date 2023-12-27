@@ -38,6 +38,8 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Run Lint
         run: yarn lint
+      - name: Check formatting
+        run: yarn prettier '**/*' --ignore-unknown --check
   tests:
     name: 📖 Unit tests
     runs-on: ubuntu-latest
