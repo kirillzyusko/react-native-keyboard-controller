@@ -45,9 +45,13 @@ import ComparisonTable from "@site/src/components/ComparisonTable";
 ```tsx
 const offset = { closed: 0, opened: 20 };
 
-<KeyboardStickyView offset={offset}>
-  <Footer />
-</KeyboardStickyView>;
+const StickyFooter = () => {
+  return (
+    <KeyboardStickyView offset={offset}>
+      <Footer />
+    </KeyboardStickyView>
+  );
+};
 ```
 
 ## Props

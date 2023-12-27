@@ -1,6 +1,5 @@
 import React from "react";
-import { View } from "react-native";
-import { TextInput } from "react-native-gesture-handler";
+import { TextInput, View } from "react-native";
 import { useKeyboardHandler } from "react-native-keyboard-controller";
 import Reanimated, {
   interpolate,
