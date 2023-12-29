@@ -81,12 +81,14 @@ export type KeyboardGestureAreaProps = {
   enableSwipeToDismiss?: boolean;
 } & ViewProps;
 
+export type Direction = "next" | "prev";
 export type KeyboardControllerModule = {
   // android only
   setDefaultMode: () => void;
   setInputMode: (mode: number) => void;
   // all platforms
   dismiss: () => void;
+  moveFocusTo: (direction: Direction) => void;
   // native event module stuff
   addListener: (eventName: string) => void;
   removeListeners: (count: number) => void;
