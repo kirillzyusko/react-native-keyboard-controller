@@ -31,8 +31,16 @@ object ViewHierarchyNavigator {
    *   </View>
    * </View>
    * ```
-   * */
-  fun findNextEditText(currentFocus: View): EditText? {
+   */
+  private fun findNextEditText(currentFocus: View): EditText? {
+    return findEditTextInDirection(currentFocus, 1)
+  }
+
+  private fun findPreviousEditText(currentFocus: View): EditText? {
+    return findEditTextInDirection(currentFocus, -1)
+  }
+
+  private fun findEditTextInDirection(currentFocus: View, direction: Int): EditText? {
     try {
       // Find the parent view group
       val parentViewGroup = currentFocus.parent as ViewGroup?
@@ -41,8 +49,11 @@ object ViewHierarchyNavigator {
         // Find the index of the current EditText in its parent
         val currentIndex = parentViewGroup.indexOfChild(currentFocus)
 
-        // Check for the next sibling in the parent
-        for (i in currentIndex + 1 until parentViewGroup.childCount) {
+        // Check for the sibling in the specified direction in the parent
+        var i = if (direction > 0) currentIndex + 1 else currentIndex - 1
+        val end = if (direction > 0) parentViewGroup.childCount else -1
+
+        while (i != end) {
           val nextChild = parentViewGroup.getChildAt(i)
 
           if (nextChild is EditText) {
@@ -55,49 +66,15 @@ object ViewHierarchyNavigator {
               return nextEditText
             }
           }
+
+          i += direction
         }
 
-        // If no next sibling was found in the parent, recurse to the parent's parent
-        return findNextEditText(parentViewGroup)
+        // If no sibling was found in the parent, recurse to the parent's parent
+        return findEditTextInDirection(parentViewGroup, direction)
       }
 
-      return null // Reached the top-level view, no next EditText found
-    } catch (e: ClassCastException) {
-      //  android.view.ViewRootImpl cannot be cast to android.view.ViewGroup
-      return null
-    }
-  }
-
-  fun findPreviousEditText(currentFocus: View): EditText? {
-    try {
-      // Find the parent view group
-      val parentViewGroup = currentFocus.parent as ViewGroup?
-
-      if (parentViewGroup != null) {
-        // Find the index of the current EditText in its parent
-        val currentIndex = parentViewGroup.indexOfChild(currentFocus)
-
-        // Check for the previous sibling in the parent
-        for (i in (currentIndex - 1) downTo 0) {
-          val previousChild = parentViewGroup.getChildAt(i)
-
-          if (previousChild is EditText) {
-            return previousChild
-          } else if (previousChild is ViewGroup) {
-            // If the previous child is a ViewGroup, check its children recursively
-            val previousEditText = findEditTextInHierarchy(previousChild)
-
-            if (previousEditText != null) {
-              return previousEditText
-            }
-          }
-        }
-
-        // If no previous sibling was found in the parent, recurse to the parent's parent
-        return findPreviousEditText(parentViewGroup)
-      }
-
-      return null // Reached the top-level view, no previous EditText found
+      return null // Reached the top-level view, no EditText found in the specified direction
     } catch (e: ClassCastException) {
       // Handle the ClassCastException (if needed)
       return null
