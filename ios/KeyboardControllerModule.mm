@@ -16,6 +16,7 @@
 #endif
 
 #import "KeyboardControllerModule-Header.h"
+#import "react_native_keyboard_controller-Swift.h"
 
 #import <React/RCTEventDispatcherProtocol.h>
 
@@ -73,6 +74,15 @@ RCT_EXPORT_METHOD(dismiss)
                                              from:nil
                                          forEvent:nil];
   });
+}
+
+#ifdef RCT_NEW_ARCH_ENABLED
+- (void)moveFocusTo:(NSString *)direction
+#else
+RCT_EXPORT_METHOD(moveFocusTo : (nonnull NSString *)direction)
+#endif
+{
+  [[ViewHierarchyNavigator alloc] moveFocusToDirection:direction];
 }
 
 + (KeyboardController *)shared

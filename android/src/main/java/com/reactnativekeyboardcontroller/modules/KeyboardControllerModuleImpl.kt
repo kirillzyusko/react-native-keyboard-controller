@@ -6,6 +6,7 @@ import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.UiThreadUtil
+import com.reactnativekeyboardcontroller.traversal.ViewHierarchyNavigator
 
 class KeyboardControllerModuleImpl(private val mReactContext: ReactApplicationContext) {
   private val mDefaultMode: Int = getCurrentMode()
@@ -25,6 +26,15 @@ class KeyboardControllerModuleImpl(private val mReactContext: ReactApplicationCo
     if (view != null) {
       val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
       imm?.hideSoftInputFromWindow(view.windowToken, 0)
+    }
+  }
+
+  fun moveFocusTo(direction: String) {
+    val activity = mReactContext.currentActivity
+    val view: View? = activity?.currentFocus
+
+    if (view != null) {
+      ViewHierarchyNavigator.moveFocusTo(direction, view)
     }
   }
 
