@@ -82,7 +82,7 @@ RCT_EXPORT_METHOD(dismiss)
 RCT_EXPORT_METHOD(moveFocusTo : (nonnull NSString *)direction)
 #endif
 {
-  [[ViewHierarchyNavigator alloc] moveFocusToDirection:direction];
+  [ViewHierarchyNavigator moveFocusToDirection:direction];
 }
 
 + (KeyboardController *)shared
