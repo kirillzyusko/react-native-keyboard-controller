@@ -15,6 +15,7 @@ import LottieAnimation from "../../screens/Examples/Lottie";
 import NonUIProps from "../../screens/Examples/NonUIProps";
 import ReanimatedChat from "../../screens/Examples/ReanimatedChat";
 import StatusBar from "../../screens/Examples/StatusBar";
+import ToolbarExample from "../../screens/Examples/Toolbar";
 import NativeStack from "../NestedStack";
 
 export type ExamplesStackParamList = {
@@ -32,6 +33,7 @@ export type ExamplesStackParamList = {
   [ScreenNames.KEYBOARD_AVOIDING_VIEW]: undefined;
   [ScreenNames.ENABLED_DISABLED]: undefined;
   [ScreenNames.CLOSE]: undefined;
+  [ScreenNames.TOOLBAR]: undefined;
 };
 
 const Stack = createStackNavigator<ExamplesStackParamList>();
@@ -79,6 +81,9 @@ const options = {
   },
   [ScreenNames.CLOSE]: {
     title: "Close keyboard",
+  },
+  [ScreenNames.TOOLBAR]: {
+    title: "Toolbar",
   },
 };
 
@@ -153,6 +158,11 @@ const ExamplesStack = () => (
       name={ScreenNames.CLOSE}
       component={CloseScreen}
       options={options[ScreenNames.CLOSE]}
+    />
+    <Stack.Screen
+      name={ScreenNames.TOOLBAR}
+      component={ToolbarExample}
+      options={options[ScreenNames.TOOLBAR]}
     />
   </Stack.Navigator>
 );

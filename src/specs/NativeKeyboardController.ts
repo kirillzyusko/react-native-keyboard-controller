@@ -2,8 +2,6 @@ import { TurboModuleRegistry } from "react-native";
 
 import type { TurboModule } from "react-native";
 
-type Direction = "next" | "prev";
-
 export interface Spec extends TurboModule {
   readonly getConstants: () => {};
 
@@ -11,7 +9,7 @@ export interface Spec extends TurboModule {
   setInputMode(mode: number): void;
   setDefaultMode(): void;
   dismiss(): void;
-  moveFocusTo(direction: Direction): void;
+  moveFocusTo(direction: string): void;
 
   // event emitter
   addListener: (eventName: string) => void;

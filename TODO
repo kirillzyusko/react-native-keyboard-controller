@@ -1,7 +1,7 @@
 # ToDo
 
 - [x] skip disabled fields
+- [x] fabric test
 - [ ] hasNext/hasPrev (or current/total)?
-- [ ] fabric test
-- [ ] unit tests for iOS/Android
 - [ ] ToolBar/Toolbar UI component
+- [ ] unit tests for iOS/Android
