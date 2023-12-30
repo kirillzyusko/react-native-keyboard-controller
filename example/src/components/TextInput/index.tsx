@@ -15,7 +15,7 @@ const TextInput = (props: CustomTextInputProps) => {
       {!!title && <Text style={styles.title}>{title}</Text>}
       <TextInputRN
         placeholderTextColor="#6c6c6c"
-        style={styles.container}
+        style={[styles.container, rest.editable === false && styles.disabled]}
         multiline
         numberOfLines={2}
         testID={rest.placeholder}
@@ -46,6 +46,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     color: "black",
     paddingHorizontal: 12,
+  },
+  disabled: {
+    opacity: 0.5,
   },
 });
 

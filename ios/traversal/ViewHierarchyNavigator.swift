@@ -72,11 +72,11 @@ public class ViewHierarchyNavigator: NSObject {
   }
 
   private static func findTextFieldInHierarchy(view: UIView) -> TextField? {
-    if let textField = view as? UITextField {
+      if let textField = view as? UITextField, textField.isEnabled {
       return textField
     }
 
-    if let textView = view as? UITextView {
+    if let textView = view as? UITextView, textView.isEditable {
       return textView
     }
 

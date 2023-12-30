@@ -1,5 +1,6 @@
 # ToDo
 
+- [x] skip disabled fields
 - [ ] hasNext/hasPrev (or current/total)?
 - [ ] fabric test
 - [ ] unit tests for iOS/Android

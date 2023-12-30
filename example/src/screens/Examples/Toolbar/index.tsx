@@ -20,7 +20,20 @@ export default function ToolbarExample() {
       />
       <KeyboardAwareScrollView style={styles.withPadding}>
         <TextInput placeholder="1" title="Name" />
-        <TextInput placeholder="2" title="Surname" />
+        <TextInput placeholder="2" title="Surname" multiline={false} />
+        <TextInput
+          keyboardType="default"
+          placeholder="example@gmail.com"
+          title="Email"
+          editable={false}
+          multiline={false}
+        />
+        <TextInput
+          keyboardType="default"
+          placeholder="Tell us funny facts about you"
+          title="About you"
+          editable={false}
+        />
         <View style={styles.row}>
           <View style={styles.birthday}>
             <TextInput multiline={false} placeholder="DD" title="Day" />
