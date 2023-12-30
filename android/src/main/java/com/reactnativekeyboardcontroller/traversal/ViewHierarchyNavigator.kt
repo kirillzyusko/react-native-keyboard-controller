@@ -16,22 +16,6 @@ object ViewHierarchyNavigator {
     }
   }
 
-  /**
-   * ```
-   * <View>
-   *   <EditText id="0" />
-   *   <View>
-   *     <EditText id="1" />
-   *   </View>
-   *   <EditText id="2" />
-   *   <View>
-   *     <View>
-   *       <EditText id="3" />
-   *     </View>
-   *   </View>
-   * </View>
-   * ```
-   */
   private fun findNextEditText(currentFocus: View): EditText? {
     return findEditTextInDirection(currentFocus, 1)
   }
@@ -56,15 +40,10 @@ object ViewHierarchyNavigator {
         while (i != end) {
           val nextChild = parentViewGroup.getChildAt(i)
 
-          if (nextChild is EditText) {
-            return nextChild
-          } else if (nextChild is ViewGroup) {
-            // If the next child is a ViewGroup, check its children recursively
-            val nextEditText = findEditTextInHierarchy(nextChild)
+          val editText = findEditTextOrGoDeeper(nextChild)
 
-            if (nextEditText != null) {
-              return nextEditText
-            }
+          if (editText != null) {
+            return editText
           }
 
           i += direction
@@ -77,6 +56,7 @@ object ViewHierarchyNavigator {
       return null // Reached the top-level view, no EditText found in the specified direction
     } catch (e: ClassCastException) {
       // Handle the ClassCastException (if needed)
+      // Happens when we reached out RootView and it can not be casted to ViewGroup
       return null
     }
   }
@@ -85,18 +65,28 @@ object ViewHierarchyNavigator {
     for (i in 0 until viewGroup.childCount) {
       val child = viewGroup.getChildAt(i)
 
-      if (child is EditText) {
-        return child
-      } else if (child is ViewGroup) {
-        // If the child is a ViewGroup, check its children recursively
-        val editText = findEditTextInHierarchy(child)
+      val editText = findEditTextOrGoDeeper(child)
 
-        if (editText != null) {
-          return editText
-        }
+      if (editText != null) {
+        return editText
       }
     }
 
     return null // No EditText found in the current view group
+  }
+
+  private fun findEditTextOrGoDeeper(child: View): EditText? {
+    if (child is EditText && child.isEnabled) {
+      return child
+    } else if (child is ViewGroup) {
+      // If the child is a ViewGroup, check its children recursively
+      val editText = findEditTextInHierarchy(child)
+
+      if (editText != null) {
+        return editText
+      }
+    }
+
+    return null
   }
 }
