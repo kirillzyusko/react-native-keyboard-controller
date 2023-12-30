@@ -20,6 +20,10 @@ class KeyboardControllerModule(mReactContext: ReactApplicationContext) : NativeK
     module.dismiss()
   }
 
+  override fun moveFocusTo(direction: String) {
+    module.moveFocusTo(direction)
+  }
+
   override fun addListener(eventName: String?) {
     /* Required for RN built-in Event Emitter Calls. */
   }
