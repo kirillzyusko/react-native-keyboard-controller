@@ -13,6 +13,7 @@ export const KeyboardController: KeyboardControllerModule = {
   setDefaultMode: NOOP,
   setInputMode: NOOP,
   dismiss: NOOP,
+  moveFocusTo: NOOP,
   addListener: NOOP,
   removeListeners: NOOP,
 };

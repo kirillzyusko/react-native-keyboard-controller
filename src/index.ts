@@ -10,4 +10,5 @@ export {
   KeyboardAvoidingView,
   KeyboardStickyView,
   KeyboardAwareScrollView,
+  KeyboardToolbar,
 } from "./components";
