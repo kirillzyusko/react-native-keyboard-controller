@@ -1,8 +1,8 @@
 import React from "react";
-import { Button, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import {
   KeyboardAwareScrollView,
-  KeyboardController,
+  KeyboardToolbar,
 } from "react-native-keyboard-controller";
 
 import TextInput from "../../../components/TextInput";
@@ -10,15 +10,7 @@ import TextInput from "../../../components/TextInput";
 export default function ToolbarExample() {
   return (
     <>
-      <Button
-        title="next"
-        onPress={() => KeyboardController.moveFocusTo("next")}
-      />
-      <Button
-        title="prev"
-        onPress={() => KeyboardController.moveFocusTo("prev")}
-      />
-      <KeyboardAwareScrollView style={styles.withPadding}>
+      <KeyboardAwareScrollView bottomOffset={62} style={styles.withPadding}>
         <TextInput placeholder="1" title="Name" />
         <TextInput placeholder="2" title="Surname" multiline={false} />
         <TextInput
@@ -52,6 +44,7 @@ export default function ToolbarExample() {
         <TextInput placeholder="7" title="House" />
         <TextInput placeholder="8" title="Flat" />
       </KeyboardAwareScrollView>
+      <KeyboardToolbar />
     </>
   );
 }

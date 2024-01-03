@@ -2,6 +2,8 @@
 
 - [x] skip disabled fields
 - [x] fabric test
-- [ ] hasNext/hasPrev (or current/total)?
-- [ ] ToolBar/Toolbar UI component
+- [-] hasNext/hasPrev (or current/total)?
+- [-] ToolBar/Toolbar UI component
+- [ ] setFocusTo("current") -> like AutoFill contacts in iOS (hide and open keyboard)
+- [ ] set focus to custom input (date picker) - how it should be done? Test on iOS?
 - [ ] unit tests for iOS/Android
