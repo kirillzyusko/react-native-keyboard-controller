@@ -36,6 +36,11 @@ public class ViewHierarchyNavigator: NSObject {
 
       let textField = findTextFieldInDirection(currentFocus: view, direction: direction)
       textField?.requestFocus()
+      let allInputFields = ViewHierarchyNavigator.getAllInputFields()
+      let currentIndex = ViewHierarchyNavigator.getCurrentFocusedInputIndex()
+
+      print("All Input Fields: \(allInputFields.count)")
+      print("Current Focused Input Index: \(currentIndex)")
     }
     // return textField
   }
@@ -72,7 +77,7 @@ public class ViewHierarchyNavigator: NSObject {
   }
 
   private static func findTextFieldInHierarchy(view: UIView) -> TextField? {
-      if let textField = view as? UITextField, textField.isEnabled {
+    if let textField = view as? UITextField, textField.isEnabled {
       return textField
     }
 
@@ -88,5 +93,42 @@ public class ViewHierarchyNavigator: NSObject {
     }
 
     return nil // No UITextField found in the current view group
+  }
+
+  private static func getAllInputFields() -> [TextField] {
+    guard let rootView = UIApplication.shared.keyWindow?.rootViewController?.view else {
+      return []
+    }
+
+    var inputFields: [TextField] = []
+    findAllTextFieldsInHierarchy(view: rootView, inputFields: &inputFields)
+
+    return inputFields
+  }
+
+  private static func getCurrentFocusedInputIndex() -> Int? {
+    guard let currentFocus = UIResponder.current as? UIView else {
+      return nil
+    }
+
+    let allInputFields = getAllInputFields()
+
+    if let currentIndex = allInputFields.firstIndex(where: { $0 as? UIView == currentFocus }) {
+      return currentIndex
+    }
+
+    return nil
+  }
+
+  private static func findAllTextFieldsInHierarchy(view: UIView, inputFields: inout [TextField]) {
+    for subview in view.subviews {
+      if let textField = findTextFieldInHierarchy(view: subview) {
+        // Check if the textField is not already in the array
+        if !inputFields.contains(where: { $0 as? UIView == textField as? UIView }) {
+          inputFields.append(textField)
+        }
+      }
+      findAllTextFieldsInHierarchy(view: subview, inputFields: &inputFields)
+    }
   }
 }
