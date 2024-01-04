@@ -1,12 +1,13 @@
 import React, { forwardRef, useCallback, useMemo } from "react";
 import { View, useWindowDimensions } from "react-native";
 import Reanimated, {
-  interpolate,
   runOnUI,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
 } from "react-native-reanimated";
+
+import useKeyboardInterpolation from "../hooks/useKeyboardInterpolation";
 
 import { useKeyboardAnimation } from "./hooks";
 
@@ -75,6 +76,7 @@ const KeyboardAvoidingView = forwardRef<View, React.PropsWithChildren<Props>>(
 
       return Math.max(frame.value.y + frame.value.height - keyboardY, 0);
     }, [screenHeight, keyboardVerticalOffset]);
+    const { interpolate } = useKeyboardInterpolation();
 
     const onLayoutWorklet = useCallback((layout: LayoutRectangle) => {
       "worklet";
@@ -92,11 +94,7 @@ const KeyboardAvoidingView = forwardRef<View, React.PropsWithChildren<Props>>(
     );
 
     const animatedStyle = useAnimatedStyle(() => {
-      const bottom = interpolate(
-        keyboard.progress.value,
-        [0, 1],
-        [0, relativeKeyboardHeight()],
-      );
+      const bottom = interpolate([0, relativeKeyboardHeight()]);
       const bottomHeight = enabled ? bottom : 0;
 
       switch (behavior) {
