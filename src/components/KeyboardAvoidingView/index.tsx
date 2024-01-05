@@ -94,7 +94,10 @@ const KeyboardAvoidingView = forwardRef<View, React.PropsWithChildren<Props>>(
     );
 
     const animatedStyle = useAnimatedStyle(() => {
-      const bottom = interpolate([0, relativeKeyboardHeight()]);
+      const bottom = interpolate(keyboard.height.value, [
+        0,
+        relativeKeyboardHeight(),
+      ]);
       const bottomHeight = enabled ? bottom : 0;
 
       switch (behavior) {

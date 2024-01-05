@@ -34,7 +34,7 @@ const KeyboardStickyView = forwardRef<
     const { interpolate } = useKeyboardInterpolation();
 
     const stickyViewStyle = useAnimatedStyle(() => {
-      const offset = interpolate([closed, opened]);
+      const offset = interpolate(-height.value, [closed, opened]);
 
       return {
         transform: [{ translateY: height.value + offset }],

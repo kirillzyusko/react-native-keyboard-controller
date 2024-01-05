@@ -24,7 +24,6 @@ type KeyboardInterpolationOutput = [number, number];
  */
 const useKeyboardInterpolation = () => {
   // keyboard heights
-  const currentKeyboardHeight = useSharedValue(0);
   const nextKeyboardHeight = useSharedValue(0);
   const prevKeyboardHeight = useSharedValue(0);
   // save latest interpolated position
@@ -32,16 +31,20 @@ const useKeyboardInterpolation = () => {
   // boolean flag indicating which output range should be used
   const shouldUseInternalInterpolation = useSharedValue(false);
 
-  const interpolate = (output: KeyboardInterpolationOutput) => {
+  const interpolate = (
+    keyboardPosition: number,
+    output: KeyboardInterpolationOutput,
+  ) => {
     "worklet";
 
     lastInterpolation.value = interpolateREA(
-      currentKeyboardHeight.value,
+      keyboardPosition,
       [prevKeyboardHeight.value, nextKeyboardHeight.value],
       shouldUseInternalInterpolation.value
         ? [lastInterpolation.value, output[1]]
         : output,
     );
+
     return lastInterpolation.value;
   };
 
@@ -50,28 +53,37 @@ const useKeyboardInterpolation = () => {
       onStart: (e) => {
         "worklet";
 
-        if (e.height === 0) {
+        const keyboardWillBeHidden = e.height === 0;
+
+        // keyboard will be hidden
+        if (keyboardWillBeHidden) {
           shouldUseInternalInterpolation.value = false;
           prevKeyboardHeight.value = 0;
         }
 
-        if (nextKeyboardHeight.value !== 0 && e.height > 0) {
+        // keyboard will change its size
+        if (
+          // keyboard is shown on screen
+          nextKeyboardHeight.value !== 0 &&
+          // it really changes size (handles iOS case when after interactive keyboard gets shown again)
+          nextKeyboardHeight.value !== e.height &&
+          // keyboard is not hiding
+          !keyboardWillBeHidden
+        ) {
           prevKeyboardHeight.value = nextKeyboardHeight.value;
           shouldUseInternalInterpolation.value = true;
         }
 
-        if (e.height > 0) {
+        // keyboard will show or change size
+        if (!keyboardWillBeHidden) {
           nextKeyboardHeight.value = e.height;
         }
-      },
-      onMove: (e) => {
-        "worklet";
-
-        currentKeyboardHeight.value = e.height;
       },
       onEnd: (e) => {
         "worklet";
 
+        // handles case show -> resize -> hide -> show
+        // here we reset value to 0 when keyboard is hidden
         nextKeyboardHeight.value = e.height;
       },
     },
