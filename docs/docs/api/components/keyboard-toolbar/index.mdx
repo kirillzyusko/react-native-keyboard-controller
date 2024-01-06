@@ -1,0 +1,37 @@
+---
+keywords:
+  [
+    react-native-keyboard-controller,
+    toolbar,
+    keyboard toolbar,
+    keyboard next button,
+    keyboard next input,
+    keyboard previous button,
+    keyboard previous input,
+    keyboard done button,
+  ]
+---
+
+# KeyboardToolbar
+
+`KeyboardToolbar` is a view that sticky to the keyboard and has **next** and **previous** buttons for switching between inputs as well as **Done** button for closing the keyboard.
+
+This component is fully customizable and allows you to define any behavior for provided buttons and also allows you to render additional content.
+
+import Lottie from "lottie-react";
+import toolbar from "./toolbar.lottie.json";
+
+<div style={{ display: "flex", justifyContent: "center", marginBottom: 20 }}>
+  <Lottie
+    className="lottie"
+    animationData={toolbar}
+    style={{ width: 400, height: 400 }}
+    loop
+  />
+</div>
+
+## Props
+
+### `renderContent`
+
+## Example
