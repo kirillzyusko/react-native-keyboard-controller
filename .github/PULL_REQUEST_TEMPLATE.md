@@ -42,3 +42,4 @@
 ## 📝 Checklist
 
 - [ ] CI successfully passed
+- [ ] I added new mocks and corresponding unit-tests if library API was changed

@@ -3,7 +3,7 @@ import {
   useSharedValue,
 } from "react-native-reanimated";
 
-import { useKeyboardHandler } from "../../hooks";
+import { useKeyboardHandler } from "react-native-keyboard-controller";
 
 type KeyboardInterpolationOutput = [number, number];
 

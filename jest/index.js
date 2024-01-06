@@ -1,4 +1,4 @@
-import { Animated } from "react-native";
+import { Animated, ScrollView, View } from "react-native";
 
 const values = {
   animated: {
@@ -49,6 +49,10 @@ const mock = {
   KeyboardGestureArea: "KeyboardGestureArea",
   // providers
   KeyboardProvider: "KeyboardProvider",
+  // components
+  KeyboardStickyView: View,
+  KeyboardAvoidingView: View,
+  KeyboardAwareScrollView: ScrollView,
 };
 
 module.exports = mock;
