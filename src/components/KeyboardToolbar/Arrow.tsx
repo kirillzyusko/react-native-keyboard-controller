@@ -6,6 +6,7 @@ type Props = {
   color: string;
 };
 
+// TODO: handle bold text
 const ArrowComponent: React.FC<Props> = ({ direction }) => {
   return (
     <View
