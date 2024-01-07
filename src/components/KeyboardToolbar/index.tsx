@@ -1,12 +1,19 @@
 import React, { useCallback, useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  useColorScheme,
+} from "react-native";
 
 import { KeyboardController } from "../../bindings";
 import KeyboardStickyView from "../KeyboardStickyView";
 
 import Arrow from "./Arrow";
+import { colors } from "./colors";
 
-import type { LayoutChangeEvent } from "react-native";
+import type { LayoutChangeEvent, TextStyle, ViewStyle } from "react-native";
 
 export type KeyboardToolbarProps = {
   renderContent: () => JSX.Element;
@@ -21,7 +28,10 @@ const dismissKeyboard = () => KeyboardController.dismiss();
  * `Done` buttons.
  */
 const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({ renderContent }) => {
+  const theme = useColorScheme() || "light";
   const [height, setHeight] = useState(0);
+  const background: ViewStyle = { backgroundColor: colors[theme].background };
+  const done: TextStyle = { color: colors[theme].primary };
 
   const onLayout = useCallback((e: LayoutChangeEvent) => {
     setHeight(e.nativeEvent.layout.height);
@@ -33,7 +43,11 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({ renderContent }) => {
         // TODO: check whether it's readable or not
         accessibilityLabel="Toolbar"
         onLayout={onLayout}
-        style={[styles.toolbar, height === 0 ? { marginBottom: -9999 } : null]}
+        style={[
+          styles.toolbar,
+          height === 0 ? { marginBottom: -9999 } : null,
+          background,
+        ]}
       >
         <TouchableOpacity
           accessibilityState={{ disabled: false }}
@@ -42,7 +56,7 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({ renderContent }) => {
           accessibilityHint="Will move focus to previous field"
           onPress={() => KeyboardController.moveFocusTo("prev")}
         >
-          <Arrow direction="up" />
+          <Arrow disabled direction="up" />
         </TouchableOpacity>
         <TouchableOpacity
           accessibilityState={{ disabled: false }}
@@ -63,12 +77,14 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({ renderContent }) => {
           onPress={dismissKeyboard}
         >
           <Text
-            style={{
-              marginRight: 8,
-              fontWeight: "600",
-              fontSize: 15,
-              color: "#007aff",
-            }}
+            style={[
+              {
+                marginRight: 8,
+                fontWeight: "600",
+                fontSize: 15,
+              },
+              done,
+            ]}
           >
             Done
           </Text>
@@ -88,7 +104,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
     flexDirection: "row",
-    backgroundColor: "#F8F8F8",
     // TODO: don't hardcode? How to get this value from in `bottomOffset` in `KeyboardAwareScrollView`?
     height: 42,
     paddingHorizontal: 8,
