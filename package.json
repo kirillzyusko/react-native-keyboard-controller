@@ -48,6 +48,10 @@
     "avoiding view",
     "sticky view",
     "keyboard aware scroll view",
+    "keyboard toolbar",
+    "keyboard done button",
+    "keyboard next button",
+    "keyboard previous button",
     "ios",
     "android"
   ],
