@@ -8,6 +8,7 @@ type Props = {
   disabled?: boolean;
 };
 
+// TODO: maxFontSizeMultiplier={1.3}
 // TODO: handle bold text
 const ArrowComponent: React.FC<Props> = ({ direction, disabled }) => {
   const theme = useColorScheme() || "light";
