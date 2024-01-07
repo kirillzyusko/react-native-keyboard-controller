@@ -85,6 +85,7 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({ renderContent }) => {
               },
               done,
             ]}
+            maxFontSizeMultiplier={1.3}
           >
             Done
           </Text>
