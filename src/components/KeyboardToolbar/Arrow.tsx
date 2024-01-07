@@ -1,13 +1,20 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, useColorScheme } from "react-native";
+
+import { colors } from "./colors";
 
 type Props = {
   direction: "up" | "down";
-  color: string;
+  disabled?: boolean;
 };
 
 // TODO: handle bold text
-const ArrowComponent: React.FC<Props> = ({ direction }) => {
+const ArrowComponent: React.FC<Props> = ({ direction, disabled }) => {
+  const theme = useColorScheme() || "light";
+  const color = {
+    backgroundColor: disabled ? colors[theme].disabled : colors[theme].primary,
+  };
+
   return (
     <View
       style={[
@@ -17,13 +24,18 @@ const ArrowComponent: React.FC<Props> = ({ direction }) => {
     >
       <View style={styles.arrow}>
         <View
-          style={[styles.arrowLine, { transform: [{ rotate: "-45deg" }] }]}
+          style={[
+            styles.arrowLine,
+            { transform: [{ rotate: "-45deg" }] },
+            color,
+          ]}
         />
         <View
           style={[
             styles.arrowLine,
             { transform: [{ rotate: "45deg" }] },
             { left: -4 },
+            color,
           ]}
         />
       </View>
@@ -49,8 +61,6 @@ const styles = StyleSheet.create({
   arrowLine: {
     width: 12,
     height: 2,
-    // TODO: use platform specific colors
-    backgroundColor: "#007aff",
   },
 });
 
