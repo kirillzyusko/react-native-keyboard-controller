@@ -88,7 +88,7 @@ export type KeyboardControllerModule = {
   setInputMode: (mode: number) => void;
   // all platforms
   dismiss: () => void;
-  moveFocusTo: (direction: Direction) => void;
+  setFocusTo: (direction: Direction) => void;
   // native event module stuff
   addListener: (eventName: string) => void;
   removeListeners: (count: number) => void;

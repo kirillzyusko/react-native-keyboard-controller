@@ -50,12 +50,12 @@ The equivalent method from `react-native` relies on specific internal components
 In contrast, the described method enables keyboard dismissal for any focused input, extending functionality beyond the limitations of the default implementation.
 :::
 
-### `moveFocusTo`
+### `setFocusTo`
 
 This method moves focus to the next or to the previous input:
 
 ```ts
-moveFocusTo("next");
+setFocusTo("next");
 // or
-moveFocusTo("prev");
+setFocusTo("prev");
 ```

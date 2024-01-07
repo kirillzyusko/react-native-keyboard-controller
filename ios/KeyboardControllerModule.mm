@@ -77,12 +77,12 @@ RCT_EXPORT_METHOD(dismiss)
 }
 
 #ifdef RCT_NEW_ARCH_ENABLED
-- (void)moveFocusTo:(NSString *)direction
+- (void)setFocusTo:(NSString *)direction
 #else
-RCT_EXPORT_METHOD(moveFocusTo : (nonnull NSString *)direction)
+RCT_EXPORT_METHOD(setFocusTo : (nonnull NSString *)direction)
 #endif
 {
-  [ViewHierarchyNavigator moveFocusToDirection:direction];
+  [ViewHierarchyNavigator setFocusToDirection:direction];
 }
 
 + (KeyboardController *)shared

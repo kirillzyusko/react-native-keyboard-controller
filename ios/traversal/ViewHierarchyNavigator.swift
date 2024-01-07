@@ -27,7 +27,7 @@ extension UITextView: TextField {
 
 @objc(ViewHierarchyNavigator)
 public class ViewHierarchyNavigator: NSObject {
-  @objc public static func moveFocusTo(direction: String) {
+  @objc public static func setFocusTo(direction: String) {
     DispatchQueue.main.async {
       guard let view = UIResponder.current as? UIView else {
         // return nil

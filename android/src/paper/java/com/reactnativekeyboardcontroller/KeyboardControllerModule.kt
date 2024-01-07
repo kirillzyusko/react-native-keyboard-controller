@@ -26,8 +26,8 @@ class KeyboardControllerModule(mReactContext: ReactApplicationContext) : ReactCo
   }
 
   @ReactMethod
-  fun moveFocusTo(direction: String) {
-    module.moveFocusTo(direction)
+  fun setFocusTo(direction: String) {
+    module.setFocusTo(direction)
   }
 
   @Suppress("detekt:UnusedParameter")
