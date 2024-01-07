@@ -8,7 +8,7 @@ import com.facebook.react.views.textinput.ReactEditText
 import java.lang.ClassCastException
 
 object ViewHierarchyNavigator {
-  fun moveFocusTo(direction: String, view: View) {
+  fun setFocusTo(direction: String, view: View) {
     val input = if (direction == "next") findNextEditText(view) else findPreviousEditText(view)
 
     UiThreadUtil.runOnUiThread {

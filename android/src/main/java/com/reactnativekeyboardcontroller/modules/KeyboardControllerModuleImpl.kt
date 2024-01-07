@@ -29,12 +29,12 @@ class KeyboardControllerModuleImpl(private val mReactContext: ReactApplicationCo
     }
   }
 
-  fun moveFocusTo(direction: String) {
+  fun setFocusTo(direction: String) {
     val activity = mReactContext.currentActivity
     val view: View? = activity?.currentFocus
 
     if (view != null) {
-      ViewHierarchyNavigator.moveFocusTo(direction, view)
+      ViewHierarchyNavigator.setFocusTo(direction, view)
     }
   }
 

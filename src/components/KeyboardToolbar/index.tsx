@@ -54,7 +54,7 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({ renderContent }) => {
           accessibilityRole="button"
           accessibilityLabel="Previous"
           accessibilityHint="Will move focus to previous field"
-          onPress={() => KeyboardController.moveFocusTo("prev")}
+          onPress={() => KeyboardController.setFocusTo("prev")}
         >
           <Arrow disabled direction="up" />
         </TouchableOpacity>
@@ -63,7 +63,7 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({ renderContent }) => {
           accessibilityRole="button"
           accessibilityLabel="Next"
           accessibilityHint="Will move focus to next field"
-          onPress={() => KeyboardController.moveFocusTo("next")}
+          onPress={() => KeyboardController.setFocusTo("next")}
         >
           <Arrow direction="down" />
         </TouchableOpacity>

@@ -12,11 +12,11 @@ export default function ToolbarExample() {
     <>
       <Button
         title="next"
-        onPress={() => KeyboardController.moveFocusTo("next")}
+        onPress={() => KeyboardController.setFocusTo("next")}
       />
       <Button
         title="prev"
-        onPress={() => KeyboardController.moveFocusTo("prev")}
+        onPress={() => KeyboardController.setFocusTo("prev")}
       />
       <KeyboardAwareScrollView style={styles.withPadding}>
         <TextInput placeholder="1" title="Name" />
