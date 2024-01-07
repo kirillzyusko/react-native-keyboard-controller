@@ -32,6 +32,7 @@ The `input` property from this hook is returned as `SharedValue`. The returned d
 ```ts
 type FocusedInputLayoutChangedEvent = {
   target: number; // tag of the focused TextInput
+  parentScrollViewTarget: number; // tag of the parent ScrollView
 
   // layout of the focused TextInput
   layout: {

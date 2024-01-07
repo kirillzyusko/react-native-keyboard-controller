@@ -18,7 +18,11 @@ import {
 import { useSmoothKeyboardHandler } from "./useSmoothKeyboardHandler";
 import { debounce } from "./utils";
 
-import type { ScrollView, ScrollViewProps } from "react-native";
+import type {
+  LayoutChangeEvent,
+  ScrollView,
+  ScrollViewProps,
+} from "react-native";
 import type { FocusedInputLayoutChangedEvent } from "react-native-keyboard-controller";
 
 type KeyboardAwareScrollViewProps = {
@@ -75,6 +79,7 @@ const KeyboardAwareScrollView = forwardRef<
   (
     {
       children,
+      onLayout,
       bottomOffset = 0,
       disableScrollOnKeyboardHide = false,
       enabled = true,
@@ -83,6 +88,7 @@ const KeyboardAwareScrollView = forwardRef<
     ref,
   ) => {
     const scrollViewAnimatedRef = useAnimatedRef<Reanimated.ScrollView>();
+    const scrollViewTarget = useSharedValue<number | null>(null);
     const scrollPosition = useSharedValue(0);
     const position = useSharedValue(0);
     const currentKeyboardFrameHeight = useSharedValue(0);
@@ -114,6 +120,15 @@ const KeyboardAwareScrollView = forwardRef<
 
       scrollViewAnimatedRef(assignedRef);
     }, []);
+    const onScrollViewLayout = useCallback(
+      (e: LayoutChangeEvent) => {
+        // TODO: check that it works on Fabric
+        scrollViewTarget.value = e.nativeEvent.target;
+
+        onLayout?.(e);
+      },
+      [onLayout],
+    );
 
     /**
      * Function that will scroll a ScrollView as keyboard gets moving
@@ -130,6 +145,19 @@ const KeyboardAwareScrollView = forwardRef<
         const absoluteY = layout.value?.layout.absoluteY || 0;
         const inputHeight = layout.value?.layout.height || 0;
         const point = absoluteY + inputHeight;
+
+        // TODO: no back transitions (fixed by `scrollPosition.value === position.value`)
+        // TODO: check Fabric (especially iOS)
+        // TODO: check different TextInputs (multiline)
+        if (
+          // input belongs to ScrollView
+          input.value?.parentScrollViewTarget !== scrollViewTarget.value &&
+          // view was not scrolled (keyboard back transition)
+          scrollPosition.value === position.value
+        ) {
+          console.log(121212, scrollPosition.value, position.value, input.value);
+          return 0;
+        }
 
         if (visibleRect - point <= bottomOffset) {
           const interpolatedScrollTo = interpolate(
@@ -300,6 +328,7 @@ const KeyboardAwareScrollView = forwardRef<
       <Reanimated.ScrollView
         ref={onRef}
         {...rest}
+        onLayout={onScrollViewLayout}
         // @ts-expect-error `onScrollReanimated` is a fake prop needed for reanimated to intercept scroll events
         onScrollReanimated={onScroll}
         scrollEventThrottle={16}

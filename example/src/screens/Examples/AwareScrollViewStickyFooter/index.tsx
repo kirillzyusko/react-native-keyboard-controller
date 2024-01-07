@@ -79,6 +79,10 @@ export default function AwareScrollViewStickyFooter({ navigation }: Props) {
         <KeyboardStickyView offset={offset}>
           <View onLayout={handleLayout} style={styles.footer}>
             <Text style={styles.footerText}>A mocked sticky footer</Text>
+            <TextInput
+              style={{ width: 200, backgroundColor: "yellow" }}
+              placeholder="Amount"
+            />
             <Button title="Click me" />
           </View>
         </KeyboardStickyView>

@@ -15,6 +15,7 @@ import com.reactnativekeyboardcontroller.extensions.addOnTextChangedListener
 import com.reactnativekeyboardcontroller.extensions.dispatchEvent
 import com.reactnativekeyboardcontroller.extensions.dp
 import com.reactnativekeyboardcontroller.extensions.emitEvent
+import com.reactnativekeyboardcontroller.extensions.parentScrollViewTarget
 import com.reactnativekeyboardcontroller.extensions.rootView
 import com.reactnativekeyboardcontroller.extensions.screenLocation
 import com.reactnativekeyboardcontroller.traversal.FocusedInputHolder
@@ -28,6 +29,7 @@ val noFocusedInputEvent = FocusedInputLayoutChangedEventData(
   absoluteX = 0.0,
   absoluteY = 0.0,
   target = -1,
+  parentScrollViewTarget = -1,
 )
 
 class FocusedInputObserver(val view: ReactViewGroup, private val context: ThemedReactContext?) {
@@ -102,6 +104,7 @@ class FocusedInputObserver(val view: ReactViewGroup, private val context: Themed
       absoluteX = x.toFloat().dp,
       absoluteY = y.toFloat().dp,
       target = input.id,
+      parentScrollViewTarget = input.parentScrollViewTarget,
     )
 
     dispatchEventToJS(event)

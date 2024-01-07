@@ -11,6 +11,7 @@
 
 @implementation FocusedInputLayoutChangedEvent {
   NSNumber *_target;
+  NSNumber *_parentScrollViewTarget;
   NSObject *_layout;
   uint16_t _coalescingKey;
 }
@@ -29,6 +30,7 @@
   if ((self = [super init])) {
     _viewTag = reactTag;
     _target = [event valueForKey:@"target"];
+    _parentScrollViewTarget = [event valueForKey:@"parentScrollViewTarget"];
     _layout = [event valueForKey:@"layout"];
     _coalescingKey = 0;
   }
@@ -46,6 +48,7 @@ RCT_NOT_IMPLEMENTED(-(instancetype)init)
 {
   NSDictionary *body = @{
     @"target" : _target,
+    @"parentScrollViewTarget" : _parentScrollViewTarget,
     @"layout" : _layout,
   };
 

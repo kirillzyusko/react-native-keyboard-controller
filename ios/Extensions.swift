@@ -53,6 +53,25 @@ public extension Optional where Wrapped == UIResponder {
   }
 }
 
+public extension Optional where Wrapped: UIResponder {
+  var parentScrollViewTarget: NSNumber {
+    var currentResponder: UIResponder? = self
+
+    while let currentView = currentResponder {
+      // If the current responder is a UIScrollView (excluding UITextView), return its tag
+      if let scrollView = currentView as? UIScrollView, !(currentView is UITextView) {
+        return scrollView.superview?.reactTag ?? -1
+      }
+
+      // Move to the next responder in the chain
+      currentResponder = currentView.next
+    }
+
+    // UIScrollView is not found
+    return -1
+  }
+}
+
 public extension UIView {
   var globalFrame: CGRect? {
     let rootView = UIApplication.shared.keyWindow?.rootViewController?.view

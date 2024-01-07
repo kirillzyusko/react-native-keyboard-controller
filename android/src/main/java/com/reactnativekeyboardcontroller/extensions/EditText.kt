@@ -3,7 +3,9 @@ package com.reactnativekeyboardcontroller.extensions
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.View
 import android.widget.EditText
+import android.widget.ScrollView
 import com.facebook.react.views.textinput.ReactEditText
 import java.lang.reflect.Field
 
@@ -64,3 +66,28 @@ fun EditText.addOnTextChangedListener(action: (String) -> Unit): TextWatcher {
 
   return listener
 }
+
+val EditText.parentScrollViewTarget: Int
+  get() {
+    var currentView: View? = this
+
+    while (currentView != null) {
+      try {
+        val parentView = currentView.parent as View
+
+        if (parentView is ScrollView) {
+          // If the parent is a ScrollView, return its id
+          return parentView.id
+        }
+
+        // Move to the next parent view
+        currentView = parentView
+      } catch (e: ClassCastException) {
+        // android.view.ViewRootImpl cannot be cast to android.view.View
+        return -1
+      }
+    }
+
+    // ScrollView was not found
+    return -1
+  }
