@@ -43,7 +43,6 @@ class KeyboardControllerView: UIView {
       onLayoutChangedHandler: { [weak self] event in self?.onLayoutChanged(event: event) },
       onTextChangedHandler: { [weak self] text in self?.onTextChanged(text: text) }
     )
-
     keyboardObserver = KeyboardMovementObserver(
       handler: { [weak self] event, height, progress, duration, target in
         self?.onEvent(event: event, height: height, progress: progress, duration: duration, target: target)
