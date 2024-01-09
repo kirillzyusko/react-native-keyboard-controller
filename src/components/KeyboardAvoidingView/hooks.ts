@@ -1,6 +1,6 @@
 import { useSharedValue } from "react-native-reanimated";
 
-import { useKeyboardHandler } from "../../hooks";
+import { useKeyboardHandler } from "react-native-keyboard-controller";
 
 export const useKeyboardAnimation = () => {
   const heightWhenOpened = useSharedValue(0);

@@ -1,5 +1,49 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`components rendering should render \`KeyboardAvoidingView\` 1`] = `
+<View
+  behavior="height"
+  style={
+    {
+      "marginBottom": 20,
+    }
+  }
+>
+  <View
+    style={
+      {
+        "backgroundColor": "black",
+        "height": 20,
+        "width": 20,
+      }
+    }
+  />
+</View>
+`;
+
+exports[`components rendering should render \`KeyboardAwareScrollView\` 1`] = `
+<RCTScrollView
+  bottomOffset={20}
+  style={
+    {
+      "marginBottom": 20,
+    }
+  }
+>
+  <View>
+    <View
+      style={
+        {
+          "backgroundColor": "black",
+          "height": 20,
+          "width": 20,
+        }
+      }
+    />
+  </View>
+</RCTScrollView>
+`;
+
 exports[`components rendering should render \`KeyboardControllerView\` 1`] = `
 <KeyboardControllerView
   statusBarTranslucent={true}
@@ -20,4 +64,30 @@ exports[`components rendering should render \`KeyboardProvider\` 1`] = `
     }
   />
 </KeyboardProvider>
+`;
+
+exports[`components rendering should render \`KeyboardStickyView\` 1`] = `
+<View
+  offset={
+    {
+      "closed": -20,
+      "opened": -40,
+    }
+  }
+  style={
+    {
+      "marginBottom": 20,
+    }
+  }
+>
+  <View
+    style={
+      {
+        "backgroundColor": "black",
+        "height": 20,
+        "width": 20,
+      }
+    }
+  />
+</View>
 `;
