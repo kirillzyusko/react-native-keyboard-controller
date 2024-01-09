@@ -28,13 +28,19 @@ const focusedInput = {
 
 const mock = {
   // hooks
+  /// keyboard
   useKeyboardAnimation: jest.fn().mockReturnValue(values.animated),
   useReanimatedKeyboardAnimation: jest.fn().mockReturnValue(values.reanimated),
   useResizeMode: jest.fn(),
   useGenericKeyboardHandler: jest.fn(),
   useKeyboardHandler: jest.fn(),
+  /// input
   useReanimatedFocusedInput: jest.fn().mockReturnValue(focusedInput),
   useFocusedInputHandler: jest.fn(),
+  /// module
+  useKeyboardController: jest
+    .fn()
+    .mockReturnValue({ setEnabled: jest.fn(), enabled: true }),
   // modules
   KeyboardController: {
     setInputMode: jest.fn(),
