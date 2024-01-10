@@ -79,6 +79,7 @@ public class FocusedInputObserver: NSObject {
 
   @objc func keyboardWillHide(_: Notification) {
     removeObservers()
+    currentInput = nil
     dispatchEventToJS(data: noFocusedInputEvent)
   }
 
