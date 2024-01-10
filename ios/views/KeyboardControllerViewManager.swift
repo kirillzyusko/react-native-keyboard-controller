@@ -39,8 +39,18 @@ class KeyboardControllerView: UIView {
     self.bridge = bridge
     eventDispatcher = bridge.eventDispatcher()
     super.init(frame: frame)
-    inputObserver = FocusedInputObserver(onLayoutChangedHandler: onLayoutChanged, onTextChangedHandler: onTextChanged)
-    keyboardObserver = KeyboardMovementObserver(handler: onEvent, onNotify: onNotify)
+    inputObserver = FocusedInputObserver(
+      onLayoutChangedHandler: { [weak self] event in self?.onLayoutChanged(event: event) },
+      onTextChangedHandler: { [weak self] text in self?.onTextChanged(text: text) }
+    )
+    keyboardObserver = KeyboardMovementObserver(
+      handler: { [weak self] event, height, progress, duration, target in
+        self?.onEvent(event: event, height: height, progress: progress, duration: duration, target: target)
+      },
+      onNotify: { [weak self] event, data in
+        self?.onNotify(event: event, data: data)
+      }
+    )
   }
 
   @available(*, unavailable)
