@@ -1,8 +1,12 @@
 package com.reactnativekeyboardcontroller.listeners
 
+import android.os.Handler
+import android.os.Looper
 import android.text.TextWatcher
 import android.view.View.OnLayoutChangeListener
 import android.view.ViewTreeObserver.OnGlobalFocusChangeListener
+import android.widget.EditText
+import com.facebook.react.bridge.UiThreadUtil
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.UIManagerHelper
 import com.facebook.react.views.textinput.ReactEditText
@@ -13,6 +17,7 @@ import com.reactnativekeyboardcontroller.events.FocusedInputTextChangedEvent
 import com.reactnativekeyboardcontroller.extensions.addOnTextChangedListener
 import com.reactnativekeyboardcontroller.extensions.dispatchEvent
 import com.reactnativekeyboardcontroller.extensions.dp
+import com.reactnativekeyboardcontroller.extensions.removeSelf
 import com.reactnativekeyboardcontroller.extensions.screenLocation
 
 val noFocusedInputEvent = FocusedInputLayoutChangedEventData(
@@ -54,6 +59,7 @@ class FocusedInputObserver(val view: ReactViewGroup, private val context: Themed
     // unfocused or focused was changed
     if (newFocus == null || oldFocus != null) {
       lastFocusedInput?.removeOnLayoutChangeListener(layoutListener)
+      println("REMOVE FOCUS LISTENER")
       lastFocusedInput?.removeTextChangedListener(textWatcher)
       lastFocusedInput = null
     }
@@ -61,7 +67,9 @@ class FocusedInputObserver(val view: ReactViewGroup, private val context: Themed
       lastFocusedInput = newFocus
       newFocus.addOnLayoutChangeListener(layoutListener)
       this.syncUpLayout()
+println("ADD FOCUS LISTENER")
       textWatcher = newFocus.addOnTextChangedListener(textListener)
+      println()
     }
     // unfocused
     if (newFocus == null) {

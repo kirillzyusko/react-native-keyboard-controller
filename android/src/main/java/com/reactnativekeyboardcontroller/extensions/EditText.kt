@@ -3,6 +3,8 @@ package com.reactnativekeyboardcontroller.extensions
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.EditText
+import com.facebook.react.views.textinput.ReactEditText
+import java.lang.reflect.Field
 
 /**
  * Adds a listener that will be fired only once for each unique value.
@@ -30,7 +32,22 @@ fun EditText.addOnTextChangedListener(action: (String) -> Unit): TextWatcher {
     }
   }
 
-  addTextChangedListener(listener)
+  // Getting the Class object
+  // Getting the Class object
+  val clazz: Class<*> = ReactEditText::class.java
+
+  // Getting the Field object for the private field
+  val field: Field = clazz.getDeclaredField("mListeners")
+
+  // Making the private field accessible
+  field.isAccessible = true
+
+  // Getting the value of the private field
+  val listeners = field[this] as ArrayList<TextWatcher>
+
+  listeners.add(0, listener)
+
+  // addTextChangedListener(listener)
 
   return listener
 }

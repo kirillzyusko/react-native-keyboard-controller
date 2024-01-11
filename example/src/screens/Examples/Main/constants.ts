@@ -93,4 +93,10 @@ export const examples: Example[] = [
     info: ScreenNames.CLOSE,
     icons: "❌",
   },
+  {
+    title: "Text input mask",
+    testID: "text_input_mask",
+    info: ScreenNames.TEXT_INPUT_MASK,
+    icons: "😷",
+  },
 ];
