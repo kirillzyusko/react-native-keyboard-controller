@@ -32,22 +32,24 @@ fun EditText.addOnTextChangedListener(action: (String) -> Unit): TextWatcher {
     }
   }
 
-  // Getting the Class object
-  // Getting the Class object
+  // we can not simply call `addTextChangedListener(listener)`, because the issue
+  // https://github.com/kirillzyusko/react-native-keyboard-controller/issues/324
+  // will be reproducible again.
+  //
+  // so here we push our listener to first position to avoid the soft crash
   val clazz: Class<*> = ReactEditText::class.java
-
-  // Getting the Field object for the private field
   val field: Field = clazz.getDeclaredField("mListeners")
-
-  // Making the private field accessible
   field.isAccessible = true
+  val fieldValue = field[this]
 
-  // Getting the value of the private field
-  val listeners = field[this] as ArrayList<TextWatcher>
+  try {
+    val listeners = fieldValue as ArrayList<TextWatcher>
 
-  listeners.add(0, listener)
-
-  // addTextChangedListener(listener)
+    listeners.add(0, listener)
+  } catch (e: ClassCastException) {
+    // Handle the case where the cast failed
+    // in this case we don't attach a listener ¯\_(ツ)_/¯
+  }
 
   return listener
 }
