@@ -4963,6 +4963,11 @@ react-native-screens@^3.24.0:
     react-freeze "^1.0.0"
     warn-once "^0.1.0"
 
+react-native-text-input-mask@3.1.5:
+  version "3.1.5"
+  resolved "https://registry.yarnpkg.com/react-native-text-input-mask/-/react-native-text-input-mask-3.1.5.tgz#332f587e6f78fdceb9d0c3a75279de89705559a7"
+  integrity sha512-3fskFHLEqjDDQldeMabo6bHWFCjgoq5IZmZ1my7UAFbuXqpZGGOI9+x2FiJiNddQDYbzg5xNkG8nBKTW7PdDEA==
+
 react-native-toast-message@^2.1.6:
   version "2.1.6"
   resolved "https://registry.yarnpkg.com/react-native-toast-message/-/react-native-toast-message-2.1.6.tgz#322827c66901fa22cb3db614c7383cc717f5bbe2"

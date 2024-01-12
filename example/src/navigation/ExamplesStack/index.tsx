@@ -16,6 +16,7 @@ import NonUIProps from "../../screens/Examples/NonUIProps";
 import ReanimatedChat from "../../screens/Examples/ReanimatedChat";
 import ReanimatedChatFlatlist from "../../screens/Examples/ReanimatedChatFlatlist";
 import StatusBar from "../../screens/Examples/StatusBar";
+import TextInputMask from "../../screens/Examples/TextInputMask";
 import NativeStack from "../NestedStack";
 
 export type ExamplesStackParamList = {
@@ -34,6 +35,7 @@ export type ExamplesStackParamList = {
   [ScreenNames.KEYBOARD_AVOIDING_VIEW]: undefined;
   [ScreenNames.ENABLED_DISABLED]: undefined;
   [ScreenNames.CLOSE]: undefined;
+  [ScreenNames.TEXT_INPUT_MASK]: undefined;
 };
 
 const Stack = createStackNavigator<ExamplesStackParamList>();
@@ -84,6 +86,9 @@ const options = {
   },
   [ScreenNames.CLOSE]: {
     title: "Close keyboard",
+  },
+  [ScreenNames.TEXT_INPUT_MASK]: {
+    title: "Text input mask",
   },
 };
 
@@ -163,6 +168,11 @@ const ExamplesStack = () => (
       name={ScreenNames.CLOSE}
       component={CloseScreen}
       options={options[ScreenNames.CLOSE]}
+    />
+    <Stack.Screen
+      name={ScreenNames.TEXT_INPUT_MASK}
+      component={TextInputMask}
+      options={options[ScreenNames.TEXT_INPUT_MASK]}
     />
   </Stack.Navigator>
 );
