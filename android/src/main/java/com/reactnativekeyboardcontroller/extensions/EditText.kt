@@ -2,6 +2,7 @@ package com.reactnativekeyboardcontroller.extensions
 
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.widget.EditText
 import com.facebook.react.views.textinput.ReactEditText
 import java.lang.reflect.Field
@@ -37,18 +38,25 @@ fun EditText.addOnTextChangedListener(action: (String) -> Unit): TextWatcher {
   // will be reproducible again.
   //
   // so here we push our listener to first position to avoid the soft crash
-  val clazz: Class<*> = ReactEditText::class.java
-  val field: Field = clazz.getDeclaredField("mListeners")
-  field.isAccessible = true
-  val fieldValue = field[this]
-
   try {
-    val listeners = fieldValue as ArrayList<TextWatcher>
+    val clazz: Class<*> = ReactEditText::class.java
+    val field: Field = clazz.getDeclaredField("mListeners")
+    field.isAccessible = true
+    val fieldValue = field[this]
+    val listeners = fieldValue as? ArrayList<*>
 
-    listeners.add(0, listener)
+    if (listeners != null && listeners.all { it is TextWatcher }) {
+      // fieldValue is an ArrayList<TextWatch>
+      val textWatchListeners = listeners as ArrayList<TextWatcher>
+
+      textWatchListeners.add(0, listener)
+    } else {
+      Log.w(javaClass.simpleName, "Can not attach listener because `fieldValue` does not belong to `ArrayList<TextWatcher>`")
+    }
   } catch (e: ClassCastException) {
-    // Handle the case where the cast failed
-    // in this case we don't attach a listener ¯\_(ツ)_/¯
+    Log.w(javaClass.simpleName, "Can not attach listener because casting failed: ${e.message}")
+  } catch (e: NoSuchFieldException) {
+    Log.w(javaClass.simpleName, "Can not attach listener because field `mListeners` not found: ${e.message}")
   }
 
   return listener
