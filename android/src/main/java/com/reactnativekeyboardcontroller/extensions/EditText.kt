@@ -51,7 +51,10 @@ fun EditText.addOnTextChangedListener(action: (String) -> Unit): TextWatcher {
 
       textWatchListeners.add(0, listener)
     } else {
-      Log.w(javaClass.simpleName, "Can not attach listener because `fieldValue` does not belong to `ArrayList<TextWatcher>`")
+      Log.w(
+        javaClass.simpleName,
+        "Can not attach listener because `fieldValue` does not belong to `ArrayList<TextWatcher>`",
+      )
     }
   } catch (e: ClassCastException) {
     Log.w(javaClass.simpleName, "Can not attach listener because casting failed: ${e.message}")
