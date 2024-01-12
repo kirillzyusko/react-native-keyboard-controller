@@ -8,7 +8,8 @@
     "test-example:android": "detox test --configuration example.android.emu.release --loglevel verbose --take-screenshots failing --record-videos failing",
     "build-example:ios": "detox build --configuration example.ios.sim.release",
     "test-example:ios": "detox test --configuration example.ios.sim.release --loglevel verbose --take-screenshots failing --record-videos failing",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "detox-clean": "detox clean-framework-cache && detox build-framework-cache"
   },
   "repository": {
     "type": "git",

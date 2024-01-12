@@ -254,7 +254,8 @@ const KeyboardAwareScrollView: FC<KeyboardAwareScrollViewProps> = ({
       onScroll={onScroll}
       scrollEventThrottle={16}
     >
-      <Reanimated.View style={view}>{children}</Reanimated.View>
+      {children}
+      <Reanimated.View style={view} />
     </Reanimated.ScrollView>
   );
 };
