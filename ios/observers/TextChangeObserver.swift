@@ -6,6 +6,10 @@
 //  Copyright © 2023 Facebook. All rights reserved.
 //
 
+protocol NotifyingMaskedTextFieldDelegateListener: class {
+    func onEditingChanged(inTextField: UITextField)
+}
+
 public class TextChangeObserver {
   private var observer: Any?
 
@@ -30,6 +34,13 @@ public class TextChangeObserver {
         handler(textView.text)
       }
     }
+      if let myProtocolView = input as? NotifyingMaskedTextFieldDelegateListener {
+          print("conforms")
+          // The view conforms to the MyProtocol
+          // myProtocolView.onEditingChanged
+      } else {
+          // The view does not conform to the MyProtocol
+      }
   }
 
   func removeObserver() {
