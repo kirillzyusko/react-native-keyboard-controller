@@ -9,6 +9,26 @@
 import Foundation
 import UIKit
 
+class CustomInputAccessoryView: UIView {
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupView()
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        setupView()
+    }
+
+    private func setupView() {
+        // Set the background color to red
+        // backgroundColor = UIColor.red
+
+        // You can customize the appearance of the accessory view here
+        // Add any additional subviews or configure constraints if needed
+    }
+}
+
 @objc(KeyboardMovementObserver)
 public class KeyboardMovementObserver: NSObject {
   // class members
@@ -162,6 +182,11 @@ public class KeyboardMovementObserver: NSObject {
   @objc func keyboardWillAppear(_ notification: Notification) {
     if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
       tag = UIResponder.current.reactViewTag
+        if let activeTextField = UIResponder.current as? UITextField {
+            activeTextField.inputAccessoryView = CustomInputAccessoryView(frame: CGRect(x: 0, y: 0, width: 0, height: 50))
+            activeTextField.reloadInputViews()
+        }
+
       let keyboardHeight = keyboardFrame.cgRectValue.size.height
       let duration = Int(
         (notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double ?? 0) * 1000
