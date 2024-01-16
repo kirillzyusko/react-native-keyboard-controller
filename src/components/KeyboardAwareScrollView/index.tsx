@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo } from "react";
+import React, { useCallback, useMemo } from "react";
 import { useWindowDimensions } from "react-native";
 import Reanimated, {
   interpolate,
@@ -24,7 +24,7 @@ import type { FocusedInputLayoutChangedEvent } from "react-native-keyboard-contr
 
 type KeyboardAwareScrollViewProps = {
   bottomOffset?: number;
-  resetScroll?: boolean;
+  disableScrollOnKeyboardHide?: boolean;
 } & ScrollViewProps;
 
 /**
@@ -68,7 +68,7 @@ type KeyboardAwareScrollViewProps = {
 const KeyboardAwareScrollView: FC<KeyboardAwareScrollViewProps> = ({
   children,
   bottomOffset = 0,
-  resetScroll = true,
+  disableScrollOnKeyboardHide = false,
   ...rest
 }) => {
   const scrollViewAnimatedRef = useAnimatedRef<Reanimated.ScrollView>();
@@ -80,13 +80,8 @@ const KeyboardAwareScrollView: FC<KeyboardAwareScrollViewProps> = ({
   const tag = useSharedValue(-1);
   const initialKeyboardSize = useSharedValue(0);
   const scrollBeforeKeyboardMovement = useSharedValue(0);
-  const resetScrollPosition = useSharedValue(resetScroll);
   const { input } = useReanimatedFocusedInput();
   const layout = useSharedValue<FocusedInputLayoutChangedEvent | null>(null);
-
-  useEffect(() => {
-    resetScrollPosition.value = resetScroll;
-  }, [resetScroll]);
 
   const { height } = useWindowDimensions();
 
@@ -226,8 +221,8 @@ const KeyboardAwareScrollView: FC<KeyboardAwareScrollViewProps> = ({
 
         currentKeyboardFrameHeight.value = e.height;
 
-        // only adjust scrolling when the keyboard opens, unless resetScroll is set
-        if (resetScrollPosition.value || keyboardWillAppear.value) {
+        // if the user has set disableScrollOnKeyboardHide, only auto-scroll when the keyboard opens
+        if (!disableScrollOnKeyboardHide || keyboardWillAppear.value) {
           maybeScroll(e.height);
         }
       },
@@ -238,7 +233,7 @@ const KeyboardAwareScrollView: FC<KeyboardAwareScrollViewProps> = ({
         scrollPosition.value = position.value;
       },
     },
-    [height, maybeScroll],
+    [height, maybeScroll, disableScrollOnKeyboardHide],
   );
 
   useAnimatedReaction(

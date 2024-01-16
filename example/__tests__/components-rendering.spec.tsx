@@ -37,7 +37,11 @@ function KeyboardAvoidingViewTest() {
 
 function KeyboardAwareScrollViewTest() {
   return (
-    <KeyboardAwareScrollView bottomOffset={20} style={style}>
+    <KeyboardAwareScrollView
+      bottomOffset={20}
+      disableScrollOnKeyboardHide={false}
+      style={style}
+    >
       <EmptyView />
     </KeyboardAwareScrollView>
   );
