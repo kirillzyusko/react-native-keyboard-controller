@@ -1,3 +1,4 @@
+import { Platform } from "react-native";
 import {
   interpolate as interpolateREA,
   useSharedValue,
@@ -36,6 +37,17 @@ const useKeyboardInterpolation = () => {
     output: KeyboardInterpolationOutput,
   ) => {
     "worklet";
+
+    // on iOS it's safe to interpolate between 0 and `fullKeyboardSize` because when
+    // keyboard resized we will not have intermediate values and transition will be instant
+    // see: https://github.com/kirillzyusko/react-native-keyboard-controller/issues/327
+    if (Platform.OS === "ios") {
+      return interpolateREA(
+        keyboardPosition,
+        [0, nextKeyboardHeight.value],
+        output,
+      );
+    }
 
     lastInterpolation.value = interpolateREA(
       keyboardPosition,

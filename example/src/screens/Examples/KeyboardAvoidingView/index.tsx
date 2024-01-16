@@ -72,6 +72,7 @@ export default function KeyboardAvoidingViewExample({ navigation }: Props) {
             placeholder="Password"
             placeholderTextColor="#7C7C7C"
             style={styles.textInput}
+            secureTextEntry
           />
         </View>
         <TouchableOpacity style={styles.button}>

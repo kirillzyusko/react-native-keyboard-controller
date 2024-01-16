@@ -74,6 +74,7 @@ const KeyboardAwareScrollView: FC<KeyboardAwareScrollViewProps> = ({
   const scrollViewAnimatedRef = useAnimatedRef<Reanimated.ScrollView>();
   const scrollPosition = useSharedValue(0);
   const position = useSharedValue(0);
+  const currentKeyboardFrameHeight = useSharedValue(0);
   const keyboardHeight = useSharedValue(0);
   const keyboardWillAppear = useSharedValue(false);
   const tag = useSharedValue(-1);
@@ -223,6 +224,8 @@ const KeyboardAwareScrollView: FC<KeyboardAwareScrollViewProps> = ({
       onMove: (e) => {
         "worklet";
 
+        currentKeyboardFrameHeight.value = e.height;
+
         // only adjust scrolling when the keyboard opens, unless resetScroll is set
         if (resetScrollPosition.value || keyboardWillAppear.value) {
           maybeScroll(e.height);
@@ -257,7 +260,7 @@ const KeyboardAwareScrollView: FC<KeyboardAwareScrollViewProps> = ({
 
   const view = useAnimatedStyle(
     () => ({
-      paddingBottom: keyboardHeight.value,
+      paddingBottom: currentKeyboardFrameHeight.value,
     }),
     [],
   );

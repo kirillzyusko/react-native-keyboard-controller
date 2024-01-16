@@ -73,6 +73,7 @@ PODS:
   - hermes-engine (0.72.4):
     - hermes-engine/Pre-built (= 0.72.4)
   - hermes-engine/Pre-built (0.72.4)
+  - InputMask (6.1.0)
   - libevent (2.1.12)
   - lottie-ios (4.2.0)
   - lottie-react-native (6.1.2):
@@ -379,10 +380,14 @@ PODS:
   - React-jsinspector (0.72.4)
   - React-logger (0.72.4):
     - glog
-  - react-native-keyboard-controller (1.10.1):
+  - react-native-keyboard-controller (1.10.2):
     - React-Core
   - react-native-safe-area-context (4.7.1):
     - React-Core
+  - react-native-text-input-mask (3.1.5):
+    - InputMask (~> 6.1.0)
+    - React-Core
+    - React-RCTText
   - React-NativeModulesApple (0.72.4):
     - hermes-engine
     - React-callinvoker
@@ -558,6 +563,7 @@ DEPENDENCIES:
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - react-native-keyboard-controller (from `../node_modules/react-native-keyboard-controller`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
+  - react-native-text-input-mask (from `../node_modules/react-native-text-input-mask`)
   - React-NativeModulesApple (from `../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
@@ -593,6 +599,7 @@ SPEC REPOS:
     - Flipper-PeerTalk
     - FlipperKit
     - fmt
+    - InputMask
     - libevent
     - lottie-ios
     - OpenSSL-Universal
@@ -649,6 +656,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-keyboard-controller"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
+  react-native-text-input-mask:
+    :path: "../node_modules/react-native-text-input-mask"
   React-NativeModulesApple:
     :path: "../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios"
   React-perflogger:
@@ -711,6 +720,7 @@ SPEC CHECKSUMS:
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
   glog: c5d68082e772fa1c511173d6b30a9de2c05a69a2
   hermes-engine: 81191603c4eaa01f5e4ae5737a9efcf64756c7b2
+  InputMask: 71d291dc54d2deaeac6512afb6ec2304228c0bb7
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
   lottie-ios: 809ecf2d460ed650a6aed7aa88b2ec45fab4779c
   lottie-react-native: 3d6f1b0db1fd9e18b92af1fbfbf67037611bae67
@@ -730,8 +740,9 @@ SPEC CHECKSUMS:
   React-jsiexecutor: c7f826e40fa9cab5d37cab6130b1af237332b594
   React-jsinspector: aaed4cf551c4a1c98092436518c2d267b13a673f
   React-logger: da1ebe05ae06eb6db4b162202faeafac4b435e77
-  react-native-keyboard-controller: 136f279ff68e853ec211f5a9cfe64c0c57bb8541
+  react-native-keyboard-controller: 9c708acff806450ce2a0f3c2aceace1fdc87070f
   react-native-safe-area-context: 9697629f7b2cda43cf52169bb7e0767d330648c2
+  react-native-text-input-mask: 22ca8eeef84d42a896f79428f7d175a5eb8b1c4e
   React-NativeModulesApple: edb5ace14f73f4969df6e7b1f3e41bef0012740f
   React-perflogger: 496a1a3dc6737f964107cb3ddae7f9e265ddda58
   React-RCTActionSheet: 02904b932b50e680f4e26e7a686b33ebf7ef3c00
@@ -757,6 +768,6 @@ SPEC CHECKSUMS:
   Yoga: 3efc43e0d48686ce2e8c60f99d4e6bd349aff981
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 45614159967e4f036f83a709a2537d9ed3694b03
+PODFILE CHECKSUM: b83fb0cd8eaef141fa89510d2dcab341c71f9169
 
 COCOAPODS: 1.14.3
