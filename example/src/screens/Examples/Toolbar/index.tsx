@@ -10,7 +10,10 @@ import TextInput from "../../../components/TextInput";
 export default function ToolbarExample() {
   return (
     <>
-      <KeyboardAwareScrollView bottomOffset={62} style={styles.withPadding}>
+      <KeyboardAwareScrollView
+        bottomOffset={62}
+        style={[styles.withPadding, styles.container]}
+      >
         <TextInput placeholder="1" title="Name" />
         <TextInput placeholder="2" title="Surname" multiline={false} />
         <TextInput
@@ -50,6 +53,9 @@ export default function ToolbarExample() {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    backgroundColor: "white",
+  },
   row: {
     flexDirection: "row",
   },
