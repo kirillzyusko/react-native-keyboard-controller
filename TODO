@@ -16,3 +16,10 @@
 - [ ] on iOS when you go from down to top - birthday inputs (2) are skipped
 - [ ] e2e tests
 - [ ] improve accessibility (arrows should react on bold/fontSize changes)
+
+Major problems (for opening PR):
+
+- disable/enable buttons (how to propagate events/ animated transitions)
+- e2e tests
+- setFocusTo("current")
+- enhanced example app
