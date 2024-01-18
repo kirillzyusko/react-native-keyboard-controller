@@ -20,6 +20,11 @@ class CustomInputAccessoryView: UIView {
         setupView()
     }
 
+    override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
+            // Return false to allow touch events to pass through
+            return false
+        }
+    
     private func setupView() {
         // Set the background color to red
         // backgroundColor = UIColor.red
