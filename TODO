@@ -4,14 +4,15 @@
 - [x] fabric test
 - [x] dark theme
 - [x] ToolBar/Toolbar UI component
+- [x] accessibility
+- [x] animations
 - [-] hasNext/hasPrev (or current/total)?
 - [ ] setFocusTo("current") -> like AutoFill contacts in iOS (hide and open keyboard)
 - [ ] set focus to custom input (date picker) - how it should be done? Test on iOS?
 - [ ] unit tests for iOS/Android
-- [ ] accessibility
-- [ ] animations
 - [ ] customization
 - [ ] memo/callbacks everywhere
 - [ ] reduce `useColorScheme() || "light";` code duplication
 - [ ] on iOS when you go from down to top - birthday inputs (2) are skipped
 - [ ] e2e tests
+- [ ] improve accessibility (arrows should react on bold/fontSize changes)
