@@ -6,6 +6,7 @@
 - [x] ToolBar/Toolbar UI component
 - [x] accessibility
 - [x] animations
+- [x] on iOS when you go from down to top - birthday inputs (2) are skipped
 - [-] hasNext/hasPrev (or current/total)?
 - [ ] setFocusTo("current") -> like AutoFill contacts in iOS (hide and open keyboard)
 - [ ] set focus to custom input (date picker) - how it should be done? Test on iOS?
@@ -13,13 +14,12 @@
 - [ ] customization
 - [ ] memo/callbacks everywhere
 - [ ] reduce `useColorScheme() || "light";` code duplication
-- [ ] on iOS when you go from down to top - birthday inputs (2) are skipped
 - [ ] e2e tests
 - [ ] improve accessibility (arrows should react on bold/fontSize changes)
 
 Major problems (for opening PR):
 
 - disable/enable buttons (how to propagate events/ animated transitions)
-- e2e tests
 - setFocusTo("current")
 - enhanced example app
+- e2e tests

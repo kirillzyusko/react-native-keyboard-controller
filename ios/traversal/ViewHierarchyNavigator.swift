@@ -67,7 +67,7 @@ public class ViewHierarchyNavigator: NSObject {
     for i in range {
       let nextChild = parentViewGroup.subviews[i]
 
-      if let nextTextField = findTextFieldInHierarchy(view: nextChild) {
+      if let nextTextField = findTextFieldInHierarchy(view: nextChild, direction: direction) {
         return nextTextField
       }
     }
@@ -76,7 +76,27 @@ public class ViewHierarchyNavigator: NSObject {
     return findTextFieldInDirection(currentFocus: parentViewGroup, direction: direction)
   }
 
-  private static func findTextFieldInHierarchy(view: UIView) -> TextField? {
+  private static func findTextFieldInHierarchy(view: UIView, direction: String) -> TextField? {
+    // Check the current view
+    if let validTextField = isValidTextField(view) {
+      return validTextField
+    }
+
+    // Determine the iteration order based on the direction
+    let subviews = direction == "next" ? view.subviews : view.subviews.reversed()
+
+    // Iterate over subviews
+    for subview in subviews {
+      if let textField = findTextFieldInHierarchy(view: subview, direction: direction) {
+        return textField
+      }
+    }
+
+    return nil // No valid UITextField or UITextView found
+  }
+
+  // Function to check if the view is a valid text field or text view
+  private static func isValidTextField(_ view: UIView) -> TextField? {
     if let textField = view as? UITextField, textField.isEnabled {
       return textField
     }
@@ -85,14 +105,7 @@ public class ViewHierarchyNavigator: NSObject {
       return textView
     }
 
-    // If the current view is not a UITextField, check its subviews recursively
-    for subview in view.subviews {
-      if let textField = findTextFieldInHierarchy(view: subview) {
-        return textField
-      }
-    }
-
-    return nil // No UITextField found in the current view group
+    return nil
   }
 
   private static func getAllInputFields() -> [TextField] {
@@ -122,7 +135,7 @@ public class ViewHierarchyNavigator: NSObject {
 
   private static func findAllTextFieldsInHierarchy(view: UIView, inputFields: inout [TextField]) {
     for subview in view.subviews {
-      if let textField = findTextFieldInHierarchy(view: subview) {
+      if let textField = findTextFieldInHierarchy(view: subview, direction: "next") {
         // Check if the textField is not already in the array
         if !inputFields.contains(where: { $0 as? UIView == textField as? UIView }) {
           inputFields.append(textField)
