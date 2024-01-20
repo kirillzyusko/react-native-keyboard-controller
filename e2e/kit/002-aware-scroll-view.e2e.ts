@@ -12,6 +12,11 @@ import setDemoMode from "./utils/setDemoMode";
 
 const BLINKING_CURSOR = 0.35;
 
+const closeKeyboard = async () => {
+  // tap outside to close a keyboard
+  await tap("aware_scroll_view_container", { x: 0, y: 100 });
+};
+
 describe("AwareScrollView test cases", () => {
   beforeAll(async () => {
     await setDemoMode();
@@ -62,11 +67,28 @@ describe("AwareScrollView test cases", () => {
   });
 
   it("should scroll back when keyboard dismissed", async () => {
-    // tap outside to close a keyboard
-    await tap("aware_scroll_view_container", { x: 0, y: 100 });
+    await closeKeyboard();
     await waitForExpect(async () => {
       await expectBitmapsToBeEqual(
         "AwareScrollViewKeyboardClosed",
+        BLINKING_CURSOR,
+      );
+    });
+  });
+
+  it("shouldn't scroll back when keyboard dismissed if such behavior intentionally disabled", async () => {
+    await waitAndTap("disable_scroll_on_keyboard_hide");
+    await waitAndTap("TextInput#5");
+    await waitForExpect(async () => {
+      await expectBitmapsToBeEqual(
+        "AwareScrollViewSecondInputFocused",
+        BLINKING_CURSOR,
+      );
+    });
+    await closeKeyboard();
+    await waitForExpect(async () => {
+      await expectBitmapsToBeEqual(
+        "AwareScrollViewKeyboardClosedWithoutBackScroll",
         BLINKING_CURSOR,
       );
     });

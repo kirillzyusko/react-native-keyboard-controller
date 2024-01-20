@@ -7,4 +7,8 @@ export const styles = StyleSheet.create({
   content: {
     paddingTop: 50,
   },
+  header: {
+    color: "black",
+    paddingRight: 12,
+  },
 });

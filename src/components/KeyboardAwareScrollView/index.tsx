@@ -23,7 +23,10 @@ import type { ScrollViewProps } from "react-native";
 import type { FocusedInputLayoutChangedEvent } from "react-native-keyboard-controller";
 
 type KeyboardAwareScrollViewProps = {
+  /** The distance between keyboard and focused `TextInput` when keyboard is shown. Default is `0`. */
   bottomOffset?: number;
+  /** Prevents automatic scrolling of the `ScrollView` when the keyboard gets hidden, maintaining the current screen position. Default is `false`. */
+  disableScrollOnKeyboardHide?: boolean;
 } & ScrollViewProps;
 
 /**
@@ -67,6 +70,7 @@ type KeyboardAwareScrollViewProps = {
 const KeyboardAwareScrollView: FC<KeyboardAwareScrollViewProps> = ({
   children,
   bottomOffset = 0,
+  disableScrollOnKeyboardHide = false,
   ...rest
 }) => {
   const scrollViewAnimatedRef = useAnimatedRef<Reanimated.ScrollView>();
@@ -74,6 +78,7 @@ const KeyboardAwareScrollView: FC<KeyboardAwareScrollViewProps> = ({
   const position = useSharedValue(0);
   const currentKeyboardFrameHeight = useSharedValue(0);
   const keyboardHeight = useSharedValue(0);
+  const keyboardWillAppear = useSharedValue(false);
   const tag = useSharedValue(-1);
   const initialKeyboardSize = useSharedValue(0);
   const scrollBeforeKeyboardMovement = useSharedValue(0);
@@ -170,7 +175,7 @@ const KeyboardAwareScrollView: FC<KeyboardAwareScrollViewProps> = ({
 
         const keyboardWillChangeSize =
           keyboardHeight.value !== e.height && e.height > 0;
-        const keyboardWillAppear = e.height > 0 && keyboardHeight.value === 0;
+        keyboardWillAppear.value = e.height > 0 && keyboardHeight.value === 0;
         const keyboardWillHide = e.height === 0;
         const focusWasChanged =
           (tag.value !== e.target && e.target !== -1) || keyboardWillChangeSize;
@@ -185,7 +190,11 @@ const KeyboardAwareScrollView: FC<KeyboardAwareScrollViewProps> = ({
           scrollPosition.value = scrollBeforeKeyboardMovement.value;
         }
 
-        if (keyboardWillAppear || keyboardWillChangeSize || focusWasChanged) {
+        if (
+          keyboardWillAppear.value ||
+          keyboardWillChangeSize ||
+          focusWasChanged
+        ) {
           // persist scroll value
           scrollPosition.value = position.value;
           // just persist height - later will be used in interpolation
@@ -203,7 +212,7 @@ const KeyboardAwareScrollView: FC<KeyboardAwareScrollViewProps> = ({
           scrollBeforeKeyboardMovement.value = position.value;
         }
 
-        if (focusWasChanged && !keyboardWillAppear) {
+        if (focusWasChanged && !keyboardWillAppear.value) {
           // update position on scroll value, so `onEnd` handler
           // will pick up correct values
           position.value += maybeScroll(e.height, true);
@@ -214,7 +223,10 @@ const KeyboardAwareScrollView: FC<KeyboardAwareScrollViewProps> = ({
 
         currentKeyboardFrameHeight.value = e.height;
 
-        maybeScroll(e.height);
+        // if the user has set disableScrollOnKeyboardHide, only auto-scroll when the keyboard opens
+        if (!disableScrollOnKeyboardHide || keyboardWillAppear.value) {
+          maybeScroll(e.height);
+        }
       },
       onEnd: (e) => {
         "worklet";
@@ -223,7 +235,7 @@ const KeyboardAwareScrollView: FC<KeyboardAwareScrollViewProps> = ({
         scrollPosition.value = position.value;
       },
     },
-    [height, maybeScroll],
+    [height, maybeScroll, disableScrollOnKeyboardHide],
   );
 
   useAnimatedReaction(
