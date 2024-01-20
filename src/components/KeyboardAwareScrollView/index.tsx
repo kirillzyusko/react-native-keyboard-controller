@@ -254,7 +254,8 @@ const KeyboardAwareScrollView: FC<KeyboardAwareScrollViewProps> = ({
     <Reanimated.ScrollView
       ref={scrollViewAnimatedRef}
       {...rest}
-      onScroll={onScroll}
+      // @ts-expect-error `onScrollReanimated` is a fake prop needed for reanimated to intercept scroll events
+      onScrollReanimated={onScroll}
       scrollEventThrottle={16}
     >
       {children}
