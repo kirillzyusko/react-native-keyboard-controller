@@ -6,7 +6,6 @@
 //  Copyright © 2023 Facebook. All rights reserved.
 //
 
-
 public class TextChangeObserver {
   private var observer: Any?
 
@@ -39,9 +38,4 @@ public class TextChangeObserver {
       self.observer = nil
     }
   }
-    
-    func onEditingChanged(inTextField: UITextField) {
-            // Your implementation here
-            print("Text field editing changed")
-        }
 }
