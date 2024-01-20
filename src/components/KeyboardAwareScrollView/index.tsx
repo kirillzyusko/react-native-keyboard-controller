@@ -26,7 +26,7 @@ type KeyboardAwareScrollViewProps = {
   bottomOffset?: number;
 } & ScrollViewProps;
 
-/**
+/*
  * Everything begins from `onStart` handler. This handler is called every time,
  * when keyboard changes its size or when focused `TextInput` was changed. In
  * this handler we are calculating/memoizing values which later will be used
