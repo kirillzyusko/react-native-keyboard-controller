@@ -27,7 +27,7 @@ extension UITextView: TextField {
 
 @objc(ViewHierarchyNavigator)
 public class ViewHierarchyNavigator: NSObject {
-  @objc public static func setFocusTo(direction: String) {
+    @objc public static func setFocusTo(direction: String, onEvent: @escaping (NSDictionary) -> Void) {
     DispatchQueue.main.async {
       guard let view = UIResponder.current as? UIView else {
         // return nil
@@ -41,6 +41,10 @@ public class ViewHierarchyNavigator: NSObject {
 
       print("All Input Fields: \(allInputFields.count)")
       print("Current Focused Input Index: \(currentIndex)")
+        onEvent([
+            "current": currentIndex,
+            "count": allInputFields.count
+        ])
     }
     // return textField
   }

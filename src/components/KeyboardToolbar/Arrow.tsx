@@ -1,5 +1,7 @@
-import React from "react";
-import { StyleSheet, View, useColorScheme } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Animated, StyleSheet, View, useColorScheme } from "react-native";
+
+import { useAnimatedValue } from "../../internal";
 
 import { colors } from "./colors";
 
@@ -12,6 +14,23 @@ type Props = {
 // TODO: handle bold text
 const ArrowComponent: React.FC<Props> = ({ direction, disabled }) => {
   const theme = useColorScheme() || "light";
+  const animated = useAnimatedValue(0);
+
+  useEffect(() => {
+    Animated.timing(animated, {
+      duration: 100,
+      useNativeDriver: true,
+      toValue: disabled ? 0 : 1,
+    }).start();
+  }, [disabled, animated]);
+  const backgroundColor = animated.interpolate({
+    inputRange: [0, 1],
+    outputRange: [colors[theme].disabled, colors[theme].primary],
+  });
+
+  /*const color = {
+    backgroundColor,
+  };*/
   const color = {
     backgroundColor: disabled ? colors[theme].disabled : colors[theme].primary,
   };
@@ -24,14 +43,14 @@ const ArrowComponent: React.FC<Props> = ({ direction, disabled }) => {
       ]}
     >
       <View style={styles.arrow}>
-        <View
+        <Animated.View
           style={[
             styles.arrowLine,
             { transform: [{ rotate: "-45deg" }] },
             color,
           ]}
         />
-        <View
+        <Animated.View
           style={[
             styles.arrowLine,
             { transform: [{ rotate: "45deg" }] },

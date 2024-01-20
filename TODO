@@ -16,6 +16,7 @@
 - [ ] reduce `useColorScheme() || "light";` code duplication
 - [ ] e2e tests
 - [ ] improve accessibility (arrows should react on bold/fontSize changes)
+- [ ] when you press and next/prev icon gets disabled -> animation is very strange
 
 Major problems (for opening PR):
 

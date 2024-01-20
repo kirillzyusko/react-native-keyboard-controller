@@ -112,6 +112,17 @@ export type KeyboardEventsModule = {
     cb: (e: KeyboardEventData) => void,
   ) => EmitterSubscription;
 };
+export type FocusedInputAvailableEvents = "focusDidSet";
+export type FocusedInputEventData = {
+  current: number;
+  count: number;
+};
+export type FocusedInputEventsModule = {
+  addListener: (
+    name: FocusedInputAvailableEvents,
+    cb: (e: FocusedInputEventData) => void,
+  ) => EmitterSubscription;
+};
 
 // reanimated hook declaration
 export type KeyboardHandlerHook<TContext, Event> = (
