@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -7,8 +7,12 @@ import {
   useColorScheme,
 } from "react-native";
 
+import {
+  FocusedInputEvents,
+  KeyboardStickyView,
+} from "react-native-keyboard-controller";
+
 import { KeyboardController } from "../../bindings";
-import KeyboardStickyView from "../KeyboardStickyView";
 
 import Arrow from "./Arrow";
 import { colors } from "./colors";
@@ -22,7 +26,8 @@ export type KeyboardToolbarProps = {
 // TODO: accessibility
 
 const dismissKeyboard = () => KeyboardController.dismiss();
-
+const goToNextField = () => KeyboardController.setFocusTo("next");
+const goToPrevField = () => KeyboardController.setFocusTo("prev");
 /**
  * `KeyboardToolbar` is a component that is shown above the keyboard with `Prev`/`Next` and
  * `Done` buttons.
@@ -30,11 +35,25 @@ const dismissKeyboard = () => KeyboardController.dismiss();
 const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({ renderContent }) => {
   const theme = useColorScheme() || "light";
   const [height, setHeight] = useState(0);
+  const [inputs, setInputs] = useState({
+    current: 0,
+    count: 0,
+  });
   const background: ViewStyle = { backgroundColor: colors[theme].background };
   const done: TextStyle = { color: colors[theme].primary };
+  const isPrevDisabled = inputs.current === 0;
+  const isNextDisabled = inputs.current === inputs.count - 1;
 
   const onLayout = useCallback((e: LayoutChangeEvent) => {
     setHeight(e.nativeEvent.layout.height);
+  }, []);
+
+  useEffect(() => {
+    const subscription = FocusedInputEvents.addListener("focusDidSet", (e) => {
+      setInputs(e);
+    });
+
+    return () => subscription.remove();
   }, []);
 
   return (
@@ -50,22 +69,24 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({ renderContent }) => {
         ]}
       >
         <TouchableOpacity
-          accessibilityState={{ disabled: false }}
+          accessibilityState={{ disabled: isPrevDisabled }}
           accessibilityRole="button"
           accessibilityLabel="Previous"
           accessibilityHint="Will move focus to previous field"
-          onPress={() => KeyboardController.setFocusTo("prev")}
+          disabled={isPrevDisabled}
+          onPress={goToPrevField}
         >
-          <Arrow disabled direction="up" />
+          <Arrow disabled={isPrevDisabled} direction="up" />
         </TouchableOpacity>
         <TouchableOpacity
-          accessibilityState={{ disabled: false }}
+          accessibilityState={{ disabled: isNextDisabled }}
           accessibilityRole="button"
           accessibilityLabel="Next"
           accessibilityHint="Will move focus to next field"
-          onPress={() => KeyboardController.setFocusTo("next")}
+          disabled={isNextDisabled}
+          onPress={goToNextField}
         >
-          <Arrow direction="down" />
+          <Arrow disabled={isNextDisabled} direction="down" />
         </TouchableOpacity>
 
         <View style={styles.flex}>{renderContent?.()}</View>

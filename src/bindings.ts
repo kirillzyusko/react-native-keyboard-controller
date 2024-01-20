@@ -1,6 +1,7 @@
 import { View } from "react-native";
 
 import type {
+  FocusedInputEventsModule,
   KeyboardControllerModule,
   KeyboardControllerProps,
   KeyboardEventsModule,
@@ -18,6 +19,9 @@ export const KeyboardController: KeyboardControllerModule = {
   removeListeners: NOOP,
 };
 export const KeyboardEvents: KeyboardEventsModule = {
+  addListener: () => ({ remove: NOOP } as EmitterSubscription),
+};
+export const FocusedInputEvents: FocusedInputEventsModule = {
   addListener: () => ({ remove: NOOP } as EmitterSubscription),
 };
 export const KeyboardControllerView =

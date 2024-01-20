@@ -1,6 +1,7 @@
 import { NativeEventEmitter, Platform } from "react-native";
 
 import type {
+  FocusedInputEventsModule,
   KeyboardControllerModule,
   KeyboardControllerProps,
   KeyboardEventsModule,
@@ -31,6 +32,10 @@ export const KeyboardController = (
 const eventEmitter = new NativeEventEmitter(KeyboardController);
 
 export const KeyboardEvents: KeyboardEventsModule = {
+  addListener: (name, cb) =>
+    eventEmitter.addListener("KeyboardController::" + name, cb),
+};
+export const FocusedInputEvents: FocusedInputEventsModule = {
   addListener: (name, cb) =>
     eventEmitter.addListener("KeyboardController::" + name, cb),
 };
