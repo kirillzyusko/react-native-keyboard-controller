@@ -1,14 +1,34 @@
-import React, { useState } from "react";
-import { Button } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Text } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 
 import TextInput from "../../../components/TextInput";
 
 import { styles } from "./styles";
 
-export default function AwareScrollView() {
+import type { ExamplesStackParamList } from "../../../navigation/ExamplesStack";
+import type { StackScreenProps } from "@react-navigation/stack";
+
+type Props = StackScreenProps<ExamplesStackParamList>;
+
+export default function AwareScrollView({ navigation }: Props) {
   const [disableScrollOnKeyboardHide, setDisableScrollOnKeyboardHide] =
     useState(false);
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <Text
+          style={styles.header}
+          onPress={() => setDisableScrollOnKeyboardHide((value) => !value)}
+          testID="disable_scroll_on_keyboard_hide"
+        >
+          {`Back scroll: ${!disableScrollOnKeyboardHide ? "true" : "false"}`}
+        </Text>
+      ),
+    });
+  }, [disableScrollOnKeyboardHide]);
+
   return (
     <KeyboardAwareScrollView
       testID="aware_scroll_view_container"
@@ -17,14 +37,6 @@ export default function AwareScrollView() {
       style={styles.container}
       contentContainerStyle={styles.content}
     >
-      <Button
-        title={`Set Disable Scroll on Close to: ${
-          disableScrollOnKeyboardHide ? "Off" : "On"
-        }`}
-        onPress={() =>
-          setDisableScrollOnKeyboardHide(!disableScrollOnKeyboardHide)
-        }
-      />
       {new Array(10).fill(0).map((_, i) => (
         <TextInput
           key={i}
