@@ -17,7 +17,7 @@ const IS_ANDROID_ELEVEN_OR_HIGHER_OR_IOS =
 // duration is taken from here: https://github.com/DrKLO/Telegram/blob/e9a35cea54c06277c69d41b8e25d94b5d7ede065/TMessagesProj/src/main/java/org/telegram/ui/ActionBar/AdjustPanLayoutHelper.java#L39
 // and bezier is taken from: https://github.com/DrKLO/Telegram/blob/e9a35cea54c06277c69d41b8e25d94b5d7ede065/TMessagesProj/src/main/java/androidx/recyclerview/widget/ChatListItemAnimator.java#L40
 const TELEGRAM_ANDROID_TIMING_CONFIG = {
-  duration: 2500,
+  duration: 250,
   easing: Easing.bezier(
     0.19919472913616398,
     0.010644531250000006,
