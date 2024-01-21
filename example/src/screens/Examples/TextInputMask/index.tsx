@@ -43,10 +43,17 @@ export default function TextInputMaskExample() {
         keyboardType="phone-pad"
         placeholder="+1 (___) ___ __ __"
         style={style.input}
+        testID="masked_input"
       />
-      <Text style={style.text}>Formatted: {data.formatted}</Text>
-      <Text style={style.text}>Extracted: {data.extracted}</Text>
-      <Text style={style.text}>Worklet: {worklet}</Text>
+      <Text testID="formatted_text" style={style.text}>
+        Formatted: {data.formatted}
+      </Text>
+      <Text testID="extracted_text" style={style.text}>
+        Extracted: {data.extracted}
+      </Text>
+      <Text testID="worklet_text" style={style.text}>
+        Worklet: {worklet}
+      </Text>
     </View>
   );
 }
@@ -58,6 +65,7 @@ const style = StyleSheet.create({
   input: {
     height: 50,
     backgroundColor: "#dcdcdc",
+    color: "black",
     borderRadius: 8,
     paddingHorizontal: 12,
     marginBottom: 12,
