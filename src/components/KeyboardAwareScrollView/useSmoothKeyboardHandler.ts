@@ -17,7 +17,7 @@ const IS_ANDROID_ELEVEN_OR_HIGHER_OR_IOS =
 // duration is taken from here: https://github.com/DrKLO/Telegram/blob/e9a35cea54c06277c69d41b8e25d94b5d7ede065/TMessagesProj/src/main/java/org/telegram/ui/ActionBar/AdjustPanLayoutHelper.java#L39
 // and bezier is taken from: https://github.com/DrKLO/Telegram/blob/e9a35cea54c06277c69d41b8e25d94b5d7ede065/TMessagesProj/src/main/java/androidx/recyclerview/widget/ChatListItemAnimator.java#L40
 const TELEGRAM_ANDROID_TIMING_CONFIG = {
-  duration: 250,
+  duration: 2500,
   easing: Easing.bezier(
     0.19919472913616398,
     0.010644531250000006,
@@ -25,6 +25,10 @@ const TELEGRAM_ANDROID_TIMING_CONFIG = {
     0.91025390625,
   ),
 };
+
+// 1. Если сбрасывать persistedHeight в onEnd, то будут рейс кондишены, неправильный progress и т. д.
+// 2. Сбрасывать persistedHeight всё-таки нужно, чтобы правильно определять переключение между инпутами
+// 3. Если его сбрасывать в useAnimatedReaction, то получается 2 onEnd события
 
 /**
  * Hook that uses default transitions for iOS and Android > 11, and uses
@@ -35,6 +39,7 @@ export const useSmoothKeyboardHandler: typeof useKeyboardHandler = (
   deps,
 ) => {
   const target = useSharedValue(-1);
+  const height = useSharedValue(0);
   const persistedHeight = useSharedValue(0);
   const animatedKeyboardHeight = useSharedValue(0);
 
@@ -43,10 +48,12 @@ export const useSmoothKeyboardHandler: typeof useKeyboardHandler = (
       if (IS_ANDROID_ELEVEN_OR_HIGHER_OR_IOS) {
         return;
       }
+      if (persistedHeight.value === 0) {
+        return;
+      }
       const event = {
-        // it'll be always 250, since we're running animation via `withTiming` where
-        // duration in config (TELEGRAM_ANDROID_TIMING_CONFIG.duration) = 250ms
-        duration: 250,
+        // it'll be always `TELEGRAM_ANDROID_TIMING_CONFIG.duration`, since we're running animation via `withTiming`
+        duration: TELEGRAM_ANDROID_TIMING_CONFIG.duration,
         target: target.value,
         height: animatedKeyboardHeight.value,
         progress: animatedKeyboardHeight.value / persistedHeight.value,
@@ -60,8 +67,13 @@ export const useSmoothKeyboardHandler: typeof useKeyboardHandler = (
       handler.onMove?.(evt);
 
       // dispatch `onEnd`
-      if (evt.height === persistedHeight.value) {
+      // console.log(height.value, evt.height);
+      if (evt.height === height.value) {
+        console.log("onENd2");
         handler.onEnd?.(evt);
+        // нужно для правильных запусков onMove если высота клавиатуры та же (с 7 до 9)
+        //
+        persistedHeight.value = height.value;
       }
     },
     [handler],
@@ -79,12 +91,14 @@ export const useSmoothKeyboardHandler: typeof useKeyboardHandler = (
           e.height === persistedHeight.value
         ) {
           handler.onStart?.(e);
+          console.log("onEnd");
           handler.onEnd?.(e);
 
           return;
         }
 
         target.value = e.target;
+        height.value = e.height;
 
         if (e.height > 0) {
           persistedHeight.value = e.height;
@@ -93,12 +107,14 @@ export const useSmoothKeyboardHandler: typeof useKeyboardHandler = (
         // to achieve smoother animation and use `animatedKeyboardHeight` as animation
         // driver
         if (!IS_ANDROID_ELEVEN_OR_HIGHER_OR_IOS) {
+          console.log("withTiming");
           animatedKeyboardHeight.value = withTiming(
             e.height,
             TELEGRAM_ANDROID_TIMING_CONFIG,
           );
         }
 
+        // TODO: incorrect duration property for `!IS_ANDROID_ELEVEN_OR_HIGHER_OR_IOS`
         handler.onStart?.(e);
       },
       onMove: (e) => {
@@ -112,10 +128,9 @@ export const useSmoothKeyboardHandler: typeof useKeyboardHandler = (
         "worklet";
 
         if (IS_ANDROID_ELEVEN_OR_HIGHER_OR_IOS) {
+          console.log("onEnd1");
           handler.onEnd?.(e);
         }
-
-        persistedHeight.value = e.height;
       },
     },
     deps,

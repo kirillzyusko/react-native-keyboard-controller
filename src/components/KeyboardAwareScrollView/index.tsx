@@ -90,6 +90,7 @@ const KeyboardAwareScrollView: FC<KeyboardAwareScrollViewProps> = ({
   const onScroll = useAnimatedScrollHandler(
     {
       onScroll: (e) => {
+        console.log("a", e.contentOffset.y);
         position.value = e.contentOffset.y;
       },
     },
@@ -114,9 +115,11 @@ const KeyboardAwareScrollView: FC<KeyboardAwareScrollViewProps> = ({
           [initialKeyboardSize.value, keyboardHeight.value],
           [0, keyboardHeight.value - (height - point) + bottomOffset],
         );
+        console.log({interpolatedScrollTo, e});
         const targetScrollY =
           Math.max(interpolatedScrollTo, 0) + scrollPosition.value;
-        scrollTo(scrollViewAnimatedRef, 0, targetScrollY, animated);
+        scrollTo(scrollViewAnimatedRef, 0, targetScrollY - 0.5, animated);
+        // console.log({targetScrollY, scroll: position.value});
 
         return interpolatedScrollTo;
       }
@@ -173,6 +176,8 @@ const KeyboardAwareScrollView: FC<KeyboardAwareScrollViewProps> = ({
       onStart: (e) => {
         "worklet";
 
+        // console.log("onStart", e, new Date().getTime());
+
         const keyboardWillChangeSize =
           keyboardHeight.value !== e.height && e.height > 0;
         keyboardWillAppear.value = e.height > 0 && keyboardHeight.value === 0;
@@ -221,6 +226,8 @@ const KeyboardAwareScrollView: FC<KeyboardAwareScrollViewProps> = ({
       onMove: (e) => {
         "worklet";
 
+        // console.log("onMove", e, new Date().getTime());
+
         currentKeyboardFrameHeight.value = e.height;
 
         // if the user has set disableScrollOnKeyboardHide, only auto-scroll when the keyboard opens
@@ -230,6 +237,8 @@ const KeyboardAwareScrollView: FC<KeyboardAwareScrollViewProps> = ({
       },
       onEnd: (e) => {
         "worklet";
+
+        // console.log("onEnd", e, new Date().getTime());
 
         keyboardHeight.value = e.height;
         scrollPosition.value = position.value;
