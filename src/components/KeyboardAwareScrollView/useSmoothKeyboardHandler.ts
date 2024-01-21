@@ -26,10 +26,6 @@ const TELEGRAM_ANDROID_TIMING_CONFIG = {
   ),
 };
 
-// 1. Если сбрасывать persistedHeight в onEnd, то будут рейс кондишены, неправильный progress и т. д.
-// 2. Сбрасывать persistedHeight всё-таки нужно, чтобы правильно определять переключение между инпутами
-// 3. Если его сбрасывать в useAnimatedReaction, то получается 2 onEnd события
-
 /**
  * Hook that uses default transitions for iOS and Android > 11, and uses
  * custom interpolation on Android < 11 to achieve more smooth animation
@@ -67,12 +63,8 @@ export const useSmoothKeyboardHandler: typeof useKeyboardHandler = (
       handler.onMove?.(evt);
 
       // dispatch `onEnd`
-      // console.log(height.value, evt.height);
       if (evt.height === height.value) {
-        console.log("onENd2");
         handler.onEnd?.(evt);
-        // нужно для правильных запусков onMove если высота клавиатуры та же (с 7 до 9)
-        //
         persistedHeight.value = height.value;
       }
     },
@@ -91,7 +83,6 @@ export const useSmoothKeyboardHandler: typeof useKeyboardHandler = (
           e.height === persistedHeight.value
         ) {
           handler.onStart?.(e);
-          console.log("onEnd");
           handler.onEnd?.(e);
 
           return;
@@ -107,7 +98,6 @@ export const useSmoothKeyboardHandler: typeof useKeyboardHandler = (
         // to achieve smoother animation and use `animatedKeyboardHeight` as animation
         // driver
         if (!IS_ANDROID_ELEVEN_OR_HIGHER_OR_IOS) {
-          console.log("withTiming");
           animatedKeyboardHeight.value = withTiming(
             e.height,
             TELEGRAM_ANDROID_TIMING_CONFIG,
@@ -128,7 +118,6 @@ export const useSmoothKeyboardHandler: typeof useKeyboardHandler = (
         "worklet";
 
         if (IS_ANDROID_ELEVEN_OR_HIGHER_OR_IOS) {
-          console.log("onEnd1");
           handler.onEnd?.(e);
         }
       },
