@@ -9,6 +9,51 @@
 import Foundation
 import UIKit
 
+class SpringAnimation {
+    private var zeta: Double // Damping ratio
+    private var omega0: Double // Undamped angular frequency of the oscillator
+    private var omega1: Double // Exponential decay
+    private var v0: Double // Initial velocity
+
+    private let stiffness: Double
+    private let damping: Double
+    private let mass: Double
+    private let initialVelocity: Double
+    private let fromValue: Double
+    private let toValue: Double
+
+    init(stiffness: Double, damping: Double, mass: Double, initialVelocity: Double, fromValue: Double, toValue: Double) {
+        self.stiffness = stiffness
+        self.damping = damping
+        self.mass = mass
+        self.initialVelocity = initialVelocity
+        self.fromValue = fromValue
+        self.toValue = toValue
+
+        self.zeta = damping / (2 * sqrt(stiffness * mass)) // Damping ratio
+        self.omega0 = sqrt(stiffness / mass) // Undamped angular frequency of the oscillator
+        self.omega1 = omega0 * sqrt(1.0 - zeta * zeta) // Exponential decay
+        self.v0 = -initialVelocity
+    }
+
+    func curveFunction(time t: Double) -> Double {
+        let x0 = toValue - fromValue
+
+        var y: Double
+        if zeta < 1 {
+            // Under damped
+            let envelope = exp(-zeta * omega0 * t)
+            y = toValue - envelope * (((v0 + zeta * omega0 * x0) / omega1) * sin(omega1 * t) + x0 * cos(omega1 * t))
+        } else {
+            // Critically damped
+            let envelope = exp(-omega0 * t)
+            y = toValue - envelope * (x0 + (v0 + omega0 * x0) * t)
+        }
+
+        return y
+    }
+}
+
 @objc(KeyboardMovementObserver)
 public class KeyboardMovementObserver: NSObject {
   // class members
@@ -39,6 +84,10 @@ public class KeyboardMovementObserver: NSObject {
   private var keyboardHeight: CGFloat = 0.0
   private var duration = 0
   private var tag: NSNumber = -1
+  private var animation: SpringAnimation?
+  private var time = CACurrentMediaTime()
+    var i = 1
+    private var diff = 0.0
 
   @objc public init(
     handler: @escaping (NSString, NSNumber, NSNumber, NSNumber, NSNumber) -> Void,
@@ -162,6 +211,8 @@ public class KeyboardMovementObserver: NSObject {
     if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
       tag = UIResponder.current.reactViewTag
       let keyboardHeight = keyboardFrame.cgRectValue.size.height
+      animation = SpringAnimation(stiffness: 1000, damping: 500, mass: 3, initialVelocity: 0, fromValue: 0, toValue: keyboardHeight)
+      time = CACurrentMediaTime()
       let duration = Int(
         (notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double ?? 0) * 1000
       )
@@ -255,7 +306,7 @@ public class KeyboardMovementObserver: NSObject {
 
     displayLink = CADisplayLink(target: self, selector: #selector(updateKeyboardFrame))
     displayLink?.preferredFramesPerSecond = 120 // will fallback to 60 fps for devices without Pro Motion display
-    displayLink?.add(to: .main, forMode: .common)
+    displayLink?.add(to: .current, forMode: .default)
   }
 
   @objc func removeKeyboardWatcher() {
@@ -263,7 +314,7 @@ public class KeyboardMovementObserver: NSObject {
     displayLink = nil
   }
 
-  @objc func updateKeyboardFrame() {
+  @objc func updateKeyboardFrame(displaylink: CADisplayLink) {
     if keyboardView == nil {
       return
     }
@@ -277,9 +328,18 @@ public class KeyboardMovementObserver: NSObject {
     }
 
     prevKeyboardPosition = keyboardPosition
+      if (diff == 0.0) {
+          diff = CACurrentMediaTime() - time
+      }
+      let duration = displaylink.targetTimestamp - time
+      print("duration: \(duration) \(diff) \(displaylink.timestamp)")
+      print("duration2: \(displaylink.timestamp - time)")
+      let pos = animation?.curveFunction(time: duration) as! NSNumber
+      i += 1
+      print("\(keyboardPosition) \(animation?.curveFunction(time: duration))")
     onEvent(
       "onKeyboardMove",
-      keyboardPosition as NSNumber,
+      CGFloat(pos) as NSNumber,
       keyboardPosition / CGFloat(keyboardHeight) as NSNumber,
       duration as NSNumber,
       tag
