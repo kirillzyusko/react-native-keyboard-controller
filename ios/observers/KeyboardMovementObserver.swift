@@ -9,11 +9,76 @@
 import Foundation
 import UIKit
 
+// kindly taken from https://stackoverflow.com/a/35189336
+
+protocol CAProgressLayerDelegate: CALayerDelegate {
+    func progressDidChange(to progress: CGFloat)
+}
+
+extension CAProgressLayerDelegate {
+    func progressDidChange(to progress: CGFloat) {}
+}
+
+class CAProgressLayer: CALayer {
+    private struct Const {
+        static let animationKey: String = "progress"
+    }
+
+    @NSManaged private(set) var progress: CGFloat
+    private var previousProgress: CGFloat?
+    private var progressDelegate: CAProgressLayerDelegate? { return self.delegate as? CAProgressLayerDelegate }
+
+    override init() {
+        super.init()
+    }
+
+    init(frame: CGRect) {
+        super.init()
+        self.frame = frame
+    }
+
+    override init(layer: Any) {
+        super.init(layer: layer)
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        self.progress = CGFloat(aDecoder.decodeFloat(forKey: Const.animationKey))
+    }
+
+    override func encode(with aCoder: NSCoder) {
+        super.encode(with: aCoder)
+        aCoder.encode(Float(self.progress), forKey: Const.animationKey)
+    }
+
+    override class func needsDisplay(forKey key: String) -> Bool {
+        if key == Const.animationKey { return true }
+        return super.needsDisplay(forKey: key)
+    }
+
+    override func display() {
+        super.display()
+        guard let layer: CAProgressLayer = self.presentation() else { return }
+        self.progress = layer.progress
+        if self.progress != self.previousProgress {
+            self.progressDelegate?.progressDidChange(to: self.progress)
+        }
+        self.previousProgress = self.progress
+    }
+}
+
+class ProgressView: UIView {
+    override class var layerClass: AnyClass {
+        return CAProgressLayer.self
+    }
+}
+var i = 0
 @objc(KeyboardMovementObserver)
-public class KeyboardMovementObserver: NSObject {
+public class KeyboardMovementObserver: NSObject, CAProgressLayerDelegate {
   // class members
   var onEvent: (NSString, NSNumber, NSNumber, NSNumber, NSNumber) -> Void
   var onNotify: (String, Any) -> Void
+    private var view: UIView?
   // progress tracker
   private var _keyboardView: UIView?
   private var keyboardView: UIView? {
@@ -36,13 +101,21 @@ public class KeyboardMovementObserver: NSObject {
   private var keyboardHeight: CGFloat = 0.0
   private var duration = 0
   private var tag: NSNumber = -1
+    // text views
+    let currentProgress = UITextView()
+    let currentProgressCommitTime = UITextView()
+    let currentDisplayLink = UITextView()
+    let currentDisplayLinkCommitTime = UITextView()
+    let syncCircle = UIView()
 
   @objc public init(
     handler: @escaping (NSString, NSNumber, NSNumber, NSNumber, NSNumber) -> Void,
-    onNotify: @escaping (String, Any) -> Void
+    onNotify: @escaping (String, Any) -> Void,
+    view: UIView
   ) {
     onEvent = handler
     self.onNotify = onNotify
+      self.view = view
   }
 
   @objc public func mount() {
@@ -97,6 +170,17 @@ public class KeyboardMovementObserver: NSObject {
     hasKVObserver = false
     _keyboardView?.removeObserver(self, forKeyPath: "center", context: nil)
   }
+    
+    func progressDidChange(to progress: CGFloat) {
+        print(progress)
+        onEvent("onKeyboardMove", keyboardHeight * progress as NSNumber, progress as NSNumber, -1, tag)
+        currentProgress.text = "Progress: \(keyboardHeight * progress)"
+        currentProgressCommitTime.text = "Progress commit time: \(CACurrentMediaTime())"
+        let size = 50
+        let screenSize: CGRect = UIScreen.main.bounds
+        let y = screenSize.height - CGFloat(size) - keyboardHeight * progress
+        syncCircle.frame = CGRect(x: 40, y: y, width: 50, height: 50)
+    }
 
   // swiftlint:disable:next block_based_kvo
   @objc override public func observeValue(
@@ -169,6 +253,55 @@ public class KeyboardMovementObserver: NSObject {
 
       onEvent("onKeyboardMoveStart", Float(keyboardHeight) as NSNumber, 1, duration as NSNumber, tag)
       onNotify("KeyboardController::keyboardWillShow", data)
+        let a = keyboardView?.layer.animation(forKey: "position")
+        print(a)
+        var animations = [CAAnimation]()
+
+                let progressAnimation = CASpringAnimation(keyPath: "progress")
+        
+        progressAnimation.fromValue = ((i % 2) != 0) ? 1 : 0
+                                progressAnimation.toValue = ((i % 2) != 0) ? 0 : 1
+                                progressAnimation.duration = 0.5
+                                progressAnimation.damping = 500
+                                progressAnimation.stiffness = 1000
+                                progressAnimation.mass = 3
+                                animations.append(progressAnimation)
+        i += 1
+                let newSublayer = CALayer()
+                let screenSize: CGRect = UIScreen.main.bounds
+                            let size = 50.0
+                newSublayer.frame = CGRect(x: 20, y: screenSize.height - size, width: size, height: size)
+                newSublayer.cornerRadius = size / 2
+                newSublayer.backgroundColor = UIColor.green.cgColor
+                self.view?.layer.addSublayer(newSublayer)
+                let progressView = ProgressView(frame: newSublayer.frame)
+                                progressView.layer.delegate = self
+                self.view?.addSubview(progressView)
+
+                CATransaction.begin()
+                        progressView.layer.add(progressAnimation, forKey: nil)
+                        CATransaction.commit()
+        
+        currentProgress.frame = CGRect(x: 20, y: 100, width: 200, height: 50)
+        currentProgress.text = ""
+        currentProgress.font = UIFont.systemFont(ofSize: 16)
+        self.view?.addSubview(currentProgress)
+        currentProgressCommitTime.frame = CGRect(x: 20, y: 150, width: 200, height: 50)
+        currentProgressCommitTime.text = ""
+        currentProgressCommitTime.font = UIFont.systemFont(ofSize: 16)
+        self.view?.addSubview(currentProgressCommitTime)
+        currentDisplayLink.frame = CGRect(x: 20, y: 200, width: 200, height: 50)
+        currentDisplayLink.text = "DL"
+        currentDisplayLink.font = UIFont.systemFont(ofSize: 16)
+        self.view?.addSubview(currentDisplayLink)
+        currentDisplayLinkCommitTime.frame = CGRect(x: 20, y: 250, width: 200, height: 50)
+        currentDisplayLinkCommitTime.text = "DLCT"
+        currentDisplayLinkCommitTime.font = UIFont.systemFont(ofSize: 16)
+        self.view?.addSubview(currentDisplayLinkCommitTime)
+        syncCircle.frame = CGRect(x: 40, y: screenSize.height - size, width: size, height: size)
+        syncCircle.backgroundColor = .green
+        syncCircle.layer.cornerRadius = 25
+        self.view?.addSubview(syncCircle)
 
       setupKeyboardWatcher()
     }
@@ -290,12 +423,15 @@ public class KeyboardMovementObserver: NSObject {
     }
 
     prevKeyboardPosition = keyboardPosition
-    onEvent(
+    /*onEvent(
       "onKeyboardMove",
       keyboardPosition as NSNumber,
       keyboardPosition / CGFloat(keyboardHeight) as NSNumber,
       duration as NSNumber,
       tag
-    )
+    )*/
+      
+      currentDisplayLink.text = "DisplayLink: \(keyboardPosition)"
+      currentDisplayLinkCommitTime.text = "DisplayLink commit time: \(CACurrentMediaTime())"
   }
 }

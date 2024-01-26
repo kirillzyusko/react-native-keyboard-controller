@@ -52,7 +52,8 @@ class KeyboardControllerView: UIView {
       },
       onNotify: { [weak self] event, data in
         self?.onNotify(event: event, data: data)
-      }
+      },
+      view: self
     )
   }
 
