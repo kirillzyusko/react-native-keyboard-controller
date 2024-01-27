@@ -149,6 +149,12 @@ public class KeyboardMovementObserver: NSObject, CAProgressLayerDelegate {
       name: UIResponder.keyboardDidHideNotification,
       object: nil
     )
+      NotificationCenter.default.addObserver(
+        self,
+        selector: #selector(keyboardWillChangeFrame),
+        name: UIResponder.keyboardWillChangeFrameNotification,
+        object: nil
+      )
   }
 
   private func setupKVObserver() {
@@ -172,14 +178,14 @@ public class KeyboardMovementObserver: NSObject, CAProgressLayerDelegate {
   }
     
     func progressDidChange(to progress: CGFloat) {
-        print(progress)
-        onEvent("onKeyboardMove", keyboardHeight * progress as NSNumber, progress as NSNumber, -1, tag)
-        currentProgress.text = "Progress: \(keyboardHeight * progress)"
+        // print(progress)
+        onEvent("onKeyboardMove", progress as NSNumber, progress as NSNumber, -1, tag)
+        currentProgress.text = "Progress: \(progress)"
         currentProgressCommitTime.text = "Progress commit time: \(CACurrentMediaTime())"
         let size = 50
         let screenSize: CGRect = UIScreen.main.bounds
-        let y = screenSize.height - CGFloat(size) - keyboardHeight * progress
-        syncCircle.frame = CGRect(x: 40, y: y, width: 50, height: 50)
+        // let y = screenSize.height - CGFloat(size) - keyboardHeight * progress
+        syncCircle.frame.origin.y = screenSize.height - CGFloat(size) - progress
     }
 
   // swiftlint:disable:next block_based_kvo
@@ -234,6 +240,25 @@ public class KeyboardMovementObserver: NSObject, CAProgressLayerDelegate {
     // swiftlint:disable:next notification_center_detachment
     NotificationCenter.default.removeObserver(self)
   }
+    
+    @objc func keyboardWillChangeFrame(_ notification: Notification) {
+        guard let userInfo = notification.userInfo else { return }
+            
+            // Get the starting frame of the keyboard before animation begins
+        let startFrame = (userInfo[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue
+            
+            // Get the ending frame of the keyboard after animation ends
+        let endFrame = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue
+            
+            // Check if the keyboard is being shown or hidden
+            if let startFrame = startFrame, let endFrame = endFrame {
+                if startFrame.origin.y >= UIScreen.main.bounds.size.height {
+                    runAnimation(h: 336)
+                } else if endFrame.origin.y >= UIScreen.main.bounds.size.height {
+                    runAnimation(h: 0)
+                }
+            }
+    }
 
   @objc func keyboardWillAppear(_ notification: Notification) {
     if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
@@ -255,24 +280,34 @@ public class KeyboardMovementObserver: NSObject, CAProgressLayerDelegate {
       onNotify("KeyboardController::keyboardWillShow", data)
         let a = keyboardView?.layer.animation(forKey: "position")
         print(a)
+        if a == nil { return }
+        // runAnimation(h: keyboardHeight)
+        
+
+      setupKeyboardWatcher()
+    }
+  }
+    
+    private func runAnimation(h: CGFloat) {
+        print("runAnimation")
         var animations = [CAAnimation]()
 
                 let progressAnimation = CASpringAnimation(keyPath: "progress")
         
-        progressAnimation.fromValue = ((i % 2) != 0) ? 1 : 0
-                                progressAnimation.toValue = ((i % 2) != 0) ? 0 : 1
+        progressAnimation.fromValue = h > 0 ? 0 : keyboardHeight
+                                progressAnimation.toValue = h > 0 ? keyboardHeight : 0
                                 progressAnimation.duration = 0.5
                                 progressAnimation.damping = 500
                                 progressAnimation.stiffness = 1000
                                 progressAnimation.mass = 3
                                 animations.append(progressAnimation)
-        i += 1
+
                 let newSublayer = CALayer()
                 let screenSize: CGRect = UIScreen.main.bounds
                             let size = 50.0
                 newSublayer.frame = CGRect(x: 20, y: screenSize.height - size, width: size, height: size)
                 newSublayer.cornerRadius = size / 2
-                newSublayer.backgroundColor = UIColor.green.cgColor
+        newSublayer.backgroundColor = UIColor.magenta.cgColor
                 self.view?.layer.addSublayer(newSublayer)
                 let progressView = ProgressView(frame: newSublayer.frame)
                                 progressView.layer.delegate = self
@@ -299,13 +334,10 @@ public class KeyboardMovementObserver: NSObject, CAProgressLayerDelegate {
         currentDisplayLinkCommitTime.font = UIFont.systemFont(ofSize: 16)
         self.view?.addSubview(currentDisplayLinkCommitTime)
         syncCircle.frame = CGRect(x: 40, y: screenSize.height - size, width: size, height: size)
-        syncCircle.backgroundColor = .green
+        // syncCircle.backgroundColor = .green
         syncCircle.layer.cornerRadius = 25
         self.view?.addSubview(syncCircle)
-
-      setupKeyboardWatcher()
     }
-  }
 
   @objc func keyboardWillDisappear(_ notification: Notification) {
     let duration = Int(
@@ -322,6 +354,8 @@ public class KeyboardMovementObserver: NSObject, CAProgressLayerDelegate {
 
     onEvent("onKeyboardMoveStart", 0, 0, duration as NSNumber, tag)
     onNotify("KeyboardController::keyboardWillHide", data)
+      
+      // runAnimation(h: 0)
 
     setupKeyboardWatcher()
     removeKVObserver()

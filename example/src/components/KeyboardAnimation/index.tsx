@@ -104,7 +104,6 @@ export default function KeyboardAnimation() {
             }}
           />
           <Reanimated.View style={s} />
-          <Reanimated.View style={s2} />
         </View>
       </View>
     </View>
