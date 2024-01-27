@@ -9,32 +9,21 @@
 import Foundation
 import UIKit
 
-protocol TextField {
-  func requestFocus()
-}
-
-extension UITextField: TextField {
-  func requestFocus() {
-    becomeFirstResponder()
-  }
-}
-
-extension UITextView: TextField {
-  func requestFocus() {
-    becomeFirstResponder()
-  }
-}
-
 @objc(ViewHierarchyNavigator)
 public class ViewHierarchyNavigator: NSObject {
     @objc public static func setFocusTo(direction: String, onEvent: @escaping (NSDictionary) -> Void) {
     DispatchQueue.main.async {
+      if (direction == "current") {
+        FocusedInputHolder.shared.requestFocus()
+        return
+      }
+
       guard let view = UIResponder.current as? UIView else {
         // return nil
         return
       }
 
-      let textField = findTextFieldInDirection(currentFocus: view, direction: direction)
+      let textField = findTextInputInDirection(currentFocus: view, direction: direction)
       textField?.requestFocus()
       let allInputFields = ViewHierarchyNavigator.getAllInputFields()
       let currentIndex = ViewHierarchyNavigator.getCurrentFocusedInputIndex()
@@ -49,13 +38,13 @@ public class ViewHierarchyNavigator: NSObject {
     // return textField
   }
 
-  private static func findTextFieldInDirection(currentFocus: UIView, direction: String) -> TextField? {
+  private static func findTextInputInDirection(currentFocus: UIView, direction: String) -> TextInput? {
     // Find the parent view group
     guard let parentViewGroup = currentFocus.superview else {
       return nil
     }
 
-    // Find the index of the current TextField in its parent
+    // Find the index of the current TextInput in its parent
     let currentIndex = parentViewGroup.subviews.firstIndex(of: currentFocus) ?? 0
 
     // Define the range for iterating based on the direction
@@ -67,23 +56,23 @@ public class ViewHierarchyNavigator: NSObject {
       range = Array(stride(from: currentIndex - 1, through: 0, by: -1))
     }
 
-    // Iterate over the range to find the next or previous TextField
+    // Iterate over the range to find the next or previous TextInput
     for i in range {
       let nextChild = parentViewGroup.subviews[i]
 
-      if let nextTextField = findTextFieldInHierarchy(view: nextChild, direction: direction) {
-        return nextTextField
+      if let nextTextInput = findTextInputInHierarchy(view: nextChild, direction: direction) {
+        return nextTextInput
       }
     }
 
     // If no next or previous sibling was found in the parent, recurse to the parent's parent
-    return findTextFieldInDirection(currentFocus: parentViewGroup, direction: direction)
+    return findTextInputInDirection(currentFocus: parentViewGroup, direction: direction)
   }
 
-  private static func findTextFieldInHierarchy(view: UIView, direction: String) -> TextField? {
+  private static func findTextInputInHierarchy(view: UIView, direction: String) -> TextInput? {
     // Check the current view
-    if let validTextField = isValidTextField(view) {
-      return validTextField
+    if let validTextInput = isValidTextInput(view) {
+      return validTextInput
     }
 
     // Determine the iteration order based on the direction
@@ -91,7 +80,7 @@ public class ViewHierarchyNavigator: NSObject {
 
     // Iterate over subviews
     for subview in subviews {
-      if let textField = findTextFieldInHierarchy(view: subview, direction: direction) {
+      if let textField = findTextInputInHierarchy(view: subview, direction: direction) {
         return textField
       }
     }
@@ -100,7 +89,7 @@ public class ViewHierarchyNavigator: NSObject {
   }
 
   // Function to check if the view is a valid text field or text view
-  private static func isValidTextField(_ view: UIView) -> TextField? {
+  private static func isValidTextInput(_ view: UIView) -> TextInput? {
     if let textField = view as? UITextField, textField.isEnabled {
       return textField
     }
@@ -112,13 +101,13 @@ public class ViewHierarchyNavigator: NSObject {
     return nil
   }
 
-  private static func getAllInputFields() -> [TextField] {
+  private static func getAllInputFields() -> [TextInput] {
     guard let rootView = UIApplication.shared.keyWindow?.rootViewController?.view else {
       return []
     }
 
-    var inputFields: [TextField] = []
-    findAllTextFieldsInHierarchy(view: rootView, inputFields: &inputFields)
+    var inputFields: [TextInput] = []
+    findAllTextInputsInHierarchy(view: rootView, inputFields: &inputFields)
 
     return inputFields
   }
@@ -137,15 +126,15 @@ public class ViewHierarchyNavigator: NSObject {
     return nil
   }
 
-  private static func findAllTextFieldsInHierarchy(view: UIView, inputFields: inout [TextField]) {
+  private static func findAllTextInputsInHierarchy(view: UIView, inputFields: inout [TextInput]) {
     for subview in view.subviews {
-      if let textField = findTextFieldInHierarchy(view: subview, direction: "next") {
+      if let textField = findTextInputInHierarchy(view: subview, direction: "next") {
         // Check if the textField is not already in the array
         if !inputFields.contains(where: { $0 as? UIView == textField as? UIView }) {
           inputFields.append(textField)
         }
       }
-      findAllTextFieldsInHierarchy(view: subview, inputFields: &inputFields)
+      findAllTextInputsInHierarchy(view: subview, inputFields: &inputFields)
     }
   }
 }
