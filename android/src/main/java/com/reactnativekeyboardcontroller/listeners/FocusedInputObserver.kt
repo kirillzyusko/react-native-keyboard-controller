@@ -14,6 +14,7 @@ import com.reactnativekeyboardcontroller.extensions.addOnTextChangedListener
 import com.reactnativekeyboardcontroller.extensions.dispatchEvent
 import com.reactnativekeyboardcontroller.extensions.dp
 import com.reactnativekeyboardcontroller.extensions.screenLocation
+import com.reactnativekeyboardcontroller.traversal.FocusedInputHolder
 
 val noFocusedInputEvent = FocusedInputLayoutChangedEventData(
   x = 0.0,
@@ -62,6 +63,7 @@ class FocusedInputObserver(val view: ReactViewGroup, private val context: Themed
       newFocus.addOnLayoutChangeListener(layoutListener)
       this.syncUpLayout()
       textWatcher = newFocus.addOnTextChangedListener(textListener)
+      FocusedInputHolder.set(newFocus)
     }
     // unfocused
     if (newFocus == null) {

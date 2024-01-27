@@ -6,6 +6,7 @@ import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.UiThreadUtil
+import com.reactnativekeyboardcontroller.traversal.FocusedInputHolder
 import com.reactnativekeyboardcontroller.traversal.ViewHierarchyNavigator
 
 class KeyboardControllerModuleImpl(private val mReactContext: ReactApplicationContext) {
@@ -30,6 +31,10 @@ class KeyboardControllerModuleImpl(private val mReactContext: ReactApplicationCo
   }
 
   fun setFocusTo(direction: String) {
+    if (direction == "current") {
+      FocusedInputHolder.requestFocus()
+    }
+
     val activity = mReactContext.currentActivity
     val view: View? = activity?.currentFocus
 

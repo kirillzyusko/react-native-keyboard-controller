@@ -7,8 +7,8 @@
 - [x] accessibility
 - [x] animations
 - [x] on iOS when you go from down to top - birthday inputs (2) are skipped
+- [x] setFocusTo("current") -> like AutoFill contacts in iOS (hide and open keyboard)
 - [-] hasNext/hasPrev (or current/total)?
-- [ ] setFocusTo("current") -> like AutoFill contacts in iOS (hide and open keyboard)
 - [ ] set focus to custom input (date picker) - how it should be done? Test on iOS?
 - [ ] unit tests for iOS/Android
 - [ ] customization
@@ -20,7 +20,7 @@
 
 Major problems (for opening PR):
 
+- (x) setFocusTo("current")
 - disable/enable buttons (how to propagate events/ animated transitions)
-- setFocusTo("current")
 - enhanced example app
 - e2e tests

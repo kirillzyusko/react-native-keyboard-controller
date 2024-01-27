@@ -52,10 +52,12 @@ In contrast, the described method enables keyboard dismissal for any focused inp
 
 ### `setFocusTo`
 
-This method moves focus to the next or to the previous input:
+This method sets focus to the selected field. Possible values:
+
+- `prev` - set focus to previous field;
+- `current` - set focus to last focused field (i. e. if keyboard was closed you can restore focus);
+- `next` - set focus to next field.
 
 ```ts
 setFocusTo("next");
-// or
-setFocusTo("prev");
 ```
