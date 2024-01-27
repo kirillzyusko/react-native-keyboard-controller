@@ -1,15 +1,27 @@
-import React from "react";
-import { StyleSheet, View } from "react-native";
+import React, { useState } from "react";
+import { Button, StyleSheet, View } from "react-native";
 import {
   KeyboardAwareScrollView,
+  KeyboardController,
   KeyboardToolbar,
 } from "react-native-keyboard-controller";
 
 import TextInput from "../../../components/TextInput";
 
 export default function ToolbarExample() {
+  const [show, setShow] = useState(true);
+
   return (
     <>
+      <Button
+        title="restore"
+        onPress={() => KeyboardController.setFocusTo("current")}
+      />
+      <Button
+        title={show ? "Hide" : "Show"}
+        onPress={() => setShow((s) => !s)}
+      />
+      {show && <TextInput placeholder="o" title="Ok" />}
       <KeyboardAwareScrollView
         bottomOffset={62}
         style={[styles.withPadding, styles.container]}
