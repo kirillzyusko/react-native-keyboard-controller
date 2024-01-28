@@ -61,6 +61,10 @@ const AutoFillContacts = () => {
   }, []);
   const handleContactSelection = useCallback((contact: Contact) => {
     bottomSheetModalRef.current?.close();
+
+    setTimeout(() => {
+      KeyboardController.setFocusTo("next");
+    }, 500);
   }, []);
 
   return (
@@ -101,7 +105,7 @@ const AutoFillContacts = () => {
                 style={{
                   width: 40,
                   height: 40,
-                  backgroundColor: "red",
+                  backgroundColor: "#fafafa",
                   borderRadius: 20,
                 }}
                 source={{ uri: contact.image }}

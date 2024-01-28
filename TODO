@@ -22,6 +22,7 @@ Major problems (for opening PR):
 
 - (x) setFocusTo("current")
 - (x) disable/enable buttons (how to propagate events/ animated transitions)
+- (x) e2e tests
 - disable/enable buttons on Android
 - enhanced example app
-- e2e tests
+- handle setFocusTo("next") when we select a contact
