@@ -16,6 +16,26 @@ object ViewHierarchyNavigator {
     }
   }
 
+  fun getAllInputFields(viewGroup: View?): List<EditText> {
+    val editTexts = mutableListOf<EditText>()
+
+    // Helper function to recursively search for EditText views
+    fun findEditTexts(view: View?) {
+      if (view is EditText) {
+        editTexts.add(view)
+      } else if (view is ViewGroup) {
+        for (i in 0 until view.childCount) {
+          findEditTexts(view.getChildAt(i))
+        }
+      }
+    }
+
+    // Start the search with the provided viewGroup
+    findEditTexts(viewGroup)
+
+    return editTexts
+  }
+
   private fun findNextEditText(currentFocus: View): EditText? {
     return findEditTextInDirection(currentFocus, 1)
   }

@@ -21,6 +21,7 @@ import com.facebook.react.views.view.ReactViewGroup
 import com.reactnativekeyboardcontroller.events.KeyboardTransitionEvent
 import com.reactnativekeyboardcontroller.extensions.dispatchEvent
 import com.reactnativekeyboardcontroller.extensions.dp
+import com.reactnativekeyboardcontroller.extensions.emitEvent
 import com.reactnativekeyboardcontroller.extensions.isKeyboardAnimation
 import com.reactnativekeyboardcontroller.interactive.InteractiveKeyboardProvider
 import kotlin.math.abs
@@ -80,8 +81,8 @@ class KeyboardAnimationCallback(
             viewTagFocused,
           ),
         )
-        this.emitEvent("KeyboardController::keyboardWillShow", getEventParams(this.persistentKeyboardHeight))
-        this.emitEvent("KeyboardController::keyboardDidShow", getEventParams(this.persistentKeyboardHeight))
+        context.emitEvent("KeyboardController::keyboardWillShow", getEventParams(this.persistentKeyboardHeight))
+        context.emitEvent("KeyboardController::keyboardDidShow", getEventParams(this.persistentKeyboardHeight))
       }
     }
   }
@@ -158,7 +159,7 @@ class KeyboardAnimationCallback(
     }
 
     layoutObserver?.syncUpLayout()
-    this.emitEvent(
+    context.emitEvent(
       "KeyboardController::" + if (!isKeyboardVisible) "keyboardWillHide" else "keyboardWillShow",
       getEventParams(keyboardHeight),
     )
@@ -255,7 +256,7 @@ class KeyboardAnimationCallback(
     }
     isKeyboardVisible = isKeyboardVisible || isKeyboardShown
 
-    this.emitEvent(
+    context.emitEvent(
       "KeyboardController::" + if (!isKeyboardVisible) "keyboardDidHide" else "keyboardDidShow",
       getEventParams(keyboardHeight),
     )
@@ -299,7 +300,7 @@ class KeyboardAnimationCallback(
       this.animation?.cancel()
     }
 
-    this.emitEvent("KeyboardController::keyboardWillShow", getEventParams(keyboardHeight))
+    context.emitEvent("KeyboardController::keyboardWillShow", getEventParams(keyboardHeight))
     context.dispatchEvent(
       view.id,
       KeyboardTransitionEvent(
@@ -331,7 +332,7 @@ class KeyboardAnimationCallback(
       )
     }
     animation.doOnEnd {
-      this.emitEvent("KeyboardController::keyboardDidShow", getEventParams(keyboardHeight))
+      context.emitEvent("KeyboardController::keyboardDidShow", getEventParams(keyboardHeight))
       context.dispatchEvent(
         view.id,
         KeyboardTransitionEvent(
@@ -366,12 +367,6 @@ class KeyboardAnimationCallback(
 
     // on hide it will be negative value, so we are using max function
     return (keyboardHeight - navigationBar).toFloat().dp.coerceAtLeast(0.0)
-  }
-
-  private fun emitEvent(event: String, params: WritableMap) {
-    context?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)?.emit(event, params)
-
-    Log.i(TAG, event)
   }
 
   private fun getEventParams(height: Double): WritableMap {
