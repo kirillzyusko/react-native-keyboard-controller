@@ -62,12 +62,14 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({ Content }) => {
           height === 0 ? { marginBottom: -9999 } : null,
           background,
         ]}
+        testID="keyboard.toolbar"
       >
         <Button
           accessibilityLabel="Previous"
           accessibilityHint="Will move focus to previous field"
           disabled={isPrevDisabled}
           onPress={goToPrevField}
+          testID="keyboard.toolbar.previous"
         >
           <Arrow disabled={isPrevDisabled} direction="up" />
         </Button>
@@ -76,6 +78,7 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({ Content }) => {
           accessibilityHint="Will move focus to next field"
           disabled={isNextDisabled}
           onPress={goToNextField}
+          testID="keyboard.toolbar.next"
         >
           <Arrow disabled={isNextDisabled} direction="down" />
         </Button>
@@ -85,6 +88,7 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({ Content }) => {
           accessibilityLabel="Done"
           accessibilityHint="Will close the keyboard"
           onPress={dismissKeyboard}
+          testID="keyboard.toolbar.done"
         >
           <Text
             style={[

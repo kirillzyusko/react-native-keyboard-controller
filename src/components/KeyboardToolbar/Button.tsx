@@ -8,6 +8,7 @@ type Props = {
   onPress: () => void;
   accessibilityLabel: string;
   accessibilityHint: string;
+  testID: string;
 };
 
 const Button = ({
@@ -16,6 +17,7 @@ const Button = ({
   disabled,
   accessibilityLabel,
   accessibilityHint,
+  testID,
 }: PropsWithChildren<Props>) => {
   const Container = disabled ? View : TouchableOpacity;
   const accessibilityState = useMemo(() => ({ disabled }), [disabled]);
@@ -27,6 +29,7 @@ const Button = ({
       accessibilityLabel={accessibilityLabel}
       accessibilityHint={accessibilityHint}
       onPress={onPress}
+      testID={testID}
     >
       {children}
     </Container>
