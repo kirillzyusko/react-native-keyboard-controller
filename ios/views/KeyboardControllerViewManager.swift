@@ -41,7 +41,10 @@ class KeyboardControllerView: UIView {
     super.init(frame: frame)
     inputObserver = FocusedInputObserver(
       onLayoutChangedHandler: { [weak self] event in self?.onLayoutChanged(event: event) },
-      onTextChangedHandler: { [weak self] text in self?.onTextChanged(text: text) }
+      onTextChangedHandler: { [weak self] text in self?.onTextChanged(text: text) },
+      onFocusDidSet: { [weak self] event in
+        self?.onNotify(event: "KeyboardController::focusDidSet", data: event)
+      }
     )
     keyboardObserver = KeyboardMovementObserver(
       handler: { [weak self] event, height, progress, duration, target in
