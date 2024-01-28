@@ -24,5 +24,9 @@ class FocusedInputHolder {
     currentFocusedInput?.requestFocus()
   }
 
+  func get() -> TextInput? {
+    return currentFocusedInput
+  }
+
   private init() {}
 }
