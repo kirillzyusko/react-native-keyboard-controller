@@ -10,12 +10,12 @@
 - [x] setFocusTo("current") -> like AutoFill contacts in iOS (hide and open keyboard)
 - [x] when you press and next/prev icon gets disabled -> animation is very strange
 - [x] hasNext/hasPrev (or current/total)?
+- [x] e2e tests
 - [ ] set focus to custom input (date picker) - how it should be done? Test on iOS?
 - [ ] unit tests for iOS/Android
 - [ ] customization
 - [ ] memo/callbacks everywhere
 - [ ] reduce `useColorScheme() || "light";` code duplication
-- [ ] e2e tests
 - [ ] improve accessibility (arrows should react on bold/fontSize changes)
 
 Major problems (for opening PR):
@@ -23,6 +23,7 @@ Major problems (for opening PR):
 - (x) setFocusTo("current")
 - (x) disable/enable buttons (how to propagate events/ animated transitions)
 - (x) e2e tests
-- disable/enable buttons on Android
+- (x) disable/enable buttons on Android
 - enhanced example app
 - handle setFocusTo("next") when we select a contact
+- on Android buttons disabling/enabling looks tooo slow - test on a real device + capture performance benchmarks (how much time it takes to go from JS -> native -> JS)
