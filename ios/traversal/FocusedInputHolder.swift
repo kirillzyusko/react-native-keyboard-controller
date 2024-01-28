@@ -9,20 +9,20 @@
 import Foundation
 
 class FocusedInputHolder {
-    static let shared = FocusedInputHolder()
+  static let shared = FocusedInputHolder()
 
-    // Using TextInput protocol as the type for currentFocusedInput
-    private weak var currentFocusedInput: TextInput?
+  // Using TextInput protocol as the type for currentFocusedInput
+  private weak var currentFocusedInput: TextInput?
 
-    // Sets the currentFocusedInput to the passed instance conforming to TextInput or clears it if nil is passed
-    func set(_ input: TextInput?) {
-        currentFocusedInput = input
-    }
+  // Sets the currentFocusedInput to the passed instance conforming to TextInput or clears it if nil is passed
+  func set(_ input: TextInput?) {
+    currentFocusedInput = input
+  }
 
-    // Requests focus for the currentFocusedInput if it's set
-    func requestFocus() {
-        currentFocusedInput?.requestFocus()
-    }
+  // Requests focus for the currentFocusedInput if it's set
+  func requestFocus() {
+    currentFocusedInput?.requestFocus()
+  }
 
-    private init() {}
+  private init() {}
 }

@@ -82,17 +82,7 @@ RCT_EXPORT_METHOD(dismiss)
 RCT_EXPORT_METHOD(setFocusTo : (nonnull NSString *)direction)
 #endif
 {
-    // Capture a weak reference to 'self'
-      __weak typeof(self) weakSelf = self;
-  [ViewHierarchyNavigator setFocusToDirection:direction onEvent:^(NSDictionary *eventDictionary) {
-      // Strongify 'self' here
-            __strong typeof(weakSelf) strongSelf = weakSelf;
-            if (strongSelf) {
-                // Now you can safely call methods on 'self'
-                NSLog(@"Event: %@", eventDictionary);
-                [strongSelf sendEvent:@"KeyboardController::focusDidSet" body:eventDictionary];
-            }
-  }];
+  [ViewHierarchyNavigator setFocusToDirection:direction];
 }
 
 + (KeyboardController *)shared

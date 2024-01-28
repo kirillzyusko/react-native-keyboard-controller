@@ -11,9 +11,9 @@ import UIKit
 
 @objc(ViewHierarchyNavigator)
 public class ViewHierarchyNavigator: NSObject {
-    @objc public static func setFocusTo(direction: String, onEvent: @escaping (NSDictionary) -> Void) {
+  @objc public static func setFocusTo(direction: String) {
     DispatchQueue.main.async {
-      if (direction == "current") {
+      if direction == "current" {
         FocusedInputHolder.shared.requestFocus()
         return
       }
@@ -25,15 +25,6 @@ public class ViewHierarchyNavigator: NSObject {
 
       let textField = findTextInputInDirection(currentFocus: view, direction: direction)
       textField?.requestFocus()
-      let allInputFields = ViewHierarchyNavigator.getAllInputFields()
-      let currentIndex = ViewHierarchyNavigator.getCurrentFocusedInputIndex()
-
-      print("All Input Fields: \(allInputFields.count)")
-      print("Current Focused Input Index: \(currentIndex)")
-        onEvent([
-            "current": currentIndex,
-            "count": allInputFields.count
-        ])
     }
     // return textField
   }
@@ -101,7 +92,7 @@ public class ViewHierarchyNavigator: NSObject {
     return nil
   }
 
-  private static func getAllInputFields() -> [TextInput] {
+  public static func getAllInputFields() -> [TextInput] {
     guard let rootView = UIApplication.shared.keyWindow?.rootViewController?.view else {
       return []
     }
@@ -112,11 +103,12 @@ public class ViewHierarchyNavigator: NSObject {
     return inputFields
   }
 
-  private static func getCurrentFocusedInputIndex() -> Int? {
+  public static func getCurrentFocusedInputIndex() -> Int? {
     guard let currentFocus = UIResponder.current as? UIView else {
       return nil
     }
 
+    // TODO: optimize by passing params
     let allInputFields = getAllInputFields()
 
     if let currentIndex = allInputFields.firstIndex(where: { $0 as? UIView == currentFocus }) {
