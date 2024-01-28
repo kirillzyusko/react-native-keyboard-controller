@@ -15,7 +15,7 @@ import { colors } from "./colors";
 import type { LayoutChangeEvent, TextStyle, ViewStyle } from "react-native";
 
 export type KeyboardToolbarProps = {
-  renderContent: () => JSX.Element;
+  Content: () => JSX.Element;
 };
 
 // TODO: accessibility
@@ -27,7 +27,7 @@ const goToPrevField = () => KeyboardController.setFocusTo("prev");
  * `KeyboardToolbar` is a component that is shown above the keyboard with `Prev`/`Next` and
  * `Done` buttons.
  */
-const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({ renderContent }) => {
+const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({ Content }) => {
   const theme = useColorScheme() || "light";
   const [height, setHeight] = useState(0);
   const [inputs, setInputs] = useState({
@@ -80,7 +80,7 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({ renderContent }) => {
           <Arrow disabled={isNextDisabled} direction="down" />
         </Button>
 
-        <View style={styles.flex}>{renderContent?.()}</View>
+        <View style={styles.flex}>{<Content />}</View>
         <Button
           accessibilityLabel="Done"
           accessibilityHint="Will close the keyboard"

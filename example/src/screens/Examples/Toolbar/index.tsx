@@ -1,27 +1,17 @@
-import React, { useState } from "react";
-import { Button, StyleSheet, View } from "react-native";
+import React from "react";
+import { StyleSheet, View } from "react-native";
 import {
   KeyboardAwareScrollView,
-  KeyboardController,
   KeyboardToolbar,
 } from "react-native-keyboard-controller";
 
 import TextInput from "../../../components/TextInput";
 
-export default function ToolbarExample() {
-  const [show, setShow] = useState(true);
+import AutoFillContacts from "./Contacts";
 
+export default function ToolbarExample() {
   return (
     <>
-      <Button
-        title="restore"
-        onPress={() => KeyboardController.setFocusTo("current")}
-      />
-      <Button
-        title={show ? "Hide" : "Show"}
-        onPress={() => setShow((s) => !s)}
-      />
-      {show && <TextInput placeholder="o" title="Ok" />}
       <KeyboardAwareScrollView
         bottomOffset={62}
         style={[styles.withPadding, styles.container]}
@@ -59,7 +49,7 @@ export default function ToolbarExample() {
         <TextInput placeholder="7" title="House" />
         <TextInput placeholder="8" title="Flat" />
       </KeyboardAwareScrollView>
-      <KeyboardToolbar />
+      <KeyboardToolbar Content={AutoFillContacts} />
     </>
   );
 }
