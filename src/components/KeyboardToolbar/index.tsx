@@ -1,11 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  useColorScheme,
-} from "react-native";
+import { StyleSheet, Text, View, useColorScheme } from "react-native";
 
 import {
   FocusedInputEvents,
@@ -15,6 +9,7 @@ import {
 import { KeyboardController } from "../../bindings";
 
 import Arrow from "./Arrow";
+import Button from "./Button";
 import { colors } from "./colors";
 
 import type { LayoutChangeEvent, TextStyle, ViewStyle } from "react-native";
@@ -68,31 +63,25 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({ renderContent }) => {
           background,
         ]}
       >
-        <TouchableOpacity
-          accessibilityState={{ disabled: isPrevDisabled }}
-          accessibilityRole="button"
+        <Button
           accessibilityLabel="Previous"
           accessibilityHint="Will move focus to previous field"
           disabled={isPrevDisabled}
           onPress={goToPrevField}
         >
           <Arrow disabled={isPrevDisabled} direction="up" />
-        </TouchableOpacity>
-        <TouchableOpacity
-          accessibilityState={{ disabled: isNextDisabled }}
-          accessibilityRole="button"
+        </Button>
+        <Button
           accessibilityLabel="Next"
           accessibilityHint="Will move focus to next field"
           disabled={isNextDisabled}
           onPress={goToNextField}
         >
           <Arrow disabled={isNextDisabled} direction="down" />
-        </TouchableOpacity>
+        </Button>
 
         <View style={styles.flex}>{renderContent?.()}</View>
-        <TouchableOpacity
-          accessibilityState={{ disabled: false }}
-          accessibilityRole="button"
+        <Button
           accessibilityLabel="Done"
           accessibilityHint="Will close the keyboard"
           onPress={dismissKeyboard}
@@ -110,7 +99,7 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({ renderContent }) => {
           >
             Done
           </Text>
-        </TouchableOpacity>
+        </Button>
       </View>
     </KeyboardStickyView>
   );
