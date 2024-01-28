@@ -83,7 +83,9 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({ Content }) => {
           <Arrow disabled={isNextDisabled} direction="down" />
         </Button>
 
-        <View style={styles.flex}>{<Content />}</View>
+        <View style={styles.flex} testID="keyboard.toolbar.content">
+          {Content ? <Content /> : null}
+        </View>
         <Button
           accessibilityLabel="Done"
           accessibilityHint="Will close the keyboard"

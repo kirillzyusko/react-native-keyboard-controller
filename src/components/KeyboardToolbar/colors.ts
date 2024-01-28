@@ -14,7 +14,7 @@ export const colors = {
     }),
     background: Platform.select({
       ios: "#F8F8F8",
-      android: "#ECEFF1",
+      android: "#f3f3f4",
     }),
   },
   dark: {
