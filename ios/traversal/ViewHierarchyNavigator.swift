@@ -18,10 +18,8 @@ public class ViewHierarchyNavigator: NSObject {
         return
       }
 
-      guard let view = UIResponder.current as? UIView else {
-        // return nil
-        return
-      }
+      let input = (FocusedInputHolder.shared.get() as? UIView) ?? (UIResponder.current as? UIView) ?? nil
+      guard let view = input else { return }
 
       let textField = findTextInputInDirection(currentFocus: view, direction: direction)
       textField?.requestFocus()

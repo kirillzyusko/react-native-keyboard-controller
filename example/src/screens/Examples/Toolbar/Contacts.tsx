@@ -94,6 +94,7 @@ const AutoFillContacts = () => {
           </TouchableOpacity>
           {contacts.map((contact) => (
             <TouchableOpacity
+              key={contact.name}
               style={{
                 flexDirection: "row",
                 alignItems: "center",
