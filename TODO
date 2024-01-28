@@ -8,7 +8,8 @@
 - [x] animations
 - [x] on iOS when you go from down to top - birthday inputs (2) are skipped
 - [x] setFocusTo("current") -> like AutoFill contacts in iOS (hide and open keyboard)
-- [-] hasNext/hasPrev (or current/total)?
+- [x] when you press and next/prev icon gets disabled -> animation is very strange
+- [x] hasNext/hasPrev (or current/total)?
 - [ ] set focus to custom input (date picker) - how it should be done? Test on iOS?
 - [ ] unit tests for iOS/Android
 - [ ] customization
@@ -16,11 +17,11 @@
 - [ ] reduce `useColorScheme() || "light";` code duplication
 - [ ] e2e tests
 - [ ] improve accessibility (arrows should react on bold/fontSize changes)
-- [ ] when you press and next/prev icon gets disabled -> animation is very strange
 
 Major problems (for opening PR):
 
 - (x) setFocusTo("current")
-- disable/enable buttons (how to propagate events/ animated transitions)
+- (x) disable/enable buttons (how to propagate events/ animated transitions)
+- disable/enable buttons on Android
 - enhanced example app
 - e2e tests
