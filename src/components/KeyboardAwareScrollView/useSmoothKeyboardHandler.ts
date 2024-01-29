@@ -35,6 +35,7 @@ export const useSmoothKeyboardHandler: typeof useKeyboardHandler = (
   deps,
 ) => {
   const target = useSharedValue(-1);
+  const height = useSharedValue(0);
   const persistedHeight = useSharedValue(0);
   const animatedKeyboardHeight = useSharedValue(0);
 
@@ -43,10 +44,12 @@ export const useSmoothKeyboardHandler: typeof useKeyboardHandler = (
       if (IS_ANDROID_ELEVEN_OR_HIGHER_OR_IOS) {
         return;
       }
+      if (persistedHeight.value === 0) {
+        return;
+      }
       const event = {
-        // it'll be always 250, since we're running animation via `withTiming` where
-        // duration in config (TELEGRAM_ANDROID_TIMING_CONFIG.duration) = 250ms
-        duration: 250,
+        // it'll be always `TELEGRAM_ANDROID_TIMING_CONFIG.duration`, since we're running animation via `withTiming`
+        duration: TELEGRAM_ANDROID_TIMING_CONFIG.duration,
         target: target.value,
         height: animatedKeyboardHeight.value,
         progress: animatedKeyboardHeight.value / persistedHeight.value,
@@ -60,8 +63,9 @@ export const useSmoothKeyboardHandler: typeof useKeyboardHandler = (
       handler.onMove?.(evt);
 
       // dispatch `onEnd`
-      if (evt.height === persistedHeight.value) {
+      if (evt.height === height.value) {
         handler.onEnd?.(evt);
+        persistedHeight.value = height.value;
       }
     },
     [handler],
@@ -85,6 +89,7 @@ export const useSmoothKeyboardHandler: typeof useKeyboardHandler = (
         }
 
         target.value = e.target;
+        height.value = e.height;
 
         if (e.height > 0) {
           persistedHeight.value = e.height;
@@ -99,7 +104,12 @@ export const useSmoothKeyboardHandler: typeof useKeyboardHandler = (
           );
         }
 
-        handler.onStart?.(e);
+        handler.onStart?.({
+          ...e,
+          duration: IS_ANDROID_ELEVEN_OR_HIGHER_OR_IOS
+            ? e.duration
+            : TELEGRAM_ANDROID_TIMING_CONFIG.duration,
+        });
       },
       onMove: (e) => {
         "worklet";
@@ -114,8 +124,6 @@ export const useSmoothKeyboardHandler: typeof useKeyboardHandler = (
         if (IS_ANDROID_ELEVEN_OR_HIGHER_OR_IOS) {
           handler.onEnd?.(e);
         }
-
-        persistedHeight.value = e.height;
       },
     },
     deps,
