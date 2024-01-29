@@ -104,8 +104,12 @@ export const useSmoothKeyboardHandler: typeof useKeyboardHandler = (
           );
         }
 
-        // TODO: incorrect duration property for `!IS_ANDROID_ELEVEN_OR_HIGHER_OR_IOS`
-        handler.onStart?.(e);
+        handler.onStart?.({
+          ...e,
+          duration: IS_ANDROID_ELEVEN_OR_HIGHER_OR_IOS
+            ? e.duration
+            : TELEGRAM_ANDROID_TIMING_CONFIG.duration,
+        });
       },
       onMove: (e) => {
         "worklet";
