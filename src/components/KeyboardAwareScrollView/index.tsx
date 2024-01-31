@@ -26,6 +26,7 @@ type KeyboardAwareScrollViewProps = {
   bottomOffset?: number;
   /** Prevents automatic scrolling of the `ScrollView` when the keyboard gets hidden, maintaining the current screen position. Default is `false`. */
   disableScrollOnKeyboardHide?: boolean;
+  enableKeyboardHandling?: boolean;
 } & ScrollViewProps;
 
 /*
@@ -75,6 +76,7 @@ const KeyboardAwareScrollView = forwardRef<
       children,
       bottomOffset = 0,
       disableScrollOnKeyboardHide = false,
+      enableKeyboardHandling = true,
       ...rest
     },
     ref,
@@ -189,6 +191,10 @@ const KeyboardAwareScrollView = forwardRef<
         onStart: (e) => {
           "worklet";
 
+          if (!enableKeyboardHandling) {
+            return;
+          }
+
           const keyboardWillChangeSize =
             keyboardHeight.value !== e.height && e.height > 0;
           keyboardWillAppear.value = e.height > 0 && keyboardHeight.value === 0;
@@ -238,6 +244,10 @@ const KeyboardAwareScrollView = forwardRef<
         onMove: (e) => {
           "worklet";
 
+          if (!enableKeyboardHandling) {
+            return;
+          }
+
           currentKeyboardFrameHeight.value = e.height;
 
           // if the user has set disableScrollOnKeyboardHide, only auto-scroll when the keyboard opens
@@ -248,11 +258,20 @@ const KeyboardAwareScrollView = forwardRef<
         onEnd: (e) => {
           "worklet";
 
+          if (!enableKeyboardHandling) {
+            return;
+          }
+
           keyboardHeight.value = e.height;
           scrollPosition.value = position.value;
         },
       },
-      [height, maybeScroll, disableScrollOnKeyboardHide],
+      [
+        height,
+        maybeScroll,
+        disableScrollOnKeyboardHide,
+        enableKeyboardHandling,
+      ],
     );
 
     useAnimatedReaction(
