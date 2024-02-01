@@ -72,10 +72,13 @@ class FocusedInputObserver(val view: ReactViewGroup, private val context: Themed
       val allInputFields = ViewHierarchyNavigator.getAllInputFields(context?.rootView)
       val currentIndex = allInputFields.indexOf(newFocus)
 
-      context.emitEvent("KeyboardController::focusDidSet", Arguments.createMap().apply {
-        putInt("current", currentIndex)
-        putInt("count", allInputFields.size)
-      })
+      context.emitEvent(
+        "KeyboardController::focusDidSet",
+        Arguments.createMap().apply {
+          putInt("current", currentIndex)
+          putInt("count", allInputFields.size)
+        },
+      )
     }
     // unfocused
     if (newFocus == null) {
