@@ -33,6 +33,11 @@ describe("`KeyboardToolbar` specification", () => {
     );
   });
 
+  it("should show bottom sheet when `AutoFill Contacts` is pressed", async () => {
+    await waitAndTap("autofill_contacts");
+    await waitAndTap("contact_1");
+  });
+
   it("should have second input focused when `next` button pressed", async () => {
     await waitAndTap("keyboard.toolbar.next");
     await expect(element(by.id("TextInput#2"))).toBeFocused();
