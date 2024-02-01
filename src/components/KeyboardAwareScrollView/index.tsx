@@ -179,6 +179,7 @@ const KeyboardAwareScrollView = forwardRef<
       scrollPosition.value = prevScrollPosition;
       layout.value = prevLayout;
     }, [maybeScroll]);
+
     const onChangeTextHandler = useMemo(
       () => debounce(onChangeText, 200),
       [onChangeText],
@@ -192,85 +193,76 @@ const KeyboardAwareScrollView = forwardRef<
     );
 
     useSmoothKeyboardHandler(
-      {
-        onStart: (e) => {
-          "worklet";
+      enabled
+        ? {
+            onStart: (e) => {
+              "worklet";
 
-          if (!enabled) {
-            return;
+              const keyboardWillChangeSize =
+                keyboardHeight.value !== e.height && e.height > 0;
+              keyboardWillAppear.value =
+                e.height > 0 && keyboardHeight.value === 0;
+              const keyboardWillHide = e.height === 0;
+              const focusWasChanged =
+                (tag.value !== e.target && e.target !== -1) ||
+                keyboardWillChangeSize;
+
+              if (keyboardWillChangeSize) {
+                initialKeyboardSize.value = keyboardHeight.value;
+              }
+
+              if (keyboardWillHide) {
+                // on back transition need to interpolate as [0, keyboardHeight]
+                initialKeyboardSize.value = 0;
+                scrollPosition.value = scrollBeforeKeyboardMovement.value;
+              }
+
+              if (
+                keyboardWillAppear.value ||
+                keyboardWillChangeSize ||
+                focusWasChanged
+              ) {
+                // persist scroll value
+                scrollPosition.value = position.value;
+                // just persist height - later will be used in interpolation
+                keyboardHeight.value = e.height;
+              }
+
+              // focus was changed
+              if (focusWasChanged) {
+                tag.value = e.target;
+
+                // save position of focused text input when keyboard starts to move
+                layout.value = input.value;
+                // save current scroll position - when keyboard will hide we'll reuse
+                // this value to achieve smooth hide effect
+                scrollBeforeKeyboardMovement.value = position.value;
+              }
+
+              if (focusWasChanged && !keyboardWillAppear.value) {
+                // update position on scroll value, so `onEnd` handler
+                // will pick up correct values
+                position.value += maybeScroll(e.height, true);
+              }
+            },
+            onMove: (e) => {
+              "worklet";
+
+              currentKeyboardFrameHeight.value = e.height;
+
+              // if the user has set disableScrollOnKeyboardHide, only auto-scroll when the keyboard opens
+              if (!disableScrollOnKeyboardHide || keyboardWillAppear.value) {
+                maybeScroll(e.height);
+              }
+            },
+            onEnd: (e) => {
+              "worklet";
+
+              keyboardHeight.value = e.height;
+              scrollPosition.value = position.value;
+            },
           }
-
-          const keyboardWillChangeSize =
-            keyboardHeight.value !== e.height && e.height > 0;
-          keyboardWillAppear.value = e.height > 0 && keyboardHeight.value === 0;
-          const keyboardWillHide = e.height === 0;
-          const focusWasChanged =
-            (tag.value !== e.target && e.target !== -1) ||
-            keyboardWillChangeSize;
-
-          if (keyboardWillChangeSize) {
-            initialKeyboardSize.value = keyboardHeight.value;
-          }
-
-          if (keyboardWillHide) {
-            // on back transition need to interpolate as [0, keyboardHeight]
-            initialKeyboardSize.value = 0;
-            scrollPosition.value = scrollBeforeKeyboardMovement.value;
-          }
-
-          if (
-            keyboardWillAppear.value ||
-            keyboardWillChangeSize ||
-            focusWasChanged
-          ) {
-            // persist scroll value
-            scrollPosition.value = position.value;
-            // just persist height - later will be used in interpolation
-            keyboardHeight.value = e.height;
-          }
-
-          // focus was changed
-          if (focusWasChanged) {
-            tag.value = e.target;
-
-            // save position of focused text input when keyboard starts to move
-            layout.value = input.value;
-            // save current scroll position - when keyboard will hide we'll reuse
-            // this value to achieve smooth hide effect
-            scrollBeforeKeyboardMovement.value = position.value;
-          }
-
-          if (focusWasChanged && !keyboardWillAppear.value) {
-            // update position on scroll value, so `onEnd` handler
-            // will pick up correct values
-            position.value += maybeScroll(e.height, true);
-          }
-        },
-        onMove: (e) => {
-          "worklet";
-
-          if (!enabled) {
-            return;
-          }
-
-          currentKeyboardFrameHeight.value = e.height;
-
-          // if the user has set disableScrollOnKeyboardHide, only auto-scroll when the keyboard opens
-          if (!disableScrollOnKeyboardHide || keyboardWillAppear.value) {
-            maybeScroll(e.height);
-          }
-        },
-        onEnd: (e) => {
-          "worklet";
-
-          if (!enabled) {
-            return;
-          }
-
-          keyboardHeight.value = e.height;
-          scrollPosition.value = position.value;
-        },
-      },
+        : {},
       [height, maybeScroll, disableScrollOnKeyboardHide, enabled],
     );
 
