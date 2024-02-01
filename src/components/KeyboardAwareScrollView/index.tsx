@@ -26,7 +26,8 @@ type KeyboardAwareScrollViewProps = {
   bottomOffset?: number;
   /** Prevents automatic scrolling of the `ScrollView` when the keyboard gets hidden, maintaining the current screen position. Default is `false`. */
   disableScrollOnKeyboardHide?: boolean;
-  enableKeyboardHandling?: boolean;
+  /** Enables `KeyboardAwareScrollView` functionality. Default is `true` */
+  enabled?: boolean;
 } & ScrollViewProps;
 
 /*
@@ -76,7 +77,7 @@ const KeyboardAwareScrollView = forwardRef<
       children,
       bottomOffset = 0,
       disableScrollOnKeyboardHide = false,
-      enableKeyboardHandling = true,
+      enabled = true,
       ...rest
     },
     ref,
@@ -121,6 +122,10 @@ const KeyboardAwareScrollView = forwardRef<
       (e: number, animated: boolean = false) => {
         "worklet";
 
+        if (!enabled) {
+          return 0;
+        }
+
         const visibleRect = height - keyboardHeight.value;
         const absoluteY = layout.value?.layout.absoluteY || 0;
         const inputHeight = layout.value?.layout.height || 0;
@@ -153,7 +158,7 @@ const KeyboardAwareScrollView = forwardRef<
 
         return 0;
       },
-      [bottomOffset],
+      [bottomOffset, enabled],
     );
 
     const onChangeText = useCallback(() => {
@@ -191,7 +196,7 @@ const KeyboardAwareScrollView = forwardRef<
         onStart: (e) => {
           "worklet";
 
-          if (!enableKeyboardHandling) {
+          if (!enabled) {
             return;
           }
 
@@ -244,7 +249,7 @@ const KeyboardAwareScrollView = forwardRef<
         onMove: (e) => {
           "worklet";
 
-          if (!enableKeyboardHandling) {
+          if (!enabled) {
             return;
           }
 
@@ -258,7 +263,7 @@ const KeyboardAwareScrollView = forwardRef<
         onEnd: (e) => {
           "worklet";
 
-          if (!enableKeyboardHandling) {
+          if (!enabled) {
             return;
           }
 
@@ -266,12 +271,7 @@ const KeyboardAwareScrollView = forwardRef<
           scrollPosition.value = position.value;
         },
       },
-      [
-        height,
-        maybeScroll,
-        disableScrollOnKeyboardHide,
-        enableKeyboardHandling,
-      ],
+      [height, maybeScroll, disableScrollOnKeyboardHide, enabled],
     );
 
     useAnimatedReaction(
