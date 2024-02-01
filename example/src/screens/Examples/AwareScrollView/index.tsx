@@ -1,3 +1,4 @@
+import { useIsFocused } from "@react-navigation/native";
 import React, { useEffect, useState } from "react";
 import { Text } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
@@ -14,6 +15,8 @@ type Props = StackScreenProps<ExamplesStackParamList>;
 export default function AwareScrollView({ navigation }: Props) {
   const [disableScrollOnKeyboardHide, setDisableScrollOnKeyboardHide] =
     useState(false);
+
+  const isFocused = useIsFocused();
 
   useEffect(() => {
     navigation.setOptions({
@@ -33,6 +36,7 @@ export default function AwareScrollView({ navigation }: Props) {
     <KeyboardAwareScrollView
       testID="aware_scroll_view_container"
       bottomOffset={50}
+      enableKeyboardHandling={isFocused}
       disableScrollOnKeyboardHide={disableScrollOnKeyboardHide}
       style={styles.container}
       contentContainerStyle={styles.content}
