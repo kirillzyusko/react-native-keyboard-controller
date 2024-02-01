@@ -26,7 +26,7 @@ type KeyboardAwareScrollViewProps = {
   bottomOffset?: number;
   /** Prevents automatic scrolling of the `ScrollView` when the keyboard gets hidden, maintaining the current screen position. Default is `false`. */
   disableScrollOnKeyboardHide?: boolean;
-  /** Enables `KeyboardAwareScrollView` functionality. Default is `true` */
+  /** Controls whether this `KeyboardAwareScrollView` instance should take effect. Default is `true` */
   enabled?: boolean;
 } & ScrollViewProps;
 
