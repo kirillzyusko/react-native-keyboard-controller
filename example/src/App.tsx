@@ -1,5 +1,6 @@
 import "react-native-gesture-handler";
 
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { NavigationContainer } from "@react-navigation/native";
 import * as React from "react";
 import { ActivityIndicator, StyleSheet } from "react-native";
@@ -41,9 +42,11 @@ export default function App() {
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
       <GestureHandlerRootView style={styles.root}>
         <KeyboardProvider statusBarTranslucent>
-          <NavigationContainer linking={linking} fallback={spinner}>
-            <RootStack />
-          </NavigationContainer>
+          <BottomSheetModalProvider>
+            <NavigationContainer linking={linking} fallback={spinner}>
+              <RootStack />
+            </NavigationContainer>
+          </BottomSheetModalProvider>
         </KeyboardProvider>
       </GestureHandlerRootView>
     </SafeAreaProvider>
