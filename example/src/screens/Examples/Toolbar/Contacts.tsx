@@ -1,6 +1,5 @@
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
-import React, { useCallback, useMemo, useRef } from "react";
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import React, { useCallback, useState } from "react";
+import { Image, Modal, Text, TouchableOpacity, View } from "react-native";
 import {
   KeyboardController,
   KeyboardEvents,
@@ -34,33 +33,24 @@ const contacts: Contact[] = [
 ];
 
 const AutoFillContacts = () => {
-  // ref
-  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
-
-  // variables
-  const snapPoints = useMemo(() => ["25%", "50%"], []);
-
-  // callbacks
-  const handleSheetChanges = useCallback((index: number) => {
-    console.log("handleSheetChanges", index);
-  }, []);
+  const [visible, setVisible] = useState(false);
   const handlePresentModalPress = useCallback(() => {
     KeyboardController.dismiss();
 
     const subscription = KeyboardEvents.addListener("keyboardDidHide", () => {
-      bottomSheetModalRef.current?.present();
+      setVisible(true);
       subscription.remove();
     });
   }, []);
   const handleCloseModalPress = useCallback(() => {
-    bottomSheetModalRef.current?.close();
+    setVisible(false);
 
     setTimeout(() => {
       KeyboardController.setFocusTo("current");
     }, 500);
   }, []);
   const handleContactSelection = useCallback((contact: Contact) => {
-    bottomSheetModalRef.current?.close();
+    setVisible(false);
 
     setTimeout(() => {
       KeyboardController.setFocusTo("next");
@@ -75,15 +65,22 @@ const AutoFillContacts = () => {
       >
         <Text>AutoFill Contacts</Text>
       </TouchableOpacity>
-      <BottomSheetModal
-        ref={bottomSheetModalRef}
-        index={1}
-        snapPoints={snapPoints}
-        onChange={handleSheetChanges}
-        backgroundStyle={{ borderRadius: 20, backgroundColor: "#ebebeb" }}
-        handleComponent={null}
+      <Modal
+        style={{ marginTop: 200 }}
+        visible={visible}
+        animationType="slide"
+        transparent
       >
-        <View style={{ paddingHorizontal: 12 }}>
+        <View
+          style={{
+            marginTop: 200,
+            backgroundColor: "#cecece",
+            flex: 1,
+            paddingHorizontal: 12,
+            borderTopLeftRadius: 20,
+            borderTopRightRadius: 20,
+          }}
+        >
           <TouchableOpacity
             onPress={handleCloseModalPress}
             style={{
@@ -121,7 +118,7 @@ const AutoFillContacts = () => {
             </TouchableOpacity>
           ))}
         </View>
-      </BottomSheetModal>
+      </Modal>
     </>
   );
 };
