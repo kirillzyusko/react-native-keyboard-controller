@@ -69,7 +69,10 @@ const AutoFillContacts = () => {
 
   return (
     <>
-      <TouchableOpacity onPress={handlePresentModalPress}>
+      <TouchableOpacity
+        testID="autofill_contacts"
+        onPress={handlePresentModalPress}
+      >
         <Text>AutoFill Contacts</Text>
       </TouchableOpacity>
       <BottomSheetModal
@@ -92,9 +95,10 @@ const AutoFillContacts = () => {
           >
             <Text>Close</Text>
           </TouchableOpacity>
-          {contacts.map((contact) => (
+          {contacts.map((contact, i) => (
             <TouchableOpacity
               key={contact.name}
+              testID={`contact_${i}`}
               style={{
                 flexDirection: "row",
                 alignItems: "center",
