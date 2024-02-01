@@ -19,7 +19,9 @@ const Button = ({
   accessibilityHint,
   testID,
 }: PropsWithChildren<Props>) => {
-  const Container = disabled ? View : TouchableOpacity;
+  const Container = disabled
+    ? (View as unknown as typeof TouchableOpacity)
+    : TouchableOpacity;
   const accessibilityState = useMemo(() => ({ disabled }), [disabled]);
 
   return (
