@@ -39,6 +39,7 @@ function KeyboardAwareScrollViewTest() {
   return (
     <KeyboardAwareScrollView
       bottomOffset={20}
+      enabled={true}
       disableScrollOnKeyboardHide={false}
       style={style}
     >

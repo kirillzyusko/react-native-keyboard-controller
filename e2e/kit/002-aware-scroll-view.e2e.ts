@@ -77,7 +77,9 @@ describe("AwareScrollView test cases", () => {
   });
 
   it("shouldn't scroll back when keyboard dismissed if such behavior intentionally disabled", async () => {
-    await waitAndTap("disable_scroll_on_keyboard_hide");
+    await waitAndTap("open_bottom_sheet_modal");
+    await waitAndTap("bottom_sheet_toggle_back_scroll");
+    await waitAndTap("bottom_sheet_close_modal");
     await waitAndTap("TextInput#5");
     await waitForExpect(async () => {
       await expectBitmapsToBeEqual(
@@ -89,6 +91,26 @@ describe("AwareScrollView test cases", () => {
     await waitForExpect(async () => {
       await expectBitmapsToBeEqual(
         "AwareScrollViewKeyboardClosedWithoutBackScroll",
+        BLINKING_CURSOR,
+      );
+    });
+  });
+
+  it("shouldn't auto scroll if `KeyboardAwareScrollView` is disabled", async () => {
+    await waitAndTap("open_bottom_sheet_modal");
+    await waitAndTap("bottom_sheet_toggle_enabled_state");
+    await waitAndTap("bottom_sheet_close_modal");
+    await waitAndTap("TextInput#7");
+    await waitForExpect(async () => {
+      await expectBitmapsToBeEqual(
+        "AwareScrollViewDisabledStateKeyboardOpened",
+        BLINKING_CURSOR,
+      );
+    });
+    await closeKeyboard();
+    await waitForExpect(async () => {
+      await expectBitmapsToBeEqual(
+        "AwareScrollViewDisabledStateKeyboardClosed",
         BLINKING_CURSOR,
       );
     });

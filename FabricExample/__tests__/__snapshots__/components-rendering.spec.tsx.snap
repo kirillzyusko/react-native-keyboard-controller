@@ -24,6 +24,7 @@ exports[`components rendering should render \`KeyboardAvoidingView\` 1`] = `
 exports[`components rendering should render \`KeyboardAwareScrollView\` 1`] = `
 <RCTScrollView
   bottomOffset={20}
+  enabled={true}
   style={
     {
       "marginBottom": 20,
