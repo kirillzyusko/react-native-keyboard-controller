@@ -25,17 +25,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup JDK 11
-        uses: actions/setup-java@v3
+      - name: Setup JDK 17
+        uses: actions/setup-java@v4
         with:
           distribution: "microsoft"
-          java-version: "11"
+          java-version: "17"
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
       - name: Restore node_modules from cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: yarn-cache
         with:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
@@ -46,7 +46,7 @@ jobs:
         run: yarn install --frozen-lockfile --cwd example
 
       - name: Restore Gradle cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.gradle/caches

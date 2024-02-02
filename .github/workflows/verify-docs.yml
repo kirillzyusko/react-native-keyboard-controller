@@ -22,7 +22,7 @@ jobs:
         working-directory: ./docs
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: 18.x
           cache: yarn
@@ -38,7 +38,7 @@ jobs:
         working-directory: ./docs
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: 18.x
           cache: yarn
@@ -55,7 +55,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: echo "PREVIEW_PATH=pr-preview/pr-${{ github.event.number }}" >> "$GITHUB_ENV"
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: 18.x
           cache: yarn
