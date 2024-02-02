@@ -12,7 +12,6 @@ import {
 } from "./helpers";
 import setDemoMode from "./utils/setDemoMode";
 
-// TODO: add interactions with "AutoFill Contacts" + verify conditional rendering
 describe("`KeyboardToolbar` specification", () => {
   beforeAll(async () => {
     await setDemoMode();
@@ -35,12 +34,26 @@ describe("`KeyboardToolbar` specification", () => {
 
   it("should show bottom sheet when `AutoFill Contacts` is pressed", async () => {
     await waitAndTap("autofill_contacts");
-    await waitAndTap("contact_1");
+    await waitForElementById("autofill_contacts_close");
   });
 
-  it("should have second input focused when `next` button pressed", async () => {
-    await waitAndTap("keyboard.toolbar.next");
+  it("should set focus back when modal closed", async () => {
+    await waitAndTap("autofill_contacts_close");
+    await expect(element(by.id("TextInput#1"))).toBeFocused();
+    await waitAndTap("autofill_contacts");
+  });
+
+  it("should do correct actions when contact gets selected", async () => {
+    await waitAndTap("contact_0");
+    // hide modal
+    await expect(element(by.id("autofill_contacts_modal#1"))).not.toBeVisible();
+    // should update text value
+    await expect(element(by.id("TextInput#1"))).toHaveText("Kiryl");
+    // shouldn't render AutoFill Contacts anymore
+    await expect(element(by.id("autofill_contacts"))).not.toExist();
+    // should move focus to next field
     await expect(element(by.id("TextInput#2"))).toBeFocused();
+    // should match to snapshot (active arrows, no AutoFill Contacts label)
     await expectElementBitmapsToBeEqual(
       "keyboard.toolbar",
       "ToolbarAllButtonsEnabled",
