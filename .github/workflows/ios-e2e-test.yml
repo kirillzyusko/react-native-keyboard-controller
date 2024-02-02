@@ -24,7 +24,7 @@ on:
 jobs:
   test:
     name: ⚙️ Automated test cases
-    runs-on: macos-12
+    runs-on: macos-14
     timeout-minutes: 60
     env:
       WORKING_DIRECTORY: example
@@ -32,8 +32,8 @@ jobs:
       group: ios-e2e-${{ github.ref }}
       cancel-in-progress: true
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 18.x
           cache: "yarn"
@@ -45,7 +45,7 @@ jobs:
         id: yarn-cache-dir-path
         run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
       - name: Restore node_modules from cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         id: yarn-cache
         with:
           path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
@@ -65,7 +65,7 @@ jobs:
         with:
           cache_key: react-native-keyboard-controller-e2e
       - name: Restore Pods cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             example/ios/Pods
@@ -85,7 +85,7 @@ jobs:
       - name: Test app
         working-directory: e2e
         run: yarn test-example:ios
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         if: ${{ failure() }}
         with:
           name: ios-fail-screen-shoots

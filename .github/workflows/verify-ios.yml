@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     name: 🔎 Swift Lint
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Run SwiftLint GitHub Action (--strict)
         uses: norio-nomura/action-swiftlint@master
         with:
@@ -27,13 +27,13 @@ jobs:
         env:
           WORKING_DIRECTORY: ios
   format:
-    runs-on: macOS-12
+    runs-on: macOS-14
     name: 📚 Swift Format
     defaults:
       run:
         working-directory: ./ios
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Install SwiftFormat
         run: brew install swiftformat
@@ -44,10 +44,10 @@ jobs:
       - name: Verify that the formatted code hasn't been changed
         run: git diff --exit-code HEAD
   objc-lint:
-    runs-on: macOS-12
+    runs-on: macOS-14
     name: 🔎 ObjC Lint
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile

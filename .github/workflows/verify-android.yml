@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     name: 🔎 Kotlin Lint
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: touchlab-lab/ktlint-action-setup@1.0.0
         with:
           ktlint_version: 0.48.0
@@ -31,9 +31,9 @@ jobs:
       run:
         working-directory: ./android
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Setup JDK 11
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: "microsoft"
           java-version: "11"
@@ -48,9 +48,9 @@ jobs:
       run:
         working-directory: ./android
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Setup JDK 11
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: "microsoft"
           java-version: "11"
@@ -65,12 +65,12 @@ jobs:
       run:
         working-directory: ./android
     steps:
-      - uses: actions/checkout@v3
-      - name: Setup JDK 11
-        uses: actions/setup-java@v3
+      - uses: actions/checkout@v4
+      - name: Setup JDK 17
+        uses: actions/setup-java@v4
         with:
           distribution: "microsoft"
-          java-version: "11"
+          java-version: "17"
       - name: Install Detekt
         run: |
           curl -sSLO https://github.com/detekt/detekt/releases/download/v1.23.1/detekt-cli-1.23.1.zip
