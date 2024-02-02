@@ -15,7 +15,7 @@ import { colors } from "./colors";
 import type { LayoutChangeEvent, TextStyle, ViewStyle } from "react-native";
 
 export type KeyboardToolbarProps = {
-  Content: () => JSX.Element;
+  Content: JSX.Element | null;
 };
 
 // TODO: accessibility
@@ -84,7 +84,7 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({ Content }) => {
         </Button>
 
         <View style={styles.flex} testID="keyboard.toolbar.content">
-          {Content ? <Content /> : null}
+          {Content}
         </View>
         <Button
           accessibilityLabel="Done"

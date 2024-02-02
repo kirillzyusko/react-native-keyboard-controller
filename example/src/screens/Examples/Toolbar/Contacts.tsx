@@ -5,18 +5,18 @@ import {
   KeyboardEvents,
 } from "react-native-keyboard-controller";
 
-type Contact = {
+export type Contact = {
   image: string;
   name: string;
 };
 const contacts: Contact[] = [
   {
     image: "https://avatars.githubusercontent.com/u/22820318",
-    name: "Kiryl Ziusko",
+    name: "Kiryl",
   },
   {
     image: "https://avatars.githubusercontent.com/u/86000012?v=4",
-    name: "Ivan Ihnatsiuk",
+    name: "Ivan",
   },
   {
     image: "https://avatars.githubusercontent.com/u/504909?v=4",
@@ -24,24 +24,29 @@ const contacts: Contact[] = [
   },
   {
     image: "https://avatars.githubusercontent.com/u/99968085?v=4",
-    name: "Oren Nurkeldi",
+    name: "Oren",
   },
   {
     image: "https://avatars.githubusercontent.com/u/115457344?v=4",
-    name: "Vladyslav Martynov",
+    name: "Vladyslav",
   },
 ];
 
-const AutoFillContacts = () => {
+type Props = {
+  onContactSelected: (contact: Contact) => void;
+};
+
+const AutoFillContacts = ({ onContactSelected }: Props) => {
   const [visible, setVisible] = useState(false);
   const handlePresentModalPress = useCallback(() => {
-    KeyboardController.dismiss();
-
     const subscription = KeyboardEvents.addListener("keyboardDidHide", () => {
       setVisible(true);
       subscription.remove();
     });
+
+    KeyboardController.dismiss();
   }, []);
+
   const handleCloseModalPress = useCallback(() => {
     setVisible(false);
 
@@ -50,6 +55,7 @@ const AutoFillContacts = () => {
     }, 500);
   }, []);
   const handleContactSelection = useCallback((contact: Contact) => {
+    onContactSelected(contact);
     setVisible(false);
 
     setTimeout(() => {
@@ -70,6 +76,7 @@ const AutoFillContacts = () => {
         visible={visible}
         animationType="slide"
         transparent
+        testID="autofill_contacts_modal"
       >
         <View
           style={{
@@ -89,6 +96,7 @@ const AutoFillContacts = () => {
               marginTop: 8,
               marginRight: 4,
             }}
+            testID="autofill_contacts_close"
           >
             <Text>Close</Text>
           </TouchableOpacity>

@@ -25,6 +25,6 @@ Major problems (for opening PR):
 - (x) e2e tests
 - (x) disable/enable buttons on Android
 - (x) handle setFocusTo("next") when we select a contact (iOS)
-- write last e2e tests (interaction with AutoFill contacts, conditional rendering)
+- (x) write last e2e tests (interaction with AutoFill contacts, conditional rendering)
 - on Android buttons disabling/enabling looks tooo slow - test on a real device + capture performance benchmarks (how much time it takes to go from JS -> native -> JS)
 - enhanced example app
