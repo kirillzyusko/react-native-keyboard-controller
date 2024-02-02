@@ -35,11 +35,11 @@ jobs:
         with:
           node-version: 18.x
           cache: "yarn"
-      - name: Setup JDK 11
+      - name: Setup JDK 17
         uses: actions/setup-java@v3
         with:
           distribution: "microsoft"
-          java-version: "11"
+          java-version: "17"
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
