@@ -71,7 +71,7 @@ jobs:
         working-directory: e2e
         run: yarn build-example:android
       - name: Run emulator and tests
-        uses: reactivecircus/android-emulator-runner@v2.28.0
+        uses: reactivecircus/android-emulator-runner@v2.30.1
         with:
           working-directory: e2e
           api-level: 28
