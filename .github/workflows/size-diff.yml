@@ -15,7 +15,7 @@ jobs:
       pull-requests: write
     steps:
       - name: Checkout to target branch
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.base.ref }}
       - name: Install dependencies
@@ -23,7 +23,7 @@ jobs:
       - name: Calculate size of package (target)
         id: old-size
         run: echo "OLD_SIZE=$(node scripts/size.js)" >> "$GITHUB_OUTPUT"
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install dependencies
         run: yarn install --frozen-lockfile
       - name: Calculate size of package (current)
