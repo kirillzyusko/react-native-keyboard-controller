@@ -32,11 +32,11 @@ jobs:
         working-directory: ./android
     steps:
       - uses: actions/checkout@v4
-      - name: Setup JDK 17
+      - name: Setup JDK 11
         uses: actions/setup-java@v4
         with:
           distribution: "microsoft"
-          java-version: "17"
+          java-version: "11"
       - name: Install dependencies
         run: yarn install --frozen-lockfile --cwd ..
       - name: Run Gradle Lint
@@ -49,11 +49,11 @@ jobs:
         working-directory: ./android
     steps:
       - uses: actions/checkout@v4
-      - name: Setup JDK 17
+      - name: Setup JDK 11
         uses: actions/setup-java@v4
         with:
           distribution: "microsoft"
-          java-version: "17"
+          java-version: "11"
       - name: Install dependencies
         run: yarn install --frozen-lockfile --cwd ..
       - name: Run Gradle Lint
