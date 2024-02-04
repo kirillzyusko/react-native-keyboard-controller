@@ -92,8 +92,8 @@ jobs:
           api-level: ${{ env.API_LEVEL }}
           target: default
           profile: pixel_2
-          ram-size: "4096M"
-          disk-size: "10G"
+          ram-size: "2048M"
+          # disk-size: "10G"
           disable-animations: false
           avd-name: e2e_emulator
           arch: x86_64
