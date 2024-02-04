@@ -42,6 +42,7 @@ jobs:
           # all of these default to true, but feel free to set to
           # "false" if necessary for your workflow
           android: false
+          docker-images: false
       - uses: actions/setup-node@v4
         with:
           node-version: 18.x
