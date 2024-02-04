@@ -1,4 +1,4 @@
-package com.reactnativekeyboardcontroller.interpolators
+package com.reactnativekeyboardcontroller.interactive.interpolators
 
 class LinearInterpolator : Interpolator {
   override fun interpolate(

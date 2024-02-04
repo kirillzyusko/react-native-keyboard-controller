@@ -1,4 +1,4 @@
-package com.reactnativekeyboardcontroller
+package com.reactnativekeyboardcontroller.interactive
 
 import android.os.CancellationSignal
 import android.view.View
