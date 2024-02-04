@@ -17,6 +17,10 @@
 - [ ] memo/callbacks everywhere
 - [ ] reduce `useColorScheme() || "light";` code duplication
 - [ ] improve accessibility (arrows should react on bold/fontSize changes)
+- [ ] an ability to customize arrow/text color
+- [ ] an ability to customize text/arrow elements
+- [ ] last input disabled
+- [ ] more effective way for gathering all inputs on screen (now it finds a lot of duplicates)
 
 Major problems (for opening PR):
 
