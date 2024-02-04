@@ -98,6 +98,9 @@ using namespace facebook::react;
               [bridge.eventDispatcher sendEvent:textChangedEvent];
             }
           }
+        }
+        onFocusDidSet:^(NSDictionary *data) {
+          [KeyboardController.shared sendEvent:@"KeyboardController::focusDidSet" body:data];
         }];
     keyboardObserver = [[KeyboardMovementObserver alloc]
         initWithHandler:^(
