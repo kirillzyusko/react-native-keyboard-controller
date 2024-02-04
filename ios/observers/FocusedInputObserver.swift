@@ -89,8 +89,6 @@ public class FocusedInputObserver: NSObject {
       currentFocus: responder
     )
 
-    print("All Input Fields: \(allInputFields.count)")
-    print("Current Focused Input Index: \(currentIndex)")
     onFocusDidSet([
       "current": currentIndex,
       "count": allInputFields.count,
