@@ -46,6 +46,7 @@ const mock = {
     setInputMode: jest.fn(),
     setDefaultMode: jest.fn(),
     dismiss: jest.fn(),
+    setFocusTo: jest.fn(),
   },
   KeyboardEvents: {
     addListener: jest.fn(() => ({ remove: jest.fn() })),
@@ -59,6 +60,7 @@ const mock = {
   KeyboardStickyView: View,
   KeyboardAvoidingView: View,
   KeyboardAwareScrollView: ScrollView,
+  KeyboardToolbar: View,
 };
 
 module.exports = mock;
