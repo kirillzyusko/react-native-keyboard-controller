@@ -11,11 +11,11 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.views.view.ReactViewGroup
-import com.reactnativekeyboardcontroller.KeyboardAnimationController
 import com.reactnativekeyboardcontroller.extensions.copyBoundsInWindow
-import com.reactnativekeyboardcontroller.interpolators.Interpolator
-import com.reactnativekeyboardcontroller.interpolators.IosInterpolator
-import com.reactnativekeyboardcontroller.interpolators.LinearInterpolator
+import com.reactnativekeyboardcontroller.interactive.KeyboardAnimationController
+import com.reactnativekeyboardcontroller.interactive.interpolators.Interpolator
+import com.reactnativekeyboardcontroller.interactive.interpolators.IosInterpolator
+import com.reactnativekeyboardcontroller.interactive.interpolators.LinearInterpolator
 import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 

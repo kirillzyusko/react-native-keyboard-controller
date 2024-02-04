@@ -1,4 +1,4 @@
-package com.reactnativekeyboardcontroller
+package com.reactnativekeyboardcontroller.interactive
 
 object InteractiveKeyboardProvider {
   var shown = false

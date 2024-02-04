@@ -1,4 +1,4 @@
-package com.reactnativekeyboardcontroller.interpolators
+package com.reactnativekeyboardcontroller.interactive.interpolators
 
 interface Interpolator {
   /**
