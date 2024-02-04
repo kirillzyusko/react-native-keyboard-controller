@@ -5,8 +5,8 @@ import {
   expectElementBitmapsToBeEqual,
 } from "./asserts";
 import {
-  doActionNTimes,
   scrollDownUntilElementIsVisible,
+  waitAndMultipleTap,
   waitAndTap,
   waitForElementById,
 } from "./helpers";
@@ -66,7 +66,7 @@ describe("`KeyboardToolbar` specification", () => {
   });
 
   it("should handle multiple clicks in row", async () => {
-    await doActionNTimes(() => waitAndTap("keyboard.toolbar.next"), 3);
+    await waitAndMultipleTap("keyboard.toolbar.next", 3);
     await expect(element(by.id("TextInput#8"))).toBeFocused();
   });
 
@@ -76,7 +76,7 @@ describe("`KeyboardToolbar` specification", () => {
   });
 
   it("should have expected UI state when end of form reached", async () => {
-    await doActionNTimes(() => waitAndTap("keyboard.toolbar.next"), 6);
+    await waitAndMultipleTap("keyboard.toolbar.next", 6);
     await expect(element(by.id("TextInput#13"))).toBeFocused();
     await expectElementBitmapsToBeEqual(
       "keyboard.toolbar",
