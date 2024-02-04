@@ -101,14 +101,7 @@ public class ViewHierarchyNavigator: NSObject {
     return inputFields
   }
 
-  public static func getCurrentFocusedInputIndex() -> Int? {
-    guard let currentFocus = UIResponder.current as? UIView else {
-      return nil
-    }
-
-    // TODO: optimize by passing params
-    let allInputFields = getAllInputFields()
-
+  public static func getCurrentFocusedInputIndex(allInputFields: [TextInput], currentFocus: UIResponder?) -> Int? {
     if let currentIndex = allInputFields.firstIndex(where: { $0 as? UIView == currentFocus }) {
       return currentIndex
     }

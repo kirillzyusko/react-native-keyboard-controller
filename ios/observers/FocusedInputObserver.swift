@@ -84,7 +84,10 @@ public class FocusedInputObserver: NSObject {
     FocusedInputHolder.shared.set(responder as? TextInput)
 
     let allInputFields = ViewHierarchyNavigator.getAllInputFields()
-    let currentIndex = ViewHierarchyNavigator.getCurrentFocusedInputIndex()
+    let currentIndex = ViewHierarchyNavigator.getCurrentFocusedInputIndex(
+      allInputFields: allInputFields,
+      currentFocus: responder
+    )
 
     print("All Input Fields: \(allInputFields.count)")
     print("Current Focused Input Index: \(currentIndex)")
