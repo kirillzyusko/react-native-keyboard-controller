@@ -1,11 +1,14 @@
 package com.reactnativekeyboardcontroller.traversal
 
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import com.facebook.react.bridge.UiThreadUtil
 import com.facebook.react.views.textinput.ReactEditText
 import java.lang.ClassCastException
+
+private val TAG = ViewHierarchyNavigator::class.qualifiedName
 
 object ViewHierarchyNavigator {
   fun setFocusTo(direction: String, view: View) {
@@ -75,6 +78,8 @@ object ViewHierarchyNavigator {
 
       return null // Reached the top-level view, no EditText found in the specified direction
     } catch (e: ClassCastException) {
+      Log.i(TAG, "EditText can not be found due to $e.")
+
       // Handle the ClassCastException (if needed)
       // Happens when we reached out RootView and it can not be casted to ViewGroup
       return null
