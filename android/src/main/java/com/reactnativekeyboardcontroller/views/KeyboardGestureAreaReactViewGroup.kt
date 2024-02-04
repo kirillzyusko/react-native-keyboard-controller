@@ -11,8 +11,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.views.view.ReactViewGroup
-import com.reactnativekeyboardcontroller.interactive.KeyboardAnimationController
 import com.reactnativekeyboardcontroller.extensions.copyBoundsInWindow
+import com.reactnativekeyboardcontroller.interactive.KeyboardAnimationController
 import com.reactnativekeyboardcontroller.interactive.interpolators.Interpolator
 import com.reactnativekeyboardcontroller.interactive.interpolators.IosInterpolator
 import com.reactnativekeyboardcontroller.interactive.interpolators.LinearInterpolator
