@@ -16,6 +16,15 @@ export const tap = async (id: string, point?: Detox.Point2D): Promise<void> => {
   await element(by.id(id)).tap(point);
 };
 
+export const multiTap = async (id: string, times: number): Promise<void> => {
+  console.debug(
+    "---------------------------------\n",
+    "Multi tap on element with id: ",
+    colors.magenta(id),
+  );
+  await element(by.id(id)).multiTap(times);
+};
+
 // Not used yet. Will be used later
 export const tapItemAtIndex = async (id: string, index = 0): Promise<void> => {
   console.debug(
@@ -71,6 +80,14 @@ export const waitAndTap = async (
 ): Promise<void> => {
   await waitForElementById(id, TIMEOUT_FOR_LONG_OPERATIONS);
   await tap(id, point);
+};
+
+export const waitAndMultipleTap = async (
+  id: string,
+  times: number,
+): Promise<void> => {
+  await waitForElementById(id, TIMEOUT_FOR_LONG_OPERATIONS);
+  await multiTap(id, times);
 };
 
 export const waitAndType = async (id: string, text: string): Promise<void> => {

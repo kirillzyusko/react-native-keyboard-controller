@@ -23,6 +23,7 @@ export type KeyboardToolbarProps = {
 const dismissKeyboard = () => KeyboardController.dismiss();
 const goToNextField = () => KeyboardController.setFocusTo("next");
 const goToPrevField = () => KeyboardController.setFocusTo("prev");
+
 /**
  * `KeyboardToolbar` is a component that is shown above the keyboard with `Prev`/`Next` and
  * `Done` buttons.
@@ -92,17 +93,7 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({ Content }) => {
           onPress={dismissKeyboard}
           testID="keyboard.toolbar.done"
         >
-          <Text
-            style={[
-              {
-                marginRight: 8,
-                fontWeight: "600",
-                fontSize: 15,
-              },
-              done,
-            ]}
-            maxFontSizeMultiplier={1.3}
-          >
+          <Text style={[styles.doneButton, done]} maxFontSizeMultiplier={1.3}>
             Done
           </Text>
         </Button>
@@ -124,6 +115,11 @@ const styles = StyleSheet.create({
     // TODO: don't hardcode? How to get this value from in `bottomOffset` in `KeyboardAwareScrollView`?
     height: 42,
     paddingHorizontal: 8,
+  },
+  doneButton: {
+    marginRight: 8,
+    fontWeight: "600",
+    fontSize: 15,
   },
 });
 

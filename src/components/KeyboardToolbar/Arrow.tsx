@@ -3,6 +3,8 @@ import { Animated, StyleSheet, View, useColorScheme } from "react-native";
 
 import { colors } from "./colors";
 
+import type { ViewStyle } from "react-native";
+
 type Props = {
   direction: "up" | "down";
   disabled?: boolean;
@@ -19,39 +21,36 @@ const ArrowComponent: React.FC<Props> = ({ direction, disabled }) => {
 
   return (
     <View
-      style={[
-        styles.arrowContainer,
-        direction === "down" && { transform: [{ rotate: "180deg" }] },
-      ]}
+      style={
+        direction === "down"
+          ? styles.arrowDownContainer
+          : styles.arrowUpContainer
+      }
     >
       <View style={styles.arrow}>
-        <Animated.View
-          style={[
-            styles.arrowLine,
-            { transform: [{ rotate: "-45deg" }] },
-            color,
-          ]}
-        />
-        <Animated.View
-          style={[
-            styles.arrowLine,
-            { transform: [{ rotate: "45deg" }] },
-            { left: -4 },
-            color,
-          ]}
-        />
+        <Animated.View style={[styles.arrowLeftLine, color]} />
+        <Animated.View style={[styles.arrowRightLine, color]} />
       </View>
     </View>
   );
 };
 
+const arrowLine: ViewStyle = {
+  width: 12,
+  height: 2,
+};
+const arrowUpContainer: ViewStyle = {
+  marginHorizontal: 5,
+  width: 30,
+  height: 30,
+  justifyContent: "center",
+  alignItems: "center",
+};
 const styles = StyleSheet.create({
-  arrowContainer: {
-    marginHorizontal: 5,
-    width: 30,
-    height: 30,
-    justifyContent: "center",
-    alignItems: "center",
+  arrowUpContainer: arrowUpContainer,
+  arrowDownContainer: {
+    ...arrowUpContainer,
+    transform: [{ rotate: "180deg" }],
   },
   arrow: {
     width: 20,
@@ -60,9 +59,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
   },
-  arrowLine: {
-    width: 12,
-    height: 2,
+  arrowLeftLine: {
+    ...arrowLine,
+    transform: [{ rotate: "-45deg" }],
+  },
+  arrowRightLine: {
+    ...arrowLine,
+    transform: [{ rotate: "45deg" }],
+    left: -4,
   },
 });
 
