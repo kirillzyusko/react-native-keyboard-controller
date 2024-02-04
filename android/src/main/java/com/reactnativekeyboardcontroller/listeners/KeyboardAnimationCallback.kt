@@ -18,11 +18,11 @@ import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.UIManagerHelper
 import com.facebook.react.views.textinput.ReactEditText
 import com.facebook.react.views.view.ReactViewGroup
-import com.reactnativekeyboardcontroller.InteractiveKeyboardProvider
 import com.reactnativekeyboardcontroller.events.KeyboardTransitionEvent
 import com.reactnativekeyboardcontroller.extensions.dispatchEvent
 import com.reactnativekeyboardcontroller.extensions.dp
 import com.reactnativekeyboardcontroller.extensions.isKeyboardAnimation
+import com.reactnativekeyboardcontroller.interactive.InteractiveKeyboardProvider
 import kotlin.math.abs
 
 private val TAG = KeyboardAnimationCallback::class.qualifiedName
