@@ -48,7 +48,7 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({ Content }) => {
       setInputs(e);
     });
 
-    return () => subscription.remove();
+    return subscription.remove;
   }, []);
 
   return (
