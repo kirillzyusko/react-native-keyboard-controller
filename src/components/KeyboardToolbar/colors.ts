@@ -1,14 +1,14 @@
 import { Platform, PlatformColor } from "react-native";
 
-type Color = ReturnType<typeof PlatformColor> | string;
+import type { ColorValue } from "react-native";
 
 export const colors = {
   light: {
-    primary: Platform.select<Color>({
+    primary: Platform.select<ColorValue>({
       ios: PlatformColor("link"), // "#007aff"
       android: "#2c2c2c",
     }),
-    disabled: Platform.select<Color>({
+    disabled: Platform.select<ColorValue>({
       ios: PlatformColor("systemGray4"), // "#d1d4d9"
       android: "#B0BEC5",
     }),
@@ -18,11 +18,11 @@ export const colors = {
     }),
   },
   dark: {
-    primary: Platform.select<Color>({
+    primary: Platform.select<ColorValue>({
       ios: PlatformColor("label"), // "#fafafa"
       android: "#fafafa",
     }),
-    disabled: Platform.select<Color>({
+    disabled: Platform.select<ColorValue>({
       ios: PlatformColor("systemGray"), // "#929292"
       android: "#707070",
     }),
