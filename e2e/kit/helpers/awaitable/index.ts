@@ -43,3 +43,12 @@ export const waitForElementNotToBeVisibleByText = async (
     .not.toBeVisible()
     .withTimeout(timeout);
 };
+
+export const doActionNTimes = async (
+  action: () => Promise<void>,
+  times: number,
+) => {
+  for (let i = 0; i < times; i++) {
+    await action();
+  }
+};
