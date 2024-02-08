@@ -48,6 +48,7 @@ android {
     }
   }
 
+  ndkVersion getExtOrDefault("ndkVersion")
   compileSdkVersion getExtOrIntegerDefault('compileSdkVersion')
   defaultConfig {
     minSdkVersion getExtOrIntegerDefault('minSdkVersion')
@@ -57,6 +58,18 @@ android {
     buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
     ndk {
       abiFilters (*reactNativeArchitectures())
+    }
+
+    externalNativeBuild {
+      cmake {
+        cppFlags "-O2 -frtti -fexceptions -Wall -fstack-protector-all"
+      }
+    }
+  }
+
+  externalNativeBuild {
+    cmake {
+      path "CMakeLists.txt"
     }
   }
 

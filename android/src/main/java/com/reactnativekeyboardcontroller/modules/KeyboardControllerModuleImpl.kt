@@ -4,10 +4,13 @@ import android.content.Context
 import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
+import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
+import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.UiThreadUtil
 import com.reactnativekeyboardcontroller.traversal.FocusedInputHolder
 import com.reactnativekeyboardcontroller.traversal.ViewHierarchyNavigator
+
 
 class KeyboardControllerModuleImpl(private val mReactContext: ReactApplicationContext) {
   private val mDefaultMode: Int = getCurrentMode()
@@ -43,6 +46,10 @@ class KeyboardControllerModuleImpl(private val mReactContext: ReactApplicationCo
     }
   }
 
+  fun multiply(a: Double, b: Double): Double {
+    return nativeMultiply(a, b)
+  }
+
   private fun setSoftInputMode(mode: Int) {
     UiThreadUtil.runOnUiThread {
       if (getCurrentMode() != mode) {
@@ -60,7 +67,13 @@ class KeyboardControllerModuleImpl(private val mReactContext: ReactApplicationCo
       ?: WindowManager.LayoutParams.SOFT_INPUT_STATE_UNSPECIFIED
   }
 
+  private external fun nativeMultiply(a: Double, b: Double): Double
+
   companion object {
     const val NAME = "KeyboardController"
+
+    init {
+      System.loadLibrary("react-native-keyboard-controller")
+    }
   }
 }

@@ -90,6 +90,15 @@ RCT_EXPORT_METHOD(setFocusTo : (nonnull NSString *)direction)
   [ViewHierarchyNavigator setFocusToDirection:direction];
 }
 
+#ifdef RCT_NEW_ARCH_ENABLED
+- (void)multiply:(NSNumber *)a
+#else
+RCT_EXPORT_METHOD(multiply:(nonnull NSNumber *)a withB:(nonnull NSNumber *)b)
+#endif
+{
+  NSLog("%d", keyboardcontroller::multiply(a, b));
+}
+
 + (KeyboardController *)shared
 {
   return shared;

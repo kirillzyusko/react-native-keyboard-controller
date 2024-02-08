@@ -6,6 +6,10 @@
 //  Copyright © 2022 Facebook. All rights reserved.
 //
 
+#ifdef __cplusplus
+#import "react-native-keyboard-controller.h"
+#endif
+
 #import <React/RCTEventEmitter.h>
 
 @interface KeyboardController : RCTEventEmitter
