@@ -13,6 +13,18 @@ keywords:
 
 This guide focuses on adding an ability to dismiss keyboard interactively. Below you can see a step by step guide which will explain how different pieces of the code work together.
 
+import Lottie from "lottie-react";
+import lottie from "@site/src/components/HomepageFeatures/interactive.lottie.json";
+
+<div style={{ display: "flex", justifyContent: "center", marginBottom: 20 }}>
+  <Lottie
+    className="lottie"
+    animationData={lottie}
+    style={{ width: 400, height: 400 }}
+    loop
+  />
+</div>
+
 ## Android
 
 ### Start point

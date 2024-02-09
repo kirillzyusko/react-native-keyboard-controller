@@ -13,6 +13,18 @@ keywords:
 
 This guide focuses on adding an ability to dismiss keyboard interactively. Below you can see a step by step guide which will explain how different pieces of the code work together.
 
+import Lottie from "lottie-react";
+import lottie from "@site/src/components/HomepageFeatures/interactive.lottie.json";
+
+<div style={{ display: "flex", justifyContent: "center", marginBottom: 20 }}>
+  <Lottie
+    className="lottie"
+    animationData={lottie}
+    style={{ width: 400, height: 400 }}
+    loop
+  />
+</div>
+
 ## Android
 
 ### Start point
@@ -43,7 +55,7 @@ In order to recognize all gestures on a `ScrollView` we need to wrap a `ScrollVi
 
 ### Reacting on keyboard movement
 
-Basically `useKeyboardAnimation`/`useReanimatedKeyboardAnimation` will update animated values as keyboard moves. But if you want to differ plain keyboard movements (when it shows/hides because of `TextInput` gets focused/unfocused) and interactive keyboard movement, then you can use `useKeyboardHandler` hook and specify [`onInteractive`](../api/hooks/keyboard/use-keyboard-handler/index.mdx#oninteractive) handler as shown below:
+Basically `useKeyboardAnimation`/`useReanimatedKeyboardAnimation` will update animated values as keyboard moves. But if you want to differ plain keyboard movements (when it shows/hides because of `TextInput` gets focused/unfocused) and interactive keyboard movement, then you can use `useKeyboardHandler` hook and specify [`onInteractive`](../api/hooks/use-keyboard-handler/index.mdx#oninteractive) handler as shown below:
 
 ```tsx
 useKeyboardHandler(
@@ -61,7 +73,7 @@ useKeyboardHandler(
 
 The interactive keyboard dismissing works well out-of-box in `react-native` using `InputAccessoryView`. However if you are not satisfied with the usage of `InputAccessoryView` - you can try to utilize the functionality of this library.
 
-For that you'll need to follow a pattern from above and add [`onInteractive`](../api/hooks/keyboard/use-keyboard-handler/index.mdx#oninteractive) handler if you are using `useKeyboardHandler` hook. If you are using `useKeyboardAnimation` or `useReanimatedKeyboardAnimation` hooks then no extra actions are required - these hooks will update its values automatically, when keyboard gets moved because of interactive dismissal.
+For that you'll need to follow a pattern from above and add [`onInteractive`](../api/hooks/use-keyboard-handler/index.mdx#oninteractive) handler if you are using `useKeyboardHandler` hook. If you are using `useKeyboardAnimation` or `useReanimatedKeyboardAnimation` hooks then no extra actions are required - these hooks will update its values automatically, when keyboard gets moved because of interactive dismissal.
 
 ## Full examples
 
