@@ -121,7 +121,7 @@ const KeyboardAwareScrollView = forwardRef<
       scrollViewAnimatedRef(assignedRef);
     }, []);
     const onScrollViewLayout = useCallback(
-      (e: LayoutChangeEvent) => {
+      (e: LayoutChangeEvent & { nativeEvent: { target: number } }) => {
         // TODO: check that it works on Fabric
         scrollViewTarget.value = e.nativeEvent.target;
 
@@ -155,7 +155,12 @@ const KeyboardAwareScrollView = forwardRef<
           // view was not scrolled (keyboard back transition)
           scrollPosition.value === position.value
         ) {
-          console.log(121212, scrollPosition.value, position.value, input.value);
+          console.log(
+            121212,
+            scrollPosition.value,
+            position.value,
+            input.value,
+          );
           return 0;
         }
 
@@ -328,6 +333,7 @@ const KeyboardAwareScrollView = forwardRef<
       <Reanimated.ScrollView
         ref={onRef}
         {...rest}
+        // @ts-expect-error https://github.com/facebook/react-native/pull/42785
         onLayout={onScrollViewLayout}
         // @ts-expect-error `onScrollReanimated` is a fake prop needed for reanimated to intercept scroll events
         onScrollReanimated={onScroll}
