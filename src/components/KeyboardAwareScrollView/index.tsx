@@ -335,7 +335,6 @@ const KeyboardAwareScrollView = forwardRef<
         {...rest}
         // @ts-expect-error https://github.com/facebook/react-native/pull/42785
         onLayout={onScrollViewLayout}
-        // @ts-expect-error `onScrollReanimated` is a fake prop needed for reanimated to intercept scroll events
         onScrollReanimated={onScroll}
         scrollEventThrottle={16}
       >
