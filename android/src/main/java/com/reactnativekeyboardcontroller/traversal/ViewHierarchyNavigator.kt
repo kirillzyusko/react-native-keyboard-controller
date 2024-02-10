@@ -62,7 +62,7 @@ object ViewHierarchyNavigator {
     // Iterate over siblings in the specified direction
     while (i != end) {
       val nextChild = parentViewGroup.getChildAt(i)
-      findEditTextOrGoDeeper(nextChild)?.let { return it } // Return if an EditText is found
+      findEditTextOrGoDeeper(nextChild, direction)?.let { return it } // Return if an EditText is found
       i += direction
     }
 
@@ -70,28 +70,26 @@ object ViewHierarchyNavigator {
     return findEditTextInDirection(parentViewGroup, direction)
   }
 
-  private fun findEditTextInHierarchy(viewGroup: ViewGroup): EditText? {
-    for (i in 0 until viewGroup.childCount) {
+  private fun findEditTextInHierarchy(viewGroup: ViewGroup, direction: Int): EditText? {
+    val range = if (direction > 0) 0 until viewGroup.childCount else viewGroup.childCount - 1 downTo 0
+
+    for (i in range) {
       val child = viewGroup.getChildAt(i)
-
-      val editText = findEditTextOrGoDeeper(child)
-
-      if (editText != null) {
-        return editText
-      }
+      findEditTextOrGoDeeper(child, direction)?.let { return it }
     }
 
-    return null // No EditText found in the current view group
+    // No EditText found in the current view group
+    return null
   }
 
-  private fun findEditTextOrGoDeeper(child: View): EditText? {
+  private fun findEditTextOrGoDeeper(child: View, direction: Int): EditText? {
     var result: EditText? = null
 
     if (child is EditText && child.isEnabled) {
       result = child
     } else if (child is ViewGroup) {
       // If the child is a ViewGroup, check its children recursively
-      result = findEditTextInHierarchy(child)
+      result = findEditTextInHierarchy(child, direction)
     }
 
     return result

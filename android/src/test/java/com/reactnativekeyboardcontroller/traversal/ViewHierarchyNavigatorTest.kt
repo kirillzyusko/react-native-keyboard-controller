@@ -131,6 +131,17 @@ class ViewHierarchyNavigatorTest {
   }
 
   @Test
+  fun `setFocusTo to 'prev' should set focus relatively to current group`() {
+    editText7.requestFocus()
+
+    ViewHierarchyNavigator.setFocusTo("prev", editText7)
+
+    ShadowLooper.runUiThreadTasksIncludingDelayedTasks()
+
+    assertTrue(editText6.hasFocus())
+  }
+
+  @Test
   fun `setFocusTo to 'next' should correctly exit from current group`() {
     editText7.requestFocus()
 
@@ -139,5 +150,38 @@ class ViewHierarchyNavigatorTest {
     ShadowLooper.runUiThreadTasksIncludingDelayedTasks()
 
     assertTrue(editText8.hasFocus())
+  }
+
+  @Test
+  fun `setFocusTo to 'prev' should set focus to last element in group`() {
+    editText8.requestFocus()
+
+    ViewHierarchyNavigator.setFocusTo("prev", editText8)
+
+    ShadowLooper.runUiThreadTasksIncludingDelayedTasks()
+
+    assertTrue(editText7.hasFocus())
+  }
+
+  @Test
+  fun `setFocusTo to 'next' should do nothing if it's last element`() {
+    editText13.requestFocus()
+
+    ViewHierarchyNavigator.setFocusTo("next", editText13)
+
+    ShadowLooper.runUiThreadTasksIncludingDelayedTasks()
+
+    assertTrue(editText13.hasFocus())
+  }
+
+  @Test
+  fun `setFocusTo to 'prev' should do nothing if it's first element`() {
+    editText1.requestFocus()
+
+    ViewHierarchyNavigator.setFocusTo("prev", editText1)
+
+    ShadowLooper.runUiThreadTasksIncludingDelayedTasks()
+
+    assertTrue(editText1.hasFocus())
   }
 }
