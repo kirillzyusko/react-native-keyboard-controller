@@ -7,6 +7,7 @@ import {
   KeyboardControllerView,
   KeyboardProvider,
   KeyboardStickyView,
+  KeyboardToolbar,
 } from "react-native-keyboard-controller";
 
 function EmptyView() {
@@ -37,7 +38,12 @@ function KeyboardAvoidingViewTest() {
 
 function KeyboardAwareScrollViewTest() {
   return (
-    <KeyboardAwareScrollView enabled={true} bottomOffset={20} style={style}>
+    <KeyboardAwareScrollView
+      bottomOffset={20}
+      enabled={true}
+      disableScrollOnKeyboardHide={false}
+      style={style}
+    >
       <EmptyView />
     </KeyboardAwareScrollView>
   );
@@ -51,6 +57,10 @@ function KeyboardStickyViewTest() {
       <EmptyView />
     </KeyboardStickyView>
   );
+}
+
+function KeyboardToolbarTest() {
+  return <KeyboardToolbar content={<EmptyView />} />;
 }
 
 describe("components rendering", () => {
@@ -72,5 +82,9 @@ describe("components rendering", () => {
 
   it("should render `KeyboardStickyView`", () => {
     expect(render(<KeyboardStickyViewTest />)).toMatchSnapshot();
+  });
+
+  it("should render `KeyboardToolbar`", () => {
+    expect(render(<KeyboardToolbarTest />)).toMatchSnapshot();
   });
 });

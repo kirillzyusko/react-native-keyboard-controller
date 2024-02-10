@@ -140,7 +140,7 @@ export default function ToolbarExample() {
         />
       </KeyboardAwareScrollView>
       <KeyboardToolbar
-        Content={
+        content={
           showAutoFill ? (
             <AutoFillContacts onContactSelected={onContactSelected} />
           ) : null

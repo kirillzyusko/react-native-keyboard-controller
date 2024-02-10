@@ -17,7 +17,7 @@ import type { KeyboardToolbarTheme } from "./colors";
 import type { LayoutChangeEvent, ViewStyle } from "react-native";
 
 export type KeyboardToolbarProps = {
-  Content: JSX.Element | null;
+  content: JSX.Element | null;
   theme?: KeyboardToolbarTheme;
 };
 const TEST_ID_KEYBOARD_TOOLBAR = "keyboard.toolbar";
@@ -39,7 +39,7 @@ const goToPrevField = () => KeyboardController.setFocusTo("prev");
  * `Done` buttons.
  */
 const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
-  Content,
+  content,
   theme = colors,
 }) => {
   const colorScheme = useColorScheme();
@@ -106,7 +106,7 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
         </Button>
 
         <View style={styles.flex} testID={TEST_ID_KEYBOARD_TOOLBAR_CONTENT}>
-          {Content}
+          {content}
         </View>
         <Button
           accessibilityLabel="Done"

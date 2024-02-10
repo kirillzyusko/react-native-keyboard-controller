@@ -39,13 +39,13 @@ import toolbar from "./toolbar.lottie.json";
 
 ## Props
 
-### `Content`
+### `content`
 
 This property allows you to show a custom content in the middle of the toolbar. It accepts JSX element. Default value is `null`.
 
 ```tsx
 <KeyboardToolbar
-  Content={
+  content={
     showAutoFill ? (
       <AutoFillContacts onContactSelected={onContactSelected} />
     ) : null

@@ -14,7 +14,9 @@
 - [x] reduce `useColorScheme() || "light";` code duplication
 - [x] an ability to customize arrow/text color
 - [x] memo/callbacks everywhere
-- [ ] set focus to custom input (date picker) - how it should be done? Test on iOS?
+- [x] js jest tests (to verify mocks)
+- [-] set focus to custom input (date picker) - how it should be done? Test on iOS?
+- [ ] remove code with `onLayout` + be sure we use `useMemo` in this code wherever we need it
 - [ ] unit tests for iOS
 - [ ] customization
 - [ ] improve accessibility (arrows should react on bold/fontSize changes)
@@ -22,7 +24,7 @@
 - [ ] last input disabled
 - [ ] more effective way for gathering all inputs on screen (now it finds a lot of duplicates)
 - [ ] arrow + ripple effect - incorrect positioning
-- [ ] remove code with `onLayout` + be sure we use `useMemo` in this code wherever we need it
+- [ ] iOS -> background should be transparent?
 - [-] unit tests for Android
 
 Major problems (for opening PR):
