@@ -1,8 +1,8 @@
 package com.reactnativekeyboardcontroller.traversal
 
 import android.content.Context
-import android.widget.LinearLayout
 import android.widget.EditText
+import android.widget.LinearLayout
 import androidx.test.core.app.ApplicationProvider
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -17,9 +17,11 @@ class ViewHierarchyNavigatorTest {
     val viewGroup = LinearLayout(context).apply {
       addView(EditText(context))
       addView(EditText(context))
-      addView(LinearLayout(context).apply {
-        addView(EditText(context))
-      })
+      addView(
+        LinearLayout(context).apply {
+          addView(EditText(context))
+        },
+      )
     }
 
     val editTexts = ViewHierarchyNavigator.getAllInputFields(viewGroup)
