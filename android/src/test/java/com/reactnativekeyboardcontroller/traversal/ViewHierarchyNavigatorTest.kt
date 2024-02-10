@@ -28,6 +28,7 @@ class ViewHierarchyNavigatorTest {
   private lateinit var editText12: EditText
   private lateinit var editText13: EditText
 
+  @Suppress("detekt:CyclomaticComplexMethod")
   @Before
   fun setUp() {
     val context = ApplicationProvider.getApplicationContext<Context>()
