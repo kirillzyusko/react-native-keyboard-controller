@@ -12,12 +12,12 @@ type Theme = {
   /** Color for ripple effect (on button touch) on Android */
   ripple: ColorValue;
 };
-type LightDarkTheme = {
+export type KeyboardToolbarTheme = {
   light: Theme;
   dark: Theme;
 };
 
-export const colors: LightDarkTheme = {
+export const colors: KeyboardToolbarTheme = {
   light: {
     primary: Platform.select<ColorValue>({
       ios: PlatformColor("link"), // "#007aff"

@@ -3,27 +3,27 @@ import { Animated, StyleSheet, View } from "react-native";
 
 import useColorScheme from "../hooks/useColorScheme";
 
-import { colors } from "./colors";
-
+import type { KeyboardToolbarTheme } from "./colors";
 import type { ViewStyle } from "react-native";
 
 type Props = {
   direction: "up" | "down";
   disabled?: boolean;
+  theme: KeyboardToolbarTheme;
 };
 
 // TODO: maxFontSizeMultiplier={1.3}
 // TODO: handle bold text
-const ArrowComponent: React.FC<Props> = ({ direction, disabled }) => {
-  const theme = useColorScheme();
+const ArrowComponent: React.FC<Props> = ({ direction, disabled, theme }) => {
+  const colorScheme = useColorScheme();
 
   const color = useMemo(
     () => ({
       backgroundColor: disabled
-        ? colors[theme].disabled
-        : colors[theme].primary,
+        ? theme[colorScheme].disabled
+        : theme[colorScheme].primary,
     }),
-    [disabled, theme],
+    [disabled, theme, colorScheme],
   );
   const left = useMemo(() => [styles.arrowLeftLine, color], [color]);
   const right = useMemo(() => [styles.arrowRightLine, color], [color]);

@@ -13,10 +13,12 @@ import Arrow from "./Arrow";
 import Button from "./Button";
 import { colors } from "./colors";
 
+import type { KeyboardToolbarTheme } from "./colors";
 import type { LayoutChangeEvent, ViewStyle } from "react-native";
 
 export type KeyboardToolbarProps = {
   Content: JSX.Element | null;
+  theme?: KeyboardToolbarTheme;
 };
 const TEST_ID_KEYBOARD_TOOLBAR = "keyboard.toolbar";
 const TEST_ID_KEYBOARD_TOOLBAR_PREVIOUS = `${TEST_ID_KEYBOARD_TOOLBAR}.previous`;
@@ -36,14 +38,22 @@ const goToPrevField = () => KeyboardController.setFocusTo("prev");
  * `KeyboardToolbar` is a component that is shown above the keyboard with `Prev`/`Next` and
  * `Done` buttons.
  */
-const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({ Content }) => {
-  const theme = useColorScheme();
+const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
+  Content,
+  theme = colors,
+}) => {
+  const colorScheme = useColorScheme();
   const [height, setHeight] = useState(0);
   const [inputs, setInputs] = useState({
     current: 0,
     count: 0,
   });
-  const background: ViewStyle = { backgroundColor: colors[theme].background };
+  const background: ViewStyle = useMemo(
+    () => ({
+      backgroundColor: theme[colorScheme].background,
+    }),
+    [colorScheme, theme],
+  );
   const isPrevDisabled = inputs.current === 0;
   const isNextDisabled = inputs.current === inputs.count - 1;
 
@@ -59,8 +69,8 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({ Content }) => {
     return subscription.remove;
   }, []);
   const doneStyle = useMemo(
-    () => [styles.doneButton, { color: colors[theme].primary }],
-    [theme],
+    () => [styles.doneButton, { color: theme[colorScheme].primary }],
+    [colorScheme, theme],
   );
 
   return (
@@ -80,8 +90,9 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({ Content }) => {
           disabled={isPrevDisabled}
           onPress={goToPrevField}
           testID={TEST_ID_KEYBOARD_TOOLBAR_PREVIOUS}
+          theme={theme}
         >
-          <Arrow disabled={isPrevDisabled} direction="up" />
+          <Arrow disabled={isPrevDisabled} direction="up" theme={theme} />
         </Button>
         <Button
           accessibilityLabel="Next"
@@ -89,8 +100,9 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({ Content }) => {
           disabled={isNextDisabled}
           onPress={goToNextField}
           testID={TEST_ID_KEYBOARD_TOOLBAR_NEXT}
+          theme={theme}
         >
-          <Arrow disabled={isNextDisabled} direction="down" />
+          <Arrow disabled={isNextDisabled} direction="down" theme={theme} />
         </Button>
 
         <View style={styles.flex} testID={TEST_ID_KEYBOARD_TOOLBAR_CONTENT}>
@@ -103,6 +115,7 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({ Content }) => {
           testID={TEST_ID_KEYBOARD_TOOLBAR_DONE}
           rippleRadius={28}
           style={styles.doneButtonContainer}
+          theme={theme}
         >
           <Text style={doneStyle} maxFontSizeMultiplier={1.3}>
             Done
@@ -135,4 +148,5 @@ const styles = StyleSheet.create({
   },
 });
 
+export { colors as DefaultKeyboardToolbarTheme };
 export default KeyboardToolbar;

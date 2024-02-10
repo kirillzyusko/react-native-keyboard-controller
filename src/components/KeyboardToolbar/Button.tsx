@@ -8,8 +8,7 @@ import {
 
 import useColorScheme from "../hooks/useColorScheme";
 
-import { colors } from "./colors";
-
+import type { KeyboardToolbarTheme } from "./colors";
 import type { PropsWithChildren } from "react";
 import type { ViewStyle } from "react-native";
 
@@ -21,6 +20,7 @@ type Props = {
   testID: string;
   rippleRadius?: number;
   style?: ViewStyle;
+  theme: KeyboardToolbarTheme;
 };
 
 const ButtonIOS = ({
@@ -62,13 +62,18 @@ const ButtonAndroid = ({
   testID,
   rippleRadius = 18,
   style,
+  theme,
 }: PropsWithChildren<Props>) => {
-  const theme = useColorScheme();
+  const colorScheme = useColorScheme();
   const accessibilityState = useMemo(() => ({ disabled }), [disabled]);
   const ripple = useMemo(
     () =>
-      TouchableNativeFeedback.Ripple(colors[theme].ripple, true, rippleRadius),
-    [theme, rippleRadius],
+      TouchableNativeFeedback.Ripple(
+        theme[colorScheme].ripple,
+        true,
+        rippleRadius,
+      ),
+    [colorScheme, rippleRadius, theme],
   );
 
   return (
