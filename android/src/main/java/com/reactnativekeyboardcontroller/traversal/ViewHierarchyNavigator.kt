@@ -1,14 +1,10 @@
 package com.reactnativekeyboardcontroller.traversal
 
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import com.facebook.react.bridge.UiThreadUtil
 import com.facebook.react.views.textinput.ReactEditText
-import java.lang.ClassCastException
-
-private val TAG = ViewHierarchyNavigator::class.qualifiedName
 
 object ViewHierarchyNavigator {
   fun setFocusTo(direction: String, view: View) {
@@ -47,43 +43,27 @@ object ViewHierarchyNavigator {
     return findEditTextInDirection(currentFocus, -1)
   }
 
+  @Suppress("detekt:ReturnCount")
   private fun findEditTextInDirection(currentFocus: View, direction: Int): EditText? {
-    try {
-      // Find the parent view group
-      val parentViewGroup = currentFocus.parent as ViewGroup?
+    // Attempt to find the parent view group, return null if not found or not a ViewGroup
+    val parentViewGroup = currentFocus.parent as? ViewGroup ?: return null
 
-      if (parentViewGroup != null) {
-        // Find the index of the current EditText in its parent
-        val currentIndex = parentViewGroup.indexOfChild(currentFocus)
+    // Find the index of the current EditText in its parent
+    val currentIndex = parentViewGroup.indexOfChild(currentFocus)
 
-        // Check for the sibling in the specified direction in the parent
-        var i = if (direction > 0) currentIndex + 1 else currentIndex - 1
-        val end = if (direction > 0) parentViewGroup.childCount else -1
+    // Determine the start index and end condition for the loop based on the direction
+    var i = if (direction > 0) currentIndex + 1 else currentIndex - 1
+    val end = if (direction > 0) parentViewGroup.childCount else -1
 
-        while (i != end) {
-          val nextChild = parentViewGroup.getChildAt(i)
-
-          val editText = findEditTextOrGoDeeper(nextChild)
-
-          if (editText != null) {
-            return editText
-          }
-
-          i += direction
-        }
-
-        // If no sibling was found in the parent, recurse to the parent's parent
-        return findEditTextInDirection(parentViewGroup, direction)
-      }
-
-      return null // Reached the top-level view, no EditText found in the specified direction
-    } catch (e: ClassCastException) {
-      Log.i(TAG, "EditText can not be found due to $e.")
-
-      // Handle the ClassCastException (if needed)
-      // Happens when we reached out RootView and it can not be casted to ViewGroup
-      return null
+    // Iterate over siblings in the specified direction
+    while (i != end) {
+      val nextChild = parentViewGroup.getChildAt(i)
+      findEditTextOrGoDeeper(nextChild)?.let { return it } // Return if an EditText is found
+      i += direction
     }
+
+    // Recurse to the parent's parent if no sibling EditText is found
+    return findEditTextInDirection(parentViewGroup, direction)
   }
 
   private fun findEditTextInHierarchy(viewGroup: ViewGroup): EditText? {
@@ -101,17 +81,15 @@ object ViewHierarchyNavigator {
   }
 
   private fun findEditTextOrGoDeeper(child: View): EditText? {
+    var result: EditText? = null
+
     if (child is EditText && child.isEnabled) {
-      return child
+      result = child
     } else if (child is ViewGroup) {
       // If the child is a ViewGroup, check its children recursively
-      val editText = findEditTextInHierarchy(child)
-
-      if (editText != null) {
-        return editText
-      }
+      result = findEditTextInHierarchy(child)
     }
 
-    return null
+    return result
   }
 }
