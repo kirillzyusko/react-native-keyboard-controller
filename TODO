@@ -11,16 +11,17 @@
 - [x] when you press and next/prev icon gets disabled -> animation is very strange
 - [x] hasNext/hasPrev (or current/total)?
 - [x] e2e tests
+- [x] reduce `useColorScheme() || "light";` code duplication
 - [ ] set focus to custom input (date picker) - how it should be done? Test on iOS?
-- [ ] unit tests for iOS/Android
+- [ ] unit tests for iOS
 - [ ] customization
 - [ ] memo/callbacks everywhere
-- [ ] reduce `useColorScheme() || "light";` code duplication
 - [ ] improve accessibility (arrows should react on bold/fontSize changes)
 - [ ] an ability to customize arrow/text color
 - [ ] an ability to customize text/arrow elements
 - [ ] last input disabled
 - [ ] more effective way for gathering all inputs on screen (now it finds a lot of duplicates)
+- [-] unit tests for Android
 
 Major problems (for opening PR):
 
@@ -30,5 +31,6 @@ Major problems (for opening PR):
 - (x) disable/enable buttons on Android
 - (x) handle setFocusTo("next") when we select a contact (iOS)
 - (x) write last e2e tests (interaction with AutoFill contacts, conditional rendering)
-- on Android buttons disabling/enabling looks tooo slow - test on a real device + capture performance benchmarks (how much time it takes to go from JS -> native -> JS)
+- (x) on Android buttons disabling/enabling looks tooo slow - test on a real device + capture performance benchmarks (how much time it takes to go from JS -> native -> JS)
 - enhanced example app
+- port example to fabric

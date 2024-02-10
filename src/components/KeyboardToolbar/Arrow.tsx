@@ -1,5 +1,7 @@
-import React from "react";
-import { Animated, StyleSheet, View, useColorScheme } from "react-native";
+import React, { useMemo } from "react";
+import { Animated, StyleSheet, View } from "react-native";
+
+import useColorScheme from "../hooks/useColorScheme";
 
 import { colors } from "./colors";
 
@@ -13,11 +15,18 @@ type Props = {
 // TODO: maxFontSizeMultiplier={1.3}
 // TODO: handle bold text
 const ArrowComponent: React.FC<Props> = ({ direction, disabled }) => {
-  const theme = useColorScheme() || "light";
+  const theme = useColorScheme();
 
-  const color = {
-    backgroundColor: disabled ? colors[theme].disabled : colors[theme].primary,
-  };
+  const color = useMemo(
+    () => ({
+      backgroundColor: disabled
+        ? colors[theme].disabled
+        : colors[theme].primary,
+    }),
+    [disabled, theme],
+  );
+  const left = useMemo(() => [styles.arrowLeftLine, color], [color]);
+  const right = useMemo(() => [styles.arrowRightLine, color], [color]);
 
   return (
     <View
@@ -28,8 +37,8 @@ const ArrowComponent: React.FC<Props> = ({ direction, disabled }) => {
       }
     >
       <View style={styles.arrow}>
-        <Animated.View style={[styles.arrowLeftLine, color]} />
-        <Animated.View style={[styles.arrowRightLine, color]} />
+        <Animated.View style={left} />
+        <Animated.View style={right} />
       </View>
     </View>
   );

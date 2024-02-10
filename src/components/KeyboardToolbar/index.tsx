@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { StyleSheet, Text, View, useColorScheme } from "react-native";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
 
 import {
   FocusedInputEvents,
@@ -7,16 +7,24 @@ import {
 } from "react-native-keyboard-controller";
 
 import { KeyboardController } from "../../bindings";
+import useColorScheme from "../hooks/useColorScheme";
 
 import Arrow from "./Arrow";
 import Button from "./Button";
 import { colors } from "./colors";
 
-import type { LayoutChangeEvent, TextStyle, ViewStyle } from "react-native";
+import type { LayoutChangeEvent, ViewStyle } from "react-native";
 
 export type KeyboardToolbarProps = {
   Content: JSX.Element | null;
 };
+const TEST_ID_KEYBOARD_TOOLBAR = "keyboard.toolbar";
+const TEST_ID_KEYBOARD_TOOLBAR_PREVIOUS = `${TEST_ID_KEYBOARD_TOOLBAR}.previous`;
+const TEST_ID_KEYBOARD_TOOLBAR_NEXT = `${TEST_ID_KEYBOARD_TOOLBAR}.next`;
+const TEST_ID_KEYBOARD_TOOLBAR_CONTENT = `${TEST_ID_KEYBOARD_TOOLBAR}.content`;
+const TEST_ID_KEYBOARD_TOOLBAR_DONE = `${TEST_ID_KEYBOARD_TOOLBAR}.done`;
+
+const KEYBOARD_TOOLBAR_HEIGHT = 42;
 
 // TODO: accessibility
 
@@ -29,14 +37,13 @@ const goToPrevField = () => KeyboardController.setFocusTo("prev");
  * `Done` buttons.
  */
 const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({ Content }) => {
-  const theme = useColorScheme() || "light";
+  const theme = useColorScheme();
   const [height, setHeight] = useState(0);
   const [inputs, setInputs] = useState({
     current: 0,
     count: 0,
   });
   const background: ViewStyle = { backgroundColor: colors[theme].background };
-  const done: TextStyle = { color: colors[theme].primary };
   const isPrevDisabled = inputs.current === 0;
   const isNextDisabled = inputs.current === inputs.count - 1;
 
@@ -51,26 +58,28 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({ Content }) => {
 
     return subscription.remove;
   }, []);
+  const doneStyle = useMemo(
+    () => [styles.doneButton, { color: colors[theme].primary }],
+    [theme],
+  );
 
   return (
     <KeyboardStickyView offset={{ closed: height }}>
       <View
-        // TODO: check whether it's readable or not
-        accessibilityLabel="Toolbar"
         onLayout={onLayout}
         style={[
           styles.toolbar,
           height === 0 ? { marginBottom: -9999 } : null,
           background,
         ]}
-        testID="keyboard.toolbar"
+        testID={TEST_ID_KEYBOARD_TOOLBAR}
       >
         <Button
           accessibilityLabel="Previous"
           accessibilityHint="Will move focus to previous field"
           disabled={isPrevDisabled}
           onPress={goToPrevField}
-          testID="keyboard.toolbar.previous"
+          testID={TEST_ID_KEYBOARD_TOOLBAR_PREVIOUS}
         >
           <Arrow disabled={isPrevDisabled} direction="up" />
         </Button>
@@ -79,21 +88,23 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({ Content }) => {
           accessibilityHint="Will move focus to next field"
           disabled={isNextDisabled}
           onPress={goToNextField}
-          testID="keyboard.toolbar.next"
+          testID={TEST_ID_KEYBOARD_TOOLBAR_NEXT}
         >
           <Arrow disabled={isNextDisabled} direction="down" />
         </Button>
 
-        <View style={styles.flex} testID="keyboard.toolbar.content">
+        <View style={styles.flex} testID={TEST_ID_KEYBOARD_TOOLBAR_CONTENT}>
           {Content}
         </View>
         <Button
           accessibilityLabel="Done"
           accessibilityHint="Will close the keyboard"
           onPress={dismissKeyboard}
-          testID="keyboard.toolbar.done"
+          testID={TEST_ID_KEYBOARD_TOOLBAR_DONE}
+          rippleRadius={28}
+          style={styles.doneButtonContainer}
         >
-          <Text style={[styles.doneButton, done]} maxFontSizeMultiplier={1.3}>
+          <Text style={doneStyle} maxFontSizeMultiplier={1.3}>
             Done
           </Text>
         </Button>
@@ -112,14 +123,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
     flexDirection: "row",
-    // TODO: don't hardcode? How to get this value from in `bottomOffset` in `KeyboardAwareScrollView`?
-    height: 42,
+    height: KEYBOARD_TOOLBAR_HEIGHT,
     paddingHorizontal: 8,
   },
   doneButton: {
-    marginRight: 8,
     fontWeight: "600",
     fontSize: 15,
+  },
+  doneButtonContainer: {
+    marginRight: 8,
   },
 });
 

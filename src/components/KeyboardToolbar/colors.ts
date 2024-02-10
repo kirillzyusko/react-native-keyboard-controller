@@ -2,7 +2,22 @@ import { Platform, PlatformColor } from "react-native";
 
 import type { ColorValue } from "react-native";
 
-export const colors = {
+type Theme = {
+  /** Color for arrow when it's enabled */
+  primary: ColorValue;
+  /** Color for arrow when it's disabled */
+  disabled: ColorValue;
+  /** Keyboard toolbar background color */
+  background: ColorValue;
+  /** Color for ripple effect (on button touch) on Android */
+  ripple: ColorValue;
+};
+type LightDarkTheme = {
+  light: Theme;
+  dark: Theme;
+};
+
+export const colors: LightDarkTheme = {
   light: {
     primary: Platform.select<ColorValue>({
       ios: PlatformColor("link"), // "#007aff"
@@ -16,6 +31,7 @@ export const colors = {
       ios: "#F8F8F8",
       default: "#f3f3f4",
     }),
+    ripple: "#bcbcbcbc",
   },
   dark: {
     primary: Platform.select<ColorValue>({
@@ -30,5 +46,6 @@ export const colors = {
       ios: "#555756",
       default: "#2C2C2E",
     }),
+    ripple: "#F8F8F888",
   },
 };
