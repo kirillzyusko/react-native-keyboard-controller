@@ -24,7 +24,6 @@ public class ViewHierarchyNavigator: NSObject {
       let textField = findTextInputInDirection(currentFocus: view, direction: direction)
       textField?.requestFocus()
     }
-    // return textField
   }
 
   private static func findTextInputInDirection(currentFocus: UIView, direction: String) -> TextInput? {
