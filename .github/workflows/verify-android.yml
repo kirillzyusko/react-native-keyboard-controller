@@ -36,7 +36,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: "microsoft"
-          java-version: "11"
+          java-version: "17"
       - name: Install dependencies
         run: yarn install --frozen-lockfile --cwd ..
       - name: Run Gradle Lint
@@ -49,11 +49,11 @@ jobs:
         working-directory: ./android
     steps:
       - uses: actions/checkout@v4
-      - name: Setup JDK 11
+      - name: Setup JDK 17
         uses: actions/setup-java@v4
         with:
           distribution: "microsoft"
-          java-version: "11"
+          java-version: "17"
       - name: Install dependencies
         run: yarn install --frozen-lockfile --cwd ..
       - name: Run Gradle Lint
@@ -77,3 +77,20 @@ jobs:
           unzip detekt-cli-1.23.1.zip
       - name: Run Detekt
         run: ./detekt-cli-1.23.1/bin/detekt-cli
+  unit-tests:
+    name: 📖 Unit tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./android
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup JDK 11
+        uses: actions/setup-java@v4
+        with:
+          distribution: "microsoft"
+          java-version: "17"
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile --cwd ..
+      - name: Run Unit Tests
+        run: ./gradlew testDebugUnitTest
