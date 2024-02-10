@@ -11,7 +11,11 @@ object ViewHierarchyNavigator {
     val input = if (direction == "next") findNextEditText(view) else findPreviousEditText(view)
 
     UiThreadUtil.runOnUiThread {
-      (input as ReactEditText?)?.requestFocusFromJS()
+      if (input is ReactEditText) {
+        input.requestFocusFromJS()
+      } else {
+        input?.requestFocus()
+      }
     }
   }
 
