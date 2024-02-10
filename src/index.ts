@@ -11,4 +11,5 @@ export {
   KeyboardStickyView,
   KeyboardAwareScrollView,
   KeyboardToolbar,
+  DefaultKeyboardToolbarTheme,
 } from "./components";
