@@ -14,10 +14,12 @@ import Button from "./Button";
 import { colors } from "./colors";
 
 import type { KeyboardToolbarTheme } from "./colors";
+import type { ReactNode } from "react";
 
 export type KeyboardToolbarProps = {
   content: JSX.Element | null;
   theme?: KeyboardToolbarTheme;
+  doneText?: ReactNode;
 };
 const TEST_ID_KEYBOARD_TOOLBAR = "keyboard.toolbar";
 const TEST_ID_KEYBOARD_TOOLBAR_PREVIOUS = `${TEST_ID_KEYBOARD_TOOLBAR}.previous`;
@@ -41,6 +43,7 @@ const goToPrevField = () => KeyboardController.setFocusTo("prev");
 const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
   content,
   theme = colors,
+  doneText,
 }) => {
   const colorScheme = useColorScheme();
   const [inputs, setInputs] = useState({
@@ -108,7 +111,7 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
           theme={theme}
         >
           <Text style={doneStyle} maxFontSizeMultiplier={1.3}>
-            Done
+            {doneText || "Done"}
           </Text>
         </Button>
       </View>
