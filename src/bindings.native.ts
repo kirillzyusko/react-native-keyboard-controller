@@ -29,15 +29,16 @@ export const KeyboardController = (
       )
 ) as KeyboardControllerModule;
 
+const KEYBOARD_CONTROLLER_NAMESPACE = "KeyboardController::";
 const eventEmitter = new NativeEventEmitter(KeyboardController);
 
 export const KeyboardEvents: KeyboardEventsModule = {
   addListener: (name, cb) =>
-    eventEmitter.addListener("KeyboardController::" + name, cb),
+    eventEmitter.addListener(KEYBOARD_CONTROLLER_NAMESPACE + name, cb),
 };
 export const FocusedInputEvents: FocusedInputEventsModule = {
   addListener: (name, cb) =>
-    eventEmitter.addListener("KeyboardController::" + name, cb),
+    eventEmitter.addListener(KEYBOARD_CONTROLLER_NAMESPACE + name, cb),
 };
 export const KeyboardControllerView: React.FC<KeyboardControllerProps> =
   require("./specs/KeyboardControllerViewNativeComponent").default;
