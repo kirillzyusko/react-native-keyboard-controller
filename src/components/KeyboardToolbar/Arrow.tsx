@@ -6,15 +6,15 @@ import useColorScheme from "../hooks/useColorScheme";
 import type { KeyboardToolbarTheme } from "./colors";
 import type { ViewStyle } from "react-native";
 
-type Props = {
-  direction: "up" | "down";
+type ArrowProps = {
+  type: "prev" | "next";
   disabled?: boolean;
   theme: KeyboardToolbarTheme;
 };
 
 // TODO: maxFontSizeMultiplier={1.3}
 // TODO: handle bold text
-const ArrowComponent: React.FC<Props> = ({ direction, disabled, theme }) => {
+const ArrowComponent: React.FC<ArrowProps> = ({ type, disabled, theme }) => {
   const colorScheme = useColorScheme();
 
   const color = useMemo(
@@ -31,9 +31,7 @@ const ArrowComponent: React.FC<Props> = ({ direction, disabled, theme }) => {
   return (
     <View
       style={
-        direction === "down"
-          ? styles.arrowDownContainer
-          : styles.arrowUpContainer
+        type === "next" ? styles.arrowDownContainer : styles.arrowUpContainer
       }
     >
       <View style={styles.arrow}>

@@ -21,6 +21,7 @@ export type KeyboardToolbarProps = {
   theme?: KeyboardToolbarTheme;
   doneText?: ReactNode;
   button?: typeof Button;
+  icon?: typeof Arrow;
 };
 const TEST_ID_KEYBOARD_TOOLBAR = "keyboard.toolbar";
 const TEST_ID_KEYBOARD_TOOLBAR_PREVIOUS = `${TEST_ID_KEYBOARD_TOOLBAR}.previous`;
@@ -46,6 +47,7 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
   theme = colors,
   doneText,
   button,
+  icon,
 }) => {
   const colorScheme = useColorScheme();
   const [inputs, setInputs] = useState({
@@ -76,6 +78,7 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
     [colorScheme, theme],
   );
   const ButtonContainer = button || Button;
+  const IconContainer = icon || Arrow;
 
   return (
     <KeyboardStickyView offset={offset}>
@@ -88,7 +91,7 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
           testID={TEST_ID_KEYBOARD_TOOLBAR_PREVIOUS}
           theme={theme}
         >
-          <Arrow disabled={isPrevDisabled} direction="up" theme={theme} />
+          <IconContainer disabled={isPrevDisabled} type="prev" theme={theme} />
         </ButtonContainer>
         <ButtonContainer
           accessibilityLabel="Next"
@@ -98,7 +101,7 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
           testID={TEST_ID_KEYBOARD_TOOLBAR_NEXT}
           theme={theme}
         >
-          <Arrow disabled={isNextDisabled} direction="down" theme={theme} />
+          <IconContainer disabled={isNextDisabled} type="next" theme={theme} />
         </ButtonContainer>
 
         <View style={styles.flex} testID={TEST_ID_KEYBOARD_TOOLBAR_CONTENT}>

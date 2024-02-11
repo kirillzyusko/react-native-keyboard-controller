@@ -45,7 +45,7 @@ This property allows to render custom touchable component for next, previous and
 
 ```
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { KeyboardToolbarProps } from "react-native-keyboard-controller";
+import { KeyboardToolbar, KeyboardToolbarProps } from "react-native-keyboard-controller";
 
 const CustomButton: KeyboardToolbarProps["button"] = ({
   children,
@@ -81,6 +81,26 @@ The property that allows to specify custom text for `Done` button.
 
 ```tsx
 <KeyboardToolbar doneText="Close" />
+```
+
+### `icon`
+
+`icon` property allows to render custom icons for prev and next buttons.
+
+```tsx
+import { Text } from "react-native";
+import {
+  KeyboardToolbar,
+  KeyboardToolbarProps,
+} from "react-native-keyboard-controller";
+
+const Icon: KeyboardToolbarProps["icon"] = ({ type }) => {
+  return <Text>{type === "next" ? "⬇️" : "⬆️"}</Text>;
+};
+
+// ...
+
+<KeyboardToolbar icon={Icon} />;
 ```
 
 ### `theme`
