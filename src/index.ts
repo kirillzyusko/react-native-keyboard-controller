@@ -10,6 +10,8 @@ export {
   KeyboardAvoidingView,
   KeyboardStickyView,
   KeyboardAwareScrollView,
+  // keyboard toolbar
   KeyboardToolbar,
   DefaultKeyboardToolbarTheme,
+  KeyboardToolbarProps,
 } from "./components";

@@ -12,7 +12,7 @@ import type { KeyboardToolbarTheme } from "./colors";
 import type { PropsWithChildren } from "react";
 import type { ViewStyle } from "react-native";
 
-type Props = {
+type ButtonProps = {
   disabled?: boolean;
   onPress: () => void;
   accessibilityLabel: string;
@@ -31,7 +31,7 @@ const ButtonIOS = ({
   accessibilityHint,
   testID,
   style,
-}: PropsWithChildren<Props>) => {
+}: PropsWithChildren<ButtonProps>) => {
   // immediately switch to plain view to avoid animation flickering
   // when fade out animation happens and view becomes disabled
   const Container = disabled
@@ -63,7 +63,7 @@ const ButtonAndroid = ({
   rippleRadius = 18,
   style,
   theme,
-}: PropsWithChildren<Props>) => {
+}: PropsWithChildren<ButtonProps>) => {
   const colorScheme = useColorScheme();
   const accessibilityState = useMemo(() => ({ disabled }), [disabled]);
   const ripple = useMemo(

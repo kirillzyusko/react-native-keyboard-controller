@@ -20,6 +20,7 @@ export type KeyboardToolbarProps = {
   content: JSX.Element | null;
   theme?: KeyboardToolbarTheme;
   doneText?: ReactNode;
+  button?: typeof Button;
 };
 const TEST_ID_KEYBOARD_TOOLBAR = "keyboard.toolbar";
 const TEST_ID_KEYBOARD_TOOLBAR_PREVIOUS = `${TEST_ID_KEYBOARD_TOOLBAR}.previous`;
@@ -44,6 +45,7 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
   content,
   theme = colors,
   doneText,
+  button,
 }) => {
   const colorScheme = useColorScheme();
   const [inputs, setInputs] = useState({
@@ -73,11 +75,12 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
     ],
     [colorScheme, theme],
   );
+  const ButtonContainer = button || Button;
 
   return (
     <KeyboardStickyView offset={offset}>
       <View style={toolbarStyle} testID={TEST_ID_KEYBOARD_TOOLBAR}>
-        <Button
+        <ButtonContainer
           accessibilityLabel="Previous"
           accessibilityHint="Will move focus to previous field"
           disabled={isPrevDisabled}
@@ -86,8 +89,8 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
           theme={theme}
         >
           <Arrow disabled={isPrevDisabled} direction="up" theme={theme} />
-        </Button>
-        <Button
+        </ButtonContainer>
+        <ButtonContainer
           accessibilityLabel="Next"
           accessibilityHint="Will move focus to next field"
           disabled={isNextDisabled}
@@ -96,12 +99,12 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
           theme={theme}
         >
           <Arrow disabled={isNextDisabled} direction="down" theme={theme} />
-        </Button>
+        </ButtonContainer>
 
         <View style={styles.flex} testID={TEST_ID_KEYBOARD_TOOLBAR_CONTENT}>
           {content}
         </View>
-        <Button
+        <ButtonContainer
           accessibilityLabel="Done"
           accessibilityHint="Will close the keyboard"
           onPress={dismissKeyboard}
@@ -113,7 +116,7 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
           <Text style={doneStyle} maxFontSizeMultiplier={1.3}>
             {doneText || "Done"}
           </Text>
-        </Button>
+        </ButtonContainer>
       </View>
     </KeyboardStickyView>
   );
