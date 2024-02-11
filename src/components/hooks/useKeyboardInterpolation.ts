@@ -49,15 +49,16 @@ const useKeyboardInterpolation = () => {
       );
     }
 
-    lastInterpolation.value = interpolateREA(
+    const interpolation = interpolateREA(
       keyboardPosition,
       [prevKeyboardHeight.value, nextKeyboardHeight.value],
       shouldUseInternalInterpolation.value
         ? [lastInterpolation.value, output[1]]
         : output,
     );
+    lastInterpolation.value = interpolation;
 
-    return lastInterpolation.value;
+    return interpolation;
   };
 
   useKeyboardHandler(

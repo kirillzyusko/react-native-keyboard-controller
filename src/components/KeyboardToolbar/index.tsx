@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 import {
@@ -14,7 +14,6 @@ import Button from "./Button";
 import { colors } from "./colors";
 
 import type { KeyboardToolbarTheme } from "./colors";
-import type { LayoutChangeEvent, ViewStyle } from "react-native";
 
 export type KeyboardToolbarProps = {
   content: JSX.Element | null;
@@ -27,6 +26,7 @@ const TEST_ID_KEYBOARD_TOOLBAR_CONTENT = `${TEST_ID_KEYBOARD_TOOLBAR}.content`;
 const TEST_ID_KEYBOARD_TOOLBAR_DONE = `${TEST_ID_KEYBOARD_TOOLBAR}.done`;
 
 const KEYBOARD_TOOLBAR_HEIGHT = 42;
+const offset = { closed: KEYBOARD_TOOLBAR_HEIGHT };
 
 // TODO: accessibility
 
@@ -43,23 +43,12 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
   theme = colors,
 }) => {
   const colorScheme = useColorScheme();
-  const [height, setHeight] = useState(0);
   const [inputs, setInputs] = useState({
     current: 0,
     count: 0,
   });
-  const background: ViewStyle = useMemo(
-    () => ({
-      backgroundColor: theme[colorScheme].background,
-    }),
-    [colorScheme, theme],
-  );
   const isPrevDisabled = inputs.current === 0;
   const isNextDisabled = inputs.current === inputs.count - 1;
-
-  const onLayout = useCallback((e: LayoutChangeEvent) => {
-    setHeight(e.nativeEvent.layout.height);
-  }, []);
 
   useEffect(() => {
     const subscription = FocusedInputEvents.addListener("focusDidSet", (e) => {
@@ -72,18 +61,19 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
     () => [styles.doneButton, { color: theme[colorScheme].primary }],
     [colorScheme, theme],
   );
+  const toolbarStyle = useMemo(
+    () => [
+      styles.toolbar,
+      {
+        backgroundColor: theme[colorScheme].background,
+      },
+    ],
+    [colorScheme, theme],
+  );
 
   return (
-    <KeyboardStickyView offset={{ closed: height }}>
-      <View
-        onLayout={onLayout}
-        style={[
-          styles.toolbar,
-          height === 0 ? { marginBottom: -9999 } : null,
-          background,
-        ]}
-        testID={TEST_ID_KEYBOARD_TOOLBAR}
-      >
+    <KeyboardStickyView offset={offset}>
+      <View style={toolbarStyle} testID={TEST_ID_KEYBOARD_TOOLBAR}>
         <Button
           accessibilityLabel="Previous"
           accessibilityHint="Will move focus to previous field"

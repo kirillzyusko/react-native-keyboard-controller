@@ -15,8 +15,8 @@
 - [x] an ability to customize arrow/text color
 - [x] memo/callbacks everywhere
 - [x] js jest tests (to verify mocks)
+- [x] remove code with `onLayout` + be sure we use `useMemo` in this code wherever we need it
 - [-] set focus to custom input (date picker) - how it should be done? Test on iOS?
-- [ ] remove code with `onLayout` + be sure we use `useMemo` in this code wherever we need it
 - [ ] unit tests for iOS
 - [ ] customization
 - [ ] improve accessibility (arrows should react on bold/fontSize changes)
