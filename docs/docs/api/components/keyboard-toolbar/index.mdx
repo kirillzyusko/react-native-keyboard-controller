@@ -43,22 +43,21 @@ import toolbar from "./toolbar.lottie.json";
 
 This property allows to render custom touchable component for next, previous and done button.
 
-```
+```tsx
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { KeyboardToolbar, KeyboardToolbarProps } from "react-native-keyboard-controller";
+import {
+  KeyboardToolbar,
+  KeyboardToolbarProps,
+} from "react-native-keyboard-controller";
 
 const CustomButton: KeyboardToolbarProps["button"] = ({
   children,
   onPress,
-}) => (
-  <TouchableOpacity onPress={onPress}>
-    {children}
-  </TouchableOpacity>
-);
+}) => <TouchableOpacity onPress={onPress}>{children}</TouchableOpacity>;
 
 // ...
 
-<KeyboardToolbar button={CustomButton} />
+<KeyboardToolbar button={CustomButton} />;
 ```
 
 ### `content`
