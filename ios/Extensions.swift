@@ -56,9 +56,9 @@ public extension Optional where Wrapped == UIResponder {
 public extension UIScrollView {
   var reactViewTag: NSNumber {
     #if KEYBOARD_CONTROLLER_NEW_ARCH_ENABLED
-      return (self.superview?.tag ?? -1) as NSNumber
+      return (superview?.tag ?? -1) as NSNumber
     #else
-      return self.superview?.reactTag ?? -1
+      return superview?.reactTag ?? -1
     #endif
   }
 }
