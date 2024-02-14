@@ -46,14 +46,14 @@ describe("`KeyboardToolbar` specification", () => {
   it("should do correct actions when contact gets selected", async () => {
     await waitAndTap("contact_0");
     // hide modal
-    await expect(element(by.id("autofill_contacts_modal#1"))).not.toBeVisible();
+    await expect(element(by.id("autofill_contacts_modal"))).not.toBeVisible();
     // should update text value
     await expect(element(by.id("TextInput#1"))).toHaveText("Kiryl");
     // shouldn't render AutoFill Contacts anymore
     await expect(element(by.id("autofill_contacts"))).not.toExist();
     // should move focus to next field
     await expect(element(by.id("TextInput#2"))).toBeFocused();
-    // should match to snapshot (active arrows, no AutoFill Contacts label)
+    // should match to snapshot (active arrows, no "AutoFill Contacts" label)
     await expectElementBitmapsToBeEqual(
       "keyboard.toolbar",
       "ToolbarAllButtonsEnabled",
