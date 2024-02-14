@@ -55,6 +55,7 @@ using namespace facebook::react;
         initOnLayoutChangedHandler:^(NSDictionary *event) {
           if (self->_eventEmitter) {
             int target = [event[@"target"] integerValue];
+            int parentScrollViewTarget = [event[@"parentScrollViewTarget"] integerValue];
             double absoluteY = [event[@"layout"][@"absoluteY"] doubleValue];
             double absoulteX = [event[@"layout"][@"absoluteX"] doubleValue];
             double y = [event[@"layout"][@"y"] doubleValue];
@@ -68,6 +69,7 @@ using namespace facebook::react;
                     facebook::react::KeyboardControllerViewEventEmitter::
                         OnFocusedInputLayoutChanged{
                             .target = target,
+                            .parentScrollViewTarget = parentScrollViewTarget,
                             .layout = facebook::react::KeyboardControllerViewEventEmitter::
                                 OnFocusedInputLayoutChangedLayout{
                                     .absoluteY = absoluteY,

@@ -53,6 +53,16 @@ public extension Optional where Wrapped == UIResponder {
   }
 }
 
+public extension UIScrollView {
+  var reactViewTag: NSNumber {
+    #if KEYBOARD_CONTROLLER_NEW_ARCH_ENABLED
+      return (self.superview?.tag ?? -1) as NSNumber
+    #else
+      return self.superview?.reactTag ?? -1
+    #endif
+  }
+}
+
 public extension Optional where Wrapped: UIResponder {
   var parentScrollViewTarget: NSNumber {
     var currentResponder: UIResponder? = self
@@ -60,7 +70,7 @@ public extension Optional where Wrapped: UIResponder {
     while let currentView = currentResponder {
       // If the current responder is a UIScrollView (excluding UITextView), return its tag
       if let scrollView = currentView as? UIScrollView, !(currentView is UITextView) {
-        return scrollView.superview?.reactTag ?? -1
+        return scrollView.reactViewTag
       }
 
       // Move to the next responder in the chain

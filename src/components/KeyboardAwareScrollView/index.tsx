@@ -122,7 +122,6 @@ const KeyboardAwareScrollView = forwardRef<
     }, []);
     const onScrollViewLayout = useCallback(
       (e: LayoutChangeEvent & { nativeEvent: { target: number } }) => {
-        // TODO: check that it works on Fabric
         scrollViewTarget.value = e.nativeEvent.target;
 
         onLayout?.(e);
@@ -141,8 +140,8 @@ const KeyboardAwareScrollView = forwardRef<
           return 0;
         }
 
-        // TODO: no back transitions (fixed by `scrollPosition.value === position.value`)
-        // TODO: check Fabric (especially iOS)
+        // TODO: no back transitions (fixed by `scrollPosition.value === position.value`) <- because input get `null`? If yes, then we should use more reliable way of detecting last focused input?
+        // TODO: check Fabric (Android)
         // TODO: check different TextInputs (multiline)
         if (
           // input belongs to ScrollView
@@ -155,6 +154,7 @@ const KeyboardAwareScrollView = forwardRef<
             scrollPosition.value,
             position.value,
             input.value,
+            scrollViewTarget.value,
           );
           return 0;
         }
