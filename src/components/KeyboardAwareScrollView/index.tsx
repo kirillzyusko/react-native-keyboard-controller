@@ -141,11 +141,6 @@ const KeyboardAwareScrollView = forwardRef<
           return 0;
         }
 
-        const visibleRect = height - keyboardHeight.value;
-        const absoluteY = layout.value?.layout.absoluteY || 0;
-        const inputHeight = layout.value?.layout.height || 0;
-        const point = absoluteY + inputHeight;
-
         // TODO: no back transitions (fixed by `scrollPosition.value === position.value`)
         // TODO: check Fabric (especially iOS)
         // TODO: check different TextInputs (multiline)
@@ -163,6 +158,11 @@ const KeyboardAwareScrollView = forwardRef<
           );
           return 0;
         }
+
+        const visibleRect = height - keyboardHeight.value;
+        const absoluteY = layout.value?.layout.absoluteY || 0;
+        const inputHeight = layout.value?.layout.height || 0;
+        const point = absoluteY + inputHeight;
 
         if (visibleRect - point <= bottomOffset) {
           const interpolatedScrollTo = interpolate(

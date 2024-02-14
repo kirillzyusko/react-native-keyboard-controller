@@ -72,20 +72,15 @@ val EditText.parentScrollViewTarget: Int
     var currentView: View? = this
 
     while (currentView != null) {
-      try {
-        val parentView = currentView.parent as View
+      val parentView = currentView.parent as? View
 
-        if (parentView is ScrollView) {
-          // If the parent is a ScrollView, return its id
-          return parentView.id
-        }
-
-        // Move to the next parent view
-        currentView = parentView
-      } catch (e: ClassCastException) {
-        // android.view.ViewRootImpl cannot be cast to android.view.View
-        return -1
+      if (parentView is ScrollView) {
+        // If the parent is a ScrollView, return its id
+        return parentView.id
       }
+
+      // Move to the next parent view
+      currentView = parentView
     }
 
     // ScrollView was not found
