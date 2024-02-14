@@ -12,8 +12,6 @@ type ArrowProps = {
   theme: KeyboardToolbarTheme;
 };
 
-// TODO: maxFontSizeMultiplier={1.3}
-// TODO: handle bold text
 const ArrowComponent: React.FC<ArrowProps> = ({ type, disabled, theme }) => {
   const colorScheme = useColorScheme();
 

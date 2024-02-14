@@ -1,4 +1,4 @@
-import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import BottomSheet from "@gorhom/bottom-sheet";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Button, Switch, Text, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
@@ -13,10 +13,10 @@ import type { StackScreenProps } from "@react-navigation/stack";
 type Props = StackScreenProps<ExamplesStackParamList>;
 
 export default function AwareScrollView({ navigation }: Props) {
-  const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+  const bottomSheetModalRef = useRef<BottomSheet>(null);
 
   const handlePresentModalPress = useCallback(() => {
-    bottomSheetModalRef.current?.present();
+    bottomSheetModalRef.current?.expand();
   }, []);
 
   const [disableScrollOnKeyboardHide, setDisableScrollOnKeyboardHide] =
@@ -55,11 +55,7 @@ export default function AwareScrollView({ navigation }: Props) {
           />
         ))}
       </KeyboardAwareScrollView>
-      <BottomSheetModal
-        snapPoints={["40%"]}
-        ref={bottomSheetModalRef}
-        index={0}
-      >
+      <BottomSheet snapPoints={["40%"]} ref={bottomSheetModalRef} index={-1}>
         <Button
           testID="bottom_sheet_close_modal"
           title="Close modal"
@@ -85,7 +81,7 @@ export default function AwareScrollView({ navigation }: Props) {
             }}
           />
         </View>
-      </BottomSheetModal>
+      </BottomSheet>
     </>
   );
 }

@@ -20,11 +20,11 @@ export type KeyboardToolbarTheme = {
 export const colors: KeyboardToolbarTheme = {
   light: {
     primary: Platform.select<ColorValue>({
-      ios: PlatformColor("link"), // "#007aff"
+      ios: PlatformColor("link"),
       default: "#2c2c2c",
     }),
     disabled: Platform.select<ColorValue>({
-      ios: PlatformColor("systemGray4"), // "#d1d4d9"
+      ios: PlatformColor("systemGray4"),
       default: "#B0BEC5",
     }),
     background: Platform.select({
@@ -35,11 +35,11 @@ export const colors: KeyboardToolbarTheme = {
   },
   dark: {
     primary: Platform.select<ColorValue>({
-      ios: PlatformColor("label"), // "#fafafa"
+      ios: PlatformColor("label"),
       default: "#fafafa",
     }),
     disabled: Platform.select<ColorValue>({
-      ios: PlatformColor("systemGray"), // "#929292"
+      ios: PlatformColor("systemGray"),
       default: "#707070",
     }),
     background: Platform.select({

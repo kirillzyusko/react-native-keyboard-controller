@@ -32,8 +32,6 @@ const TEST_ID_KEYBOARD_TOOLBAR_DONE = `${TEST_ID_KEYBOARD_TOOLBAR}.done`;
 const KEYBOARD_TOOLBAR_HEIGHT = 42;
 const offset = { closed: KEYBOARD_TOOLBAR_HEIGHT };
 
-// TODO: accessibility
-
 const dismissKeyboard = () => KeyboardController.dismiss();
 const goToNextField = () => KeyboardController.setFocusTo("next");
 const goToPrevField = () => KeyboardController.setFocusTo("prev");
