@@ -19,14 +19,14 @@
 - [x] unit tests for Android
 - [x] an ability to customize text/arrow elements
 - [x] customization
+- [x] apply scale to arrows to check whether there is any missing pixels between two lines/incorrect overlap
 - [-] set focus to custom input (date picker) - how it should be done? Test on iOS?
 - [-] improve accessibility (arrows should react on bold/fontSize changes)
-- [ ] unit tests for iOS
+- [-] unit tests for iOS
 - [ ] last input disabled
 - [ ] more effective way for gathering all inputs on screen (now it finds a lot of duplicates)
 - [ ] arrow + ripple effect - incorrect positioning
 - [ ] iOS -> background should be transparent/blurred?
-- [ ] apply scale to arrows to check whether there is any missing pixels between two lines/incorrect overlap
 - [ ] customize a11y labels and hints
 
 Major problems (for opening PR):

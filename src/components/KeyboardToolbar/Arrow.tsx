@@ -41,8 +41,9 @@ const ArrowComponent: React.FC<ArrowProps> = ({ type, disabled, theme }) => {
 };
 
 const arrowLine: ViewStyle = {
-  width: 12,
+  width: 13,
   height: 2,
+  borderRadius: 1,
 };
 const arrowUpContainer: ViewStyle = {
   marginHorizontal: 5,
@@ -67,11 +68,12 @@ const styles = StyleSheet.create({
   arrowLeftLine: {
     ...arrowLine,
     transform: [{ rotate: "-45deg" }],
+    left: -0.5,
   },
   arrowRightLine: {
     ...arrowLine,
     transform: [{ rotate: "45deg" }],
-    left: -4,
+    left: -5.5,
   },
 });
 
