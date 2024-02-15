@@ -105,8 +105,7 @@ public class KeyboardMovementObserver: NSObject {
     change: [NSKeyValueChangeKey: Any]?,
     context _: UnsafeMutableRawPointer?
   ) {
-    // swiftlint:disable:next force_cast
-    if keyPath == "center", object as! NSObject == _keyboardView! {
+    if keyPath == "center", object as? NSObject == _keyboardView {
       // if we are currently animating keyboard -> we need to ignore values from KVO
       if displayLink != nil {
         return
@@ -117,8 +116,10 @@ public class KeyboardMovementObserver: NSObject {
         return
       }
 
-      // swiftlint:disable:next force_cast
-      let keyboardFrameY = (change?[.newKey] as! NSValue).cgPointValue.y
+      guard let changeValue = change?[.newKey] as? NSValue else {
+        return
+      }
+      let keyboardFrameY = changeValue.cgPointValue.y
       let keyboardWindowH = keyboardView?.window?.bounds.size.height ?? 0
       let keyboardPosition = keyboardWindowH - keyboardFrameY
       let position = CGFloat.interpolate(
