@@ -143,17 +143,14 @@ const KeyboardAwareScrollView = forwardRef<
         // TODO: no back transitions (fixed by `scrollPosition.value === position.value`) <- because input get `null`? If yes, then we should use more reliable way of detecting last focused input?
         // TODO: check Fabric (Android)
         // TODO: check different TextInputs (multiline)
-        if (
-          // input belongs to ScrollView
-          input.value?.parentScrollViewTarget !== scrollViewTarget.value &&
-          // view was not scrolled (keyboard back transition)
-          scrollPosition.value === position.value
-        ) {
+        // input belongs to ScrollView
+        if (layout.value?.parentScrollViewTarget !== scrollViewTarget.value) {
           console.log(
             121212,
             scrollPosition.value,
             position.value,
             input.value,
+            layout.value,
             scrollViewTarget.value,
           );
           return 0;

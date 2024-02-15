@@ -37,4 +37,8 @@ export const styles = StyleSheet.create({
     color: "black",
     paddingRight: 12,
   },
+  inputInFooter: {
+    width: 200,
+    backgroundColor: "yellow",
+  },
 });
