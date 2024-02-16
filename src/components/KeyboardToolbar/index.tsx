@@ -17,7 +17,7 @@ import type { KeyboardToolbarTheme } from "./colors";
 import type { ReactNode } from "react";
 
 export type KeyboardToolbarProps = {
-  content: JSX.Element | null;
+  content?: JSX.Element | null;
   theme?: KeyboardToolbarTheme;
   doneText?: ReactNode;
   button?: typeof Button;
