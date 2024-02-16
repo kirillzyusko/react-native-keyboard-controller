@@ -125,8 +125,151 @@ Don't forget that you need to specify colors for **both** `dark` and `light` the
 ## Example
 
 ```tsx
+import React, { useCallback, useState } from "react";
+import { StyleSheet, Text, TextInput as TextInputRN, View } from "react-native";
+import {
+  KeyboardAwareScrollView,
+  KeyboardToolbar,
+} from "react-native-keyboard-controller";
 
+import type {
+  NativeSyntheticEvent,
+  TextInputFocusEventData,
+  TextInputProps,
+} from "react-native";
+
+export default function ToolbarExample() {
+  return (
+    <>
+      <KeyboardAwareScrollView bottomOffset={35} style={scrollViewStyles}>
+        <TextInput placeholder="Your name" title="Name" />
+        <TextInput placeholder="Your surname" title="Surname" />
+        <TextInput
+          placeholder="example@gmail.com"
+          title="Email"
+          editable={false}
+        />
+        <TextInput
+          placeholder="Tell us funny facts about you"
+          title="About you"
+          editable={false}
+        />
+        <View style={styles.row}>
+          <View style={styles.birthday}>
+            <TextInput placeholder="DD" title="Day" />
+          </View>
+          <View style={[styles.birthday, styles.withPadding]}>
+            <TextInput placeholder="MM" title="Month" />
+          </View>
+          <View style={styles.birthday}>
+            <TextInput placeholder="YYYY" title="Year" />
+          </View>
+        </View>
+        <TextInput placeholder="Country" title="Country" />
+        <TextInput placeholder="Region of the city" title="Region" />
+        <TextInput placeholder="City where you currently live" title="City" />
+        <TextInput placeholder="Street name" title="Street" />
+        <TextInput placeholder="House number" title="House" />
+        <TextInput placeholder="Flat number" title="Flat" />
+      </KeyboardAwareScrollView>
+      <KeyboardToolbar />
+    </>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: "white",
+  },
+  row: {
+    flexDirection: "row",
+  },
+  birthday: {
+    flex: 1 / 3,
+  },
+  withPadding: {
+    paddingHorizontal: 16,
+  },
+});
+const scrollViewStyles = [styles.withPadding, styles.container];
+
+type CustomTextInputProps = {
+  title?: string;
+} & TextInputProps;
+
+const TextInput = (props: CustomTextInputProps) => {
+  const { title, ...rest } = props;
+  const [isFocused, setFocused] = useState(false);
+
+  const onFocus = useCallback(
+    (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
+      setFocused(true);
+      props.onFocus?.(e);
+    },
+    [],
+  );
+
+  const onBlur = useCallback(
+    (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
+      setFocused(false);
+      props.onBlur?.(e);
+    },
+    [],
+  );
+
+  return (
+    <>
+      {!!title && <Text style={textInputStyles.title}>{title}</Text>}
+      <TextInputRN
+        placeholderTextColor="#6c6c6c"
+        style={[
+          textInputStyles.container,
+          rest.editable === false && textInputStyles.disabled,
+          isFocused && textInputStyles.focused,
+        ]}
+        multiline
+        numberOfLines={2}
+        testID={rest.placeholder}
+        {...rest}
+        placeholder={`${rest.placeholder}`}
+        onFocus={onFocus}
+        onBlur={onBlur}
+      />
+    </>
+  );
+};
+
+const textInputStyles = StyleSheet.create({
+  title: {
+    marginBottom: 6,
+    marginLeft: 3,
+    color: "black",
+    fontSize: 16,
+  },
+  container: {
+    width: "100%",
+    minHeight: 50,
+    maxHeight: 200,
+    marginBottom: 50,
+    borderColor: "black",
+    borderWidth: 2,
+    marginRight: 160,
+    borderRadius: 10,
+    color: "black",
+    paddingHorizontal: 12,
+  },
+  disabled: {
+    opacity: 0.5,
+  },
+  focused: {
+    borderColor: "#20AAFF",
+  },
+});
 ```
+
+:::info More comprehensive usage
+For more comprehensive usage that covers more complex interactions please check [example](https://github.com/kirillzyusko/react-native-keyboard-controller/tree/main/example) app.
+:::
 
 ## Limitations
 
