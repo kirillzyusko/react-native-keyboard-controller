@@ -36,6 +36,10 @@ export const KeyboardEvents: KeyboardEventsModule = {
   addListener: (name, cb) =>
     eventEmitter.addListener(KEYBOARD_CONTROLLER_NAMESPACE + name, cb),
 };
+/**
+ * This API is not documented, it's for internal usage only (for now), and is a subject to potential breaking changes in future.
+ * Use it with cautious.
+ */
 export const FocusedInputEvents: FocusedInputEventsModule = {
   addListener: (name, cb) =>
     eventEmitter.addListener(KEYBOARD_CONTROLLER_NAMESPACE + name, cb),
