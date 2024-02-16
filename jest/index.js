@@ -14,6 +14,7 @@ const focusedInput = {
   input: {
     value: {
       target: 1,
+      parentScrollViewTarget: -1,
       layout: {
         x: 0,
         y: 0,
