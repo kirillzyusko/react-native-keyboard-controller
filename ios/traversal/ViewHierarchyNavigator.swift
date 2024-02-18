@@ -26,6 +26,39 @@ public class ViewHierarchyNavigator: NSObject {
     }
   }
 
+  public static func getAllInputFields() -> [TextInput] {
+    var textInputs = [TextInput]()
+
+    guard let rootView = UIApplication.shared.keyWindow?.rootViewController?.view else {
+      return []
+    }
+
+    // Helper function to recursively search for TextInput views
+    func findTextInputs(in view: UIView?) {
+      guard let view = view else { return }
+
+      if let textInput = isValidTextInput(view) {
+        textInputs.append(textInput)
+      } else {
+        for subview in view.subviews {
+          findTextInputs(in: subview)
+        }
+      }
+    }
+
+    findTextInputs(in: rootView)
+
+    return textInputs
+  }
+
+  public static func getCurrentFocusedInputIndex(allInputFields: [TextInput], currentFocus: UIResponder?) -> Int? {
+    if let currentIndex = allInputFields.firstIndex(where: { $0 as? UIView == currentFocus }) {
+      return currentIndex
+    }
+
+    return nil
+  }
+
   private static func findTextInputInDirection(currentFocus: UIView, direction: String) -> TextInput? {
     // Find the parent view group
     guard let parentViewGroup = currentFocus.superview else {
@@ -84,39 +117,6 @@ public class ViewHierarchyNavigator: NSObject {
 
     if let textView = view as? UITextView, textView.isEditable {
       return textView
-    }
-
-    return nil
-  }
-
-  public static func getAllInputFields() -> [TextInput] {
-    var textInputs = [TextInput]()
-
-    guard let rootView = UIApplication.shared.keyWindow?.rootViewController?.view else {
-      return []
-    }
-
-    // Helper function to recursively search for TextInput views
-    func findTextInputs(in view: UIView?) {
-      guard let view = view else { return }
-
-      if let textInput = isValidTextInput(view) {
-        textInputs.append(textInput)
-      } else {
-        for subview in view.subviews {
-          findTextInputs(in: subview)
-        }
-      }
-    }
-
-    findTextInputs(in: rootView)
-
-    return textInputs
-  }
-
-  public static func getCurrentFocusedInputIndex(allInputFields: [TextInput], currentFocus: UIResponder?) -> Int? {
-    if let currentIndex = allInputFields.firstIndex(where: { $0 as? UIView == currentFocus }) {
-      return currentIndex
     }
 
     return nil
