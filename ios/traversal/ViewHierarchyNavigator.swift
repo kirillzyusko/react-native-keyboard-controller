@@ -90,14 +90,28 @@ public class ViewHierarchyNavigator: NSObject {
   }
 
   public static func getAllInputFields() -> [TextInput] {
+    var textInputs = [TextInput]()
+
     guard let rootView = UIApplication.shared.keyWindow?.rootViewController?.view else {
       return []
     }
 
-    var inputFields: [TextInput] = []
-    findAllTextInputsInHierarchy(view: rootView, inputFields: &inputFields)
+    // Helper function to recursively search for TextInput views
+    func findTextInputs(in view: UIView?) {
+      guard let view = view else { return }
 
-    return inputFields
+      if let textInput = isValidTextInput(view) {
+        textInputs.append(textInput)
+      } else {
+        for subview in view.subviews {
+          findTextInputs(in: subview)
+        }
+      }
+    }
+
+    findTextInputs(in: rootView)
+
+    return textInputs
   }
 
   public static func getCurrentFocusedInputIndex(allInputFields: [TextInput], currentFocus: UIResponder?) -> Int? {
@@ -106,17 +120,5 @@ public class ViewHierarchyNavigator: NSObject {
     }
 
     return nil
-  }
-
-  private static func findAllTextInputsInHierarchy(view: UIView, inputFields: inout [TextInput]) {
-    for subview in view.subviews {
-      if let textField = findTextInputInHierarchy(view: subview, direction: "next") {
-        // Check if the textField is not already in the array
-        if !inputFields.contains(where: { $0 as? UIView == textField as? UIView }) {
-          inputFields.append(textField)
-        }
-      }
-      findAllTextInputsInHierarchy(view: subview, inputFields: &inputFields)
-    }
   }
 }

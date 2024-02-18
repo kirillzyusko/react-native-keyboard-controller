@@ -24,8 +24,8 @@ object ViewHierarchyNavigator {
 
     // Helper function to recursively search for EditText views
     fun findEditTexts(view: View?) {
-      if (view is EditText) {
-        editTexts.add(view)
+      if (isValidTextInput(view)) {
+        editTexts.add(view as EditText)
       } else if (view is ViewGroup) {
         for (i in 0 until view.childCount) {
           findEditTexts(view.getChildAt(i))
@@ -85,13 +85,17 @@ object ViewHierarchyNavigator {
   private fun findEditTextOrGoDeeper(child: View, direction: Int): EditText? {
     var result: EditText? = null
 
-    if (child is EditText && child.isEnabled) {
-      result = child
+    if (isValidTextInput(child)) {
+      result = child as EditText
     } else if (child is ViewGroup) {
       // If the child is a ViewGroup, check its children recursively
       result = findEditTextInHierarchy(child, direction)
     }
 
     return result
+  }
+
+  private fun isValidTextInput(view: View?): Boolean {
+    return view is EditText && view.isEnabled
   }
 }

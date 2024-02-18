@@ -20,13 +20,13 @@
 - [x] an ability to customize text/arrow elements
 - [x] customization
 - [x] apply scale to arrows to check whether there is any missing pixels between two lines/incorrect overlap
+- [x] more effective way for gathering all inputs on screen (now it finds a lot of duplicates)
+- [x] last input disabled
 - [-] set focus to custom input (date picker) - how it should be done? Test on iOS? <- we already have custom contacts input
 - [-] improve accessibility (arrows should react on bold/fontSize changes) <- requires custom font
 - [-] unit tests for iOS <- hard to setup in RN project since RN is not found
 - [-] iOS -> background should be transparent/blurred?
-- [ ] last input disabled
-- [ ] more effective way for gathering all inputs on screen (now it finds a lot of duplicates)
-- [ ] arrow + ripple effect - incorrect positioning
+- [-] arrow + ripple effect - incorrect positioning <- will be fixed later
 - [ ] customize a11y labels and hints
 
 Major problems (for opening PR):

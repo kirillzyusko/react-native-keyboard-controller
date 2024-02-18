@@ -72,7 +72,8 @@ class ViewHierarchyNavigatorTest {
   fun `getAllInputFields returns all EditTexts in ViewGroup`() {
     val editTexts = ViewHierarchyNavigator.getAllInputFields(layout)
 
-    assertTrue(editTexts.size == 13)
+    // 13 (all) - 2 (disabled)
+    assertTrue(editTexts.size == 11)
   }
 
   @Test
