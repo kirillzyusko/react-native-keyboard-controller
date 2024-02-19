@@ -17,10 +17,15 @@ import type { KeyboardToolbarTheme } from "./colors";
 import type { ReactNode } from "react";
 
 export type KeyboardToolbarProps = {
+  /** An element that is shown in the middle of the toolbar. */
   content?: JSX.Element | null;
+  /** A set of dark/light colors consumed by toolbar component. */
   theme?: KeyboardToolbarTheme;
+  /** Custom text for done button. */
   doneText?: ReactNode;
+  /** Custom touchable component for toolbar (used for prev/next/done buttons). */
   button?: typeof Button;
+  /** Custom icon component used to display next/prev buttons. */
   icon?: typeof Arrow;
 };
 const TEST_ID_KEYBOARD_TOOLBAR = "keyboard.toolbar";
