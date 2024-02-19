@@ -27,7 +27,7 @@
 - [-] unit tests for iOS <- hard to setup in RN project since RN is not found
 - [-] iOS -> background should be transparent/blurred?
 - [-] arrow + ripple effect - incorrect positioning <- will be fixed later
-- [ ] customize a11y labels and hints
+- [-] customize a11y labels and hints <- later
 
 Major problems (for opening PR):
 
