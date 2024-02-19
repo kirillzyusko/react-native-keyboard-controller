@@ -47,6 +47,7 @@ const mock = {
     setInputMode: jest.fn(),
     setDefaultMode: jest.fn(),
     dismiss: jest.fn(),
+    setFocusTo: jest.fn(),
   },
   AndroidSoftInputModes: {
     SOFT_INPUT_ADJUST_NOTHING: 48,
@@ -76,6 +77,7 @@ const mock = {
   KeyboardStickyView: View,
   KeyboardAvoidingView: View,
   KeyboardAwareScrollView: ScrollView,
+  KeyboardToolbar: View,
 };
 
 module.exports = mock;

@@ -70,18 +70,14 @@ const checkIsScreenShotMatch = (
   return { matched, percentDiff, diff };
 };
 
-async function expectBitmapsToBeEqual(
+function verifyBitmapsToBeEqual(
+  tempImagePath: string,
   screenName: string,
   acceptableDiffPercent = 0.1,
-): Promise<void> {
+): void {
   const platform = device.getPlatform();
   const deviceName = parseDeviceName(device.name);
   const SCREENS_DIR = `kit/assets/${platform}/${deviceName}`;
-
-  // better to wait 1s to be sure all scroll indicators etc are hidden
-  // and then take a screenshot and compare it (because it's expensive operation)
-  await delay(1000);
-  const tempImagePath = await device.takeScreenshot(screenName);
 
   const expectedImagePath = `${SCREENS_DIR}/${screenName}.png`;
   const expectedBitmapBuffer = fs.readFileSync(tempImagePath);
@@ -120,4 +116,26 @@ async function expectBitmapsToBeEqual(
   }
 }
 
-export { expectBitmapsToBeEqual };
+async function expectElementBitmapsToBeEqual(
+  elementId: string,
+  bitmapName: string,
+  acceptableDiffPercent = 0.1,
+): Promise<void> {
+  const imagePath = await element(by.id(elementId)).takeScreenshot(bitmapName);
+
+  verifyBitmapsToBeEqual(imagePath, bitmapName, acceptableDiffPercent);
+}
+
+async function expectBitmapsToBeEqual(
+  screenName: string,
+  acceptableDiffPercent = 0.1,
+): Promise<void> {
+  // better to wait 1s to be sure all scroll indicators etc are hidden
+  // and then take a screenshot and compare it (because it's expensive operation)
+  await delay(1000);
+  const tempImagePath = await device.takeScreenshot(screenName);
+
+  verifyBitmapsToBeEqual(tempImagePath, screenName, acceptableDiffPercent);
+}
+
+export { expectBitmapsToBeEqual, expectElementBitmapsToBeEqual };

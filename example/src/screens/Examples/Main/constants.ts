@@ -99,4 +99,10 @@ export const examples: Example[] = [
     info: ScreenNames.TEXT_INPUT_MASK,
     icons: "🎭",
   },
+  {
+    title: "Toolbar",
+    testID: "toolbar",
+    info: ScreenNames.TOOLBAR,
+    icons: "🔥",
+  },
 ];

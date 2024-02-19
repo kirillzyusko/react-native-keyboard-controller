@@ -6,5 +6,9 @@ line_length:
   warning: 120
   ignores_urls: true
 
+identifier_name:
+  excluded:
+    - i # allow `i` variable in cycles
+
 excluded:
   - Pods

@@ -49,3 +49,15 @@ The equivalent method from `react-native` relies on specific internal components
 
 In contrast, the described method enables keyboard dismissal for any focused input, extending functionality beyond the limitations of the default implementation.
 :::
+
+### `setFocusTo`
+
+This method sets focus to the selected field. Possible values:
+
+- `prev` - set focus to the previous field;
+- `current` - set focus to the last focused field (i. e. if keyboard was closed you can restore focus);
+- `next` - set focus to the next field.
+
+```ts
+setFocusTo("next");
+```

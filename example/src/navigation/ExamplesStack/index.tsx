@@ -17,6 +17,7 @@ import ReanimatedChat from "../../screens/Examples/ReanimatedChat";
 import ReanimatedChatFlatlist from "../../screens/Examples/ReanimatedChatFlatlist";
 import StatusBar from "../../screens/Examples/StatusBar";
 import TextInputMask from "../../screens/Examples/TextInputMask";
+import ToolbarExample from "../../screens/Examples/Toolbar";
 import NativeStack from "../NestedStack";
 
 export type ExamplesStackParamList = {
@@ -36,6 +37,7 @@ export type ExamplesStackParamList = {
   [ScreenNames.ENABLED_DISABLED]: undefined;
   [ScreenNames.CLOSE]: undefined;
   [ScreenNames.TEXT_INPUT_MASK]: undefined;
+  [ScreenNames.TOOLBAR]: undefined;
 };
 
 const Stack = createStackNavigator<ExamplesStackParamList>();
@@ -89,6 +91,9 @@ const options = {
   },
   [ScreenNames.TEXT_INPUT_MASK]: {
     title: "Text input mask",
+  },
+  [ScreenNames.TOOLBAR]: {
+    title: "Toolbar",
   },
 };
 
@@ -173,6 +178,11 @@ const ExamplesStack = () => (
       name={ScreenNames.TEXT_INPUT_MASK}
       component={TextInputMask}
       options={options[ScreenNames.TEXT_INPUT_MASK]}
+    />
+    <Stack.Screen
+      name={ScreenNames.TOOLBAR}
+      component={ToolbarExample}
+      options={options[ScreenNames.TOOLBAR]}
     />
   </Stack.Navigator>
 );

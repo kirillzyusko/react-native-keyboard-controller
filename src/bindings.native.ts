@@ -1,6 +1,7 @@
 import { NativeEventEmitter, Platform } from "react-native";
 
 import type {
+  FocusedInputEventsModule,
   KeyboardControllerModule,
   KeyboardControllerProps,
   KeyboardEventsModule,
@@ -28,11 +29,20 @@ export const KeyboardController = (
       )
 ) as KeyboardControllerModule;
 
+const KEYBOARD_CONTROLLER_NAMESPACE = "KeyboardController::";
 const eventEmitter = new NativeEventEmitter(KeyboardController);
 
 export const KeyboardEvents: KeyboardEventsModule = {
   addListener: (name, cb) =>
-    eventEmitter.addListener("KeyboardController::" + name, cb),
+    eventEmitter.addListener(KEYBOARD_CONTROLLER_NAMESPACE + name, cb),
+};
+/**
+ * This API is not documented, it's for internal usage only (for now), and is a subject to potential breaking changes in future.
+ * Use it with cautious.
+ */
+export const FocusedInputEvents: FocusedInputEventsModule = {
+  addListener: (name, cb) =>
+    eventEmitter.addListener(KEYBOARD_CONTROLLER_NAMESPACE + name, cb),
 };
 export const KeyboardControllerView: React.FC<KeyboardControllerProps> =
   require("./specs/KeyboardControllerViewNativeComponent").default;

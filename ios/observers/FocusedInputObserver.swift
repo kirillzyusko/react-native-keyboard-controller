@@ -26,6 +26,7 @@ public class FocusedInputObserver: NSObject {
   // class members
   var onLayoutChangedHandler: (NSDictionary) -> Void
   var onTextChangedHandler: (String) -> Void
+  var onFocusDidSet: (NSDictionary) -> Void
   // state variables
   private var isMounted = false
   // input tracking
@@ -37,10 +38,12 @@ public class FocusedInputObserver: NSObject {
 
   @objc public init(
     onLayoutChangedHandler: @escaping (NSDictionary) -> Void,
-    onTextChangedHandler: @escaping (String) -> Void
+    onTextChangedHandler: @escaping (String) -> Void,
+    onFocusDidSet: @escaping (NSDictionary) -> Void
   ) {
     self.onLayoutChangedHandler = onLayoutChangedHandler
     self.onTextChangedHandler = onTextChangedHandler
+    self.onFocusDidSet = onFocusDidSet
   }
 
   @objc public func mount() {
@@ -72,9 +75,21 @@ public class FocusedInputObserver: NSObject {
 
   @objc func keyboardWillShow(_: Notification) {
     removeObservers()
-    currentInput = (UIResponder.current as? UIView)?.superview as UIView?
+    let responder = UIResponder.current as? UIView
+    currentInput = responder?.superview as UIView?
+
     setupObservers()
     syncUpLayout()
+
+    FocusedInputHolder.shared.set(responder as? TextInput)
+
+    let allInputFields = ViewHierarchyNavigator.getAllInputFields()
+    let currentIndex = allInputFields.firstIndex(where: { $0 as? UIView == responder }) ?? -1
+
+    onFocusDidSet([
+      "current": currentIndex,
+      "count": allInputFields.count,
+    ])
   }
 
   @objc func keyboardWillHide(_: Notification) {

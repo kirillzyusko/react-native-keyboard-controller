@@ -3,6 +3,7 @@ package com.reactnativekeyboardcontroller.listeners
 import android.text.TextWatcher
 import android.view.View.OnLayoutChangeListener
 import android.view.ViewTreeObserver.OnGlobalFocusChangeListener
+import com.facebook.react.bridge.Arguments
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.UIManagerHelper
 import com.facebook.react.views.textinput.ReactEditText
@@ -13,7 +14,11 @@ import com.reactnativekeyboardcontroller.events.FocusedInputTextChangedEvent
 import com.reactnativekeyboardcontroller.extensions.addOnTextChangedListener
 import com.reactnativekeyboardcontroller.extensions.dispatchEvent
 import com.reactnativekeyboardcontroller.extensions.dp
+import com.reactnativekeyboardcontroller.extensions.emitEvent
+import com.reactnativekeyboardcontroller.extensions.rootView
 import com.reactnativekeyboardcontroller.extensions.screenLocation
+import com.reactnativekeyboardcontroller.traversal.FocusedInputHolder
+import com.reactnativekeyboardcontroller.traversal.ViewHierarchyNavigator
 
 val noFocusedInputEvent = FocusedInputLayoutChangedEventData(
   x = 0.0,
@@ -62,6 +67,18 @@ class FocusedInputObserver(val view: ReactViewGroup, private val context: Themed
       newFocus.addOnLayoutChangeListener(layoutListener)
       this.syncUpLayout()
       textWatcher = newFocus.addOnTextChangedListener(textListener)
+      FocusedInputHolder.set(newFocus)
+
+      val allInputFields = ViewHierarchyNavigator.getAllInputFields(context?.rootView)
+      val currentIndex = allInputFields.indexOf(newFocus)
+
+      context.emitEvent(
+        "KeyboardController::focusDidSet",
+        Arguments.createMap().apply {
+          putInt("current", currentIndex)
+          putInt("count", allInputFields.size)
+        },
+      )
     }
     // unfocused
     if (newFocus == null) {

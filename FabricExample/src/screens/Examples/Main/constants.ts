@@ -87,4 +87,10 @@ export const examples: Example[] = [
     info: ScreenNames.CLOSE,
     icons: "❌",
   },
+  {
+    title: "Toolbar",
+    testID: "toolbar",
+    info: ScreenNames.TOOLBAR,
+    icons: "🔥",
+  },
 ];

@@ -24,6 +24,7 @@ exports[`components rendering should render \`KeyboardAvoidingView\` 1`] = `
 exports[`components rendering should render \`KeyboardAwareScrollView\` 1`] = `
 <RCTScrollView
   bottomOffset={20}
+  disableScrollOnKeyboardHide={false}
   enabled={true}
   style={
     {
@@ -91,4 +92,10 @@ exports[`components rendering should render \`KeyboardStickyView\` 1`] = `
     }
   />
 </View>
+`;
+
+exports[`components rendering should render \`KeyboardToolbar\` 1`] = `
+<View
+  content={<EmptyView />}
+/>
 `;
