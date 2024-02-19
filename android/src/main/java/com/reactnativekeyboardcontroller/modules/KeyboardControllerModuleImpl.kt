@@ -32,7 +32,7 @@ class KeyboardControllerModuleImpl(private val mReactContext: ReactApplicationCo
 
   fun setFocusTo(direction: String) {
     if (direction == "current") {
-      FocusedInputHolder.requestFocus()
+      return FocusedInputHolder.requestFocus()
     }
 
     val activity = mReactContext.currentActivity

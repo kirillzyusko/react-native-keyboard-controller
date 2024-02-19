@@ -51,14 +51,6 @@ public class ViewHierarchyNavigator: NSObject {
     return textInputs
   }
 
-  public static func getCurrentFocusedInputIndex(allInputFields: [TextInput], currentFocus: UIResponder?) -> Int? {
-    if let currentIndex = allInputFields.firstIndex(where: { $0 as? UIView == currentFocus }) {
-      return currentIndex
-    }
-
-    return nil
-  }
-
   private static func findTextInputInDirection(currentFocus: UIView, direction: String) -> TextInput? {
     // Find the parent view group
     guard let parentViewGroup = currentFocus.superview else {

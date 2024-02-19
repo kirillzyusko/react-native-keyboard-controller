@@ -84,10 +84,7 @@ public class FocusedInputObserver: NSObject {
     FocusedInputHolder.shared.set(responder as? TextInput)
 
     let allInputFields = ViewHierarchyNavigator.getAllInputFields()
-    let currentIndex = ViewHierarchyNavigator.getCurrentFocusedInputIndex(
-      allInputFields: allInputFields,
-      currentFocus: responder
-    )
+    let currentIndex = allInputFields.firstIndex(where: { $0 as? UIView == responder }) ?? -1
 
     onFocusDidSet([
       "current": currentIndex,
