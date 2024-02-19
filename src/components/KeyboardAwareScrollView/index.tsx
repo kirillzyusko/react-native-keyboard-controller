@@ -18,7 +18,11 @@ import {
 import { useSmoothKeyboardHandler } from "./useSmoothKeyboardHandler";
 import { debounce } from "./utils";
 
-import type { ScrollView, ScrollViewProps } from "react-native";
+import type {
+  LayoutChangeEvent,
+  ScrollView,
+  ScrollViewProps,
+} from "react-native";
 import type { FocusedInputLayoutChangedEvent } from "react-native-keyboard-controller";
 
 type KeyboardAwareScrollViewProps = {
@@ -75,6 +79,7 @@ const KeyboardAwareScrollView = forwardRef<
   (
     {
       children,
+      onLayout,
       bottomOffset = 0,
       disableScrollOnKeyboardHide = false,
       enabled = true,
@@ -83,6 +88,7 @@ const KeyboardAwareScrollView = forwardRef<
     ref,
   ) => {
     const scrollViewAnimatedRef = useAnimatedRef<Reanimated.ScrollView>();
+    const scrollViewTarget = useSharedValue<number | null>(null);
     const scrollPosition = useSharedValue(0);
     const position = useSharedValue(0);
     const currentKeyboardFrameHeight = useSharedValue(0);
@@ -114,6 +120,14 @@ const KeyboardAwareScrollView = forwardRef<
 
       scrollViewAnimatedRef(assignedRef);
     }, []);
+    const onScrollViewLayout = useCallback(
+      (e: LayoutChangeEvent & { nativeEvent: { target: number } }) => {
+        scrollViewTarget.value = e.nativeEvent.target;
+
+        onLayout?.(e);
+      },
+      [onLayout],
+    );
 
     /**
      * Function that will scroll a ScrollView as keyboard gets moving
@@ -123,6 +137,11 @@ const KeyboardAwareScrollView = forwardRef<
         "worklet";
 
         if (!enabled) {
+          return 0;
+        }
+
+        // input belongs to ScrollView
+        if (layout.value?.parentScrollViewTarget !== scrollViewTarget.value) {
           return 0;
         }
 
@@ -300,7 +319,8 @@ const KeyboardAwareScrollView = forwardRef<
       <Reanimated.ScrollView
         ref={onRef}
         {...rest}
-        // @ts-expect-error `onScrollReanimated` is a fake prop needed for reanimated to intercept scroll events
+        // @ts-expect-error https://github.com/facebook/react-native/pull/42785
+        onLayout={onScrollViewLayout}
         onScrollReanimated={onScroll}
         scrollEventThrottle={16}
       >

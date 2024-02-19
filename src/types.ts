@@ -13,6 +13,7 @@ export type NativeEvent = {
 };
 export type FocusedInputLayoutChangedEvent = {
   target: number;
+  parentScrollViewTarget: number;
   layout: {
     x: number;
     y: number;

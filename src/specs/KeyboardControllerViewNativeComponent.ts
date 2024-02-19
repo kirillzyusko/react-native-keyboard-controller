@@ -17,6 +17,7 @@ type KeyboardMoveEvent = Readonly<{
 
 type FocusedInputLayoutChangedEvent = Readonly<{
   target: Int32;
+  parentScrollViewTarget: Int32;
   layout: {
     x: Double;
     y: Double;

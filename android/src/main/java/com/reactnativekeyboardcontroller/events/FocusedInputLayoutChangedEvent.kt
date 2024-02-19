@@ -12,6 +12,7 @@ data class FocusedInputLayoutChangedEventData(
   val absoluteX: Double,
   val absoluteY: Double,
   val target: Int,
+  val parentScrollViewTarget: Int,
 )
 
 class FocusedInputLayoutChangedEvent(
@@ -26,6 +27,7 @@ class FocusedInputLayoutChangedEvent(
 
   override fun getEventData(): WritableMap? = Arguments.createMap().apply {
     putInt("target", event.target)
+    putInt("parentScrollViewTarget", event.parentScrollViewTarget)
     putMap(
       "layout",
       Arguments.createMap().apply {

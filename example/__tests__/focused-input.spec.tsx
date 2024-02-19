@@ -35,6 +35,7 @@ describe("`useReanimatedFocusedInput` mocking", () => {
       input: {
         value: {
           target: 2,
+          parentScrollViewTarget: -1,
           layout: {
             x: 10,
             y: 100,

@@ -11,6 +11,7 @@ import UIKit
 
 let noFocusedInputEvent: [String: Any] = [
   "target": -1,
+  "parentScrollViewTarget": -1,
   "layout": [
     "absoluteX": 0,
     "absoluteY": 0,
@@ -105,6 +106,7 @@ public class FocusedInputObserver: NSObject {
 
     let data: [String: Any] = [
       "target": responder.reactViewTag,
+      "parentScrollViewTarget": responder.parentScrollViewTarget,
       "layout": [
         "absoluteX": globalFrame?.origin.x,
         "absoluteY": globalFrame?.origin.y,
