@@ -164,8 +164,7 @@ public class FocusedInputObserver: NSObject {
     change _: [NSKeyValueChangeKey: Any]?,
     context _: UnsafeMutableRawPointer?
   ) {
-    // swiftlint:disable:next force_cast
-    if keyPath == "center", object as! NSObject == currentInput! {
+    if keyPath == "center", object as? NSObject == currentInput {
       // we need to read layout in next frame, otherwise we'll get old
       // layout values
       DispatchQueue.main.async {
