@@ -32,10 +32,10 @@ import toolbar from "./toolbar.lottie.json";
 
 ## Features
 
-- Fully customizable UI 🎨: Tailor the appearance of the toolbar to match your app's design.
-- Supports dark/light theme 🌓: Adapts to the theme settings of the user's device for a seamless experience.
-- Extended accessibility support 🔍: Ensures that all users, including those with disabilities, can navigate through inputs effectively.
-- Full control over the buttons behavior 🔧: Customize the actions triggered by the next, previous, and done buttons according to your needs.
+- **Fully customizable UI** 🎨: Tailor the appearance of the toolbar to match your app's design.
+- **Supports dark/light theme** 🌓: Adapts to the theme settings of the user's device for a seamless experience.
+- **Extended accessibility support** 🔍: Ensures that all users, including those with disabilities, can navigate through inputs effectively.
+- **Full control over the buttons behavior** 🔧: Customize the actions triggered by the next, previous, and done buttons according to your needs.
 
 ## Props
 
@@ -109,13 +109,13 @@ Prop allowing you to specify the brand colors of your application for `KeyboardT
 ```ts
 import { DefaultKeyboardToolbarTheme } from "react-native-keyboard-controller";
 
-const theme={{
+const theme = {
   ...DefaultKeyboardToolbarTheme,
   dark: {
     ...DefaultKeyboardToolbarTheme.dark,
     primary: "#FFCC00",
   },
-}}
+};
 ```
 
 :::info dark/light theme support
