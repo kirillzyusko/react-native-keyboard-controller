@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[2136],{9720:e=>{e.exports=JSON.parse('{"label":"sticky view","permalink":"/react-native-keyboard-controller/pr-preview/pr-365/blog/tags/sticky-view","allTagsPath":"/react-native-keyboard-controller/pr-preview/pr-365/blog/tags","count":1}')}}]);
