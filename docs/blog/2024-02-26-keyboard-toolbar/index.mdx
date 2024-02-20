@@ -40,7 +40,13 @@ While`react-native-keyboard-manager` offers toolbar component that is powered by
 
 - missing Android support;
 - lack of full customization (you can not render custom content/buttons/icons, perform custom actions on clicks, etc.);
--
+- issues when you need to integrate custom input components (date pickers, bottom sheets, etc.).
+
+Taking all these points into consideration I've decided to create a **new** component that will overcome all these limitations, but at the same time will have a simple API so that developers can easily work with it.
+
+I was inspired by `IQKeyboardManager` functionality and how easily it can be integrated into iOS projects, so I decided to replicate their algorithms for view traversal on both Android and iOS.
+
+For sure current implementation is covering only basic use cases, but I'm planning to extend the functionality to cover more and more various edge cases in the future. 😎
 
 ## The simple API behind a new component
 
