@@ -1,0 +1,76 @@
+---
+slug: keyboard-toolbar
+title: New KeyboardToolbar component 😍
+authors: [kirill]
+tags: [react-native, keyboard, keyboard toolbar]
+keywords:
+  [
+    react-native-keyboard-controller,
+    keyboard,
+    keyboard toolbar,
+    keyboard next button,
+    keyboard previous button,
+    keyboard done button,
+  ]
+---
+
+I'm glad to announce a groundbreaking feature that's set to transform the way users interact with keyboards in your app: the `KeyboardToolbar`. This innovative tool is not just an enhancement; it's a revolution in typing efficiency and user satisfaction. 😎
+
+import Lottie from "lottie-react";
+import lottie from "../../docs/api/components/keyboard-toolbar/toolbar.lottie.json";
+
+<div style={{ display: "flex", justifyContent: "center", marginBottom: 20 }}>
+  <Lottie
+    className="lottie"
+    animationData={lottie}
+    style={{ width: 400, height: 400 }}
+    loop
+  />
+</div>
+
+<!-- truncate -->
+
+## Why `KeyboardToolbar`?
+
+In the digital age, the keyboard is not just a tool; it's the gateway to communication, creativity, and connection. Recognizing this, we set out to redefine the keyboard experience, making it more intuitive, seamless, and, most importantly, tailored to your users needs. Enter `KeyboardToolbar` - a sleek, customizable toolbar that sticks to your keyboard like a faithful companion, ready to streamline your typing journey. 😍
+
+## Why I need another toolbar component if `react-native-keyboard-manager` already provides an implementation?
+
+While`react-native-keyboard-manager` offers toolbar component that is powered by `IQKeyboardManager` it still lack some features, such as:
+
+- missing Android support;
+- lack of full customization (you can not render custom content/buttons/icons, perform custom actions on clicks, etc.);
+-
+
+## The simple API behind a new component
+
+The UI of the new component is implemented using `react-native` primitives (thus allowing a great customization). But the functionality with moving focus to `next` and `previous` fields is implemented on a native side and is powered by a simple API:
+
+```ts
+import { KeyboardController } from "react-native-keyboard-controller";
+
+// this will move focus to the next TextInput
+KeyboardController.setFocusTo("next");
+// or if we want to set focus to previous field
+KeyboardController.setFocusTo("prev");
+```
+
+Last but not least - the new API allows you to restore a focus to last focused input 🤯. To achieve this you should use:
+
+```tsx
+import { KeyboardController } from "react-native-keyboard-controller";
+
+// if keyboard is closed - it'll restore a focus
+// if keyboard is open - it will not do anything
+KeyboardController.setFocusTo("current");
+```
+
+So as you can see for simple navigation to `next` and `previous` fields you don't need to create a complex solutions with array of `refs` in JS code - now it's powered by a new API of this library and allows you to delegate a control to the library and simplify your codebase 😎
+
+## Instead of summary
+
+As I roll out the `KeyboardToolbar`, I invite you to join me in this exciting journey. Elevate your app's user experience, redefine keyboard interaction, and watch as your users engage with your app in ways never imagined before. Stay tuned for more updates, and get ready to embrace the future of keyboard navigation.
+
+To start to use this feature install the latest `react-native-keyboard-controller` version `1.11.0` and add this component into your app. 😎 Also don't forget to check [example](https://github.com/kirillzyusko/react-native-keyboard-controller/tree/main/example) app to see how it's implemented there 👀
+
+Follow me on [Twitter](https://twitter.com/ziusko) and [GitHub](https://github.com/kirillzyusko) for updates. Thank you for your support! 😊
