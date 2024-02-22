@@ -10,6 +10,6 @@ import UIKit
 
 public extension UIView {
   var reactTag: NSNumber {
-    return self.tag as NSNumber
+    return tag as NSNumber
   }
 }
