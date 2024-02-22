@@ -18,6 +18,7 @@ Pod::Spec.new do |s|
   s.source       = { :git => "https://github.com/kirillzyusko/react-native-keyboard-controller.git", :tag => "#{s.version}" }
 
   s.source_files = "ios/**/*.{h,m,mm,swift}"
+  s.exclude_files = "ios/Tests/**"
   s.public_header_files = "ios/**/*.h"
 
   # This guard prevent to install the dependencies when we run `pod install` in the old architecture.
