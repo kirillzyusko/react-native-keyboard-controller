@@ -13,7 +13,7 @@ import Arrow from "./Arrow";
 import Button from "./Button";
 import { colors } from "./colors";
 
-import type { KeyboardToolbarTheme } from "./colors";
+import type { KeyboardToolbarTheme } from "./types";
 import type { ReactNode } from "react";
 
 export type KeyboardToolbarProps = {
