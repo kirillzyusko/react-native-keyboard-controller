@@ -3,7 +3,7 @@ import { Animated, StyleSheet, View } from "react-native";
 
 import useColorScheme from "../hooks/useColorScheme";
 
-import type { KeyboardToolbarTheme } from "./colors";
+import type { KeyboardToolbarTheme } from "./types";
 import type { ViewStyle } from "react-native";
 
 type ArrowProps = {

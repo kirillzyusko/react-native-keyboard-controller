@@ -8,7 +8,7 @@ import {
 
 import useColorScheme from "../hooks/useColorScheme";
 
-import type { KeyboardToolbarTheme } from "./colors";
+import type { KeyboardToolbarTheme } from "./types";
 import type { PropsWithChildren } from "react";
 import type { ViewStyle } from "react-native";
 
