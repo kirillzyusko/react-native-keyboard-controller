@@ -1,7 +1,7 @@
 package com.reactnativekeyboardcontroller.traversal
 
 import android.widget.EditText
-import com.reactnativekeyboardcontroller.extensions.requireFocus
+import com.reactnativekeyboardcontroller.extensions.focus
 import java.lang.ref.WeakReference
 
 object FocusedInputHolder {
@@ -11,11 +11,11 @@ object FocusedInputHolder {
     input = WeakReference(textInput)
   }
 
-  fun requestFocus() {
-    input?.get()?.requireFocus()
-  }
-
   fun get(): EditText? {
     return input?.get()
+  }
+
+  fun focus() {
+    input?.get()?.focus()
   }
 }

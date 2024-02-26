@@ -4,14 +4,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import com.facebook.react.bridge.UiThreadUtil
-import com.reactnativekeyboardcontroller.extensions.requireFocus
+import com.reactnativekeyboardcontroller.extensions.focus
 
 object ViewHierarchyNavigator {
   fun setFocusTo(direction: String, view: View) {
     val input = if (direction == "next") findNextEditText(view) else findPreviousEditText(view)
 
     UiThreadUtil.runOnUiThread {
-      input.requireFocus()
+      input.focus()
     }
   }
 

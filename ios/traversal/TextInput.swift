@@ -10,17 +10,17 @@ import Foundation
 import UIKit
 
 public protocol TextInput: AnyObject {
-  func requestFocus()
+  func focus()
 }
 
 extension UITextField: TextInput {
-  public func requestFocus() {
+  public func focus() {
     becomeFirstResponder()
   }
 }
 
 extension UITextView: TextInput {
-  public func requestFocus() {
+  public func focus() {
     becomeFirstResponder()
   }
 }

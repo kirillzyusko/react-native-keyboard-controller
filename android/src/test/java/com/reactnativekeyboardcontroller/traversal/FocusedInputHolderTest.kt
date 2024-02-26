@@ -3,8 +3,6 @@ package com.reactnativekeyboardcontroller.traversal
 import android.content.Context
 import android.widget.EditText
 import androidx.test.core.app.ApplicationProvider
-import com.facebook.react.views.textinput.ReactEditText
-import org.junit.Assert
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Test

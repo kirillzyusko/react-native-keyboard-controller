@@ -87,7 +87,7 @@ val EditText.parentScrollViewTarget: Int
     return -1
   }
 
-fun EditText?.requireFocus() {
+fun EditText?.focus() {
   if (this is ReactEditText) {
     this.requestFocusFromJS()
   } else {
