@@ -86,3 +86,11 @@ val EditText.parentScrollViewTarget: Int
     // ScrollView was not found
     return -1
   }
+
+fun EditText?.requireFocus() {
+  if (this is ReactEditText) {
+    this.requestFocusFromJS()
+  } else {
+    this?.requestFocus()
+  }
+}
