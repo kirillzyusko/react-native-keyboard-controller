@@ -4,6 +4,7 @@ import android.content.Context
 import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.test.core.app.ApplicationProvider
+import com.reactnativekeyboardcontroller.extensions.focus
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -78,7 +79,7 @@ class ViewHierarchyNavigatorTest {
 
   @Test
   fun `setFocusTo to 'next' should set focus to next field`() {
-    editText1.requestFocus()
+    editText1.focus()
 
     ViewHierarchyNavigator.setFocusTo("next", editText1)
 
@@ -89,7 +90,7 @@ class ViewHierarchyNavigatorTest {
 
   @Test
   fun `setFocusTo to 'prev' should set focus to previous field`() {
-    editText2.requestFocus()
+    editText2.focus()
 
     ViewHierarchyNavigator.setFocusTo("prev", editText2)
 
@@ -100,7 +101,7 @@ class ViewHierarchyNavigatorTest {
 
   @Test
   fun `setFocusTo to 'next' should skip non-editable fields`() {
-    editText2.requestFocus()
+    editText2.focus()
 
     ViewHierarchyNavigator.setFocusTo("next", editText2)
 
@@ -111,7 +112,7 @@ class ViewHierarchyNavigatorTest {
 
   @Test
   fun `setFocusTo to 'prev' should skip non-editable fields`() {
-    editText5.requestFocus()
+    editText5.focus()
 
     ViewHierarchyNavigator.setFocusTo("prev", editText5)
 
@@ -122,7 +123,7 @@ class ViewHierarchyNavigatorTest {
 
   @Test
   fun `setFocusTo to 'next' should set focus relatively to current group`() {
-    editText5.requestFocus()
+    editText5.focus()
 
     ViewHierarchyNavigator.setFocusTo("next", editText5)
 
@@ -133,7 +134,7 @@ class ViewHierarchyNavigatorTest {
 
   @Test
   fun `setFocusTo to 'prev' should set focus relatively to current group`() {
-    editText7.requestFocus()
+    editText7.focus()
 
     ViewHierarchyNavigator.setFocusTo("prev", editText7)
 
@@ -144,7 +145,7 @@ class ViewHierarchyNavigatorTest {
 
   @Test
   fun `setFocusTo to 'next' should correctly exit from current group`() {
-    editText7.requestFocus()
+    editText7.focus()
 
     ViewHierarchyNavigator.setFocusTo("next", editText7)
 
@@ -155,7 +156,7 @@ class ViewHierarchyNavigatorTest {
 
   @Test
   fun `setFocusTo to 'prev' should set focus to last element in group`() {
-    editText8.requestFocus()
+    editText8.focus()
 
     ViewHierarchyNavigator.setFocusTo("prev", editText8)
 
@@ -166,7 +167,7 @@ class ViewHierarchyNavigatorTest {
 
   @Test
   fun `setFocusTo to 'next' should do nothing if it's last element`() {
-    editText13.requestFocus()
+    editText13.focus()
 
     ViewHierarchyNavigator.setFocusTo("next", editText13)
 
@@ -177,7 +178,7 @@ class ViewHierarchyNavigatorTest {
 
   @Test
   fun `setFocusTo to 'prev' should do nothing if it's first element`() {
-    editText1.requestFocus()
+    editText1.focus()
 
     ViewHierarchyNavigator.setFocusTo("prev", editText1)
 

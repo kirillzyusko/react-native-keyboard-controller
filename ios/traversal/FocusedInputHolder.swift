@@ -19,13 +19,13 @@ class FocusedInputHolder {
     currentFocusedInput = input
   }
 
-  // Requests focus for the currentFocusedInput if it's set
-  func requestFocus() {
-    currentFocusedInput?.requestFocus()
-  }
-
   func get() -> TextInput? {
     return currentFocusedInput
+  }
+
+  // Requests focus for the currentFocusedInput if it's set
+  func focus() {
+    currentFocusedInput?.focus()
   }
 
   private init() {}

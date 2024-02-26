@@ -14,7 +14,7 @@ public class ViewHierarchyNavigator: NSObject {
   @objc public static func setFocusTo(direction: String) {
     DispatchQueue.main.async {
       if direction == "current" {
-        FocusedInputHolder.shared.requestFocus()
+        FocusedInputHolder.shared.focus()
         return
       }
 
@@ -22,7 +22,7 @@ public class ViewHierarchyNavigator: NSObject {
       guard let view = input else { return }
 
       let textField = findTextInputInDirection(currentFocus: view, direction: direction)
-      textField?.requestFocus()
+      textField?.focus()
     }
   }
 

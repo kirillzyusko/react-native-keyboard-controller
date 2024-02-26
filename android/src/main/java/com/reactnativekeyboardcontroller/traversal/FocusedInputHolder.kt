@@ -1,16 +1,21 @@
 package com.reactnativekeyboardcontroller.traversal
 
-import com.facebook.react.views.textinput.ReactEditText
+import android.widget.EditText
+import com.reactnativekeyboardcontroller.extensions.focus
 import java.lang.ref.WeakReference
 
 object FocusedInputHolder {
-  private var input: WeakReference<ReactEditText?>? = null
+  private var input: WeakReference<EditText?>? = null
 
-  fun set(textInput: ReactEditText) {
+  fun set(textInput: EditText) {
     input = WeakReference(textInput)
   }
 
-  fun requestFocus() {
-    input?.get()?.requestFocusFromJS()
+  fun get(): EditText? {
+    return input?.get()
+  }
+
+  fun focus() {
+    input?.get()?.focus()
   }
 }
