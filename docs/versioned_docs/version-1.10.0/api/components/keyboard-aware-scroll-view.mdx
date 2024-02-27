@@ -43,16 +43,18 @@ Below is a table with the most important functions and their support in various 
 
 > <sup>1</sup> <b>only</b> on <b>iOS</b>
 
-> <sup>2</sup> <code>KeyboardAwareScrollView</code> is implemented in JS, but some
-> hooks (<code>useKeyboardHandler</code>/<code>useReanimatedFocusedInput</code>/<code>
->   useFocusedInputHandler
-> </code>) exposed from native code
+<!-- prettier-ignore-start -->
+> <sup>2</sup> <code>KeyboardAwareScrollView</code> is implemented in JS, but some hooks
+> (<code>useKeyboardHandler</code>/<code>useReanimatedFocusedInput</code>/<code>useFocusedInputHandler</code>)
+> exposed from native code
+<!-- prettier-ignore-end -->
 
-> <sup>3</sup> achievable with <code>
->   KeyboardManager.reloadLayoutIfNeeded()
-> </code> usage in appropriate <code>TextInput</code> callbacks (<code>
->   onLayout
-> </code>/<code>onChangeText</code>)
+<!-- prettier-ignore-start -->
+> <sup>3</sup> achievable with
+> <code>KeyboardManager.reloadLayoutIfNeeded()</code>
+> usage in appropriate <code>TextInput</code> callbacks
+> (<code>onLayout</code>/<code>onChangeText</code>)
+<!-- prettier-ignore-end -->
 
 > <sup>4</sup> since it's JS based solution it supports new architecture, but it
 > uses <b>deprecated</b> API.
