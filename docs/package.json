@@ -15,10 +15,10 @@
     "typecheck": "tsc"
   },
   "dependencies": {
-    "@docusaurus/core": "3.0.0",
-    "@docusaurus/preset-classic": "3.0.0",
+    "@docusaurus/core": "3.1.1",
+    "@docusaurus/preset-classic": "3.1.1",
     "@mdx-js/react": "^3.0.0",
-    "clsx": "^1.2.1",
+    "clsx": "^2.0.0",
     "lottie-react": "^2.4.0",
     "prism-react-renderer": "^2.3.0",
     "react": "^18.2.0",
@@ -27,11 +27,12 @@
   "devDependencies": {
     "@argos-ci/cli": "^1.0.0",
     "@argos-ci/playwright": "^1.0.1",
-    "@docusaurus/module-type-aliases": "3.0.0",
+    "@docusaurus/module-type-aliases": "3.1.1",
+    "@docusaurus/tsconfig": "3.1.1",
+    "@docusaurus/types": "3.1.1",
     "@playwright/test": "^1.39.0",
-    "@tsconfig/docusaurus": "^1.0.5",
     "cheerio": "^1.0.0-rc.12",
-    "markdownlint-cli2": "^0.7.1",
+    "markdownlint-cli2": "^0.12.1",
     "typescript": "^5.2.2"
   },
   "browserslist": {
@@ -41,9 +42,9 @@
       "not op_mini all"
     ],
     "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
+      "last 3 chrome version",
+      "last 3 firefox version",
+      "last 5 safari version"
     ]
   },
   "engines": {
