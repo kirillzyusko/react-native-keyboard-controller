@@ -168,7 +168,14 @@ const config = {
         copyright: `Copyright © ${new Date().getFullYear()} Kirill Zyusko. Built with Docusaurus.`,
       },
       prism: {
-        additionalLanguages: ["java", "kotlin", "swift", "json", "diff"],
+        additionalLanguages: [
+          "java",
+          "kotlin",
+          "swift",
+          "json",
+          "diff",
+          "bash",
+        ],
         theme: lightCodeTheme,
         darkTheme: darkCodeTheme,
         magicComments: [
