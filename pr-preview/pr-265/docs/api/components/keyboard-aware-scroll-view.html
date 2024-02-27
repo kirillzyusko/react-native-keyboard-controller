@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://www.googletagmanager.com">
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-4JH9YK1X2Q"></script>
 <script>function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("js",new Date),gtag("config","G-4JH9YK1X2Q",{anonymize_ip:!0})</script><link rel="stylesheet" href="/react-native-keyboard-controller/pr-preview/pr-265/assets/css/styles.927ee16c.css">
-<script src="/react-native-keyboard-controller/pr-preview/pr-265/assets/js/runtime~main.98eb3d58.js" defer="defer"></script>
+<script src="/react-native-keyboard-controller/pr-preview/pr-265/assets/js/runtime~main.8eacba1c.js" defer="defer"></script>
 <script src="/react-native-keyboard-controller/pr-preview/pr-265/assets/js/main.2138a598.js" defer="defer"></script>
 </head>
 <body class="navigation-with-keyboard">
@@ -27,17 +27,15 @@
 <p><sup>1</sup> <b>only</b> on <b>iOS</b></p>
 </blockquote>
 <blockquote>
-<p><sup>2</sup> <code>KeyboardAwareScrollView</code> is implemented in JS, but some
-hooks (<code>useKeyboardHandler</code>/<code>useReanimatedFocusedInput</code>/<code>
-useFocusedInputHandler
-</code>) exposed from native code</p>
+<p><sup>2</sup> <code>KeyboardAwareScrollView</code> is implemented in JS, but some hooks
+(<code>useKeyboardHandler</code>/<code>useReanimatedFocusedInput</code>/<code>useFocusedInputHandler</code>)
+exposed from native code</p>
 </blockquote>
 <blockquote>
-<p><sup>3</sup> achievable with <code>
-KeyboardManager.reloadLayoutIfNeeded()
-</code> usage in appropriate <code>TextInput</code> callbacks (<code>
-onLayout
-</code>/<code>onChangeText</code>)</p>
+<p><sup>3</sup> achievable with
+<code>KeyboardManager.reloadLayoutIfNeeded()</code>
+usage in appropriate <code>TextInput</code> callbacks
+(<code>onLayout</code>/<code>onChangeText</code>)</p>
 </blockquote>
 <blockquote>
 <p><sup>4</sup> since it&#x27;s JS based solution it supports new architecture, but it
