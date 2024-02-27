@@ -69,12 +69,12 @@ export const onStartCode = (
     This function is called before the keyboard movement starts.{" "}
     <code>height</code> and <code>progress</code> values will have{" "}
     <b>destination</b> values, i. e. if keyboard was closed but will appear -
-    these values will have a values like "keyboard is already opened" (
-    <code>progress</code> will be equal to <code>1</code> and{" "}
+    these values will have a values like "keyboard is already opened"
+    (<code>progress</code> will be equal to <code>1</code> and{" "}
     <code>height</code> will have non-zero value).
-    <br />
-    <br />
+
     <div className="desktop">{onStartCode}</div>
+
   </div>
   <div>
     <img src={require("./start.png").default} />
@@ -103,9 +103,9 @@ export const onMoveCode = (
   <div className="description-block">
     This function will be called every frame when the keyboard changes its
     position.
-    <br />
-    <br />
+
     <div className="desktop">{onMoveCode}</div>
+
   </div>
   <div>
     <img src={require("./move.png").default} />
@@ -140,8 +140,6 @@ export const onEndCode = (
   <div className="description-block">
     This function will be called when the keyboard has completed its movement.
     The event will contain <b>current</b> keyboard metrics.
-    <br />
-    <br />
     <div className="desktop">{onEndCode}</div>
   </div>
   <div>

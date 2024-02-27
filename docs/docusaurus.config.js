@@ -1,8 +1,9 @@
 // @ts-check
 // Note: type annotations allow type checking and IDEs autocompletion
 
-const darkCodeTheme = require("prism-react-renderer/themes/dracula");
-const lightCodeTheme = require("prism-react-renderer/themes/github");
+const { themes } = require("prism-react-renderer");
+const lightCodeTheme = themes.github;
+const darkCodeTheme = themes.dracula;
 
 let baseUrl = "/react-native-keyboard-controller/";
 if (process.env.PREVIEW_PATH) baseUrl += process.env.PREVIEW_PATH;
@@ -167,7 +168,14 @@ const config = {
         copyright: `Copyright © ${new Date().getFullYear()} Kirill Zyusko. Built with Docusaurus.`,
       },
       prism: {
-        additionalLanguages: ["java", "kotlin", "swift"],
+        additionalLanguages: [
+          "java",
+          "kotlin",
+          "swift",
+          "json",
+          "diff",
+          "bash",
+        ],
         theme: lightCodeTheme,
         darkTheme: darkCodeTheme,
         magicComments: [
