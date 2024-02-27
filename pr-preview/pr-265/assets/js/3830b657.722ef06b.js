@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[4984],{6443:e=>{e.exports=JSON.parse('{"label":"achieved milestones","permalink":"/react-native-keyboard-controller/pr-preview/pr-265/blog/tags/achieved-milestones","allTagsPath":"/react-native-keyboard-controller/pr-preview/pr-265/blog/tags","count":1,"unlisted":false}')}}]);
