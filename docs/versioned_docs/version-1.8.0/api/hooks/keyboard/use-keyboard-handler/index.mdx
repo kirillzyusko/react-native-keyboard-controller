@@ -92,9 +92,9 @@ export const onStartCode = (
     these values will have a values like "keyboard is already opened" (
     <code>progress</code> will be equal to <code>1</code> and{" "}
     <code>height</code> will have non-zero value).
-    <br />
-    <br />
+
     <div className="desktop">{onStartCode}</div>
+
   </div>
   <div>
     <img src={require("./start.png").default} />
@@ -123,9 +123,9 @@ export const onMoveCode = (
   <div className="description-block">
     This function will be called every frame when the keyboard changes its
     position.
-    <br />
-    <br />
+
     <div className="desktop">{onMoveCode}</div>
+
   </div>
   <div>
     <img src={require("./move.png").default} />
@@ -160,14 +160,14 @@ export const onInteractiveCode = (
   <div className="description-block">
     This function will be called every frame when user changes position of the
     keyboard by the drag.
-    <br />
-    <br />
-    If finger is released and keyboard animates to its final destination, then the
-    standard <code>onStart</code>/<code>onMove</code>/<code>onEnd</code> lifecycles
-    will be triggered.
-    <br />
-    <br />
+
+    <span>
+      If finger is released and keyboard animates to its final destination, then
+      the standard <code>onStart</code>/<code>onMove</code>/<code>onEnd</code>{" "}
+      lifecycles will be triggered.
+    </span>
     <div className="desktop">{onInteractiveCode}</div>
+
   </div>
   <div>
     <img src={require("./interactive.png").default} />
@@ -202,8 +202,6 @@ export const onEndCode = (
   <div className="description-block">
     This function will be called when the keyboard has completed its movement.
     The event will contain <b>current</b> keyboard metrics.
-    <br />
-    <br />
     <div className="desktop">{onEndCode}</div>
   </div>
   <div>
