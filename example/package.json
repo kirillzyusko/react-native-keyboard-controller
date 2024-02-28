@@ -20,7 +20,7 @@
     "@testing-library/react-hooks": "^8.0.1",
     "lottie-react-native": "^6.1.2",
     "react": "18.2.0",
-    "react-native": "0.72.4",
+    "react-native": "0.72.11",
     "react-native-gesture-handler": "2.12.1",
     "react-native-keyboard-controller": "link:../",
     "react-native-reanimated": "3.6.1",
