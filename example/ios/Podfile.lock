@@ -384,7 +384,7 @@ PODS:
   - React-jsinspector (0.72.11)
   - React-logger (0.72.11):
     - glog
-  - react-native-keyboard-controller (1.11.1):
+  - react-native-keyboard-controller (1.11.2):
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
   - react-native-safe-area-context (4.7.1):
@@ -744,7 +744,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 13401c2c6ddc727c74b71eb58b7590332d27d4eb
   React-jsinspector: a70e8fc7f3ae7982db27e7c114c0ec8c0714c8f5
   React-logger: 9fd8d34baa7930b42a70669ec0f0971083ae5a7b
-  react-native-keyboard-controller: 6818aadbaffb580eba6f24eb10d41aeb5360f815
+  react-native-keyboard-controller: d0dea8af3ee3aca5618df0e7b250e8fd0b7e6187
   react-native-safe-area-context: 9697629f7b2cda43cf52169bb7e0767d330648c2
   react-native-text-input-mask: 22ca8eeef84d42a896f79428f7d175a5eb8b1c4e
   React-NativeModulesApple: fd9fb8a2d2d789988f110c3c21c91fa0795fa2c7
