@@ -35,6 +35,7 @@ module.exports = {
       "error",
       { prefer: "type-imports" },
     ],
+    "@typescript-eslint/no-import-type-side-effects": "error",
     "@typescript-eslint/no-var-requires": "warn",
     // import
     "sort-imports": [
