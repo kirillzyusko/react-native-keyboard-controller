@@ -1,23 +1,80 @@
 package com.reactnativekeyboardcontroller.views
 
 import android.annotation.SuppressLint
+import android.app.Dialog
+import android.content.ContextWrapper
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.View
+import android.view.ViewGroup
+import android.view.Window
 import android.widget.FrameLayout
 import androidx.appcompat.widget.FitWindowsLinearLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsAnimationCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.children
 import com.facebook.react.uimanager.ThemedReactContext
+import com.facebook.react.views.modal.ReactModalHostView
 import com.facebook.react.views.view.ReactViewGroup
 import com.reactnativekeyboardcontroller.extensions.removeSelf
 import com.reactnativekeyboardcontroller.extensions.requestApplyInsetsWhenAttached
 import com.reactnativekeyboardcontroller.extensions.rootView
 import com.reactnativekeyboardcontroller.listeners.KeyboardAnimationCallback
+import java.lang.reflect.Field
+
 
 private val TAG = EdgeToEdgeReactViewGroup::class.qualifiedName
+
+fun getDialogFromView(view: View): Dialog? {
+  var context = view.context
+  while (context is ContextWrapper) {
+    if (context is Dialog) {
+      return context as Dialog
+    }
+    context = context.baseContext
+  }
+  return null // View is not inside a Dialog
+}
+
+fun getWindowFromView(view: View): Window? {
+  var context = view.context
+  while (context is ContextWrapper) {
+    context = if (context is Dialog) {
+      return (context as Dialog).window
+    } else {
+      context.baseContext
+    }
+  }
+  return null // The view is not inside a Dialog
+}
+
+fun findContainingDialog(view: View?): Dialog? {
+  var view = view
+  while (view != null) {
+    var context = view.context
+    if (context is ContextWrapper) {
+      context = if (context is Dialog) {
+        // If the context is an instance of Dialog, we found our dialog
+        return context as Dialog
+      } else {
+        // Otherwise, keep unwrapping the context to find the base context
+        context.baseContext
+      }
+    }
+
+    // If the view's parent is not a ViewGroup, we've reached the top of the view hierarchy without finding a Dialog
+    if (view.parent !is ViewGroup) {
+      break
+    }
+
+    // Move up in the view hierarchy
+    view = view.parent as ViewGroup
+  }
+  return null // No containing Dialog found
+}
 
 @Suppress("detekt:TooManyFunctions")
 @SuppressLint("ViewConstructor")
@@ -43,12 +100,74 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
     }
 
     this.setupKeyboardCallbacks()
+
+    println("onAttachedToWindow ${this} ${getDialogFromView(this)} ${this.parent.parent.parent} ${this.children} ${this.context.applicationContext} ${getWindowFromView(this)}")
+    println("${(this.parent?.parent?.parent?.parent?.parent?.parent?.parent)}") // decor view
+    println("${(this.parent?.parent?.parent)}") // ModalRootView
+    println("${this.parent?.parent?.parent?.javaClass?.simpleName} ${(this.parent?.parent?.parent as ReactViewGroup).context} ${reactContext}") // ModalRootView
+    println("${findContainingDialog(this)}")
+
+    try {
+      val mHostView = this.parent.parent.parent
+
+      mHostView.javaClass.declaredFields.forEach { field ->
+        println(field.name)
+      }
+
+      val outerClassReferenceField = mHostView.javaClass.getDeclaredField("this$0").apply {
+        isAccessible = true
+      }
+      val reactModalHostViewInstance1 = outerClassReferenceField.get(mHostView) as ReactModalHostView
+
+      println("reactModalHostViewInstance1:: ${reactModalHostViewInstance1}")
+
+      // Hypothetical method to get the ReactModalHostView instance from mHostView
+      val reactModalHostViewInstanceMethod = mHostView::class.java.getMethod("getContext")
+      val reactModalHostViewInstance = reactModalHostViewInstanceMethod.invoke(mHostView) as? ReactModalHostView
+
+      if (reactModalHostViewInstance != null) {
+        // Now that you have the ReactModalHostView instance, access the mDialog field
+        val field: Field = ReactModalHostView::class.java.getDeclaredField("mDialog")
+        field.isAccessible = true  // Make the private field accessible
+
+        val mDialog: Dialog? = field.get(reactModalHostViewInstance) as? Dialog
+
+        // Use mDialog as needed
+        if (mDialog != null) {
+          // Do something with mDialog
+        } else {
+          println("mDialog is null")
+        }
+      } else {
+        println("Failed to obtain ReactModalHostView instance from mHostView")
+      }
+    } catch (e: Exception) {
+      e.printStackTrace()
+      println("An error occurred")
+    }
+
+    // This would be the parent view that potentially contains ReactModalHostView
+    if (false && this.parent?.parent?.parent != null && this.parent?.parent?.parent?.javaClass?.simpleName == "DialogRootViewGroup") {
+      val instanceC = this.parent.parent.parent
+      // Using reflection to access the 'this$0' field from C, which refers to its enclosing instance of A
+      val `this$0Field`: Field = instanceC.javaClass.getDeclaredField("this$0")
+      `this$0Field`.isAccessible = true
+      val instanceA: ReactModalHostView = `this$0Field`[instanceC] as ReactModalHostView
+println(instanceA)
+      // Now that we have the instance of A, we can use reflection again to access propertyB
+      // Now that we have the instance of A, we can use reflection again to access propertyB
+      // val propertyBField: Field = A::class.java.getDeclaredField("propertyB")
+      // propertyBField.isAccessible = true
+      // val propertyB: A.B = propertyBField[instanceA] as A.B
+    }
   }
 
   override fun onDetachedFromWindow() {
     super.onDetachedFromWindow()
 
     this.removeKeyboardCallbacks()
+
+    // println("onDetachedFromWindow ${this} ${getDialogFromView(this)} ${this.parent} ${this.children}")
   }
   // endregion
 
@@ -99,6 +218,8 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
   }
 
   private fun goToEdgeToEdge(edgeToEdge: Boolean) {
+    val a = this.parent
+    println("goToEdgeToEdge ${this} ${getDialogFromView(this)} ${this.parent} ${this.children}")
     reactContext.currentActivity?.let {
       WindowCompat.setDecorFitsSystemWindows(
         it.window,
