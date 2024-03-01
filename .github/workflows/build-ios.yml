@@ -31,10 +31,7 @@ jobs:
         working-directory: example/ios
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 18.x
-          cache: "yarn"
+
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
@@ -77,7 +74,7 @@ jobs:
       - name: Install xcpretty
         run: gem install xcpretty
       - name: Build App
-        run: "xcodebuild \
+        run: "set -o pipefail && xcodebuild \
           CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ \
           -derivedDataPath build -UseModernBuildSystem=YES \
           -workspace KeyboardControllerExample.xcworkspace \
@@ -86,4 +83,4 @@ jobs:
           -configuration Debug \
           -destination 'platform=iOS Simulator,name=iPhone 11 Pro' \
           build \
-          CODE_SIGNING_ALLOWED=NO"
+          CODE_SIGNING_ALLOWED=NO | xcpretty"
