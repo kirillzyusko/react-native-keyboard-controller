@@ -2,6 +2,8 @@ import React, { useCallback, useRef } from "react";
 import { TextInput, View } from "react-native";
 import { useKeyboardHandler } from "react-native-keyboard-controller";
 import Reanimated, {
+  useAnimatedProps,
+  useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
 } from "react-native-reanimated";
@@ -16,7 +18,11 @@ const AnimatedTextInput = Reanimated.createAnimatedComponent(TextInput);
 const useKeyboardAnimation = () => {
   const progress = useSharedValue(0);
   const height = useSharedValue(0);
+  const inset = useSharedValue(0);
+  const offset = useSharedValue(0);
+  const scroll = useSharedValue(0);
   const shouldUseOnMoveHandler = useSharedValue(false);
+
   useKeyboardHandler({
     onStart: (e) => {
       "worklet";
@@ -32,6 +38,10 @@ const useKeyboardAnimation = () => {
 
       progress.value = e.progress;
       height.value = e.height;
+
+      inset.value = e.height;
+      // Math.max is needed to prevent overscroll when keyboard hides (and user scrolled to the top, for example)
+      offset.value = Math.max(e.height + scroll.value, 0);
     },
     onInteractive: (e) => {
       "worklet";
@@ -56,7 +66,13 @@ const useKeyboardAnimation = () => {
     },
   });
 
-  return { height, progress };
+  const onScroll = useAnimatedScrollHandler({
+    onScroll: (e) => {
+      scroll.value = e.contentOffset.y - inset.value;
+    },
+  });
+
+  return { height, progress, onScroll, inset, offset };
 };
 
 const TEXT_INPUT_HEIGHT = 50;
@@ -67,7 +83,7 @@ const contentContainerStyle = {
 
 function InteractiveKeyboard() {
   const ref = useRef<Reanimated.ScrollView>(null);
-  const { height } = useKeyboardAnimation();
+  const { height, onScroll, inset, offset } = useKeyboardAnimation();
 
   const scrollToBottom = useCallback(() => {
     ref.current?.scrollToEnd({ animated: false });
@@ -84,6 +100,16 @@ function InteractiveKeyboard() {
     [],
   );
 
+  const props = useAnimatedProps(() => ({
+    contentInset: {
+      bottom: inset.value,
+    },
+    contentOffset: {
+      x: 0,
+      y: offset.value,
+    },
+  }));
+
   return (
     <View style={styles.container}>
       <Reanimated.ScrollView
@@ -91,7 +117,9 @@ function InteractiveKeyboard() {
         onContentSizeChange={scrollToBottom}
         contentContainerStyle={contentContainerStyle}
         keyboardDismissMode="interactive"
-        automaticallyAdjustKeyboardInsets
+        animatedProps={props}
+        onScroll={onScroll}
+        // automaticallyAdjustKeyboardInsets
         automaticallyAdjustContentInsets={false}
         contentInsetAdjustmentBehavior="never"
       >
