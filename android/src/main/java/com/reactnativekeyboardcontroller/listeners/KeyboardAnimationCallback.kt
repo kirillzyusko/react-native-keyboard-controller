@@ -150,6 +150,7 @@ class KeyboardAnimationCallback(
     isKeyboardVisible = isKeyboardVisible()
     duration = animation.durationMillis.toInt()
     val keyboardHeight = getCurrentKeyboardHeight()
+    val prevKeyboardHeight = this.persistentKeyboardHeight
 
     if (isKeyboardVisible) {
       // do not update it on hide, since back progress will be invalid
@@ -159,7 +160,10 @@ class KeyboardAnimationCallback(
     layoutObserver?.syncUpLayout()
 
     // keyboard gets resized - we do not want to have a default animated transition
-    if (isKeyboardVisible && keyboardHeight != 0.0) {
+    // so we skip these animations
+    val isKeyboardResized = keyboardHeight != 0.0 && prevKeyboardHeight != keyboardHeight
+    val isKeyboardShown = isKeyboardVisible && prevKeyboardHeight != 0.0
+    if (isKeyboardResized && isKeyboardShown) {
       onKeyboardResized(keyboardHeight)
       animationToSkip = animation
 
