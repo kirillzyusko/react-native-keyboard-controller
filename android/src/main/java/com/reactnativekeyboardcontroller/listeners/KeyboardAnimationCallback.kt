@@ -1,11 +1,9 @@
 package com.reactnativekeyboardcontroller.listeners
 
-import android.animation.ValueAnimator
 import android.os.Build
 import android.util.Log
 import android.view.View
 import android.view.ViewTreeObserver.OnGlobalFocusChangeListener
-import androidx.core.animation.doOnEnd
 import androidx.core.graphics.Insets
 import androidx.core.view.OnApplyWindowInsetsListener
 import androidx.core.view.ViewCompat
