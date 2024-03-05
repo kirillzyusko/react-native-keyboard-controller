@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Modal, TextInput, View } from "react-native";
+import { Modal, TextInput, TouchableOpacity, View } from "react-native";
 import {
   KeyboardEvents,
   OverKeyboardView,
@@ -31,18 +31,29 @@ export default function OverKeyboardViewExample() {
   return (
     <View>
       <TextInput
-        style={{ backgroundColor: "yellow", width: 200, height: 50, alignSelf: 'center', marginTop: 50 }}
+        style={{
+          backgroundColor: "yellow",
+          width: 200,
+          height: 50,
+          alignSelf: "center",
+          marginTop: 50,
+        }}
       />
       {isShow && (
         <OverKeyboardView>
-          <View
-            style={{
-              backgroundColor: "yellow",
-              width: 50,
-              height: 50,
-              borderRadius: 25,
-            }}
-          />
+          <View style={{ flex: 1, alignItems: "center" }}>
+            <TouchableOpacity onPress={console.log}>
+              <View
+                style={{
+                  backgroundColor: "pink",
+                  width: 100,
+                  height: 100,
+                  borderRadius: 50,
+                  marginTop: 700,
+                }}
+              />
+            </TouchableOpacity>
+          </View>
         </OverKeyboardView>
       )}
     </View>
