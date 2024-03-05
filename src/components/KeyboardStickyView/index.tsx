@@ -1,7 +1,10 @@
 import React, { forwardRef, useMemo } from "react";
-import Reanimated, { useAnimatedStyle } from "react-native-reanimated";
+import Reanimated, {
+  useAnimatedStyle,
+  useSharedValue,
+} from "react-native-reanimated";
 
-import { useReanimatedKeyboardAnimation } from "react-native-keyboard-controller";
+import { useKeyboardHandler } from "react-native-keyboard-controller";
 
 import useKeyboardInterpolation from "../hooks/useKeyboardInterpolation";
 
@@ -31,14 +34,43 @@ const KeyboardStickyView = forwardRef<
     { children, offset: { closed = 0, opened = 0 } = {}, style, ...props },
     ref,
   ) => {
-    const { height } = useReanimatedKeyboardAnimation();
+    const keyboardHeight = useSharedValue(0);
+    const shouldSkipNextOnMove = useSharedValue(false);
+
+    useKeyboardHandler(
+      {
+        onStart: (e) => {
+          "worklet";
+
+          if (keyboardHeight.value !== 0 && e.height !== 0) {
+            keyboardHeight.value = e.height;
+            shouldSkipNextOnMove.value = true;
+          }
+        },
+        onMove: (e) => {
+          "worklet";
+          if (!shouldSkipNextOnMove.value) {
+            keyboardHeight.value = e.height;
+          }
+        },
+        onEnd: () => {
+          "worklet";
+
+          console.log("onEnd");
+
+          shouldSkipNextOnMove.value = false;
+        },
+      },
+      [],
+    );
+
     const { interpolate } = useKeyboardInterpolation();
 
     const stickyViewStyle = useAnimatedStyle(() => {
-      const offset = interpolate(-height.value, [closed, opened]);
+      const offset = interpolate(keyboardHeight.value, [closed, opened]);
 
       return {
-        transform: [{ translateY: height.value + offset }],
+        transform: [{ translateY: -keyboardHeight.value + offset }],
       };
     }, [closed, opened]);
 
