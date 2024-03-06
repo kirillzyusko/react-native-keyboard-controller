@@ -37,6 +37,7 @@ class KeyboardAnimationCallback(
 
   // state variables
   private var persistentKeyboardHeight = 0.0
+  private var prevKeyboardHeight = 0.0
   private var isKeyboardVisible = false
   private var isTransitioning = false
   private var duration = 0
@@ -151,7 +152,6 @@ class KeyboardAnimationCallback(
     isKeyboardVisible = isKeyboardVisible()
     duration = animation.durationMillis.toInt()
     val keyboardHeight = getCurrentKeyboardHeight()
-    val prevKeyboardHeight = this.persistentKeyboardHeight
 
     if (isKeyboardVisible) {
       // do not update it on hide, since back progress will be invalid
@@ -267,6 +267,7 @@ class KeyboardAnimationCallback(
       InteractiveKeyboardProvider.shown = false
     }
     isKeyboardVisible = isKeyboardVisible || isKeyboardShown
+    prevKeyboardHeight = keyboardHeight
 
     if (animation === animationToSkip) {
       duration = 0
