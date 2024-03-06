@@ -313,7 +313,7 @@ class KeyboardAnimationCallback(
         "topKeyboardMoveStart",
         keyboardHeight,
         1.0,
-        DEFAULT_ANIMATION_TIME,
+        0,
         viewTagFocused,
       ),
     )
@@ -325,7 +325,7 @@ class KeyboardAnimationCallback(
         "topKeyboardMove",
         keyboardHeight,
         1.0,
-        DEFAULT_ANIMATION_TIME,
+        0,
         viewTagFocused,
       ),
     )
@@ -337,7 +337,7 @@ class KeyboardAnimationCallback(
         "topKeyboardMoveEnd",
         keyboardHeight,
         1.0,
-        DEFAULT_ANIMATION_TIME,
+        0,
         viewTagFocused,
       ),
     )
@@ -369,9 +369,5 @@ class KeyboardAnimationCallback(
     params.putInt("target", viewTagFocused)
 
     return params
-  }
-
-  companion object {
-    private const val DEFAULT_ANIMATION_TIME = 250
   }
 }
