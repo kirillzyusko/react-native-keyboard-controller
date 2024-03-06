@@ -24,6 +24,7 @@ import com.reactnativekeyboardcontroller.interactive.InteractiveKeyboardProvider
 import kotlin.math.abs
 
 private val TAG = KeyboardAnimationCallback::class.qualifiedName
+private val isResizeHandledInCallbackMethods = Build.VERSION.SDK_INT < Build.VERSION_CODES.R
 
 class KeyboardAnimationCallback(
   val view: ReactViewGroup,
@@ -127,7 +128,8 @@ class KeyboardAnimationCallback(
     // but in general this check is a must because we are detecting keyboard size changes
     // in this method
     val isKeyboardSizeEqual = this.persistentKeyboardHeight == keyboardHeight
-    if (isKeyboardFullyVisible && !isKeyboardSizeEqual && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+
+    if (isKeyboardFullyVisible && !isKeyboardSizeEqual && !isResizeHandledInCallbackMethods) {
       Log.i(TAG, "onApplyWindowInsets: ${this.persistentKeyboardHeight} -> $keyboardHeight")
       layoutObserver?.syncUpLayout()
       this.onKeyboardResized(keyboardHeight)
@@ -161,7 +163,7 @@ class KeyboardAnimationCallback(
     // so we skip these animations
     val isKeyboardResized = keyboardHeight != 0.0 && prevKeyboardHeight != keyboardHeight
     val isKeyboardShown = isKeyboardVisible && prevKeyboardHeight != 0.0
-    if (isKeyboardResized && isKeyboardShown) {
+    if (isKeyboardResized && isKeyboardShown && isResizeHandledInCallbackMethods) {
       onKeyboardResized(keyboardHeight)
       animationToSkip = animation
 
@@ -266,6 +268,8 @@ class KeyboardAnimationCallback(
     isKeyboardVisible = isKeyboardVisible || isKeyboardShown
 
     if (animation === animationToSkip) {
+      duration = 0
+      animationToSkip = null
       return
     }
 
