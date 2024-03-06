@@ -332,11 +332,13 @@ public class KeyboardMovementObserver: NSObject {
           diff = CACurrentMediaTime() - time
       }
       let duration = displaylink.targetTimestamp - time
+      let beginTime = keyboardView?.layer.animation(forKey: "position")?.beginTime ?? time
       print("duration: \(duration) \(diff) \(displaylink.timestamp)")
       print("duration2: \(displaylink.timestamp - time)")
-      let pos = animation?.curveFunction(time: duration) as! NSNumber
+      let pos = animation?.curveFunction(time: displaylink.targetTimestamp - beginTime) as! NSNumber
       i += 1
       print("\(keyboardPosition) \(animation?.curveFunction(time: duration))")
+      print("BeginTime:  \(beginTime) Time: \(time) Timestamp: \(displaylink.timestamp) Duration: \(duration)")
     onEvent(
       "onKeyboardMove",
       CGFloat(pos) as NSNumber,
