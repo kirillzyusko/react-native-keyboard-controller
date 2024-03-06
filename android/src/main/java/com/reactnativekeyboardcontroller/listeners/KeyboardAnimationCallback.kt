@@ -42,7 +42,7 @@ class KeyboardAnimationCallback(
   private var isTransitioning = false
   private var duration = 0
   private var viewTagFocused = -1
-  private var animationToSkip: WindowInsetsAnimationCompat? = null
+  private var animationsToSkip = arrayListOf<WindowInsetsAnimationCompat>()
 
   // listeners
   private val focusListener = OnGlobalFocusChangeListener { oldFocus, newFocus ->
@@ -166,7 +166,7 @@ class KeyboardAnimationCallback(
     val isKeyboardShown = isKeyboardVisible && prevKeyboardHeight != 0.0
     if (isKeyboardResized && isKeyboardShown && isResizeHandledInCallbackMethods) {
       onKeyboardResized(keyboardHeight)
-      animationToSkip = animation
+      animationsToSkip.add(animation)
 
       return bounds
     }
@@ -200,7 +200,7 @@ class KeyboardAnimationCallback(
     // onProgress() is called when any of the running animations progress...
 
     // ignore non-keyboard animation or animation that we intentionally want to skip
-    runningAnimations.find { it.isKeyboardAnimation && it !== animationToSkip } ?: return insets
+    runningAnimations.find { it.isKeyboardAnimation && !animationsToSkip.contains(it) } ?: return insets
 
     // First we get the insets which are potentially deferred
     val typesInset = insets.getInsets(deferredInsetTypes)
@@ -269,9 +269,9 @@ class KeyboardAnimationCallback(
     isKeyboardVisible = isKeyboardVisible || isKeyboardShown
     prevKeyboardHeight = keyboardHeight
 
-    if (animation === animationToSkip) {
+    if (animation in animationsToSkip) {
       duration = 0
-      animationToSkip = null
+      animationsToSkip.removeAll { it === animation }
       return
     }
 
