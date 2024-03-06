@@ -138,6 +138,7 @@ class KeyboardAnimationCallback(
     return insets
   }
 
+  @Suppress("detekt:ReturnCount")
   override fun onStart(
     animation: WindowInsetsAnimationCompat,
     bounds: WindowInsetsAnimationCompat.BoundsCompat,
