@@ -27,6 +27,11 @@ export type KeyboardToolbarProps = {
   button?: typeof Button;
   /** Custom icon component used to display next/prev buttons. */
   icon?: typeof Arrow;
+  /**
+   * Whether to show next and previous buttons. Can be useful to set it to `false` if you have only one input
+   * and want to show only `Done` button. Default to `true`.
+   */
+  showArrows?: boolean;
 };
 const TEST_ID_KEYBOARD_TOOLBAR = "keyboard.toolbar";
 const TEST_ID_KEYBOARD_TOOLBAR_PREVIOUS = `${TEST_ID_KEYBOARD_TOOLBAR}.previous`;
@@ -51,6 +56,7 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
   doneText,
   button,
   icon,
+  showArrows = true,
 }) => {
   const colorScheme = useColorScheme();
   const [inputs, setInputs] = useState({
@@ -86,26 +92,38 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
   return (
     <KeyboardStickyView offset={offset}>
       <View style={toolbarStyle} testID={TEST_ID_KEYBOARD_TOOLBAR}>
-        <ButtonContainer
-          accessibilityLabel="Previous"
-          accessibilityHint="Will move focus to previous field"
-          disabled={isPrevDisabled}
-          onPress={goToPrevField}
-          testID={TEST_ID_KEYBOARD_TOOLBAR_PREVIOUS}
-          theme={theme}
-        >
-          <IconContainer disabled={isPrevDisabled} type="prev" theme={theme} />
-        </ButtonContainer>
-        <ButtonContainer
-          accessibilityLabel="Next"
-          accessibilityHint="Will move focus to next field"
-          disabled={isNextDisabled}
-          onPress={goToNextField}
-          testID={TEST_ID_KEYBOARD_TOOLBAR_NEXT}
-          theme={theme}
-        >
-          <IconContainer disabled={isNextDisabled} type="next" theme={theme} />
-        </ButtonContainer>
+        {showArrows && (
+          <>
+            <ButtonContainer
+              accessibilityLabel="Previous"
+              accessibilityHint="Will move focus to previous field"
+              disabled={isPrevDisabled}
+              onPress={goToPrevField}
+              testID={TEST_ID_KEYBOARD_TOOLBAR_PREVIOUS}
+              theme={theme}
+            >
+              <IconContainer
+                disabled={isPrevDisabled}
+                type="prev"
+                theme={theme}
+              />
+            </ButtonContainer>
+            <ButtonContainer
+              accessibilityLabel="Next"
+              accessibilityHint="Will move focus to next field"
+              disabled={isNextDisabled}
+              onPress={goToNextField}
+              testID={TEST_ID_KEYBOARD_TOOLBAR_NEXT}
+              theme={theme}
+            >
+              <IconContainer
+                disabled={isNextDisabled}
+                type="next"
+                theme={theme}
+              />
+            </ButtonContainer>
+          </>
+        )}
 
         <View style={styles.flex} testID={TEST_ID_KEYBOARD_TOOLBAR_CONTENT}>
           {content}
