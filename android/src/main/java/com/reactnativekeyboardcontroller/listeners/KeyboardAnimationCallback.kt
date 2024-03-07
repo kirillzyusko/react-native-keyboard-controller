@@ -305,6 +305,8 @@ class KeyboardAnimationCallback(
    * Method that dispatches necessary events when keyboard gets resized
    */
   private fun onKeyboardResized(keyboardHeight: Double) {
+    duration = 0
+
     context.emitEvent("KeyboardController::keyboardWillShow", getEventParams(keyboardHeight))
     context.dispatchEvent(
       view.id,
