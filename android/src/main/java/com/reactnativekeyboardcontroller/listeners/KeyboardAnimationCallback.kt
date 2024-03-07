@@ -42,7 +42,7 @@ class KeyboardAnimationCallback(
   private var isTransitioning = false
   private var duration = 0
   private var viewTagFocused = -1
-  private var animationsToSkip = arrayListOf<WindowInsetsAnimationCompat>()
+  private var animationsToSkip = hashSetOf<WindowInsetsAnimationCompat>()
 
   // listeners
   private val focusListener = OnGlobalFocusChangeListener { oldFocus, newFocus ->
@@ -271,7 +271,7 @@ class KeyboardAnimationCallback(
 
     if (animation in animationsToSkip) {
       duration = 0
-      animationsToSkip.removeAll { it === animation }
+      animationsToSkip.remove(animation)
       return
     }
 
