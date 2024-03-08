@@ -1,3 +1,4 @@
+// @ts-expect-error because there is no corresponding type definition
 import * as NativeAndroidManager from "react-native/Libraries/Components/StatusBar/NativeStatusBarManagerAndroid";
 const RCTStatusBarManagerCompat = require("./specs/NativeStatusBarManagerCompat").default;
 
