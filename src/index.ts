@@ -12,5 +12,5 @@ export {
   // keyboard toolbar
   KeyboardToolbar,
   DefaultKeyboardToolbarTheme,
-  KeyboardToolbarProps,
+  type KeyboardToolbarProps,
 } from "./components";

@@ -4,5 +4,5 @@ export { default as KeyboardAwareScrollView } from "./KeyboardAwareScrollView";
 export {
   default as KeyboardToolbar,
   DefaultKeyboardToolbarTheme,
-  KeyboardToolbarProps,
+  type KeyboardToolbarProps,
 } from "./KeyboardToolbar";
