@@ -5,4 +5,4 @@ export {
   default as KeyboardToolbar,
   DefaultKeyboardToolbarTheme,
 } from "./KeyboardToolbar";
-export type { KeyboardToolbarProps } from "./KeyboardToolbar"
+export type { KeyboardToolbarProps } from "./KeyboardToolbar";

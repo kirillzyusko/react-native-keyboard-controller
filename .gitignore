@@ -65,3 +65,6 @@ lib/
 
 # testing
 /coverage
+
+# yarn cache folder (v2+)
+.yarn

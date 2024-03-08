@@ -1,9 +1,12 @@
 // @ts-expect-error because there is no corresponding type definition
 import * as NativeAndroidManager from "react-native/Libraries/Components/StatusBar/NativeStatusBarManagerAndroid";
-const RCTStatusBarManagerCompat = require("./specs/NativeStatusBarManagerCompat").default;
+
+const RCTStatusBarManagerCompat =
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  require("./specs/NativeStatusBarManagerCompat").default;
 
 // Copy original default manager to keep its original state and methods
-const OriginalNativeAndroidManager = {...NativeAndroidManager.default};
+const OriginalNativeAndroidManager = { ...NativeAndroidManager.default };
 
 // Create a new object that modifies the necessary methods
 // On Android < 11 RN uses legacy API which breaks EdgeToEdge mode in RN, so
@@ -17,11 +20,11 @@ const ModifiedNativeAndroidManager = {
   setTranslucent: (translucent: boolean): void => {
     RCTStatusBarManagerCompat.setTranslucent(translucent);
   },
-   /**
-     *  - statusBarStyles can be:
-     *    - 'default'
-     *    - 'dark-content'
-     */
+  /**
+   *  - statusBarStyles can be:
+   *    - 'default'
+   *    - 'dark-content'
+   */
   setStyle: (statusBarStyle?: string): void => {
     RCTStatusBarManagerCompat.setStyle(statusBarStyle);
   },
