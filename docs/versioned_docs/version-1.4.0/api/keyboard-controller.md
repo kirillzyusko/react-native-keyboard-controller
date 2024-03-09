@@ -6,7 +6,7 @@
 - `setDefaultMode` - used to restore default `windowSoftInputMode` (which is declared in `AndroidManifest.xml`);
 
 :::tip Understanding how different modes works
-To understand the difference between `adjustResize`/`adjustPan`/`adjustNothing` behavior you can look into this [post](https://stackoverflow.com/questions/17410499/difference-between-adjustresize-and-adjustpan-in-android/71301500#71301500).
+To understand the difference between `adjustResize`/`adjustPan`/`adjustNothing` behavior you can look into this [post](https://stackoverflow.com/a/71301500/9272042).
 :::
 
 :::info
