@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://www.googletagmanager.com">
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-4JH9YK1X2Q"></script>
 <script>function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("js",new Date),gtag("config","G-4JH9YK1X2Q",{anonymize_ip:!0})</script><link rel="stylesheet" href="/react-native-keyboard-controller/pr-preview/pr-381/assets/css/styles.927ee16c.css">
-<script src="/react-native-keyboard-controller/pr-preview/pr-381/assets/js/runtime~main.845f0e1b.js" defer="defer"></script>
+<script src="/react-native-keyboard-controller/pr-preview/pr-381/assets/js/runtime~main.e44bf33c.js" defer="defer"></script>
 <script src="/react-native-keyboard-controller/pr-preview/pr-381/assets/js/main.8664b3dc.js" defer="defer"></script>
 </head>
 <body class="navigation-with-keyboard">
@@ -21,7 +21,7 @@
 <p>To track each keyboard frame in Android you need to perform 3 steps:</p>
 <ul>
 <li>enter <a href="https://developer.android.com/training/gestures/edge-to-edge" target="_blank" rel="noopener noreferrer">edge-to-edge</a> mode (<code>KeyboardControllerView</code> already does it for you, and <code>KeyboardProvider</code> uses <code>KeyboardControllerView</code>, so once you&#x27;ve wrapped your app in <code>KeyboardProvider</code> - you&#x27;ve completed this step 🎉).</li>
-<li>change <code>android:windowSoftInputMode</code> to <code>adjustResize</code> (this library exposes <a href="/react-native-keyboard-controller/pr-preview/pr-381/docs/1.5.0/api/keyboard-controller">KeyboardController</a> and you can change it in runtime - default hooks changes soft input mode on mount and restore default behavior on unmount, but you can control it as you <a href="/react-native-keyboard-controller/pr-preview/pr-381/docs/1.5.0/guides/building-own-hook">wish</a> (change mode on focus/unfocus screen etc.)) - this is needed to deliver the best <a href="https://developer.android.com/develop/ui/views/layout/sw-keyboard#check-visibility" target="_blank" rel="noopener noreferrer">backward</a> compatibility;</li>
+<li>change <code>android:windowSoftInputMode</code> to <code>adjustResize</code> (this library exposes <a href="/react-native-keyboard-controller/pr-preview/pr-381/docs/1.5.0/api/keyboard-controller">KeyboardController</a> and you can change it in runtime - default hooks changes soft input mode on mount and restore default behavior on unmount, but you can control it as you <a href="/react-native-keyboard-controller/pr-preview/pr-381/docs/1.5.0/guides/building-own-hook">wish</a> (change mode on focus/unfocus screen etc.)) - this is needed to deliver the best <a href="https://developer.android.com/develop/ui/views/layout/sw-keyboard#check-visibility" target="_blank" rel="noopener noreferrer">backward</a> compatibility and <em><strong>prevent</strong></em> automatic window resizing (<code>adjustResize</code> + <code>edge-to-edge</code> makes window not automatically resizable anymore);</li>
 <li>setup <code>WindowInsetsAnimationCallback</code> and track keyboard frames. <code>KeyboardControllerView</code> maps events from this callback and forward them in <code>onKeyboardMove</code> callback on JS side (<code>KeyboardProvider</code> handles it and maps these events to <code>Animated</code> values + stores it in <code>context</code>).</li>
 </ul>
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="ios">iOS<a href="#ios" class="hash-link" aria-label="Direct link to iOS" title="Direct link to iOS">​</a></h2>
