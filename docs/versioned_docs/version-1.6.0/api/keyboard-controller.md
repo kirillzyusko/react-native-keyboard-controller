@@ -18,6 +18,14 @@ keywords:
 - `setInputMode` - used to change `windowSoftInputMode` in runtime;
 - `setDefaultMode` - used to restore default `windowSoftInputMode` (which is declared in `AndroidManifest.xml`);
 
+:::tip Understanding how different modes works
+To understand the difference between `adjustResize`/`adjustPan`/`adjustNothing` behavior you can look into this [post](https://stackoverflow.com/questions/17410499/difference-between-adjustresize-and-adjustpan-in-android/71301500#71301500).
+:::
+
+:::info
+A combination of `adjustResize` + `edge-to-edge` mode will result in behavior similar to `adjustNothing` - in this case window is not resized automatically and content is not moved along with the keyboard position. And it becomes a responsibility of developer to handle keyboard appearance (thus it'll match iOS behavior).
+:::
+
 ## Example
 
 ```ts
