@@ -1,5 +1,5 @@
 import React, { forwardRef, useCallback, useMemo } from "react";
-import { useWindowDimensions } from "react-native";
+import { findNodeHandle, useWindowDimensions } from "react-native";
 import Reanimated, {
   interpolate,
   scrollTo,
@@ -121,8 +121,8 @@ const KeyboardAwareScrollView = forwardRef<
       scrollViewAnimatedRef(assignedRef);
     }, []);
     const onScrollViewLayout = useCallback(
-      (e: LayoutChangeEvent & { nativeEvent: { target: number } }) => {
-        scrollViewTarget.value = e.nativeEvent.target;
+      (e: LayoutChangeEvent) => {
+        scrollViewTarget.value = findNodeHandle(scrollViewAnimatedRef.current);
 
         onLayout?.(e);
       },
@@ -319,8 +319,8 @@ const KeyboardAwareScrollView = forwardRef<
       <Reanimated.ScrollView
         ref={onRef}
         {...rest}
-        // @ts-expect-error https://github.com/facebook/react-native/pull/42785
         onLayout={onScrollViewLayout}
+        // @ts-expect-error `onScrollReanimated` is a fake prop needed for reanimated to intercept scroll events
         onScrollReanimated={onScroll}
         scrollEventThrottle={16}
       >
