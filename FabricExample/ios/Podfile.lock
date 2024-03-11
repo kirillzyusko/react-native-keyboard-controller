@@ -941,7 +941,7 @@ PODS:
   - React-jsinspector (0.72.11)
   - React-logger (0.72.11):
     - glog
-  - react-native-keyboard-controller (1.11.2):
+  - react-native-keyboard-controller (1.11.3):
     - hermes-engine
     - RCT-Folly (= 2021.07.22.00)
     - RCTRequired
@@ -1377,7 +1377,7 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
 SPEC CHECKSUMS:
-  boost: 57d2868c099736d80fcd648bf211b4431e51a558
+  boost: 7dcd2de282d72e344012f7d6564d024930a6a440
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
   FBLazyVector: 1d033b6462f2d7bdde254a5118fe5e459c3ff36d
@@ -1414,7 +1414,7 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 13401c2c6ddc727c74b71eb58b7590332d27d4eb
   React-jsinspector: a70e8fc7f3ae7982db27e7c114c0ec8c0714c8f5
   React-logger: 9fd8d34baa7930b42a70669ec0f0971083ae5a7b
-  react-native-keyboard-controller: e2c20584501c992419b0c36e2fad5852008090fa
+  react-native-keyboard-controller: 37bc6f70f46554a123ad9f2ec8cc14657f3b8a75
   react-native-safe-area-context: a283130af276caa22ecfed30c3d1eb450bc83439
   React-NativeModulesApple: fd9fb8a2d2d789988f110c3c21c91fa0795fa2c7
   React-perflogger: 800d85d51d4f53efc2eec11f459919752e494db3
