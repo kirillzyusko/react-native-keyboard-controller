@@ -367,7 +367,7 @@ public class KeyboardMovementObserver: NSObject {
       i += 1
       print("\(keyboardPosition) \(animation?.curveFunction(time: duration))")
       print("BeginTime:  \(beginTime) Time: \(time) Timestamp: \(displaylink.timestamp) TargetTimestamp: \(displaylink.targetTimestamp) Duration: \(duration)")
-      print("--> CADisplayLink position: \(keyboardPosition), duration for CADisplayLink (reverse): \(animation?.approximateTiming(forValue: keyboardPosition)), CADisplayLink timestamp: \(displaylink.timestamp), CADisplayLink targetTimestamp: \(displaylink.targetTimestamp), Spring formula prediction: \(pos), at: \(duration)")
+      // print("--> CADisplayLink position: \(keyboardPosition), duration for CADisplayLink (reverse): \(animation?.approximateTiming(forValue: keyboardPosition)), CADisplayLink timestamp: \(displaylink.timestamp), CADisplayLink targetTimestamp: \(displaylink.targetTimestamp), Spring formula prediction: \(pos), at: \(duration)")
     onEvent(
       "onKeyboardMove",
       CGFloat(pos) as NSNumber,
