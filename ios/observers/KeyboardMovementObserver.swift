@@ -259,6 +259,7 @@ public class KeyboardMovementObserver: NSObject {
     )
     tag = UIResponder.current.reactViewTag
     self.duration = duration
+    let anim = keyboardView?.layer.presentation()?.animation(forKey: "position") as? CASpringAnimation
 
     var data = [AnyHashable: Any]()
     data["height"] = 0
@@ -272,6 +273,12 @@ public class KeyboardMovementObserver: NSObject {
 
     setupKeyboardWatcher()
     removeKVObserver()
+
+      guard let keyboardAnimation = anim else {
+          return
+      }
+      animation = SpringAnimation(stiffness: keyboardAnimation.stiffness, damping: keyboardAnimation.damping, mass: keyboardAnimation.mass, initialVelocity: keyboardAnimation.initialVelocity, fromValue: keyboardHeight, toValue: 0)
+      time = CACurrentMediaTime()
   }
 
   @objc func keyboardDidAppear(_ notification: Notification) {
@@ -326,7 +333,7 @@ public class KeyboardMovementObserver: NSObject {
 
     displayLink = CADisplayLink(target: self, selector: #selector(updateKeyboardFrame))
     displayLink?.preferredFramesPerSecond = 120 // will fallback to 60 fps for devices without Pro Motion display
-    displayLink?.add(to: .current, forMode: .default)
+    displayLink?.add(to: .main, forMode: .common)
   }
 
   @objc func removeKeyboardWatcher() {
@@ -351,11 +358,12 @@ public class KeyboardMovementObserver: NSObject {
       if (diff == 0.0) {
           diff = CACurrentMediaTime() - time
       }
-      let beginTime = keyboardView?.layer.animation(forKey: "position")?.beginTime ?? time
-      let duration = displaylink.targetTimestamp - beginTime
+      let anim = keyboardView?.layer.animation(forKey: "position")
+      let beginTime = anim?.beginTime ?? time
+      let duration = (displaylink.targetTimestamp - beginTime) * Double(anim?.speed ?? 1) + displaylink.duration
       print("duration: \(duration) \(diff) \(displaylink.timestamp)")
       print("duration2: \(displaylink.timestamp - time)")
-      let pos = animation?.curveFunction(time: displaylink.targetTimestamp - beginTime) as! NSNumber
+      let pos = animation?.curveFunction(time: duration) as! NSNumber
       i += 1
       print("\(keyboardPosition) \(animation?.curveFunction(time: duration))")
       print("BeginTime:  \(beginTime) Time: \(time) Timestamp: \(displaylink.timestamp) TargetTimestamp: \(displaylink.targetTimestamp) Duration: \(duration)")
