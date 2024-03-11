@@ -52,6 +52,26 @@ class SpringAnimation {
 
         return y
     }
+    
+    func approximateTiming(forValue y: Double) -> Double {
+        var lowerBound: Double = 0.0
+        var upperBound: Double = 1.0 // Assuming 1 second is the max duration for simplicity
+        let tolerance: Double = 0.001 // Define how precise you want to be
+        var tGuess: Double = 0.0
+
+        while (upperBound - lowerBound) > tolerance {
+            tGuess = (lowerBound + upperBound) / 2
+            let currentValue = curveFunction(time: tGuess)
+
+            if currentValue < y {
+                lowerBound = tGuess
+            } else {
+                upperBound = tGuess
+            }
+        }
+
+        return tGuess
+    }
 }
 
 @objc(KeyboardMovementObserver)
@@ -331,14 +351,15 @@ public class KeyboardMovementObserver: NSObject {
       if (diff == 0.0) {
           diff = CACurrentMediaTime() - time
       }
-      let duration = displaylink.targetTimestamp - time
       let beginTime = keyboardView?.layer.animation(forKey: "position")?.beginTime ?? time
+      let duration = displaylink.targetTimestamp - beginTime
       print("duration: \(duration) \(diff) \(displaylink.timestamp)")
       print("duration2: \(displaylink.timestamp - time)")
       let pos = animation?.curveFunction(time: displaylink.targetTimestamp - beginTime) as! NSNumber
       i += 1
       print("\(keyboardPosition) \(animation?.curveFunction(time: duration))")
-      print("BeginTime:  \(beginTime) Time: \(time) Timestamp: \(displaylink.timestamp) Duration: \(duration)")
+      print("BeginTime:  \(beginTime) Time: \(time) Timestamp: \(displaylink.timestamp) TargetTimestamp: \(displaylink.targetTimestamp) Duration: \(duration)")
+      print("--> CADisplayLink position: \(keyboardPosition), duration for CADisplayLink (reverse): \(animation?.approximateTiming(forValue: keyboardPosition)), CADisplayLink timestamp: \(displaylink.timestamp), CADisplayLink targetTimestamp: \(displaylink.targetTimestamp), Spring formula prediction: \(pos), at: \(duration)")
     onEvent(
       "onKeyboardMove",
       CGFloat(pos) as NSNumber,
