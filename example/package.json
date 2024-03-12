@@ -25,8 +25,8 @@
     "react-native-reanimated": "3.8.0",
     "react-native-safe-area-context": "^4.9.0",
     "react-native-screens": "^3.29.0",
-    "react-native-toast-message": "^2.1.9",
-    "react-native-text-input-mask": "3.1.5"
+    "react-native-text-input-mask": "3.1.5",
+    "react-native-toast-message": "^2.1.9"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
