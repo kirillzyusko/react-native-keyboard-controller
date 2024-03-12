@@ -117,9 +117,9 @@ function InteractiveKeyboard() {
         onContentSizeChange={scrollToBottom}
         contentContainerStyle={contentContainerStyle}
         keyboardDismissMode="interactive"
+        // simulation of `automaticallyAdjustKeyboardInsets` behavior on RN < 0.73
         animatedProps={props}
         onScroll={onScroll}
-        // automaticallyAdjustKeyboardInsets
         automaticallyAdjustContentInsets={false}
         contentInsetAdjustmentBehavior="never"
       >
