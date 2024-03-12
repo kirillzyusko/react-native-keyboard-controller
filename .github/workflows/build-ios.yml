@@ -45,6 +45,8 @@ jobs:
             ${{ runner.os }}-yarn-
       - name: Install node_modules for example/
         run: yarn install --frozen-lockfile --cwd ..
+      - name: Install root dependencies
+        run: yarn install --frozen-lockfile --cwd ../..
 
       - name: Restore buildcache
         uses: mikehardy/buildcache-action@v2

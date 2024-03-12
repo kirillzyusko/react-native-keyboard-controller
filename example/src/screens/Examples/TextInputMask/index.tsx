@@ -42,6 +42,7 @@ export default function TextInputMaskExample() {
         onChangeText={onChangeText}
         keyboardType="phone-pad"
         placeholder="+1 (___) ___ __ __"
+        placeholderTextColor="gray"
         style={style.input}
         testID="masked_input"
       />
