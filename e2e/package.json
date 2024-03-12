@@ -28,7 +28,7 @@
     "@types/pixelmatch": "^5.2.4",
     "@types/pngjs": "^6.0.1",
     "colors": "^1.4.0",
-    "detox": "^20.17.0",
+    "detox": "^20.19.0",
     "jest": "^29",
     "pixelmatch": "^5.3.0",
     "pngjs": "^7.0.0",
