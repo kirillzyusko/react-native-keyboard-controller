@@ -10,68 +10,72 @@ import Foundation
 import UIKit
 
 class SpringAnimation {
-    private var zeta: Double // Damping ratio
-    private var omega0: Double // Undamped angular frequency of the oscillator
-    private var omega1: Double // Exponential decay
-    private var v0: Double // Initial velocity
+  private var zeta: Double // Damping ratio
+  private var omega0: Double // Undamped angular frequency of the oscillator
+  private var omega1: Double // Exponential decay
+  private var v0: Double // Initial velocity
 
-    private let stiffness: Double
-    private let damping: Double
-    private let mass: Double
-    private let initialVelocity: Double
-    private let fromValue: Double
-    private let toValue: Double
+  private let stiffness: Double
+  private let damping: Double
+  private let mass: Double
+  private let initialVelocity: Double
+  private let fromValue: Double
+  private let toValue: Double
 
-    init(stiffness: Double, damping: Double, mass: Double, initialVelocity: Double, fromValue: Double, toValue: Double) {
-        self.stiffness = stiffness
-        self.damping = damping
-        self.mass = mass
-        self.initialVelocity = initialVelocity
-        self.fromValue = fromValue
-        self.toValue = toValue
+  init(stiffness: Double, damping: Double, mass: Double, initialVelocity: Double, fromValue: Double, toValue: Double) {
+    self.stiffness = stiffness
+    self.damping = damping
+    self.mass = mass
+    self.initialVelocity = initialVelocity
+    self.fromValue = fromValue
+    self.toValue = toValue
 
-        self.zeta = damping / (2 * sqrt(stiffness * mass)) // Damping ratio
-        self.omega0 = sqrt(stiffness / mass) // Undamped angular frequency of the oscillator
-        self.omega1 = omega0 * sqrt(1.0 - zeta * zeta) // Exponential decay
-        self.v0 = -initialVelocity
+    zeta = damping / (2 * sqrt(stiffness * mass)) // Damping ratio
+    omega0 = sqrt(stiffness / mass) // Undamped angular frequency of the oscillator
+    omega1 = omega0 * sqrt(1.0 - zeta * zeta) // Exponential decay
+    v0 = -initialVelocity
+  }
+
+  convenience init(animation: CASpringAnimation, fromValue: Double, toValue: Double) {
+    self.init(stiffness: animation.stiffness, damping: animation.damping, mass: animation.mass, initialVelocity: animation.initialVelocity, fromValue: fromValue, toValue: toValue)
+  }
+
+  func curveFunction(time t: Double) -> Double {
+    let x0 = toValue - fromValue
+
+    var y: Double
+    if zeta < 1 {
+      // Under damped
+      let envelope = exp(-zeta * omega0 * t)
+      y = toValue - envelope * (((v0 + zeta * omega0 * x0) / omega1) * sin(omega1 * t) + x0 * cos(omega1 * t))
+    } else {
+      // Critically damped
+      let envelope = exp(-omega0 * t)
+      y = toValue - envelope * (x0 + (v0 + omega0 * x0) * t)
     }
 
-    func curveFunction(time t: Double) -> Double {
-        let x0 = toValue - fromValue
+    return y
+  }
 
-        var y: Double
-        if zeta < 1 {
-            // Under damped
-            let envelope = exp(-zeta * omega0 * t)
-            y = toValue - envelope * (((v0 + zeta * omega0 * x0) / omega1) * sin(omega1 * t) + x0 * cos(omega1 * t))
-        } else {
-            // Critically damped
-            let envelope = exp(-omega0 * t)
-            y = toValue - envelope * (x0 + (v0 + omega0 * x0) * t)
-        }
+  func approximateTiming(forValue y: Double) -> Double {
+    var lowerBound = 0.0
+    var upperBound = 1.0 // Assuming 1 second is the max duration for simplicity
+    let tolerance = 0.001 // Define how precise you want to be
+    var tGuess = 0.0
 
-        return y
+    while (upperBound - lowerBound) > tolerance {
+      tGuess = (lowerBound + upperBound) / 2
+      let currentValue = curveFunction(time: tGuess)
+
+      if currentValue < y {
+        lowerBound = tGuess
+      } else {
+        upperBound = tGuess
+      }
     }
-    
-    func approximateTiming(forValue y: Double) -> Double {
-        var lowerBound: Double = 0.0
-        var upperBound: Double = 1.0 // Assuming 1 second is the max duration for simplicity
-        let tolerance: Double = 0.001 // Define how precise you want to be
-        var tGuess: Double = 0.0
 
-        while (upperBound - lowerBound) > tolerance {
-            tGuess = (lowerBound + upperBound) / 2
-            let currentValue = curveFunction(time: tGuess)
-
-            if currentValue < y {
-                lowerBound = tGuess
-            } else {
-                upperBound = tGuess
-            }
-        }
-
-        return tGuess
-    }
+    return tGuess
+  }
 }
 
 @objc(KeyboardMovementObserver)
@@ -106,8 +110,7 @@ public class KeyboardMovementObserver: NSObject {
   private var tag: NSNumber = -1
   private var animation: SpringAnimation?
   private var time = CACurrentMediaTime()
-    var i = 1
-    private var diff = 0.0
+  private var diff = 0.0
 
   @objc public init(
     handler: @escaping (NSString, NSNumber, NSNumber, NSNumber, NSNumber) -> Void,
@@ -231,8 +234,6 @@ public class KeyboardMovementObserver: NSObject {
     if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
       tag = UIResponder.current.reactViewTag
       let keyboardHeight = keyboardFrame.cgRectValue.size.height
-      animation = SpringAnimation(stiffness: 1000, damping: 500, mass: 3, initialVelocity: 0, fromValue: 0, toValue: keyboardHeight)
-      time = CACurrentMediaTime()
       let duration = Int(
         (notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double ?? 0) * 1000
       )
@@ -250,6 +251,7 @@ public class KeyboardMovementObserver: NSObject {
       onNotify("KeyboardController::keyboardWillShow", data)
 
       setupKeyboardWatcher()
+      initializeAnimation(fromValue: 0, toValue: keyboardHeight)
     }
   }
 
@@ -259,7 +261,6 @@ public class KeyboardMovementObserver: NSObject {
     )
     tag = UIResponder.current.reactViewTag
     self.duration = duration
-    let anim = keyboardView?.layer.presentation()?.animation(forKey: "position") as? CASpringAnimation
 
     var data = [AnyHashable: Any]()
     data["height"] = 0
@@ -273,12 +274,7 @@ public class KeyboardMovementObserver: NSObject {
 
     setupKeyboardWatcher()
     removeKVObserver()
-
-      guard let keyboardAnimation = anim else {
-          return
-      }
-      animation = SpringAnimation(stiffness: keyboardAnimation.stiffness, damping: keyboardAnimation.damping, mass: keyboardAnimation.mass, initialVelocity: keyboardAnimation.initialVelocity, fromValue: keyboardHeight, toValue: 0)
-      time = CACurrentMediaTime()
+    initializeAnimation(fromValue: keyboardHeight, toValue: 0)
   }
 
   @objc func keyboardDidAppear(_ notification: Notification) {
@@ -340,6 +336,16 @@ public class KeyboardMovementObserver: NSObject {
     displayLink?.invalidate()
     displayLink = nil
   }
+    
+    func initializeAnimation(fromValue: Double, toValue: Double) {
+        let anim = keyboardView?.layer.presentation()?.animation(forKey: "position") as? CASpringAnimation
+        guard let keyboardAnimation = anim else {
+          // TODO: set animation to null here? Check how it works with modal windows
+          return
+        }
+        animation = SpringAnimation(animation: keyboardAnimation, fromValue: fromValue, toValue: toValue)
+        time = CACurrentMediaTime()
+    }
 
   @objc func updateKeyboardFrame(displaylink: CADisplayLink) {
     if keyboardView == nil {
@@ -355,24 +361,35 @@ public class KeyboardMovementObserver: NSObject {
     }
 
     prevKeyboardPosition = keyboardPosition
-      if (diff == 0.0) {
-          diff = CACurrentMediaTime() - time
-      }
-      let anim = keyboardView?.layer.animation(forKey: "position")
-      let beginTime = anim?.beginTime ?? time
-      let duration = (displaylink.targetTimestamp - beginTime) * Double(anim?.speed ?? 1) + displaylink.duration
-      print("duration: \(duration) \(diff) \(displaylink.timestamp)")
-      print("duration2: \(displaylink.timestamp - time)")
-      let pos = animation?.curveFunction(time: duration) as! NSNumber
-      i += 1
-      print("\(keyboardPosition) \(animation?.curveFunction(time: duration))")
-      print("BeginTime:  \(beginTime) Time: \(time) Timestamp: \(displaylink.timestamp) TargetTimestamp: \(displaylink.targetTimestamp) Duration: \(duration)")
-      // print("--> CADisplayLink position: \(keyboardPosition), duration for CADisplayLink (reverse): \(animation?.approximateTiming(forValue: keyboardPosition)), CADisplayLink timestamp: \(displaylink.timestamp), CADisplayLink targetTimestamp: \(displaylink.targetTimestamp), Spring formula prediction: \(pos), at: \(duration)")
+    if diff == 0.0 {
+      diff = CACurrentMediaTime() - time
+    }
+    let anim = keyboardView?.layer.animation(forKey: "position")
+    // animation hasn't started yet, so we ignore this frame
+    if anim?.beginTime == 0.0 {
+      return
+    }
+    let beginTime = anim?.beginTime ?? time
+    let baseDuration = displaylink.targetTimestamp - beginTime
+
+    #if targetEnvironment(simulator)
+      let correctedDuration = baseDuration - displaylink.duration * 0.6
+    #else
+      // TODO: on iPhone 14 Pro it has 3 frames delay?
+      let correctedDuration = baseDuration + displaylink.duration
+    #endif
+
+    let duration = correctedDuration * Double(anim?.speed ?? 1)
+    print("duration: \(duration) \(diff) \(displaylink.timestamp)")
+    print("duration2: \(displaylink.timestamp - time)")
+    let pos = CGFloat(animation?.curveFunction(time: duration) ?? 0)
+    print("BeginTime:  \(beginTime) Time: \(time)")
+    print("--> CADisplayLink position: \(keyboardPosition), duration for CADisplayLink (reverse): \(animation?.approximateTiming(forValue: keyboardPosition)), CADisplayLink timestamp: \(displaylink.timestamp), CADisplayLink targetTimestamp: \(displaylink.targetTimestamp), Spring formula prediction: \(pos), at: \(duration) anim?.beginTime: \(anim?.beginTime) time: \(time)")
     onEvent(
       "onKeyboardMove",
-      CGFloat(pos) as NSNumber,
-      keyboardPosition / CGFloat(keyboardHeight) as NSNumber,
-      duration as NSNumber,
+      pos as NSNumber,
+      pos / CGFloat(keyboardHeight) as NSNumber,
+      self.duration as NSNumber,
       tag
     )
   }
