@@ -131,6 +131,12 @@ public class KeyboardMovementObserver: NSObject {
 
     isMounted = true
 
+      NotificationCenter.default.addObserver(
+        self,
+        selector: #selector(keyboardWillChange),
+        name: UIResponder.keyboardWillChangeFrameNotification,
+        object: nil
+      )
     NotificationCenter.default.addObserver(
       self,
       selector: #selector(keyboardWillDisappear),
@@ -254,6 +260,11 @@ public class KeyboardMovementObserver: NSObject {
       initializeAnimation(fromValue: 0, toValue: keyboardHeight)
     }
   }
+    
+    @objc func keyboardWillChange() {
+        print("keyboardWillChange \(CACurrentMediaTime())")
+        time = CACurrentMediaTime()
+    }
 
   @objc func keyboardWillDisappear(_ notification: Notification) {
     let duration = Int(
@@ -298,6 +309,8 @@ public class KeyboardMovementObserver: NSObject {
 
       removeKeyboardWatcher()
       setupKVObserver()
+        
+      diff = 0.0
     }
   }
 
@@ -317,6 +330,7 @@ public class KeyboardMovementObserver: NSObject {
     onNotify("KeyboardController::keyboardDidHide", data)
 
     removeKeyboardWatcher()
+    diff = 0.0
   }
 
   @objc func setupKeyboardWatcher() {
@@ -344,7 +358,7 @@ public class KeyboardMovementObserver: NSObject {
           return
         }
         animation = SpringAnimation(animation: keyboardAnimation, fromValue: fromValue, toValue: toValue)
-        time = CACurrentMediaTime()
+        // time = CACurrentMediaTime()
     }
 
   @objc func updateKeyboardFrame(displaylink: CADisplayLink) {
@@ -362,7 +376,7 @@ public class KeyboardMovementObserver: NSObject {
 
     prevKeyboardPosition = keyboardPosition
     if diff == 0.0 {
-      diff = CACurrentMediaTime() - time
+      diff = displaylink.timestamp - time
     }
     let anim = keyboardView?.layer.animation(forKey: "position")
     // animation hasn't started yet, so we ignore this frame
@@ -375,8 +389,8 @@ public class KeyboardMovementObserver: NSObject {
     #if targetEnvironment(simulator)
       let correctedDuration = baseDuration - displaylink.duration * 0.6
     #else
-      // TODO: on iPhone 14 Pro it has 3 frames delay?
-      let correctedDuration = baseDuration + displaylink.duration
+      // TODO: on iPhone 14 Pro it has 2 or 1 frame delay?
+      let correctedDuration = baseDuration + displaylink.duration * 1
     #endif
 
     let duration = correctedDuration * Double(anim?.speed ?? 1)

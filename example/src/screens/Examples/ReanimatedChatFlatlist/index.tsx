@@ -1,7 +1,13 @@
 import React from "react";
 import { FlatList, TextInput, View } from "react-native";
-import { useReanimatedKeyboardAnimation } from "react-native-keyboard-controller";
-import Animated, { useAnimatedStyle } from "react-native-reanimated";
+import {
+  useKeyboardHandler,
+  useReanimatedKeyboardAnimation,
+} from "react-native-keyboard-controller";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+} from "react-native-reanimated";
 
 import Message from "../../../components/Message";
 import { history } from "../../../components/Message/data";
@@ -17,8 +23,33 @@ const RenderItem: ListRenderItem<MessageProps> = ({ item, index }) => {
   return <Message key={index} {...item} />;
 };
 
+function useGradualKeyboardAnimation() {
+  const height = useSharedValue(0);
+  const progress = useSharedValue(0);
+
+  useKeyboardHandler(
+    {
+      onMove: (e) => {
+        "worklet";
+
+        height.value = e.height;
+        progress.value = e.progress;
+      },
+      onEnd: (e) => {
+        "worklet";
+
+        height.value = e.height;
+        progress.value = e.progress;
+      },
+    },
+    [],
+  );
+
+  return { height, progress };
+}
+
 function ReanimatedChatFlatlist() {
-  const { height } = useReanimatedKeyboardAnimation();
+  const { height } = useGradualKeyboardAnimation();
 
   const fakeView = useAnimatedStyle(
     () => ({
