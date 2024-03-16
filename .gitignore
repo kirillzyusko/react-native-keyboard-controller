@@ -70,5 +70,5 @@ lib/
 # yarn cache folder (v2+)
 .yarn
 
-# Docs
+# Web
 *.pem
