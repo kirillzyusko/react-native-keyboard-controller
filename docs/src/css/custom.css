@@ -142,3 +142,83 @@
     display: block;
   }
 }
+
+.label {
+  border-radius: 20px;
+  color: #fff;
+  display: inline-block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 2px 12px;
+  position: relative;
+}
+
+.label.android {
+  background: #3ddc84;
+}
+
+.label.android::before {
+  content: "Android";
+}
+
+.label.ios {
+  background: #616a70;
+}
+
+.label.ios::before {
+  content: "iOS";
+}
+
+.label.required {
+  background: #fa5035;
+}
+
+.label.required::before {
+  content: "Required";
+}
+
+.label.new {
+  background: #40e0d0;
+}
+
+.label.new::before {
+  content: "New";
+}
+
+.label.web {
+  background: #007bff;
+}
+
+.label.web::before {
+  content: "Web";
+}
+
+h1 .label {
+  padding: 3px 12px;
+  top: -9px;
+}
+
+h2 .label {
+  padding: 3px 12px;
+  top: -5px;
+}
+
+h3 .label {
+  line-height: 20px;
+  top: -2px;
+}
+
+/* to become a circle in table of contents */
+.table-of-contents .label {
+  border-radius: 100%;
+  color: transparent;
+  float: none;
+  height: 6px;
+  margin-left: 4px;
+  margin-top: 7px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  white-space: nowrap;
+  width: 6px;
+}

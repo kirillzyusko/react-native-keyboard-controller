@@ -2,3 +2,7 @@ default: true
 
 # Disable checks for line length
 MD013: false
+
+# Disable check for inline html (badges)
+MD033:
+  allowed_elements: ["div"]
