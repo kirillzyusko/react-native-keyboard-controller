@@ -147,14 +147,14 @@
   border-radius: 20px;
   color: #fff;
   display: inline-block;
-  font-size: .85rem;
+  font-size: 0.85rem;
   font-weight: 500;
   padding: 2px 12px;
-  position: relative
+  position: relative;
 }
 
 .badge.android {
-  background: #3DDC84
+  background: #3ddc84;
 }
 
 .badge.android::before {
@@ -162,7 +162,7 @@
 }
 
 .badge.ios {
-  background: #616a70
+  background: #616a70;
 }
 
 .badge.ios::before {
@@ -178,7 +178,7 @@
 }
 
 .badge.new {
-  background: #40E0D0;
+  background: #40e0d0;
 }
 
 .badge.new::before {
@@ -186,7 +186,7 @@
 }
 
 .badge.web {
-  background: #007BFF;
+  background: #007bff;
 }
 
 .badge.web::before {
@@ -195,17 +195,17 @@
 
 h1 .badge {
   padding: 3px 12px;
-  top: -9px
+  top: -9px;
 }
 
 h2 .badge {
   padding: 3px 12px;
-  top: -5px
+  top: -5px;
 }
 
 h3 .badge {
   line-height: 20px;
-  top: -2px
+  top: -2px;
 }
 
 /* to become a circle in table of contents */
