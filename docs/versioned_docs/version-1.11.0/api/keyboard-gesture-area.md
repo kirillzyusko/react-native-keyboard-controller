@@ -1,5 +1,6 @@
 ---
 sidebar_position: 4
+title: KeyboardGestureArea
 keywords:
   [
     react-native-keyboard-controller,
@@ -9,7 +10,11 @@ keywords:
   ]
 ---
 
-# KeyboardGestureArea
+<!-- prettier-ignore-start -->
+<!-- we explicitly specify title and h1 because we add badge to h1 and we don't want this element to go to table of contents -->
+<!-- markdownlint-disable-next-line MD025 -->
+# KeyboardGestureArea <div class="label android"></div>
+<!-- prettier-ignore-end -->
 
 `KeyboardGestureArea` allows you to define a region on the screen, where gestures will control the keyboard position.
 
