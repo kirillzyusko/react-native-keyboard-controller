@@ -7,7 +7,9 @@ import ExamplesStack from "../ExamplesStack";
 
 export type RootStackParamList = {
   [ScreenNames.EXAMPLES]: undefined;
-  [ScreenNames.EXAMPLES_STACK]: undefined;
+  [ScreenNames.EXAMPLES_STACK]: {
+    screen: ScreenNames;
+  };
 };
 
 const Stack = createStackNavigator<RootStackParamList>();

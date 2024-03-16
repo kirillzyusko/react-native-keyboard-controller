@@ -1,7 +1,8 @@
 jest.unmock("react-native-reanimated");
 jest.useFakeTimers();
 
-global.ReanimatedDataMock = {
+// TODO: fix?
+(global as any).ReanimatedDataMock = {
   now: () => 0,
 };
 
