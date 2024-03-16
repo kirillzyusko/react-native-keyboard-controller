@@ -10,7 +10,7 @@ keywords:
   ]
 ---
 
-# KeyboardGestureArea <div class="label android"></div>
+# KeyboardGestureArea <div class="badge android"></div>
 
 `KeyboardGestureArea` allows you to define a region on the screen, where gestures will control the keyboard position.
 

@@ -20,7 +20,7 @@ The `KeyboardController` module in React Native provides a convenient set of met
 
 ## Methods
 
-### `setInputMode` <div class="label android"></div>
+### `setInputMode` <div class="badge android"></div>
 
 This method is used to dynamically change the `windowSoftInputMode` during runtime in an Android application. It takes an argument that specifies the desired input mode. The example provided sets the input mode to `SOFT_INPUT_ADJUST_RESIZE`:
 
@@ -36,7 +36,7 @@ To understand the difference between `adjustResize`/`adjustPan`/`adjustNothing` 
 A combination of `adjustResize` + `edge-to-edge` mode will result in behavior similar to `adjustNothing` - in this case window is not resized automatically and content is not moved along with the keyboard position. And it becomes a responsibility of developer to handle keyboard appearance (thus it'll match iOS behavior).
 :::
 
-### `setDefaultMode` <div class="label android"></div>
+### `setDefaultMode` <div class="badge android"></div>
 
 This method is used to restore the default `windowSoftInputMode` declared in the `AndroidManifest.xml`. It resets the input mode to the default value:
 
