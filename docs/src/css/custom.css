@@ -143,7 +143,7 @@
   }
 }
 
-.badge {
+.label {
   border-radius: 20px;
   color: #fff;
   display: inline-block;
@@ -153,63 +153,63 @@
   position: relative;
 }
 
-.badge.android {
+.label.android {
   background: #3ddc84;
 }
 
-.badge.android::before {
+.label.android::before {
   content: "Android";
 }
 
-.badge.ios {
+.label.ios {
   background: #616a70;
 }
 
-.badge.ios::before {
+.label.ios::before {
   content: "iOS";
 }
 
-.badge.required {
+.label.required {
   background: #fa5035;
 }
 
-.badge.required::before {
+.label.required::before {
   content: "Required";
 }
 
-.badge.new {
+.label.new {
   background: #40e0d0;
 }
 
-.badge.new::before {
+.label.new::before {
   content: "New";
 }
 
-.badge.web {
+.label.web {
   background: #007bff;
 }
 
-.badge.web::before {
+.label.web::before {
   content: "Web";
 }
 
-h1 .badge {
+h1 .label {
   padding: 3px 12px;
   top: -9px;
 }
 
-h2 .badge {
+h2 .label {
   padding: 3px 12px;
   top: -5px;
 }
 
-h3 .badge {
+h3 .label {
   line-height: 20px;
   top: -2px;
 }
 
 /* to become a circle in table of contents */
-.table-of-contents .badge {
+.table-of-contents .label {
   border-radius: 100%;
   color: transparent;
   float: none;
