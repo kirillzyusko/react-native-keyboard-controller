@@ -9,74 +9,8 @@
 import Foundation
 import UIKit
 
-class SpringAnimation {
-  private var zeta: Double // Damping ratio
-  private var omega0: Double // Undamped angular frequency of the oscillator
-  private var omega1: Double // Exponential decay
-  private var v0: Double // Initial velocity
-
-  private let stiffness: Double
-  private let damping: Double
-  private let mass: Double
-  private let initialVelocity: Double
-  private let fromValue: Double
-  private let toValue: Double
-
-  init(stiffness: Double, damping: Double, mass: Double, initialVelocity: Double, fromValue: Double, toValue: Double) {
-    self.stiffness = stiffness
-    self.damping = damping
-    self.mass = mass
-    self.initialVelocity = initialVelocity
-    self.fromValue = fromValue
-    self.toValue = toValue
-
-    zeta = damping / (2 * sqrt(stiffness * mass)) // Damping ratio
-    omega0 = sqrt(stiffness / mass) // Undamped angular frequency of the oscillator
-    omega1 = omega0 * sqrt(1.0 - zeta * zeta) // Exponential decay
-    v0 = -initialVelocity
-  }
-
-  convenience init(animation: CASpringAnimation, fromValue: Double, toValue: Double) {
-    self.init(stiffness: animation.stiffness, damping: animation.damping, mass: animation.mass, initialVelocity: animation.initialVelocity, fromValue: fromValue, toValue: toValue)
-  }
-
-  func curveFunction(time t: Double) -> Double {
-    let x0 = toValue - fromValue
-
-    var y: Double
-    if zeta < 1 {
-      // Under damped
-      let envelope = exp(-zeta * omega0 * t)
-      y = toValue - envelope * (((v0 + zeta * omega0 * x0) / omega1) * sin(omega1 * t) + x0 * cos(omega1 * t))
-    } else {
-      // Critically damped
-      let envelope = exp(-omega0 * t)
-      y = toValue - envelope * (x0 + (v0 + omega0 * x0) * t)
-    }
-
-    return y
-  }
-
-  func approximateTiming(forValue y: Double) -> Double {
-    var lowerBound = 0.0
-    var upperBound = 1.0 // Assuming 1 second is the max duration for simplicity
-    let tolerance = 0.001 // Define how precise you want to be
-    var tGuess = 0.0
-
-    while (upperBound - lowerBound) > tolerance {
-      tGuess = (lowerBound + upperBound) / 2
-      let currentValue = curveFunction(time: tGuess)
-
-      if currentValue < y {
-        lowerBound = tGuess
-      } else {
-        upperBound = tGuess
-      }
-    }
-
-    return tGuess
-  }
-}
+// swiftlint:disable:next identifier_name
+let ONE_FRAME = 1.0 / 60
 
 @objc(KeyboardMovementObserver)
 public class KeyboardMovementObserver: NSObject {
@@ -131,12 +65,6 @@ public class KeyboardMovementObserver: NSObject {
 
     isMounted = true
 
-      NotificationCenter.default.addObserver(
-        self,
-        selector: #selector(keyboardWillChange),
-        name: UIResponder.keyboardWillChangeFrameNotification,
-        object: nil
-      )
     NotificationCenter.default.addObserver(
       self,
       selector: #selector(keyboardWillDisappear),
@@ -260,11 +188,6 @@ public class KeyboardMovementObserver: NSObject {
       initializeAnimation(fromValue: 0, toValue: keyboardHeight)
     }
   }
-    
-    @objc func keyboardWillChange() {
-        print("keyboardWillChange \(CACurrentMediaTime())")
-        time = CACurrentMediaTime()
-    }
 
   @objc func keyboardWillDisappear(_ notification: Notification) {
     let duration = Int(
@@ -309,7 +232,7 @@ public class KeyboardMovementObserver: NSObject {
 
       removeKeyboardWatcher()
       setupKVObserver()
-        
+
       diff = 0.0
     }
   }
@@ -350,18 +273,19 @@ public class KeyboardMovementObserver: NSObject {
     displayLink?.invalidate()
     displayLink = nil
   }
-    
-    func initializeAnimation(fromValue: Double, toValue: Double) {
-        let anim = keyboardView?.layer.presentation()?.animation(forKey: "position") as? CASpringAnimation
-        guard let keyboardAnimation = anim else {
-          // TODO: set animation to null here? Check how it works with modal windows
-          return
-        }
-        animation = SpringAnimation(animation: keyboardAnimation, fromValue: fromValue, toValue: toValue)
-        // time = CACurrentMediaTime()
-    }
 
-  @objc func updateKeyboardFrame(displaylink: CADisplayLink) {
+  func initializeAnimation(fromValue: Double, toValue: Double) {
+    print("initializeAnimation from: \(fromValue) to: \(toValue)")
+    let anim = keyboardView?.layer.presentation()?.animation(forKey: "position") as? CASpringAnimation
+    guard let keyboardAnimation = anim else {
+      // TODO: set animation to null here? Check how it works with modal windows
+      return
+    }
+    animation = SpringAnimation(animation: keyboardAnimation, fromValue: fromValue, toValue: toValue)
+    time = CACurrentMediaTime()
+  }
+
+  @objc func updateKeyboardFrame(link: CADisplayLink) {
     if keyboardView == nil {
       return
     }
@@ -376,29 +300,30 @@ public class KeyboardMovementObserver: NSObject {
 
     prevKeyboardPosition = keyboardPosition
     if diff == 0.0 {
-      diff = displaylink.timestamp - time
+      diff = link.timestamp - time
     }
     let anim = keyboardView?.layer.animation(forKey: "position")
     // animation hasn't started yet, so we ignore this frame
     if anim?.beginTime == 0.0 {
       return
     }
-    let beginTime = anim?.beginTime ?? time
-    let baseDuration = displaylink.targetTimestamp - beginTime
+    // when concurrent animation happens, then `.beginTime` remains the same
+    let beginTime = max(anim?.beginTime ?? time, time)
+    let baseDuration = link.targetTimestamp - beginTime
 
     #if targetEnvironment(simulator)
-      let correctedDuration = baseDuration - displaylink.duration * 0.6
+      let correctedDuration = baseDuration - ONE_FRAME * 0.6
     #else
-      // TODO: on iPhone 14 Pro it has 2 or 1 frame delay?
-      let correctedDuration = baseDuration + displaylink.duration * 1
+      // TODO: check on iPhone 14 Pro (ProMotion display)
+      let correctedDuration = baseDuration + ONE_FRAME
     #endif
 
-    let duration = correctedDuration * Double(anim?.speed ?? 1)
-    print("duration: \(duration) \(diff) \(displaylink.timestamp)")
-    print("duration2: \(displaylink.timestamp - time)")
+    let duration = correctedDuration
+    print("duration: \(duration) \(diff) \(link.timestamp)")
+    print("duration2: \(link.timestamp - time)")
     let pos = CGFloat(animation?.curveFunction(time: duration) ?? 0)
     print("BeginTime:  \(beginTime) Time: \(time)")
-    print("--> CADisplayLink position: \(keyboardPosition), duration for CADisplayLink (reverse): \(animation?.approximateTiming(forValue: keyboardPosition)), CADisplayLink timestamp: \(displaylink.timestamp), CADisplayLink targetTimestamp: \(displaylink.targetTimestamp), Spring formula prediction: \(pos), at: \(duration) anim?.beginTime: \(anim?.beginTime) time: \(time)")
+    print("--> CADisplayLink position: \(keyboardPosition), duration for CADisplayLink (reverse): \(animation?.approximateTiming(forValue: keyboardPosition)), CADisplayLink timestamp: \(link.timestamp), CADisplayLink targetTimestamp: \(link.targetTimestamp), Spring formula prediction: \(pos), at: \(duration) anim?.beginTime: \(anim?.beginTime) time: \(time) speed: \(anim?.speed)")
     onEvent(
       "onKeyboardMove",
       pos as NSNumber,

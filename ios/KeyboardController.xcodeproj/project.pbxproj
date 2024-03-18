@@ -17,6 +17,7 @@
 		089BA5DC2B3E0C9D000A9A90 /* ViewHierarchyNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 089BA5DB2B3E0C9D000A9A90 /* ViewHierarchyNavigator.swift */; };
 		08C47AFC2BA9AF7100DB93BB /* KeyboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08C47AFB2BA9AF7100DB93BB /* KeyboardView.swift */; };
 		08DF17B32BB1838D00279890 /* RCTUIManager+LayoutAnimationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 08DF17B22BB1838D00279890 /* RCTUIManager+LayoutAnimationManager.m */; };
+		08C47AF82BA84F3E00DB93BB /* SpringAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08C47AF72BA84F3E00DB93BB /* SpringAnimation.swift */; };
 		F333F8D428996B8D0015B05F /* KeyboardControllerView.mm in Sources */ = {isa = PBXBuildFile; fileRef = F333F8D228996B8D0015B05F /* KeyboardControllerView.mm */; };
 		F359D34F28133C26000B6AFE /* KeyboardControllerModule.mm in Sources */ = {isa = PBXBuildFile; fileRef = F359D34E28133C26000B6AFE /* KeyboardControllerModule.mm */; };
 		F3626A0728B3FE760021B2D9 /* KeyboardMovementObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3626A0628B3FE760021B2D9 /* KeyboardMovementObserver.swift */; };
@@ -50,6 +51,7 @@
 		08C47AFB2BA9AF7100DB93BB /* KeyboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardView.swift; sourceTree = "<group>"; };
 		08DF17B22BB1838D00279890 /* RCTUIManager+LayoutAnimationManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "RCTUIManager+LayoutAnimationManager.m"; sourceTree = "<group>"; };
 		08DF17B52BB1845500279890 /* RCTUIManager+LayoutAnimationManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "RCTUIManager+LayoutAnimationManager.h"; sourceTree = "<group>"; };
+		08C47AF72BA84F3E00DB93BB /* SpringAnimation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpringAnimation.swift; sourceTree = "<group>"; };
 		134814201AA4EA6300B7C361 /* libKeyboardController.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libKeyboardController.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B3E7B5891CC2AC0600A0062D /* KeyboardControllerViewManager.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = KeyboardControllerViewManager.mm; sourceTree = "<group>"; };
 		F333F8D128996B1C0015B05F /* KeyboardControllerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KeyboardControllerView.h; sourceTree = "<group>"; };
@@ -126,6 +128,13 @@
 				08DF17B52BB1845500279890 /* RCTUIManager+LayoutAnimationManager.h */,
 			);
 			path = objc;
+		};
+		08C47AF62BA84F2700DB93BB /* core */ = {
+			isa = PBXGroup;
+			children = (
+				08C47AF72BA84F3E00DB93BB /* SpringAnimation.swift */,
+			);
+			path = core;
 			sourceTree = "<group>";
 		};
 		134814211AA4EA7D00B7C361 /* Products */ = {
@@ -140,6 +149,7 @@
 			isa = PBXGroup;
 			children = (
 				08DF17B12BB1834400279890 /* objc */,
+				08C47AF62BA84F2700DB93BB /* core */,
 				089BA5DD2B3EC978000A9A90 /* traversal */,
 				084AEEC12ACF405C001A3069 /* views */,
 				084AEEC02ACDFC2A001A3069 /* observers */,
@@ -222,6 +232,7 @@
 				08C47AFC2BA9AF7100DB93BB /* KeyboardView.swift in Sources */,
 				F3F50669289E653B003091D6 /* KeyboardMoveEvent.m in Sources */,
 				083FB9852B15171600C0EFF0 /* TextChangeObserver.swift in Sources */,
+				08C47AF82BA84F3E00DB93BB /* SpringAnimation.swift in Sources */,
 				089BA5DC2B3E0C9D000A9A90 /* ViewHierarchyNavigator.swift in Sources */,
 				083FB9872B15174C00C0EFF0 /* FocusedInputTextChangedEvent.m in Sources */,
 			);
