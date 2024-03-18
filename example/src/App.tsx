@@ -2,7 +2,7 @@ import "react-native-gesture-handler";
 
 import { NavigationContainer } from "@react-navigation/native";
 import * as React from "react";
-import { ActivityIndicator, StyleSheet } from "react-native";
+import { ActivityIndicator, StyleSheet, Text } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 import {
@@ -40,11 +40,9 @@ export default function App() {
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
       <GestureHandlerRootView style={styles.root}>
-        <KeyboardProvider statusBarTranslucent>
-          <NavigationContainer linking={linking} fallback={spinner}>
-            <RootStack />
-          </NavigationContainer>
-        </KeyboardProvider>
+        <Text>Hello people</Text>
+        {/* @ts-expect-error aaa */}
+        <Text>{"virtualKeyboard" in navigator ? "True" : "False"}</Text>
       </GestureHandlerRootView>
     </SafeAreaProvider>
   );
