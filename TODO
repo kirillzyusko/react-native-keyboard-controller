@@ -1,0 +1,2 @@
+- in iOS simulator: enable slow animation, then open keyboard and while it's opening -> press return (circle on hide disappear instantly)
+- why duration * 0.6 on iOS? Maybe there is a more sophisticated way how to calculate that value?
