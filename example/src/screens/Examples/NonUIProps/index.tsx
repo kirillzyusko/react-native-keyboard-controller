@@ -13,17 +13,11 @@ function useGradualKeyboardAnimation() {
 
   useKeyboardHandler(
     {
-      onStart: (e) => {
+      onMove: (e) => {
         "worklet";
 
         height.value = e.height;
         progress.value = e.progress;
-      },
-      onMove: (e) => {
-        "worklet";
-
-        // height.value = e.height;
-        // progress.value = e.progress;
       },
       onEnd: (e) => {
         "worklet";
@@ -43,7 +37,7 @@ function NonUIProps() {
 
   const rStyle = useAnimatedStyle(() => {
     return {
-      backgroundColor: "black",
+      backgroundColor: "gray",
       height: height.value,
       width: interpolate(progress.value, [0, 1], [100, 200]),
     };

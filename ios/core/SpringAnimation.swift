@@ -59,7 +59,7 @@ public class SpringAnimation {
     )
   }
 
-  func curveFunction(time: Double) -> Double {
+  func valueAt(time: Double) -> Double {
     let t = time * Double(speed)
     let x0 = toValue - fromValue
 
@@ -77,7 +77,7 @@ public class SpringAnimation {
     return y
   }
 
-  func approximateTiming(forValue y: Double) -> Double {
+  func timingAt(value y: Double) -> Double {
     var lowerBound = 0.0
     var upperBound = 1.0 // Assuming 1 second is the max duration for simplicity
     let tolerance = 0.001 // Define how precise you want to be
@@ -85,7 +85,7 @@ public class SpringAnimation {
 
     while (upperBound - lowerBound) > tolerance {
       tGuess = ((lowerBound + upperBound) / 2) / Double(speed)
-      let currentValue = curveFunction(time: tGuess)
+      let currentValue = valueAt(time: tGuess)
 
       if currentValue < y {
         lowerBound = tGuess
