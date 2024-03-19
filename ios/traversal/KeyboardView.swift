@@ -9,7 +9,7 @@
 import Foundation
 import UIKit
 
-class KeyboardView {
+enum KeyboardView {
   // https://stackoverflow.com/questions/32598490/show-uiview-with-buttons-over-keyboard-like-in-skype-viber-messengers-swift-i
   static func find() -> UIView? {
     var result: UIView?
