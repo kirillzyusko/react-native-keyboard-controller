@@ -44,7 +44,6 @@ public class KeyboardMovementObserver: NSObject {
   private var tag: NSNumber = -1
   private var animation: SpringAnimation?
   private var time = CACurrentMediaTime()
-  private var diff = 0.0
 
   @objc public init(
     handler: @escaping (NSString, NSNumber, NSNumber, NSNumber, NSNumber) -> Void,
@@ -232,8 +231,6 @@ public class KeyboardMovementObserver: NSObject {
 
       removeKeyboardWatcher()
       setupKVObserver()
-
-      diff = 0.0
     }
   }
 
@@ -253,7 +250,6 @@ public class KeyboardMovementObserver: NSObject {
     onNotify("KeyboardController::keyboardDidHide", data)
 
     removeKeyboardWatcher()
-    diff = 0.0
   }
 
   @objc func setupKeyboardWatcher() {
@@ -299,11 +295,8 @@ public class KeyboardMovementObserver: NSObject {
     }
 
     prevKeyboardPosition = keyboardPosition
-    if diff == 0.0 {
-      diff = link.timestamp - time
-    }
+
     let anim = keyboardView?.layer.animation(forKey: "position")
-    // animation hasn't started yet, so we ignore this frame
     // when concurrent animation happens, then `.beginTime` remains the same
     let beginTime = max(anim?.beginTime ?? time, time)
     let baseDuration = link.targetTimestamp - beginTime
@@ -311,16 +304,15 @@ public class KeyboardMovementObserver: NSObject {
     #if targetEnvironment(simulator)
       let correctedDuration = baseDuration - ONE_FRAME * 0.6
     #else
-      // TODO: check on iPhone 14 Pro (ProMotion display)
       let correctedDuration = baseDuration + ONE_FRAME
     #endif
 
     let duration = correctedDuration
-    print("duration: \(duration) \(diff) \(link.timestamp)")
+    print("duration: \(duration) \(link.timestamp)")
     print("duration2: \(link.timestamp - time)")
-    let pos = CGFloat(animation?.curveFunction(time: duration) ?? 0)
+    let pos = CGFloat(animation?.valueAt(time: duration) ?? 0)
     print("BeginTime:  \(beginTime) Time: \(time)")
-    print("--> CADisplayLink position: \(keyboardPosition), duration for CADisplayLink (reverse): \(animation?.approximateTiming(forValue: keyboardPosition)), CADisplayLink timestamp: \(link.timestamp), CADisplayLink targetTimestamp: \(link.targetTimestamp), Spring formula prediction: \(pos), at: \(duration) anim?.beginTime: \(anim?.beginTime) time: \(time) speed: \(anim?.speed)")
+    print("--> CADisplayLink position: \(keyboardPosition), duration for CADisplayLink (reverse): \(animation?.timingAt(value: keyboardPosition)), CADisplayLink timestamp: \(link.timestamp), CADisplayLink targetTimestamp: \(link.targetTimestamp), Spring formula prediction: \(pos), at: \(duration) anim?.beginTime: \(anim?.beginTime) time: \(time) speed: \(anim?.speed)")
     onEvent(
       "onKeyboardMove",
       pos as NSNumber,

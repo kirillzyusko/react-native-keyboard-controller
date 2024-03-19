@@ -1,2 +1,2 @@
-- in iOS simulator: enable slow animation, then open keyboard and while it's opening -> press return (circle on hide disappear instantly)
+- in iOS simulator: enable slow animation, then open keyboard and while it's opening -> press return (circle on hide moves to final position and then animates, but should be animating from current position)
 - why duration * 0.6 on iOS? Maybe there is a more sophisticated way how to calculate that value?
