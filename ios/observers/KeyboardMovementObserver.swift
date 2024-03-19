@@ -20,7 +20,7 @@ public class KeyboardMovementObserver: NSObject {
     let windowsCount = UIApplication.shared.windows.count
 
     if _keyboardView == nil || windowsCount != _windowsCount {
-      _keyboardView = findKeyboardView()
+      _keyboardView = KeyboardView.find()
       _windowsCount = windowsCount
     }
 
@@ -250,30 +250,6 @@ public class KeyboardMovementObserver: NSObject {
   @objc func removeKeyboardWatcher() {
     displayLink?.invalidate()
     displayLink = nil
-  }
-
-  // https://stackoverflow.com/questions/32598490/show-uiview-with-buttons-over-keyboard-like-in-skype-viber-messengers-swift-i
-  func findKeyboardView() -> UIView? {
-    var result: UIView?
-
-    let windows = UIApplication.shared.windows
-    for window in windows {
-      if window.description.hasPrefix("<UITextEffectsWindow") {
-        for subview in window.subviews {
-          if subview.description.hasPrefix("<UIInputSetContainerView") {
-            for hostView in subview.subviews {
-              if hostView.description.hasPrefix("<UIInputSetHostView") {
-                result = hostView
-                break
-              }
-            }
-            break
-          }
-        }
-        break
-      }
-    }
-    return result
   }
 
   @objc func updateKeyboardFrame() {
