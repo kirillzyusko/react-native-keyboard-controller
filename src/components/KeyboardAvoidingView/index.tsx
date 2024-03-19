@@ -79,7 +79,7 @@ const KeyboardAvoidingView = forwardRef<View, React.PropsWithChildren<Props>>(
     const onLayoutWorklet = useCallback((layout: LayoutRectangle) => {
       "worklet";
 
-      if (keyboard.isClosed.value) {
+      if (keyboard.isClosed.value || initialFrame.value === null) {
         initialFrame.value = layout;
       }
     }, []);
