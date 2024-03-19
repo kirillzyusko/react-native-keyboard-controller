@@ -304,9 +304,6 @@ public class KeyboardMovementObserver: NSObject {
     }
     let anim = keyboardView?.layer.animation(forKey: "position")
     // animation hasn't started yet, so we ignore this frame
-    if anim?.beginTime == 0.0 {
-      return
-    }
     // when concurrent animation happens, then `.beginTime` remains the same
     let beginTime = max(anim?.beginTime ?? time, time)
     let baseDuration = link.targetTimestamp - beginTime
