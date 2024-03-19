@@ -11,18 +11,24 @@ import QuartzCore
 
 // swiftlint:disable identifier_name
 public class SpringAnimation {
+  private weak var animation: CASpringAnimation?
+
+  // internal variables
   private var zeta: Double // Damping ratio
   private var omega0: Double // Undamped angular frequency of the oscillator
   private var omega1: Double // Exponential decay
   private var v0: Double // Initial velocity
 
+  // constructor variables
   private let stiffness: Double
   private let damping: Double
   private let mass: Double
   private let initialVelocity: Double
-  private let speed: Float
   private let fromValue: Double
   private let toValue: Double
+  
+  // public members
+  public let speed: Float
 
   init(
     stiffness: Double,
@@ -57,8 +63,15 @@ public class SpringAnimation {
       fromValue: fromValue,
       toValue: toValue
     )
+    self.animation = animation
+  }
+  
+  // public getters
+  var beginTime: CFTimeInterval? {
+    return animation?.beginTime
   }
 
+  // public functions
   func valueAt(time: Double) -> Double {
     let t = time * Double(speed)
     let x0 = toValue - fromValue
