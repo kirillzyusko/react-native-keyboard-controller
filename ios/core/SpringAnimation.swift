@@ -26,7 +26,7 @@ public class SpringAnimation {
   private let initialVelocity: Double
   private let fromValue: Double
   private let toValue: Double
-  
+
   // public members
   public let speed: Float
 
@@ -65,7 +65,7 @@ public class SpringAnimation {
     )
     self.animation = animation
   }
-  
+
   // public getters
   var beginTime: CFTimeInterval? {
     return animation?.beginTime
