@@ -296,9 +296,8 @@ public class KeyboardMovementObserver: NSObject {
 
     prevKeyboardPosition = keyboardPosition
 
-    let anim = keyboardView?.layer.animation(forKey: "position")
     // when concurrent animation happens, then `.beginTime` remains the same
-    let beginTime = max(anim?.beginTime ?? time, time)
+    let beginTime = max(animation?.beginTime ?? time, time)
     let baseDuration = link.targetTimestamp - beginTime
 
     #if targetEnvironment(simulator)
@@ -312,7 +311,7 @@ public class KeyboardMovementObserver: NSObject {
     print("duration2: \(link.timestamp - time)")
     let pos = CGFloat(animation?.valueAt(time: duration) ?? 0)
     print("BeginTime:  \(beginTime) Time: \(time)")
-    print("--> CADisplayLink position: \(keyboardPosition), duration for CADisplayLink (reverse): \(animation?.timingAt(value: keyboardPosition)), CADisplayLink timestamp: \(link.timestamp), CADisplayLink targetTimestamp: \(link.targetTimestamp), Spring formula prediction: \(pos), at: \(duration) anim?.beginTime: \(anim?.beginTime) time: \(time) speed: \(anim?.speed)")
+    print("--> CADisplayLink position: \(keyboardPosition), duration for CADisplayLink (reverse): \(animation?.timingAt(value: keyboardPosition)), CADisplayLink timestamp: \(link.timestamp), CADisplayLink targetTimestamp: \(link.targetTimestamp), Spring formula prediction: \(pos), at: \(duration) animation?.beginTime: \(animation?.beginTime) time: \(time) speed: \(animation?.speed)")
     onEvent(
       "onKeyboardMove",
       pos as NSNumber,
