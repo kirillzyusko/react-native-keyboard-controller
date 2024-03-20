@@ -72,6 +72,10 @@ type KeyboardProviderProps = {
   enabled?: boolean;
 };
 
+// capture `Platform.OS` in separate variable to avoid deep workletization of entire RN package
+// see https://github.com/kirillzyusko/react-native-keyboard-controller/issues/393 and https://github.com/kirillzyusko/react-native-keyboard-controller/issues/294 for more details
+const OS = Platform.OS;
+
 export const KeyboardProvider = ({
   children,
   statusBarTranslucent,
@@ -130,7 +134,7 @@ export const KeyboardProvider = ({
   const updateSharedValues = (event: NativeEvent, platforms: string[]) => {
     "worklet";
 
-    if (platforms.includes(Platform.OS)) {
+    if (platforms.includes(OS)) {
       progressSV.value = event.progress;
       heightSV.value = -event.height;
     }
@@ -201,8 +205,8 @@ export const KeyboardProvider = ({
       <KeyboardControllerViewAnimated
         enabled={enabled}
         onKeyboardMoveReanimated={keyboardHandler}
-        onKeyboardMoveStart={Platform.OS === "ios" ? onKeyboardMove : undefined}
-        onKeyboardMove={Platform.OS === "android" ? onKeyboardMove : undefined}
+        onKeyboardMoveStart={OS === "ios" ? onKeyboardMove : undefined}
+        onKeyboardMove={OS === "android" ? onKeyboardMove : undefined}
         onKeyboardMoveInteractive={onKeyboardMove}
         onFocusedInputLayoutChangedReanimated={inputLayoutHandler}
         onFocusedInputTextChangedReanimated={inputTextHandler}
