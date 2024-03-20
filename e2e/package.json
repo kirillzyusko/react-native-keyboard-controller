@@ -9,7 +9,8 @@
     "build-example:ios": "detox build --configuration example.ios.sim.release",
     "test-example:ios": "detox test --configuration example.ios.sim.release --loglevel verbose --take-screenshots failing --record-videos failing",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "detox-clean": "detox clean-framework-cache && detox build-framework-cache"
+    "detox-clean": "detox clean-framework-cache && detox build-framework-cache",
+    "postinstall": "patch-package"
   },
   "repository": {
     "type": "git",
@@ -32,6 +33,7 @@
     "colors": "^1.4.0",
     "detox": "^20.19.3",
     "jest": "^29",
+    "patch-package": "^8.0.0",
     "pixelmatch": "^5.3.0",
     "pngjs": "^7.0.0",
     "ts-jest": "^29.1.1"

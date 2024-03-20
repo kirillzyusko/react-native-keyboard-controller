@@ -1,0 +1,18 @@
+diff --git a/node_modules/detox/src/devices/runtime/drivers/ios/SimulatorDriver.js b/node_modules/detox/src/devices/runtime/drivers/ios/SimulatorDriver.js
+index 62efd48..f77ad8f 100644
+--- a/node_modules/detox/src/devices/runtime/drivers/ios/SimulatorDriver.js
++++ b/node_modules/detox/src/devices/runtime/drivers/ios/SimulatorDriver.js
+@@ -106,9 +106,10 @@ class SimulatorDriver extends IosDriver {
+ 
+   async terminate(bundleId) {
+     const { udid } = this;
+-    await this.emitter.emit('beforeTerminateApp', { deviceId: udid, bundleId });
+-    await this._applesimutils.terminate(udid, bundleId);
+-    await this.emitter.emit('terminateApp', { deviceId: udid, bundleId });
++    // fixes: https://github.com/wix/Detox/issues/4148
++    // await this.emitter.emit('beforeTerminateApp', { deviceId: udid, bundleId });
++    // await this._applesimutils.terminate(udid, bundleId);
++    // await this.emitter.emit('terminateApp', { deviceId: udid, bundleId });
+   }
+ 
+   async setBiometricEnrollment(yesOrNo) {
