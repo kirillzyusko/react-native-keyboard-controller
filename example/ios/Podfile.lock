@@ -951,7 +951,7 @@ PODS:
   - React-Mapbuffer (0.73.6):
     - glog
     - React-debug
-  - react-native-keyboard-controller (1.11.3):
+  - react-native-keyboard-controller (1.11.4):
     - glog
     - RCT-Folly (= 2022.05.16.00)
     - React-Core
@@ -1405,7 +1405,7 @@ SPEC CHECKSUMS:
   React-jsinspector: 85583ef014ce53d731a98c66a0e24496f7a83066
   React-logger: 3eb80a977f0d9669468ef641a5e1fabbc50a09ec
   React-Mapbuffer: 84ea43c6c6232049135b1550b8c60b2faac19fab
-  react-native-keyboard-controller: 9ea48f690b816cfb6efec550f3914cf23d7cc3d3
+  react-native-keyboard-controller: 99771d484d89cba1c1d5f813023103ff682937c7
   react-native-safe-area-context: b97eb6f9e3b7f437806c2ce5983f479f8eb5de4b
   react-native-text-input-mask: 22ca8eeef84d42a896f79428f7d175a5eb8b1c4e
   React-nativeconfig: b4d4e9901d4cabb57be63053fd2aa6086eb3c85f
