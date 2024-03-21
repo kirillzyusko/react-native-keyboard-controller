@@ -12,6 +12,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.views.view.ReactViewGroup
 import com.reactnativekeyboardcontroller.extensions.copyBoundsInWindow
+import com.reactnativekeyboardcontroller.extensions.px
 import com.reactnativekeyboardcontroller.interactive.KeyboardAnimationController
 import com.reactnativekeyboardcontroller.interactive.interpolators.Interpolator
 import com.reactnativekeyboardcontroller.interactive.interpolators.IosInterpolator
@@ -35,6 +36,7 @@ class KeyboardGestureAreaReactViewGroup(private val reactContext: ThemedReactCon
   private var keyboardHeight = 0
 
   // react props
+  private var offset = 0
   private var interpolator: Interpolator = LinearInterpolator()
   private var scrollKeyboardOnScreenWhenNotVisible = false
   private var scrollKeyboardOffScreenWhenVisible = true
@@ -63,6 +65,10 @@ class KeyboardGestureAreaReactViewGroup(private val reactContext: ThemedReactCon
   }
 
   // region Props setters
+  fun setOffset(offset: Double) {
+    this.offset = offset.toFloat().px.toInt()
+  }
+
   fun setInterpolator(interpolator: String) {
     this.interpolator = interpolators[interpolator] ?: LinearInterpolator()
   }
@@ -125,6 +131,7 @@ class KeyboardGestureAreaReactViewGroup(private val reactContext: ThemedReactCon
           dy.roundToInt(),
           this.getWindowHeight() - event.rawY.toInt(),
           controller.getCurrentKeyboardHeight(),
+          offset
         )
 
         if (moveBy != 0) {

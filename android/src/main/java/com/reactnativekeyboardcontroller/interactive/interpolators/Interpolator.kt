@@ -8,7 +8,8 @@ interface Interpolator {
    * @param dy the distance that the finger has moved relative to the previous location.
    * @param absoluteFingerPosition current position of the finger.
    * @param keyboardPosition current keyboard position.
+   * @param offset extra space to the keyboard to activate a gesture
    * @return the distance the keyboard should be moved from its current location.
    */
-  fun interpolate(dy: Int, absoluteFingerPosition: Int, keyboardPosition: Int): Int
+  fun interpolate(dy: Int, absoluteFingerPosition: Int, keyboardPosition: Int, offset: Int): Int
 }

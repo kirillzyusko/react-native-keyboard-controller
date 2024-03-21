@@ -101,6 +101,10 @@ export type KeyboardGestureAreaProps = {
    * Defaults to `true`.
    */
   enableSwipeToDismiss?: boolean;
+  /**
+   * Extra distance to the keyboard.
+   */
+  offset?: number;
 } & ViewProps;
 
 export type Direction = "next" | "prev" | "current";
