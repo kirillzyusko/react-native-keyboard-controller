@@ -89,6 +89,7 @@ function InteractiveKeyboard({ navigation }: Props) {
         style={styles.content}
         interpolator={interpolator}
         showOnSwipeUp
+        offset={50}
       >
         <Reanimated.ScrollView
           showsVerticalScrollIndicator={false}

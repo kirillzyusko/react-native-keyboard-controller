@@ -27,6 +27,11 @@ class KeyboardGestureAreaViewManager(mReactContext: ReactApplicationContext) :
     return manager.createViewInstance(context)
   }
 
+  @ReactProp(name = "offset")
+  override fun setOffset(view: ReactViewGroup, value: Double?) {
+    manager.setOffset(view as KeyboardGestureAreaReactViewGroup, value ?: 0.0)
+  }
+
   @ReactProp(name = "interpolator")
   override fun setInterpolator(view: ReactViewGroup, value: String?) {
     manager.setInterpolator(view as KeyboardGestureAreaReactViewGroup, value ?: "linear")
