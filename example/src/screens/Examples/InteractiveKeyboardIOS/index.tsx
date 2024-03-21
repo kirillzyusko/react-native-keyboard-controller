@@ -4,7 +4,6 @@ import { useKeyboardHandler } from "react-native-keyboard-controller";
 import Reanimated, {
   useAnimatedProps,
   useAnimatedScrollHandler,
-  interpolate,
   useAnimatedStyle,
   useSharedValue,
 } from "react-native-reanimated";
@@ -84,7 +83,7 @@ const contentContainerStyle = {
 
 function InteractiveKeyboard() {
   const ref = useRef<Reanimated.ScrollView>(null);
-  const { height, progress, onScroll, inset, offset } = useKeyboardAnimation();
+  const { height, onScroll, inset, offset } = useKeyboardAnimation();
 
   const scrollToBottom = useCallback(() => {
     ref.current?.scrollToEnd({ animated: false });
@@ -98,7 +97,7 @@ function InteractiveKeyboard() {
       backgroundColor: "#BCBCBC",
       transform: [
         {
-          translateY: -height.value + 25,
+          translateY: -height.value,
         },
       ],
     }),
