@@ -14,6 +14,7 @@ public class KeyboardMovementObserver: NSObject {
   // class members
   var onEvent: (NSString, NSNumber, NSNumber, NSNumber, NSNumber) -> Void
   var onNotify: (String, Any) -> Void
+  var onRequestAnimation: () -> Void
   // progress tracker
   private var _keyboardView: UIView?
   private var keyboardView: UIView? {
@@ -30,19 +31,23 @@ public class KeyboardMovementObserver: NSObject {
   private var _windowsCount: Int = 0
   private var prevKeyboardPosition = 0.0
   private var displayLink: CADisplayLink?
-  private var hasKVObserver = false
   private var isMounted = false
   // state variables
   private var keyboardHeight: CGFloat = 0.0
   private var duration = 0
   private var tag: NSNumber = -1
+  // interactive
+  private var hasKVObserver = false
+  private var isInteractive = false
 
   @objc public init(
     handler: @escaping (NSString, NSNumber, NSNumber, NSNumber, NSNumber) -> Void,
-    onNotify: @escaping (String, Any) -> Void
+    onNotify: @escaping (String, Any) -> Void,
+    onRequestAnimation: @escaping () -> Void
   ) {
     onEvent = handler
     self.onNotify = onNotify
+    self.onRequestAnimation = onRequestAnimation
   }
 
   @objc public func mount() {
@@ -135,6 +140,8 @@ public class KeyboardMovementObserver: NSObject {
         return
       }
 
+      isInteractive = true
+        onRequestAnimation()
       onEvent(
         "onKeyboardMoveInteractive",
         position as NSNumber,
@@ -166,7 +173,13 @@ public class KeyboardMovementObserver: NSObject {
       data["duration"] = duration
       data["timestamp"] = Date.currentTimeStamp
       data["target"] = tag
-
+print("\(duration)")
+        if (isInteractive) {
+            onRequestAnimation()
+        }
+        
+      isInteractive = false
+        
       onEvent("onKeyboardMoveStart", Float(keyboardHeight) as NSNumber, 1, duration as NSNumber, tag)
       onNotify("KeyboardController::keyboardWillShow", data)
 
@@ -186,6 +199,8 @@ public class KeyboardMovementObserver: NSObject {
     data["duration"] = duration
     data["timestamp"] = Date.currentTimeStamp
     data["target"] = tag
+      
+    isInteractive = false
 
     onEvent("onKeyboardMoveStart", 0, 0, duration as NSNumber, tag)
     onNotify("KeyboardController::keyboardWillHide", data)
@@ -208,6 +223,8 @@ public class KeyboardMovementObserver: NSObject {
       data["duration"] = duration
       data["timestamp"] = Date.currentTimeStamp
       data["target"] = tag
+        
+        isInteractive = false
 
       onEvent("onKeyboardMoveEnd", keyboardHeight as NSNumber, 1, duration as NSNumber, tag)
       onNotify("KeyboardController::keyboardDidShow", data)
@@ -228,6 +245,8 @@ public class KeyboardMovementObserver: NSObject {
     data["timestamp"] = Date.currentTimeStamp
     data["target"] = tag
 
+      isInteractive = false
+      
     onEvent("onKeyboardMoveEnd", 0 as NSNumber, 0, duration as NSNumber, tag)
     onNotify("KeyboardController::keyboardDidHide", data)
 
