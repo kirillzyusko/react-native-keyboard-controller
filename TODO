@@ -1,0 +1,2 @@
+- {"duration": -1, "eventName": "onKeyboardMoveInteractive", "height": 346, "progress": 1, "target": 847} - when attach input accessory view
+- dynamic resize (i. e. offset property from 50 to 80, 110, etc.)

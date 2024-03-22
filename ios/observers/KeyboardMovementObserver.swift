@@ -9,31 +9,6 @@
 import Foundation
 import UIKit
 
-class CustomInputAccessoryView: UIView {
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        setupView()
-    }
-
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        setupView()
-    }
-
-    override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
-            // Return false to allow touch events to pass through
-            return false
-        }
-    
-    private func setupView() {
-        // Set the background color to red
-        // backgroundColor = UIColor.red
-
-        // You can customize the appearance of the accessory view here
-        // Add any additional subviews or configure constraints if needed
-    }
-}
-
 @objc(KeyboardMovementObserver)
 public class KeyboardMovementObserver: NSObject {
   // class members
@@ -58,7 +33,6 @@ public class KeyboardMovementObserver: NSObject {
   private var _windowsCount: Int = 0
   private var prevKeyboardPosition = 0.0
   private var displayLink: CADisplayLink?
-  private var hasKVObserver = false
   private var isMounted = false
   // state variables
   private var keyboardHeight: CGFloat = 0.0
@@ -66,7 +40,8 @@ public class KeyboardMovementObserver: NSObject {
   private var tag: NSNumber = -1
   private var animation: KeyboardAnimation?
   // interactive keyboard
-  private var offset = 0
+  private var hasKVObserver = false
+  private var offset: CGFloat = 0.0
 
   @objc public init(
     handler: @escaping (NSString, NSNumber, NSNumber, NSNumber, NSNumber) -> Void,
@@ -114,6 +89,7 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   private func setupKVObserver() {
+    print("setupKVObserver")
     if hasKVObserver {
       return
     }
@@ -125,6 +101,7 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   private func removeKVObserver() {
+    print("removeKVObserver")
     if !hasKVObserver {
       return
     }
@@ -147,7 +124,7 @@ public class KeyboardMovementObserver: NSObject {
       }
       // if keyboard height is not equal to its bounds - we can ignore
       // values, since they'll be invalid and will cause UI jumps
-      if keyboardView?.bounds.size.height != keyboardHeight {
+      if keyboardView?.bounds.size.height != keyboardHeight + offset {
         return
       }
 
@@ -158,10 +135,11 @@ public class KeyboardMovementObserver: NSObject {
       let keyboardWindowH = keyboardView?.window?.bounds.size.height ?? 0
       let keyboardPosition = keyboardWindowH - keyboardFrameY
       let position = CGFloat.interpolate(
-        inputRange: [keyboardHeight / 2, -keyboardHeight / 2],
-        outputRange: [keyboardHeight, 0],
+        inputRange: [(keyboardHeight + offset) / 2, -(keyboardHeight + offset) / 2],
+        outputRange: [keyboardHeight + offset, 0],
         currentValue: keyboardPosition
-      )
+      ) - offset
+      print("AAA kh: \(keyboardHeight) kp: \(keyboardPosition) p: \(position)")
 
       if position == 0 {
         // it will be triggered before `keyboardWillDisappear` and
@@ -190,7 +168,7 @@ public class KeyboardMovementObserver: NSObject {
     if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
       tag = UIResponder.current.reactViewTag
         
-      let keyboardHeight = keyboardFrame.cgRectValue.size.height
+      let keyboardHeight = keyboardFrame.cgRectValue.size.height - offset
       let duration = Int(
         (notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double ?? 0) * 1000
       )
@@ -240,7 +218,7 @@ public class KeyboardMovementObserver: NSObject {
 
   @objc func keyboardDidAppear(_ notification: Notification) {
     if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
-      let keyboardHeight = keyboardFrame.cgRectValue.size.height
+      let keyboardHeight = keyboardFrame.cgRectValue.size.height - offset
       tag = UIResponder.current.reactViewTag
       self.keyboardHeight = keyboardHeight
       let duration = Int(
@@ -263,10 +241,10 @@ public class KeyboardMovementObserver: NSObject {
       setupKVObserver()
       animation = nil
       
-      let h = 50
+      let h = 50.0
       offset = h
         if let activeTextField = UIResponder.current as? UITextField, activeTextField.inputAccessoryView == nil {
-          activeTextField.inputAccessoryView = CustomInputAccessoryView(frame: CGRect(x: 0, y: 0, width: 0, height: h))
+          activeTextField.inputAccessoryView = InvisibleInputAccessoryView(frame: CGRect(x: 0, y: 0, width: 0, height: h))
           activeTextField.reloadInputViews()
       }
     }
@@ -291,6 +269,10 @@ public class KeyboardMovementObserver: NSObject {
     animation = nil
       
     print("keyboardDidDisappear \(keyboardHeight) \(Date.currentTimeStamp)")
+      
+    // clean dark magic
+    (FocusedInputHolder.shared.get() as? UITextField)?.inputAccessoryView = nil
+    offset = 0.0
   }
 
   @objc func setupKeyboardWatcher() {
@@ -326,7 +308,7 @@ public class KeyboardMovementObserver: NSObject {
 
     let keyboardFrameY = keyboardView?.layer.presentation()?.frame.origin.y ?? 0
     let keyboardWindowH = keyboardView?.window?.bounds.size.height ?? 0
-    var keyboardPosition = keyboardWindowH - keyboardFrameY
+    let keyboardPosition = keyboardWindowH - keyboardFrameY // - offset
 
     if keyboardPosition == prevKeyboardPosition || keyboardFrameY == 0 {
       return

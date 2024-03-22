@@ -30,6 +30,8 @@ export const useAnimatedKeyboardHandler: KeyboardHandlerHook<
         onKeyboardMoveInteractive,
       } = handlers;
 
+      console.log(event);
+
       if (
         onKeyboardMoveStart &&
         event.eventName.endsWith("onKeyboardMoveStart")
