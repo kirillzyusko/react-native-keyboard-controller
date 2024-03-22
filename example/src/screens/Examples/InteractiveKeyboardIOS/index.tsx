@@ -32,7 +32,7 @@ const useKeyboardAnimation = () => {
       // simply update `height` to destination and we need to listen to `onMove`
       // handler to have a smooth animation
       if (progress.value !== 1 && progress.value !== 0 && e.height !== 0) {
-        shouldUseOnMoveHandler.value = true;
+        // shouldUseOnMoveHandler.value = true;
         return;
       }
 

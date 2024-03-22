@@ -83,13 +83,14 @@ class KeyboardControllerView: UIView {
 
   func onTextChanged(text: String) {
     guard isJSThreadReady() else { return }
-
+      
     eventDispatcher.send(FocusedInputTextChangedEvent(reactTag: reactTag, text: text))
   }
 
   func onEvent(event: NSString, height: NSNumber, progress: NSNumber, duration: NSNumber, target: NSNumber) {
     guard isJSThreadReady() else { return }
 
+    bridge.uiManager.scheduleKeyboardAnimation()
     eventDispatcher.send(
       KeyboardMoveEvent(
         reactTag: reactTag,
