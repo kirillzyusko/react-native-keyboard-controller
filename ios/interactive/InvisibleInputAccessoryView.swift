@@ -27,7 +27,7 @@ public class InvisibleInputAccessoryView: UIView {
     
     private func setupView() {
         // Set the background color to red
-        // backgroundColor = UIColor.red
+        backgroundColor = UIColor.red
 
         // You can customize the appearance of the accessory view here
         // Add any additional subviews or configure constraints if needed
