@@ -12,7 +12,6 @@
 #import "FocusedInputLayoutChangedEvent.h"
 #import "FocusedInputTextChangedEvent.h"
 #import "KeyboardMoveEvent.h"
-#import "RCTUIManager+LayoutAnimationManager.h"
 
 #if __has_include("react_native_keyboard_controller-Swift.h")
 #import "react_native_keyboard_controller-Swift.h"
@@ -26,7 +25,6 @@
 #import <react/renderer/components/reactnativekeyboardcontroller/RCTComponentViewHelpers.h>
 
 #import <React/RCTBridge+Private.h>
-#import <React/RCTUIManager.h>
 
 #import "KeyboardControllerModule-Header.h"
 #import "RCTFabricComponentsPlugins.h"
@@ -179,9 +177,10 @@ using namespace facebook::react;
           [KeyboardController.shared sendEvent:event body:data];
         }
         onRequestAnimation:^() {
-          RCTBridge *bridge = [RCTBridge currentBridge];
-          RCTUIManager *uiManager = [bridge moduleForClass:[RCTUIManager class]];
-          [uiManager scheduleKeyboardAnimation];
+          // no-op for fabric
+        }
+        onCancelAnimation:^(){
+            // no-op for fabric
         }];
   }
 

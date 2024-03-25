@@ -5,7 +5,7 @@
 //  Created by Kiryl Ziusko on 22/03/2024.
 //
 
-#import "RCTUIManager.h"
+#import <React/RCTUIManager.h>
 
 @interface RCTUIManager (LayoutAnimationManager)
 

@@ -109,12 +109,10 @@ class KeyboardControllerView: UIView {
   }
 
   func onRequestAnimation() {
-    print("onRequestAnimation")
     bridge.uiManager.scheduleKeyboardAnimation()
   }
 
   func onCancelAnimation() {
-    print("onCancelAnimation")
     bridge.uiManager.unscheduleKeyboardAnimation()
   }
 
