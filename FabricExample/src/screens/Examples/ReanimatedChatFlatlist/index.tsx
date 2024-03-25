@@ -1,15 +1,6 @@
 import React from "react";
-import {
-  FlatList,
-  LayoutAnimation,
-  TextInput,
-  TouchableWithoutFeedback,
-  View,
-} from "react-native";
-import {
-  KeyboardController,
-  useReanimatedKeyboardAnimation,
-} from "react-native-keyboard-controller";
+import { FlatList, TextInput, View } from "react-native";
+import { useReanimatedKeyboardAnimation } from "react-native-keyboard-controller";
 import Animated, { useAnimatedStyle } from "react-native-reanimated";
 
 import Message from "../../../components/Message";
@@ -37,31 +28,17 @@ function ReanimatedChatFlatlist() {
   );
 
   return (
-    <TouchableWithoutFeedback
-      onPress={() => {
-        /*LayoutAnimation.configureNext({
-          duration: 250,
-          update: {
-            duration: 250,
-            type: "keyboard",
-          },
-        });*/
-        // KeyboardController.dismiss();
-      }}
-    >
-      <View style={styles.container}>
-        <FlatList
-          keyboardShouldPersistTaps="never"
-          inverted
-          initialNumToRender={15}
-          contentContainerStyle={styles.contentContainer}
-          data={reversedMessages}
-          renderItem={RenderItem}
-        />
-        <TextInput style={styles.textInput} />
-        <Animated.View style={fakeView} />
-      </View>
-    </TouchableWithoutFeedback>
+    <View style={styles.container}>
+      <FlatList
+        inverted
+        initialNumToRender={15}
+        contentContainerStyle={styles.contentContainer}
+        data={reversedMessages}
+        renderItem={RenderItem}
+      />
+      <TextInput style={styles.textInput} />
+      <Animated.View style={fakeView} />
+    </View>
   );
 }
 
