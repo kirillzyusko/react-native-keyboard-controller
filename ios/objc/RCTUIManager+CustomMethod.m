@@ -5,16 +5,6 @@
 //  Created by Kiryl Ziusko on 22/03/2024.
 //
 
-/*#import "RCTUIManager+CustomMethod.h"
-
-@implementation RCTUIManager (CustomMethod)
-
-- (void)callMethodOnUIManager:(RCTUIManager *)uiManager {
-    [uiManager setNextLayoutAnimationGroup: nil];
-}
-
-@end*/
-
 #import "RCTUIManager+CustomMethod.h"
 #import <React/RCTLayoutAnimationGroup.h>
 
@@ -37,6 +27,10 @@
     }];
 
     [self setNextLayoutAnimationGroup:layoutAnimationGroup];
+}
+
+-(void)unscheduleKeyboardAnimation {
+    
 }
 
 @end
