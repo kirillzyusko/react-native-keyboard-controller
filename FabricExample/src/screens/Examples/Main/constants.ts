@@ -16,6 +16,12 @@ export const examples: Example[] = [
     icons: "💬",
   },
   {
+    title: "Chat flatlist",
+    testID: "reanimated_chat_flatlist",
+    info: ScreenNames.REANIMATED_CHAT_FLATLIST,
+    icons: "💬",
+  },
+  {
     title: "Events",
     testID: "events",
     info: ScreenNames.EVENTS,
