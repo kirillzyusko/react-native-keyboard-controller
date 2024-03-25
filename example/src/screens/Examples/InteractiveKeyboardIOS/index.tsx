@@ -32,12 +32,12 @@ const useKeyboardAnimation = () => {
       // simply update `height` to destination and we need to listen to `onMove`
       // handler to have a smooth animation
       if (progress.value !== 1 && progress.value !== 0 && e.height !== 0) {
-        // shouldUseOnMoveHandler.value = true;
+        shouldUseOnMoveHandler.value = true;
         return;
       }
 
       progress.value = e.progress;
-      height.value = e.height * 1.5;
+      height.value = e.height;
 
       inset.value = e.height;
       // Math.max is needed to prevent overscroll when keyboard hides (and user scrolled to the top, for example)
@@ -47,20 +47,20 @@ const useKeyboardAnimation = () => {
       "worklet";
 
       progress.value = e.progress;
-      height.value = e.height * 1.5;
+      height.value = e.height;
     },
     onMove: (e) => {
       "worklet";
 
       if (shouldUseOnMoveHandler.value) {
         progress.value = e.progress;
-        height.value = e.height * 1.5;
+        height.value = e.height;
       }
     },
     onEnd: (e) => {
       "worklet";
 
-      height.value = e.height * 1.5;
+      height.value = e.height;
       progress.value = e.progress;
       shouldUseOnMoveHandler.value = false;
     },

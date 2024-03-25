@@ -34,7 +34,6 @@ class KeyboardControllerView: UIView {
       }
     }
   }
-    private var a: Int64 = 0
 
   init(frame: CGRect, bridge: RCTBridge) {
     self.bridge = bridge
@@ -58,19 +57,7 @@ class KeyboardControllerView: UIView {
           self?.onRequestAnimation()
       }
     )
-      
-      // Initialize UITapGestureRecognizer
-              let tapGesture = UITapGestureRecognizer(target: self, action: #selector(viewTapped))
-
-              // Add UITapGestureRecognizer to your view
-              self.addGestureRecognizer(tapGesture)
   }
-    
-    // Selector method to handle tap
-    @objc func viewTapped() {
-        a = Date.currentTimeStamp
-        print("View was tapped! \(Date.currentTimeStamp)")
-    }
 
   @available(*, unavailable)
   required init?(coder _: NSCoder) {
@@ -90,18 +77,6 @@ class KeyboardControllerView: UIView {
       mount()
     }
   }
-    
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-            super.touchesEnded(touches, with: event)
-            // Your custom logic here
-            print("Touches ended in \(self)")
-        }
-    
-    public override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
-                // Return false to allow touch events to pass through
-        print("Touches \(self)")
-                return true
-            }
 
   func onLayoutChanged(event: NSObject) {
     guard isJSThreadReady() else { return }
@@ -111,16 +86,13 @@ class KeyboardControllerView: UIView {
 
   func onTextChanged(text: String) {
     guard isJSThreadReady() else { return }
-      
+
     eventDispatcher.send(FocusedInputTextChangedEvent(reactTag: reactTag, text: text))
   }
 
   func onEvent(event: NSString, height: NSNumber, progress: NSNumber, duration: NSNumber, target: NSNumber) {
     guard isJSThreadReady() else { return }
-      print("111 \(event) \(Date.currentTimeStamp)")
-      if (event == "onKeyboardMoveStart" && height == 0.0 && Date.currentTimeStamp - a < 100) {
-          self.onRequestAnimation()
-      }
+
     eventDispatcher.send(
       KeyboardMoveEvent(
         reactTag: reactTag,
