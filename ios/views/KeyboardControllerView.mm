@@ -175,6 +175,12 @@ using namespace facebook::react;
         }
         onNotify:^(NSString *event, NSDictionary *data) {
           [KeyboardController.shared sendEvent:event body:data];
+        }
+        onRequestAnimation:^() {
+          // no-op for fabric
+        }
+        onCancelAnimation:^(){
+            // no-op for fabric
         }];
   }
 

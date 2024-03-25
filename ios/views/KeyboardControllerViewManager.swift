@@ -52,6 +52,12 @@ class KeyboardControllerView: UIView {
       },
       onNotify: { [weak self] event, data in
         self?.onNotify(event: event, data: data)
+      },
+      onRequestAnimation: { [weak self] in
+        self?.onRequestAnimation()
+      },
+      onCancelAnimation: { [weak self] in
+        self?.onCancelAnimation()
       }
     )
   }
@@ -100,6 +106,14 @@ class KeyboardControllerView: UIView {
         target: target
       )
     )
+  }
+
+  func onRequestAnimation() {
+    bridge.uiManager.scheduleKeyboardAnimation()
+  }
+
+  func onCancelAnimation() {
+    bridge.uiManager.unscheduleKeyboardAnimation()
   }
 
   func onNotify(event: String, data: Any) {

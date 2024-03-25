@@ -14,6 +14,9 @@ public class KeyboardMovementObserver: NSObject {
   // class members
   var onEvent: (NSString, NSNumber, NSNumber, NSNumber, NSNumber) -> Void
   var onNotify: (String, Any) -> Void
+  // animation
+  var onRequestAnimation: () -> Void
+  var onCancelAnimation: () -> Void
   // progress tracker
   private var _keyboardView: UIView?
   private var keyboardView: UIView? {
@@ -39,10 +42,14 @@ public class KeyboardMovementObserver: NSObject {
 
   @objc public init(
     handler: @escaping (NSString, NSNumber, NSNumber, NSNumber, NSNumber) -> Void,
-    onNotify: @escaping (String, Any) -> Void
+    onNotify: @escaping (String, Any) -> Void,
+    onRequestAnimation: @escaping () -> Void,
+    onCancelAnimation: @escaping () -> Void
   ) {
     onEvent = handler
     self.onNotify = onNotify
+    self.onRequestAnimation = onRequestAnimation
+    self.onCancelAnimation = onCancelAnimation
   }
 
   @objc public func mount() {
@@ -167,6 +174,7 @@ public class KeyboardMovementObserver: NSObject {
       data["timestamp"] = Date.currentTimeStamp
       data["target"] = tag
 
+      onRequestAnimation()
       onEvent("onKeyboardMoveStart", Float(keyboardHeight) as NSNumber, 1, duration as NSNumber, tag)
       onNotify("KeyboardController::keyboardWillShow", data)
 
@@ -187,6 +195,7 @@ public class KeyboardMovementObserver: NSObject {
     data["timestamp"] = Date.currentTimeStamp
     data["target"] = tag
 
+    onRequestAnimation()
     onEvent("onKeyboardMoveStart", 0, 0, duration as NSNumber, tag)
     onNotify("KeyboardController::keyboardWillHide", data)
 
@@ -209,6 +218,7 @@ public class KeyboardMovementObserver: NSObject {
       data["timestamp"] = Date.currentTimeStamp
       data["target"] = tag
 
+      onCancelAnimation()
       onEvent("onKeyboardMoveEnd", keyboardHeight as NSNumber, 1, duration as NSNumber, tag)
       onNotify("KeyboardController::keyboardDidShow", data)
 
@@ -228,6 +238,7 @@ public class KeyboardMovementObserver: NSObject {
     data["timestamp"] = Date.currentTimeStamp
     data["target"] = tag
 
+    onCancelAnimation()
     onEvent("onKeyboardMoveEnd", 0 as NSNumber, 0, duration as NSNumber, tag)
     onNotify("KeyboardController::keyboardDidHide", data)
 

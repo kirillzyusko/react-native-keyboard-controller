@@ -14,6 +14,7 @@ import KeyboardAvoidingViewExample from "../../screens/Examples/KeyboardAvoiding
 import LottieAnimation from "../../screens/Examples/Lottie";
 import NonUIProps from "../../screens/Examples/NonUIProps";
 import ReanimatedChat from "../../screens/Examples/ReanimatedChat";
+import ReanimatedChatFlatlist from "../../screens/Examples/ReanimatedChatFlatlist";
 import StatusBar from "../../screens/Examples/StatusBar";
 import ToolbarExample from "../../screens/Examples/Toolbar";
 import NativeStack from "../NestedStack";
@@ -21,6 +22,7 @@ import NativeStack from "../NestedStack";
 export type ExamplesStackParamList = {
   [ScreenNames.ANIMATED_EXAMPLE]: undefined;
   [ScreenNames.REANIMATED_CHAT]: undefined;
+  [ScreenNames.REANIMATED_CHAT_FLATLIST]: undefined;
   [ScreenNames.EVENTS]: undefined;
   [ScreenNames.AWARE_SCROLL_VIEW]: undefined;
   [ScreenNames.AWARE_SCROLL_VIEW_STICKY_FOOTER]: undefined;
@@ -44,6 +46,9 @@ const options = {
   },
   [ScreenNames.REANIMATED_CHAT]: {
     title: "Chat",
+  },
+  [ScreenNames.REANIMATED_CHAT_FLATLIST]: {
+    title: "Chat Flatlist",
   },
   [ScreenNames.EVENTS]: {
     title: "Events",
@@ -97,6 +102,11 @@ const ExamplesStack = () => (
     <Stack.Screen
       name={ScreenNames.REANIMATED_CHAT}
       component={ReanimatedChat}
+      options={options[ScreenNames.REANIMATED_CHAT]}
+    />
+    <Stack.Screen
+      name={ScreenNames.REANIMATED_CHAT_FLATLIST}
+      component={ReanimatedChatFlatlist}
       options={options[ScreenNames.REANIMATED_CHAT]}
     />
     <Stack.Screen
