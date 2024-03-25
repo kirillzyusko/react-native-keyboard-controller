@@ -180,7 +180,7 @@ using namespace facebook::react;
         }
         onRequestAnimation:^() {
           RCTBridge *bridge = [RCTBridge currentBridge];
-          RCTUIManager* uiManager = [bridge moduleForClass:[RCTUIManager class]];
+          RCTUIManager *uiManager = [bridge moduleForClass:[RCTUIManager class]];
           [uiManager scheduleKeyboardAnimation];
         }];
   }
