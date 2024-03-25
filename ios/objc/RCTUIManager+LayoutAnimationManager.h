@@ -1,5 +1,5 @@
 //
-//  RCTUIManager+CustomMethod.h
+//  RCTUIManager+LayoutAnimationManager.h
 //  react-native-keyboard-controller
 //
 //  Created by Kiryl Ziusko on 22/03/2024.

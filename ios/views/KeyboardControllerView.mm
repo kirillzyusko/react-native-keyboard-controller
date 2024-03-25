@@ -12,7 +12,7 @@
 #import "FocusedInputLayoutChangedEvent.h"
 #import "FocusedInputTextChangedEvent.h"
 #import "KeyboardMoveEvent.h"
-#import "RCTUIManager+CustomMethod.h"
+#import "RCTUIManager+LayoutAnimationManager.h"
 
 #if __has_include("react_native_keyboard_controller-Swift.h")
 #import "react_native_keyboard_controller-Swift.h"

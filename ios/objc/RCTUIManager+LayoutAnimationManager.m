@@ -1,11 +1,11 @@
 //
-//  RCTUIManager+CustomMethod.m
+//  RCTUIManager+LayoutAnimationManager.m
 //  react-native-keyboard-controller
 //
 //  Created by Kiryl Ziusko on 22/03/2024.
 //
 
-#import "RCTUIManager+CustomMethod.h"
+#import "RCTUIManager+LayoutAnimationManager.h"
 #import <React/RCTLayoutAnimationGroup.h>
 
 @implementation RCTUIManager (LayoutAnimationManager)
