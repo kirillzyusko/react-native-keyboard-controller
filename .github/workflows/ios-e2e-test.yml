@@ -96,6 +96,8 @@ jobs:
         run: top -l 1 -s 0 | grep PhysMem
       - name: System stat
         run: hostinfo
+      - name: Free up RAM
+        run: sudo purge
       - name: Test app
         working-directory: e2e
         run: yarn test-example:ios
