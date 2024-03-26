@@ -93,9 +93,6 @@ jobs:
         run: yarn build-example:ios
       - name: Use software keyboard
         run: defaults write com.apple.iphonesimulator ConnectHardwareKeyboard -bool NO
-      # wait before running a simulator to give a system time to free up resources
-      - name: Cool down
-        run: sleep 20
       - name: Disk free
         run: df -h
       - name: Memory stat
@@ -104,6 +101,11 @@ jobs:
         run: hostinfo
       - name: Free up RAM
         run: sudo purge
+      # wait before running a simulator to give a system time to free up resources
+      - name: Cool down
+        run: sleep 20
+      - name: Memory stat
+        run: top -l 1 -s 0 | grep PhysMem
       - name: Test app
         working-directory: e2e
         run: yarn test-example:ios
