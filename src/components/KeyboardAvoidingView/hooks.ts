@@ -1,12 +1,16 @@
 import { useSharedValue } from "react-native-reanimated";
 
-import { useKeyboardHandler } from "react-native-keyboard-controller";
+import {
+  useKeyboardContext,
+  useKeyboardHandler,
+} from "react-native-keyboard-controller";
 
 export const useKeyboardAnimation = () => {
-  const heightWhenOpened = useSharedValue(0);
-  const height = useSharedValue(0);
-  const progress = useSharedValue(0);
-  const isClosed = useSharedValue(true);
+  const { reanimated } = useKeyboardContext();
+  const heightWhenOpened = useSharedValue(-reanimated.height.value);
+  const height = useSharedValue(-reanimated.height.value);
+  const progress = useSharedValue(reanimated.progress.value);
+  const isClosed = useSharedValue(reanimated.progress.value === 0);
 
   useKeyboardHandler(
     {
