@@ -79,6 +79,12 @@ jobs:
           key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
           restore-keys: |
             ${{ runner.os }}-pods-
+      - name: Memory stat
+        run: top -l 1 -s 0 | grep PhysMem
+      - name: System stat
+        run: hostinfo
+      - name: Free up RAM
+        run: sudo purge
       - name: Install pods
         working-directory: ${{ env.WORKING_DIRECTORY }}/ios
         run: pod install
