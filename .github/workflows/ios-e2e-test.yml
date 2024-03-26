@@ -87,6 +87,9 @@ jobs:
         run: yarn build-example:ios
       - name: Use software keyboard
         run: defaults write com.apple.iphonesimulator ConnectHardwareKeyboard -bool NO
+      # wait before running a simulator to give a system time to free up resources
+      - name: Cool down
+        run: sleep 20
       - name: Disk free
         run: df -h
       - name: Memory stat
