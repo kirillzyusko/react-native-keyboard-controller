@@ -47,9 +47,6 @@ jobs:
       - name: Save yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
-      - name: Save XCode version
-        id: xcode-version
-        run: echo "current=$(xcodebuild -version|tail -1|cut -f3 -d' ')" >> $GITHUB_OUTPUT
       - name: Restore node_modules from cache
         uses: actions/cache@v4
         id: yarn-cache
@@ -58,12 +55,6 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
-      - uses: actions/cache@v4
-        name: Detox Framework Cache
-        id: detox-cache
-        with:
-          path: ~/Library/Detox/ios
-          key: ${{ runner.os }}-detox-framework-cache-${{ steps.xcode-version.outputs.current }}-v1
       - name: Install root dependencies
         run: yarn install
       - name: Install example project dependencies
@@ -89,9 +80,6 @@ jobs:
       - name: Install pods
         working-directory: ${{ env.WORKING_DIRECTORY }}/ios
         run: pod install
-      - name: Build Detox Framework Cache
-        working-directory: e2e
-        run: yarn detox build-framework-cache
       - name: Build app
         working-directory: e2e
         run: yarn build-example:ios
