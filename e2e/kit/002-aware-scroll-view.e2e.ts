@@ -9,12 +9,12 @@ import {
 } from "./helpers";
 import setDemoMode from "./utils/setDemoMode";
 
-const DATE_AND_TIME = 0.5;
+// const DATE_AND_TIME = 0.5;
 const BLINKING_CURSOR = 0.35;
 const ACCEPTABLE_DIFF =
   // on iOS there is currently bug - we can not set default date and time, but it's fixed in XCode 15.3
   // but it's not available on GH yet, so we use this workaround
-  BLINKING_CURSOR + device.getPlatform() === "ios" ? DATE_AND_TIME : 0;
+  BLINKING_CURSOR; /*+ device.getPlatform() === "ios" ? DATE_AND_TIME : 0*/
 
 const closeKeyboard = async () => {
   // tap outside to close a keyboard
