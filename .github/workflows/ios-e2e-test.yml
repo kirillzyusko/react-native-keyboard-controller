@@ -40,8 +40,6 @@ jobs:
       - uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: "15.2"
-      # - name: Install Rosetta
-      #   run: softwareupdate --install-rosetta --agree-to-license
       - name: Get Xcode version
         run: xcodebuild -version
       - name: Install AppleSimulatorUtils
