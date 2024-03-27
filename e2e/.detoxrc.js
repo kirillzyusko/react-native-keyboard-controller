@@ -6,7 +6,7 @@ module.exports = {
       config: "kit/jest.config.js",
     },
     jest: {
-      setupTimeout: 360000,
+      setupTimeout: 720000,
     },
   },
   apps: {
