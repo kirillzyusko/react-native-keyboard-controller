@@ -47,7 +47,7 @@ jobs:
       - name: Save yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
-      - name: Get XCode version
+      - name: Save XCode version
         id: xcode-version
         run: echo "current=$(xcodebuild -version|tail -1|cut -f3 -d' ')" >> $GITHUB_OUTPUT
       - name: Restore node_modules from cache
@@ -90,6 +90,7 @@ jobs:
         working-directory: ${{ env.WORKING_DIRECTORY }}/ios
         run: pod install
       - name: Build Detox Framework Cache
+        working-directory: e2e
         run: yarn detox build-framework-cache
       - name: Build app
         working-directory: e2e
