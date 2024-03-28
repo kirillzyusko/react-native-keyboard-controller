@@ -101,6 +101,7 @@ export const scrollDownUntilElementIsVisible = async (
   scrollViewId: string,
   elementId: string,
 ): Promise<void> => {
+  await waitForElementById(scrollViewId, TIMEOUT_FOR_LONG_OPERATIONS);
   await waitFor(element(by.id(elementId)))
     .toBeVisible()
     .whileElement(by.id(scrollViewId))
