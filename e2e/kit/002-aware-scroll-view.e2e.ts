@@ -9,7 +9,7 @@ import {
 } from "./helpers";
 import setDemoMode from "./utils/setDemoMode";
 
-const DATE_AND_TIME = 0.5;
+const DATE_AND_TIME = 0.75;
 const BLINKING_CURSOR = 0.35;
 const ACCEPTABLE_DIFF =
   // on iOS there is currently bug - we can not set default date and time, but it's fixed in XCode 15.3
