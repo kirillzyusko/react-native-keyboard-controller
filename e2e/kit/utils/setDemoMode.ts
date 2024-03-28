@@ -24,7 +24,7 @@ export default async function setDemoMode(): Promise<void> {
     );
   } else {
     await device.setStatusBar({
-      time: "12:00",
+      time: "09:41",
       dataNetwork: "wifi",
       wifiMode: "active",
       wifiBars: "3",

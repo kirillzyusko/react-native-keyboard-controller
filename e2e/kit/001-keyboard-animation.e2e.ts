@@ -1,7 +1,10 @@
-import waitForExpect from "wait-for-expect";
-
 import { expectBitmapsToBeEqual } from "./asserts";
-import { closeKeyboard, waitAndTap, waitForElementById } from "./helpers";
+import {
+  closeKeyboard,
+  waitAndTap,
+  waitForElementById,
+  waitForExpect,
+} from "./helpers";
 import setDemoMode from "./utils/setDemoMode";
 
 describe("Example", () => {
