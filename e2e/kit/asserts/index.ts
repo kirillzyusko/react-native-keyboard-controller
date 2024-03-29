@@ -102,7 +102,9 @@ function verifyBitmapsToBeEqual(
   );
 
   console.debug(
-    colors.green(`Screenshot '${screenName}' has ${percentDiff}% pixel diff!`),
+    colors.green(
+      `Screenshot '${screenName}' has ${percentDiff}% pixel diff! Acceptable is ${acceptableDiffPercent}%.`,
+    ),
   );
 
   if (!matched) {

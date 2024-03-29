@@ -37,11 +37,14 @@ jobs:
         with:
           node-version: 18.x
           cache: "yarn"
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: "15.3"
       - name: Get Xcode version
         run: xcodebuild -version
       - name: Install AppleSimulatorUtils
         run: brew tap wix/brew && brew install applesimutils
-      - name: Get yarn cache directory path
+      - name: Save yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
       - name: Restore node_modules from cache

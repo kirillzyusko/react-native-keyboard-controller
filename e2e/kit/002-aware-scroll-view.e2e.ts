@@ -1,5 +1,3 @@
-import waitForExpect from "wait-for-expect";
-
 import { expectBitmapsToBeEqual } from "./asserts";
 import {
   tap,
@@ -7,6 +5,7 @@ import {
   waitAndReplace,
   waitAndTap,
   waitAndType,
+  waitForExpect,
 } from "./helpers";
 import setDemoMode from "./utils/setDemoMode";
 
