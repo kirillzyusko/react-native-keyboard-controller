@@ -59,7 +59,7 @@ jobs:
     runs-on: macOS-14
     defaults:
       run:
-        working-directory: ./ios/Tests
+        working-directory: ./ios/KeyboardControllerNative
     steps:
       - uses: actions/checkout@v4
 

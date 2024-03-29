@@ -9,7 +9,12 @@
 import XCTest
 
 extension XCTestCase {
-  func waitForFocusChange(to textField: TestableInput, timeout: TimeInterval = 10.0, file: StaticString = #file, line: UInt = #line) {
+  func waitForFocusChange(
+    to textField: TestableInput,
+    timeout: TimeInterval = 10.0,
+    file: StaticString = #file,
+    line: UInt = #line
+  ) {
     let expectation = XCTestExpectation(description: "Wait for focus change to \(textField.tag)")
 
     XCTAssertFalse(
@@ -32,8 +37,8 @@ extension XCTestCase {
 }
 
 protocol TestableInput: UIView, TextInput {
-    var becomeFirstResponderCalled: Bool { get set }
-        func becomeFirstResponder() -> Bool
+  var becomeFirstResponderCalled: Bool { get set }
+  func becomeFirstResponder() -> Bool
 }
 
 class TestableTextField: UITextField, TestableInput {
@@ -62,10 +67,10 @@ final class KeyboardControllerNativeTests: XCTestCase {
     super.setUp()
 
     rootView = UIView()
-    textFields = (1 ... 13).map { id in
-        let textField = (id % 2 == 0 ? TestableTextField() : TestableTextView()) as TestableInput
-      textField.tag = id
-        let isEditable = id != 3 && id != 4 // Assuming ids 3 and 4 are not editable, similar to our Android test
+    textFields = (1 ... 13).map { tag in
+      let textField = (tag % 2 == 0 ? TestableTextField() : TestableTextView()) as TestableInput
+      textField.tag = tag
+      let isEditable = tag != 3 && tag != 4 // Assuming ids 3 and 4 are not editable, similar to our Android test
       (textField as? UITextField)?.isEnabled = isEditable
       (textField as? UITextView)?.isEditable = isEditable
 
@@ -161,7 +166,6 @@ final class KeyboardControllerNativeTests: XCTestCase {
     waitForFocusChange(to: textFields[6])
   }
 
-  // TODO: get all, testSetFocusToNextDoesNothingIfLastElement, testSetFocusToPrevDoesNothingIfFirstElement
   func testPerformanceExample() throws {
     // This is an example of a performance test case.
     measure {
