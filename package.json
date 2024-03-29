@@ -22,6 +22,7 @@
     "!android/gradlew",
     "!android/gradlew.bat",
     "!ios/build",
+    "!ios/KeyboardControllerNative",
     "!**/__tests__",
     "!**/__fixtures__",
     "!**/__mocks__"

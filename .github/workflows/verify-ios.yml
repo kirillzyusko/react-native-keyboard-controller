@@ -54,3 +54,26 @@ jobs:
 
       - name: Verify formatting
         run: yarn lint-clang
+  unit-tests:
+    name: 📖 Unit tests
+    runs-on: macOS-14
+    defaults:
+      run:
+        working-directory: ./ios/KeyboardControllerNative
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: "15.3"
+
+      - name: Install xcpretty
+        run: gem install xcpretty
+
+      - name: Run unit tests
+        run: "set -o pipefail && xcodebuild \
+          test \
+          -scheme KeyboardControllerNative \
+          -only-testing KeyboardControllerNativeTests \
+          -destination 'platform=iOS Simulator,name=iPhone 15 Pro' \
+          CODE_SIGNING_ALLOWED=NO | xcpretty"
