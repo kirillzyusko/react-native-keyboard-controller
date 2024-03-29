@@ -66,6 +66,10 @@ jobs:
       - name: Install xcpretty
         run: gem install xcpretty
 
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: "15.2"
+
       - name: Run unit tests
         run: "set -o pipefail && xcodebuild \
           test \
