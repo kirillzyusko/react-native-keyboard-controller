@@ -1,13 +1,13 @@
 //
-//  TestsUITestsLaunchTests.swift
-//  TestsUITests
+//  KeyboardControllerNativeUITestsLaunchTests.swift
+//  KeyboardControllerNativeUITests
 //
-//  Created by Kiryl Ziusko on 21/02/2024.
+//  Created by Kiryl Ziusko on 29/03/2024.
 //
 
 import XCTest
 
-final class TestsUITestsLaunchTests: XCTestCase {
+final class KeyboardControllerNativeUITestsLaunchTests: XCTestCase {
   override class var runsForEachTargetApplicationUIConfiguration: Bool {
     true
   }

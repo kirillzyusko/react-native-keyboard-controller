@@ -1,11 +1,11 @@
 //
-//  TestsTests.swift
-//  TestsTests
+//  KeyboardControllerNativeTests.swift
+//  KeyboardControllerNativeTests
 //
-//  Created by Kiryl Ziusko on 21/02/2024.
+//  Created by Kiryl Ziusko on 29/03/2024.
 //
 
-@testable import Tests
+@testable import KeyboardControllerNative
 import XCTest
 
 extension XCTestCase {
@@ -54,7 +54,7 @@ class TestableTextView: UITextView, TestableInput {
   }
 }
 
-final class TestsTests: XCTestCase {
+final class KeyboardControllerNativeTests: XCTestCase {
   var rootView: UIView!
   var textFields: [TestableInput]!
 
