@@ -66,13 +66,6 @@ jobs:
       - name: Install xcpretty
         run: gem install xcpretty
 
-      - uses: maxim-lobanov/setup-xcode@v1
-        with:
-          xcode-version: "15.0"
-
-      - name: List of all devices
-        run: xcrun simctl list
-
       - name: Run unit tests
         run: "set -o pipefail && xcodebuild \
           test \
