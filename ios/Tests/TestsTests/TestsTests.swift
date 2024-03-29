@@ -9,7 +9,7 @@
 import XCTest
 
 extension XCTestCase {
-  func waitForFocusChange(to textField: TestableTextField, timeout: TimeInterval = 10.0, file: StaticString = #file, line: UInt = #line) {
+  func waitForFocusChange(to textField: TestableInput, timeout: TimeInterval = 10.0, file: StaticString = #file, line: UInt = #line) {
     let expectation = XCTestExpectation(description: "Wait for focus change to \(textField.tag)")
 
     XCTAssertFalse(
@@ -31,7 +31,12 @@ extension XCTestCase {
   }
 }
 
-class TestableTextField: UITextField {
+protocol TestableInput: UIView, TextInput {
+    var becomeFirstResponderCalled: Bool { get set }
+        func becomeFirstResponder() -> Bool
+}
+
+class TestableTextField: UITextField, TestableInput {
   var becomeFirstResponderCalled = false
 
   override func becomeFirstResponder() -> Bool {
@@ -40,7 +45,7 @@ class TestableTextField: UITextField {
   }
 }
 
-class TestableTextView: UITextView {
+class TestableTextView: UITextView, TestableInput {
   var becomeFirstResponderCalled = false
 
   override func becomeFirstResponder() -> Bool {
@@ -51,15 +56,19 @@ class TestableTextView: UITextView {
 
 final class TestsTests: XCTestCase {
   var rootView: UIView!
-  var textFields: [TestableTextField]!
+  var textFields: [TestableInput]!
 
   override func setUpWithError() throws {
     super.setUp()
+
     rootView = UIView()
     textFields = (1 ... 13).map { id in
-      let textField = TestableTextField()
+        let textField = (id % 2 == 0 ? TestableTextField() : TestableTextView()) as TestableInput
       textField.tag = id
-      textField.isEnabled = id != 3 && id != 4 // Assuming ids 3 and 4 are not editable, similar to our Android test
+        let isEditable = id != 3 && id != 4 // Assuming ids 3 and 4 are not editable, similar to our Android test
+      (textField as? UITextField)?.isEnabled = isEditable
+      (textField as? UITextView)?.isEditable = isEditable
+
       return textField
     }
 
