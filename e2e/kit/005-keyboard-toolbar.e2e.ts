@@ -9,6 +9,7 @@ import {
   scrollDownUntilElementIsVisible,
   waitAndTap,
   waitForElementById,
+  waitForExpect,
 } from "./helpers";
 import setDemoMode from "./utils/setDemoMode";
 
@@ -95,6 +96,8 @@ describe("`KeyboardToolbar` specification", () => {
 
   it("should close keyboard when press `Done`", async () => {
     await waitAndTap("keyboard.toolbar.done");
-    await expectBitmapsToBeEqual("ToolbarKeyboardClosed");
+    await waitForExpect(async () => {
+      await expectBitmapsToBeEqual("ToolbarKeyboardClosed");
+    });
   });
 });

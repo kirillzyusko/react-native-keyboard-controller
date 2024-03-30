@@ -1,3 +1,4 @@
+import retry from "async-retry";
 import colors from "colors/safe";
 
 const DEFAULT_TIMEOUT = 15000;
@@ -51,4 +52,14 @@ export const doActionNTimes = async (
   for (let i = 0; i < times; i++) {
     await action();
   }
+};
+
+const options = {
+  retries: 3,
+  minTimeout: 2000,
+  maxTimeout: 7000,
+};
+
+export const waitForExpect = async (expectation: () => Promise<void>) => {
+  await retry(expectation, options);
 };
