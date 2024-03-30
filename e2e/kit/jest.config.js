@@ -6,6 +6,7 @@ module.exports = {
   maxWorkers: 1,
   globalSetup: "detox/runners/jest/globalSetup",
   globalTeardown: "detox/runners/jest/globalTeardown",
+  testSequencer: "./sequencer.js",
   reporters: ["detox/runners/jest/reporter"],
   testEnvironment: "detox/runners/jest/testEnvironment",
   verbose: true,
