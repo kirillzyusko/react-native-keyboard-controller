@@ -16,10 +16,7 @@
       @{@"duration" : @250, @"update" : @{@"duration" : @250, @"type" : @"keyboard"}};
 
   RCTLayoutAnimationGroup *layoutAnimationGroup =
-      [[RCTLayoutAnimationGroup alloc] initWithConfig:animationConfig
-                                             callback:^(NSArray *response) {
-                                               [self unscheduleKeyboardAnimation];
-                                             }];
+      [[RCTLayoutAnimationGroup alloc] initWithConfig:animationConfig callback:nil];
 
   [self setValue:layoutAnimationGroup forKey:@"_layoutAnimationGroup"];
 }
