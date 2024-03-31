@@ -2,7 +2,7 @@
 module.exports = {
   preset: "ts-jest",
   testMatch: ["<rootDir>/**/*.e2e.ts"],
-  testTimeout: 13 * 60000,
+  testTimeout: 4 * 60000,
   maxWorkers: 1,
   globalSetup: "detox/runners/jest/globalSetup",
   globalTeardown: "detox/runners/jest/globalTeardown",
