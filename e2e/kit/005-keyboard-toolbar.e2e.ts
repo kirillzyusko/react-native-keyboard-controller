@@ -97,7 +97,7 @@ describe("`KeyboardToolbar` specification", () => {
   it("should close keyboard when press `Done`", async () => {
     await waitAndTap("keyboard.toolbar.done");
     await waitForExpect(async () => {
-      await expectBitmapsToBeEqual("ToolbarKeyboardClosed", 1);
+      await expectBitmapsToBeEqual("ToolbarKeyboardClosed");
     });
   });
 });
