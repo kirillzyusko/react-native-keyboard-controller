@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "build-example:android": "detox build --configuration example.android.emu.release",
-    "test-example:android": "detox test --configuration example.android.emu.release --loglevel verbose --take-screenshots failing --record-videos failing  --record-logs failing --retries 2",
+    "test-example:android": "detox test --configuration example.android.emu.release --loglevel verbose --take-screenshots failing --record-videos failing --retries 2",
     "build-example:ios": "detox build --configuration example.ios.sim.release",
-    "test-example:ios": "detox test --configuration example.ios.sim.release --loglevel verbose --take-screenshots failing --record-videos failing --record-logs failing --retries 2",
+    "test-example:ios": "detox test --configuration example.ios.sim.release --loglevel verbose --take-screenshots failing --record-videos failing --retries 2",
     "test": "echo \"Error: no test specified\" && exit 1",
     "detox-clean": "detox clean-framework-cache && detox build-framework-cache",
     "postinstall": "patch-package"
