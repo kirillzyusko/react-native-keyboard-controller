@@ -7,7 +7,6 @@ import {
   waitAndType,
   waitForExpect,
 } from "./helpers";
-import setDemoMode from "./utils/setDemoMode";
 
 const BLINKING_CURSOR = 0.35;
 
@@ -17,11 +16,6 @@ const closeKeyboard = async () => {
 };
 
 describe("AwareScrollView test cases", () => {
-  beforeAll(async () => {
-    await setDemoMode();
-    await device.launchApp();
-  });
-
   it("should push input above keyboard on focus", async () => {
     await waitAndTap("aware_scroll_view");
     await waitAndTap("TextInput#3");

@@ -9,5 +9,6 @@ module.exports = {
   testSequencer: "./sequencer.js",
   reporters: ["detox/runners/jest/reporter"],
   testEnvironment: "detox/runners/jest/testEnvironment",
+  setupFilesAfterEnv: ["<rootDir>/setup-jest.ts"],
   verbose: true,
 };

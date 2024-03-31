@@ -7,14 +7,8 @@ import {
   waitAndType,
   waitForElementById,
 } from "./helpers";
-import setDemoMode from "./utils/setDemoMode";
 
 describe("`onTextChange` functionality", () => {
-  beforeAll(async () => {
-    await setDemoMode();
-    await device.launchApp();
-  });
-
   it("should fire `onTextChange` with correct text", async () => {
     await scrollDownUntilElementIsVisible(
       "main_scroll_view",

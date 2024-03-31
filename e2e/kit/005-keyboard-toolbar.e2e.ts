@@ -19,6 +19,10 @@ describe("`KeyboardToolbar` specification", () => {
     await device.launchApp();
   });
 
+  afterAll(async () => {
+    await device.terminateApp();
+  });
+
   it("should navigate to `Toolbar` screen", async () => {
     await scrollDownUntilElementIsVisible("main_scroll_view", "toolbar");
     await waitAndTap("toolbar");

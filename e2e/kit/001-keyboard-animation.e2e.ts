@@ -5,14 +5,8 @@ import {
   waitForElementById,
   waitForExpect,
 } from "./helpers";
-import setDemoMode from "./utils/setDemoMode";
 
 describe("Example", () => {
-  beforeAll(async () => {
-    await setDemoMode();
-    await device.launchApp();
-  });
-
   it("should navigate to `Animated transition` screen", async () => {
     await waitAndTap("animated_transition");
     await waitForElementById("keyboard_animation_text_input");

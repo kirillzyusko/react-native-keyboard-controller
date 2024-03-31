@@ -6,14 +6,8 @@ import {
   waitForElementById,
   waitForExpect,
 } from "./helpers";
-import setDemoMode from "./utils/setDemoMode";
 
 describe("Example", () => {
-  beforeAll(async () => {
-    await setDemoMode();
-    await device.launchApp();
-  });
-
   it("should navigate to `Enabled/disabled` screen", async () => {
     await scrollDownUntilElementIsVisible(
       "main_scroll_view",
