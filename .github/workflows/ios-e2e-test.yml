@@ -85,6 +85,12 @@ jobs:
         run: yarn build-example:ios
       - name: Use software keyboard
         run: defaults write com.apple.iphonesimulator ConnectHardwareKeyboard -bool NO
+      # To fix slow UI tests for first run (known bug in XCode 15)
+      - name: Install yeetd
+        run: |
+          wget https://github.com/biscuitehh/yeetd/releases/download/1.0/yeetd-normal.pkg
+          sudo installer -pkg yeetd-normal.pkg -target /
+          yeetd &
       - name: Test app
         working-directory: e2e
         run: yarn test-example:ios
