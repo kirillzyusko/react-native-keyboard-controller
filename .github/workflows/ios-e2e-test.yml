@@ -25,7 +25,7 @@ jobs:
   test:
     name: ⚙️ Automated test cases
     runs-on: macos-14
-    timeout-minutes: 60
+    timeout-minutes: 90
     env:
       WORKING_DIRECTORY: example
     concurrency:

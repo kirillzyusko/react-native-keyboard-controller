@@ -11,14 +11,8 @@ import {
   waitForElementById,
   waitForExpect,
 } from "./helpers";
-import setDemoMode from "./utils/setDemoMode";
 
 describe("`KeyboardToolbar` specification", () => {
-  beforeAll(async () => {
-    await setDemoMode();
-    await device.launchApp();
-  });
-
   it("should navigate to `Toolbar` screen", async () => {
     await scrollDownUntilElementIsVisible("main_scroll_view", "toolbar");
     await waitAndTap("toolbar");

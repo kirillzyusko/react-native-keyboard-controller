@@ -7,7 +7,6 @@ import {
   waitAndType,
   waitForExpect,
 } from "./helpers";
-import setDemoMode from "./utils/setDemoMode";
 
 const BLINKING_CURSOR = 0.35;
 
@@ -17,11 +16,6 @@ const closeKeyboard = async () => {
 };
 
 describe("AwareScrollView test cases", () => {
-  beforeAll(async () => {
-    await setDemoMode();
-    await device.launchApp();
-  });
-
   it("should push input above keyboard on focus", async () => {
     await waitAndTap("aware_scroll_view");
     await waitAndTap("TextInput#3");
@@ -55,7 +49,7 @@ describe("AwareScrollView test cases", () => {
   });
 
   it("should auto-scroll when user types a text", async () => {
-    await element(by.id("TextInput#4")).swipe("down", "slow", 0.15);
+    await element(by.id("aware_scroll_view_container")).scroll(80, "up");
     await typeText("TextInput#4", "1");
     await waitForExpect(async () => {
       await expectBitmapsToBeEqual(
