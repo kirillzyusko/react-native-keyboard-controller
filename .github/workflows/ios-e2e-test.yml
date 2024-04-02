@@ -44,6 +44,8 @@ jobs:
         run: xcodebuild -version
       - name: Install AppleSimulatorUtils
         run: brew tap wix/brew && brew install applesimutils
+      - name: Pre-boot simulator
+        run: xcrun simctl boot $(applesimutils --list --byType "iPhone 15 Pro" | grep '"udid"' | head -1 | cut -d '"' -f 4)
       - name: Save yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
