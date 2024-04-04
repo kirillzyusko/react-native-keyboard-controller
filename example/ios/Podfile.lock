@@ -1263,7 +1263,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNScreens (3.29.0):
+  - RNScreens (3.30.1):
     - DoubleConversion
     - glog
     - hermes-engine

@@ -4680,10 +4680,10 @@ react-is@^17.0.1:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-17.0.2.tgz#e691d4a8e9c789365655539ab372762b0efb54f0"
   integrity sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==
 
-react-native-gesture-handler@2.15.0:
-  version "2.15.0"
-  resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-2.15.0.tgz#f8e6c0451a7bdf065edb7b9be605480db402baa0"
-  integrity sha512-cmMGW8k86o/xgVTBZZOPohvR5re4Vh65PUxH4HbBBJAYTog4aN4wTVTUlnoky01HuSN8/X4h3tI/K3XLPoDnsg==
+react-native-gesture-handler@2.16.0:
+  version "2.16.0"
+  resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-2.16.0.tgz#45a00b5988e74ebc58f130c8d1443319c8e678db"
+  integrity sha512-1hFkx7RIfeJSyTQQ0Nkv4icFVZ5+XjQkd47OgZMBFzoB7ecL+nFSz8KLi3OCWOhq+nbHpSPlSG5VF3CQNCJpWA==
   dependencies:
     "@egjs/hammerjs" "^2.0.17"
     hoist-non-react-statics "^3.3.0"
@@ -4700,10 +4700,10 @@ react-native-haptic-feedback@^2.2.0:
   version "0.0.0"
   uid ""
 
-react-native-reanimated@3.8.0:
-  version "3.8.0"
-  resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-3.8.0.tgz#e7724ceae8fdf87e9523d9d54efb3e4652f608cb"
-  integrity sha512-xoG4+nf+lSmzv37mjTUIT0gYNEIr2Mb8WXgmqR8deCJk8CC6lXT0HRpshTPVAF00LvdzrD2W/rCpiBdHN5FW2w==
+react-native-reanimated@3.9.0-nightly-20240402-12717cdb5:
+  version "3.9.0-nightly-20240402-12717cdb5"
+  resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-3.9.0-nightly-20240402-12717cdb5.tgz#43af7da098ae92774da5432e7ce6d7f54dd8c46a"
+  integrity sha512-SRbR7rEoZUqr5KCl6iEISoDaiT5RvpFNGTyi28RfLHBWa8750l10w4U0/AbQJ5v5MeTtkLD32t7CLISWgMy0Bw==
   dependencies:
     "@babel/plugin-transform-arrow-functions" "^7.0.0-0"
     "@babel/plugin-transform-nullish-coalescing-operator" "^7.0.0-0"
@@ -4719,10 +4719,10 @@ react-native-safe-area-context@^4.10.0-rc.1:
   resolved "https://registry.yarnpkg.com/react-native-safe-area-context/-/react-native-safe-area-context-4.10.0-rc.1.tgz#414c23cd1b2004724a0421dd71536be9343fe76b"
   integrity sha512-DOzh3rh6TBuPcaAkRtlBjZ18E4zQfCqgtrZtzLsFJTvKSJsONIansl87rrfq5m1DxUHzryhXGP3vU1WYsGh5vg==
 
-react-native-screens@^3.29.0:
-  version "3.29.0"
-  resolved "https://registry.yarnpkg.com/react-native-screens/-/react-native-screens-3.29.0.tgz#1dee0326defbc1d4ef4e68287abb32a8e6b76b29"
-  integrity sha512-yB1GoAMamFAcYf4ku94uBPn0/ani9QG7NdI98beJ5cet2YFESYYzuEIuU+kt+CNRcO8qqKeugxlfgAa3HyTqlg==
+react-native-screens@^3.31.0-rc.0:
+  version "3.31.0-rc.0"
+  resolved "https://registry.yarnpkg.com/react-native-screens/-/react-native-screens-3.31.0-rc.0.tgz#6a2a3fe1a9333f685c0a653606dc72982a0fe062"
+  integrity sha512-E7zqNJSf+MWI/CKaZhtrB0sVFXaLEeHJhCQRgg6M1tsnsDF4OYIdMgTCIgOjQWMSUz2nOrqK03ru2FTBFMP9Aw==
   dependencies:
     react-freeze "^1.0.0"
     warn-once "^0.1.0"
