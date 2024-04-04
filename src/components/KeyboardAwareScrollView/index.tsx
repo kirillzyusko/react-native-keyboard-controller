@@ -115,7 +115,7 @@ const KeyboardAwareScrollView = forwardRef<
           }
         },
       },
-      [],
+      [onScrollProps],
     );
 
     const onRef = useCallback((assignedRef: Reanimated.ScrollView) => {
