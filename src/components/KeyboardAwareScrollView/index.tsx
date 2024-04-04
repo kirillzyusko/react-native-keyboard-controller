@@ -2,6 +2,7 @@ import React, { forwardRef, useCallback, useMemo } from "react";
 import { findNodeHandle, useWindowDimensions } from "react-native";
 import Reanimated, {
   interpolate,
+  runOnJS,
   scrollTo,
   useAnimatedReaction,
   useAnimatedRef,
@@ -83,6 +84,7 @@ const KeyboardAwareScrollView = forwardRef<
       bottomOffset = 0,
       disableScrollOnKeyboardHide = false,
       enabled = true,
+      onScroll: onScrollProps,
       ...rest
     },
     ref,
@@ -106,6 +108,11 @@ const KeyboardAwareScrollView = forwardRef<
       {
         onScroll: (e) => {
           position.value = e.contentOffset.y;
+
+          if (onScrollProps) {
+            // @ts-expect-error we can not pass currentTarget, bubbles and other properties
+            runOnJS(onScrollProps)({ nativeEvent: e });
+          }
         },
       },
       [],
@@ -320,8 +327,7 @@ const KeyboardAwareScrollView = forwardRef<
         ref={onRef}
         {...rest}
         onLayout={onScrollViewLayout}
-        // @ts-expect-error `onScrollReanimated` is a fake prop needed for reanimated to intercept scroll events
-        onScrollReanimated={onScroll}
+        onScroll={onScroll}
         scrollEventThrottle={16}
       >
         {children}

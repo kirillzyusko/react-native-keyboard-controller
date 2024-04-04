@@ -16,3 +16,5 @@ FabricExample/ios/build/
 FabricExample/src/**/Lottie/*.json
 
 android/build/
+
+tea.yaml
