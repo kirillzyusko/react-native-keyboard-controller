@@ -2,11 +2,9 @@ import React, { forwardRef, useCallback, useMemo } from "react";
 import { findNodeHandle, useWindowDimensions } from "react-native";
 import Reanimated, {
   interpolate,
-  runOnJS,
   scrollTo,
   useAnimatedReaction,
   useAnimatedRef,
-  useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
 } from "react-native-reanimated";
@@ -104,16 +102,11 @@ const KeyboardAwareScrollView = forwardRef<
 
     const { height } = useWindowDimensions();
 
-    const onScroll = useAnimatedScrollHandler(
-      {
-        onScroll: (e) => {
-          position.value = e.contentOffset.y;
+    const onScroll = useCallback<NonNullable<ScrollViewProps["onScroll"]>>(
+      (event) => {
+        position.value = event.nativeEvent.contentOffset.y;
 
-          if (onScrollProps) {
-            // @ts-expect-error we can not pass currentTarget, bubbles and other properties
-            runOnJS(onScrollProps)({ nativeEvent: e });
-          }
-        },
+        onScrollProps?.(event);
       },
       [onScrollProps],
     );
