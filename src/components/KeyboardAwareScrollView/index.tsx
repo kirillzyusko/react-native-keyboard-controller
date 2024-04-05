@@ -5,7 +5,6 @@ import Reanimated, {
   scrollTo,
   useAnimatedReaction,
   useAnimatedRef,
-  useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
 } from "react-native-reanimated";
@@ -83,6 +82,7 @@ const KeyboardAwareScrollView = forwardRef<
       bottomOffset = 0,
       disableScrollOnKeyboardHide = false,
       enabled = true,
+      onScroll: onScrollProps,
       ...rest
     },
     ref,
@@ -102,13 +102,13 @@ const KeyboardAwareScrollView = forwardRef<
 
     const { height } = useWindowDimensions();
 
-    const onScroll = useAnimatedScrollHandler(
-      {
-        onScroll: (e) => {
-          position.value = e.contentOffset.y;
-        },
+    const onScroll = useCallback<NonNullable<ScrollViewProps["onScroll"]>>(
+      (event) => {
+        position.value = event.nativeEvent.contentOffset.y;
+
+        onScrollProps?.(event);
       },
-      [],
+      [onScrollProps],
     );
 
     const onRef = useCallback((assignedRef: Reanimated.ScrollView) => {
@@ -320,8 +320,7 @@ const KeyboardAwareScrollView = forwardRef<
         ref={onRef}
         {...rest}
         onLayout={onScrollViewLayout}
-        // @ts-expect-error `onScrollReanimated` is a fake prop needed for reanimated to intercept scroll events
-        onScrollReanimated={onScroll}
+        onScroll={onScroll}
         scrollEventThrottle={16}
       >
         {children}
