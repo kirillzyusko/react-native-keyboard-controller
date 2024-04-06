@@ -4700,10 +4700,10 @@ react-native-haptic-feedback@^2.2.0:
   version "0.0.0"
   uid ""
 
-react-native-reanimated@3.9.0-nightly-20240402-12717cdb5:
-  version "3.9.0-nightly-20240402-12717cdb5"
-  resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-3.9.0-nightly-20240402-12717cdb5.tgz#43af7da098ae92774da5432e7ce6d7f54dd8c46a"
-  integrity sha512-SRbR7rEoZUqr5KCl6iEISoDaiT5RvpFNGTyi28RfLHBWa8750l10w4U0/AbQJ5v5MeTtkLD32t7CLISWgMy0Bw==
+react-native-reanimated@3.9.0-rc.0:
+  version "3.9.0-rc.0"
+  resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-3.9.0-rc.0.tgz#f3178705ce76e14e887bf88cc92cfe25407aa5e8"
+  integrity sha512-wJdtA6//eDO1+vBFpmbO051NKog4yNQEHK9wpvc1gN8cu4v2sZbiJE+FvCzETG18x419LMZ3N5kxI+/JYHCdwg==
   dependencies:
     "@babel/plugin-transform-arrow-functions" "^7.0.0-0"
     "@babel/plugin-transform-nullish-coalescing-operator" "^7.0.0-0"
