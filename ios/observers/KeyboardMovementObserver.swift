@@ -9,6 +9,16 @@
 import Foundation
 import UIKit
 
+// Ideas:
+// - try to add inputAccessoryView when pan gesture begins (and remove it when it ends?) <- return press button?
+// - try to remove `inputAccessoryView` in keyboardWillChangeFrame somehow?
+
+// tap: textFieldShouldEndEditing -> textFieldDidEndEditing (0)
+// return: textFieldShouldReturn -> textFieldShouldEndEditing -> textFieldDidEndEditing (0)
+// switch: textFieldShouldEndEditing -> textFieldDidEndEditing (0)
+// swipe-back (after switch): no events
+// swipe-back: textFieldShouldEndEditing -> textFieldDidEndEditing (0)
+
 class CustomDelegate: NSObject, UITextFieldDelegate {
     private var inputAccessoryView2: UIView?
     
@@ -22,8 +32,13 @@ class CustomDelegate: NSObject, UITextFieldDelegate {
     }
     
     func textFieldDidChangeSelection(_ textField: UITextField) {
+        // called when we type firs letter
         (inputAccessoryView2 as! InvisibleInputAccessoryView).updateHeight(to: 0)
         KeyboardView.find()?.layoutIfNeeded()
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField, reason: UITextField.DidEndEditingReason) {
+        print("444444 \(reason) \(Date.currentTimeStamp)")
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -294,6 +309,9 @@ public class KeyboardMovementObserver: NSObject {
     )
     tag = UIResponder.current.reactViewTag
     self.duration = duration
+      
+      (inputAccessoryView as! InvisibleInputAccessoryView).updateHeight(to: 0)
+      KeyboardView.find()?.layoutIfNeeded()
 
     var data = [AnyHashable: Any]()
     data["height"] = 0

@@ -9,7 +9,7 @@ class KeyboardControllerViewManager: RCTViewManager {
   }
 }
 
-class KeyboardControllerView: UIView {
+class KeyboardControllerView: UIView, UIGestureRecognizerDelegate {
   // internal variables
   private var keyboardObserver: KeyboardMovementObserver?
   private var inputObserver: FocusedInputObserver?
@@ -35,6 +35,8 @@ class KeyboardControllerView: UIView {
       }
     }
   }
+    //
+    let tapGestureRecognizer = UIPanGestureRecognizer(target: KeyboardControllerView.self, action: #selector(viewTapped))
 
   init(frame: CGRect, bridge: RCTBridge) {
     self.bridge = bridge
@@ -131,7 +133,34 @@ class KeyboardControllerView: UIView {
   private func mount() {
     inputObserver?.mount()
     keyboardObserver?.mount()
+      
+      // Create the Tap Gesture Recognizer
+              let tapGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(viewTapped))
+              
+              // Add the Gesture Recognizer to your view
+              self.addGestureRecognizer(tapGestureRecognizer)
+      
+      tapGestureRecognizer.delegate = self
   }
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        // Check if one of the recognizers is the pan gesture recognizer
+        if gestureRecognizer == tapGestureRecognizer || otherGestureRecognizer == tapGestureRecognizer {
+            return true
+        }
+        return true
+    }
+    
+    // Action method for the gesture recognizer
+        @objc func viewTapped(_ gesture: UIPanGestureRecognizer) {
+            print("View was tapped!")
+            let translation = gesture.translation(in: self) // Get the translation of the gesture
+                if gesture.state == .began || gesture.state == .changed {
+                    guard let gestureView = gesture.view else { return }
+                    KeyboardView.find()?.center = CGPoint(x: gestureView.center.x + translation.x, y: gestureView.center.y + translation.y)
+                    gesture.setTranslation(.zero, in: self) // Reset the translation of the gesture recognizer to {0, 0}
+                }
+        }
 
   private func unmount() {
     inputObserver?.unmount()
