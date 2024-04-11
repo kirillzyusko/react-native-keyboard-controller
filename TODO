@@ -1,3 +1,4 @@
 - in iOS simulator: enable slow animation, then open keyboard and while it's opening -> press return (circle on hide moves to final position and then animates, but should be animating from current position)
 - why duration * 0.6 on iOS? Maybe there is a more sophisticated way how to calculate that value?
 - check interactive keyboard (when you release a finger -> you need to animate from current position to final destination, so you need to check whether it has correct positioning - we rely on `onMove` in one corner case)
+- verify that we use fallback mechanism when animation type is not SpringAnimation

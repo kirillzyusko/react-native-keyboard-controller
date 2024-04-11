@@ -29,6 +29,7 @@ public class SpringAnimation {
 
   // public members
   public let speed: Float
+  public let timestamp: CFTimeInterval
 
   init(
     stiffness: Double,
@@ -46,6 +47,7 @@ public class SpringAnimation {
     self.speed = speed
     self.fromValue = fromValue
     self.toValue = toValue
+    self.timestamp = CACurrentMediaTime()
 
     zeta = damping / (2 * sqrt(stiffness * mass)) // Damping ratio
     omega0 = sqrt(stiffness / mass) // Undamped angular frequency of the oscillator
@@ -69,6 +71,11 @@ public class SpringAnimation {
   // public getters
   var beginTime: CFTimeInterval? {
     return animation?.beginTime
+  }
+    
+  var startTime: CFTimeInterval {
+    // when concurrent animation happens, then `.beginTime` remains the same
+    return max(animation?.beginTime ?? timestamp, timestamp)
   }
 
   // public functions
@@ -97,7 +104,7 @@ public class SpringAnimation {
     var tGuess = 0.0
 
     while (upperBound - lowerBound) > tolerance {
-      tGuess = ((lowerBound + upperBound) / 2) / Double(speed)
+      tGuess = ((lowerBound + upperBound) / 2)
       let currentValue = valueAt(time: tGuess)
 
       if currentValue < y {
