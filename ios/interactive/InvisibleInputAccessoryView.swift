@@ -10,6 +10,8 @@ import Foundation
 import UIKit
 
 public class InvisibleInputAccessoryView: UIView {
+    private var height: CGFloat = 10
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupView()
@@ -25,11 +27,19 @@ public class InvisibleInputAccessoryView: UIView {
             return false
         }
     
+    public func updateHeight(to newHeight: CGFloat) {
+        height = newHeight
+                // Invalidate intrinsic content size to trigger a layout update
+                invalidateIntrinsicContentSize()
+        self.layoutIfNeeded()
+    }
+    
+    public override var intrinsicContentSize: CGSize {
+        return CGSize(width: UIView.noIntrinsicMetric, height: height)
+    }
+    
     private func setupView() {
         // Set the background color to red
         backgroundColor = UIColor.red
-
-        // You can customize the appearance of the accessory view here
-        // Add any additional subviews or configure constraints if needed
     }
 }

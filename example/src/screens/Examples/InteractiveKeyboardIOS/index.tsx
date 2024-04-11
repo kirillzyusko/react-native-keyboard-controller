@@ -36,6 +36,8 @@ const useKeyboardAnimation = () => {
         return;
       }
 
+      console.log("onStart", e);
+
       progress.value = e.progress;
       height.value = e.height;
 
@@ -45,7 +47,7 @@ const useKeyboardAnimation = () => {
     },
     onInteractive: (e) => {
       "worklet";
-console.log(e.progress);
+      console.log("onInteractive", e);
       progress.value = e.progress;
       height.value = e.height;
     },
@@ -55,10 +57,14 @@ console.log(e.progress);
       if (shouldUseOnMoveHandler.value) {
         progress.value = e.progress;
         height.value = e.height;
+
+        console.log("onMove", e);
       }
     },
     onEnd: (e) => {
       "worklet";
+
+      console.log("onEnd", e);
 
       height.value = e.height;
       progress.value = e.progress;

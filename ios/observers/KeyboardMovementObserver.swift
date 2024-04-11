@@ -9,7 +9,6 @@
 import Foundation
 import UIKit
 
-
 class CustomDelegate: NSObject, UITextFieldDelegate {
     private var inputAccessoryView2: UIView?
     
@@ -22,9 +21,14 @@ class CustomDelegate: NSObject, UITextFieldDelegate {
         return true
     }
     
+    func textFieldDidChangeSelection(_ textField: UITextField) {
+        (inputAccessoryView2 as! InvisibleInputAccessoryView).updateHeight(to: 0)
+        KeyboardView.find()?.layoutIfNeeded()
+    }
+    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         print("11111 \(Date.currentTimeStamp)")
-        inputAccessoryView2?.removeFromSuperview()
+        // inputAccessoryView2?.removeFromSuperview()
 
         print(textField.inputAccessoryView)
         //
@@ -44,6 +48,10 @@ class CustomDelegate: NSObject, UITextFieldDelegate {
         }
         
         return false*/
+        
+        (inputAccessoryView2 as! InvisibleInputAccessoryView).updateHeight(to: 0)
+        inputAccessoryView2?.superview?.layoutIfNeeded()
+        // KeyboardView.find()?.layoutIfNeeded()
         
         return true
     }
@@ -260,6 +268,16 @@ public class KeyboardMovementObserver: NSObject {
       data["target"] = tag
         
       print("keyboardWillAppear \(keyboardHeight) \(Date.currentTimeStamp)")
+        let b = UIResponder.current?.inputAccessoryView
+        /*if let accessoryView = inputAccessoryView {
+            let h = Int.random(in: 0..<200)
+            print(h)
+            (b as? InvisibleInputAccessoryView)?.updateHeight(to: CGFloat(h))
+        }*/
+        let c = _keyboardView?.superview
+        let d = b?.superview
+        let e = inputAccessoryView?.superview
+
 
       onRequestAnimation()
       onEvent("onKeyboardMoveStart", Float(keyboardHeight) as NSNumber, 1, duration as NSNumber, tag)
@@ -336,8 +354,18 @@ public class KeyboardMovementObserver: NSObject {
       offset = h
         if let activeTextField = UIResponder.current as? UITextField, activeTextField.inputAccessoryView == nil {
             print("ATTACH FAKE ACCESSORY VIEW")
-            inputAccessoryView = InvisibleInputAccessoryView(frame: CGRect(x: 0, y: 0, width: 0, height: h))
+            inputAccessoryView = InvisibleInputAccessoryView()
+            activeTextField.translatesAutoresizingMaskIntoConstraints = false
+            
+            /*NSLayoutConstraint.activate([
+                activeTextField.topAnchor.constraint(equalTo: inputAccessoryView!.safeAreaLayoutGuide.topAnchor),
+                activeTextField.leftAnchor.constraint(equalTo: inputAccessoryView!.leftAnchor),
+                activeTextField.rightAnchor.constraint(equalTo: inputAccessoryView!.rightAnchor),
+                activeTextField.bottomAnchor.constraint(equalTo: inputAccessoryView!.safeAreaLayoutGuide.bottomAnchor)
+                    ])*/
+            
           activeTextField.inputAccessoryView = inputAccessoryView
+            inputAccessoryView?.autoresizingMask = .flexibleHeight
           activeTextField.reloadInputViews()
             del = CustomDelegate(inputAccessoryView: inputAccessoryView)
             activeTextField.delegate = del
@@ -448,7 +476,8 @@ public class KeyboardMovementObserver: NSObject {
     private func onEvent(_ event: NSString, _ position: NSNumber, _ progress: NSNumber, _ duration: NSNumber, _ tag: NSNumber) {
         onEventHanlder(
           event,
-          max((CGFloat(position) - offset), 0) as NSNumber,
+          // max((CGFloat(position) - offset), 0) as NSNumber,
+          max((CGFloat(position)), 0) as NSNumber,
           progress,
           duration,
           tag
