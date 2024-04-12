@@ -72,7 +72,7 @@ public class SpringAnimation {
   var beginTime: CFTimeInterval? {
     return animation?.beginTime
   }
-    
+
   var startTime: CFTimeInterval {
     // when concurrent animation happens, then `.beginTime` remains the same
     return max(animation?.beginTime ?? timestamp, timestamp)
@@ -103,18 +103,22 @@ public class SpringAnimation {
     let tolerance = 0.001 // Define how precise you want to be
     var tGuess = 0.0
 
-    while (upperBound - lowerBound) > tolerance {
-      tGuess = ((lowerBound + upperBound) / 2)
-      let currentValue = valueAt(time: tGuess)
+    // Check the direction of the animation
+    let isIncreasing = fromValue < toValue
 
-      if currentValue < y {
+    while (upperBound - lowerBound) > tolerance {
+      tGuess = (lowerBound + upperBound) / 2
+      let currentValue = valueAt(time: tGuess / Double(speed))
+
+      // Adjust the condition to account for the direction of animation
+      if (currentValue < y && isIncreasing) || (currentValue > y && !isIncreasing) {
         lowerBound = tGuess
       } else {
         upperBound = tGuess
       }
     }
 
-    return tGuess
+    return tGuess / Double(speed)
   }
 }
 
