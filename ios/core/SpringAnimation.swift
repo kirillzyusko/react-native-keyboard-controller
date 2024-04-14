@@ -47,7 +47,7 @@ public class SpringAnimation {
     self.speed = speed
     self.fromValue = fromValue
     self.toValue = toValue
-    self.timestamp = CACurrentMediaTime()
+    timestamp = CACurrentMediaTime()
 
     zeta = damping / (2 * sqrt(stiffness * mass)) // Damping ratio
     omega0 = sqrt(stiffness / mass) // Undamped angular frequency of the oscillator

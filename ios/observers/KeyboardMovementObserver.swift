@@ -317,7 +317,7 @@ public class KeyboardMovementObserver: NSObject {
       "onKeyboardMove",
       keyboardPosition as NSNumber,
       keyboardPosition / CGFloat(keyboardHeight) as NSNumber,
-      self.duration as NSNumber,
+      duration as NSNumber,
       tag
     )
   }

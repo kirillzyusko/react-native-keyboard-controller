@@ -6,6 +6,6 @@
 //  Copyright © 2024 Facebook. All rights reserved.
 //
 
-struct UIUtils {
+enum UIUtils {
   static let nextFrame = 1.0 / 60
 }
