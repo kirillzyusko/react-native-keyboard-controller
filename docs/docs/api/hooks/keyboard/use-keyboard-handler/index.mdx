@@ -134,9 +134,7 @@ export const onMoveCode = (
 <div className="mobile">{onMoveCode}</div>
 
 :::info Not precise values
-There is no corresponding events in iOS for this hook. So values will not be perfectly synchronized with the keyboard.
-
-The same is applied to Android < 11 - these OS versions don't have API for getting keyboard positions during an animation.
+On Android < 11 values will not be perfectly synchronized with the keyboard, because prior to this version it was not possible to get keyboard position during an animation.
 :::
 
 #### `onInteractive`

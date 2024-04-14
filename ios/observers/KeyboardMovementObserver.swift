@@ -183,7 +183,7 @@ public class KeyboardMovementObserver: NSObject {
       onNotify("KeyboardController::keyboardWillShow", data)
 
       setupKeyboardWatcher()
-      initializeAnimation(fromValue: 0, toValue: keyboardHeight)
+      initializeAnimation(fromValue: prevKeyboardPosition, toValue: keyboardHeight)
     }
   }
 
@@ -206,7 +206,7 @@ public class KeyboardMovementObserver: NSObject {
 
     setupKeyboardWatcher()
     removeKVObserver()
-    initializeAnimation(fromValue: keyboardHeight, toValue: 0)
+    initializeAnimation(fromValue: prevKeyboardPosition, toValue: 0)
   }
 
   @objc func keyboardDidAppear(_ notification: Notification) {
@@ -230,6 +230,7 @@ public class KeyboardMovementObserver: NSObject {
 
       removeKeyboardWatcher()
       setupKVObserver()
+      animation = nil
     }
   }
 
@@ -249,6 +250,7 @@ public class KeyboardMovementObserver: NSObject {
     onNotify("KeyboardController::keyboardDidHide", data)
 
     removeKeyboardWatcher()
+    animation = nil
   }
 
   @objc func setupKeyboardWatcher() {
@@ -270,9 +272,11 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   func initializeAnimation(fromValue: Double, toValue: Double) {
-    print("initializeAnimation from: \(fromValue) to: \(toValue)")
+    print("initializeAnimation from: \(fromValue) to: \(toValue) timestamp \(CACurrentMediaTime())")
+    print(keyboardView?.layer.presentation()?.animation(forKey: "position"))
     let anim = keyboardView?.layer.presentation()?.animation(forKey: "position") as? CASpringAnimation
     guard let keyboardAnimation = anim else {
+      print("can not read animation from layer - skipping creation...")
       // TODO: set animation to null here? Check how it works with modal windows
       return
     }
@@ -292,28 +296,30 @@ public class KeyboardMovementObserver: NSObject {
       return
     }
 
-
     if let animation = animation {
-        let beginTime = animation.startTime
-        let baseDuration = link.targetTimestamp - beginTime
+      let beginTime = animation.startTime
+      let baseDuration = link.targetTimestamp - beginTime
 
-        #if targetEnvironment(simulator)
-          let correctedDuration = baseDuration - ONE_FRAME * 0.6
-        #else
-          let correctedDuration = baseDuration + ONE_FRAME
-        #endif
+      #if targetEnvironment(simulator)
+        let correctedDuration = baseDuration - ONE_FRAME * 0.6 // animation.timingAt(value: keyboardPosition)
+      #else
+        let correctedDuration = baseDuration + ONE_FRAME
+      #endif
 
-        let duration = correctedDuration
-        print("duration: \(duration) \(link.timestamp)")
-          print("duration2: \(link.timestamp - animation.timestamp)")
-        let pos = CGFloat(animation.valueAt(time: duration))
-        print("BeginTime:  \(beginTime) Time: \(animation.timestamp)")
-        print("--> CADisplayLink position: \(keyboardPosition), duration for CADisplayLink (reverse): \(animation.timingAt(value: keyboardPosition)), CADisplayLink timestamp: \(link.timestamp), CADisplayLink targetTimestamp: \(link.targetTimestamp), Spring formula prediction: \(pos), at: \(duration) animation?.beginTime: \(animation.beginTime) time: \(animation.timestamp) speed: \(animation.speed)")
-        keyboardPosition = pos
+      let duration = correctedDuration
+      print("duration: \(duration) \(link.timestamp)")
+      print("duration2: \(link.timestamp - animation.timestamp)")
+      let pos = CGFloat(animation.valueAt(time: duration))
+      print("BeginTime:  \(beginTime) Time: \(animation.timestamp)")
+      print("--> CADisplayLink position: \(keyboardPosition), duration for CADisplayLink (reverse): \(animation.timingAt(value: keyboardPosition)), CADisplayLink timestamp: \(link.timestamp), CADisplayLink targetTimestamp: \(link.targetTimestamp), Spring formula prediction: \(pos), at: \(duration) animation?.beginTime: \(animation.beginTime) time: \(animation.timestamp) speed: \(animation.speed)")
+      keyboardPosition = pos
     }
-      
+
     prevKeyboardPosition = keyboardPosition
-    
+      
+    print(keyboardView?.layer.presentation()?.animation(forKey: "position"))
+    print(keyboardView?.layer.presentation()?.animation(forKey: "position") as? CASpringAnimation)
+
     onEvent(
       "onKeyboardMove",
       keyboardPosition as NSNumber,
