@@ -9,9 +9,6 @@
 import Foundation
 import UIKit
 
-// swiftlint:disable:next identifier_name
-let ONE_FRAME = 1.0 / 60
-
 @objc(KeyboardMovementObserver)
 public class KeyboardMovementObserver: NSObject {
   // class members
@@ -273,7 +270,6 @@ public class KeyboardMovementObserver: NSObject {
 
   func initializeAnimation(fromValue: Double, toValue: Double) {
     print("initializeAnimation from: \(fromValue) to: \(toValue) timestamp \(CACurrentMediaTime())")
-    print(keyboardView?.layer.presentation()?.animation(forKey: "position"))
     let anim = keyboardView?.layer.presentation()?.animation(forKey: "position") as? CASpringAnimation
     guard let keyboardAnimation = anim else {
       print("can not read animation from layer - skipping creation...")
@@ -301,9 +297,9 @@ public class KeyboardMovementObserver: NSObject {
       let baseDuration = link.targetTimestamp - beginTime
 
       #if targetEnvironment(simulator)
-        let correctedDuration = baseDuration - ONE_FRAME * 0.6 // animation.timingAt(value: keyboardPosition)
+        let correctedDuration = baseDuration - UIUtils.nextFrame * 0.6 // animation.timingAt(value: keyboardPosition)
       #else
-        let correctedDuration = baseDuration + ONE_FRAME
+        let correctedDuration = baseDuration + UIUtils.nextFrame
       #endif
 
       let duration = correctedDuration
@@ -316,9 +312,6 @@ public class KeyboardMovementObserver: NSObject {
     }
 
     prevKeyboardPosition = keyboardPosition
-      
-    print(keyboardView?.layer.presentation()?.animation(forKey: "position"))
-    print(keyboardView?.layer.presentation()?.animation(forKey: "position") as? CASpringAnimation)
 
     onEvent(
       "onKeyboardMove",
