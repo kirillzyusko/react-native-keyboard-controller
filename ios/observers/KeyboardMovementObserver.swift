@@ -312,7 +312,7 @@ public class KeyboardMovementObserver: NSObject {
       let pos = CGFloat(animation.valueAt(time: duration))
       print("BeginTime:  \(beginTime) Time: \(animation.timestamp)")
       print("--> CADisplayLink position: \(keyboardPosition), duration for CADisplayLink (reverse): \(animation.timingAt(value: keyboardPosition)), CADisplayLink timestamp: \(link.timestamp), CADisplayLink targetTimestamp: \(link.targetTimestamp), Spring formula prediction: \(pos), at: \(duration) animation?.beginTime: \(animation.beginTime) time: \(animation.timestamp) speed: \(animation.speed)")
-      keyboardPosition = pos
+      keyboardPosition = pos // TODO: use max/min between pos/keyboardPosition depends on direction of animation
     }
 
     prevKeyboardPosition = keyboardPosition
