@@ -78,6 +78,10 @@ public class SpringAnimation {
     return max(animation?.beginTime ?? timestamp, timestamp)
   }
 
+  var isIncreasing: Bool {
+    return fromValue < toValue
+  }
+
   // public functions
   func valueAt(time: Double) -> Double {
     let t = time * Double(speed)
@@ -104,7 +108,7 @@ public class SpringAnimation {
     var tGuess = 0.0
 
     // Check the direction of the animation
-    let isIncreasing = fromValue < toValue
+    let isIncreasing = isIncreasing
 
     while (upperBound - lowerBound) > tolerance {
       tGuess = (lowerBound + upperBound) / 2

@@ -270,10 +270,9 @@ public class KeyboardMovementObserver: NSObject {
 
   func initializeAnimation(fromValue: Double, toValue: Double) {
     print("initializeAnimation from: \(fromValue) to: \(toValue) timestamp \(CACurrentMediaTime())")
-    let anim = keyboardView?.layer.presentation()?.animation(forKey: "position") as? CASpringAnimation
-    guard let keyboardAnimation = anim else {
+    let positionAnimation = keyboardView?.layer.presentation()?.animation(forKey: "position") as? CASpringAnimation
+    guard let keyboardAnimation = positionAnimation else {
       print("can not read animation from layer - skipping creation...")
-      // TODO: set animation to null here? Check how it works with modal windows
       return
     }
     animation = SpringAnimation(animation: keyboardAnimation, fromValue: fromValue, toValue: toValue)
@@ -305,10 +304,13 @@ public class KeyboardMovementObserver: NSObject {
       let duration = correctedDuration
       print("duration: \(duration) \(link.timestamp)")
       print("duration2: \(link.timestamp - animation.timestamp)")
-      let pos = CGFloat(animation.valueAt(time: duration))
+      let position = CGFloat(animation.valueAt(time: duration))
       print("BeginTime:  \(beginTime) Time: \(animation.timestamp)")
-      print("--> CADisplayLink position: \(keyboardPosition), duration for CADisplayLink (reverse): \(animation.timingAt(value: keyboardPosition)), CADisplayLink timestamp: \(link.timestamp), CADisplayLink targetTimestamp: \(link.targetTimestamp), Spring formula prediction: \(pos), at: \(duration) animation?.beginTime: \(animation.beginTime) time: \(animation.timestamp) speed: \(animation.speed)")
-      keyboardPosition = pos // TODO: use max/min between pos/keyboardPosition depends on direction of animation
+      print("--> CADisplayLink position: \(keyboardPosition), duration for CADisplayLink (reverse): \(animation.timingAt(value: keyboardPosition)), CADisplayLink timestamp: \(link.timestamp), CADisplayLink targetTimestamp: \(link.targetTimestamp), Spring formula prediction: \(position), at: \(duration) animation?.beginTime: \(animation.beginTime) time: \(animation.timestamp) speed: \(animation.speed)")
+      // handles a case when final frame has final destination (i. e. 0 or 291)
+      // but CASpringAnimation can never get to this final destination
+      let race: (CGFloat, CGFloat) -> CGFloat = animation.isIncreasing ? max : min
+      keyboardPosition = race(position, keyboardPosition)
     }
 
     prevKeyboardPosition = keyboardPosition
