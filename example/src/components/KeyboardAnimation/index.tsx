@@ -6,19 +6,23 @@ import {
   useKeyboardHandler,
 } from "react-native-keyboard-controller";
 import Reanimated, {
-  useAnimatedKeyboard,
   useAnimatedStyle,
   useSharedValue,
 } from "react-native-reanimated";
 
 import styles from "./styles";
 
-const useA = () => {
+const useGradualKeyboardAnimation = () => {
   const height = useSharedValue(0);
 
   useKeyboardHandler(
     {
       onMove: (e) => {
+        "worklet";
+
+        height.value = e.height;
+      },
+      onEnd: (e) => {
         "worklet";
 
         height.value = e.height;
@@ -32,26 +36,15 @@ const useA = () => {
 
 export default function KeyboardAnimation() {
   const { height, progress } = useKeyboardAnimation();
-  const a = useA();
-  const b = useAnimatedKeyboard();
+  const keyboard = useGradualKeyboardAnimation();
 
-  const s = useAnimatedStyle(
+  const gradual = useAnimatedStyle(
     () => ({
       width: 50,
       height: 50,
       backgroundColor: "gray",
       borderRadius: 25,
-      bottom: a.value,
-    }),
-    [],
-  );
-  const s2 = useAnimatedStyle(
-    () => ({
-      width: 50,
-      height: 50,
-      backgroundColor: "pink",
-      borderRadius: 25,
-      bottom: b.height.value,
+      bottom: keyboard.value,
     }),
     [],
   );
@@ -101,8 +94,7 @@ export default function KeyboardAnimation() {
                 transform: [{ translateY: height }],
               }}
             />
-            <Reanimated.View style={s} />
-            <Reanimated.View style={s2} />
+            <Reanimated.View style={gradual} />
           </View>
         </View>
       </>

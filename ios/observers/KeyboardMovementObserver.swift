@@ -269,10 +269,8 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   func initializeAnimation(fromValue: Double, toValue: Double) {
-    print("initializeAnimation from: \(fromValue) to: \(toValue) timestamp \(CACurrentMediaTime())")
     let positionAnimation = keyboardView?.layer.presentation()?.animation(forKey: "position") as? CASpringAnimation
     guard let keyboardAnimation = positionAnimation else {
-      print("can not read animation from layer - skipping creation...")
       return
     }
     animation = SpringAnimation(animation: keyboardAnimation, fromValue: fromValue, toValue: toValue)
@@ -296,17 +294,13 @@ public class KeyboardMovementObserver: NSObject {
       let baseDuration = link.targetTimestamp - beginTime
 
       #if targetEnvironment(simulator)
-        let correctedDuration = baseDuration - UIUtils.nextFrame * 0.6 // animation.timingAt(value: keyboardPosition)
+        let correctedDuration = baseDuration - UIUtils.nextFrame * 0.6
       #else
         let correctedDuration = baseDuration + UIUtils.nextFrame
       #endif
 
       let duration = correctedDuration
-      print("duration: \(duration) \(link.timestamp)")
-      print("duration2: \(link.timestamp - animation.timestamp)")
       let position = CGFloat(animation.valueAt(time: duration))
-      print("BeginTime:  \(beginTime) Time: \(animation.timestamp)")
-      print("--> CADisplayLink position: \(keyboardPosition), duration for CADisplayLink (reverse): \(animation.timingAt(value: keyboardPosition)), CADisplayLink timestamp: \(link.timestamp), CADisplayLink targetTimestamp: \(link.targetTimestamp), Spring formula prediction: \(position), at: \(duration) animation?.beginTime: \(animation.beginTime) time: \(animation.timestamp) speed: \(animation.speed)")
       // handles a case when final frame has final destination (i. e. 0 or 291)
       // but CASpringAnimation can never get to this final destination
       let race: (CGFloat, CGFloat) -> CGFloat = animation.isIncreasing ? max : min

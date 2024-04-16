@@ -26,10 +26,8 @@ public class SpringAnimation {
   private let initialVelocity: Double
   private let fromValue: Double
   private let toValue: Double
-
-  // public members
-  public let speed: Float
-  public let timestamp: CFTimeInterval
+  private let speed: Float
+  private let timestamp: CFTimeInterval
 
   init(
     stiffness: Double,
@@ -69,10 +67,6 @@ public class SpringAnimation {
   }
 
   // public getters
-  var beginTime: CFTimeInterval? {
-    return animation?.beginTime
-  }
-
   var startTime: CFTimeInterval {
     // when concurrent animation happens, then `.beginTime` remains the same
     return max(animation?.beginTime ?? timestamp, timestamp)
@@ -101,6 +95,7 @@ public class SpringAnimation {
     return y
   }
 
+  // this function can be used only for code debugging
   func timingAt(value y: Double) -> Double {
     var lowerBound = 0.0
     var upperBound = 1.0 // Assuming 1 second is the max duration for simplicity
