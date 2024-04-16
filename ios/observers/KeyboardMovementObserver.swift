@@ -290,16 +290,19 @@ public class KeyboardMovementObserver: NSObject {
     }
 
     if let animation = animation {
-      let beginTime = animation.startTime
-      let baseDuration = link.targetTimestamp - beginTime
+      let baseDuration = link.targetTimestamp - animation.startTime
 
       #if targetEnvironment(simulator)
-        let correctedDuration = baseDuration - UIUtils.nextFrame * 0.6
+        // on iOS simulator we can not use static interval
+        // (from my observation from frame to frame we may have different delays)
+        // so for now we use approximation (0.6 of the frame) - it gives not perfect
+        // but satisfactory results (better than 1 frame delay)
+        // later on I'll try to find a way to get the real frame interval
+        let duration = baseDuration - UIUtils.nextFrame * 0.6
       #else
-        let correctedDuration = baseDuration + UIUtils.nextFrame
+        let duration = baseDuration + UIUtils.nextFrame
       #endif
 
-      let duration = correctedDuration
       let position = CGFloat(animation.valueAt(time: duration))
       // handles a case when final frame has final destination (i. e. 0 or 291)
       // but CASpringAnimation can never get to this final destination
