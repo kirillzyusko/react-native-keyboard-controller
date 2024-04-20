@@ -212,77 +212,74 @@ const KeyboardAwareScrollView = forwardRef<
     );
 
     useSmoothKeyboardHandler(
-      enabled
-        ? {
-            onStart: (e) => {
-              "worklet";
+      {
+        onStart: (e) => {
+          "worklet";
 
-              const keyboardWillChangeSize =
-                keyboardHeight.value !== e.height && e.height > 0;
-              keyboardWillAppear.value =
-                e.height > 0 && keyboardHeight.value === 0;
-              const keyboardWillHide = e.height === 0;
-              const focusWasChanged =
-                (tag.value !== e.target && e.target !== -1) ||
-                keyboardWillChangeSize;
+          const keyboardWillChangeSize =
+            keyboardHeight.value !== e.height && e.height > 0;
+          keyboardWillAppear.value = e.height > 0 && keyboardHeight.value === 0;
+          const keyboardWillHide = e.height === 0;
+          const focusWasChanged =
+            (tag.value !== e.target && e.target !== -1) ||
+            keyboardWillChangeSize;
 
-              if (keyboardWillChangeSize) {
-                initialKeyboardSize.value = keyboardHeight.value;
-              }
-
-              if (keyboardWillHide) {
-                // on back transition need to interpolate as [0, keyboardHeight]
-                initialKeyboardSize.value = 0;
-                scrollPosition.value = scrollBeforeKeyboardMovement.value;
-              }
-
-              if (
-                keyboardWillAppear.value ||
-                keyboardWillChangeSize ||
-                focusWasChanged
-              ) {
-                // persist scroll value
-                scrollPosition.value = position.value;
-                // just persist height - later will be used in interpolation
-                keyboardHeight.value = e.height;
-              }
-
-              // focus was changed
-              if (focusWasChanged) {
-                tag.value = e.target;
-
-                // save position of focused text input when keyboard starts to move
-                layout.value = input.value;
-                // save current scroll position - when keyboard will hide we'll reuse
-                // this value to achieve smooth hide effect
-                scrollBeforeKeyboardMovement.value = position.value;
-              }
-
-              if (focusWasChanged && !keyboardWillAppear.value) {
-                // update position on scroll value, so `onEnd` handler
-                // will pick up correct values
-                position.value += maybeScroll(e.height, true);
-              }
-            },
-            onMove: (e) => {
-              "worklet";
-
-              currentKeyboardFrameHeight.value = e.height;
-
-              // if the user has set disableScrollOnKeyboardHide, only auto-scroll when the keyboard opens
-              if (!disableScrollOnKeyboardHide || keyboardWillAppear.value) {
-                maybeScroll(e.height);
-              }
-            },
-            onEnd: (e) => {
-              "worklet";
-
-              keyboardHeight.value = e.height;
-              scrollPosition.value = position.value;
-            },
+          if (keyboardWillChangeSize) {
+            initialKeyboardSize.value = keyboardHeight.value;
           }
-        : {},
-      [height, maybeScroll, disableScrollOnKeyboardHide, enabled],
+
+          if (keyboardWillHide) {
+            // on back transition need to interpolate as [0, keyboardHeight]
+            initialKeyboardSize.value = 0;
+            scrollPosition.value = scrollBeforeKeyboardMovement.value;
+          }
+
+          if (
+            keyboardWillAppear.value ||
+            keyboardWillChangeSize ||
+            focusWasChanged
+          ) {
+            // persist scroll value
+            scrollPosition.value = position.value;
+            // just persist height - later will be used in interpolation
+            keyboardHeight.value = e.height;
+          }
+
+          // focus was changed
+          if (focusWasChanged) {
+            tag.value = e.target;
+
+            // save position of focused text input when keyboard starts to move
+            layout.value = input.value;
+            // save current scroll position - when keyboard will hide we'll reuse
+            // this value to achieve smooth hide effect
+            scrollBeforeKeyboardMovement.value = position.value;
+          }
+
+          if (focusWasChanged && !keyboardWillAppear.value) {
+            // update position on scroll value, so `onEnd` handler
+            // will pick up correct values
+            position.value += maybeScroll(e.height, true);
+          }
+        },
+        onMove: (e) => {
+          "worklet";
+
+          currentKeyboardFrameHeight.value = e.height;
+
+          // if the user has set disableScrollOnKeyboardHide, only auto-scroll when the keyboard opens
+          if (!disableScrollOnKeyboardHide || keyboardWillAppear.value) {
+            maybeScroll(e.height);
+          }
+        },
+        onEnd: (e) => {
+          "worklet";
+
+          keyboardHeight.value = e.height;
+          scrollPosition.value = position.value;
+        },
+      },
+      [height, maybeScroll, disableScrollOnKeyboardHide],
     );
 
     useAnimatedReaction(
@@ -303,16 +300,19 @@ const KeyboardAwareScrollView = forwardRef<
     );
 
     const view = useAnimatedStyle(
-      () => ({
-        // animations become laggy when scrolling to the end of the `ScrollView` (when the last input is focused)
-        // this happens because the layout recalculates on every frame. To avoid this we slightly increase padding
-        // by `+1`. In this way we assure, that `scrollTo` will never scroll to the end, because it uses interpolation
-        // from 0 to `keyboardHeight`, and here our padding is `keyboardHeight + 1`. It allows us not to re-run layout
-        // re-calculation on every animation frame and it helps to achieve smooth animation.
-        // see: https://github.com/kirillzyusko/react-native-keyboard-controller/pull/342
-        paddingBottom: currentKeyboardFrameHeight.value + 1,
-      }),
-      [],
+      () =>
+        enabled
+          ? {
+              // animations become laggy when scrolling to the end of the `ScrollView` (when the last input is focused)
+              // this happens because the layout recalculates on every frame. To avoid this we slightly increase padding
+              // by `+1`. In this way we assure, that `scrollTo` will never scroll to the end, because it uses interpolation
+              // from 0 to `keyboardHeight`, and here our padding is `keyboardHeight + 1`. It allows us not to re-run layout
+              // re-calculation on every animation frame and it helps to achieve smooth animation.
+              // see: https://github.com/kirillzyusko/react-native-keyboard-controller/pull/342
+              paddingBottom: currentKeyboardFrameHeight.value + 1,
+            }
+          : {},
+      [enabled],
     );
 
     return (
