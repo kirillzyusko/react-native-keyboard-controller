@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@gorhom/bottom-sheet": "^4.6.0",
+    "@react-native-community/blur": "^4.4.0",
     "@react-native-masked-view/masked-view": "^0.3.1",
     "@react-navigation/bottom-tabs": "^6.5.16",
     "@react-navigation/native": "^6.1.14",

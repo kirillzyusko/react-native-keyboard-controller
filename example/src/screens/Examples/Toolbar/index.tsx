@@ -1,3 +1,4 @@
+import { BlurView } from "@react-native-community/blur";
 import React, { useCallback, useState } from "react";
 import { Platform, StyleSheet, View } from "react-native";
 import { trigger } from "react-native-haptic-feedback";
@@ -154,6 +155,8 @@ export default function ToolbarExample() {
             <AutoFillContacts onContactSelected={onContactSelected} />
           ) : null
         }
+        blur={blur}
+        opacity={Platform.OS === "ios" ? "4F" : "DD"}
         onDoneCallback={haptic}
         onPrevCallback={haptic}
         onNextCallback={haptic}
@@ -175,4 +178,20 @@ const styles = StyleSheet.create({
   withPadding: {
     paddingHorizontal: 16,
   },
+  absolute: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+  },
 });
+
+const blur = (
+  <BlurView
+    blurType={Platform.OS === "ios" ? "chromeMaterial" : "light"}
+    blurAmount={32}
+    reducedTransparencyFallbackColor="white"
+    style={styles.absolute}
+  />
+);

@@ -964,6 +964,25 @@ PODS:
   - React-Mapbuffer (0.73.6):
     - glog
     - React-debug
+  - react-native-blur (4.4.0):
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2022.05.16.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Codegen
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-graphics
+    - React-ImageManager
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-rendererdebug
+    - React-utils
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
   - react-native-keyboard-controller (1.11.7):
     - glog
     - hermes-engine
@@ -1395,6 +1414,7 @@ DEPENDENCIES:
   - React-jsitracing (from `../node_modules/react-native/ReactCommon/hermes/executor/`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - React-Mapbuffer (from `../node_modules/react-native/ReactCommon`)
+  - "react-native-blur (from `../node_modules/@react-native-community/blur`)"
   - react-native-keyboard-controller (from `../node_modules/react-native-keyboard-controller`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - React-nativeconfig (from `../node_modules/react-native/ReactCommon`)
@@ -1502,6 +1522,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/logger"
   React-Mapbuffer:
     :path: "../node_modules/react-native/ReactCommon"
+  react-native-blur:
+    :path: "../node_modules/@react-native-community/blur"
   react-native-keyboard-controller:
     :path: "../node_modules/react-native-keyboard-controller"
   react-native-safe-area-context:
@@ -1607,6 +1629,7 @@ SPEC CHECKSUMS:
   React-jsitracing: 4fed160d939e93a39049481f47744af246a7ac2c
   React-logger: 3eb80a977f0d9669468ef641a5e1fabbc50a09ec
   React-Mapbuffer: 84ea43c6c6232049135b1550b8c60b2faac19fab
+  react-native-blur: 4313c8f85ce921bbcc2e85e8ab3edae0673a41bf
   react-native-keyboard-controller: 7ac0083f3f16b3587d1d305e9ed75e4d759a84b8
   react-native-safe-area-context: 1e374c51edf537be56313b893b6e96b0e254ddfe
   React-nativeconfig: b4d4e9901d4cabb57be63053fd2aa6086eb3c85f
