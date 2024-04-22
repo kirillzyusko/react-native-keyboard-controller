@@ -32,6 +32,21 @@ export type KeyboardToolbarProps = {
    * and want to show only `Done` button. Default to `true`.
    */
   showArrows?: boolean;
+  /**
+   * A callback that is called when the user presses the next button.
+   * If provided then default action is not called and you'll need to call it yourself.
+   */
+  onPressNext?: () => void;
+  /**
+   * A callback that is called when the user presses the previous button.
+   * If provided then default action is not called and you'll need to call it yourself.
+   */
+  onPressPrev?: () => void;
+  /**
+   * A callback that is called when the user presses the done button.
+   * If provided then default action is not called and you'll need to call it yourself.
+   */
+  onPressDone?: () => void;
 };
 const TEST_ID_KEYBOARD_TOOLBAR = "keyboard.toolbar";
 const TEST_ID_KEYBOARD_TOOLBAR_PREVIOUS = `${TEST_ID_KEYBOARD_TOOLBAR}.previous`;
@@ -57,6 +72,9 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
   button,
   icon,
   showArrows = true,
+  onPressNext,
+  onPressPrev,
+  onPressDone,
 }) => {
   const colorScheme = useColorScheme();
   const [inputs, setInputs] = useState({
@@ -98,7 +116,7 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
               accessibilityLabel="Previous"
               accessibilityHint="Will move focus to previous field"
               disabled={isPrevDisabled}
-              onPress={goToPrevField}
+              onPress={onPressPrev ?? goToPrevField}
               testID={TEST_ID_KEYBOARD_TOOLBAR_PREVIOUS}
               theme={theme}
             >
@@ -112,7 +130,7 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
               accessibilityLabel="Next"
               accessibilityHint="Will move focus to next field"
               disabled={isNextDisabled}
-              onPress={goToNextField}
+              onPress={onPressNext ?? goToNextField}
               testID={TEST_ID_KEYBOARD_TOOLBAR_NEXT}
               theme={theme}
             >
@@ -131,7 +149,7 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
         <ButtonContainer
           accessibilityLabel="Done"
           accessibilityHint="Will close the keyboard"
-          onPress={dismissKeyboard}
+          onPress={onPressDone ?? dismissKeyboard}
           testID={TEST_ID_KEYBOARD_TOOLBAR_DONE}
           rippleRadius={28}
           style={styles.doneButtonContainer}

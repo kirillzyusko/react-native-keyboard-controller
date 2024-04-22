@@ -102,6 +102,90 @@ const Icon: KeyboardToolbarProps["icon"] = ({ type }) => {
 <KeyboardToolbar icon={Icon} />;
 ```
 
+### `onPressDone`
+
+A callback that is called when the user presses the **done** button.
+
+:::warning Overriding default behavior
+If you specify this callback then default action is not called and it becomes your responsibility to define a behavior for the interaction with the button.
+:::
+
+```tsx
+import {
+  KeyboardController,
+  KeyboardToolbar,
+} from "react-native-keyboard-controller";
+import { trigger } from "react-native-haptic-feedback";
+
+const onPressDone = () => {
+  KeyboardController.dismiss();
+  trigger(Platform.OS === "ios" ? "impactLight" : "keyboardTap", {
+    enableVibrateFallback: true,
+    ignoreAndroidSystemSettings: false,
+  });
+};
+
+// ...
+
+<KeyboardToolbar onPressDone={onPressDone} />;
+```
+
+### `onPressNext`
+
+A callback that is called when the user presses the **next** button.
+
+:::warning Overriding default behavior
+If you specify this callback then default action is not called and it becomes your responsibility to define a behavior for the interaction with the button.
+:::
+
+```tsx
+import {
+  KeyboardController,
+  KeyboardToolbar,
+} from "react-native-keyboard-controller";
+import { trigger } from "react-native-haptic-feedback";
+
+const onPressNext = () => {
+  KeyboardController.setFocusTo("next");
+  trigger(Platform.OS === "ios" ? "impactLight" : "keyboardTap", {
+    enableVibrateFallback: true,
+    ignoreAndroidSystemSettings: false,
+  });
+};
+
+// ...
+
+<KeyboardToolbar onPressNext={onPressNext} />;
+```
+
+### `onPressPrev`
+
+A callback that is called when the user presses the **previous** button.
+
+:::warning Overriding default behavior
+If you specify this callback then default action is not called and it becomes your responsibility to define a behavior for the interaction with the button.
+:::
+
+```tsx
+import {
+  KeyboardController,
+  KeyboardToolbar,
+} from "react-native-keyboard-controller";
+import { trigger } from "react-native-haptic-feedback";
+
+const onPressPrev = () => {
+  KeyboardController.setFocusTo("prev");
+  trigger(Platform.OS === "ios" ? "impactLight" : "keyboardTap", {
+    enableVibrateFallback: true,
+    ignoreAndroidSystemSettings: false,
+  });
+};
+
+// ...
+
+<KeyboardToolbar onPressPrev={onPressPrev} />;
+```
+
 ### `showArrows`
 
 A boolean prop indicating whether to show `next` and `prev` buttons. Can be useful to set it to `false` if you have only one input and want to show only `Done` button. Default to `true`.
