@@ -37,6 +37,8 @@ class KeyboardControllerViewManagerImpl(mReactContext: ReactApplicationContext) 
       MapBuilder.of("registrationName", "onFocusedInputLayoutChanged"),
       "topFocusedInputTextChanged",
       MapBuilder.of("registrationName", "onFocusedInputTextChanged"),
+      "topFocusedInputSelectionChanged",
+      MapBuilder.of("registrationName", "onFocusedInputSelectionChanged"),
     )
 
     return map

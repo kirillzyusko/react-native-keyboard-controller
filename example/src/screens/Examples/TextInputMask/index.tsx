@@ -1,9 +1,10 @@
 import React, { useCallback, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TextInput, View } from "react-native";
 import { useFocusedInputHandler } from "react-native-keyboard-controller";
 import { runOnJS } from "react-native-reanimated";
 import TextInputMask from "react-native-text-input-mask";
 
+import type { TextInputSelectionChangeEventData } from "react-native";
 import type { TextInputMaskProps } from "react-native-text-input-mask";
 
 type MaskedInputState = {
@@ -17,6 +18,14 @@ export default function TextInputMaskExample() {
     extracted: "",
   });
   const [worklet, setWorkletData] = useState("");
+  const [selection, setSelection] = useState({
+    x: 0,
+    y: 0,
+    start: 0,
+    end: 0,
+  });
+  const [originalSelection, setOriginalSelection] =
+    useState<TextInputSelectionChangeEventData | null>(null);
 
   useFocusedInputHandler(
     {
@@ -24,6 +33,11 @@ export default function TextInputMaskExample() {
         "worklet";
 
         runOnJS(setWorkletData)(text);
+      },
+      onSelectionChange: (event) => {
+        "worklet";
+
+        runOnJS(setSelection)(event);
       },
     },
     [],
@@ -40,11 +54,21 @@ export default function TextInputMaskExample() {
       <TextInputMask
         mask="+1 ([000]) [000] [00] [00]"
         onChangeText={onChangeText}
+        onSelectionChange={({ nativeEvent }) =>
+          setOriginalSelection(nativeEvent)
+        }
         keyboardType="phone-pad"
         placeholder="+1 (___) ___ __ __"
         placeholderTextColor="gray"
         style={style.input}
         testID="masked_input"
+      />
+      <TextInput
+        onSelectionChange={({ nativeEvent }) =>
+          setOriginalSelection(nativeEvent)
+        }
+        multiline
+        style={style.input}
       />
       <Text testID="formatted_text" style={style.text}>
         Formatted: {data.formatted}
@@ -54,6 +78,12 @@ export default function TextInputMaskExample() {
       </Text>
       <Text testID="worklet_text" style={style.text}>
         Worklet: {worklet}
+      </Text>
+      <Text testID="selection_text" style={style.text}>
+        Selection: {JSON.stringify(selection)}
+      </Text>
+      <Text testID="original_selection_text" style={style.text}>
+        Original selection: {JSON.stringify(originalSelection)}
       </Text>
     </View>
   );

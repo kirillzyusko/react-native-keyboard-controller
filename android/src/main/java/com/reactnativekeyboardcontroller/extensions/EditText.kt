@@ -1,13 +1,18 @@
 package com.reactnativekeyboardcontroller.extensions
 
+import android.os.Build
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import android.view.ViewTreeObserver
 import android.widget.EditText
 import android.widget.ScrollView
 import com.facebook.react.views.textinput.ReactEditText
+import com.facebook.react.views.textinput.SelectionWatcher
 import java.lang.reflect.Field
+import kotlin.math.max
+import kotlin.math.min
 
 /**
  * Adds a listener that will be fired only once for each unique value.
@@ -92,5 +97,90 @@ fun EditText?.focus() {
     this.requestFocusFromJS()
   } else {
     this?.requestFocus()
+  }
+}
+
+// TODO: reduce complexity
+fun ReactEditText.addOnSelectionChangedListener(
+  action: (start: Int, end: Int, startX: Int, startY: Int, endX: Int, endY: Int) -> Unit,
+): () -> Unit {
+  var lastSelectionStart: Int? = null
+  var lastSelectionEnd: Int? = null
+  var originalListener: SelectionWatcher? = null
+
+  try {
+    val clazz: Class<*> = ReactEditText::class.java
+    val field: Field = clazz.getDeclaredField("mSelectionWatcher")
+    field.isAccessible = true
+    val fieldValue = field[this] as? SelectionWatcher
+
+    originalListener = fieldValue
+    val listener = object : SelectionWatcher {
+      override fun onSelectionChanged(start: Int, end: Int) {
+        if (lastSelectionStart != start || lastSelectionEnd != end) {
+          lastSelectionStart = start
+          lastSelectionEnd = end
+
+          val view = this@addOnSelectionChangedListener
+          val layout = view.layout
+
+          if (layout === null) {
+            view.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+              override fun onGlobalLayout() {
+                view.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                onSelectionChanged(start, end)
+              }
+            })
+
+            return
+          }
+
+          var cursorPositionStartX = 0
+          var cursorPositionStartY = 0
+          var cursorPositionEndX = 0
+          var cursorPositionEndY = 0
+
+          val realStart = min(start, end)
+          val realEnd = max(start, end)
+
+          val lineStart = layout.getLineForOffset(realStart)
+          val baselineStart = layout.getLineBaseline(lineStart)
+          val ascentStart = layout.getLineAscent(lineStart)
+
+          cursorPositionStartX = layout.getPrimaryHorizontal(realStart).dp.toInt()
+          cursorPositionStartY = (baselineStart + ascentStart).toFloat().dp.toInt()
+
+          val lineEnd = layout.getLineForOffset(realEnd)
+          // TODO: remove unused variables
+          val baselineEnd = layout.getLineBaseline(lineEnd)
+          val ascentEnd = layout.getLineAscent(lineEnd)
+
+          val right = layout.getPrimaryHorizontal(realEnd)
+          val bottom = layout.getLineBottom(lineEnd) + layout.getLineAscent(lineEnd)
+          val cursorWidth = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            view.textCursorDrawable?.intrinsicWidth ?: 0
+          } else {
+            0
+          }
+
+          cursorPositionEndX = (right + cursorWidth).dp.toInt()
+          cursorPositionEndY = bottom
+
+          action(start, end, cursorPositionStartX, cursorPositionStartY, cursorPositionEndX, cursorPositionEndY)
+        }
+
+        fieldValue?.onSelectionChanged(start, end)
+      }
+    }
+
+    this.setSelectionWatcher(listener)
+  } catch (e: ClassCastException) {
+    Log.w(javaClass.simpleName, "Can not attach callback because casting failed: ${e.message}")
+  } catch (e: NoSuchFieldException) {
+    Log.w(javaClass.simpleName, "Can not attach callback because field `mSelectionWatcher` not found: ${e.message}")
+  }
+
+  return {
+    this.setSelectionWatcher(originalListener)
   }
 }

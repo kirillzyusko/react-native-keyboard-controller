@@ -26,6 +26,22 @@ export type FocusedInputLayoutChangedEvent = {
 export type FocusedInputTextChangedEvent = {
   text: string;
 };
+export type FocusedInputSelectionChangedEvent = {
+  position: {
+    start: number;
+    end: number;
+  };
+  coordinates: {
+    start: {
+      x: number;
+      y: number;
+    };
+    end: {
+      x: number;
+      y: number;
+    };
+  };
+};
 export type EventWithName<T> = {
   eventName: string;
 } & T;
@@ -150,6 +166,10 @@ export type FocusedInputTextHandlerHook<TContext, Event> = (
       e: FocusedInputTextChangedEvent,
       context: TContext,
     ) => void;
+    onFocusedInputSelectionChanged?: (
+      e: FocusedInputSelectionChangedEvent,
+      context: TContext,
+    ) => void;
   },
   dependencies?: unknown[],
 ) => (e: NativeSyntheticEvent<Event>) => void;
@@ -165,5 +185,6 @@ export type KeyboardHandler = Partial<{
 export type KeyboardHandlers = Handlers<KeyboardHandler>;
 export type FocusedInputHandler = Partial<{
   onChangeText: (e: FocusedInputTextChangedEvent) => void;
+  onSelectionChange: (e: FocusedInputSelectionChangedEvent) => void;
 }>;
 export type FocusedInputHandlers = Handlers<FocusedInputHandler>;

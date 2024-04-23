@@ -188,6 +188,11 @@ export const KeyboardProvider = ({
 
         broadcastInputEvents("onChangeText", e);
       },
+      onFocusedInputSelectionChanged: (e) => {
+        "worklet";
+
+        broadcastInputEvents("onSelectionChange", e);
+      },
     },
     [],
   );
