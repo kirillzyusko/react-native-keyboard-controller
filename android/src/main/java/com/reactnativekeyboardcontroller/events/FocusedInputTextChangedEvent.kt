@@ -8,7 +8,7 @@ class FocusedInputTextChangedEvent(
   surfaceId: Int,
   viewId: Int,
   private val text: String,
-) : Event<KeyboardTransitionEvent>(surfaceId, viewId) {
+) : Event<FocusedInputTextChangedEvent>(surfaceId, viewId) {
   override fun getEventName() = "topFocusedInputTextChanged"
 
   // All events for a given view can be coalesced

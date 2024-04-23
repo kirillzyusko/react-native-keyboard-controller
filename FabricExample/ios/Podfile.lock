@@ -964,7 +964,7 @@ PODS:
   - React-Mapbuffer (0.73.6):
     - glog
     - React-debug
-  - react-native-keyboard-controller (1.11.6):
+  - react-native-keyboard-controller (1.11.7):
     - glog
     - hermes-engine
     - RCT-Folly (= 2022.05.16.00)
@@ -1558,7 +1558,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   boost: d3f49c53809116a5d38da093a8aa78bf551aed09
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
-  DoubleConversion: fea03f2699887d960129cc54bba7e52542b6f953
+  DoubleConversion: 76ab83afb40bddeeee456813d9c04f67f78771b5
   FBLazyVector: f64d1e2ea739b4d8f7e4740cde18089cd97fe864
   Flipper: c7a0093234c4bdd456e363f2f19b2e4b27652d44
   Flipper-Boost-iOSX: fd1e2b8cbef7e662a122412d7ac5f5bea715403c
@@ -1597,7 +1597,7 @@ SPEC CHECKSUMS:
   React-jsitracing: 4fed160d939e93a39049481f47744af246a7ac2c
   React-logger: 3eb80a977f0d9669468ef641a5e1fabbc50a09ec
   React-Mapbuffer: 84ea43c6c6232049135b1550b8c60b2faac19fab
-  react-native-keyboard-controller: 444fcb1487bbeb38cbd2c112ac813be1d78ed26d
+  react-native-keyboard-controller: 7ac0083f3f16b3587d1d305e9ed75e4d759a84b8
   react-native-safe-area-context: 1e374c51edf537be56313b893b6e96b0e254ddfe
   React-nativeconfig: b4d4e9901d4cabb57be63053fd2aa6086eb3c85f
   React-NativeModulesApple: cd26e56d56350e123da0c1e3e4c76cb58a05e1ee
