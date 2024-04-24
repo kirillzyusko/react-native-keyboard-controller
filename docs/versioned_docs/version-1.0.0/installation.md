@@ -14,6 +14,11 @@ yarn add react-native-keyboard-controller
 # npm install react-native-keyboard-controller --save
 ```
 
+:::warning Mandatory `react-native-reanimated` dependency
+
+This library requires `react-native-reanimated` to work properly. If you don't have it in your project, you need to follow [installation guide](https://docs.swmansion.com/react-native-reanimated/docs/fundamentals/getting-started/#installation) and install it in your project before using this library.
+:::
+
 ### Linking
 
 This package supports [autolinking](https://github.com/react-native-community/cli/blob/master/docs/autolinking.md).
