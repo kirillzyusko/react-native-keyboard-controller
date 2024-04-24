@@ -6,19 +6,18 @@
 //  Copyright © 2023 Facebook. All rights reserved.
 //
 
-// TODO: custom delegate breaks input mask functionality
 class KeyboardControllerCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDelegate {
     weak var textViewDelegate: UITextViewDelegate?
     weak var textFieldDelegate: UITextFieldDelegate?
+    
+    public func setTextViewDelegate(delegate: UITextViewDelegate?) {
+        textViewDelegate = delegate
+        textFieldDelegate = nil
+    }
 
-    public func setDelegate<T>(delegate: T) where T: UITextViewDelegate {
-        if let delegate = delegate as? UITextViewDelegate {
-            textViewDelegate = delegate
-            textFieldDelegate = nil
-        } else if let delegate = delegate as? UITextFieldDelegate {
-            textFieldDelegate = delegate
-            textViewDelegate = nil
-        }
+    public func setTextFieldDelegate(delegate: UITextFieldDelegate?) {
+        textFieldDelegate = delegate
+        textViewDelegate = nil
     }
 
     // MARK: UITextViewDelegate
@@ -71,6 +70,33 @@ class KeyboardControllerCompositeDelegate: NSObject, UITextViewDelegate, UITextF
     }
     
     // Implement other UITextFieldDelegate methods as needed, forwarding to textFieldDelegate
+    func textFieldShouldClear(_ textField: UITextField) -> Bool {
+        return textFieldDelegate?.textFieldShouldClear?(textField) ?? true
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        return textFieldDelegate?.textFieldShouldReturn?(textField) ?? true
+    }
+    
+    func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
+        return textFieldDelegate?.textFieldShouldEndEditing?(textField) ?? true
+    }
+    
+    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        return textFieldDelegate?.textFieldShouldBeginEditing?(textField) ?? true
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        textFieldDelegate?.textFieldDidEndEditing?(textField)
+    }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        textFieldDelegate?.textFieldDidBeginEditing?(textField)
+    }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        return textFieldDelegate?.textField?(textField, shouldChangeCharactersIn: range, replacementString: string) ?? true
+    }
 }
 
 // single line - UITextField
@@ -84,7 +110,10 @@ public class TextChangeObserver {
       return
     }
     if let textField = input as? UITextField {
-        textField.delegate = delegate
+        if (!(textField.delegate is KeyboardControllerCompositeDelegate)) {
+            delegate.setTextFieldDelegate(delegate: textField.delegate)
+            textField.delegate = delegate
+        }
       observer = NotificationCenter.default.addObserver(
         forName: UITextField.textDidChangeNotification,
         object: textField,
@@ -94,8 +123,10 @@ public class TextChangeObserver {
         handler(textField.text)
       }
     } else if let textView = input as? UITextView {
-        (textView as UITextView).delegate = nil
-        textView.setValue(nil, forKey: "delegate")
+        if (!(textView.delegate is KeyboardControllerCompositeDelegate)) {
+            delegate.setTextViewDelegate(delegate: textView.delegate)
+            (textView as? RCTUITextView)?.setForceDelegate(delegate)
+        }
         print(textView.delegate)
       observer = NotificationCenter.default.addObserver(
         forName: UITextView.textDidChangeNotification,

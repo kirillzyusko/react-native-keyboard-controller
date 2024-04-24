@@ -164,7 +164,6 @@ public class FocusedInputObserver: NSObject {
     if currentInput != nil {
       hasObservers = true
       currentInput?.addObserver(self, forKeyPath: "center", options: .new, context: nil)
-      currentInput?.addObserver(self, forKeyPath: "selectedTextRange", options: [.new, .old], context: nil)
       textChangeObserver.observeTextChanges(for: UIResponder.current, handler: onTextChanged)
     }
   }
@@ -186,7 +185,6 @@ public class FocusedInputObserver: NSObject {
     change _: [NSKeyValueChangeKey: Any]?,
     context _: UnsafeMutableRawPointer?
   ) {
-    print(keyPath)
     if keyPath == "center", object as? NSObject == currentInput {
       // we need to read layout in next frame, otherwise we'll get old
       // layout values
