@@ -150,20 +150,19 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
     // TODO: better to rename varialbes/function
     if let coordinates = textSelectionCoordinates(in: textInput) {
       onSelectionChange([
-        "position": [
-          "start": coordinates.start,
-          "end": coordinates.end,
+        "selection": [
+            "start": [
+                "x": coordinates.startX,
+                "y": coordinates.startY,
+                "position": coordinates.start,
+            ],
+            "end": [
+                "x": coordinates.endX,
+                "y": coordinates.endY,
+                "position": coordinates.end
+            ],
         ],
-        "coordinates": [
-          "start": [
-            "x": coordinates.startX,
-            "y": coordinates.startY,
-          ],
-          "end": [
-            "x": coordinates.endX,
-            "y": coordinates.endY,
-          ],
-        ],
+        "target": UIResponder.current.reactViewTag,
       ])
     }
   }

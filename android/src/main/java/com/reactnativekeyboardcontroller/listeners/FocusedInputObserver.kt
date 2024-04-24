@@ -61,13 +61,22 @@ class FocusedInputObserver(val view: ReactViewGroup, private val context: Themed
       ),
     )
   }
-  private val selectionListener: (start: Int, end: Int, startX: Int, startY: Int, endX: Int, endY: Int) -> Unit = { start, end, startX, startY, endX, endY ->
+  private val selectionListener: (
+    start: Int,
+    end: Int,
+    startX: Int,
+    startY: Int,
+    endX: Int,
+    endY: Int,
+  ) -> Unit = listener@{ start, end, startX, startY, endX, endY ->
+    val input = lastFocusedInput ?: return@listener
     context.dispatchEvent(
       view.id,
       FocusedInputSelectionChangedEvent(
         surfaceId,
         view.id,
         event = FocusedInputSelectionChangedEventData(
+          target = input.id,
           start = start,
           end = end,
           startX = startX.toDouble(),

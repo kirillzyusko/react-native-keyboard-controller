@@ -5,6 +5,7 @@ import com.facebook.react.bridge.WritableMap
 import com.facebook.react.uimanager.events.Event
 
 data class FocusedInputSelectionChangedEventData(
+  val target: Int,
   val startX: Double,
   val startY: Double,
   val endX: Double,
@@ -24,21 +25,16 @@ class FocusedInputSelectionChangedEvent(
   override fun getCoalescingKey(): Short = 0
 
   override fun getEventData(): WritableMap? = Arguments.createMap().apply {
+    putInt("target", event.target)
     putMap(
-      "position",
-      Arguments.createMap().apply {
-        putInt("start", event.start)
-        putInt("end", event.end)
-      },
-    )
-    putMap(
-      "coordinates",
+      "selection",
       Arguments.createMap().apply {
         putMap(
           "start",
           Arguments.createMap().apply {
             putDouble("x", event.startX)
             putDouble("y", event.startY)
+            putInt("position", event.start)
           },
         )
         putMap(
@@ -46,6 +42,7 @@ class FocusedInputSelectionChangedEvent(
           Arguments.createMap().apply {
             putDouble("x", event.endX)
             putDouble("y", event.endY)
+            putInt("position", event.end)
           },
         )
       },

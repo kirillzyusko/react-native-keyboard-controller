@@ -9,8 +9,8 @@
 #import <React/RCTAssert.h>
 
 @implementation FocusedInputSelectionChangedEvent {
-  NSObject *_position;
-  NSObject *_coordinates;
+  NSNumber *_target;
+  NSObject *_selection;
   uint16_t _coalescingKey;
 }
 
@@ -28,8 +28,8 @@
   if ((self = [super init])) {
     _viewTag = reactTag;
     
-    _position = [event valueForKey:@"position"];
-    _coordinates = [event valueForKey:@"coordinates"];
+    _selection = [event valueForKey:@"selection"];
+    _target = [event valueForKey:@"target"];
     _coalescingKey = 0;
   }
   return self;
@@ -45,8 +45,8 @@ RCT_NOT_IMPLEMENTED(-(instancetype)init)
 - (NSDictionary *)body
 {
   NSDictionary *body = @{
-    @"position" : _position,
-    @"coordinates" : _coordinates,
+    @"selection" : _selection,
+    @"target" : _target,
   };
 
   return body;

@@ -18,19 +18,18 @@ export default function TextInputMaskExample() {
     extracted: "",
   });
   const [worklet, setWorkletData] = useState("");
-  const [selection, setSelection] = useState({
-    position: {
-      start: 0,
-      end: 0,
-    },
-    coordinates: {
+  const [workletSelection, setWorkletSelection] = useState({
+    target: -1,
+    selection: {
       start: {
         x: 0,
         y: 0,
+        position: 0,
       },
       end: {
         x: 0,
         y: 0,
+        position: 0,
       },
     },
   });
@@ -47,7 +46,7 @@ export default function TextInputMaskExample() {
       onSelectionChange: (event) => {
         "worklet";
 
-        runOnJS(setSelection)(event);
+        runOnJS(setWorkletSelection)(event);
       },
     },
     [],
@@ -94,15 +93,17 @@ export default function TextInputMaskExample() {
         Keyboard controller Selection:
       </Text>
       <Text testID="selection_text_start_end" style={style.text}>
-        start: {selection.position.start}, end: {selection.position.end},
-        target: {selection.target}
+        start: {workletSelection.selection.start.position}, end:{" "}
+        {workletSelection.selection.end.position}, target:{" "}
+        {workletSelection.target}
       </Text>
       <Text testID="selection_text_coordinates_start" style={style.text}>
-        startX: {selection.coordinates.start.x}, startY:{" "}
-        {selection.coordinates.start.y}
+        startX: {workletSelection.selection.start.x}, startY:{" "}
+        {workletSelection.selection.start.y}
       </Text>
       <Text testID="selection_text_coordinates_end" style={style.text}>
-        endY: {selection.coordinates.end.x}, endY: {selection.coordinates.end.y}
+        endX: {workletSelection.selection.end.x}, endY:{" "}
+        {workletSelection.selection.end.y}
       </Text>
       <Text testID="original_selection_text" style={[style.text, style.bold]}>
         Original selection:

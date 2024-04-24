@@ -1,12 +1,13 @@
+- (x) redefine event structure `{cursor: {start: {x, y}, end: {x, y}}}`
+- (x) iOS implementation
+- (x) include target property in event
 - documentation (for hook)
 - new js view props declaration (+ documentation for that)
-- (x) redefine event structure `{cursor: {start: {x, y}, end: {x, y}}}`
 - define events + handlers for fabric
 - fix TS issues in src (+recompile lib)
 - integration with KeyboardAwareScrollView
 - multiline example
 - add e2e tests
 - update unit tests
-- (x) iOS implementation
-- iOS: set focus -> selection not getting updated
-- include target property in event
+- set focus -> selection not getting updated
+- test with markdown component
