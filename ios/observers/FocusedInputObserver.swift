@@ -51,8 +51,8 @@ public class FocusedInputObserver: NSObject {
     self.onTextChangedHandler = onTextChangedHandler
     self.onSelectionChangedHandler = onSelectionChangedHandler
     self.onFocusDidSet = onFocusDidSet
-      // TODO: weak reference
-    self.delegate = KCTextInputCompositeDelegate(onSelectionChange: self.onSelectionChangedHandler)
+    // TODO: weak reference
+    delegate = KCTextInputCompositeDelegate(onSelectionChange: self.onSelectionChangedHandler)
   }
 
   @objc public func mount() {
@@ -86,7 +86,7 @@ public class FocusedInputObserver: NSObject {
     removeObservers()
     let responder = UIResponder.current as? UIView
     currentInput = responder?.superview as UIView?
-    
+
     setupObservers()
     syncUpLayout()
 
@@ -155,8 +155,8 @@ public class FocusedInputObserver: NSObject {
       let responder = UIResponder.current
       currentInput?.addObserver(self, forKeyPath: "center", options: .new, context: nil)
       textChangeObserver.observeTextChanges(for: responder, handler: onTextChanged)
-      
-        substituteDelegate(responder)
+
+      substituteDelegate(responder)
     }
   }
 
@@ -169,21 +169,21 @@ public class FocusedInputObserver: NSObject {
     currentInput?.removeObserver(self, forKeyPath: "center", context: nil)
     textChangeObserver.removeObserver()
   }
-    
-    private func substituteDelegate(_ input: UIResponder?) {
-        if let textField = input as? UITextField {
-            if (!(textField.delegate is KCTextInputCompositeDelegate)) {
-                delegate.setTextFieldDelegate(delegate: textField.delegate)
-                textField.delegate = delegate
-            }
-        } else if let textView = input as? UITextView {
-            if (!(textView.delegate is KCTextInputCompositeDelegate)) {
-                delegate.setTextViewDelegate(delegate: textView.delegate)
-                (textView as? RCTUITextView)?.setForceDelegate(delegate)
-            }
-            print(textView.delegate)
-        }
+
+  private func substituteDelegate(_ input: UIResponder?) {
+    if let textField = input as? UITextField {
+      if !(textField.delegate is KCTextInputCompositeDelegate) {
+        delegate.setTextFieldDelegate(delegate: textField.delegate)
+        textField.delegate = delegate
+      }
+    } else if let textView = input as? UITextView {
+      if !(textView.delegate is KCTextInputCompositeDelegate) {
+        delegate.setTextViewDelegate(delegate: textView.delegate)
+        (textView as? RCTUITextView)?.setForceDelegate(delegate)
+      }
+      print(textView.delegate)
     }
+  }
 
   // swiftlint:disable:next block_based_kvo
   @objc override public func observeValue(
