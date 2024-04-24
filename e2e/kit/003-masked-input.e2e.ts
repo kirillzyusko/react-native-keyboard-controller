@@ -12,9 +12,9 @@ describe("`onTextChange` functionality", () => {
   it("should fire `onTextChange` with correct text", async () => {
     await scrollDownUntilElementIsVisible(
       "main_scroll_view",
-      "text_input_mask",
+      "focused_input_handlers",
     );
-    await waitAndTap("text_input_mask");
+    await waitAndTap("focused_input_handlers");
     await waitForElementById("masked_input");
     await waitAndTap("masked_input");
     await delay(500); // for keyboard to appear

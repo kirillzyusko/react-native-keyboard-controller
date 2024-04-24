@@ -19,10 +19,20 @@ export default function TextInputMaskExample() {
   });
   const [worklet, setWorkletData] = useState("");
   const [selection, setSelection] = useState({
-    x: 0,
-    y: 0,
-    start: 0,
-    end: 0,
+    position: {
+      start: 0,
+      end: 0,
+    },
+    coordinates: {
+      start: {
+        x: 0,
+        y: 0,
+      },
+      end: {
+        x: 0,
+        y: 0,
+      },
+    },
   });
   const [originalSelection, setOriginalSelection] =
     useState<TextInputSelectionChangeEventData | null>(null);
@@ -80,11 +90,26 @@ export default function TextInputMaskExample() {
       <Text testID="worklet_text" style={style.text}>
         Worklet: {worklet}
       </Text>
-      <Text testID="selection_text" style={style.text}>
-        Selection: {JSON.stringify(selection)}
+      <Text testID="selection_text" style={[style.text, style.bold]}>
+        Keyboard controller Selection:
       </Text>
-      <Text testID="original_selection_text" style={style.text}>
-        Original selection: {JSON.stringify(originalSelection)}
+      <Text testID="selection_text_start_end" style={style.text}>
+        start: {selection.position.start}, end: {selection.position.end},
+        target: {selection.target}
+      </Text>
+      <Text testID="selection_text_coordinates_start" style={style.text}>
+        startX: {selection.coordinates.start.x}, startY:{" "}
+        {selection.coordinates.start.y}
+      </Text>
+      <Text testID="selection_text_coordinates_end" style={style.text}>
+        endY: {selection.coordinates.end.x}, endY: {selection.coordinates.end.y}
+      </Text>
+      <Text testID="original_selection_text" style={[style.text, style.bold]}>
+        Original selection:
+      </Text>
+      <Text testID="selection_text_start_end" style={style.text}>
+        start: {originalSelection?.selection.start}, end:{" "}
+        {originalSelection?.selection.end}, target: {originalSelection?.target}
       </Text>
     </View>
   );
@@ -105,5 +130,8 @@ const style = StyleSheet.create({
   },
   text: {
     color: "black",
+  },
+  bold: {
+    fontWeight: "bold",
   },
 });

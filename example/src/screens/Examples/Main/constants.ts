@@ -94,10 +94,10 @@ export const examples: Example[] = [
     icons: "❌",
   },
   {
-    title: "Text input mask",
-    testID: "text_input_mask",
-    info: ScreenNames.TEXT_INPUT_MASK,
-    icons: "🎭",
+    title: "Focused input handlers",
+    testID: "focused_input_handlers",
+    info: ScreenNames.FOCUSED_INPUT_HANDLERS,
+    icons: "🔍",
   },
   {
     title: "Toolbar",

@@ -9,3 +9,4 @@
 - update unit tests
 - (x) iOS implementation
 - iOS: set focus -> selection not getting updated
+- include target property in event
