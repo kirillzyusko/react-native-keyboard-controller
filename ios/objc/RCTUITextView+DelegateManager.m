@@ -6,7 +6,7 @@
 //
 
 #import <objc/runtime.h>
-#import "RCTTextView+DelegateManager.h"
+#import "RCTUITextView+DelegateManager.h"
 
 @implementation RCTUITextView (DelegateManager)
 

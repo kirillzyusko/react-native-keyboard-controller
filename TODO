@@ -7,4 +7,5 @@
 - multiline example
 - add e2e tests
 - update unit tests
-- (-) iOS implementation
+- (x) iOS implementation
+- iOS: set focus -> selection not getting updated
