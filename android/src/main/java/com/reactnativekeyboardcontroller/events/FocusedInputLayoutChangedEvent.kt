@@ -19,7 +19,7 @@ class FocusedInputLayoutChangedEvent(
   surfaceId: Int,
   viewId: Int,
   private val event: FocusedInputLayoutChangedEventData,
-) : Event<KeyboardTransitionEvent>(surfaceId, viewId) {
+) : Event<FocusedInputLayoutChangedEvent>(surfaceId, viewId) {
   override fun getEventName() = "topFocusedInputLayoutChanged"
 
   // All events for a given view can be coalesced
