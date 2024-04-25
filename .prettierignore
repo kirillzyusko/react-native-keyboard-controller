@@ -1,5 +1,6 @@
 Pods/
 docs/.docusaurus/
+docs/build/
 lib/
 node_modules/
 
@@ -16,5 +17,6 @@ FabricExample/ios/build/
 FabricExample/src/**/Lottie/*.json
 
 android/build/
+android/.cxx/
 
 tea.yaml

@@ -60,14 +60,15 @@ type FocusedInputSelectionChangedEvent = {
       x: number;
       y: number;
       position: number;
-    },
+    };
     end: {
       x: number;
       y: number;
       position: number;
-    },
+    };
   };
 };
+```
 
 This handler can be handy when you need to have an access to what user typed on a global level (i. e. when you don't have a direct access to your `TextInput`) or if you need to have an access to coordinates of text selection.
 
