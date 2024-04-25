@@ -10,7 +10,7 @@ import kotlin.math.min
 class KeyboardControllerSelectionWatcher(
   private val editText: ReactEditText,
   originalHandler: Any?,
-  private val action: (start: Int, end: Int, startX: Int, startY: Int, endX: Int, endY: Int) -> Unit
+  private val action: (start: Int, end: Int, startX: Double, startY: Double, endX: Double, endY: Double) -> Unit
 ) : SelectionWatcher {
   private var lastSelectionStart: Int = -1
   private var lastSelectionEnd: Int = -1
@@ -36,10 +36,10 @@ class KeyboardControllerSelectionWatcher(
         return
       }
 
-      var cursorPositionStartX = 0
-      var cursorPositionStartY = 0
-      var cursorPositionEndX = 0
-      var cursorPositionEndY = 0
+      var cursorPositionStartX = 0.0
+      var cursorPositionStartY = 0.0
+      var cursorPositionEndX = 0.0
+      var cursorPositionEndY = 0.0
 
       val realStart = min(start, end)
       val realEnd = max(start, end)
@@ -48,8 +48,8 @@ class KeyboardControllerSelectionWatcher(
       val baselineStart = layout.getLineBaseline(lineStart)
       val ascentStart = layout.getLineAscent(lineStart)
 
-      cursorPositionStartX = layout.getPrimaryHorizontal(realStart).dp.toInt()
-      cursorPositionStartY = (baselineStart + ascentStart).toFloat().dp.toInt()
+      cursorPositionStartX = layout.getPrimaryHorizontal(realStart).dp
+      cursorPositionStartY = (baselineStart + ascentStart).toFloat().dp
 
       val lineEnd = layout.getLineForOffset(realEnd)
       // TODO: remove unused variables
@@ -64,8 +64,8 @@ class KeyboardControllerSelectionWatcher(
         0
       }
 
-      cursorPositionEndX = (right + cursorWidth).dp.toInt()
-      cursorPositionEndY = bottom
+      cursorPositionEndX = (right + cursorWidth).dp
+      cursorPositionEndY = bottom.toFloat().dp
 
       action(start, end, cursorPositionStartX, cursorPositionStartY, cursorPositionEndX, cursorPositionEndY)
     }

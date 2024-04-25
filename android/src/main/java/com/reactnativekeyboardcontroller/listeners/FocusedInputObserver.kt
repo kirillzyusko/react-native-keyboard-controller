@@ -64,10 +64,10 @@ class FocusedInputObserver(val view: ReactViewGroup, private val context: Themed
   private val selectionListener: (
     start: Int,
     end: Int,
-    startX: Int,
-    startY: Int,
-    endX: Int,
-    endY: Int,
+    startX: Double,
+    startY: Double,
+    endX: Double,
+    endY: Double,
   ) -> Unit = listener@{ start, end, startX, startY, endX, endY ->
     val input = lastFocusedInput ?: return@listener
     context.dispatchEvent(
@@ -79,10 +79,10 @@ class FocusedInputObserver(val view: ReactViewGroup, private val context: Themed
           target = input.id,
           start = start,
           end = end,
-          startX = startX.toDouble(),
-          startY = startY.toDouble(),
-          endX = endX.toDouble(),
-          endY = endY.toDouble(),
+          startX = startX,
+          startY = startY,
+          endX = endX,
+          endY = endY,
         ),
       ),
     )

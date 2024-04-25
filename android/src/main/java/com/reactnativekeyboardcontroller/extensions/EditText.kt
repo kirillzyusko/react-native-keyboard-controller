@@ -97,7 +97,7 @@ fun EditText?.focus() {
 }
 
 fun ReactEditText.addOnSelectionChangedListener(
-  action: (start: Int, end: Int, startX: Int, startY: Int, endX: Int, endY: Int) -> Unit,
+  action: (start: Int, end: Int, startX: Double, startY: Double, endX: Double, endY: Double) -> Unit,
 ): () -> Unit {
   var listener: KeyboardControllerSelectionWatcher? = null
 
