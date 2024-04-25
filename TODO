@@ -5,7 +5,7 @@
 - (x) documentation for new js view props declaration
 - (x) new js view props declaration
 - (x) define events + handlers for fabric
-- fix TS issues in src (+recompile lib)
+- (x) fix TS issues in src (+recompile lib)
 - test fabric
 - integration with KeyboardAwareScrollView
 - multiline example

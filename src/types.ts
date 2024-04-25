@@ -79,6 +79,9 @@ export type KeyboardControllerProps = {
   onFocusedInputTextChangedReanimated?: (
     e: NativeSyntheticEvent<EventWithName<FocusedInputTextChangedEvent>>,
   ) => void;
+  onFocusedInputSelectionChangedReanimated?: (
+    e: NativeSyntheticEvent<EventWithName<FocusedInputSelectionChangedEvent>>,
+  ) => void;
   // props
   statusBarTranslucent?: boolean;
   navigationBarTranslucent?: boolean;
@@ -168,6 +171,11 @@ export type FocusedInputTextHandlerHook<TContext, Event> = (
       e: FocusedInputTextChangedEvent,
       context: TContext,
     ) => void;
+  },
+  dependencies?: unknown[],
+) => (e: NativeSyntheticEvent<Event>) => void;
+export type FocusedInputSelectionHandlerHook<TContext, Event> = (
+  handlers: {
     onFocusedInputSelectionChanged?: (
       e: FocusedInputSelectionChangedEvent,
       context: TContext,

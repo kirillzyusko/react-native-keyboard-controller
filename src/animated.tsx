@@ -9,6 +9,7 @@ import { applyMonkeyPatch, revertMonkeyPatch } from "./monkey-patch";
 import {
   useAnimatedKeyboardHandler,
   useFocusedInputLayoutHandler,
+  useFocusedInputSelectionHandler,
   useFocusedInputTextHandler,
 } from "./reanimated";
 
@@ -188,6 +189,11 @@ export const KeyboardProvider = ({
 
         broadcastInputEvents("onChangeText", e);
       },
+    },
+    [],
+  );
+  const inputSelectionHandler = useFocusedInputSelectionHandler(
+    {
       onFocusedInputSelectionChanged: (e) => {
         "worklet";
 
@@ -215,6 +221,7 @@ export const KeyboardProvider = ({
         onKeyboardMoveInteractive={onKeyboardMove}
         onFocusedInputLayoutChangedReanimated={inputLayoutHandler}
         onFocusedInputTextChangedReanimated={inputTextHandler}
+        onFocusedInputSelectionChangedReanimated={inputSelectionHandler}
         navigationBarTranslucent={navigationBarTranslucent}
         statusBarTranslucent={statusBarTranslucent}
         style={styles.container}
