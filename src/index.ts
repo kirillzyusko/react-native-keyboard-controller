@@ -13,4 +13,9 @@ export {
   KeyboardToolbar,
   DefaultKeyboardToolbarTheme,
 } from "./components";
-export type { KeyboardToolbarProps } from "./components";
+export type {
+  KeyboardAvoidingViewProps,
+  KeyboardStickyViewProps,
+  KeyboardAwareScrollViewProps,
+  KeyboardToolbarProps,
+} from "./components";
