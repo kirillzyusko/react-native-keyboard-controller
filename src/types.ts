@@ -27,18 +27,17 @@ export type FocusedInputTextChangedEvent = {
   text: string;
 };
 export type FocusedInputSelectionChangedEvent = {
-  position: {
-    start: number;
-    end: number;
-  };
-  coordinates: {
+  target: number;
+  selection: {
     start: {
       x: number;
       y: number;
+      position: number;
     };
     end: {
       x: number;
       y: number;
+      position: number;
     };
   };
 };
@@ -66,6 +65,9 @@ export type KeyboardControllerProps = {
   ) => void;
   onFocusedInputTextChanged?: (
     e: NativeSyntheticEvent<EventWithName<FocusedInputTextChangedEvent>>,
+  ) => void;
+  onFocusedInputSelectionChanged?: (
+    e: NativeSyntheticEvent<EventWithName<FocusedInputSelectionChangedEvent>>,
   ) => void;
   // fake props used to activate reanimated bindings
   onKeyboardMoveReanimated?: (

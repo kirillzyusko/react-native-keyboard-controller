@@ -48,6 +48,29 @@ This handler can be handy when you need to have an access to what user typed on 
 - you develop a generic component for any kind of avoidance focused inputs (i. e. `AwareScrollView`) that doesn't have an access to child `TextInputs` by design;
 - you track user activity on the screen and if there is no activity for certain period of time then you do a certain action (logout for example). If you want to reset timer when user interacts with a keyboard - usage of this hook can be a good choice.
 
+### `onSelectionChange`
+
+Fires an event whenever user selects text in focused `TextInput`. Event has following structure:
+
+```ts
+type FocusedInputSelectionChangedEvent = {
+  target: number;
+  selection: {
+    start: {
+      x: number;
+      y: number;
+      position: number;
+    },
+    end: {
+      x: number;
+      y: number;
+      position: number;
+    },
+  };
+};
+
+This handler can be handy when you need to have an access to what user typed on a global level (i. e. when you don't have a direct access to your `TextInput`) or if you need to have an access to coordinates of text selection.
+
 ## Known issues
 
 - [react-native-text-input-mask#305](https://github.com/react-native-text-input-mask/react-native-text-input-mask/pull/305): `onChangeText` handler ignores an input from `react-native-text-input-mask` on `iOS`

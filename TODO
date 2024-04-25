@@ -1,10 +1,12 @@
 - (x) redefine event structure `{cursor: {start: {x, y}, end: {x, y}}}`
 - (x) iOS implementation
 - (x) include target property in event
-- documentation (for hook)
-- new js view props declaration (+ documentation for that)
-- define events + handlers for fabric
+- (x) documentation (for hook)
+- (x) documentation for new js view props declaration
+- (x) new js view props declaration
+- (x) define events + handlers for fabric
 - fix TS issues in src (+recompile lib)
+- test fabric
 - integration with KeyboardAwareScrollView
 - multiline example
 - add e2e tests

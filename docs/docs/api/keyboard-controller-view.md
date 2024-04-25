@@ -33,6 +33,10 @@ A callback function which is fired when layout of focused input gets changed.
 
 A callback function which is fired every time when user changes a text (types/deletes symbols).
 
+### `onFocusedInputSelectionChanged`
+
+A callback function which is fired when user selects text in focused input.
+
 ### `statusBarTranslucent` <div class="label android"></div>
 
 A boolean prop to indicate whether `StatusBar` should be translucent on `Android` or not.
