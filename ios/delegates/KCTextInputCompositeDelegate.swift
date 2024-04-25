@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct SelectionCoordinates {
+struct Selection {
   var start: Int
   var startX: CGFloat
   var startY: CGFloat
@@ -16,12 +16,12 @@ struct SelectionCoordinates {
   var endY: CGFloat
 }
 
-func textSelectionCoordinates(in textInput: UITextInput) -> SelectionCoordinates? {
+func textSelection(in textInput: UITextInput) -> Selection? {
   if let selectedRange = textInput.selectedTextRange {
     let caretRectStart = textInput.caretRect(for: selectedRange.start)
     let caretRectEnd = textInput.caretRect(for: selectedRange.end)
 
-    let coordinates = SelectionCoordinates(
+    let coordinates = Selection(
       start: textInput.offset(from: textInput.beginningOfDocument, to: selectedRange.start),
       startX: caretRectStart.origin.x,
       startY: caretRectStart.origin.y,
@@ -66,42 +66,16 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
     textViewDelegate = nil
   }
 
+  // Getter for the active delegate
+  public var activeDelegate: AnyObject? {
+    return textViewDelegate ?? textFieldDelegate
+  }
+
   // MARK: UITextViewDelegate
 
   func textViewDidChangeSelection(_ textView: UITextView) {
     textViewDelegate?.textViewDidChangeSelection?(textView)
     updateSelectionPosition(textInput: textView)
-  }
-
-  // Implement other UITextViewDelegate methods as needed, forwarding to textViewDelegate
-
-  func textViewDidChange(_ textView: UITextView) {
-    textViewDelegate?.textViewDidChange?(textView)
-  }
-
-  func textViewDidEndEditing(_ textView: UITextView) {
-    textViewDelegate?.textViewDidEndEditing?(textView)
-  }
-
-  func textViewDidBeginEditing(_ textView: UITextView) {
-    textViewDelegate?.textViewDidBeginEditing?(textView)
-  }
-
-  func textViewShouldEndEditing(_ textView: UITextView) -> Bool {
-    return textViewDelegate?.textViewShouldEndEditing?(textView) ?? true
-  }
-
-  func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
-    return textViewDelegate?.textViewShouldEndEditing?(textView) ?? true
-  }
-
-  func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-    return textViewDelegate?.textView?(textView, shouldChangeTextIn: range, replacementText: text) ?? true
-  }
-
-  @available(iOS 16.0, *)
-  func textView(_ textView: UITextView, willDismissEditMenuWith animator: any UIEditMenuInteractionAnimating) {
-    textViewDelegate?.textView?(textView, willDismissEditMenuWith: animator)
   }
 
   // MARK: UITextFieldDelegate
@@ -111,55 +85,36 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
     updateSelectionPosition(textInput: textField)
   }
 
-  // Implement other UITextFieldDelegate methods as needed, forwarding to textFieldDelegate
-  func textFieldShouldClear(_ textField: UITextField) -> Bool {
-    return textFieldDelegate?.textFieldShouldClear?(textField) ?? true
+  // Implement forwarding for all other methods if needed
+  override func responds(to aSelector: Selector!) -> Bool {
+    if super.responds(to: aSelector) {
+      return true
+    }
+    return activeDelegate?.responds(to: aSelector) ?? false
   }
 
-  func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-    return textFieldDelegate?.textFieldShouldReturn?(textField) ?? true
-  }
-
-  func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
-    return textFieldDelegate?.textFieldShouldEndEditing?(textField) ?? true
-  }
-
-  func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-    return textFieldDelegate?.textFieldShouldBeginEditing?(textField) ?? true
-  }
-
-  func textFieldDidEndEditing(_ textField: UITextField) {
-    textFieldDelegate?.textFieldDidEndEditing?(textField)
-  }
-
-  func textFieldDidBeginEditing(_ textField: UITextField) {
-    textFieldDelegate?.textFieldDidBeginEditing?(textField)
-  }
-
-  func textField(
-    _ textField: UITextField,
-    shouldChangeCharactersIn range: NSRange,
-    replacementString string: String
-  ) -> Bool {
-    return textFieldDelegate?.textField?(textField, shouldChangeCharactersIn: range, replacementString: string) ?? true
+  override func forwardingTarget(for aSelector: Selector!) -> Any? {
+    if activeDelegate?.responds(to: aSelector) ?? false {
+      return activeDelegate
+    }
+    return super.forwardingTarget(for: aSelector)
   }
 
   // MARK: Private functions
 
   private func updateSelectionPosition(textInput: UITextInput) {
-    // TODO: better to rename varialbes/function
-    if let coordinates = textSelectionCoordinates(in: textInput) {
+    if let selection = textSelection(in: textInput) {
       onSelectionChange([
         "selection": [
           "start": [
-            "x": coordinates.startX,
-            "y": coordinates.startY,
-            "position": coordinates.start,
+            "x": selection.startX,
+            "y": selection.startY,
+            "position": selection.start,
           ],
           "end": [
-            "x": coordinates.endX,
-            "y": coordinates.endY,
-            "position": coordinates.end,
+            "x": selection.endX,
+            "y": selection.endY,
+            "position": selection.end,
           ],
         ],
         "target": UIResponder.current.reactViewTag,
