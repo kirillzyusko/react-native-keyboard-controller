@@ -151,16 +151,16 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
     if let coordinates = textSelectionCoordinates(in: textInput) {
       onSelectionChange([
         "selection": [
-            "start": [
-                "x": coordinates.startX,
-                "y": coordinates.startY,
-                "position": coordinates.start,
-            ],
-            "end": [
-                "x": coordinates.endX,
-                "y": coordinates.endY,
-                "position": coordinates.end
-            ],
+          "start": [
+            "x": coordinates.startX,
+            "y": coordinates.startY,
+            "position": coordinates.start,
+          ],
+          "end": [
+            "x": coordinates.endX,
+            "y": coordinates.endY,
+            "position": coordinates.end,
+          ],
         ],
         "target": UIResponder.current.reactViewTag,
       ])
