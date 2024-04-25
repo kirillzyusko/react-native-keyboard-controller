@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[7960],{5765:e=>{e.exports=JSON.parse('{"label":"react-native","permalink":"/react-native-keyboard-controller/pr-preview/pr-425/blog/tags/react-native","allTagsPath":"/react-native-keyboard-controller/pr-preview/pr-425/blog/tags","count":9,"unlisted":false}')}}]);

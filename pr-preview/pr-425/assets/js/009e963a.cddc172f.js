@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[6122],{810:e=>{e.exports=JSON.parse('{"label":"animation","permalink":"/react-native-keyboard-controller/pr-preview/pr-425/blog/tags/animation","allTagsPath":"/react-native-keyboard-controller/pr-preview/pr-425/blog/tags","count":1,"unlisted":false}')}}]);
