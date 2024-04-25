@@ -47,6 +47,7 @@
     "focused input",
     "text changed",
     "avoiding view",
+    "avoid keyboard",
     "sticky view",
     "keyboard aware scroll view",
     "keyboard toolbar",
