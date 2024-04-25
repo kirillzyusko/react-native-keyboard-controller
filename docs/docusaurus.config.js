@@ -194,7 +194,8 @@ const config = {
       metadata: [
         {
           name: "keywords",
-          content: "react-native, keyboard, animation, ios, android",
+          content:
+            "react-native, keyboard, animation, ios, android, avoid keyboard, keyboard avoiding view, keyboard aware scroll view, sticky keyboard view, keyboard toolbar",
         },
       ],
       algolia: {
