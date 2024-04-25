@@ -27,7 +27,7 @@
 
   if ((self = [super init])) {
     _viewTag = reactTag;
-    
+
     _selection = [event valueForKey:@"selection"];
     _target = [event valueForKey:@"target"];
     _coalescingKey = 0;
@@ -57,7 +57,8 @@ RCT_NOT_IMPLEMENTED(-(instancetype)init)
   return NO;
 }
 
-- (FocusedInputSelectionChangedEvent *)coalesceWithEvent:(FocusedInputSelectionChangedEvent *)newEvent
+- (FocusedInputSelectionChangedEvent *)coalesceWithEvent:
+    (FocusedInputSelectionChangedEvent *)newEvent
 {
   return newEvent;
 }

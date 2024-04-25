@@ -15,11 +15,12 @@
  * but we are using composite delegate to forward all calls to original delegate
  * so we use this method to force set our delegate
  */
-- (void)setForceDelegate:(id<UITextViewDelegate>)delegate {
-    Ivar ivar = class_getInstanceVariable([UITextView class], "_delegate");
-    if (ivar) {
-        object_setIvar(self, ivar, delegate);
-    }
+- (void)setForceDelegate:(id<UITextViewDelegate>)delegate
+{
+  Ivar ivar = class_getInstanceVariable([UITextView class], "_delegate");
+  if (ivar) {
+    object_setIvar(self, ivar, delegate);
+  }
 }
 
 @end
