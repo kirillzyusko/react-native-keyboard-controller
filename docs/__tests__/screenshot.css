@@ -21,3 +21,7 @@ img[src$='.gif'],
 .lottie {
   display: none;
 }
+/* playwright - universal class that will hide element in e2e tests environment */
+.playwright {
+  display: none;
+}
