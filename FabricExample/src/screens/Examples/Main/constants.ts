@@ -94,6 +94,12 @@ export const examples: Example[] = [
     icons: "❌",
   },
   {
+    title: "Focused input handlers",
+    testID: "focused_input_handlers",
+    info: ScreenNames.FOCUSED_INPUT_HANDLERS,
+    icons: "🔍",
+  },
+  {
     title: "Toolbar",
     testID: "toolbar",
     info: ScreenNames.TOOLBAR,

@@ -7,6 +7,7 @@ import AwareScrollViewStickyFooter from "../../screens/Examples/AwareScrollViewS
 import CloseScreen from "../../screens/Examples/Close";
 import EnabledDisabled from "../../screens/Examples/EnabledDisabled";
 import Events from "../../screens/Examples/Events";
+import FocusedInputHandlers from "../../screens/Examples/FocusedInputHandlers";
 import InteractiveKeyboard from "../../screens/Examples/InteractiveKeyboard";
 import InteractiveKeyboardIOS from "../../screens/Examples/InteractiveKeyboardIOS";
 import KeyboardAnimation from "../../screens/Examples/KeyboardAnimation";
@@ -36,6 +37,7 @@ export type ExamplesStackParamList = {
   [ScreenNames.KEYBOARD_AVOIDING_VIEW]: undefined;
   [ScreenNames.ENABLED_DISABLED]: undefined;
   [ScreenNames.CLOSE]: undefined;
+  [ScreenNames.FOCUSED_INPUT_HANDLERS]: undefined;
   [ScreenNames.TOOLBAR]: undefined;
   [ScreenNames.MODAL]: undefined;
 };
@@ -88,6 +90,9 @@ const options = {
   },
   [ScreenNames.CLOSE]: {
     title: "Close keyboard",
+  },
+  [ScreenNames.FOCUSED_INPUT_HANDLERS]: {
+    title: "Focused input handlers",
   },
   [ScreenNames.TOOLBAR]: {
     title: "Toolbar",
@@ -173,6 +178,11 @@ const ExamplesStack = () => (
       name={ScreenNames.CLOSE}
       component={CloseScreen}
       options={options[ScreenNames.CLOSE]}
+    />
+    <Stack.Screen
+      name={ScreenNames.FOCUSED_INPUT_HANDLERS}
+      component={FocusedInputHandlers}
+      options={options[ScreenNames.FOCUSED_INPUT_HANDLERS]}
     />
     <Stack.Screen
       name={ScreenNames.TOOLBAR}

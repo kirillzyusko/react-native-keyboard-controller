@@ -1,0 +1,124 @@
+import React, { useCallback, useState } from "react";
+import { StyleSheet, Text, TextInput, View } from "react-native";
+import { useFocusedInputHandler } from "react-native-keyboard-controller";
+import { runOnJS } from "react-native-reanimated";
+
+import type { TextInputSelectionChangeEventData } from "react-native";
+
+type MaskedInputState = {
+  formatted: string; // +1 (123) 456-78-90
+  extracted?: string; // 1234567890
+};
+
+export default function TextInputMaskExample() {
+  const [data, setData] = useState<MaskedInputState>({
+    formatted: "",
+    extracted: "",
+  });
+  const [worklet, setWorkletData] = useState("");
+  const [workletSelection, setWorkletSelection] = useState({
+    target: -1,
+    selection: {
+      start: {
+        x: 0,
+        y: 0,
+        position: 0,
+      },
+      end: {
+        x: 0,
+        y: 0,
+        position: 0,
+      },
+    },
+  });
+  const [originalSelection, setOriginalSelection] =
+    useState<TextInputSelectionChangeEventData | null>(null);
+
+  useFocusedInputHandler(
+    {
+      onChangeText: ({ text }) => {
+        "worklet";
+
+        runOnJS(setWorkletData)(text);
+      },
+      onSelectionChange: (event) => {
+        "worklet";
+
+        runOnJS(setWorkletSelection)(event);
+      },
+    },
+    [],
+  );
+
+  const onChangeText = useCallback<
+    (formatted: string, extracted?: string) => void
+  >((formatted, extracted) => {
+    setData({ formatted, extracted });
+  }, []);
+
+  return (
+    <View style={style.container}>
+      <TextInput
+        onSelectionChange={({ nativeEvent }) =>
+          setOriginalSelection(nativeEvent)
+        }
+        onChangeText={onChangeText}
+        multiline
+        style={style.input}
+      />
+      <Text testID="formatted_text" style={style.text}>
+        Formatted: {data.formatted}
+      </Text>
+      <Text testID="extracted_text" style={style.text}>
+        Extracted: {data.extracted}
+      </Text>
+      <Text testID="worklet_text" style={style.text}>
+        Worklet: {worklet}
+      </Text>
+      <Text testID="selection_text" style={[style.text, style.bold]}>
+        Keyboard controller Selection:
+      </Text>
+      <Text testID="selection_text_start_end" style={style.text}>
+        start: {workletSelection.selection.start.position}, end:{" "}
+        {workletSelection.selection.end.position}, target:{" "}
+        {workletSelection.target}
+      </Text>
+      <Text testID="selection_text_coordinates_start" style={style.text}>
+        startX: {Math.round(workletSelection.selection.start.x)}, startY:{" "}
+        {Math.round(workletSelection.selection.start.y)}
+      </Text>
+      <Text testID="selection_text_coordinates_end" style={style.text}>
+        endX: {Math.round(workletSelection.selection.end.x)}, endY:{" "}
+        {Math.round(workletSelection.selection.end.y)}
+      </Text>
+      <Text testID="original_selection_text" style={[style.text, style.bold]}>
+        Original selection:
+      </Text>
+      <Text testID="selection_text_start_end" style={style.text}>
+        start: {originalSelection?.selection.start}, end:{" "}
+        {originalSelection?.selection.end}, target: {originalSelection?.target}
+      </Text>
+    </View>
+  );
+}
+
+const style = StyleSheet.create({
+  container: {
+    marginHorizontal: 12,
+  },
+  input: {
+    height: 50,
+    backgroundColor: "#dcdcdc",
+    color: "black",
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    marginBottom: 12,
+    marginVertical: 12,
+  },
+  text: {
+    color: "black",
+  },
+  bold: {
+    fontWeight: "bold",
+  },
+});

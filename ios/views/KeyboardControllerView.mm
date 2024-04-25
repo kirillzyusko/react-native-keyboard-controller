@@ -10,6 +10,7 @@
 #ifdef RCT_NEW_ARCH_ENABLED
 #import "KeyboardControllerView.h"
 #import "FocusedInputLayoutChangedEvent.h"
+#import "FocusedInputSelectionChangedEvent.h"
 #import "FocusedInputTextChangedEvent.h"
 #import "KeyboardMoveEvent.h"
 
@@ -103,6 +104,42 @@ using namespace facebook::react;
               FocusedInputTextChangedEvent *textChangedEvent =
                   [[FocusedInputTextChangedEvent alloc] initWithReactTag:@(self.tag) text:text];
               [bridge.eventDispatcher sendEvent:textChangedEvent];
+            }
+          }
+        }
+        onSelectionChangedHandler:^(NSDictionary *event) {
+          if (self->_eventEmitter) {
+            int target = [event[@"target"] integerValue];
+            double startX = [event[@"selection"][@"start"][@"x"] doubleValue];
+            double startY = [event[@"selection"][@"start"][@"y"] doubleValue];
+            double endX = [event[@"selection"][@"end"][@"x"] doubleValue];
+            double endY = [event[@"selection"][@"end"][@"y"] doubleValue];
+            int start = [event[@"selection"][@"start"][@"position"] integerValue];
+            int end = [event[@"selection"][@"end"][@"position"] integerValue];
+
+            std::dynamic_pointer_cast<const facebook::react::KeyboardControllerViewEventEmitter>(
+                self->_eventEmitter)
+                ->onFocusedInputSelectionChanged(
+                    facebook::react::KeyboardControllerViewEventEmitter::
+                        OnFocusedInputSelectionChanged{
+                            .target = target,
+                            .selection = facebook::react::KeyboardControllerViewEventEmitter::
+                                OnFocusedInputSelectionChangedSelection{
+                                    .start =
+                                        facebook::react::KeyboardControllerViewEventEmitter::
+                                            OnFocusedInputSelectionChangedSelectionStart{
+                                                .x = startX, .y = startY, .position = start},
+                                    .end = facebook::react::KeyboardControllerViewEventEmitter::
+                                        OnFocusedInputSelectionChangedSelectionEnd{
+                                            .x = endX, .y = endY, .position = end}}});
+            // TODO: use built-in _eventEmitter once NativeAnimated module will use
+            // ModernEventemitter
+            RCTBridge *bridge = [RCTBridge currentBridge];
+            if (bridge && [bridge valueForKey:@"_jsThread"]) {
+              FocusedInputSelectionChangedEvent *selectionChangedEvent =
+                  [[FocusedInputSelectionChangedEvent alloc] initWithReactTag:@(self.tag)
+                                                                        event:event];
+              [bridge.eventDispatcher sendEvent:selectionChangedEvent];
             }
           }
         }
