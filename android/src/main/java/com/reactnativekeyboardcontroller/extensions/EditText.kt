@@ -5,7 +5,6 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
-import android.view.ViewTreeObserver
 import android.widget.EditText
 import android.widget.ScrollView
 import com.facebook.react.views.textinput.ReactEditText
@@ -102,7 +101,7 @@ fun EditText?.focus() {
 
 class KeyboardControllerSelectionWatcher(
   private val editText: ReactEditText,
-  private val action: (start: Int, end: Int, startX: Double, startY: Double, endX: Double, endY: Double) -> Unit
+  private val action: (start: Int, end: Int, startX: Double, startY: Double, endX: Double, endY: Double) -> Unit,
 ) {
   private var lastSelectionStart: Int = -1
   private var lastSelectionEnd: Int = -1

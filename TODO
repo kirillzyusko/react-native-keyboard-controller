@@ -6,10 +6,10 @@
 - (x) new js view props declaration
 - (x) define events + handlers for fabric
 - (x) fix TS issues in src (+recompile lib)
-- test fabric
+- (x) test fabric
+- (x) multiline example
+- (-) test with markdown component (paper only because fabric throws compilation errors)
+- (x) add e2e tests
 - integration with KeyboardAwareScrollView
-- multiline example
-- add e2e tests
 - update unit tests
 - set focus -> selection not getting updated
-- test with markdown component

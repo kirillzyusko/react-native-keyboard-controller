@@ -79,6 +79,7 @@ export default function TextInputMaskExample() {
         onChangeText={onChangeText}
         multiline
         style={style.input}
+        testID="multiline_input"
       />
       <Text testID="formatted_text" style={style.text}>
         Formatted: {data.formatted}
@@ -94,8 +95,10 @@ export default function TextInputMaskExample() {
       </Text>
       <Text testID="selection_text_start_end" style={style.text}>
         start: {workletSelection.selection.start.position}, end:{" "}
-        {workletSelection.selection.end.position}, target:{" "}
-        {workletSelection.target}
+        {workletSelection.selection.end.position}
+      </Text>
+      <Text testID="selection_text_target" style={style.text}>
+        target:{workletSelection.target}
       </Text>
       <Text testID="selection_text_coordinates_start" style={style.text}>
         startX: {Math.round(workletSelection.selection.start.x)}, startY:{" "}
@@ -108,9 +111,12 @@ export default function TextInputMaskExample() {
       <Text testID="original_selection_text" style={[style.text, style.bold]}>
         Original selection:
       </Text>
-      <Text testID="selection_text_start_end" style={style.text}>
+      <Text testID="original_selection_text_start_end" style={style.text}>
         start: {originalSelection?.selection.start}, end:{" "}
-        {originalSelection?.selection.end}, target: {originalSelection?.target}
+        {originalSelection?.selection.end}
+      </Text>
+      <Text testID="original_selection_text_target" style={style.text}>
+        target: {originalSelection?.target}
       </Text>
     </View>
   );
