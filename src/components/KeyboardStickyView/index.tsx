@@ -8,7 +8,7 @@ import { useReanimatedKeyboardAnimation } from "react-native-keyboard-controller
 
 import type { View, ViewProps } from "react-native";
 
-type KeyboardStickyViewProps = {
+export type KeyboardStickyViewProps = {
   /**
    * Specify additional offset to the view for given keyboard state.
    */

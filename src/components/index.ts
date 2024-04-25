@@ -5,4 +5,7 @@ export {
   default as KeyboardToolbar,
   DefaultKeyboardToolbarTheme,
 } from "./KeyboardToolbar";
+export type { KeyboardAvoidingViewProps } from "./KeyboardAvoidingView";
+export type { KeyboardStickyViewProps } from "./KeyboardStickyView";
+export type { KeyboardAwareScrollViewProps } from "./KeyboardAwareScrollView";
 export type { KeyboardToolbarProps } from "./KeyboardToolbar";

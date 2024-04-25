@@ -12,7 +12,7 @@ import { useKeyboardAnimation } from "./hooks";
 
 import type { LayoutRectangle, ViewProps } from "react-native";
 
-type Props = {
+export type KeyboardAvoidingViewProps = {
   /**
    * Specify how to react to the presence of the keyboard.
    */
@@ -47,7 +47,10 @@ const defaultLayout: LayoutRectangle = {
  * View that moves out of the way when the keyboard appears by automatically
  * adjusting its height, position, or bottom padding.
  */
-const KeyboardAvoidingView = forwardRef<View, React.PropsWithChildren<Props>>(
+const KeyboardAvoidingView = forwardRef<
+  View,
+  React.PropsWithChildren<KeyboardAvoidingViewProps>
+>(
   (
     {
       behavior,
