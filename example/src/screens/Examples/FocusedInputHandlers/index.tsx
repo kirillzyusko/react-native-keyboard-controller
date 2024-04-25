@@ -98,12 +98,12 @@ export default function TextInputMaskExample() {
         {workletSelection.target}
       </Text>
       <Text testID="selection_text_coordinates_start" style={style.text}>
-        startX: {workletSelection.selection.start.x}, startY:{" "}
-        {workletSelection.selection.start.y}
+        startX: {Math.round(workletSelection.selection.start.x)}, startY:{" "}
+        {Math.round(workletSelection.selection.start.y)}
       </Text>
       <Text testID="selection_text_coordinates_end" style={style.text}>
-        endX: {workletSelection.selection.end.x}, endY:{" "}
-        {workletSelection.selection.end.y}
+        endX: {Math.round(workletSelection.selection.end.x)}, endY:{" "}
+        {Math.round(workletSelection.selection.end.y)}
       </Text>
       <Text testID="original_selection_text" style={[style.text, style.bold]}>
         Original selection:
