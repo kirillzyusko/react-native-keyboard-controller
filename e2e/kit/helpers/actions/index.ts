@@ -49,7 +49,7 @@ export const typeText = async (id: string, text: string): Promise<void> => {
     "---------------------------------\n",
     "Type on field with id:",
     colors.magenta(id),
-    "\x1b[36mtext:\x1b[0m",
+    "\x1b[36text:\x1b[0m",
     colors.yellow(text),
   );
 

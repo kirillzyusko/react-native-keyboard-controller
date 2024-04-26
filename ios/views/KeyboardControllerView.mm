@@ -57,7 +57,7 @@ using namespace facebook::react;
             int target = [event[@"target"] integerValue];
             int parentScrollViewTarget = [event[@"parentScrollViewTarget"] integerValue];
             double absoluteY = [event[@"layout"][@"absoluteY"] doubleValue];
-            double absoulteX = [event[@"layout"][@"absoluteX"] doubleValue];
+            double absoluteX = [event[@"layout"][@"absoluteX"] doubleValue];
             double y = [event[@"layout"][@"y"] doubleValue];
             double x = [event[@"layout"][@"x"] doubleValue];
             double width = [event[@"layout"][@"width"] doubleValue];
@@ -73,13 +73,13 @@ using namespace facebook::react;
                             .layout = facebook::react::KeyboardControllerViewEventEmitter::
                                 OnFocusedInputLayoutChangedLayout{
                                     .absoluteY = absoluteY,
-                                    .absoluteX = absoulteX,
+                                    .absoluteX = absoluteX,
                                     .height = height,
                                     .width = width,
                                     .x = x,
                                     .y = y}});
             // TODO: use built-in _eventEmitter once NativeAnimated module will use
-            // ModernEventemitter
+            // ModernEventEmitter
             RCTBridge *bridge = [RCTBridge currentBridge];
             if (bridge && [bridge valueForKey:@"_jsThread"]) {
               FocusedInputLayoutChangedEvent *inputChangedEvent =
@@ -97,7 +97,7 @@ using namespace facebook::react;
                         .text = std::string([text UTF8String])});
 
             // TODO: use built-in _eventEmitter once NativeAnimated module will use
-            // ModernEventemitter
+            // ModernEventEmitter
             RCTBridge *bridge = [RCTBridge currentBridge];
             if (bridge && [bridge valueForKey:@"_jsThread"]) {
               FocusedInputTextChangedEvent *textChangedEvent =
@@ -160,7 +160,7 @@ using namespace facebook::react;
                         .target = [target intValue]});
           }
 
-          // TODO: use built-in _eventEmitter once NativeAnimated module will use ModernEventemitter
+          // TODO: use built-in _eventEmitter once NativeAnimated module will use ModernEventEmitter
           RCTBridge *bridge = [RCTBridge currentBridge];
           if (bridge && [bridge valueForKey:@"_jsThread"]) {
             KeyboardMoveEvent *keyboardMoveEvent =

@@ -1,8 +1,8 @@
 import type { MessageProps } from "./types";
 
 export const history: MessageProps[] = [
-  { text: "Hmmmm🤔" },
-  { text: "It looks like it still will be laggy..." },
+  { text: "Hmmm🤔" },
+  { text: "It looks like it still will be choppy..." },
   { text: "But I don't know what should I try next" },
   { text: "Reanimated?", sender: true },
   { text: "A little bit disappointed 😔" },

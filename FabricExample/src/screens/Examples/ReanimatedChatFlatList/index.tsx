@@ -17,7 +17,7 @@ const RenderItem: ListRenderItem<MessageProps> = ({ item, index }) => {
   return <Message key={index} {...item} />;
 };
 
-function ReanimatedChatFlatlist() {
+function ReanimatedChatFlatList() {
   const { height } = useReanimatedKeyboardAnimation();
 
   const fakeView = useAnimatedStyle(
@@ -42,4 +42,4 @@ function ReanimatedChatFlatlist() {
   );
 }
 
-export default ReanimatedChatFlatlist;
+export default ReanimatedChatFlatList;
