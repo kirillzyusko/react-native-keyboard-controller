@@ -1,6 +1,12 @@
 {
   "language": "en",
-  "words": [],
+  "words": [
+    "Codegen",
+    "codegen",
+    "worklet",
+    "reactnativekeyboardcontroller",
+    "subview"
+  ],
   "ignorePaths": [
     "node_modules",
     "docs/src/components/Testimonials"
