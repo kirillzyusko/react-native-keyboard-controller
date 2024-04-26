@@ -36,8 +36,6 @@ func textSelection(in textInput: UITextInput) -> Selection? {
   return nil
 }
 
-// TODO: unset delegate of unfocus?
-
 /**
  * A delegate that is being set to any focused input
  * and intercepts some specific events that needs to be handled
@@ -55,6 +53,8 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
   public init(onSelectionChange: @escaping (_ event: NSDictionary) -> Void) {
     self.onSelectionChange = onSelectionChange
   }
+    
+  // MARK: setters/getters
 
   public func setTextViewDelegate(delegate: UITextViewDelegate?) {
     textViewDelegate = delegate
@@ -85,7 +85,8 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
     updateSelectionPosition(textInput: textField)
   }
 
-  // Implement forwarding for all other methods if needed
+  // MARK: call forwarding
+
   override func responds(to aSelector: Selector!) -> Bool {
     if super.responds(to: aSelector) {
       return true

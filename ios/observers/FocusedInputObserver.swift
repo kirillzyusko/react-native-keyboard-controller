@@ -36,6 +36,7 @@ public class FocusedInputObserver: NSObject {
   private var isMounted = false
   // input tracking
   private var currentInput: UIView?
+  private var currentResponder: UIView?
   private var hasObservers = false
   private var lastEventDispatched: [AnyHashable: Any] = noFocusedInputEvent
   // observers
@@ -84,16 +85,16 @@ public class FocusedInputObserver: NSObject {
 
   @objc func keyboardWillShow(_: Notification) {
     removeObservers()
-    let responder = UIResponder.current as? UIView
-    currentInput = responder?.superview as UIView?
+    currentResponder = UIResponder.current as? UIView
+    currentInput = currentResponder?.superview as UIView?
 
     setupObservers()
     syncUpLayout()
 
-    FocusedInputHolder.shared.set(responder as? TextInput)
+    FocusedInputHolder.shared.set(currentResponder as? TextInput)
 
     let allInputFields = ViewHierarchyNavigator.getAllInputFields()
-    let currentIndex = allInputFields.firstIndex(where: { $0 as? UIView == responder }) ?? -1
+    let currentIndex = allInputFields.firstIndex(where: { $0 as? UIView == currentResponder }) ?? -1
 
     onFocusDidSet([
       "current": currentIndex,
@@ -104,12 +105,13 @@ public class FocusedInputObserver: NSObject {
   @objc func keyboardWillHide(_: Notification) {
     removeObservers()
     currentInput = nil
+    currentResponder = nil
     dispatchEventToJS(data: noFocusedInputEvent)
   }
 
   @objc func syncUpLayout() {
-    let responder = UIResponder.current
-    let focusedInput = (responder as? UIView)?.superview
+    let responder = currentResponder as UIResponder?
+    let focusedInput = currentInput
     let globalFrame = focusedInput?.globalFrame
 
     let data: [String: Any] = [
@@ -152,11 +154,10 @@ public class FocusedInputObserver: NSObject {
 
     if currentInput != nil {
       hasObservers = true
-      let responder = UIResponder.current
       currentInput?.addObserver(self, forKeyPath: "center", options: .new, context: nil)
-      textChangeObserver.observeTextChanges(for: responder, handler: onTextChanged)
+      textChangeObserver.observeTextChanges(for: currentResponder, handler: onTextChanged)
 
-      substituteDelegate(responder)
+      substituteDelegate(currentResponder)
     }
   }
 
@@ -168,6 +169,8 @@ public class FocusedInputObserver: NSObject {
     hasObservers = false
     currentInput?.removeObserver(self, forKeyPath: "center", context: nil)
     textChangeObserver.removeObserver()
+
+    substituteDelegateBack(currentResponder)
   }
 
   private func substituteDelegate(_ input: UIResponder?) {
@@ -181,8 +184,15 @@ public class FocusedInputObserver: NSObject {
         delegate.setTextViewDelegate(delegate: textView.delegate)
         (textView as? RCTUITextView)?.setForceDelegate(delegate)
       }
-      print(textView.delegate)
     }
+  }
+
+  private func substituteDelegateBack(_ input: UIResponder?) {
+      if let textField = input as? UITextField {
+          textField.delegate = delegate.activeDelegate as? UITextFieldDelegate
+      } else if let textView = input as? UITextView {
+          (textView as? RCTUITextView)?.setForceDelegate(delegate.activeDelegate as? UITextViewDelegate)
+      }
   }
 
   // swiftlint:disable:next block_based_kvo
