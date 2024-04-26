@@ -11,11 +11,17 @@
     "Ziusko",
     "buildscript",
     "uimanager",
-    "Compat"
+    "Compat",
+    "keyboardcontroller",
+    "lateinit",
+    "robolectric",
   ],
   "ignorePaths": [
     "node_modules",
-    "e2e/apks/"
+    "e2e/apks/",
+    "**/gradlew",
+    "**/gradlew.bat",
+    "**/*.pbxproj"
   ],
   "useGitignore": true
 }
