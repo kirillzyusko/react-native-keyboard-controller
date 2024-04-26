@@ -21,7 +21,6 @@ public class TextChangeObserver {
         object: textField,
         queue: nil
       ) { _ in
-        print(textField.delegate)
         handler(textField.text)
       }
     } else if let textView = input as? UITextView {
@@ -30,7 +29,6 @@ public class TextChangeObserver {
         object: textView,
         queue: nil
       ) { _ in
-        print(textView.delegate)
         handler(textView.text)
       }
     }
