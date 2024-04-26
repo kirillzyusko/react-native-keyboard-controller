@@ -7,7 +7,7 @@ import android.view.View
 import androidx.annotation.RequiresApi
 
 /**
- * Call this everytime when using [ViewCompat.setOnApplyWindowInsetsListener]
+ * Call this every time when using [ViewCompat.setOnApplyWindowInsetsListener]
  * to ensure that insets are always received.
  * @see https://stackoverflow.com/a/61909205/9272042
  */

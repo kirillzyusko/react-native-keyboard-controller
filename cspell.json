@@ -20,7 +20,7 @@
     "Tawil",
     "buildscript",
     "uimanager",
-    "Compat",
+    "compat",
     "keyboardcontroller",
     "lateinit",
     "robolectric",
@@ -101,7 +101,10 @@
     "xcconfig",
     "DKEYBOARD",
     "DRCT",
-    "DFOLLY"
+    "DFOLLY",
+    "upto",
+    "clazz",
+    "xcworkspace"
   ],
   "ignorePaths": [
     "node_modules",
