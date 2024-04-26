@@ -18,7 +18,7 @@ jobs:
         with:
           files: "**/*"
           root: "."
-          # config: './cspell.json'
+          config: "./cspell.json"
           inline: error
           strict: true
           use_cspell_files: false
