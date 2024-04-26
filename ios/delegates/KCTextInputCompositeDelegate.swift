@@ -52,7 +52,7 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
   public init(onSelectionChange: @escaping (_ event: NSDictionary) -> Void) {
     self.onSelectionChange = onSelectionChange
   }
-    
+
   // MARK: setters/getters
 
   public func setTextViewDelegate(delegate: UITextViewDelegate?) {
