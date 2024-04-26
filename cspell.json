@@ -1,13 +1,15 @@
 {
   "language": "en",
   "words": [
-    "Codegen",
     "codegen",
     "worklet",
+    "worklets",
     "reactnativekeyboardcontroller",
     "subview",
     "subviews",
+    "superview",
     "Kiryl",
+    "kirill"
     "Ziusko",
     "buildscript",
     "uimanager",
@@ -15,13 +17,18 @@
     "keyboardcontroller",
     "lateinit",
     "robolectric",
+    "instancetype",
+    "androidx",
+    "swiftlint"
   ],
   "ignorePaths": [
     "node_modules",
     "e2e/apks/",
     "**/gradlew",
     "**/gradlew.bat",
-    "**/*.pbxproj"
+    "**/*.pbxproj",
+    "**/*.xcscheme",
+    "**/*.xcworkspacedata"
   ],
   "useGitignore": true
 }
