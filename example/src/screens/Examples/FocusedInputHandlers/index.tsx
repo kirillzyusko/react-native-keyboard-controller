@@ -1,15 +1,80 @@
-import React, { useCallback, useState } from "react";
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  findNodeHandle,
+} from "react-native";
 import { useFocusedInputHandler } from "react-native-keyboard-controller";
-import { runOnJS } from "react-native-reanimated";
+import Reanimated, {
+  runOnJS,
+  useAnimatedStyle,
+  useSharedValue,
+} from "react-native-reanimated";
 import TextInputMask from "react-native-text-input-mask";
 
-import type { TextInputSelectionChangeEventData } from "react-native";
+import type {
+  TextInputProps,
+  TextInputSelectionChangeEventData,
+} from "react-native";
 import type { TextInputMaskProps } from "react-native-text-input-mask";
 
 type MaskedInputState = {
   formatted: string; // +1 (123) 456-78-90
   extracted?: string; // 1234567890
+};
+
+const TextInputWithMicSelection = (props: TextInputProps) => {
+  const ref = useRef<TextInput>(null);
+  const tag = useSharedValue(-1);
+  const position = useSharedValue({ x: 0, y: 0 });
+
+  useEffect(() => {
+    tag.value = findNodeHandle(ref.current) ?? -1;
+  }, []);
+
+  useFocusedInputHandler(
+    {
+      onSelectionChange: (event) => {
+        "worklet";
+
+        if (event.target === tag.value) {
+          position.value = {
+            x: event.selection.end.x,
+            y: event.selection.end.y,
+          };
+        }
+      },
+    },
+    [],
+  );
+
+  const style = useAnimatedStyle(
+    () => ({
+      position: "absolute",
+      width: 20,
+      height: 20,
+      backgroundColor: "blue",
+      left: 10,
+      transform: [
+        {
+          translateX: position.value.x,
+        },
+        {
+          translateY: position.value.y,
+        },
+      ],
+    }),
+    [],
+  );
+
+  return (
+    <View>
+      <TextInput ref={ref} {...props} />
+      <Reanimated.View style={style} />
+    </View>
+  );
 };
 
 export default function TextInputMaskExample() {
@@ -72,7 +137,7 @@ export default function TextInputMaskExample() {
         style={style.input}
         testID="masked_input"
       />
-      <TextInput
+      <TextInputWithMicSelection
         onSelectionChange={({ nativeEvent }) =>
           setOriginalSelection(nativeEvent)
         }

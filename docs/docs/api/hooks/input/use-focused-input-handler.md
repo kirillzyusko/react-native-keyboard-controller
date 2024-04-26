@@ -70,7 +70,7 @@ type FocusedInputSelectionChangedEvent = {
 };
 ```
 
-This handler can be handy when you need to have an access to what user typed on a global level (i. e. when you don't have a direct access to your `TextInput`) or if you need to have an access to coordinates of text selection.
+This handler can be handy when you need to have an access to what user typed on a global level (i. e. when you don't have a direct access to your `TextInput`) or if you need to have an access to coordinates of text selection (for example to draw a custom element that follows caret position).
 
 ## Known issues
 

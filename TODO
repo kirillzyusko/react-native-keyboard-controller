@@ -13,3 +13,4 @@
 - integration with KeyboardAwareScrollView
 - update unit tests
 - set focus -> selection not getting updated
+- example with caret tracking
