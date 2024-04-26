@@ -11,6 +11,14 @@ on:
 jobs:
   spellcheck:
     runs-on: ubuntu-latest
+    name: 🔍 spellcheck
     steps:
       - uses: actions/checkout@v4
       - uses: streetsidesoftware/cspell-action@v6
+        with:
+          files: "**/*"
+          root: "."
+          # config: './cspell.json'
+          inline: error
+          strict: true
+          use_cspell_files: false
