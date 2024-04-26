@@ -49,7 +49,6 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
   weak var textViewDelegate: UITextViewDelegate?
   weak var textFieldDelegate: UITextFieldDelegate?
 
-  // TODO: weak references
   public init(onSelectionChange: @escaping (_ event: NSDictionary) -> Void) {
     self.onSelectionChange = onSelectionChange
   }

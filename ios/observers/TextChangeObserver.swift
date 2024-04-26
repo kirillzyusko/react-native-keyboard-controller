@@ -6,8 +6,6 @@
 //  Copyright © 2023 Facebook. All rights reserved.
 //
 
-// single line - UITextField
-// multiline - UITextView
 public class TextChangeObserver {
   private var observer: Any?
 

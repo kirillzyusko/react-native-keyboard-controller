@@ -194,6 +194,10 @@ public class FocusedInputObserver: NSObject {
           (textView as? RCTUITextView)?.setForceDelegate(delegate.activeDelegate as? UITextViewDelegate)
       }
   }
+    
+    deinit {
+        print(111)
+    }
 
   // swiftlint:disable:next block_based_kvo
   @objc override public func observeValue(
