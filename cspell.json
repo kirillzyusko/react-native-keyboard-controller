@@ -5,11 +5,17 @@
     "codegen",
     "worklet",
     "reactnativekeyboardcontroller",
-    "subview"
+    "subview",
+    "subviews",
+    "Kiryl",
+    "Ziusko",
+    "buildscript",
+    "uimanager",
+    "Compat"
   ],
   "ignorePaths": [
     "node_modules",
-    "docs/src/components/Testimonials"
+    "e2e/apks/"
   ],
   "useGitignore": true
 }
