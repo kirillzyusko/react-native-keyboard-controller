@@ -14,7 +14,7 @@ import KeyboardAvoidingViewExample from "../../screens/Examples/KeyboardAvoiding
 import LottieAnimation from "../../screens/Examples/Lottie";
 import NonUIProps from "../../screens/Examples/NonUIProps";
 import ReanimatedChat from "../../screens/Examples/ReanimatedChat";
-import ReanimatedChatFlatlist from "../../screens/Examples/ReanimatedChatFlatlist";
+import ReanimatedChatFlatList from "../../screens/Examples/ReanimatedChatFlatList";
 import StatusBar from "../../screens/Examples/StatusBar";
 import ToolbarExample from "../../screens/Examples/Toolbar";
 import NativeStack from "../NestedStack";
@@ -48,7 +48,7 @@ const options = {
     title: "Chat",
   },
   [ScreenNames.REANIMATED_CHAT_FLAT_LIST]: {
-    title: "Chat Flatlist",
+    title: "Chat FlatList",
   },
   [ScreenNames.EVENTS]: {
     title: "Events",
@@ -106,7 +106,7 @@ const ExamplesStack = () => (
     />
     <Stack.Screen
       name={ScreenNames.REANIMATED_CHAT_FLAT_LIST}
-      component={ReanimatedChatFlatlist}
+      component={ReanimatedChatFlatList}
       options={options[ScreenNames.REANIMATED_CHAT]}
     />
     <Stack.Screen
