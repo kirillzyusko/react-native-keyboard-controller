@@ -79,7 +79,29 @@
     "inputmethod",
     "unavatar",
     "unfocus",
-    "soloader"
+    "soloader",
+    "iname",
+    "Srcs",
+    "xcconfig",
+    "ifdef",
+    "apks",
+    "Iframes",
+    "androiddebugkey",
+    "rnkcexample",
+    "jvmargs",
+    "autoskip",
+    "Preact",
+    "APPL",
+    "armv",
+    "BNDL",
+    "rnkcfabricexample",
+    "podspec",
+    "LIBCPP",
+    "CPLUSPLUSFLAGS",
+    "xcconfig",
+    "DKEYBOARD",
+    "DRCT",
+    "DFOLLY"
   ],
   "ignorePaths": [
     "node_modules",
@@ -88,7 +110,10 @@
     "**/gradlew.bat",
     "**/*.pbxproj",
     "**/*.xcscheme",
-    "**/*.xcworkspacedata"
+    "**/*.xcworkspacedata",
+    "**/*.svg",
+    "**/*.storyboard",
+    "cspell.json"
   ],
   "useGitignore": true
 }
