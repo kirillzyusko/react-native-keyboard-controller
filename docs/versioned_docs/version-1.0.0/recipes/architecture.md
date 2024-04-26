@@ -11,7 +11,7 @@ This library requires to wrap an app with `KeyboardProvider` component. It's nee
 Library exposes `KeyboardControllerView` with `onKeyboardMove` method. This method is fired when keyboard frame is changed. `KeyboardProvider` automatically maps these events to `Animated.Value` and `Reanimated.SharedValue` and stores it in `context`.
 
 :::info
-Underhood `KeyboardControllerView` is a simple `View` with one additional `onKeyboardMove` callback method, so it inherits all props from plain `View`, such as `style`, etc.
+Under the hood `KeyboardControllerView` is a simple `View` with one additional `onKeyboardMove` callback method, so it inherits all props from plain `View`, such as `style`, etc.
 :::
 
 Thus we have a single source of truth about keyboard position. Since values are stored in `context` we can use it in any component where we need them. Moreover, we can consume `context` values in class components as well as in hooks.

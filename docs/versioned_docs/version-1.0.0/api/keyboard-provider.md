@@ -1,6 +1,6 @@
 # KeyboardProvider
 
-`KeyboardProvider` should wrap your app. Underhood it works with `KeyboardControllerView` to receive events during keyboard movements, maps these events to `Animated`/`Reanimated` values and store them in `context`.
+`KeyboardProvider` should wrap your app. Under the hood it works with `KeyboardControllerView` to receive events during keyboard movements, maps these events to `Animated`/`Reanimated` values and store them in `context`.
 
 ## Props
 

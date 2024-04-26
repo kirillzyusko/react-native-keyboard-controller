@@ -303,7 +303,7 @@ const KeyboardAwareScrollView = forwardRef<
       () =>
         enabled
           ? {
-              // animations become laggy when scrolling to the end of the `ScrollView` (when the last input is focused)
+              // animations become choppy when scrolling to the end of the `ScrollView` (when the last input is focused)
               // this happens because the layout recalculates on every frame. To avoid this we slightly increase padding
               // by `+1`. In this way we assure, that `scrollTo` will never scroll to the end, because it uses interpolation
               // from 0 to `keyboardHeight`, and here our padding is `keyboardHeight + 1`. It allows us not to re-run layout
