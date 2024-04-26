@@ -22,7 +22,7 @@ import NativeStack from "../NestedStack";
 export type ExamplesStackParamList = {
   [ScreenNames.ANIMATED_EXAMPLE]: undefined;
   [ScreenNames.REANIMATED_CHAT]: undefined;
-  [ScreenNames.REANIMATED_CHAT_FLATLIST]: undefined;
+  [ScreenNames.REANIMATED_CHAT_FLAT_LIST]: undefined;
   [ScreenNames.EVENTS]: undefined;
   [ScreenNames.AWARE_SCROLL_VIEW]: undefined;
   [ScreenNames.AWARE_SCROLL_VIEW_STICKY_FOOTER]: undefined;
@@ -47,7 +47,7 @@ const options = {
   [ScreenNames.REANIMATED_CHAT]: {
     title: "Chat",
   },
-  [ScreenNames.REANIMATED_CHAT_FLATLIST]: {
+  [ScreenNames.REANIMATED_CHAT_FLAT_LIST]: {
     title: "Chat Flatlist",
   },
   [ScreenNames.EVENTS]: {
@@ -105,7 +105,7 @@ const ExamplesStack = () => (
       options={options[ScreenNames.REANIMATED_CHAT]}
     />
     <Stack.Screen
-      name={ScreenNames.REANIMATED_CHAT_FLATLIST}
+      name={ScreenNames.REANIMATED_CHAT_FLAT_LIST}
       component={ReanimatedChatFlatlist}
       options={options[ScreenNames.REANIMATED_CHAT]}
     />
