@@ -52,7 +52,6 @@ public class FocusedInputObserver: NSObject {
     self.onTextChangedHandler = onTextChangedHandler
     self.onSelectionChangedHandler = onSelectionChangedHandler
     self.onFocusDidSet = onFocusDidSet
-    // TODO: weak reference
     delegate = KCTextInputCompositeDelegate(onSelectionChange: self.onSelectionChangedHandler)
   }
 
@@ -194,10 +193,6 @@ public class FocusedInputObserver: NSObject {
           (textView as? RCTUITextView)?.setForceDelegate(delegate.activeDelegate as? UITextViewDelegate)
       }
   }
-    
-    deinit {
-        print(111)
-    }
 
   // swiftlint:disable:next block_based_kvo
   @objc override public func observeValue(
