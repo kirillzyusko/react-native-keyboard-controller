@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 import {
@@ -33,20 +33,17 @@ export type KeyboardToolbarProps = {
    */
   showArrows?: boolean;
   /**
-   * A callback that is called when the user presses the next button.
-   * If provided then default action is not called and you'll need to call it yourself.
+   * A callback that is called when the user presses the next button along with the default action.
    */
-  onPressNext?: () => void;
+  onNextCallback?: () => void;
   /**
-   * A callback that is called when the user presses the previous button.
-   * If provided then default action is not called and you'll need to call it yourself.
+   * A callback that is called when the user presses the previous button along with the default action.
    */
-  onPressPrev?: () => void;
+  onPrevCallback?: () => void;
   /**
-   * A callback that is called when the user presses the done button.
-   * If provided then default action is not called and you'll need to call it yourself.
+   * A callback that is called when the user presses the done button along with the default action.
    */
-  onPressDone?: () => void;
+  onDoneCallback?: () => void;
 };
 const TEST_ID_KEYBOARD_TOOLBAR = "keyboard.toolbar";
 const TEST_ID_KEYBOARD_TOOLBAR_PREVIOUS = `${TEST_ID_KEYBOARD_TOOLBAR}.previous`;
@@ -72,9 +69,9 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
   button,
   icon,
   showArrows = true,
-  onPressNext,
-  onPressPrev,
-  onPressDone,
+  onNextCallback,
+  onPrevCallback,
+  onDoneCallback,
 }) => {
   const colorScheme = useColorScheme();
   const [inputs, setInputs] = useState({
@@ -107,6 +104,19 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
   const ButtonContainer = button || Button;
   const IconContainer = icon || Arrow;
 
+  const onPressNext = useCallback(() => {
+    goToNextField();
+    onNextCallback?.();
+  }, [onNextCallback]);
+  const onPressPrev = useCallback(() => {
+    goToPrevField();
+    onPrevCallback?.();
+  }, [onPrevCallback]);
+  const onPressDone = useCallback(() => {
+    dismissKeyboard();
+    onDoneCallback?.();
+  }, [onDoneCallback]);
+
   return (
     <KeyboardStickyView offset={offset}>
       <View style={toolbarStyle} testID={TEST_ID_KEYBOARD_TOOLBAR}>
@@ -116,7 +126,7 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
               accessibilityLabel="Previous"
               accessibilityHint="Will move focus to previous field"
               disabled={isPrevDisabled}
-              onPress={onPressPrev ?? goToPrevField}
+              onPress={onPressPrev}
               testID={TEST_ID_KEYBOARD_TOOLBAR_PREVIOUS}
               theme={theme}
             >
@@ -130,7 +140,7 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
               accessibilityLabel="Next"
               accessibilityHint="Will move focus to next field"
               disabled={isNextDisabled}
-              onPress={onPressNext ?? goToNextField}
+              onPress={onPressNext}
               testID={TEST_ID_KEYBOARD_TOOLBAR_NEXT}
               theme={theme}
             >
@@ -149,7 +159,7 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
         <ButtonContainer
           accessibilityLabel="Done"
           accessibilityHint="Will close the keyboard"
-          onPress={onPressDone ?? dismissKeyboard}
+          onPress={onPressDone}
           testID={TEST_ID_KEYBOARD_TOOLBAR_DONE}
           rippleRadius={28}
           style={styles.doneButtonContainer}

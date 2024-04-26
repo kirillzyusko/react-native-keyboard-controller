@@ -3,7 +3,6 @@ import { Platform, StyleSheet, View } from "react-native";
 import { trigger } from "react-native-haptic-feedback";
 import {
   KeyboardAwareScrollView,
-  KeyboardController,
   KeyboardToolbar,
 } from "react-native-keyboard-controller";
 
@@ -20,19 +19,6 @@ const options = {
 };
 const haptic = () =>
   trigger(Platform.OS === "ios" ? "impactLight" : "keyboardTap", options);
-
-const goToNextField = () => {
-  KeyboardController.setFocusTo("next");
-  haptic();
-};
-const goToPrevField = () => {
-  KeyboardController.setFocusTo("prev");
-  haptic();
-};
-const dismissKeyboard = () => {
-  KeyboardController.dismiss();
-  haptic();
-};
 
 export default function ToolbarExample() {
   const [showAutoFill, setShowAutoFill] = useState(false);
@@ -168,9 +154,9 @@ export default function ToolbarExample() {
             <AutoFillContacts onContactSelected={onContactSelected} />
           ) : null
         }
-        onPressNext={goToNextField}
-        onPressPrev={goToPrevField}
-        onPressDone={dismissKeyboard}
+        onDoneCallback={haptic}
+        onPrevCallback={haptic}
+        onNextCallback={haptic}
       />
     </>
   );

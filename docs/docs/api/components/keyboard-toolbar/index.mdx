@@ -102,88 +102,67 @@ const Icon: KeyboardToolbarProps["icon"] = ({ type }) => {
 <KeyboardToolbar icon={Icon} />;
 ```
 
-### `onPressDone`
+### `onDoneCallback`
 
-A callback that is called when the user presses the **done** button.
-
-:::warning Overriding default behavior
-If you specify this callback then default action is not called and it becomes your responsibility to define a behavior for the interaction with the button.
-:::
+A callback that is called when the user presses the **done** button along with the default action.
 
 ```tsx
-import {
-  KeyboardController,
-  KeyboardToolbar,
-} from "react-native-keyboard-controller";
+import { Platform } from "react-native";
+import { KeyboardToolbar } from "react-native-keyboard-controller";
 import { trigger } from "react-native-haptic-feedback";
 
-const onPressDone = () => {
-  KeyboardController.dismiss();
-  trigger(Platform.OS === "ios" ? "impactLight" : "keyboardTap", {
-    enableVibrateFallback: true,
-    ignoreAndroidSystemSettings: false,
-  });
+const options = {
+  enableVibrateFallback: true,
+  ignoreAndroidSystemSettings: false,
 };
+const haptic = () =>
+  trigger(Platform.OS === "ios" ? "impactLight" : "keyboardTap", options);
 
 // ...
 
-<KeyboardToolbar onPressDone={onPressDone} />;
+<KeyboardToolbar onDoneCallback={haptic} />;
 ```
 
-### `onPressNext`
+### `onNextCallback`
 
-A callback that is called when the user presses the **next** button.
-
-:::warning Overriding default behavior
-If you specify this callback then default action is not called and it becomes your responsibility to define a behavior for the interaction with the button.
-:::
+A callback that is called when the user presses the **next** button along with the default action.
 
 ```tsx
-import {
-  KeyboardController,
-  KeyboardToolbar,
-} from "react-native-keyboard-controller";
+import { Platform } from "react-native";
+import { KeyboardToolbar } from "react-native-keyboard-controller";
 import { trigger } from "react-native-haptic-feedback";
 
-const onPressNext = () => {
-  KeyboardController.setFocusTo("next");
-  trigger(Platform.OS === "ios" ? "impactLight" : "keyboardTap", {
-    enableVibrateFallback: true,
-    ignoreAndroidSystemSettings: false,
-  });
+const options = {
+  enableVibrateFallback: true,
+  ignoreAndroidSystemSettings: false,
 };
+const haptic = () =>
+  trigger(Platform.OS === "ios" ? "impactLight" : "keyboardTap", options);
 
 // ...
 
-<KeyboardToolbar onPressNext={onPressNext} />;
+<KeyboardToolbar onNextCallback={haptic} />;
 ```
 
-### `onPressPrev`
+### `onPrevCallback`
 
-A callback that is called when the user presses the **previous** button.
-
-:::warning Overriding default behavior
-If you specify this callback then default action is not called and it becomes your responsibility to define a behavior for the interaction with the button.
-:::
+A callback that is called when the user presses the **previous** button along with the default action.
 
 ```tsx
-import {
-  KeyboardController,
-  KeyboardToolbar,
-} from "react-native-keyboard-controller";
+import { Platform } from "react-native";
+import { KeyboardToolbar } from "react-native-keyboard-controller";
 import { trigger } from "react-native-haptic-feedback";
 
-const onPressPrev = () => {
-  KeyboardController.setFocusTo("prev");
-  trigger(Platform.OS === "ios" ? "impactLight" : "keyboardTap", {
-    enableVibrateFallback: true,
-    ignoreAndroidSystemSettings: false,
-  });
+const options = {
+  enableVibrateFallback: true,
+  ignoreAndroidSystemSettings: false,
 };
+const haptic = () =>
+  trigger(Platform.OS === "ios" ? "impactLight" : "keyboardTap", options);
 
 // ...
 
-<KeyboardToolbar onPressPrev={onPressPrev} />;
+<KeyboardToolbar onPrevCallback={haptic} />;
 ```
 
 ### `showArrows`
