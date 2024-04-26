@@ -64,7 +64,22 @@
     "turbomodule",
     "hhmm",
     "sysui",
-    "unmock"
+    "unmock",
+    "gradlew"
+    "gifs",
+    "Werror",
+    "alloc"
+    "metaspace",
+    "rootproject",
+    "allprojects"
+    "infima",
+    "argb",
+    "dists",
+    "stdlib"
+    "inputmethod",
+    "unavatar",
+    "unfocus",
+    "soloader"
   ],
   "ignorePaths": [
     "node_modules",

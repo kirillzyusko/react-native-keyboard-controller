@@ -54,7 +54,7 @@ class KeyboardAnimationCallback(
         // imitate iOS behavior and send two instant start/end events containing an info about new tag
         // 1. onStart/onMove/onEnd can be still dispatched after, if keyboard change size (numeric -> alphabetic type)
         // 2. event should be send only when keyboard is visible, since this event arrives earlier -> `tag` will be
-        // 100% included in onStart/onMove/onEnd lifecycles, but triggering onStart/onEnd several time
+        // 100% included in onStart/onMove/onEnd life cycles, but triggering onStart/onEnd several time
         // can bring breaking changes
         context.dispatchEvent(
           view.id,

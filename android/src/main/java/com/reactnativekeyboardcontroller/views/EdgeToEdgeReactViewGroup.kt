@@ -32,7 +32,7 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
   private var wasMounted = false
   private var callback: KeyboardAnimationCallback? = null
 
-  // region View lifecycles
+  // region View life cycles
   override fun onAttachedToWindow() {
     super.onAttachedToWindow()
 
