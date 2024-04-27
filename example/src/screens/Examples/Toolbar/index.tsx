@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { Platform, StyleSheet, View } from "react-native";
+import { trigger } from "react-native-haptic-feedback";
 import {
   KeyboardAwareScrollView,
   KeyboardToolbar,
@@ -10,6 +11,14 @@ import TextInput from "../../../components/TextInput";
 import AutoFillContacts from "./Contacts";
 
 import type { Contact } from "./Contacts";
+
+// Optional configuration
+const options = {
+  enableVibrateFallback: true,
+  ignoreAndroidSystemSettings: false,
+};
+const haptic = () =>
+  trigger(Platform.OS === "ios" ? "impactLight" : "keyboardTap", options);
 
 export default function ToolbarExample() {
   const [showAutoFill, setShowAutoFill] = useState(false);
@@ -145,6 +154,9 @@ export default function ToolbarExample() {
             <AutoFillContacts onContactSelected={onContactSelected} />
           ) : null
         }
+        onDoneCallback={haptic}
+        onPrevCallback={haptic}
+        onNextCallback={haptic}
       />
     </>
   );

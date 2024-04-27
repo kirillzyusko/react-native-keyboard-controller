@@ -102,6 +102,69 @@ const Icon: KeyboardToolbarProps["icon"] = ({ type }) => {
 <KeyboardToolbar icon={Icon} />;
 ```
 
+### `onDoneCallback`
+
+A callback that is called when the user presses the **done** button along with the default action.
+
+```tsx
+import { Platform } from "react-native";
+import { KeyboardToolbar } from "react-native-keyboard-controller";
+import { trigger } from "react-native-haptic-feedback";
+
+const options = {
+  enableVibrateFallback: true,
+  ignoreAndroidSystemSettings: false,
+};
+const haptic = () =>
+  trigger(Platform.OS === "ios" ? "impactLight" : "keyboardTap", options);
+
+// ...
+
+<KeyboardToolbar onDoneCallback={haptic} />;
+```
+
+### `onNextCallback`
+
+A callback that is called when the user presses the **next** button along with the default action.
+
+```tsx
+import { Platform } from "react-native";
+import { KeyboardToolbar } from "react-native-keyboard-controller";
+import { trigger } from "react-native-haptic-feedback";
+
+const options = {
+  enableVibrateFallback: true,
+  ignoreAndroidSystemSettings: false,
+};
+const haptic = () =>
+  trigger(Platform.OS === "ios" ? "impactLight" : "keyboardTap", options);
+
+// ...
+
+<KeyboardToolbar onNextCallback={haptic} />;
+```
+
+### `onPrevCallback`
+
+A callback that is called when the user presses the **previous** button along with the default action.
+
+```tsx
+import { Platform } from "react-native";
+import { KeyboardToolbar } from "react-native-keyboard-controller";
+import { trigger } from "react-native-haptic-feedback";
+
+const options = {
+  enableVibrateFallback: true,
+  ignoreAndroidSystemSettings: false,
+};
+const haptic = () =>
+  trigger(Platform.OS === "ios" ? "impactLight" : "keyboardTap", options);
+
+// ...
+
+<KeyboardToolbar onPrevCallback={haptic} />;
+```
+
 ### `showArrows`
 
 A boolean prop indicating whether to show `next` and `prev` buttons. Can be useful to set it to `false` if you have only one input and want to show only `Done` button. Default to `true`.
