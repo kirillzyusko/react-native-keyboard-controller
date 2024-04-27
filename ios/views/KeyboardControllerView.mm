@@ -133,7 +133,7 @@ using namespace facebook::react;
                                         OnFocusedInputSelectionChangedSelectionEnd{
                                             .x = endX, .y = endY, .position = end}}});
             // TODO: use built-in _eventEmitter once NativeAnimated module will use
-            // ModernEventemitter
+            // ModernEventEmitter
             RCTBridge *bridge = [RCTBridge currentBridge];
             if (bridge && [bridge valueForKey:@"_jsThread"]) {
               FocusedInputSelectionChangedEvent *selectionChangedEvent =

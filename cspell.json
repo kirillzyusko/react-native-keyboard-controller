@@ -104,7 +104,9 @@
     "upto",
     "clazz",
     "xcworkspace",
-    "ccache"
+    "ccache",
+    "ivar",
+    "objc"
   ],
   "ignorePaths": [
     "node_modules",

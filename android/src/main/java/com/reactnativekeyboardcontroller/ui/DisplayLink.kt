@@ -4,7 +4,7 @@ import android.view.Choreographer
 
 class DisplayLink(private val callback: () -> Unit) {
   private val frameCallback = object : Choreographer.FrameCallback {
-    override fun doFrame(frameTimeNanos: Long) {
+    override fun doFrame(frameTimeNanoSeconds: Long) {
       // Execute the callback
       callback()
 
