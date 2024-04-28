@@ -295,10 +295,10 @@ public class KeyboardMovementObserver: NSObject {
       #if targetEnvironment(simulator)
         // on iOS simulator we can not use static interval
         // (from my observation from frame to frame we may have different delays)
-        // so for now we use approximation (0.6 of the frame) - it gives not perfect
-        // but satisfactory results (better than 1 frame delay)
-        // later on I'll try to find a way to get the real frame interval
-        let duration = baseDuration - UIUtils.nextFrame * 0.6
+        // so for now we use approximation - we add a difference as
+        // beginTime - keyboardEventTime (but only in 0..0.016 range)
+        // and it gives satisfactory results (better than static delays)
+        let duration = baseDuration + animation.diff - UIUtils.nextFrame
       #else
         let duration = baseDuration + UIUtils.nextFrame
       #endif

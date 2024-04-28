@@ -72,6 +72,10 @@ public class SpringAnimation {
     return max(animation?.beginTime ?? timestamp, timestamp)
   }
 
+  var diff: Double {
+    return ((animation?.beginTime ?? timestamp) - timestamp).truncatingRemainder(dividingBy: UIUtils.nextFrame)
+  }
+
   var isIncreasing: Bool {
     return fromValue < toValue
   }
