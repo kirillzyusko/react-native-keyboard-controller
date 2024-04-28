@@ -60,6 +60,39 @@ const CustomButton: KeyboardToolbarProps["button"] = ({
 <KeyboardToolbar button={CustomButton} />;
 ```
 
+### `blur`
+
+This property allows to render custom blur effect for the toolbar (by default iOS keyboard is opaque and it blurs the content underneath, so if you want to follow **HIG** ([_Human Interface Guidelines_](https://developer.apple.com/design/human-interface-guidelines/materials)) properly - consider to add this effect).
+
+By default it is `null` and will not render any blur effect, because it's not a responsibility of this library to provide a blur effect. Instead it provides a property where you can specify your own blur effect and its provider, i. e. `@react-native-community/blur`, `expo-blur` or maybe even `react-native-skia` (based on your project preferences of course).
+
+:::warning
+Please, note, that you need to specify `opacity` prop for this prop to work. Because otherwise you will not see a blur effect.
+:::
+
+```tsx
+import { BlurView } from "@react-native-community/blur";
+import {
+  KeyboardToolbar,
+  KeyboardToolbarProps,
+} from "react-native-keyboard-controller";
+
+const CustomBlur: KeyboardToolbarProps["blur"] = ({ children }) => (
+  <BlurView
+    blurType="chromeMaterial"
+    blurAmount={10}
+    reducedTransparencyFallbackColor="white"
+    style={{ position: "absolute", top: 0, left: 0, bottom: 0, right: 0 }}
+  >
+    {children}
+  </BlurView>
+);
+
+// ...
+
+<KeyboardToolbar blur={CustomBlur} opacity="4F" />;
+```
+
 ### `content`
 
 This property allows you to show a custom content in the middle of the toolbar. It accepts JSX element. Default value is `null`.
@@ -163,6 +196,14 @@ const haptic = () =>
 // ...
 
 <KeyboardToolbar onPrevCallback={haptic} />;
+```
+
+### `opacity`
+
+This property allows to specify the opacity of the toolbar container. The value must be specified in hexadecimal format. Default value is `FF`.
+
+```tsx
+<KeyboardToolbar opacity="EE" />
 ```
 
 ### `showArrows`

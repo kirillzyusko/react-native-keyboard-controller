@@ -13,7 +13,7 @@ import Arrow from "./Arrow";
 import Button from "./Button";
 import { colors } from "./colors";
 
-import type { KeyboardToolbarTheme } from "./types";
+import type { HEX, KeyboardToolbarTheme } from "./types";
 import type { ReactNode } from "react";
 
 export type KeyboardToolbarProps = {
@@ -44,6 +44,14 @@ export type KeyboardToolbarProps = {
    * A callback that is called when the user presses the done button along with the default action.
    */
   onDoneCallback?: () => void;
+  /**
+   * A component that applies blur effect to the toolbar.
+   */
+  blur?: JSX.Element | null;
+  /**
+   * A value for container opacity in hexadecimal format (e.g. `ff`). Default value is `ff`.
+   */
+  opacity?: HEX;
 };
 const TEST_ID_KEYBOARD_TOOLBAR = "keyboard.toolbar";
 const TEST_ID_KEYBOARD_TOOLBAR_PREVIOUS = `${TEST_ID_KEYBOARD_TOOLBAR}.previous`;
@@ -52,6 +60,7 @@ const TEST_ID_KEYBOARD_TOOLBAR_CONTENT = `${TEST_ID_KEYBOARD_TOOLBAR}.content`;
 const TEST_ID_KEYBOARD_TOOLBAR_DONE = `${TEST_ID_KEYBOARD_TOOLBAR}.done`;
 
 const KEYBOARD_TOOLBAR_HEIGHT = 42;
+const DEFAULT_OPACITY: HEX = "FF";
 const offset = { closed: KEYBOARD_TOOLBAR_HEIGHT };
 
 const dismissKeyboard = () => KeyboardController.dismiss();
@@ -72,6 +81,8 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
   onNextCallback,
   onPrevCallback,
   onDoneCallback,
+  blur = null,
+  opacity = DEFAULT_OPACITY,
 }) => {
   const colorScheme = useColorScheme();
   const [inputs, setInputs] = useState({
@@ -96,10 +107,10 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
     () => [
       styles.toolbar,
       {
-        backgroundColor: theme[colorScheme].background,
+        backgroundColor: `${theme[colorScheme].background}${opacity}`,
       },
     ],
-    [colorScheme, theme],
+    [colorScheme, opacity, theme],
   );
   const ButtonContainer = button || Button;
   const IconContainer = icon || Arrow;
@@ -120,6 +131,7 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
   return (
     <KeyboardStickyView offset={offset}>
       <View style={toolbarStyle} testID={TEST_ID_KEYBOARD_TOOLBAR}>
+        {blur}
         {showArrows && (
           <>
             <ButtonContainer
