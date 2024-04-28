@@ -288,6 +288,8 @@ public class KeyboardMovementObserver: NSObject {
     if keyboardPosition == prevKeyboardPosition || keyboardFrameY == 0 {
       return
     }
+      
+    prevKeyboardPosition = keyboardPosition
 
     if let animation = animation {
       let baseDuration = link.targetTimestamp - animation.startTime
@@ -309,8 +311,6 @@ public class KeyboardMovementObserver: NSObject {
       let race: (CGFloat, CGFloat) -> CGFloat = animation.isIncreasing ? max : min
       keyboardPosition = race(position, keyboardPosition)
     }
-
-    prevKeyboardPosition = keyboardPosition
 
     onEvent(
       "onKeyboardMove",
