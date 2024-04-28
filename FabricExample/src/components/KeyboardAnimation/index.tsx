@@ -44,7 +44,7 @@ export default function KeyboardAnimation() {
       height: 50,
       backgroundColor: "gray",
       borderRadius: 25,
-      bottom: keyboard.value,
+      transform: [{ translateY: -keyboard.value }],
     }),
     [],
   );
