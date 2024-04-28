@@ -288,7 +288,7 @@ public class KeyboardMovementObserver: NSObject {
     if keyboardPosition == prevKeyboardPosition || keyboardFrameY == 0 {
       return
     }
-      
+
     prevKeyboardPosition = keyboardPosition
 
     if let animation = animation {
