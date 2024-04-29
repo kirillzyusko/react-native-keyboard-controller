@@ -18,4 +18,5 @@ export enum ScreenNames {
   ENABLED_DISABLED = "ENABLED_DISABLED",
   CLOSE = "CLOSE",
   TOOLBAR = "TOOLBAR",
+  MODAL = "MODAL",
 }

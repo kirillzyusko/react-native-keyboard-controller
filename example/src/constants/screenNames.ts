@@ -19,4 +19,5 @@ export enum ScreenNames {
   CLOSE = "CLOSE",
   TEXT_INPUT_MASK = "TEXT_INPUT_MASK",
   TOOLBAR = "TOOLBAR",
+  MODAL = "MODAL",
 }
