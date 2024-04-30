@@ -19,7 +19,7 @@ fun ThemedReactContext?.dispatchEvent(viewId: Int, event: Event<*>) {
 }
 
 fun ThemedReactContext?.emitEvent(event: String, params: WritableMap) {
-  this?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)?.emit(event, params)
+  this?.reactApplicationContext?.emitDeviceEvent(event, params)
 
   Log.i("ThemedReactContext", event)
 }
