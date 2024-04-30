@@ -27,14 +27,15 @@ private val TAG = KeyboardAnimationCallback::class.qualifiedName
 private val isResizeHandledInCallbackMethods = Build.VERSION.SDK_INT < Build.VERSION_CODES.R
 
 class KeyboardAnimationCallback(
-  val view: ReactViewGroup,
+  val viewId: ReactViewGroup,
+  val view: View,
   val persistentInsetTypes: Int,
   val deferredInsetTypes: Int,
   dispatchMode: Int = DISPATCH_MODE_STOP,
   val context: ThemedReactContext?,
   val hasTranslucentNavigationBar: Boolean = false,
 ) : WindowInsetsAnimationCompat.Callback(dispatchMode), OnApplyWindowInsetsListener {
-  private val surfaceId = UIManagerHelper.getSurfaceId(view)
+  private val surfaceId = UIManagerHelper.getSurfaceId(viewId)
 
   // state variables
   private var persistentKeyboardHeight = 0.0
@@ -58,10 +59,10 @@ class KeyboardAnimationCallback(
         // 100% included in onStart/onMove/onEnd life cycles, but triggering onStart/onEnd several time
         // can bring breaking changes
         context.dispatchEvent(
-          view.id,
+          viewId.id,
           KeyboardTransitionEvent(
             surfaceId,
-            view.id,
+            viewId.id,
             "topKeyboardMoveStart",
             this.persistentKeyboardHeight,
             1.0,
@@ -70,10 +71,10 @@ class KeyboardAnimationCallback(
           ),
         )
         context.dispatchEvent(
-          view.id,
+          viewId.id,
           KeyboardTransitionEvent(
             surfaceId,
-            view.id,
+            viewId.id,
             "topKeyboardMoveEnd",
             this.persistentKeyboardHeight,
             1.0,
@@ -94,7 +95,7 @@ class KeyboardAnimationCallback(
         " same WindowInsetsCompat.Type values"
     }
 
-    layoutObserver = FocusedInputObserver(view = view, context = context)
+    layoutObserver = FocusedInputObserver(view = viewId, context = context)
     view.viewTreeObserver.addOnGlobalFocusChangeListener(focusListener)
   }
 
@@ -179,10 +180,10 @@ class KeyboardAnimationCallback(
 
     Log.i(TAG, "HEIGHT:: $keyboardHeight TAG:: $viewTagFocused")
     context.dispatchEvent(
-      view.id,
+      viewId.id,
       KeyboardTransitionEvent(
         surfaceId,
-        view.id,
+        viewId.id,
         "topKeyboardMoveStart",
         keyboardHeight,
         if (!isKeyboardVisible) 0.0 else 1.0,
@@ -233,10 +234,10 @@ class KeyboardAnimationCallback(
 
     val event = if (InteractiveKeyboardProvider.isInteractive) "topKeyboardMoveInteractive" else "topKeyboardMove"
     context.dispatchEvent(
-      view.id,
+      viewId.id,
       KeyboardTransitionEvent(
         surfaceId,
-        view.id,
+        viewId.id,
         event,
         height,
         progress,
@@ -284,10 +285,10 @@ class KeyboardAnimationCallback(
       getEventParams(keyboardHeight),
     )
     context.dispatchEvent(
-      view.id,
+      viewId.id,
       KeyboardTransitionEvent(
         surfaceId,
-        view.id,
+        viewId.id,
         "topKeyboardMoveEnd",
         keyboardHeight,
         if (!isKeyboardVisible) 0.0 else 1.0,
@@ -313,10 +314,10 @@ class KeyboardAnimationCallback(
 
     context.emitEvent("KeyboardController::keyboardWillShow", getEventParams(keyboardHeight))
     context.dispatchEvent(
-      view.id,
+      viewId.id,
       KeyboardTransitionEvent(
         surfaceId,
-        view.id,
+        viewId.id,
         "topKeyboardMoveStart",
         keyboardHeight,
         1.0,
@@ -325,10 +326,10 @@ class KeyboardAnimationCallback(
       ),
     )
     context.dispatchEvent(
-      view.id,
+      viewId.id,
       KeyboardTransitionEvent(
         surfaceId,
-        view.id,
+        viewId.id,
         "topKeyboardMove",
         keyboardHeight,
         1.0,
@@ -337,10 +338,10 @@ class KeyboardAnimationCallback(
       ),
     )
     context.dispatchEvent(
-      view.id,
+      viewId.id,
       KeyboardTransitionEvent(
         surfaceId,
-        view.id,
+        viewId.id,
         "topKeyboardMoveEnd",
         keyboardHeight,
         1.0,
