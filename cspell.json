@@ -92,7 +92,6 @@
     "autoskip",
     "Preact",
     "APPL",
-    "armv",
     "BNDL",
     "rnkcfabricexample",
     "podspec",
@@ -104,7 +103,8 @@
     "DFOLLY",
     "upto",
     "clazz",
-    "xcworkspace"
+    "xcworkspace",
+    "ccache"
   ],
   "ignorePaths": [
     "node_modules",

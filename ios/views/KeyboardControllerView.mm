@@ -81,7 +81,7 @@ using namespace facebook::react;
             // TODO: use built-in _eventEmitter once NativeAnimated module will use
             // ModernEventEmitter
             RCTBridge *bridge = [RCTBridge currentBridge];
-            if (bridge && [bridge valueForKey:@"_jsThread"]) {
+            if (bridge) {
               FocusedInputLayoutChangedEvent *inputChangedEvent =
                   [[FocusedInputLayoutChangedEvent alloc] initWithReactTag:@(self.tag) event:event];
               [bridge.eventDispatcher sendEvent:inputChangedEvent];
@@ -99,7 +99,7 @@ using namespace facebook::react;
             // TODO: use built-in _eventEmitter once NativeAnimated module will use
             // ModernEventEmitter
             RCTBridge *bridge = [RCTBridge currentBridge];
-            if (bridge && [bridge valueForKey:@"_jsThread"]) {
+            if (bridge) {
               FocusedInputTextChangedEvent *textChangedEvent =
                   [[FocusedInputTextChangedEvent alloc] initWithReactTag:@(self.tag) text:text];
               [bridge.eventDispatcher sendEvent:textChangedEvent];
@@ -162,7 +162,7 @@ using namespace facebook::react;
 
           // TODO: use built-in _eventEmitter once NativeAnimated module will use ModernEventEmitter
           RCTBridge *bridge = [RCTBridge currentBridge];
-          if (bridge && [bridge valueForKey:@"_jsThread"]) {
+          if (bridge) {
             KeyboardMoveEvent *keyboardMoveEvent =
                 [[KeyboardMoveEvent alloc] initWithReactTag:@(self.tag)
                                                       event:event
