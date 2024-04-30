@@ -277,6 +277,7 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc func updateKeyboardFrame(link: CADisplayLink) {
+      let start = CFAbsoluteTimeGetCurrent()
     if keyboardView == nil {
       return
     }
@@ -300,9 +301,14 @@ public class KeyboardMovementObserver: NSObject {
         // so for now we use approximation - we add a difference as
         // beginTime - keyboardEventTime (but only in 0..0.016 range)
         // and it gives satisfactory results (better than static delays)
-        let duration = baseDuration + animation.diff - UIUtils.nextFrame
+        // let duration = baseDuration + animation.diff - UIUtils.nextFrame
+        let duration = animation.timingAt(value: keyboardPosition) + animation.diff
       #else
-        let duration = baseDuration + UIUtils.nextFrame
+        print(animation.diff)
+        print("\(baseDuration) -> \(animation.valueAt(time: baseDuration)). \(animation.timingAt(value: keyboardPosition)) -> \(keyboardPosition)")
+        print("DIFF: \(CACurrentMediaTime() - link.timestamp) \(CACurrentMediaTime()) \(link.timestamp) \(link.targetTimestamp - link.timestamp)")
+        // let duration = baseDuration + UIUtils.nextFrame
+        let duration = animation.timingAt(value: keyboardPosition) + (link.duration) * 2 // <-- it works
       #endif
 
       let position = CGFloat(animation.valueAt(time: duration))
@@ -311,6 +317,9 @@ public class KeyboardMovementObserver: NSObject {
       let race: (CGFloat, CGFloat) -> CGFloat = animation.isIncreasing ? max : min
       keyboardPosition = race(position, keyboardPosition)
     }
+      
+      let diff = CFAbsoluteTimeGetCurrent() - start
+      print("Took \(diff) seconds")
 
     onEvent(
       "onKeyboardMove",
