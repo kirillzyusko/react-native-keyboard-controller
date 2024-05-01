@@ -277,7 +277,6 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc func updateKeyboardFrame(link: CADisplayLink) {
-      let start = CFAbsoluteTimeGetCurrent()
     if keyboardView == nil {
       return
     }
@@ -293,7 +292,7 @@ public class KeyboardMovementObserver: NSObject {
     prevKeyboardPosition = keyboardPosition
 
     if let animation = animation {
-      let baseDuration = link.targetTimestamp - animation.startTime
+      let baseDuration = animation.timingAt(value: keyboardPosition)
 
       #if targetEnvironment(simulator)
         // on iOS simulator we can not use static interval
@@ -302,24 +301,19 @@ public class KeyboardMovementObserver: NSObject {
         // beginTime - keyboardEventTime (but only in 0..0.016 range)
         // and it gives satisfactory results (better than static delays)
         // let duration = baseDuration + animation.diff - UIUtils.nextFrame
-        let duration = animation.timingAt(value: keyboardPosition) + animation.diff
+        let duration = baseDuration + animation.diff
       #else
-        print(animation.diff)
-        print("\(baseDuration) -> \(animation.valueAt(time: baseDuration)). \(animation.timingAt(value: keyboardPosition)) -> \(keyboardPosition)")
-        print("DIFF: \(CACurrentMediaTime() - link.timestamp) \(CACurrentMediaTime()) \(link.timestamp) \(link.targetTimestamp - link.timestamp)")
-        // let duration = baseDuration + UIUtils.nextFrame
-        let duration = animation.timingAt(value: keyboardPosition) + (link.duration) * 2 // <-- it works
+        // 2 frames because we read previous frame, but need to calculate the next frame
+        let duration = baseDuration + link.duration * 2
       #endif
 
       let position = CGFloat(animation.valueAt(time: duration))
+
       // handles a case when final frame has final destination (i. e. 0 or 291)
       // but CASpringAnimation can never get to this final destination
       let race: (CGFloat, CGFloat) -> CGFloat = animation.isIncreasing ? max : min
       keyboardPosition = race(position, keyboardPosition)
     }
-      
-      let diff = CFAbsoluteTimeGetCurrent() - start
-      print("Took \(diff) seconds")
 
     onEvent(
       "onKeyboardMove",

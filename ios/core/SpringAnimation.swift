@@ -103,7 +103,7 @@ public class SpringAnimation {
   func timingAt(value y: Double) -> Double {
     var lowerBound = 0.0
     var upperBound = 1.0 // Assuming 1 second is the max duration for simplicity
-    let tolerance = 0.001 // Define how precise you want to be
+    let tolerance = 0.00001 // Define how precise you want to be
     var tGuess = 0.0
 
     // Check the direction of the animation
