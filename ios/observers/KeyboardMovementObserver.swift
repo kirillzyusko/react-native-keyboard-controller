@@ -300,7 +300,6 @@ public class KeyboardMovementObserver: NSObject {
         // so for now we use approximation - we add a difference as
         // beginTime - keyboardEventTime (but only in 0..0.016 range)
         // and it gives satisfactory results (better than static delays)
-        // let duration = baseDuration + animation.diff - UIUtils.nextFrame
         let duration = baseDuration + animation.diff
       #else
         // 2 frames because we read previous frame, but need to calculate the next frame
