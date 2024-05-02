@@ -39,6 +39,7 @@ public class KeyboardMovementObserver: NSObject {
   private var keyboardHeight: CGFloat = 0.0
   private var duration = 0
   private var tag: NSNumber = -1
+  private var animation: SpringAnimation?
 
   @objc public init(
     handler: @escaping (NSString, NSNumber, NSNumber, NSNumber, NSNumber) -> Void,
@@ -179,6 +180,7 @@ public class KeyboardMovementObserver: NSObject {
       onNotify("KeyboardController::keyboardWillShow", data)
 
       setupKeyboardWatcher()
+      initializeAnimation(fromValue: prevKeyboardPosition, toValue: keyboardHeight)
     }
   }
 
@@ -201,6 +203,7 @@ public class KeyboardMovementObserver: NSObject {
 
     setupKeyboardWatcher()
     removeKVObserver()
+    initializeAnimation(fromValue: prevKeyboardPosition, toValue: 0)
   }
 
   @objc func keyboardDidAppear(_ notification: Notification) {
@@ -224,6 +227,7 @@ public class KeyboardMovementObserver: NSObject {
 
       removeKeyboardWatcher()
       setupKVObserver()
+      animation = nil
     }
   }
 
@@ -243,6 +247,7 @@ public class KeyboardMovementObserver: NSObject {
     onNotify("KeyboardController::keyboardDidHide", data)
 
     removeKeyboardWatcher()
+    animation = nil
   }
 
   @objc func setupKeyboardWatcher() {
@@ -263,20 +268,52 @@ public class KeyboardMovementObserver: NSObject {
     displayLink = nil
   }
 
-  @objc func updateKeyboardFrame() {
+  func initializeAnimation(fromValue: Double, toValue: Double) {
+    let positionAnimation = keyboardView?.layer.presentation()?.animation(forKey: "position") as? CASpringAnimation
+    guard let keyboardAnimation = positionAnimation else {
+      return
+    }
+    animation = SpringAnimation(animation: keyboardAnimation, fromValue: fromValue, toValue: toValue)
+  }
+
+  @objc func updateKeyboardFrame(link: CADisplayLink) {
     if keyboardView == nil {
       return
     }
 
     let keyboardFrameY = keyboardView?.layer.presentation()?.frame.origin.y ?? 0
     let keyboardWindowH = keyboardView?.window?.bounds.size.height ?? 0
-    let keyboardPosition = keyboardWindowH - keyboardFrameY
+    var keyboardPosition = keyboardWindowH - keyboardFrameY
 
     if keyboardPosition == prevKeyboardPosition || keyboardFrameY == 0 {
       return
     }
 
     prevKeyboardPosition = keyboardPosition
+
+    if let animation = animation {
+      let baseDuration = animation.timingAt(value: keyboardPosition)
+
+      #if targetEnvironment(simulator)
+        // on iOS simulator we can not use static interval
+        // (from my observation from frame to frame we may have different delays)
+        // so for now we use approximation - we add a difference as
+        // beginTime - keyboardEventTime (but only in 0..0.016 range)
+        // and it gives satisfactory results (better than static delays)
+        let duration = baseDuration + animation.diff
+      #else
+        // 2 frames because we read previous frame, but need to calculate the next frame
+        let duration = baseDuration + link.duration * 2
+      #endif
+
+      let position = CGFloat(animation.valueAt(time: duration))
+
+      // handles a case when final frame has final destination (i. e. 0 or 291)
+      // but CASpringAnimation can never get to this final destination
+      let race: (CGFloat, CGFloat) -> CGFloat = animation.isIncreasing ? max : min
+      keyboardPosition = race(position, keyboardPosition)
+    }
+
     onEvent(
       "onKeyboardMove",
       keyboardPosition as NSNumber,
