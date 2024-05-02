@@ -135,7 +135,7 @@ using namespace facebook::react;
             // TODO: use built-in _eventEmitter once NativeAnimated module will use
             // ModernEventEmitter
             RCTBridge *bridge = [RCTBridge currentBridge];
-            if (bridge && [bridge valueForKey:@"_jsThread"]) {
+            if (bridge) {
               FocusedInputSelectionChangedEvent *selectionChangedEvent =
                   [[FocusedInputSelectionChangedEvent alloc] initWithReactTag:@(self.tag)
                                                                         event:event];
