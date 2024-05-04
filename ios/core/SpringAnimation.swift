@@ -10,78 +10,35 @@ import Foundation
 import QuartzCore
 
 // swiftlint:disable identifier_name
-public class SpringAnimation {
-  private weak var animation: CASpringAnimation?
-
+public class SpringAnimation: KeyboardAnimation {
   // internal variables
-  private var zeta: Double // Damping ratio
-  private var omega0: Double // Undamped angular frequency of the oscillator
-  private var omega1: Double // Exponential decay
-  private var v0: Double // Initial velocity
+  private let zeta: Double // Damping ratio
+  private let omega0: Double // Undamped angular frequency of the oscillator
+  private let omega1: Double // Exponential decay
+  private let v0: Double // Initial velocity
 
   // constructor variables
   private let stiffness: Double
   private let damping: Double
   private let mass: Double
   private let initialVelocity: Double
-  private let fromValue: Double
-  private let toValue: Double
-  private let speed: Float
-  private let timestamp: CFTimeInterval
 
-  init(
-    stiffness: Double,
-    damping: Double,
-    mass: Double,
-    initialVelocity: Double,
-    speed: Float,
-    fromValue: Double,
-    toValue: Double
-  ) {
-    self.stiffness = stiffness
-    self.damping = damping
-    self.mass = mass
-    self.initialVelocity = initialVelocity
-    self.speed = speed
-    self.fromValue = fromValue
-    self.toValue = toValue
-    timestamp = CACurrentMediaTime()
+  init(animation: CASpringAnimation, fromValue: Double, toValue: Double) {
+    stiffness = animation.stiffness
+    damping = animation.damping
+    mass = animation.mass
+    initialVelocity = animation.initialVelocity
 
     zeta = damping / (2 * sqrt(stiffness * mass)) // Damping ratio
     omega0 = sqrt(stiffness / mass) // Undamped angular frequency of the oscillator
     omega1 = omega0 * sqrt(1.0 - zeta * zeta) // Exponential decay
     v0 = -initialVelocity
-  }
 
-  convenience init(animation: CASpringAnimation, fromValue: Double, toValue: Double) {
-    self.init(
-      stiffness: animation.stiffness,
-      damping: animation.damping,
-      mass: animation.mass,
-      initialVelocity: animation.initialVelocity,
-      speed: (animation as CABasicAnimation).speed,
-      fromValue: fromValue,
-      toValue: toValue
-    )
-    self.animation = animation
-  }
-
-  // public getters
-  var startTime: CFTimeInterval {
-    // when concurrent animation happens, then `.beginTime` remains the same
-    return max(animation?.beginTime ?? timestamp, timestamp)
-  }
-
-  var diff: Double {
-    return ((animation?.beginTime ?? timestamp) - timestamp).truncatingRemainder(dividingBy: UIUtils.nextFrame)
-  }
-
-  var isIncreasing: Bool {
-    return fromValue < toValue
+    super.init(fromValue: fromValue, toValue: toValue, animation: animation)
   }
 
   // public functions
-  func valueAt(time: Double) -> Double {
+  override func valueAt(time: Double) -> Double {
     let t = time * Double(speed)
     let x0 = toValue - fromValue
 
@@ -97,30 +54,6 @@ public class SpringAnimation {
     }
 
     return y
-  }
-
-  func timingAt(value y: Double) -> Double {
-    var lowerBound = 0.0
-    var upperBound = 1.0 // Assuming 1 second is the max duration for simplicity
-    let tolerance = 0.00001 // Define how precise you want to be
-    var tGuess = 0.0
-
-    // Check the direction of the animation
-    let isIncreasing = isIncreasing
-
-    while (upperBound - lowerBound) > tolerance {
-      tGuess = (lowerBound + upperBound) / 2
-      let currentValue = valueAt(time: tGuess / Double(speed))
-
-      // Adjust the condition to account for the direction of animation
-      if (currentValue < y && isIncreasing) || (currentValue > y && !isIncreasing) {
-        lowerBound = tGuess
-      } else {
-        upperBound = tGuess
-      }
-    }
-
-    return tGuess / Double(speed)
   }
 }
 

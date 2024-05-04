@@ -39,7 +39,7 @@ public class KeyboardMovementObserver: NSObject {
   private var keyboardHeight: CGFloat = 0.0
   private var duration = 0
   private var tag: NSNumber = -1
-  private var animation: SpringAnimation?
+  private var animation: KeyboardAnimation?
 
   @objc public init(
     handler: @escaping (NSString, NSNumber, NSNumber, NSNumber, NSNumber) -> Void,
