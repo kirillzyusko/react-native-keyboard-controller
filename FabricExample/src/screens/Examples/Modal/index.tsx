@@ -53,8 +53,8 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     flex: 1,
-    paddingLeft: 100,
-    backgroundColor: "rgba(0,0,0,0.5)",
+    paddingLeft: 220,
+    backgroundColor: "rgba(0,0,0,0.3)",
     justifyContent: "center",
     alignItems: "center",
   },
