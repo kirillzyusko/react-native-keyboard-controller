@@ -39,6 +39,7 @@ export type ExamplesStackParamList = {
   [ScreenNames.CLOSE]: undefined;
   [ScreenNames.TEXT_INPUT_MASK]: undefined;
   [ScreenNames.TOOLBAR]: undefined;
+  [ScreenNames.MODAL]: undefined;
 };
 
 const Stack = createStackNavigator<ExamplesStackParamList>();
@@ -95,6 +96,9 @@ const options = {
   },
   [ScreenNames.TOOLBAR]: {
     title: "Toolbar",
+  },
+  [ScreenNames.MODAL]: {
+    title: "Modal",
   },
 };
 
