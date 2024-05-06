@@ -104,14 +104,8 @@ import { FlashList } from "@shopify/flash-list";
   <summary>Click to see a full code example with integration</summary>
 
 ```tsx
-import React, {
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-  ScrollView,
-} from "react";
-import { Button, Switch, Text, View, FlatList, TextInput } from "react-native";
+import React from "react";
+import { View, FlatList, TextInput } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 
 const List = () => {
@@ -119,7 +113,6 @@ const List = () => {
     <View style={{ flex: 1 }}>
       <FlatList
         data={new Array(10).fill(0).map((_, i) => i)}
-        estimatedItemSize={250}
         keyExtractor={(data) => String(data)}
         renderItem={() => {
           return (
