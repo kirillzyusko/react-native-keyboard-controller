@@ -32,12 +32,12 @@ export default function ModalExample() {
         onDismiss={() => setModalVisible(false)}
         onRequestClose={() => setModalVisible(false)}
       >
-        <Button
-          title={"Close Modal"}
-          onPress={() => setModalVisible(false)}
-          testID="close_button"
-        />
         <View style={styles.modalContainer}>
+          <Button
+            title={"Close Modal"}
+            onPress={() => setModalVisible(false)}
+            testID="close_button"
+          />
           <KeyboardAnimationTemplate provider={useKeyboardAnimation} />
         </View>
       </Modal>
@@ -53,6 +53,7 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     flex: 1,
+    paddingTop: 50,
     paddingLeft: 220,
     backgroundColor: "rgba(0,0,0,0.3)",
     justifyContent: "center",
