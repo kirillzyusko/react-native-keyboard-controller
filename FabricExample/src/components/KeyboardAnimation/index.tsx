@@ -2,8 +2,8 @@ import React from "react";
 import { Animated, TextInput, TouchableOpacity, View } from "react-native";
 import {
   KeyboardController,
+  useGenericKeyboardHandler,
   useKeyboardAnimation,
-  useKeyboardHandler,
 } from "react-native-keyboard-controller";
 import Reanimated, {
   useAnimatedStyle,
@@ -15,7 +15,7 @@ import styles from "./styles";
 const useGradualKeyboardAnimation = () => {
   const height = useSharedValue(0);
 
-  useKeyboardHandler(
+  useGenericKeyboardHandler(
     {
       onMove: (e) => {
         "worklet";
@@ -34,8 +34,14 @@ const useGradualKeyboardAnimation = () => {
   return height;
 };
 
-export default function KeyboardAnimation() {
-  const { height, progress } = useKeyboardAnimation();
+type Props = {
+  provider?: typeof useKeyboardAnimation;
+};
+
+export default function KeyboardAnimation({
+  provider = useKeyboardAnimation,
+}: Props) {
+  const { height, progress } = provider();
   const keyboard = useGradualKeyboardAnimation();
 
   const gradual = useAnimatedStyle(

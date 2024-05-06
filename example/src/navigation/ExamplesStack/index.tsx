@@ -12,6 +12,7 @@ import InteractiveKeyboardIOS from "../../screens/Examples/InteractiveKeyboardIO
 import KeyboardAnimation from "../../screens/Examples/KeyboardAnimation";
 import KeyboardAvoidingViewExample from "../../screens/Examples/KeyboardAvoidingView";
 import LottieAnimation from "../../screens/Examples/Lottie";
+import ModalExample from "../../screens/Examples/Modal";
 import NonUIProps from "../../screens/Examples/NonUIProps";
 import ReanimatedChat from "../../screens/Examples/ReanimatedChat";
 import ReanimatedChatFlatList from "../../screens/Examples/ReanimatedChatFlatList";
@@ -38,6 +39,7 @@ export type ExamplesStackParamList = {
   [ScreenNames.CLOSE]: undefined;
   [ScreenNames.TEXT_INPUT_MASK]: undefined;
   [ScreenNames.TOOLBAR]: undefined;
+  [ScreenNames.MODAL]: undefined;
 };
 
 const Stack = createStackNavigator<ExamplesStackParamList>();
@@ -94,6 +96,9 @@ const options = {
   },
   [ScreenNames.TOOLBAR]: {
     title: "Toolbar",
+  },
+  [ScreenNames.MODAL]: {
+    title: "Modal",
   },
 };
 
@@ -183,6 +188,11 @@ const ExamplesStack = () => (
       name={ScreenNames.TOOLBAR}
       component={ToolbarExample}
       options={options[ScreenNames.TOOLBAR]}
+    />
+    <Stack.Screen
+      name={ScreenNames.MODAL}
+      component={ModalExample}
+      options={options[ScreenNames.MODAL]}
     />
   </Stack.Navigator>
 );

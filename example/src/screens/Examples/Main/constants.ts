@@ -105,4 +105,10 @@ export const examples: Example[] = [
     info: ScreenNames.TOOLBAR,
     icons: "🔥",
   },
+  {
+    title: "Modal",
+    testID: "modal",
+    info: ScreenNames.MODAL,
+    icons: "🔴 🌎",
+  },
 ];
