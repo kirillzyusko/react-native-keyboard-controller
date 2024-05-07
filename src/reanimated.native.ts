@@ -94,7 +94,6 @@ export const useFocusedInputTextHandler: FocusedInputTextHandlerHook<
   return useEvent(
     (event) => {
       "worklet";
-
       const { onFocusedInputTextChanged } = handlers;
 
       if (
