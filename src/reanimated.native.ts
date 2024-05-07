@@ -101,10 +101,7 @@ export const useFocusedInputTextHandler: FocusedInputTextHandlerHook<
         onFocusedInputTextChanged &&
         event.eventName.endsWith("onFocusedInputTextChanged")
       ) {
-        onFocusedInputTextChanged(
-          event as FocusedInputTextChangedEvent,
-          context,
-        );
+        onFocusedInputTextChanged(event, context);
       }
     },
     ["onFocusedInputTextChanged"],
