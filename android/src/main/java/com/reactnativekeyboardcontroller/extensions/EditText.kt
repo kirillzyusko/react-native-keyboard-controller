@@ -8,7 +8,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.ScrollView
 import com.facebook.react.views.textinput.ReactEditText
-import com.reactnativekeyboardcontroller.ui.DisplayLink
+import com.reactnativekeyboardcontroller.ui.FrameScheduler
 import java.lang.reflect.Field
 import kotlin.math.max
 import kotlin.math.min
@@ -106,7 +106,7 @@ class KeyboardControllerSelectionWatcher(
   private var lastSelectionStart: Int = -1
   private var lastSelectionEnd: Int = -1
 
-  private val displayLink = DisplayLink {
+  private val frameScheduler = FrameScheduler {
     val start = editText.selectionStart
     val end = editText.selectionEnd
 
@@ -118,7 +118,7 @@ class KeyboardControllerSelectionWatcher(
       val layout = view.layout
 
       if (layout === null) {
-        return@DisplayLink
+        return@FrameScheduler
       }
 
       val cursorPositionStartX: Double
@@ -154,11 +154,11 @@ class KeyboardControllerSelectionWatcher(
   }
 
   fun setup() {
-    displayLink.start()
+    frameScheduler.start()
   }
 
   fun destroy() {
-    displayLink.stop()
+    frameScheduler.stop()
   }
 }
 
