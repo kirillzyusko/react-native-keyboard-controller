@@ -77,6 +77,79 @@ Prevents automatic scrolling of the `ScrollView` when the keyboard gets hidden, 
 
 A boolean prop indicating whether `KeyboardAwareScrollView` is enabled or disabled. Default is `true`.
 
+## `FlatList`/`FlashList`/`SectionList` integrations
+
+Unlike original [react-native-keyboard-aware-scroll-view](https://github.com/APSL/react-native-keyboard-aware-scroll-view) package I'm not exporting `KeyboardAwareFlatList`, `KeyboardAwareSectionList` and other components.
+
+If you want to integrate it with your custom virtualization list, you can pass `renderScrollComponent` prop like:
+
+```tsx
+import { FlatList } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
+
+<FlatList
+  renderScrollComponent={(props) => <KeyboardAwareScrollView {...props} />}
+/>;
+
+// or
+
+import { FlashList } from "@shopify/flash-list";
+
+<FlashList
+  renderScrollComponent={(props) => <KeyboardAwareScrollView {...props} />}
+/>;
+```
+
+<details>
+  <summary>Click to see a full code example with integration</summary>
+
+```tsx
+import React from "react";
+import { View, FlatList, TextInput } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
+
+const List = () => {
+  return (
+    <View style={{ flex: 1 }}>
+      <FlatList
+        data={new Array(10).fill(0).map((_, i) => i)}
+        keyExtractor={(data) => String(data)}
+        renderItem={() => {
+          return (
+            <View
+              style={{
+                width: "100%",
+                height: 250,
+                backgroundColor: "#00000066",
+                justifyContent: "center",
+              }}
+            >
+              <TextInput
+                style={{
+                  height: 40,
+                  width: "100%",
+                  borderColor: "black",
+                  borderWidth: 2,
+                }}
+              />
+            </View>
+          );
+        }}
+        renderScrollComponent={(props) => (
+          <KeyboardAwareScrollView {...props} />
+        )}
+        ItemSeparatorComponent={() => <View style={{ height: 5 }} />}
+        showsVerticalScrollIndicator={false}
+      />
+    </View>
+  );
+};
+
+export default List;
+```
+
+</details>
+
 ## Example
 
 ```tsx
