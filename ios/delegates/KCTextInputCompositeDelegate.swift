@@ -117,7 +117,6 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
             "position": selection.end,
           ],
         ],
-        "target": UIResponder.current.reactViewTag,
       ])
     }
   }

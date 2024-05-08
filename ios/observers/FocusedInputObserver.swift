@@ -52,7 +52,16 @@ public class FocusedInputObserver: NSObject {
     self.onTextChangedHandler = onTextChangedHandler
     self.onSelectionChangedHandler = onSelectionChangedHandler
     self.onFocusDidSet = onFocusDidSet
-    delegate = KCTextInputCompositeDelegate(onSelectionChange: self.onSelectionChangedHandler)
+
+    // Temporary initialization of the delegate with an empty closure
+    delegate = KCTextInputCompositeDelegate(onSelectionChange: { _ in })
+
+    super.init()
+
+    // Initialize the delegate
+    delegate = KCTextInputCompositeDelegate(onSelectionChange: { [weak self] event in
+      self?.onSelectionChange(event)
+    })
   }
 
   @objc public func mount() {
@@ -208,5 +217,20 @@ public class FocusedInputObserver: NSObject {
         self.syncUpLayout()
       }
     }
+  }
+
+  private func onSelectionChange(_ event: NSDictionary) {
+    // Safely retrieve the event dictionary as a Swift dictionary
+    guard let eventDict = event as? [String: Any] else {
+      return
+    }
+
+    let target: [String: Any] = [
+      "target": (currentResponder as UIResponder?).reactViewTag,
+    ]
+
+    let data = target.merging(eventDict) { _, new in new }
+
+    onSelectionChangedHandler(data as NSDictionary)
   }
 }
