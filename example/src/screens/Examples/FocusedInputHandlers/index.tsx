@@ -163,7 +163,7 @@ export default function TextInputMaskExample() {
         {workletSelection.selection.end.position}
       </Text>
       <Text testID="selection_text_target" style={style.text}>
-        target:{workletSelection.target}
+        target: {workletSelection.target}
       </Text>
       <Text testID="selection_text_coordinates_start" style={style.text}>
         startX: {Math.round(workletSelection.selection.start.x)}, startY:{" "}
