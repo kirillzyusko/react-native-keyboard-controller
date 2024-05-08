@@ -24,6 +24,7 @@ class KeyboardControllerView: UIView {
   /// focused input
   @objc var onFocusedInputLayoutChanged: RCTDirectEventBlock?
   @objc var onFocusedInputTextChanged: RCTDirectEventBlock?
+  @objc var onFocusedInputSelectionChanged: RCTDirectEventBlock?
   // react props
   @objc var enabled: ObjCBool = true {
     didSet {
@@ -42,6 +43,7 @@ class KeyboardControllerView: UIView {
     inputObserver = FocusedInputObserver(
       onLayoutChangedHandler: { [weak self] event in self?.onLayoutChanged(event: event) },
       onTextChangedHandler: { [weak self] text in self?.onTextChanged(text: text) },
+      onSelectionChangedHandler: { [weak self] event in self?.onSelectionChanged(event: event) },
       onFocusDidSet: { [weak self] event in
         self?.onNotify(event: "KeyboardController::focusDidSet", data: event)
       }
@@ -91,6 +93,12 @@ class KeyboardControllerView: UIView {
     guard isJSThreadReady() else { return }
 
     eventDispatcher.send(FocusedInputTextChangedEvent(reactTag: reactTag, text: text))
+  }
+
+  func onSelectionChanged(event: NSObject) {
+    guard isJSThreadReady() else { return }
+
+    eventDispatcher.send(FocusedInputSelectionChangedEvent(reactTag: reactTag, event: event))
   }
 
   func onEvent(event: NSString, height: NSNumber, progress: NSNumber, duration: NSNumber, target: NSNumber) {

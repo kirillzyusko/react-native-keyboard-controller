@@ -1,5 +1,6 @@
 package com.reactnativekeyboardcontroller.extensions
 
+import android.os.Build
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -7,7 +8,10 @@ import android.view.View
 import android.widget.EditText
 import android.widget.ScrollView
 import com.facebook.react.views.textinput.ReactEditText
+import com.reactnativekeyboardcontroller.ui.FrameScheduler
 import java.lang.reflect.Field
+import kotlin.math.max
+import kotlin.math.min
 
 /**
  * Adds a listener that will be fired only once for each unique value.
@@ -92,5 +96,80 @@ fun EditText?.focus() {
     this.requestFocusFromJS()
   } else {
     this?.requestFocus()
+  }
+}
+
+class KeyboardControllerSelectionWatcher(
+  private val editText: ReactEditText,
+  private val action: (start: Int, end: Int, startX: Double, startY: Double, endX: Double, endY: Double) -> Unit,
+) {
+  private var lastSelectionStart: Int = -1
+  private var lastSelectionEnd: Int = -1
+
+  private val frameScheduler = FrameScheduler {
+    val start = editText.selectionStart
+    val end = editText.selectionEnd
+
+    if (lastSelectionStart != start || lastSelectionEnd != end) {
+      lastSelectionStart = start
+      lastSelectionEnd = end
+
+      val view = editText
+      val layout = view.layout
+
+      if (layout === null) {
+        return@FrameScheduler
+      }
+
+      val cursorPositionStartX: Double
+      val cursorPositionStartY: Double
+      val cursorPositionEndX: Double
+      val cursorPositionEndY: Double
+
+      val realStart = min(start, end)
+      val realEnd = max(start, end)
+
+      val lineStart = layout.getLineForOffset(realStart)
+      val baselineStart = layout.getLineBaseline(lineStart)
+      val ascentStart = layout.getLineAscent(lineStart)
+
+      cursorPositionStartX = layout.getPrimaryHorizontal(realStart).toDouble()
+      cursorPositionStartY = (baselineStart + ascentStart).toDouble()
+
+      val lineEnd = layout.getLineForOffset(realEnd)
+
+      val right = layout.getPrimaryHorizontal(realEnd)
+      val bottom = layout.getLineBottom(lineEnd) + layout.getLineAscent(lineEnd)
+      val cursorWidth = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        view.textCursorDrawable?.intrinsicWidth ?: 0
+      } else {
+        0
+      }
+
+      cursorPositionEndX = (right + cursorWidth).toDouble()
+      cursorPositionEndY = bottom.toDouble()
+
+      action(start, end, cursorPositionStartX, cursorPositionStartY, cursorPositionEndX, cursorPositionEndY)
+    }
+  }
+
+  fun setup() {
+    frameScheduler.start()
+  }
+
+  fun destroy() {
+    frameScheduler.stop()
+  }
+}
+
+fun ReactEditText.addOnSelectionChangedListener(
+  action: (start: Int, end: Int, startX: Double, startY: Double, endX: Double, endY: Double) -> Unit,
+): () -> Unit {
+  val listener = KeyboardControllerSelectionWatcher(this, action)
+
+  listener.setup()
+
+  return {
+    listener.destroy()
   }
 }

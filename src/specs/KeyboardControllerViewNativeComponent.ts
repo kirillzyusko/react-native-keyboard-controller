@@ -32,6 +32,22 @@ type FocusedInputTextChangedEvent = Readonly<{
   text: string;
 }>;
 
+type FocusedInputSelectionChangedEvent = Readonly<{
+  target: Int32;
+  selection: {
+    start: {
+      x: Double;
+      y: Double;
+      position: Int32;
+    };
+    end: {
+      x: Double;
+      y: Double;
+      position: Int32;
+    };
+  };
+}>;
+
 export interface NativeProps extends ViewProps {
   // props
   enabled?: boolean;
@@ -46,6 +62,7 @@ export interface NativeProps extends ViewProps {
   /// focused input
   onFocusedInputLayoutChanged?: DirectEventHandler<FocusedInputLayoutChangedEvent>;
   onFocusedInputTextChanged?: DirectEventHandler<FocusedInputTextChangedEvent>;
+  onFocusedInputSelectionChanged?: DirectEventHandler<FocusedInputSelectionChangedEvent>;
 }
 
 export default codegenNativeComponent<NativeProps>(

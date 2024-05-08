@@ -4,14 +4,18 @@ import type {
   EventWithName,
   FocusedInputLayoutChangedEvent,
   FocusedInputLayoutHandlerHook,
+  FocusedInputSelectionChangedEvent,
+  FocusedInputSelectionHandlerHook,
   FocusedInputTextChangedEvent,
   FocusedInputTextHandlerHook,
   KeyboardHandlerHook,
   NativeEvent,
 } from "./types";
 
+type EventContext = Record<string, unknown>;
+
 export const useAnimatedKeyboardHandler: KeyboardHandlerHook<
-  Record<string, unknown>,
+  EventContext,
   EventWithName<NativeEvent>
 > = (handlers, dependencies) => {
   const { context, doDependenciesDiffer } = useHandler(handlers, dependencies);
@@ -59,7 +63,7 @@ export const useAnimatedKeyboardHandler: KeyboardHandlerHook<
 };
 
 export const useFocusedInputLayoutHandler: FocusedInputLayoutHandlerHook<
-  Record<string, unknown>,
+  EventContext,
   EventWithName<FocusedInputLayoutChangedEvent>
 > = (handlers, dependencies) => {
   const { context, doDependenciesDiffer } = useHandler(handlers, dependencies);
@@ -82,7 +86,7 @@ export const useFocusedInputLayoutHandler: FocusedInputLayoutHandlerHook<
 };
 
 export const useFocusedInputTextHandler: FocusedInputTextHandlerHook<
-  Record<string, unknown>,
+  EventContext,
   EventWithName<FocusedInputTextChangedEvent>
 > = (handlers, dependencies) => {
   const { context, doDependenciesDiffer } = useHandler(handlers, dependencies);
@@ -100,6 +104,29 @@ export const useFocusedInputTextHandler: FocusedInputTextHandlerHook<
       }
     },
     ["onFocusedInputTextChanged"],
+    doDependenciesDiffer,
+  );
+};
+
+export const useFocusedInputSelectionHandler: FocusedInputSelectionHandlerHook<
+  EventContext,
+  EventWithName<FocusedInputSelectionChangedEvent>
+> = (handlers, dependencies) => {
+  const { context, doDependenciesDiffer } = useHandler(handlers, dependencies);
+
+  return useEvent(
+    (event) => {
+      "worklet";
+      const { onFocusedInputSelectionChanged } = handlers;
+
+      if (
+        onFocusedInputSelectionChanged &&
+        event.eventName.endsWith("onFocusedInputSelectionChanged")
+      ) {
+        onFocusedInputSelectionChanged(event, context);
+      }
+    },
+    ["onFocusedInputSelectionChanged"],
     doDependenciesDiffer,
   );
 };

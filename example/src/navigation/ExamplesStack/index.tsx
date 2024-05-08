@@ -7,6 +7,7 @@ import AwareScrollViewStickyFooter from "../../screens/Examples/AwareScrollViewS
 import CloseScreen from "../../screens/Examples/Close";
 import EnabledDisabled from "../../screens/Examples/EnabledDisabled";
 import Events from "../../screens/Examples/Events";
+import FocusedInputHandlers from "../../screens/Examples/FocusedInputHandlers";
 import InteractiveKeyboard from "../../screens/Examples/InteractiveKeyboard";
 import InteractiveKeyboardIOS from "../../screens/Examples/InteractiveKeyboardIOS";
 import KeyboardAnimation from "../../screens/Examples/KeyboardAnimation";
@@ -17,7 +18,6 @@ import NonUIProps from "../../screens/Examples/NonUIProps";
 import ReanimatedChat from "../../screens/Examples/ReanimatedChat";
 import ReanimatedChatFlatList from "../../screens/Examples/ReanimatedChatFlatList";
 import StatusBar from "../../screens/Examples/StatusBar";
-import TextInputMask from "../../screens/Examples/TextInputMask";
 import ToolbarExample from "../../screens/Examples/Toolbar";
 import NativeStack from "../NestedStack";
 
@@ -37,7 +37,7 @@ export type ExamplesStackParamList = {
   [ScreenNames.KEYBOARD_AVOIDING_VIEW]: undefined;
   [ScreenNames.ENABLED_DISABLED]: undefined;
   [ScreenNames.CLOSE]: undefined;
-  [ScreenNames.TEXT_INPUT_MASK]: undefined;
+  [ScreenNames.FOCUSED_INPUT_HANDLERS]: undefined;
   [ScreenNames.TOOLBAR]: undefined;
   [ScreenNames.MODAL]: undefined;
 };
@@ -91,8 +91,8 @@ const options = {
   [ScreenNames.CLOSE]: {
     title: "Close keyboard",
   },
-  [ScreenNames.TEXT_INPUT_MASK]: {
-    title: "Text input mask",
+  [ScreenNames.FOCUSED_INPUT_HANDLERS]: {
+    title: "Focused input handlers",
   },
   [ScreenNames.TOOLBAR]: {
     title: "Toolbar",
@@ -180,9 +180,9 @@ const ExamplesStack = () => (
       options={options[ScreenNames.CLOSE]}
     />
     <Stack.Screen
-      name={ScreenNames.TEXT_INPUT_MASK}
-      component={TextInputMask}
-      options={options[ScreenNames.TEXT_INPUT_MASK]}
+      name={ScreenNames.FOCUSED_INPUT_HANDLERS}
+      component={FocusedInputHandlers}
+      options={options[ScreenNames.FOCUSED_INPUT_HANDLERS]}
     />
     <Stack.Screen
       name={ScreenNames.TOOLBAR}

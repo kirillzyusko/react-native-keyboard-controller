@@ -26,6 +26,21 @@ export type FocusedInputLayoutChangedEvent = {
 export type FocusedInputTextChangedEvent = {
   text: string;
 };
+export type FocusedInputSelectionChangedEvent = {
+  target: number;
+  selection: {
+    start: {
+      x: number;
+      y: number;
+      position: number;
+    };
+    end: {
+      x: number;
+      y: number;
+      position: number;
+    };
+  };
+};
 export type EventWithName<T> = {
   eventName: string;
 } & T;
@@ -51,6 +66,9 @@ export type KeyboardControllerProps = {
   onFocusedInputTextChanged?: (
     e: NativeSyntheticEvent<EventWithName<FocusedInputTextChangedEvent>>,
   ) => void;
+  onFocusedInputSelectionChanged?: (
+    e: NativeSyntheticEvent<EventWithName<FocusedInputSelectionChangedEvent>>,
+  ) => void;
   // fake props used to activate reanimated bindings
   onKeyboardMoveReanimated?: (
     e: NativeSyntheticEvent<EventWithName<NativeEvent>>,
@@ -60,6 +78,9 @@ export type KeyboardControllerProps = {
   ) => void;
   onFocusedInputTextChangedReanimated?: (
     e: NativeSyntheticEvent<EventWithName<FocusedInputTextChangedEvent>>,
+  ) => void;
+  onFocusedInputSelectionChangedReanimated?: (
+    e: NativeSyntheticEvent<EventWithName<FocusedInputSelectionChangedEvent>>,
   ) => void;
   // props
   statusBarTranslucent?: boolean;
@@ -153,6 +174,15 @@ export type FocusedInputTextHandlerHook<TContext, Event> = (
   },
   dependencies?: unknown[],
 ) => (e: NativeSyntheticEvent<Event>) => void;
+export type FocusedInputSelectionHandlerHook<TContext, Event> = (
+  handlers: {
+    onFocusedInputSelectionChanged?: (
+      e: FocusedInputSelectionChangedEvent,
+      context: TContext,
+    ) => void;
+  },
+  dependencies?: unknown[],
+) => (e: NativeSyntheticEvent<Event>) => void;
 
 // package types
 export type Handlers<T> = Record<string, T | undefined>;
@@ -165,5 +195,6 @@ export type KeyboardHandler = Partial<{
 export type KeyboardHandlers = Handlers<KeyboardHandler>;
 export type FocusedInputHandler = Partial<{
   onChangeText: (e: FocusedInputTextChangedEvent) => void;
+  onSelectionChange: (e: FocusedInputSelectionChangedEvent) => void;
 }>;
 export type FocusedInputHandlers = Handlers<FocusedInputHandler>;

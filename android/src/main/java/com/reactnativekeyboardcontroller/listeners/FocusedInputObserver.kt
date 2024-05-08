@@ -10,7 +10,10 @@ import com.facebook.react.views.textinput.ReactEditText
 import com.facebook.react.views.view.ReactViewGroup
 import com.reactnativekeyboardcontroller.events.FocusedInputLayoutChangedEvent
 import com.reactnativekeyboardcontroller.events.FocusedInputLayoutChangedEventData
+import com.reactnativekeyboardcontroller.events.FocusedInputSelectionChangedEvent
+import com.reactnativekeyboardcontroller.events.FocusedInputSelectionChangedEventData
 import com.reactnativekeyboardcontroller.events.FocusedInputTextChangedEvent
+import com.reactnativekeyboardcontroller.extensions.addOnSelectionChangedListener
 import com.reactnativekeyboardcontroller.extensions.addOnTextChangedListener
 import com.reactnativekeyboardcontroller.extensions.dispatchEvent
 import com.reactnativekeyboardcontroller.extensions.dp
@@ -40,6 +43,7 @@ class FocusedInputObserver(val view: ReactViewGroup, private val context: Themed
   private var lastFocusedInput: ReactEditText? = null
   private var lastEventDispatched: FocusedInputLayoutChangedEventData = noFocusedInputEvent
   private var textWatcher: TextWatcher? = null
+  private var selectionSubscription: (() -> Unit)? = null
 
   // listeners
   private val layoutListener =
@@ -57,11 +61,38 @@ class FocusedInputObserver(val view: ReactViewGroup, private val context: Themed
       ),
     )
   }
+  private val selectionListener: (
+    start: Int,
+    end: Int,
+    startX: Double,
+    startY: Double,
+    endX: Double,
+    endY: Double,
+  ) -> Unit = listener@{ start, end, startX, startY, endX, endY ->
+    val input = lastFocusedInput ?: return@listener
+    context.dispatchEvent(
+      view.id,
+      FocusedInputSelectionChangedEvent(
+        surfaceId,
+        view.id,
+        event = FocusedInputSelectionChangedEventData(
+          target = input.id,
+          start = start,
+          end = end,
+          startX = startX,
+          startY = startY,
+          endX = endX,
+          endY = endY,
+        ),
+      ),
+    )
+  }
   private val focusListener = OnGlobalFocusChangeListener { oldFocus, newFocus ->
     // unfocused or focused was changed
     if (newFocus == null || oldFocus != null) {
       lastFocusedInput?.removeOnLayoutChangeListener(layoutListener)
       lastFocusedInput?.removeTextChangedListener(textWatcher)
+      selectionSubscription?.invoke()
       lastFocusedInput = null
     }
     if (newFocus is ReactEditText) {
@@ -69,6 +100,7 @@ class FocusedInputObserver(val view: ReactViewGroup, private val context: Themed
       newFocus.addOnLayoutChangeListener(layoutListener)
       this.syncUpLayout()
       textWatcher = newFocus.addOnTextChangedListener(textListener)
+      selectionSubscription = newFocus.addOnSelectionChangedListener(selectionListener)
       FocusedInputHolder.set(newFocus)
 
       val allInputFields = ViewHierarchyNavigator.getAllInputFields(context?.rootView)
