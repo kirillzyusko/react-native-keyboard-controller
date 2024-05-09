@@ -41,6 +41,12 @@ describe("input handlers functionality", () => {
     await waitAndTap("multiline_input");
     await waitAndType("multiline_input", "QWERTY\nqwerty");
 
+    await expect(element(by.id("formatted_text"))).toHaveText(
+      "Formatted: QWERTY\nqwerty",
+    );
+    await expect(element(by.id("formatted_text"))).toHaveText(
+      "Worklet: QWERTY\nqwerty",
+    );
     await expect(element(by.id("selection_text_start_end"))).toHaveText(
       "start: 13, end: 13",
     );
@@ -51,6 +57,12 @@ describe("input handlers functionality", () => {
     await element(by.id("multiline_input")).clearText();
     await waitAndType("multiline_input", "QWERTY");
 
+    await expect(element(by.id("formatted_text"))).toHaveText(
+      "Formatted: QWERTY",
+    );
+    await expect(element(by.id("formatted_text"))).toHaveText(
+      "Worklet: QWERTY",
+    );
     await expect(element(by.id("selection_text_start_end"))).toHaveText(
       "start: 6, end: 6",
     );
@@ -60,6 +72,10 @@ describe("input handlers functionality", () => {
 
     await element(by.id("multiline_input")).tapBackspaceKey();
 
+    await expect(element(by.id("formatted_text"))).toHaveText(
+      "Formatted: QWERT",
+    );
+    await expect(element(by.id("formatted_text"))).toHaveText("Worklet: QWERT");
     await expect(element(by.id("selection_text_start_end"))).toHaveText(
       "start: 5, end: 5",
     );

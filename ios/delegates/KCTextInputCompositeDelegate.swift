@@ -82,16 +82,12 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
     updateSelectionPosition(textInput: textView)
   }
 
-  func textView(
-    _ textView: UITextView,
-    shouldChangeTextIn range: NSRange,
-    replacementText text: String
-  ) -> Bool {
+  func textViewDidChange(_ textView: UITextView) {
     defer {
       self.onTextChange(textView.text)
     }
 
-    return textViewDelegate?.textView?(textView, shouldChangeTextIn: range, replacementText: text) ?? true
+    textViewDelegate?.textViewDidChange?(textView)
   }
 
   // MARK: UITextFieldDelegate
