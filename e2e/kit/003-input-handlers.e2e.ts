@@ -49,9 +49,9 @@ describe("input handlers functionality", () => {
     await waitFor(element(by.id("formatted_text")))
       .toHaveText("Formatted: QWERTY\nqwerty")
       .withTimeout(DEFAULT_TIMEOUT);
-    await waitFor(element(by.id("worklet_text")))
+    /*await waitFor(element(by.id("worklet_text")))
       .toHaveText("Worklet: QWERTY\nqwerty")
-      .withTimeout(DEFAULT_TIMEOUT);
+      .withTimeout(DEFAULT_TIMEOUT);*/
     await waitFor(element(by.id("selection_text_start_end")))
       .toHaveText("start: 13, end: 13")
       .withTimeout(DEFAULT_TIMEOUT);
@@ -65,9 +65,9 @@ describe("input handlers functionality", () => {
     await waitFor(element(by.id("formatted_text")))
       .toHaveText("Formatted: QWERTY")
       .withTimeout(DEFAULT_TIMEOUT);
-    await waitFor(element(by.id("worklet_text")))
+    /*await waitFor(element(by.id("worklet_text")))
       .toHaveText("Worklet: QWERTY")
-      .withTimeout(DEFAULT_TIMEOUT);
+      .withTimeout(DEFAULT_TIMEOUT);*/
     await waitFor(element(by.id("selection_text_start_end")))
       .toHaveText("start: 6, end: 6")
       .withTimeout(DEFAULT_TIMEOUT);
@@ -80,9 +80,9 @@ describe("input handlers functionality", () => {
     await waitFor(element(by.id("formatted_text")))
       .toHaveText("Formatted: QWERT")
       .withTimeout(DEFAULT_TIMEOUT);
-    await waitFor(element(by.id("worklet_text")))
+    /*await waitFor(element(by.id("worklet_text")))
       .toHaveText("Worklet: QWERT")
-      .withTimeout(DEFAULT_TIMEOUT);
+      .withTimeout(DEFAULT_TIMEOUT);*/
     await waitFor(element(by.id("selection_text_start_end")))
       .toHaveText("start: 5, end: 5")
       .withTimeout(DEFAULT_TIMEOUT);

@@ -82,13 +82,13 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
     updateSelectionPosition(textInput: textView)
   }
 
-  func textViewDidChange(_ textView: UITextView) {
+  /*func textViewDidChange(_ textView: UITextView) {
     defer {
       self.onTextChange(textView.text)
     }
 
     textViewDelegate?.textViewDidChange?(textView)
-  }
+  }*/
 
   // MARK: UITextFieldDelegate
 
@@ -106,7 +106,7 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
       self.onTextChange(textField.text)
     }
 
-    return textFieldDelegate?.textField?(textField, shouldChangeCharactersIn: range, replacementString: string) ?? false
+    return textFieldDelegate?.textField?(textField, shouldChangeCharactersIn: range, replacementString: string) ?? true
   }*/
 
   // MARK: call forwarding
