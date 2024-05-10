@@ -57,9 +57,14 @@ public class FocusedInputObserver: NSObject {
     super.init()
 
     // Initialize the delegate
-    delegate = KCTextInputCompositeDelegate(onSelectionChange: { [weak self] event in
-      self?.onSelectionChange(event)
-    }, onTextChange: { [weak self] text in self?.onTextChanged(text: text) })
+    delegate = KCTextInputCompositeDelegate(
+      onSelectionChange: { [weak self] event in
+        self?.onSelectionChange(event)
+      },
+      onTextChange: { [weak self] text in
+        self?.onTextChanged(text: text)
+      }
+    )
   }
 
   @objc public func mount() {
