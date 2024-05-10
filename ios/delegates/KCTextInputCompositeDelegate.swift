@@ -97,7 +97,7 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
     updateSelectionPosition(textInput: textField)
   }
 
-  func textField(
+  /*func textField(
     _ textField: UITextField,
     shouldChangeCharactersIn range: NSRange,
     replacementString string: String
@@ -107,7 +107,7 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
     }
 
     return textFieldDelegate?.textField?(textField, shouldChangeCharactersIn: range, replacementString: string) ?? false
-  }
+  }*/
 
   // MARK: call forwarding
 
