@@ -121,10 +121,10 @@ class KeyboardControllerSelectionWatcher(
         return@FrameScheduler
       }
 
-      val cursorPositionStartX: Double
-      val cursorPositionStartY: Double
-      val cursorPositionEndX: Double
-      val cursorPositionEndY: Double
+      val cursorPositionStartX: Float
+      val cursorPositionStartY: Float
+      val cursorPositionEndX: Float
+      val cursorPositionEndY: Float
 
       val realStart = min(start, end)
       val realEnd = max(start, end)
@@ -133,8 +133,8 @@ class KeyboardControllerSelectionWatcher(
       val baselineStart = layout.getLineBaseline(lineStart)
       val ascentStart = layout.getLineAscent(lineStart)
 
-      cursorPositionStartX = layout.getPrimaryHorizontal(realStart).toDouble()
-      cursorPositionStartY = (baselineStart + ascentStart).toDouble()
+      cursorPositionStartX = layout.getPrimaryHorizontal(realStart)
+      cursorPositionStartY = (baselineStart + ascentStart).toFloat()
 
       val lineEnd = layout.getLineForOffset(realEnd)
 
@@ -146,10 +146,10 @@ class KeyboardControllerSelectionWatcher(
         0
       }
 
-      cursorPositionEndX = (right + cursorWidth).toDouble()
-      cursorPositionEndY = bottom.toDouble()
+      cursorPositionEndX = right + cursorWidth
+      cursorPositionEndY = bottom.toFloat()
 
-      action(start, end, cursorPositionStartX, cursorPositionStartY, cursorPositionEndX, cursorPositionEndY)
+      action(start, end, cursorPositionStartX.dp, cursorPositionStartY.dp, cursorPositionEndX.dp, cursorPositionEndY.dp)
     }
   }
 
