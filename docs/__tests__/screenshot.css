@@ -25,3 +25,7 @@ img[src$='.gif'],
 .playwright {
   display: none;
 }
+/* Videos are autoplayed */
+.video {
+  display: none;
+}
