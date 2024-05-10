@@ -45,12 +45,17 @@ func textSelection(in textInput: UITextInput) -> Selection? {
 class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDelegate {
   // constructor members
   var onSelectionChange: (_ event: NSDictionary) -> Void
+  var onTextChange: (_ text: String?) -> Void
   // delegates
   weak var textViewDelegate: UITextViewDelegate?
   weak var textFieldDelegate: UITextFieldDelegate?
 
-  public init(onSelectionChange: @escaping (_ event: NSDictionary) -> Void) {
+  public init(
+    onSelectionChange: @escaping (_ event: NSDictionary) -> Void,
+    onTextChange: @escaping (_ text: String?) -> Void
+  ) {
     self.onSelectionChange = onSelectionChange
+    self.onTextChange = onTextChange
   }
 
   // MARK: setters/getters
@@ -77,11 +82,31 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
     updateSelectionPosition(textInput: textView)
   }
 
+  func textViewDidChange(_ textView: UITextView) {
+    defer {
+      self.onTextChange(textView.text)
+    }
+
+    textViewDelegate?.textViewDidChange?(textView)
+  }
+
   // MARK: UITextFieldDelegate
 
   func textFieldDidChangeSelection(_ textField: UITextField) {
     textFieldDelegate?.textFieldDidChangeSelection?(textField)
     updateSelectionPosition(textInput: textField)
+  }
+
+  func textField(
+    _ textField: UITextField,
+    shouldChangeCharactersIn range: NSRange,
+    replacementString string: String
+  ) -> Bool {
+    defer {
+      self.onTextChange(textField.text)
+    }
+
+    return textFieldDelegate?.textField?(textField, shouldChangeCharactersIn: range, replacementString: string) ?? true
   }
 
   // MARK: call forwarding

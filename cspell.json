@@ -106,7 +106,8 @@
     "xcworkspace",
     "ccache",
     "ivar",
-    "objc"
+    "objc",
+    "QWERT"
   ],
   "ignorePaths": [
     "node_modules",

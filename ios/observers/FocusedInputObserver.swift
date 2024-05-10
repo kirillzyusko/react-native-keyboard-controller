@@ -39,8 +39,6 @@ public class FocusedInputObserver: NSObject {
   private var currentResponder: UIView?
   private var hasObservers = false
   private var lastEventDispatched: [AnyHashable: Any] = noFocusedInputEvent
-  // observers
-  private let textChangeObserver = TextChangeObserver()
 
   @objc public init(
     onLayoutChangedHandler: @escaping (NSDictionary) -> Void,
@@ -54,14 +52,19 @@ public class FocusedInputObserver: NSObject {
     self.onFocusDidSet = onFocusDidSet
 
     // Temporary initialization of the delegate with an empty closure
-    delegate = KCTextInputCompositeDelegate(onSelectionChange: { _ in })
+    delegate = KCTextInputCompositeDelegate(onSelectionChange: { _ in }, onTextChange: { _ in })
 
     super.init()
 
     // Initialize the delegate
-    delegate = KCTextInputCompositeDelegate(onSelectionChange: { [weak self] event in
-      self?.onSelectionChange(event)
-    })
+    delegate = KCTextInputCompositeDelegate(
+      onSelectionChange: { [weak self] event in
+        self?.onSelectionChange(event)
+      },
+      onTextChange: { [weak self] text in
+        self?.onTextChanged(text: text)
+      }
+    )
   }
 
   @objc public func mount() {
@@ -92,8 +95,9 @@ public class FocusedInputObserver: NSObject {
   }
 
   @objc func keyboardWillShow(_: Notification) {
-    removeObservers()
-    currentResponder = UIResponder.current as? UIView
+    let responder = UIResponder.current as? UIView
+    removeObservers(newResponder: responder)
+    currentResponder = responder
     currentInput = currentResponder?.superview as UIView?
 
     setupObservers()
@@ -111,7 +115,7 @@ public class FocusedInputObserver: NSObject {
   }
 
   @objc func keyboardWillHide(_: Notification) {
-    removeObservers()
+    removeObservers(newResponder: nil)
     currentInput = nil
     currentResponder = nil
     dispatchEventToJS(data: noFocusedInputEvent)
@@ -163,20 +167,18 @@ public class FocusedInputObserver: NSObject {
     if currentInput != nil {
       hasObservers = true
       currentInput?.addObserver(self, forKeyPath: "center", options: .new, context: nil)
-      textChangeObserver.observeTextChanges(for: currentResponder, handler: onTextChanged)
 
       substituteDelegate(currentResponder)
     }
   }
 
-  private func removeObservers() {
-    if !hasObservers {
+  private func removeObservers(newResponder: UIResponder?) {
+    if newResponder == currentResponder || !hasObservers {
       return
     }
 
     hasObservers = false
     currentInput?.removeObserver(self, forKeyPath: "center", context: nil)
-    textChangeObserver.removeObserver()
 
     substituteDelegateBack(currentResponder)
   }

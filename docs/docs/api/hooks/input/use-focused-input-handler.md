@@ -71,7 +71,3 @@ type FocusedInputSelectionChangedEvent = {
 ```
 
 This handler can be handy when you need to have an access to input on a global level (i. e. when you don't have a direct access to your `TextInput`) or if you need to have an access to coordinates of text selection (for example to draw a custom element that follows caret position).
-
-## Known issues
-
-- [react-native-text-input-mask#305](https://github.com/react-native-text-input-mask/react-native-text-input-mask/pull/305): `onChangeText` handler ignores an input from `react-native-text-input-mask` on `iOS`

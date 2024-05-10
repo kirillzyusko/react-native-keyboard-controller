@@ -17,7 +17,8 @@ describe("input handlers functionality", () => {
     await waitAndTap("focused_input_handlers");
     await waitForElementById("masked_input");
     await waitAndTap("masked_input");
-    await delay(500); // for keyboard to appear
+    // make sure keyboard is shown
+    await delay(500);
     await waitAndType("masked_input", "1234567890");
     await expect(element(by.id("formatted_text"))).toHaveText(
       "Formatted: +1 (123) 456 78 90",
@@ -31,16 +32,15 @@ describe("input handlers functionality", () => {
   });
 
   it("should fire `onSelectionChange` with expected values", async () => {
-    await expect(element(by.id("selection_text_start_end"))).toHaveText(
-      "start: 18, end: 18",
-    );
-    await expect(
-      element(by.id("original_selection_text_start_end")),
-    ).toHaveText("start: 18, end: 18");
-
     await waitAndTap("multiline_input");
     await waitAndType("multiline_input", "QWERTY\nqwerty");
 
+    await expect(element(by.id("formatted_text"))).toHaveText(
+      "Formatted: QWERTY\nqwerty",
+    );
+    await expect(element(by.id("worklet_text"))).toHaveText(
+      "Worklet: QWERTY\nqwerty",
+    );
     await expect(element(by.id("selection_text_start_end"))).toHaveText(
       "start: 13, end: 13",
     );
@@ -51,6 +51,10 @@ describe("input handlers functionality", () => {
     await element(by.id("multiline_input")).clearText();
     await waitAndType("multiline_input", "QWERTY");
 
+    await expect(element(by.id("formatted_text"))).toHaveText(
+      "Formatted: QWERTY",
+    );
+    await expect(element(by.id("worklet_text"))).toHaveText("Worklet: QWERTY");
     await expect(element(by.id("selection_text_start_end"))).toHaveText(
       "start: 6, end: 6",
     );
@@ -60,6 +64,10 @@ describe("input handlers functionality", () => {
 
     await element(by.id("multiline_input")).tapBackspaceKey();
 
+    await expect(element(by.id("formatted_text"))).toHaveText(
+      "Formatted: QWERT",
+    );
+    await expect(element(by.id("worklet_text"))).toHaveText("Worklet: QWERT");
     await expect(element(by.id("selection_text_start_end"))).toHaveText(
       "start: 5, end: 5",
     );
