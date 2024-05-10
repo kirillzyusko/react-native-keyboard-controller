@@ -44,7 +44,7 @@ describe("input handlers functionality", () => {
     await expect(element(by.id("formatted_text"))).toHaveText(
       "Formatted: QWERTY\nqwerty",
     );
-    await expect(element(by.id("formatted_text"))).toHaveText(
+    await expect(element(by.id("worklet_text"))).toHaveText(
       "Worklet: QWERTY\nqwerty",
     );
     await expect(element(by.id("selection_text_start_end"))).toHaveText(
@@ -60,9 +60,7 @@ describe("input handlers functionality", () => {
     await expect(element(by.id("formatted_text"))).toHaveText(
       "Formatted: QWERTY",
     );
-    await expect(element(by.id("formatted_text"))).toHaveText(
-      "Worklet: QWERTY",
-    );
+    await expect(element(by.id("worklet_text"))).toHaveText("Worklet: QWERTY");
     await expect(element(by.id("selection_text_start_end"))).toHaveText(
       "start: 6, end: 6",
     );
@@ -75,7 +73,7 @@ describe("input handlers functionality", () => {
     await expect(element(by.id("formatted_text"))).toHaveText(
       "Formatted: QWERT",
     );
-    await expect(element(by.id("formatted_text"))).toHaveText("Worklet: QWERT");
+    await expect(element(by.id("worklet_text"))).toHaveText("Worklet: QWERT");
     await expect(element(by.id("selection_text_start_end"))).toHaveText(
       "start: 5, end: 5",
     );
