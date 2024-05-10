@@ -32,13 +32,6 @@ describe("input handlers functionality", () => {
   });
 
   it("should fire `onSelectionChange` with expected values", async () => {
-    /*await waitFor(element(by.id("selection_text_start_end")))
-      .toHaveText("start: 18, end: 18")
-      .withTimeout(DEFAULT_TIMEOUT);
-    await waitFor(element(by.id("original_selection_text_start_end")))
-      .toHaveText("start: 18, end: 18")
-      .withTimeout(DEFAULT_TIMEOUT);*/
-
     await waitAndTap("multiline_input");
     await waitAndType("multiline_input", "QWERTY\nqwerty");
 
