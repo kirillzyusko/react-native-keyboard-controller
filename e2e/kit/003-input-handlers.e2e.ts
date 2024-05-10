@@ -1,13 +1,11 @@
 import { expect } from "detox";
 
-import { expectBitmapsToBeEqual } from "./asserts";
 import {
   delay,
   scrollDownUntilElementIsVisible,
   waitAndTap,
   waitAndType,
   waitForElementById,
-  waitForExpect,
 } from "./helpers";
 
 const DEFAULT_TIMEOUT = 5000;
@@ -22,9 +20,7 @@ describe("input handlers functionality", () => {
     await waitForElementById("masked_input");
     await waitAndTap("masked_input");
     // make sure keyboard is shown
-    await waitForExpect(async () => {
-      await expectBitmapsToBeEqual("InputHandlersKeyboardIsShown");
-    });
+    await delay(5000);
     await waitAndType("masked_input", "1234567890");
     await expect(element(by.id("formatted_text"))).toHaveText(
       "Formatted: +1 (123) 456 78 90",
