@@ -107,7 +107,8 @@
     "ccache",
     "ivar",
     "objc",
-    "QWERT"
+    "QWERT",
+    "autoplayed"
   ],
   "ignorePaths": [
     "node_modules",
