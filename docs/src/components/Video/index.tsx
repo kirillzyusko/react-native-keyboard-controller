@@ -3,22 +3,24 @@ import React from "react";
 
 type VideoProps = {
   src: string;
+  width?: number;
 };
 
-export default function Video({ src, ...props }: VideoProps) {
+export default function Video({ src, width = 100, ...props }: VideoProps) {
   const source = useBaseUrl(src);
 
   return (
-    <video
-      className="video"
-      src={source}
-      width="100%"
-      height="100%"
-      playsInline
-      autoPlay
-      muted
-      loop
-      {...props}
-    />
+    <div className="center video">
+      <video
+        src={source}
+        width={`${width}%`}
+        height="100%"
+        playsInline
+        autoPlay
+        muted
+        loop
+        {...props}
+      />
+    </div>
   );
 }
