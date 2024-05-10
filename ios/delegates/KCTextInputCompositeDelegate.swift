@@ -106,7 +106,7 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
       self.onTextChange(textField.text)
     }
 
-    return textFieldDelegate?.textField?(textField, shouldChangeCharactersIn: range, replacementString: string) ?? true
+    return textFieldDelegate?.textField?(textField, shouldChangeCharactersIn: range, replacementString: string) ?? false
   }
 
   // MARK: call forwarding
