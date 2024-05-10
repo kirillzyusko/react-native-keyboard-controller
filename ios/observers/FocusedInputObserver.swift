@@ -95,7 +95,8 @@ public class FocusedInputObserver: NSObject {
   }
 
   @objc func keyboardWillShow(_: Notification) {
-    removeObservers()
+    let responder = UIResponder.current as? UIView
+    removeObservers(newResponder: responder)
     currentResponder = UIResponder.current as? UIView
     currentInput = currentResponder?.superview as UIView?
 
@@ -114,7 +115,7 @@ public class FocusedInputObserver: NSObject {
   }
 
   @objc func keyboardWillHide(_: Notification) {
-    removeObservers()
+    removeObservers(newResponder: nil)
     currentInput = nil
     currentResponder = nil
     dispatchEventToJS(data: noFocusedInputEvent)
@@ -171,8 +172,8 @@ public class FocusedInputObserver: NSObject {
     }
   }
 
-  private func removeObservers() {
-    if !hasObservers {
+  private func removeObservers(newResponder: UIResponder?) {
+    if newResponder == currentResponder || !hasObservers {
       return
     }
 
@@ -184,14 +185,18 @@ public class FocusedInputObserver: NSObject {
 
   private func substituteDelegate(_ input: UIResponder?) {
     if let textField = input as? UITextField {
+        print("1133 \(textField.delegate)")
       if !(textField.delegate is KCTextInputCompositeDelegate) {
         delegate.setTextFieldDelegate(delegate: textField.delegate)
         textField.delegate = delegate
+          print("1122 \(textField.delegate)")
       }
     } else if let textView = input as? UITextView {
+        print("1155 \(textView.delegate)")
       if !(textView.delegate is KCTextInputCompositeDelegate) {
         delegate.setTextViewDelegate(delegate: textView.delegate)
         (textView as? RCTUITextView)?.setForceDelegate(delegate)
+          print("1166 \(textView.delegate)")
       }
     }
   }
