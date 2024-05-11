@@ -136,6 +136,10 @@ const config = {
                 label: "Guides",
                 to: "/docs/installation",
               },
+              {
+                label: "API",
+                to: "/docs/category/api-reference",
+              },
             ],
           },
           {
