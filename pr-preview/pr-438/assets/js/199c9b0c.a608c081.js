@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[8388],{61893:e=>{e.exports=JSON.parse('{"label":"keyboard aware scroll view","permalink":"/react-native-keyboard-controller/pr-preview/pr-438/blog/tags/keyboard-aware-scroll-view","allTagsPath":"/react-native-keyboard-controller/pr-preview/pr-438/blog/tags","count":1,"unlisted":false}')}}]);

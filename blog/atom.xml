@@ -2,11 +2,61 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://kirillzyusko.github.io/react-native-keyboard-controller/blog</id>
     <title>Keyboard Controller Blog</title>
-    <updated>2024-02-21T00:00:00.000Z</updated>
+    <updated>2024-05-13T00:00:00.000Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog"/>
     <subtitle>Keyboard Controller Blog</subtitle>
     <icon>https://kirillzyusko.github.io/react-native-keyboard-controller/img/favicon.ico</icon>
+    <entry>
+        <title type="html"><![CDATA[Announcing upcoming release 📣]]></title>
+        <id>https://kirillzyusko.github.io/react-native-keyboard-controller/blog/release-1-12</id>
+        <link href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/release-1-12"/>
+        <updated>2024-05-13T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[I'm excited to announce the latest release, version 1.12.0, of react-native-keyboard-controller!]]></summary>
+        <content type="html"><![CDATA[<p>I'm excited to announce the latest release, version 1.12.0, of react-native-keyboard-controller!</p>
+<p>Although this release may not seem monumental, it's significant, and I'm thrilled to share it with you. 😍</p>
+<p>The key features of this release are: <strong>bridgeless</strong> support, selection tracking, enhanced <code>KeyboardToolbar</code> component and synchronous <code>onMove</code> handler on iOS among other bug fixes and improvements.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="bridgeless-support">Bridgeless support<a href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/release-1-12#bridgeless-support" class="hash-link" aria-label="Direct link to Bridgeless support" title="Direct link to Bridgeless support">​</a></h2>
+<p>This library starting from <code>1.12.0</code> is now compatible RN 0.74 and fully supports bridgeless mode, offering improved performance and streamlined communication between native and JavaScript layers.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="selection-tracking">Selection tracking<a href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/release-1-12#selection-tracking" class="hash-link" aria-label="Direct link to Selection tracking" title="Direct link to Selection tracking">​</a></h2>
+<p>In the previous version, <code>react-native-keyboard-controller</code> was not able to track selection changes in the text input fields. Starting from <code>1.12.0</code> this library exposes a new event and handlers making it possible to track selection changes.</p>
+<p>In addition to duplicating the react-native API, this event provides information not only about the <code>start</code> and <code>end</code> positions but also the <code>x</code> and <code>y</code> coordinates for the top-left and bottom-right corners of the selection.</p>
+<p>These details allow you to draw elements behind the cursor, making interaction with focused inputs more intuitive:</p>
+<!-- -->
+<!-- -->
+<div class="center video"><video src="/react-native-keyboard-controller/video/selection-demo.mov" width="65%" height="100%" playsinline="" autoplay="" muted="" loop=""></video></div>
+<br>
+<p>Later on I'm planning to extend <code>KeyboardAwareScrollView</code> to react on selection tracking, so if your selection is overlapped with keyboard then <code>KeyboardAwareScrollView</code> will automatically scroll and avoid an overlap.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="keyboardtoolbar-enhancements"><code>KeyboardToolbar</code> enhancements<a href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/release-1-12#keyboardtoolbar-enhancements" class="hash-link" aria-label="Direct link to keyboardtoolbar-enhancements" title="Direct link to keyboardtoolbar-enhancements">​</a></h2>
+<p>The <code>KeyboardToolbar</code> component was initially introduced in version <code>1.10.0</code>. In this release, I've added new features to make it even more customizable and HID compatible.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="blur-effect"><code>blur</code> effect<a href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/release-1-12#blur-effect" class="hash-link" aria-label="Direct link to blur-effect" title="Direct link to blur-effect">​</a></h3>
+<p>Starting with version <code>1.12.0</code>, you can apply a blur effect to the <code>KeyboardToolbar</code> component by using the <code>blur</code> prop. You can use any compatible component, such as <code>react-native-blur</code> or <code>expo-blur</code>. Since iOS 16, the keyboard itself is translucent with a blur effect, which causes all components behind it to be blurred too.</p>
+<p>With the new version of <code>react-native-keyboard-controller</code>, you can extend this effect to the <code>KeyboardToolbar</code> component! 😎</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="button-callbacks">Button callbacks<a href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/release-1-12#button-callbacks" class="hash-link" aria-label="Direct link to Button callbacks" title="Direct link to Button callbacks">​</a></h3>
+<p>From version <code>1.12.0</code>, the <code>KeyboardToolbar</code> component supports various callbacks for specific events, such as <code>onNextCallback</code>, <code>onPrevCallback</code>, and <code>onDoneCallback</code>.</p>
+<p>These callbacks let you add <strong>haptic</strong> feedback, <strong>play sounds</strong>, or implement other creative responses based on your needs.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="synchronous-onmove-handler-on-ios">Synchronous <code>onMove</code> handler on iOS<a href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/release-1-12#synchronous-onmove-handler-on-ios" class="hash-link" aria-label="Direct link to synchronous-onmove-handler-on-ios" title="Direct link to synchronous-onmove-handler-on-ios">​</a></h2>
+<p>Since version <code>1.4.0</code>, when the <code>useKeyboardHandler</code> hook was introduced, the <code>onMove</code> handler was always a frame behind.</p>
+<p>As a result, it created a parallax effect that prevented elements from precisely following the keyboard.</p>
+<p>With a new release this problem is solved, and the <code>onMove</code> handler is now synchronized with the keyboard animation. 😊</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="no-need-to-patch-react-native-text-input-mask-anymore">No need to patch <code>react-native-text-input-mask</code> anymore<a href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/release-1-12#no-need-to-patch-react-native-text-input-mask-anymore" class="hash-link" aria-label="Direct link to no-need-to-patch-react-native-text-input-mask-anymore" title="Direct link to no-need-to-patch-react-native-text-input-mask-anymore">​</a></h2>
+<p>If you used <code>react-native-text-input-mask</code> alongside <code>useFocusedInputHandler</code> or <code>KeyboardAwareScrollView</code>, you might have needed to patch it to ensure that the <code>onChangeText</code> event was triggered.</p>
+<p>With the new release of <code>react-native-keyboard-controller</code>, you can now safely remove this patch and keep your existing code intact. 👍</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="whats-next">What's next?<a href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/release-1-12#whats-next" class="hash-link" aria-label="Direct link to What's next?" title="Direct link to What's next?">​</a></h2>
+<p>This release refines the previous version and at the same time introduces crucial improvements that will unlock the full potential of <code>react-native-keyboard-controller</code> in future updates:</p>
+<ul>
+<li>on iOS, we now inject a delegate into <code>TextInput</code>, providing greater control over input and keyboard events;</li>
+<li>the fully synchronous <code>onMove</code> handler will enable frame-by-frame keyboard control in the future, particularly when an interactive keyboard offset is implemented. 👀</li>
+</ul>
+<p>To stay tuned follow me on <a href="https://twitter.com/ziusko" target="_blank" rel="noopener noreferrer">Twitter</a> and <a href="https://github.com/kirillzyusko" target="_blank" rel="noopener noreferrer">GitHub</a> for updates. Thank you for your support! 😊</p>]]></content>
+        <author>
+            <name>Kirill Zyusko</name>
+            <uri>https://github.com/kirillzyusko</uri>
+        </author>
+        <category label="react-native" term="react-native"/>
+        <category label="keyboard" term="keyboard"/>
+        <category label="bridgeless" term="bridgeless"/>
+    </entry>
     <entry>
         <title type="html"><![CDATA[New KeyboardToolbar component 😍]]></title>
         <id>https://kirillzyusko.github.io/react-native-keyboard-controller/blog/keyboard-toolbar</id>
