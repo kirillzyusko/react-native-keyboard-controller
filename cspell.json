@@ -108,7 +108,8 @@
     "ivar",
     "objc",
     "QWERT",
-    "autoplayed"
+    "autoplayed",
+    "bridgeless"
   ],
   "ignorePaths": [
     "node_modules",
