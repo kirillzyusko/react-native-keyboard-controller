@@ -95,7 +95,7 @@ public class FocusedInputObserver: NSObject {
   }
 
   @objc func keyboardWillShow(_: Notification) {
-    let responder = UIResponder.current as? UIView
+    guard let responder = UIResponder.current as? UIView else { return }
     removeObservers(newResponder: responder)
     currentResponder = responder
     currentInput = currentResponder?.superview as UIView?
