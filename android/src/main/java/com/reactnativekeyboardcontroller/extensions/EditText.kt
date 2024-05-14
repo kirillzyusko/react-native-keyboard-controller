@@ -79,7 +79,7 @@ val EditText.parentScrollViewTarget: Int
       val parentView = currentView.parent as? View
 
       if (parentView is ScrollView) {
-        // If the parent is a ScrollView, return its id
+        // If the parent is a vertical ScrollView, return its id
         return parentView.id
       }
 
