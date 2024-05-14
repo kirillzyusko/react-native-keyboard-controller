@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[8132],{29747:e=>{e.exports=JSON.parse('{"label":"focused text input","permalink":"/react-native-keyboard-controller/pr-preview/pr-445/blog/tags/focused-text-input","allTagsPath":"/react-native-keyboard-controller/pr-preview/pr-445/blog/tags","count":2,"unlisted":false}')}}]);
