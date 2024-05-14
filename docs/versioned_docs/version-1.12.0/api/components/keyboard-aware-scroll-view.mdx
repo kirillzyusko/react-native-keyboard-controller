@@ -77,7 +77,9 @@ Prevents automatic scrolling of the `ScrollView` when the keyboard gets hidden, 
 
 A boolean prop indicating whether `KeyboardAwareScrollView` is enabled or disabled. Default is `true`.
 
-## `FlatList`/`FlashList`/`SectionList` integrations
+## Integration with 3rd party components
+
+### `FlatList`/`FlashList`/`SectionList` etc.
 
 Unlike original [react-native-keyboard-aware-scroll-view](https://github.com/APSL/react-native-keyboard-aware-scroll-view) package I'm not exporting `KeyboardAwareFlatList`, `KeyboardAwareSectionList` and other components.
 
@@ -149,6 +151,56 @@ export default List;
 ```
 
 </details>
+
+### `@gorhom/bottom-sheet`
+
+To seamlessly work with [@gorhom/bottom-sheet](https://github.com/gorhom/react-native-bottom-sheet) you will need to wrap `KeyboardAwareScrollView` in some HOCs provided by `@gorhom/bottom-sheet`.
+
+```tsx title="BottomSheetKeyboardAwareScrollView.tsx"
+import {
+  KeyboardAwareScrollView,
+  KeyboardAwareScrollViewProps,
+} from "react-native-keyboard-controller";
+import {
+  SCROLLABLE_TYPE,
+  createBottomSheetScrollableComponent,
+  type BottomSheetScrollViewMethods,
+} from "@gorhom/bottom-sheet";
+import type { BottomSheetScrollViewProps } from "@gorhom/bottom-sheet/src/components/bottomSheetScrollable/types";
+import Reanimated from "react-native-reanimated";
+
+const AnimatedScrollView =
+  Reanimated.createAnimatedComponent<KeyboardAwareScrollViewProps>(
+    KeyboardAwareScrollView,
+  );
+const BottomSheetScrollViewComponent = createBottomSheetScrollableComponent<
+  BottomSheetScrollViewMethods,
+  BottomSheetScrollViewProps
+>(SCROLLABLE_TYPE.SCROLLVIEW, AnimatedScrollView);
+const BottomSheetKeyboardAwareScrollView = memo(BottomSheetScrollViewComponent);
+
+BottomSheetKeyboardAwareScrollView.displayName =
+  "BottomSheetKeyboardAwareScrollView";
+
+export default BottomSheetKeyboardAwareScrollView as (
+  props: BottomSheetScrollViewProps,
+) => ReturnType<typeof BottomSheetKeyboardAwareScrollView>;
+```
+
+```tsx title="index.tsx"
+import BottomSheet from "@gorhom/bottom-sheet";
+import BottomSheetKeyboardAwareScrollView from "./BottomSheetKeyboardAwareScrollView";
+
+export function Example() {
+  return (
+    <BottomSheet>
+      <BottomSheetKeyboardAwareScrollView>
+        {/* More content here */}
+      </BottomSheetKeyboardAwareScrollView>
+    </BottomSheet>
+  );
+}
+```
 
 ## Example
 
