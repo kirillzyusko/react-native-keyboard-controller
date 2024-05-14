@@ -68,8 +68,8 @@ public extension Optional where Wrapped: UIResponder {
     var currentResponder: UIResponder? = self
 
     while let currentView = currentResponder {
-      // If the current responder is a UIScrollView (excluding UITextView), return its tag
-      if let scrollView = currentView as? UIScrollView, !(currentView is UITextView) {
+      // If the current responder is a vertical UIScrollView (excluding UITextView), return its tag
+      if let scrollView = currentView as? UIScrollView, !(currentView is UITextView), scrollView.contentSize.height > scrollView.frame.size.height {
         return scrollView.reactViewTag
       }
 
