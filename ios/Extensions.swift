@@ -72,7 +72,10 @@ public extension Optional where Wrapped: UIResponder {
       if let scrollView = currentView as? UIScrollView,
          !(currentView is UITextView),
          scrollView.contentSize.height > scrollView.frame.size.height
+         // it was fixed in swiftlint https://github.com/realm/SwiftLint/issues/3756 but a new release is not available yet
+         // swiftlint:disable all
       {
+        // swiftlint:enable all
         return scrollView.reactViewTag
       }
 
