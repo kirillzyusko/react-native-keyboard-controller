@@ -126,16 +126,18 @@ public class FocusedInputObserver: NSObject {
     let focusedInput = currentInput
     let globalFrame = focusedInput?.globalFrame
 
+    guard let frame = globalFrame, let input = focusedInput else { return }
+
     let data: [String: Any] = [
       "target": responder.reactViewTag,
       "parentScrollViewTarget": responder.parentScrollViewTarget,
       "layout": [
-        "absoluteX": globalFrame?.origin.x,
-        "absoluteY": globalFrame?.origin.y,
-        "width": focusedInput?.frame.width,
-        "height": focusedInput?.frame.height,
-        "x": focusedInput?.frame.origin.x,
-        "y": focusedInput?.frame.origin.y,
+        "absoluteX": frame.origin.x,
+        "absoluteY": frame.origin.y,
+        "width": input.frame.width,
+        "height": input.frame.height,
+        "x": input.frame.origin.x,
+        "y": input.frame.origin.y,
       ],
     ]
 
