@@ -49,8 +49,8 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
   private var callback: KeyboardAnimationCallback? = null
 
   // react managers
-  private val uiManager = reactContext.getNativeModule(UIManagerModule::class.java)
-  private val eventDispatcher = UIManagerHelper.getEventDispatcher(reactContext, if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) UIManagerType.FABRIC else UIManagerType.DEFAULT)
+  private val uiManager = reactContext.reactApplicationContext.getNativeModule(UIManagerModule::class.java)
+  private val eventDispatcher = UIManagerHelper.getEventDispatcher(reactContext.reactApplicationContext, if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) UIManagerType.FABRIC else UIManagerType.DEFAULT)
 
   init {
     reactContext.setupWindowDimensionsListener()
@@ -215,7 +215,6 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
     println(event?.eventName)
 
     if (event?.eventName == "topShow") {
-      Handler(Looper.getMainLooper()).postDelayed({
       val view = uiManager?.resolveView(event.viewTag) as? ReactModalHostView
       println(view)
       if (view != null) {
@@ -250,7 +249,6 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
           )
         }*/
         }
-      }, 500)
 
 
     }
