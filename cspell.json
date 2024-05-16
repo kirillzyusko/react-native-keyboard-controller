@@ -109,7 +109,8 @@
     "objc",
     "QWERT",
     "autoplayed",
-    "bridgeless"
+    "bridgeless",
+    "scrollview"
   ],
   "ignorePaths": [
     "node_modules",
