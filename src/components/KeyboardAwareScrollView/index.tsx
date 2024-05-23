@@ -9,6 +9,7 @@ import Reanimated, {
   useSharedValue,
 } from "react-native-reanimated";
 
+import { clampLower } from "example/src/utils";
 import {
   useFocusedInputHandler,
   useReanimatedFocusedInput,
@@ -154,7 +155,13 @@ const KeyboardAwareScrollView = forwardRef<
           const interpolatedScrollTo = interpolate(
             e,
             [initialKeyboardSize.value, keyboardHeight.value],
-            [0, keyboardHeight.value - (height - point) + bottomOffset],
+            [
+              0,
+              clampLower({
+                value: keyboardHeight.value - (height - point) + bottomOffset,
+                lowerBound: rest.snapToOffsets?.[0] || 0,
+              }),
+            ],
           );
           const targetScrollY =
             Math.max(interpolatedScrollTo, 0) + scrollPosition.value;
