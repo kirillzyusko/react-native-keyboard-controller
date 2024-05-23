@@ -9,14 +9,13 @@ import Reanimated, {
   useSharedValue,
 } from "react-native-reanimated";
 
-import { clampLower } from "example/src/utils";
 import {
   useFocusedInputHandler,
   useReanimatedFocusedInput,
 } from "react-native-keyboard-controller";
 
 import { useSmoothKeyboardHandler } from "./useSmoothKeyboardHandler";
-import { debounce } from "./utils";
+import { clampLower, debounce } from "./utils";
 
 import type {
   LayoutChangeEvent,
