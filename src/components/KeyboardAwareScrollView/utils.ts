@@ -31,5 +31,6 @@ interface ClampLowerParams {
 }
 
 export function clampLower({ value, lowerBound }: ClampLowerParams) {
+  "worklet";
   return Math.max(value, lowerBound);
 }
