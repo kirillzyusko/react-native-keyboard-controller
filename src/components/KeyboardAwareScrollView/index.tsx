@@ -183,7 +183,7 @@ const KeyboardAwareScrollView = forwardRef<
 
         return 0;
       },
-      [bottomOffset, enabled],
+      [bottomOffset, enabled, rest.snapToOffsets],
     );
 
     const onChangeText = useCallback(() => {
