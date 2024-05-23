@@ -24,3 +24,12 @@ export const debounce = <F extends (...args: Parameters<F>) => ReturnType<F>>(
     return worklet(...args);
   };
 };
+
+interface ClampLowerParams {
+  value: number;
+  lowerBound: number;
+}
+
+export function clampLower({ value, lowerBound }: ClampLowerParams) {
+  return Math.max(value, lowerBound);
+}
