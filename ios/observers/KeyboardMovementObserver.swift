@@ -228,6 +228,9 @@ public class KeyboardMovementObserver: NSObject {
         // since it will be handled in `keyboardWillDisappear` function
         return
       }
+        
+        (UIResponder.current?.inputAccessoryView as? InvisibleInputAccessoryView)?.updateHeight(to: 0)
+        UIResponder.current?.inputAccessoryView?.superview?.layoutIfNeeded()
 
       onEvent(
         "onKeyboardMoveInteractive",
@@ -310,7 +313,7 @@ public class KeyboardMovementObserver: NSObject {
     tag = UIResponder.current.reactViewTag
     self.duration = duration
       
-      (inputAccessoryView as! InvisibleInputAccessoryView).updateHeight(to: 0)
+      (inputAccessoryView as? InvisibleInputAccessoryView)?.updateHeight(to: 0)
       KeyboardView.find()?.layoutIfNeeded()
 
     var data = [AnyHashable: Any]()

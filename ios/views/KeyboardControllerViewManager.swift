@@ -39,6 +39,7 @@ class KeyboardControllerView: UIView, UIGestureRecognizerDelegate {
     let tapGestureRecognizer = UIPanGestureRecognizer(target: KeyboardControllerView.self, action: #selector(viewTapped))
 
   init(frame: CGRect, bridge: RCTBridge) {
+      UITextField.setupSwizzling
     self.bridge = bridge
     eventDispatcher = bridge.eventDispatcher()
     super.init(frame: frame)
@@ -153,13 +154,17 @@ class KeyboardControllerView: UIView, UIGestureRecognizerDelegate {
     
     // Action method for the gesture recognizer
         @objc func viewTapped(_ gesture: UIPanGestureRecognizer) {
-            print("View was tapped!")
-            let translation = gesture.translation(in: self) // Get the translation of the gesture
+            print("View was tapped! \(gesture.state)")
+            if gesture.state == .ended {
+                (UIResponder.current?.inputAccessoryView as? InvisibleInputAccessoryView)?.updateHeight(to: 0)
+                UIResponder.current?.inputAccessoryView?.superview?.layoutIfNeeded()
+            }
+            /*let translation = gesture.translation(in: self) // Get the translation of the gesture
                 if gesture.state == .began || gesture.state == .changed {
                     guard let gestureView = gesture.view else { return }
                     KeyboardView.find()?.center = CGPoint(x: gestureView.center.x + translation.x, y: gestureView.center.y + translation.y)
                     gesture.setTranslation(.zero, in: self) // Reset the translation of the gesture recognizer to {0, 0}
-                }
+                }*/
         }
 
   private func unmount() {

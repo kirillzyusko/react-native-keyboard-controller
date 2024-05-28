@@ -94,3 +94,37 @@ public extension UIView {
     return superview?.convert(frame, to: rootView)
   }
 }
+
+private var originalResignFirstResponder: IMP?
+
+extension UITextField {
+    static let setupSwizzling: Void = {
+            let originalSelector = #selector(resignFirstResponder)
+            guard let originalMethod = class_getInstanceMethod(UITextField.self, originalSelector) else {
+                return
+            }
+
+            originalResignFirstResponder = method_getImplementation(originalMethod)
+
+            let swizzledImplementation: @convention(block) (UITextField) -> Bool = { (self) in
+                // Add your custom behavior here
+                print("Performing custom actions before the original resignFirstResponder")
+                
+                (self.inputAccessoryView as? InvisibleInputAccessoryView)?.updateHeight(to: 0)
+                self.inputAccessoryView?.superview?.layoutIfNeeded()
+
+                // Postpone execution of the original resignFirstResponder
+                DispatchQueue.main.async { // Delay for 1 second
+                    // Call the original resignFirstResponder
+                    typealias Function = @convention(c) (AnyObject, Selector) -> Bool
+                    let castOriginalResignFirstResponder = unsafeBitCast(originalResignFirstResponder, to: Function.self)
+                    _ = castOriginalResignFirstResponder(self, originalSelector)
+                }
+                
+                return true // We need to return a value immediately, even though the actual action is delayed
+            }
+
+            let implementation = imp_implementationWithBlock(swizzledImplementation)
+            method_setImplementation(originalMethod, implementation)
+        }()
+}
