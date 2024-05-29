@@ -71,7 +71,7 @@ public extension Optional where Wrapped: UIResponder {
       // If the current responder is a vertical UIScrollView (excluding UITextView), return its tag
       if let scrollView = currentView as? UIScrollView,
          !(currentView is UITextView),
-         scrollView.contentSize.height > scrollView.frame.size.height
+         scrollView.frame.width >= scrollView.contentSize.width
       // it was fixed in swiftlint https://github.com/realm/SwiftLint/issues/3756 but a new release is not available yet
       // swiftlint:disable all
       {
