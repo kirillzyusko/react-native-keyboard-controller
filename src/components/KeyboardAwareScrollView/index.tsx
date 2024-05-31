@@ -31,6 +31,8 @@ export type KeyboardAwareScrollViewProps = {
   disableScrollOnKeyboardHide?: boolean;
   /** Controls whether this `KeyboardAwareScrollView` instance should take effect. Default is `true` */
   enabled?: boolean;
+  /** Adjusting the bottom spacing of KeyboardAwareScrollView. Default is `0` */
+  extraKeyboardSpace?: number;
 } & ScrollViewProps;
 
 /*
@@ -83,6 +85,7 @@ const KeyboardAwareScrollView = forwardRef<
       disableScrollOnKeyboardHide = false,
       enabled = true,
       onScroll: onScrollProps,
+      extraKeyboardSpace = 0,
       ...rest
     },
     ref,
@@ -265,7 +268,12 @@ const KeyboardAwareScrollView = forwardRef<
         onMove: (e) => {
           "worklet";
 
-          currentKeyboardFrameHeight.value = e.height;
+          const keyboardFrame = interpolate(
+            e.height,
+            [0, keyboardHeight.value],
+            [0, keyboardHeight.value + extraKeyboardSpace],
+          );
+          currentKeyboardFrameHeight.value = keyboardFrame;
 
           // if the user has set disableScrollOnKeyboardHide, only auto-scroll when the keyboard opens
           if (!disableScrollOnKeyboardHide || keyboardWillAppear.value) {
@@ -279,7 +287,7 @@ const KeyboardAwareScrollView = forwardRef<
           scrollPosition.value = position.value;
         },
       },
-      [height, maybeScroll, disableScrollOnKeyboardHide],
+      [height, maybeScroll, disableScrollOnKeyboardHide, extraKeyboardSpace],
     );
 
     useAnimatedReaction(
