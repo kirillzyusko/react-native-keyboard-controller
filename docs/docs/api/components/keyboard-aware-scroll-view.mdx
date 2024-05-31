@@ -77,6 +77,12 @@ Prevents automatic scrolling of the `ScrollView` when the keyboard gets hidden, 
 
 A boolean prop indicating whether `KeyboardAwareScrollView` is enabled or disabled. Default is `true`.
 
+### `extraKeyboardSpace`
+
+Adjusting the bottom spacing of `KeyboardAwareScrollView`. Default is `0`.
+
+It can be useful when there is some space between the `KeyboardAwareScrollView` and the bottom of the screen, and you don't want the full keyboard frame to be in the bottom. In such cases, you can specify a negative value.
+
 ## Integration with 3rd party components
 
 ### `FlatList`/`FlashList`/`SectionList` etc.
