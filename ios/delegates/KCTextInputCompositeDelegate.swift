@@ -92,6 +92,7 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
 
   // MARK: UITextFieldDelegate
 
+  @available(iOS 13.0, *)
   func textFieldDidChangeSelection(_ textField: UITextField) {
     textFieldDelegate?.textFieldDidChangeSelection?(textField)
     updateSelectionPosition(textInput: textField)
