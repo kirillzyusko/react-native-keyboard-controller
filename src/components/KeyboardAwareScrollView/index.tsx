@@ -15,7 +15,7 @@ import {
 } from "react-native-keyboard-controller";
 
 import { useSmoothKeyboardHandler } from "./useSmoothKeyboardHandler";
-import { clampLower, debounce } from "./utils";
+import { debounce } from "./utils";
 
 import type {
   LayoutChangeEvent,
@@ -153,16 +153,31 @@ const KeyboardAwareScrollView = forwardRef<
         const inputHeight = layout.value?.layout.height || 0;
         const point = absoluteY + inputHeight;
 
+        const scrollOutput = (
+          defaultScrollValue: number,
+          snapPoints?: number[],
+        ) => {
+          let snapPoint: number | undefined;
+
+          if (snapPoints) {
+            snapPoint = snapPoints.find(
+              (offset) => offset >= defaultScrollValue,
+            );
+          }
+
+          return snapPoint ? snapPoint : defaultScrollValue;
+        };
+
         if (visibleRect - point <= bottomOffset) {
           const interpolatedScrollTo = interpolate(
             e,
             [initialKeyboardSize.value, keyboardHeight.value],
             [
               0,
-              clampLower({
-                value: keyboardHeight.value - (height - point) + bottomOffset,
-                lowerBound: rest.snapToOffsets?.[0] || 0,
-              }),
+              scrollOutput(
+                keyboardHeight.value - (height - point) + bottomOffset,
+                rest.snapToOffsets,
+              ),
             ],
           );
           const targetScrollY =
