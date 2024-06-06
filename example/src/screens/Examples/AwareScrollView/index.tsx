@@ -11,6 +11,7 @@ import type { ExamplesStackParamList } from "../../../navigation/ExamplesStack";
 import type { StackScreenProps } from "@react-navigation/stack";
 
 type Props = StackScreenProps<ExamplesStackParamList>;
+const snapToOffsets = [125, 225, 325, 425];
 
 export default function AwareScrollView({ navigation }: Props) {
   const bottomSheetModalRef = useRef<BottomSheet>(null);
@@ -39,8 +40,6 @@ export default function AwareScrollView({ navigation }: Props) {
     });
   }, []);
 
-  const snapToOffsets = [125, 225, 325, 425];
-
   return (
     <>
       <KeyboardAwareScrollView
@@ -57,28 +56,16 @@ export default function AwareScrollView({ navigation }: Props) {
             {snapToOffsets.map((offset) => (
               <View
                 key={offset}
-                style={{
-                  width: "100%",
-                  position: "absolute",
-                  top: offset,
-                }}
+                style={[
+                  styles.snapToOffsetsAbsoluteContainer,
+                  {
+                    top: offset,
+                  },
+                ]}
               >
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: 12,
-                  }}
-                >
+                <View style={styles.snapToOffsetsInnerContainer}>
                   <Text>{offset}</Text>
-                  <View
-                    key={offset}
-                    style={{
-                      height: 2,
-                      flex: 1,
-                      backgroundColor: "black",
-                    }}
-                  ></View>
+                  <View style={styles.snapToOffsetsLine} />
                 </View>
               </View>
             ))}
@@ -124,7 +111,7 @@ export default function AwareScrollView({ navigation }: Props) {
           <Text>Toggle snapToOffsets</Text>
           <Switch
             value={snapToOffsetsEnabled}
-            testID="bottom_sheet_toggle_enabled_state"
+            testID="bottom_sheet_toggle_snap_to_offsets"
             onChange={() => {
               setSnapToOffsetsEnabled(!snapToOffsetsEnabled);
             }}
