@@ -161,6 +161,7 @@ const KeyboardAwareScrollView = forwardRef<
               0,
               scrollOutput(
                 keyboardHeight.value - (height - point) + bottomOffset,
+                scrollPosition.value,
                 rest.snapToOffsets,
               ),
             ],
