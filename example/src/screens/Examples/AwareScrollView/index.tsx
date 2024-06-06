@@ -23,7 +23,6 @@ export default function AwareScrollView({ navigation }: Props) {
   const [disableScrollOnKeyboardHide, setDisableScrollOnKeyboardHide] =
     useState(false);
   const [enabled, setEnabled] = useState(true);
-
   const [snapToOffsetsEnabled, setSnapToOffsetsEnabled] = useState(false);
 
   useEffect(() => {

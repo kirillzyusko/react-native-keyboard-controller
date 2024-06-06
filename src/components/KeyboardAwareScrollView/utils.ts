@@ -25,19 +25,17 @@ export const debounce = <F extends (...args: Parameters<F>) => ReturnType<F>>(
   };
 };
 
-export const scrollOutput = (
+export const scrollDistanceWithRespectToSnapPoints = (
   defaultScrollValue: number,
-  scrollPosition: number,
   snapPoints?: number[],
 ) => {
   "worklet";
+
   let snapPoint: number | undefined;
 
   if (snapPoints) {
-    snapPoint = snapPoints.find(
-      (offset) => offset >= defaultScrollValue + scrollPosition,
-    );
+    snapPoint = snapPoints.find((offset) => offset >= defaultScrollValue);
   }
 
-  return snapPoint ? snapPoint : defaultScrollValue;
+  return snapPoint ?? defaultScrollValue;
 };
