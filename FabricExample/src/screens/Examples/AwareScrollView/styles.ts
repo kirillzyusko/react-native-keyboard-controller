@@ -17,4 +17,18 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     margin: 16,
   },
+  snapToOffsetsAbsoluteContainer: {
+    width: "100%",
+    position: "absolute",
+  },
+  snapToOffsetsInnerContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+  },
+  snapToOffsetsLine: {
+    height: 2,
+    flex: 1,
+    backgroundColor: "black",
+  },
 });

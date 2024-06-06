@@ -11,6 +11,7 @@ import type { ExamplesStackParamList } from "../../../navigation/ExamplesStack";
 import type { StackScreenProps } from "@react-navigation/stack";
 
 type Props = StackScreenProps<ExamplesStackParamList>;
+const snapToOffsets = [125, 225, 325, 425, 525, 625];
 
 export default function AwareScrollView({ navigation }: Props) {
   const bottomSheetModalRef = useRef<BottomSheet>(null);
@@ -22,6 +23,7 @@ export default function AwareScrollView({ navigation }: Props) {
   const [disableScrollOnKeyboardHide, setDisableScrollOnKeyboardHide] =
     useState(false);
   const [enabled, setEnabled] = useState(true);
+  const [snapToOffsetsEnabled, setSnapToOffsetsEnabled] = useState(false);
 
   useEffect(() => {
     navigation.setOptions({
@@ -43,10 +45,32 @@ export default function AwareScrollView({ navigation }: Props) {
         testID="aware_scroll_view_container"
         bottomOffset={50}
         enabled={enabled}
+        snapToOffsets={snapToOffsetsEnabled ? snapToOffsets : undefined}
         disableScrollOnKeyboardHide={disableScrollOnKeyboardHide}
         style={styles.container}
         contentContainerStyle={styles.content}
       >
+        {snapToOffsetsEnabled && (
+          <>
+            {snapToOffsets.map((offset) => (
+              <View
+                key={offset}
+                style={[
+                  styles.snapToOffsetsAbsoluteContainer,
+                  {
+                    top: offset,
+                  },
+                ]}
+              >
+                <View style={styles.snapToOffsetsInnerContainer}>
+                  <Text>{offset}</Text>
+                  <View style={styles.snapToOffsetsLine} />
+                </View>
+              </View>
+            ))}
+          </>
+        )}
+
         {new Array(10).fill(0).map((_, i) => (
           <TextInput
             key={i}
@@ -78,6 +102,17 @@ export default function AwareScrollView({ navigation }: Props) {
             testID="bottom_sheet_toggle_enabled_state"
             onChange={() => {
               setEnabled(!enabled);
+            }}
+          />
+        </View>
+
+        <View style={styles.switchContainer}>
+          <Text>Toggle snapToOffsets</Text>
+          <Switch
+            value={snapToOffsetsEnabled}
+            testID="bottom_sheet_toggle_snap_to_offsets"
+            onChange={() => {
+              setSnapToOffsetsEnabled(!snapToOffsetsEnabled);
             }}
           />
         </View>
