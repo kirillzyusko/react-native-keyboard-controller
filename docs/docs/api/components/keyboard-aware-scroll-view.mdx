@@ -179,6 +179,7 @@ export default List;
 To seamlessly work with [@gorhom/bottom-sheet](https://github.com/gorhom/react-native-bottom-sheet) you will need to wrap `KeyboardAwareScrollView` in some HOCs provided by `@gorhom/bottom-sheet`.
 
 ```tsx title="BottomSheetKeyboardAwareScrollView.tsx"
+import { memo } from "react";
 import {
   KeyboardAwareScrollView,
   KeyboardAwareScrollViewProps,
