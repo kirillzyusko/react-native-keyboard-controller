@@ -11,7 +11,7 @@ import type { ExamplesStackParamList } from "../../../navigation/ExamplesStack";
 import type { StackScreenProps } from "@react-navigation/stack";
 
 type Props = StackScreenProps<ExamplesStackParamList>;
-const snapToOffsets = [125, 225, 325, 425];
+const snapToOffsets = [125, 225, 325, 425, 525, 625];
 
 export default function AwareScrollView({ navigation }: Props) {
   const bottomSheetModalRef = useRef<BottomSheet>(null);
@@ -23,7 +23,6 @@ export default function AwareScrollView({ navigation }: Props) {
   const [disableScrollOnKeyboardHide, setDisableScrollOnKeyboardHide] =
     useState(false);
   const [enabled, setEnabled] = useState(true);
-
   const [snapToOffsetsEnabled, setSnapToOffsetsEnabled] = useState(false);
 
   useEffect(() => {
