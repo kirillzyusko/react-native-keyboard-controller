@@ -30,7 +30,7 @@ private val TAG = EdgeToEdgeReactViewGroup::class.qualifiedName
 @Suppress("detekt:TooManyFunctions")
 @SuppressLint("ViewConstructor")
 class EdgeToEdgeReactViewGroup(
-  private val reactContext: ThemedReactContext
+  private val reactContext: ThemedReactContext,
 ) : ReactViewGroup(reactContext), EventDispatcherListener {
   // props
   private var isStatusBarTranslucent = false
