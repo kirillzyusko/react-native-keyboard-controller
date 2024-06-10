@@ -22,7 +22,7 @@ The `KeyboardController` module in React Native provides a convenient set of met
 
 ### `setInputMode` <div class="label android"></div>
 
-This method is used to dynamically change the `windowSoftInputMode` during runtime in an Android application (in `Expo` often referred as `softwareKeyboardLayoutMode`). It takes an argument that specifies the desired input mode. The example provided sets the input mode to `SOFT_INPUT_ADJUST_RESIZE`:
+This method is used to dynamically change the `windowSoftInputMode` (in `Expo` often referred as `softwareKeyboardLayoutMode`) during runtime in an Android application. It takes an argument that specifies the desired input mode. The example provided sets the input mode to `SOFT_INPUT_ADJUST_RESIZE`:
 
 ```ts
 KeyboardController.setInputMode(AndroidSoftInputModes.SOFT_INPUT_ADJUST_RESIZE);
@@ -38,7 +38,7 @@ A combination of `adjustResize` + `edge-to-edge` mode will result in behavior si
 
 ### `setDefaultMode` <div class="label android"></div>
 
-This method is used to restore the default `windowSoftInputMode` declared in the `AndroidManifest.xml` (in `Expo` referred as `softwareKeyboardLayoutMode`). It resets the input mode to the default value:
+This method is used to restore the default `windowSoftInputMode` (in `Expo` often referred as `softwareKeyboardLayoutMode`) declared in the `AndroidManifest.xml`. It resets the input mode to the default value:
 
 ```ts
 KeyboardController.setDefaultMode();
