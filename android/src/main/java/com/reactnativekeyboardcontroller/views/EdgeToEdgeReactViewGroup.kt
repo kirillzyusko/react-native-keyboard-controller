@@ -49,7 +49,8 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
   private var callback: KeyboardAnimationCallback? = null
 
   // react managers
-  private val uiManager = reactContext.reactApplicationContext.getNativeModule(UIManagerModule::class.java)
+  private val archType = if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) UIManagerType.FABRIC else UIManagerType.DEFAULT
+  private val uiManager = UIManagerHelper.getUIManager(reactContext.reactApplicationContext, archType) // reactContext.reactApplicationContext.getNativeModule(UIManagerModule::class.java)
   private val eventDispatcher = UIManagerHelper.getEventDispatcher(reactContext.reactApplicationContext, if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) UIManagerType.FABRIC else UIManagerType.DEFAULT)
 
   init {
@@ -215,7 +216,9 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
     println(event?.eventName)
 
     if (event?.eventName == "topShow") {
-      val view = uiManager?.resolveView(event.viewTag) as? ReactModalHostView
+      val view2 = uiManager?.resolveView(event.viewTag)
+      println("view2 $view2 uiManger $uiManager")
+      val view = view2 as? ReactModalHostView
       println(view)
       if (view != null) {
         println(view.dialog?.window)
@@ -230,6 +233,7 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
             context = reactContext,
           )
           view.dialog?.window?.decorView?.rootView?.let {
+            println("989898 $it")
             ViewCompat.setWindowInsetsAnimationCallback(
               it, callback
             )
