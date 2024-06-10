@@ -29,7 +29,9 @@ private val TAG = EdgeToEdgeReactViewGroup::class.qualifiedName
 
 @Suppress("detekt:TooManyFunctions")
 @SuppressLint("ViewConstructor")
-class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : ReactViewGroup(reactContext), EventDispatcherListener {
+class EdgeToEdgeReactViewGroup(
+  private val reactContext: ThemedReactContext
+) : ReactViewGroup(reactContext), EventDispatcherListener {
   // props
   private var isStatusBarTranslucent = false
   private var isNavigationBarTranslucent = false
@@ -42,8 +44,8 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
 
   // react managers
   private val archType = if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) UIManagerType.FABRIC else UIManagerType.DEFAULT
-  private val uiManager = UIManagerHelper.getUIManager(reactContext.reactApplicationContext, archType) // reactContext.reactApplicationContext.getNativeModule(UIManagerModule::class.java)
-  private val eventDispatcher = UIManagerHelper.getEventDispatcher(reactContext.reactApplicationContext, if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) UIManagerType.FABRIC else UIManagerType.DEFAULT)
+  private val uiManager = UIManagerHelper.getUIManager(reactContext.reactApplicationContext, archType)
+  private val eventDispatcher = UIManagerHelper.getEventDispatcher(reactContext.reactApplicationContext, archType)
 
   init {
     reactContext.setupWindowDimensionsListener()
@@ -237,7 +239,6 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
   }
 
   private fun addModalAttachingObserver() {
-    println(eventDispatcher)
     eventDispatcher?.addListener(this)
   }
 
