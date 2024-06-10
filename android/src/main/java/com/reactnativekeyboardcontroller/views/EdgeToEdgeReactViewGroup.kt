@@ -4,19 +4,14 @@ import android.annotation.SuppressLint
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import android.view.View
-import android.view.WindowManager
 import android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING
 import android.widget.FrameLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsAnimationCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.children
-import androidx.core.view.setPadding
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.UIManagerHelper
-import com.facebook.react.uimanager.UIManagerModule
 import com.facebook.react.uimanager.common.UIManagerType
 import com.facebook.react.uimanager.events.Event
 import com.facebook.react.uimanager.events.EventDispatcherListener
@@ -29,9 +24,6 @@ import com.reactnativekeyboardcontroller.extensions.requestApplyInsetsWhenAttach
 import com.reactnativekeyboardcontroller.extensions.rootView
 import com.reactnativekeyboardcontroller.extensions.setupWindowDimensionsListener
 import com.reactnativekeyboardcontroller.listeners.KeyboardAnimationCallback
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 private val TAG = EdgeToEdgeReactViewGroup::class.qualifiedName
 
@@ -213,48 +205,34 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
   // endregion
 
   override fun onEventDispatch(event: Event<out Event<*>>?) {
-    println(event?.eventName)
+    if (event?.eventName == MODAL_SHOW_EVENT) {
+      val view = uiManager?.resolveView(event.viewTag) as? ReactModalHostView
 
-    if (event?.eventName == "topShow") {
-      val view2 = uiManager?.resolveView(event.viewTag)
-      println("view2 $view2 uiManger $uiManager")
-      val view = view2 as? ReactModalHostView
-      println(view)
       if (view != null) {
-        println(view.dialog?.window)
-          // Delay for 1 second (1000 milliseconds)
+        val window = view.dialog?.window
+        val rootView = window?.decorView?.rootView
 
+        if (rootView != null) {
           callback = KeyboardAnimationCallback(
-            view = if (view.dialog?.window?.decorView?.rootView != null) view.dialog!!.window!!.decorView.rootView else this@EdgeToEdgeReactViewGroup,
+            view = rootView,
             viewId = this@EdgeToEdgeReactViewGroup,
             persistentInsetTypes = WindowInsetsCompat.Type.systemBars(),
             deferredInsetTypes = WindowInsetsCompat.Type.ime(),
             dispatchMode = WindowInsetsAnimationCompat.Callback.DISPATCH_MODE_CONTINUE_ON_SUBTREE,
             context = reactContext,
           )
-          view.dialog?.window?.decorView?.rootView?.let {
-            println("989898 $it")
-            ViewCompat.setWindowInsetsAnimationCallback(
-              it, callback
-            )
-            // ViewCompat.setOnApplyWindowInsetsListener(it, callback)
-          }
-          view.dialog?.window?.setSoftInputMode(SOFT_INPUT_ADJUST_NOTHING)
-          val content = view.dialog?.window?.decorView?.findViewById<FrameLayout>(
-            android.R.id.content,
-          )
-          println("content $content")
 
-          /*view.dialog?.window?.let {
-          println("set edge-to-edge")
-          WindowCompat.setDecorFitsSystemWindows(
-            it,
-            false,
+          ViewCompat.setWindowInsetsAnimationCallback(
+            rootView,
+            callback,
           )
-        }*/
+          // adds additional bottom padding
+          // ViewCompat.setOnApplyWindowInsetsListener(rootView, callback)
+
+          // imitating edge-to-edge mode behavior
+          window.setSoftInputMode(SOFT_INPUT_ADJUST_NOTHING)
         }
-
-
+      }
     }
   }
 
@@ -265,5 +243,9 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
 
   private fun removeModalAttachingObserver() {
     eventDispatcher?.removeListener(this)
+  }
+
+  companion object {
+    private const val MODAL_SHOW_EVENT = "topShow"
   }
 }
