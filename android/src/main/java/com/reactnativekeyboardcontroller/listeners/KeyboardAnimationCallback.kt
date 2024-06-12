@@ -32,6 +32,7 @@ class KeyboardAnimationCallback(
   val deferredInsetTypes: Int,
   dispatchMode: Int = DISPATCH_MODE_STOP,
   val context: ThemedReactContext?,
+  val hasTranslucentNavigationBar: Boolean = false,
 ) : WindowInsetsAnimationCompat.Callback(dispatchMode), OnApplyWindowInsetsListener {
   private val surfaceId = UIManagerHelper.getSurfaceId(view)
 
@@ -205,10 +206,13 @@ class KeyboardAnimationCallback(
     // First we get the insets which are potentially deferred
     val typesInset = insets.getInsets(deferredInsetTypes)
     // Then we get the persistent inset types which are applied as padding during layout
-    val otherInset = insets.getInsets(persistentInsetTypes)
+    var otherInset = insets.getInsets(persistentInsetTypes)
 
     // Now that we subtract the two insets, to calculate the difference. We also coerce
     // the insets to be >= 0, to make sure we don't use negative insets.
+    if (hasTranslucentNavigationBar) {
+      otherInset = Insets.NONE
+    }
     val diff = Insets.subtract(typesInset, otherInset).let {
       Insets.max(it, Insets.NONE)
     }
@@ -358,7 +362,7 @@ class KeyboardAnimationCallback(
   private fun getCurrentKeyboardHeight(): Double {
     val insets = ViewCompat.getRootWindowInsets(view)
     val keyboardHeight = insets?.getInsets(WindowInsetsCompat.Type.ime())?.bottom ?: 0
-    val navigationBar = insets?.getInsets(WindowInsetsCompat.Type.navigationBars())?.bottom ?: 0
+    val navigationBar = if (hasTranslucentNavigationBar) 0 else insets?.getInsets(WindowInsetsCompat.Type.navigationBars())?.bottom ?: 0
 
     // on hide it will be negative value, so we are using max function
     return (keyboardHeight - navigationBar).toFloat().dp.coerceAtLeast(0.0)
