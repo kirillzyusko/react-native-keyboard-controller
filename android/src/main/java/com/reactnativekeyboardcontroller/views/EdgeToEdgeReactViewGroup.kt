@@ -121,7 +121,7 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
         deferredInsetTypes = WindowInsetsCompat.Type.ime(),
         dispatchMode = WindowInsetsAnimationCompat.Callback.DISPATCH_MODE_CONTINUE_ON_SUBTREE,
         context = reactContext,
-        hasTranslucentNavigationBar = isNavigationBarTranslucent
+        hasTranslucentNavigationBar = isNavigationBarTranslucent,
       )
 
       eventView?.let {
