@@ -37,7 +37,7 @@ class WindowDimensionListener(private val context: ThemedReactContext?) {
         Arguments.createMap().apply {
           putDouble("height", newDimensions.height)
           putDouble("width", newDimensions.width)
-        }
+        },
       )
     }
   }

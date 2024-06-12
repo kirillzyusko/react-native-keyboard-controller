@@ -12,9 +12,10 @@ import com.facebook.react.uimanager.events.EventDispatcher
 val ThemedReactContext.rootView: View?
   get() = this.currentActivity?.window?.decorView?.rootView
 
-// TODO: re-use this in EdgeToEdgeView instead of getContentView function?
 val ThemedReactContext.content: ViewGroup?
-  get() = this.currentActivity?.findViewById(android.R.id.content)
+  get() = this.currentActivity?.window?.decorView?.rootView?.findViewById(
+    androidx.appcompat.R.id.action_bar_root,
+  )
 
 fun ThemedReactContext?.dispatchEvent(viewId: Int, event: Event<*>) {
   val eventDispatcher: EventDispatcher? =

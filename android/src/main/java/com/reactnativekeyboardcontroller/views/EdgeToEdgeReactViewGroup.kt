@@ -5,13 +5,13 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.widget.FrameLayout
-import androidx.appcompat.widget.FitWindowsLinearLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsAnimationCompat
 import androidx.core.view.WindowInsetsCompat
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.views.view.ReactViewGroup
+import com.reactnativekeyboardcontroller.extensions.content
 import com.reactnativekeyboardcontroller.extensions.removeSelf
 import com.reactnativekeyboardcontroller.extensions.requestApplyInsetsWhenAttached
 import com.reactnativekeyboardcontroller.extensions.rootView
@@ -34,7 +34,7 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
   private var callback: KeyboardAnimationCallback? = null
 
   init {
-      WindowDimensionListener(reactContext)
+    WindowDimensionListener(reactContext)
   }
 
   // region View life cycles
@@ -62,7 +62,7 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
     val rootView = reactContext.rootView
     if (rootView != null) {
       ViewCompat.setOnApplyWindowInsetsListener(rootView) { v, insets ->
-        val content = getContentView()
+        val content = reactContext.content
         val params = FrameLayout.LayoutParams(
           FrameLayout.LayoutParams.MATCH_PARENT,
           FrameLayout.LayoutParams.MATCH_PARENT,
@@ -117,7 +117,7 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
 
     if (activity != null) {
       eventView = ReactViewGroup(context)
-      val root = this.getContentView()
+      val root = reactContext.content
       root?.addView(eventView)
 
       callback = KeyboardAnimationCallback(
@@ -152,12 +152,6 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
     // see https://github.com/kirillzyusko/react-native-keyboard-controller/issues/242
     // for more details
     Handler(Looper.getMainLooper()).post { view.removeSelf() }
-  }
-
-  private fun getContentView(): FitWindowsLinearLayout? {
-    return reactContext.currentActivity?.window?.decorView?.rootView?.findViewById(
-      androidx.appcompat.R.id.action_bar_root,
-    )
   }
   // endregion
 
