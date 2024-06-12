@@ -1,6 +1,7 @@
 package com.reactnativekeyboardcontroller.listeners
 
 import android.view.ViewGroup
+import androidx.core.view.marginTop
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.uimanager.ThemedReactContext
 import com.reactnativekeyboardcontroller.extensions.content
@@ -27,7 +28,10 @@ class WindowDimensionListener(private val context: ThemedReactContext?) {
       return
     }
 
-    val newDimensions = Dimensions(content.width.toFloat().dp, content.height.toFloat().dp)
+    val newDimensions = Dimensions(
+      content.width.toFloat().dp,
+      content.height.toFloat().dp + content.marginTop.toFloat().dp,
+    )
 
     if (newDimensions != lastDispatchedDimensions) {
       lastDispatchedDimensions = newDimensions
