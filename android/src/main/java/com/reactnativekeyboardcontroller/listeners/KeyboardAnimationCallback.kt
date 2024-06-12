@@ -362,7 +362,12 @@ class KeyboardAnimationCallback(
   private fun getCurrentKeyboardHeight(): Double {
     val insets = ViewCompat.getRootWindowInsets(view)
     val keyboardHeight = insets?.getInsets(WindowInsetsCompat.Type.ime())?.bottom ?: 0
-    val navigationBar = if (hasTranslucentNavigationBar) 0 else insets?.getInsets(WindowInsetsCompat.Type.navigationBars())?.bottom ?: 0
+    val navigationBar =
+      if (hasTranslucentNavigationBar) {
+        0
+      } else {
+        insets?.getInsets(WindowInsetsCompat.Type.navigationBars())?.bottom ?: 0
+      }
 
     // on hide it will be negative value, so we are using max function
     return (keyboardHeight - navigationBar).toFloat().dp.coerceAtLeast(0.0)
