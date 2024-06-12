@@ -6,6 +6,7 @@ import type {
   KeyboardControllerProps,
   KeyboardEventsModule,
   KeyboardGestureAreaProps,
+  WindowDimensionsEventsModule,
 } from "./types";
 
 const LINKING_ERROR =
@@ -41,6 +42,10 @@ export const KeyboardEvents: KeyboardEventsModule = {
  * Use it with cautious.
  */
 export const FocusedInputEvents: FocusedInputEventsModule = {
+  addListener: (name, cb) =>
+    eventEmitter.addListener(KEYBOARD_CONTROLLER_NAMESPACE + name, cb),
+};
+export const WindowDimensionsEvents: WindowDimensionsEventsModule = {
   addListener: (name, cb) =>
     eventEmitter.addListener(KEYBOARD_CONTROLLER_NAMESPACE + name, cb),
 };

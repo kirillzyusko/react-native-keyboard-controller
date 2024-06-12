@@ -6,6 +6,7 @@ import type {
   KeyboardControllerProps,
   KeyboardEventsModule,
   KeyboardGestureAreaProps,
+  WindowDimensionsEventsModule,
 } from "./types";
 import type { EmitterSubscription } from "react-native";
 
@@ -26,6 +27,9 @@ export const KeyboardEvents: KeyboardEventsModule = {
  * Use it with cautious.
  */
 export const FocusedInputEvents: FocusedInputEventsModule = {
+  addListener: () => ({ remove: NOOP } as EmitterSubscription),
+};
+export const WindowDimensionsEvents: WindowDimensionsEventsModule = {
   addListener: () => ({ remove: NOOP } as EmitterSubscription),
 };
 export const KeyboardControllerView =
