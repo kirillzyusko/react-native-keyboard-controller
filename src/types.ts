@@ -145,6 +145,17 @@ export type FocusedInputEventsModule = {
     cb: (e: FocusedInputEventData) => void,
   ) => EmitterSubscription;
 };
+export type WindowDimensionsAvailableEvents = "windowDidResize";
+export type WindowDimensionsEventData = {
+  width: number;
+  height: number;
+};
+export type WindowDimensionsEventsModule = {
+  addListener: (
+    name: WindowDimensionsAvailableEvents,
+    cb: (e: WindowDimensionsEventData) => void,
+  ) => EmitterSubscription;
+};
 
 // reanimated hook declaration
 export type KeyboardHandlerHook<TContext, Event> = (

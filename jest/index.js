@@ -1,4 +1,4 @@
-import { Animated, ScrollView, View } from "react-native";
+import { Animated, ScrollView, View, useWindowDimensions } from "react-native";
 
 const values = {
   animated: {
@@ -43,6 +43,8 @@ const mock = {
   useKeyboardController: jest
     .fn()
     .mockReturnValue({ setEnabled: jest.fn(), enabled: true }),
+  // internal
+  useWindowDimensions,
   // modules
   KeyboardController: {
     setInputMode: jest.fn(),

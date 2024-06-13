@@ -1,5 +1,5 @@
 import React, { forwardRef, useCallback, useMemo } from "react";
-import { View, useWindowDimensions } from "react-native";
+import { View } from "react-native";
 import Reanimated, {
   interpolate,
   runOnUI,
@@ -7,6 +7,8 @@ import Reanimated, {
   useDerivedValue,
   useSharedValue,
 } from "react-native-reanimated";
+
+import { useWindowDimensions } from "react-native-keyboard-controller";
 
 import { useKeyboardAnimation } from "./hooks";
 
