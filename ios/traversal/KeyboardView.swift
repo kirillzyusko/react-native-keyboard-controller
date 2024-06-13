@@ -12,8 +12,6 @@ import UIKit
 enum KeyboardView {
   // https://stackoverflow.com/questions/32598490/show-uiview-with-buttons-over-keyboard-like-in-skype-viber-messengers-swift-i
   static func find() -> UIView? {
-    var result: UIView?
-
     let windows = UIApplication.shared.windows
     for window in windows {
       if window.description.hasPrefix("<UITextEffectsWindow") {
@@ -21,9 +19,7 @@ enum KeyboardView {
           if subview.description.hasPrefix("<UIInputSetContainerView") {
             for hostView in subview.subviews {
               if hostView.description.hasPrefix("<UIInputSetHostView") {
-                result = hostView
-
-                return result
+                return hostView
               }
             }
             break
@@ -31,6 +27,7 @@ enum KeyboardView {
         }
       }
     }
-    return result
+
+    return nil
   }
 }
