@@ -34,7 +34,7 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
   private var callback: KeyboardAnimationCallback? = null
 
   init {
-      reactContext.setupWindowDimensionsListener()
+    reactContext.setupWindowDimensionsListener()
   }
 
   // region View life cycles
