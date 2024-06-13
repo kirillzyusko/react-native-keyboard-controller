@@ -22,13 +22,13 @@ enum KeyboardView {
             for hostView in subview.subviews {
               if hostView.description.hasPrefix("<UIInputSetHostView") {
                 result = hostView
-                break
+
+                return result
               }
             }
             break
           }
         }
-        break
       }
     }
     return result
