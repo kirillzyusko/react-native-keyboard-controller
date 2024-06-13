@@ -8,6 +8,7 @@ import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.UIManagerHelper
 import com.facebook.react.uimanager.events.Event
 import com.facebook.react.uimanager.events.EventDispatcher
+import com.reactnativekeyboardcontroller.listeners.WindowDimensionListener
 
 val ThemedReactContext.rootView: View?
   get() = this.currentActivity?.window?.decorView?.rootView
@@ -16,6 +17,10 @@ val ThemedReactContext.content: ViewGroup?
   get() = this.currentActivity?.window?.decorView?.rootView?.findViewById(
     androidx.appcompat.R.id.action_bar_root,
   )
+
+fun ThemedReactContext.setupWindowDimensionsListener() {
+  WindowDimensionListener(this)
+}
 
 fun ThemedReactContext?.dispatchEvent(viewId: Int, event: Event<*>) {
   val eventDispatcher: EventDispatcher? =

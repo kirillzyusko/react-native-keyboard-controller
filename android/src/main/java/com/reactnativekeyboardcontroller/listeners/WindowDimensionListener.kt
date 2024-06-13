@@ -14,12 +14,17 @@ class WindowDimensionListener(private val context: ThemedReactContext?) {
   private var lastDispatchedDimensions = Dimensions(0.0, 0.0)
 
   init {
-    val content = context?.content
+    // attach to content view only once
+    if (!isListenerAttached) {
+      isListenerAttached = true
 
-    updateWindowDimensions(content)
+      val content = context?.content
 
-    content?.viewTreeObserver?.addOnGlobalLayoutListener {
       updateWindowDimensions(content)
+
+      content?.viewTreeObserver?.addOnGlobalLayoutListener {
+        updateWindowDimensions(content)
+      }
     }
   }
 
@@ -44,5 +49,9 @@ class WindowDimensionListener(private val context: ThemedReactContext?) {
         },
       )
     }
+  }
+
+  companion object {
+    private var isListenerAttached = false
   }
 }

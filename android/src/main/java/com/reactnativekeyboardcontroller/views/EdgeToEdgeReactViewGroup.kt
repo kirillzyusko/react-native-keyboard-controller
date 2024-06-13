@@ -15,8 +15,8 @@ import com.reactnativekeyboardcontroller.extensions.content
 import com.reactnativekeyboardcontroller.extensions.removeSelf
 import com.reactnativekeyboardcontroller.extensions.requestApplyInsetsWhenAttached
 import com.reactnativekeyboardcontroller.extensions.rootView
+import com.reactnativekeyboardcontroller.extensions.setupWindowDimensionsListener
 import com.reactnativekeyboardcontroller.listeners.KeyboardAnimationCallback
-import com.reactnativekeyboardcontroller.listeners.WindowDimensionListener
 
 private val TAG = EdgeToEdgeReactViewGroup::class.qualifiedName
 
@@ -34,7 +34,7 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
   private var callback: KeyboardAnimationCallback? = null
 
   init {
-    WindowDimensionListener(reactContext)
+      reactContext.setupWindowDimensionsListener()
   }
 
   // region View life cycles
