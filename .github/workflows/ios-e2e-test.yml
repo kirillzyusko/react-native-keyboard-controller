@@ -39,7 +39,7 @@ jobs:
           cache: "yarn"
       - uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: "15.3"
+          xcode-version: "15.4"
       - name: Get Xcode version
         run: xcodebuild -version
       - name: Install AppleSimulatorUtils
