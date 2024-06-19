@@ -15,6 +15,7 @@ const snapToOffsets = [125, 225, 325, 425, 525, 625];
 
 export default function AwareScrollView({ navigation }: Props) {
   const bottomSheetModalRef = useRef<BottomSheet>(null);
+  const [_, setText] = useState("");
 
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.expand();
@@ -76,6 +77,7 @@ export default function AwareScrollView({ navigation }: Props) {
             key={i}
             placeholder={`TextInput#${i}`}
             keyboardType={i % 2 === 0 ? "numeric" : "default"}
+            onChangeText={setText}
           />
         ))}
       </KeyboardAwareScrollView>
