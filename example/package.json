@@ -24,7 +24,7 @@
     "react-native-gesture-handler": "2.16.1",
     "react-native-haptic-feedback": "^2.2.0",
     "react-native-keyboard-controller": "link:../",
-    "react-native-reanimated": "3.9.0",
+    "react-native-reanimated": "3.12.1",
     "react-native-safe-area-context": "^4.10.1",
     "react-native-screens": "^3.31.1",
     "react-native-text-input-mask": "3.1.5",
