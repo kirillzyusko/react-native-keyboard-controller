@@ -12,10 +12,10 @@
 #include <map>
 #include <string>
 
-#import "KeyboardControllerView.h"
 #import "FocusedInputLayoutChangedEvent.h"
 #import "FocusedInputSelectionChangedEvent.h"
 #import "FocusedInputTextChangedEvent.h"
+#import "KeyboardControllerView.h"
 #import "KeyboardMoveEvent.h"
 
 #if __has_include("react_native_keyboard_controller-Swift.h")
@@ -42,41 +42,81 @@ using namespace facebook::react;
 
 // Helper function to set common fields
 template <typename EventStruct>
-void setCommonFields(EventStruct &eventStruct, NSNumber *height, NSNumber *progress, NSNumber *duration, NSNumber *target) {
-    eventStruct.height = [height doubleValue];
-    eventStruct.progress = [progress doubleValue];
-    eventStruct.duration = [duration intValue];
-    eventStruct.target = [target intValue];
+void setCommonFields(
+    EventStruct &eventStruct,
+    NSNumber *height,
+    NSNumber *progress,
+    NSNumber *duration,
+    NSNumber *target)
+{
+  eventStruct.height = [height doubleValue];
+  eventStruct.progress = [progress doubleValue];
+  eventStruct.duration = [duration intValue];
+  eventStruct.target = [target intValue];
 }
 
 // Define a type for the method pointer
 template <typename EventStruct>
-using EventMethod = void (facebook::react::KeyboardControllerViewEventEmitter::*)(const EventStruct&) const;
+using EventMethod =
+    void (facebook::react::KeyboardControllerViewEventEmitter::*)(const EventStruct &) const;
 
-// Create a map from event strings to their corresponding method and a lambda to set the struct values
-std::map<std::string, std::function<void(facebook::react::KeyboardControllerViewEventEmitter const*,
-                                          NSNumber*, NSNumber*, NSNumber*, NSNumber*)>> eventMap = {
-    {"onKeyboardMoveStart", [](const facebook::react::KeyboardControllerViewEventEmitter* emitter, NSNumber* height, NSNumber* progress, NSNumber* duration, NSNumber* target) {
-        facebook::react::KeyboardControllerViewEventEmitter::OnKeyboardMoveStart eventStruct;
-        setCommonFields(eventStruct, height, progress, duration, target);
-        (emitter->*(&facebook::react::KeyboardControllerViewEventEmitter::onKeyboardMoveStart))(eventStruct);
-    }},
-    {"onKeyboardMove", [](const facebook::react::KeyboardControllerViewEventEmitter* emitter, NSNumber* height, NSNumber* progress, NSNumber* duration, NSNumber* target) {
-        facebook::react::KeyboardControllerViewEventEmitter::OnKeyboardMove eventStruct;
-        setCommonFields(eventStruct, height, progress, duration, target);
-        (emitter->*(&facebook::react::KeyboardControllerViewEventEmitter::onKeyboardMove))(eventStruct);
-    }},
-    {"onKeyboardMoveEnd", [](const facebook::react::KeyboardControllerViewEventEmitter* emitter, NSNumber* height, NSNumber* progress, NSNumber* duration, NSNumber* target) {
-        facebook::react::KeyboardControllerViewEventEmitter::OnKeyboardMoveEnd eventStruct;
-        setCommonFields(eventStruct, height, progress, duration, target);
-        (emitter->*(&facebook::react::KeyboardControllerViewEventEmitter::onKeyboardMoveEnd))(eventStruct);
-    }},
-    {"onKeyboardMoveInteractive", [](const facebook::react::KeyboardControllerViewEventEmitter* emitter, NSNumber* height, NSNumber* progress, NSNumber* duration, NSNumber* target) {
-        facebook::react::KeyboardControllerViewEventEmitter::OnKeyboardMoveInteractive eventStruct;
-        setCommonFields(eventStruct, height, progress, duration, target);
-        (emitter->*(&facebook::react::KeyboardControllerViewEventEmitter::onKeyboardMoveInteractive))(eventStruct);
-    }}
-};
+// Create a map from event strings to their corresponding method and a lambda to set the struct
+// values
+std::map<
+    std::string,
+    std::function<void(
+        facebook::react::KeyboardControllerViewEventEmitter const *,
+        NSNumber *,
+        NSNumber *,
+        NSNumber *,
+        NSNumber *)>>
+    eventMap = {
+        {"onKeyboardMoveStart",
+         [](const facebook::react::KeyboardControllerViewEventEmitter *emitter,
+            NSNumber *height,
+            NSNumber *progress,
+            NSNumber *duration,
+            NSNumber *target) {
+           facebook::react::KeyboardControllerViewEventEmitter::OnKeyboardMoveStart eventStruct;
+           setCommonFields(eventStruct, height, progress, duration, target);
+           (emitter->*(&facebook::react::KeyboardControllerViewEventEmitter::onKeyboardMoveStart))(
+               eventStruct);
+         }},
+        {"onKeyboardMove",
+         [](const facebook::react::KeyboardControllerViewEventEmitter *emitter,
+            NSNumber *height,
+            NSNumber *progress,
+            NSNumber *duration,
+            NSNumber *target) {
+           facebook::react::KeyboardControllerViewEventEmitter::OnKeyboardMove eventStruct;
+           setCommonFields(eventStruct, height, progress, duration, target);
+           (emitter->*(&facebook::react::KeyboardControllerViewEventEmitter::onKeyboardMove))(
+               eventStruct);
+         }},
+        {"onKeyboardMoveEnd",
+         [](const facebook::react::KeyboardControllerViewEventEmitter *emitter,
+            NSNumber *height,
+            NSNumber *progress,
+            NSNumber *duration,
+            NSNumber *target) {
+           facebook::react::KeyboardControllerViewEventEmitter::OnKeyboardMoveEnd eventStruct;
+           setCommonFields(eventStruct, height, progress, duration, target);
+           (emitter->*(&facebook::react::KeyboardControllerViewEventEmitter::onKeyboardMoveEnd))(
+               eventStruct);
+         }},
+        {"onKeyboardMoveInteractive",
+         [](const facebook::react::KeyboardControllerViewEventEmitter *emitter,
+            NSNumber *height,
+            NSNumber *progress,
+            NSNumber *duration,
+            NSNumber *target) {
+           facebook::react::KeyboardControllerViewEventEmitter::OnKeyboardMoveInteractive
+               eventStruct;
+           setCommonFields(eventStruct, height, progress, duration, target);
+           (emitter
+                ->*(&facebook::react::KeyboardControllerViewEventEmitter::onKeyboardMoveInteractive))(
+               eventStruct);
+         }}};
 
 @implementation KeyboardControllerView {
   KeyboardMovementObserver *keyboardObserver;
@@ -195,14 +235,22 @@ std::map<std::string, std::function<void(facebook::react::KeyboardControllerView
             NSNumber *progress,
             NSNumber *duration,
             NSNumber *target) {
-                if (self->_eventEmitter) {
-                    // Check if the event exists in the map and call the corresponding method
-                    auto it = eventMap.find([event UTF8String]);
-                    if (it != eventMap.end()) {
-                        const auto& handler = it->second;
-                        handler(std::dynamic_pointer_cast<const facebook::react::KeyboardControllerViewEventEmitter>(self->_eventEmitter).get(), height, progress, duration, target);
-                    }
-                }
+          if (self->_eventEmitter) {
+            // Check if the event exists in the map and call the corresponding method
+            auto it = eventMap.find([event UTF8String]);
+            if (it != eventMap.end()) {
+              const auto &handler = it->second;
+              handler(
+                  std::dynamic_pointer_cast<
+                      const facebook::react::KeyboardControllerViewEventEmitter>(
+                      self->_eventEmitter)
+                      .get(),
+                  height,
+                  progress,
+                  duration,
+                  target);
+            }
+          }
 
           // TODO: use built-in _eventEmitter once NativeAnimated module will use ModernEventEmitter
           RCTBridge *bridge = [RCTBridge currentBridge];
