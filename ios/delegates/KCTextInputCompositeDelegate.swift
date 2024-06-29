@@ -36,6 +36,25 @@ func textSelection(in textInput: UITextInput) -> Selection? {
   return nil
 }
 
+func updateSelectionPosition(textInput: UITextInput, sendEvent: (_ event: NSDictionary) -> Void) {
+  if let selection = textSelection(in: textInput) {
+    sendEvent([
+      "selection": [
+        "start": [
+          "x": selection.startX,
+          "y": selection.startY,
+          "position": selection.start,
+        ],
+        "end": [
+          "x": selection.endX,
+          "y": selection.endY,
+          "position": selection.end,
+        ],
+      ],
+    ])
+  }
+}
+
 /**
  * A delegate that is being set to any focused input
  * and intercepts some specific events that needs to be handled
@@ -79,7 +98,7 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
 
   func textViewDidChangeSelection(_ textView: UITextView) {
     textViewDelegate?.textViewDidChangeSelection?(textView)
-    updateSelectionPosition(textInput: textView)
+    updateSelectionPosition(textInput: textView, sendEvent: onSelectionChange)
   }
 
   func textViewDidChange(_ textView: UITextView) {
@@ -95,7 +114,7 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
   @available(iOS 13.0, *)
   func textFieldDidChangeSelection(_ textField: UITextField) {
     textFieldDelegate?.textFieldDidChangeSelection?(textField)
-    updateSelectionPosition(textInput: textField)
+    updateSelectionPosition(textInput: textField, sendEvent: onSelectionChange)
   }
 
   func textField(
@@ -124,26 +143,5 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
       return activeDelegate
     }
     return super.forwardingTarget(for: aSelector)
-  }
-
-  // MARK: Private functions
-
-  private func updateSelectionPosition(textInput: UITextInput) {
-    if let selection = textSelection(in: textInput) {
-      onSelectionChange([
-        "selection": [
-          "start": [
-            "x": selection.startX,
-            "y": selection.startY,
-            "position": selection.start,
-          ],
-          "end": [
-            "x": selection.endX,
-            "y": selection.endY,
-            "position": selection.end,
-          ],
-        ],
-      ])
-    }
   }
 }
