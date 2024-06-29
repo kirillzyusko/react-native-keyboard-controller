@@ -17,8 +17,8 @@ import com.facebook.react.uimanager.events.Event
 import com.facebook.react.uimanager.events.EventDispatcherListener
 import com.facebook.react.views.modal.ReactModalHostView
 import com.facebook.react.views.view.ReactViewGroup
-import com.reactnativekeyboardcontroller.extensions.content
 import com.reactnativekeyboardcontroller.BuildConfig
+import com.reactnativekeyboardcontroller.extensions.content
 import com.reactnativekeyboardcontroller.extensions.removeSelf
 import com.reactnativekeyboardcontroller.extensions.requestApplyInsetsWhenAttached
 import com.reactnativekeyboardcontroller.extensions.rootView
