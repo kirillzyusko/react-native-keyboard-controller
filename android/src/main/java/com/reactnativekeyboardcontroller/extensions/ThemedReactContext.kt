@@ -3,6 +3,7 @@ package com.reactnativekeyboardcontroller.extensions
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
+import com.facebook.react.bridge.ReactContext
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.facebook.react.uimanager.ThemedReactContext
@@ -25,7 +26,7 @@ fun ThemedReactContext.setupWindowDimensionsListener() {
 
 fun ThemedReactContext?.dispatchEvent(viewId: Int, event: Event<*>) {
   val eventDispatcher: EventDispatcher? =
-    UIManagerHelper.getEventDispatcherForReactTag(this, viewId)
+    UIManagerHelper.getEventDispatcherForReactTag(this as ReactContext, viewId)
   eventDispatcher?.dispatchEvent(event)
 }
 
