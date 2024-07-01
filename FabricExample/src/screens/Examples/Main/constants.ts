@@ -109,6 +109,6 @@ export const examples: Example[] = [
     title: "Modal",
     testID: "modal",
     info: ScreenNames.MODAL,
-    icons: "🔴 🌎",
+    icons: "🌎",
   },
 ];

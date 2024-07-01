@@ -4,13 +4,20 @@ import android.annotation.SuppressLint
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING
 import android.widget.FrameLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsAnimationCompat
 import androidx.core.view.WindowInsetsCompat
 import com.facebook.react.uimanager.ThemedReactContext
+import com.facebook.react.uimanager.UIManagerHelper
+import com.facebook.react.uimanager.common.UIManagerType
+import com.facebook.react.uimanager.events.Event
+import com.facebook.react.uimanager.events.EventDispatcherListener
+import com.facebook.react.views.modal.ReactModalHostView
 import com.facebook.react.views.view.ReactViewGroup
+import com.reactnativekeyboardcontroller.BuildConfig
 import com.reactnativekeyboardcontroller.extensions.content
 import com.reactnativekeyboardcontroller.extensions.removeSelf
 import com.reactnativekeyboardcontroller.extensions.requestApplyInsetsWhenAttached
@@ -22,7 +29,9 @@ private val TAG = EdgeToEdgeReactViewGroup::class.qualifiedName
 
 @Suppress("detekt:TooManyFunctions")
 @SuppressLint("ViewConstructor")
-class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : ReactViewGroup(reactContext) {
+class EdgeToEdgeReactViewGroup(
+  private val reactContext: ThemedReactContext,
+) : ReactViewGroup(reactContext), EventDispatcherListener {
   // props
   private var isStatusBarTranslucent = false
   private var isNavigationBarTranslucent = false
@@ -32,6 +41,11 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
   private var eventView: ReactViewGroup? = null
   private var wasMounted = false
   private var callback: KeyboardAnimationCallback? = null
+
+  // react managers
+  private val archType = if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) UIManagerType.FABRIC else UIManagerType.DEFAULT
+  private val uiManager = UIManagerHelper.getUIManager(reactContext.reactApplicationContext, archType)
+  private val eventDispatcher = UIManagerHelper.getEventDispatcher(reactContext.reactApplicationContext, archType)
 
   init {
     reactContext.setupWindowDimensionsListener()
@@ -122,6 +136,7 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
 
       callback = KeyboardAnimationCallback(
         view = this,
+        viewId = this,
         persistentInsetTypes = WindowInsetsCompat.Type.systemBars(),
         deferredInsetTypes = WindowInsetsCompat.Type.ime(),
         dispatchMode = WindowInsetsAnimationCompat.Callback.DISPATCH_MODE_CONTINUE_ON_SUBTREE,
@@ -160,12 +175,14 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
     this.goToEdgeToEdge(true)
     this.setupWindowInsets()
     this.setupKeyboardCallbacks()
+    this.addModalAttachingObserver()
   }
 
   private fun disable() {
     this.goToEdgeToEdge(false)
     this.setupWindowInsets()
     this.removeKeyboardCallbacks()
+    this.removeModalAttachingObserver()
   }
   // endregion
 
@@ -188,4 +205,48 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
     }
   }
   // endregion
+
+  override fun onEventDispatch(event: Event<out Event<*>>?) {
+    if (event?.eventName == MODAL_SHOW_EVENT) {
+      val view = uiManager?.resolveView(event.viewTag) as? ReactModalHostView
+
+      if (view != null) {
+        val window = view.dialog?.window
+        val rootView = window?.decorView?.rootView
+
+        if (rootView != null) {
+          callback = KeyboardAnimationCallback(
+            view = rootView,
+            viewId = this@EdgeToEdgeReactViewGroup,
+            persistentInsetTypes = WindowInsetsCompat.Type.systemBars(),
+            deferredInsetTypes = WindowInsetsCompat.Type.ime(),
+            dispatchMode = WindowInsetsAnimationCompat.Callback.DISPATCH_MODE_CONTINUE_ON_SUBTREE,
+            context = reactContext,
+          )
+
+          ViewCompat.setWindowInsetsAnimationCallback(
+            rootView,
+            callback,
+          )
+          // adds additional bottom padding
+          // ViewCompat.setOnApplyWindowInsetsListener(rootView, callback)
+
+          // imitating edge-to-edge mode behavior
+          window.setSoftInputMode(SOFT_INPUT_ADJUST_NOTHING)
+        }
+      }
+    }
+  }
+
+  private fun addModalAttachingObserver() {
+    eventDispatcher?.addListener(this)
+  }
+
+  private fun removeModalAttachingObserver() {
+    eventDispatcher?.removeListener(this)
+  }
+
+  companion object {
+    private const val MODAL_SHOW_EVENT = "topShow"
+  }
 }
