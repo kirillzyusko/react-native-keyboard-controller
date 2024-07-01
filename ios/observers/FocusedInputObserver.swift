@@ -197,6 +197,10 @@ public class FocusedInputObserver: NSObject {
         (textView as? RCTUITextView)?.setForceDelegate(delegate)
       }
     }
+    // dispatch onSelectionChange on focus
+    if let textInput = input as? UITextInput {
+      updateSelectionPosition(textInput: textInput, sendEvent: onSelectionChange)
+    }
   }
 
   private func substituteDelegateBack(_ input: UIResponder?) {

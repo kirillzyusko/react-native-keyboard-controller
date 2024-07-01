@@ -7,33 +7,34 @@
 
 import Foundation
 
-struct Selection {
-  var start: Int
-  var startX: CGFloat
-  var startY: CGFloat
-  var end: Int
-  var endX: CGFloat
-  var endY: CGFloat
-}
-
-func textSelection(in textInput: UITextInput) -> Selection? {
+func textSelection(in textInput: UITextInput) -> NSDictionary? {
   if let selectedRange = textInput.selectedTextRange {
     let caretRectStart = textInput.caretRect(for: selectedRange.start)
     let caretRectEnd = textInput.caretRect(for: selectedRange.end)
 
-    let coordinates = Selection(
-      start: textInput.offset(from: textInput.beginningOfDocument, to: selectedRange.start),
-      startX: caretRectStart.origin.x,
-      startY: caretRectStart.origin.y,
-      end: textInput.offset(from: textInput.beginningOfDocument, to: selectedRange.end),
-      endX: caretRectEnd.origin.x + caretRectEnd.size.width,
-      endY: caretRectEnd.origin.y + caretRectEnd.size.height
-    )
-
-    return coordinates
+    return [
+      "selection": [
+        "start": [
+          "x": caretRectStart.origin.x,
+          "y": caretRectStart.origin.y,
+          "position": textInput.offset(from: textInput.beginningOfDocument, to: selectedRange.start),
+        ],
+        "end": [
+          "x": caretRectEnd.origin.x + caretRectEnd.size.width,
+          "y": caretRectEnd.origin.y + caretRectEnd.size.height,
+          "position": textInput.offset(from: textInput.beginningOfDocument, to: selectedRange.end),
+        ],
+      ],
+    ]
   }
 
   return nil
+}
+
+func updateSelectionPosition(textInput: UITextInput, sendEvent: (_ event: NSDictionary) -> Void) {
+  if let selection = textSelection(in: textInput) {
+    sendEvent(selection)
+  }
 }
 
 /**
@@ -79,7 +80,7 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
 
   func textViewDidChangeSelection(_ textView: UITextView) {
     textViewDelegate?.textViewDidChangeSelection?(textView)
-    updateSelectionPosition(textInput: textView)
+    updateSelectionPosition(textInput: textView, sendEvent: onSelectionChange)
   }
 
   func textViewDidChange(_ textView: UITextView) {
@@ -95,7 +96,7 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
   @available(iOS 13.0, *)
   func textFieldDidChangeSelection(_ textField: UITextField) {
     textFieldDelegate?.textFieldDidChangeSelection?(textField)
-    updateSelectionPosition(textInput: textField)
+    updateSelectionPosition(textInput: textField, sendEvent: onSelectionChange)
   }
 
   func textField(
@@ -124,26 +125,5 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
       return activeDelegate
     }
     return super.forwardingTarget(for: aSelector)
-  }
-
-  // MARK: Private functions
-
-  private func updateSelectionPosition(textInput: UITextInput) {
-    if let selection = textSelection(in: textInput) {
-      onSelectionChange([
-        "selection": [
-          "start": [
-            "x": selection.startX,
-            "y": selection.startY,
-            "position": selection.start,
-          ],
-          "end": [
-            "x": selection.endX,
-            "y": selection.endY,
-            "position": selection.end,
-          ],
-        ],
-      ])
-    }
   }
 }
