@@ -75,4 +75,18 @@ describe("input handlers functionality", () => {
       element(by.id("original_selection_text_start_end")),
     ).toHaveText("start: 5, end: 5");
   });
+
+  it("should fire `onSelectionChange` when we switch between inputs", async () => {
+    await expect(element(by.id("selection_text_start_end"))).toHaveText(
+      "start: 5, end: 5",
+    );
+    await waitAndTap("masked_input");
+    await expect(element(by.id("selection_text_start_end"))).toHaveText(
+      "start: 18, end: 18",
+    );
+    await waitAndType("multiline_input", ""); // just set focus back
+    await expect(element(by.id("selection_text_start_end"))).toHaveText(
+      "start: 5, end: 5",
+    );
+  });
 });
