@@ -56,7 +56,7 @@ jobs:
           java-version: "17"
       - name: Install dependencies
         run: yarn install --frozen-lockfile --cwd ..
-      - name: Run Gradle Lint
+      - name: Run Gradle Assemble
         run: ./gradlew assembleDebug
   detekt:
     runs-on: ubuntu-latest
