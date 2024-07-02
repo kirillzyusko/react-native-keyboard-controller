@@ -86,7 +86,8 @@ jobs:
       cancel-in-progress: true
     strategy:
       matrix:
-        devices: [{ api: 28, target: default }, { api: 31, target: default }]
+        devices:
+          [{ api: 28, target: default }, { api: 31, target: google_apis }]
     needs: build
     steps:
       - uses: actions/checkout@v4
