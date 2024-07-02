@@ -61,11 +61,12 @@ module.exports = {
       },
       utilBinaryPaths: ["apks/test-butler-app-2.2.1.apk"],
     },
-    emulator34: {
+    emulator31: {
       type: "android.emulator",
       device: {
-        avdName: "e2e_emulator_34",
+        avdName: "e2e_emulator_31",
       },
+      utilBinaryPaths: ["apks/test-butler-app-2.2.1.apk"],
     },
   },
   configurations: {
@@ -93,12 +94,12 @@ module.exports = {
       device: "emulator28",
       app: "example.android.release",
     },
-    "example.android.emu-34.debug": {
-      device: "emulator34",
+    "example.android.emu-31.debug": {
+      device: "emulator31",
       app: "example.android.debug",
     },
-    "example.android.emu-34.release": {
-      device: "emulator34",
+    "example.android.emu-31.release": {
+      device: "emulator31",
       app: "example.android.release",
     },
   },
