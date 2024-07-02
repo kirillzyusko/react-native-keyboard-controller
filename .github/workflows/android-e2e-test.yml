@@ -20,25 +20,16 @@ on:
       - "src/**"
 
 jobs:
-  test:
-    name: ⚙️ Automated test cases
+  build:
+    name: 🏗️ Build E2E apk
     runs-on: ubuntu-latest
-    timeout-minutes: 60
     env:
       WORKING_DIRECTORY: example
-      API_LEVEL: 28
     concurrency:
       group: android-e2e-${{ github.ref }}
       cancel-in-progress: true
     steps:
       - uses: actions/checkout@v4
-      - name: Free Disk Space (Ubuntu)
-        uses: jlumbroso/free-disk-space@main
-        with:
-          # force to remove default tools
-          tool-cache: true
-          # preserve Android
-          android: false
       - uses: actions/setup-node@v4
         with:
           node-version: 18.x
@@ -78,6 +69,63 @@ jobs:
       - name: Build app
         working-directory: e2e
         run: yarn build-example:android
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-e2e-apk
+          path: example/android/app/build/outputs/apk/**
+
+  e2e-test:
+    name: ⚙️ Automated test cases
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      WORKING_DIRECTORY: example
+    concurrency:
+      group: android-e2e-${{ matrix.devices.api }}-${{ github.ref }}
+      cancel-in-progress: true
+    strategy:
+      matrix:
+        devices: [{ api: 28, target: default }, { api: 31, target: default }]
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download a single artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: android-e2e-apk
+          path: example/android/app/build/outputs/apk/
+      - name: Free Disk Space (Ubuntu)
+        uses: jlumbroso/free-disk-space@main
+        with:
+          # force to remove default tools
+          tool-cache: true
+          # preserve Android
+          android: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18.x
+          cache: "yarn"
+      - name: Setup JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: "microsoft"
+          java-version: "17"
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
+      - name: Restore node_modules from cache
+        uses: actions/cache@v4
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - name: Install root dependencies
+        run: yarn install
+      - name: Install e2e dependencies
+        run: yarn install --cwd e2e
       - name: Enable KVM group perms
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
@@ -90,20 +138,20 @@ jobs:
           path: |
             ~/.android/avd/*
             ~/.android/adb*
-          key: avd-${{ env.API_LEVEL }}
+          key: avd-${{ matrix.devices.api }}
       - name: Run emulator and tests
         uses: reactivecircus/android-emulator-runner@v2.30.1
         with:
           working-directory: e2e
-          api-level: ${{ env.API_LEVEL }}
-          target: default
+          api-level: ${{ matrix.devices.api }}
+          target: ${{ matrix.devices.target }}
           profile: pixel_2
           ram-size: "4096M"
           disk-size: "10G"
           disable-animations: false
-          avd-name: e2e_emulator
+          avd-name: e2e_emulator_${{ matrix.devices.api }}
           arch: x86_64
-          script: yarn test-example:android
+          script: yarn test-example:android-${{ matrix.devices.api }}
       - uses: actions/upload-artifact@v4
         if: ${{ failure() }}
         with:
