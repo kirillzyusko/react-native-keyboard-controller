@@ -6,7 +6,7 @@
   "scripts": {
     "build-example:android": "detox build --configuration example.android.emu-28.release",
     "test-example:android-28": "detox test --configuration example.android.emu-28.release --loglevel verbose --take-screenshots failing --record-videos failing --retries 2",
-    "test-example:android-33": "detox test --configuration example.android.emu-33.release --loglevel verbose --take-screenshots failing --record-videos failing --retries 2",
+    "test-example:android-34": "detox test --configuration example.android.emu-34.release --loglevel verbose --take-screenshots failing --record-videos failing --retries 2",
     "build-example:ios": "detox build --configuration example.ios.sim.release",
     "test-example:ios": "detox test --configuration example.ios.sim.release --loglevel verbose --take-screenshots failing --record-videos failing --retries 2",
     "test": "echo \"Error: no test specified\" && exit 1",

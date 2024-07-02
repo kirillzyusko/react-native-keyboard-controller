@@ -105,7 +105,7 @@ export const scrollDownUntilElementIsVisible = async (
   await waitFor(element(by.id(elementId)))
     .toBeVisible()
     .whileElement(by.id(scrollViewId))
-    .scroll(100, "down");
+    .scroll(100, "down", NaN, 0.5);
 };
 
 export const closeKeyboard = async (textInputId: string) => {

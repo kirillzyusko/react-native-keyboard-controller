@@ -31,7 +31,7 @@ jobs:
       cancel-in-progress: true
     strategy:
       matrix:
-        api: [28, 33]
+        api: [28, 34]
     steps:
       - uses: actions/checkout@v4
       - name: Free Disk Space (Ubuntu)
