@@ -122,6 +122,8 @@ jobs:
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-yarn-
+      - name: Install root dependencies
+        run: yarn install
       - name: Install e2e dependencies
         run: yarn install --cwd e2e
       - name: Enable KVM group perms
