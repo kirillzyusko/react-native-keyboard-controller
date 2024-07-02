@@ -54,12 +54,18 @@ module.exports = {
         adbName: ".*",
       },
     },
-    emulator: {
+    emulator28: {
       type: "android.emulator",
       device: {
-        avdName: "e2e_emulator",
+        avdName: "e2e_emulator_28",
       },
       utilBinaryPaths: ["apks/test-butler-app-2.2.1.apk"],
+    },
+    emulator33: {
+      type: "android.emulator",
+      device: {
+        avdName: "e2e_emulator_33",
+      },
     },
   },
   configurations: {
@@ -79,12 +85,20 @@ module.exports = {
       device: "attached",
       app: "example.android.release",
     },
-    "example.android.emu.debug": {
-      device: "emulator",
+    "example.android.emu-28.debug": {
+      device: "emulator28",
       app: "example.android.debug",
     },
-    "example.android.emu.release": {
-      device: "emulator",
+    "example.android.emu-28.release": {
+      device: "emulator28",
+      app: "example.android.release",
+    },
+    "example.android.emu-33.debug": {
+      device: "emulator33",
+      app: "example.android.debug",
+    },
+    "example.android.emu-33.release": {
+      device: "emulator33",
       app: "example.android.release",
     },
   },
