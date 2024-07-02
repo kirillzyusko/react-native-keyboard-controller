@@ -96,7 +96,7 @@ jobs:
           name: android-e2e-apk
           path: example/android/app/build/outputs/apk/
       - name: Verify path
-        run: ls -la android/app/build/outputs/apk/
+        run: ls -la example/android/app/build/outputs/apk/
       - name: Free Disk Space (Ubuntu)
         uses: jlumbroso/free-disk-space@main
         with:
