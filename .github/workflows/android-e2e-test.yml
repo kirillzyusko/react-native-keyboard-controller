@@ -27,7 +27,7 @@ jobs:
     env:
       WORKING_DIRECTORY: example
     concurrency:
-      group: android-e2e-${{ github.ref }}
+      group: android-e2e-${{ matrix.api }}-${{ github.ref }}
       cancel-in-progress: true
     strategy:
       matrix:
