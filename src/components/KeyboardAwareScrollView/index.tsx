@@ -145,9 +145,12 @@ const KeyboardAwareScrollView = forwardRef<
         const inputHeight = layout.value?.layout.height || 0;
         const point = absoluteY + inputHeight;
 
+        console.log(77, visibleRect, point, bottomOffset);
+
         if (visibleRect - point <= bottomOffset) {
           const relativeScrollTo =
             keyboardHeight.value - (height - point) + bottomOffset;
+            console.log(771, relativeScrollTo, initialKeyboardSize.value);
           const interpolatedScrollTo = interpolate(
             e,
             [initialKeyboardSize.value, keyboardHeight.value],
@@ -162,6 +165,7 @@ const KeyboardAwareScrollView = forwardRef<
           const targetScrollY =
             Math.max(interpolatedScrollTo, 0) + scrollPosition.value;
           scrollTo(scrollViewAnimatedRef, 0, targetScrollY, animated);
+          console.log({targetScrollY, interpolatedScrollTo, spv: scrollPosition.value});
 
           return interpolatedScrollTo;
         }
@@ -170,6 +174,7 @@ const KeyboardAwareScrollView = forwardRef<
           const positionOnScreen = visibleRect - inputHeight - bottomOffset;
           const topOfScreen = scrollPosition.value + absoluteY;
 
+          console.log(1, {a: topOfScreen - positionOnScreen});
           scrollTo(
             scrollViewAnimatedRef,
             0,
@@ -195,9 +200,12 @@ const KeyboardAwareScrollView = forwardRef<
       const prevScrollPosition = scrollPosition.value;
       const prevLayout = layout.value;
 
+      console.log(91, position.value);
       scrollPosition.value = position.value;
       layout.value = input.value;
+      console.log(11);
       maybeScroll(keyboardHeight.value, true);
+      console.log(92, prevScrollPosition);
       scrollPosition.value = prevScrollPosition;
       layout.value = prevLayout;
     }, [maybeScroll]);
@@ -227,6 +235,8 @@ const KeyboardAwareScrollView = forwardRef<
             (tag.value !== e.target && e.target !== -1) ||
             keyboardWillChangeSize;
 
+          console.log("onStart", {e}, "tag.value", tag.value);
+
           if (keyboardWillChangeSize) {
             initialKeyboardSize.value = keyboardHeight.value;
           }
@@ -234,6 +244,7 @@ const KeyboardAwareScrollView = forwardRef<
           if (keyboardWillHide) {
             // on back transition need to interpolate as [0, keyboardHeight]
             initialKeyboardSize.value = 0;
+            console.log(93);
             scrollPosition.value = scrollBeforeKeyboardMovement.value;
           }
 
@@ -243,6 +254,7 @@ const KeyboardAwareScrollView = forwardRef<
             focusWasChanged
           ) {
             // persist scroll value
+            console.log(94, position.value);
             scrollPosition.value = position.value;
             // just persist height - later will be used in interpolation
             keyboardHeight.value = e.height;
@@ -262,6 +274,7 @@ const KeyboardAwareScrollView = forwardRef<
           if (focusWasChanged && !keyboardWillAppear.value) {
             // update position on scroll value, so `onEnd` handler
             // will pick up correct values
+            console.log(12);
             position.value += maybeScroll(e.height, true);
           }
         },
@@ -277,6 +290,7 @@ const KeyboardAwareScrollView = forwardRef<
 
           // if the user has set disableScrollOnKeyboardHide, only auto-scroll when the keyboard opens
           if (!disableScrollOnKeyboardHide || keyboardWillAppear.value) {
+            console.log(13);
             maybeScroll(e.height);
           }
         },
@@ -284,6 +298,7 @@ const KeyboardAwareScrollView = forwardRef<
           "worklet";
 
           keyboardHeight.value = e.height;
+          console.log(95, position.value);
           scrollPosition.value = position.value;
         },
       },
@@ -300,6 +315,7 @@ const KeyboardAwareScrollView = forwardRef<
           const prevLayout = layout.value;
 
           layout.value = input.value;
+          console.log(14, keyboardHeight.value);
           scrollPosition.value += maybeScroll(keyboardHeight.value, true);
           layout.value = prevLayout;
         }
