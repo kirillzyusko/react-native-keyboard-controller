@@ -150,7 +150,7 @@ const KeyboardAwareScrollView = forwardRef<
         if (visibleRect - point <= bottomOffset) {
           const relativeScrollTo =
             keyboardHeight.value - (height - point) + bottomOffset;
-            console.log(771, relativeScrollTo, initialKeyboardSize.value);
+          console.log(771, relativeScrollTo, initialKeyboardSize.value);
           const interpolatedScrollTo = interpolate(
             e,
             [initialKeyboardSize.value, keyboardHeight.value],
@@ -165,7 +165,11 @@ const KeyboardAwareScrollView = forwardRef<
           const targetScrollY =
             Math.max(interpolatedScrollTo, 0) + scrollPosition.value;
           scrollTo(scrollViewAnimatedRef, 0, targetScrollY, animated);
-          console.log({targetScrollY, interpolatedScrollTo, spv: scrollPosition.value});
+          console.log({
+            targetScrollY,
+            interpolatedScrollTo,
+            spv: scrollPosition.value,
+          });
 
           return interpolatedScrollTo;
         }
@@ -174,7 +178,7 @@ const KeyboardAwareScrollView = forwardRef<
           const positionOnScreen = visibleRect - inputHeight - bottomOffset;
           const topOfScreen = scrollPosition.value + absoluteY;
 
-          console.log(1, {a: topOfScreen - positionOnScreen});
+          console.log(1, { a: topOfScreen - positionOnScreen });
           scrollTo(
             scrollViewAnimatedRef,
             0,
@@ -235,7 +239,7 @@ const KeyboardAwareScrollView = forwardRef<
             (tag.value !== e.target && e.target !== -1) ||
             keyboardWillChangeSize;
 
-          console.log("onStart", {e}, "tag.value", tag.value);
+          console.log("onStart", { e }, "tag.value", tag.value);
 
           if (keyboardWillChangeSize) {
             initialKeyboardSize.value = keyboardHeight.value;
