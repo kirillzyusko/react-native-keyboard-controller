@@ -94,3 +94,14 @@ public extension UIView {
     return superview?.convert(frame, to: rootView)
   }
 }
+
+public extension UITextInput {
+  var isSelectionFitIntoLayout: Bool {
+    guard let selectedRange = selectedTextRange else { return false }
+
+    guard let range = textRange(from: selectedRange.start, to: selectedRange.end) else { return false }
+    let rect = firstRect(for: range)
+
+    return rect.origin.x.isFinite && rect.origin.y.isFinite
+  }
+}
