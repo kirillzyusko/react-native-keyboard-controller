@@ -79,7 +79,6 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
   // MARK: UITextViewDelegate
 
   func textViewDidChangeSelection(_ textView: UITextView) {
-    textView.layoutIfNeeded()
     textViewDelegate?.textViewDidChangeSelection?(textView)
     if textView.canSelectionFitIntoLayout {
       updateSelectionPosition(textInput: textView, sendEvent: onSelectionChange)
