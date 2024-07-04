@@ -2,9 +2,11 @@ import React, { forwardRef, useCallback, useMemo } from "react";
 import { findNodeHandle } from "react-native";
 import Reanimated, {
   interpolate,
+  runOnJS,
   scrollTo,
   useAnimatedReaction,
   useAnimatedRef,
+  useAnimatedScrollHandler,
   useAnimatedStyle,
   useSharedValue,
 } from "react-native-reanimated";
@@ -106,11 +108,16 @@ const KeyboardAwareScrollView = forwardRef<
 
     const { height } = useWindowDimensions();
 
-    const onScroll = useCallback<NonNullable<ScrollViewProps["onScroll"]>>(
-      (event) => {
-        position.value = event.nativeEvent.contentOffset.y;
+    const onScroll = useAnimatedScrollHandler(
+      {
+        onScroll: (event) => {
+          position.value = event.contentOffset.y;
 
-        onScrollProps?.(event);
+          if (onScrollProps) {
+            // @ts-expect-error https://github.com/software-mansion/react-native-reanimated/issues/6204
+            runOnJS(onScrollProps)({ nativeEvent: event });
+          }
+        },
       },
       [onScrollProps],
     );
