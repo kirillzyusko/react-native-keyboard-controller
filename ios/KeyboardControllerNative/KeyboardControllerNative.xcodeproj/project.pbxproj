@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		081006A82C36904E00578E07 /* UIResponder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 081006A72C36904E00578E07 /* UIResponder.swift */; };
+		081006A92C36904E00578E07 /* UIResponder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 081006A72C36904E00578E07 /* UIResponder.swift */; };
+		081006AA2C36904E00578E07 /* UIResponder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 081006A72C36904E00578E07 /* UIResponder.swift */; };
+		081006AC2C36906900578E07 /* UIScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 081006AB2C36906800578E07 /* UIScrollView.swift */; };
+		081006AD2C36906900578E07 /* UIScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 081006AB2C36906800578E07 /* UIScrollView.swift */; };
+		081006AE2C36906900578E07 /* UIScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 081006AB2C36906800578E07 /* UIScrollView.swift */; };
 		0873ED562BB6B7380004F3A4 /* KeyboardControllerNativeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0873ED552BB6B7380004F3A4 /* KeyboardControllerNativeApp.swift */; };
 		0873ED582BB6B7380004F3A4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0873ED572BB6B7380004F3A4 /* ContentView.swift */; };
 		0873ED5A2BB6B7390004F3A4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0873ED592BB6B7390004F3A4 /* Assets.xcassets */; };
@@ -23,9 +29,6 @@
 		0873ED882BB6B94B0004F3A4 /* ViewHierarchyNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0873ED812BB6B94B0004F3A4 /* ViewHierarchyNavigator.swift */; };
 		0873ED892BB6B94B0004F3A4 /* ViewHierarchyNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0873ED812BB6B94B0004F3A4 /* ViewHierarchyNavigator.swift */; };
 		0873ED8A2BB6B94B0004F3A4 /* ViewHierarchyNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0873ED812BB6B94B0004F3A4 /* ViewHierarchyNavigator.swift */; };
-		0873ED8C2BB6B95A0004F3A4 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0873ED8B2BB6B95A0004F3A4 /* Extensions.swift */; };
-		0873ED8D2BB6B95A0004F3A4 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0873ED8B2BB6B95A0004F3A4 /* Extensions.swift */; };
-		0873ED8E2BB6B95A0004F3A4 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0873ED8B2BB6B95A0004F3A4 /* Extensions.swift */; };
 		0873ED902BB6B9960004F3A4 /* Extension+UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0873ED8F2BB6B9960004F3A4 /* Extension+UIView.swift */; };
 		0873ED912BB6B9960004F3A4 /* Extension+UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0873ED8F2BB6B9960004F3A4 /* Extension+UIView.swift */; };
 		0873ED922BB6B9960004F3A4 /* Extension+UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0873ED8F2BB6B9960004F3A4 /* Extension+UIView.swift */; };
@@ -49,6 +52,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		081006A72C36904E00578E07 /* UIResponder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UIResponder.swift; path = ../../extensions/UIResponder.swift; sourceTree = "<group>"; };
+		081006AB2C36906800578E07 /* UIScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UIScrollView.swift; path = ../../extensions/UIScrollView.swift; sourceTree = "<group>"; };
 		0873ED522BB6B7380004F3A4 /* KeyboardControllerNative.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KeyboardControllerNative.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0873ED552BB6B7380004F3A4 /* KeyboardControllerNativeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardControllerNativeApp.swift; sourceTree = "<group>"; };
 		0873ED572BB6B7380004F3A4 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -62,7 +67,6 @@
 		0873ED7F2BB6B94B0004F3A4 /* FocusedInputHolder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FocusedInputHolder.swift; path = ../../traversal/FocusedInputHolder.swift; sourceTree = "<group>"; };
 		0873ED802BB6B94B0004F3A4 /* TextInput.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TextInput.swift; path = ../../traversal/TextInput.swift; sourceTree = "<group>"; };
 		0873ED812BB6B94B0004F3A4 /* ViewHierarchyNavigator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ViewHierarchyNavigator.swift; path = ../../traversal/ViewHierarchyNavigator.swift; sourceTree = "<group>"; };
-		0873ED8B2BB6B95A0004F3A4 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Extensions.swift; path = ../../Extensions.swift; sourceTree = "<group>"; };
 		0873ED8F2BB6B9960004F3A4 /* Extension+UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Extension+UIView.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -114,8 +118,9 @@
 		0873ED542BB6B7380004F3A4 /* KeyboardControllerNative */ = {
 			isa = PBXGroup;
 			children = (
+				081006AB2C36906800578E07 /* UIScrollView.swift */,
+				081006A72C36904E00578E07 /* UIResponder.swift */,
 				0873ED8F2BB6B9960004F3A4 /* Extension+UIView.swift */,
-				0873ED8B2BB6B95A0004F3A4 /* Extensions.swift */,
 				0873ED7F2BB6B94B0004F3A4 /* FocusedInputHolder.swift */,
 				0873ED802BB6B94B0004F3A4 /* TextInput.swift */,
 				0873ED812BB6B94B0004F3A4 /* ViewHierarchyNavigator.swift */,
@@ -284,9 +289,10 @@
 			files = (
 				0873ED902BB6B9960004F3A4 /* Extension+UIView.swift in Sources */,
 				0873ED582BB6B7380004F3A4 /* ContentView.swift in Sources */,
-				0873ED8C2BB6B95A0004F3A4 /* Extensions.swift in Sources */,
 				0873ED562BB6B7380004F3A4 /* KeyboardControllerNativeApp.swift in Sources */,
 				0873ED882BB6B94B0004F3A4 /* ViewHierarchyNavigator.swift in Sources */,
+				081006A82C36904E00578E07 /* UIResponder.swift in Sources */,
+				081006AC2C36906900578E07 /* UIScrollView.swift in Sources */,
 				0873ED822BB6B94B0004F3A4 /* FocusedInputHolder.swift in Sources */,
 				0873ED852BB6B94B0004F3A4 /* TextInput.swift in Sources */,
 			);
@@ -296,11 +302,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0873ED8D2BB6B95A0004F3A4 /* Extensions.swift in Sources */,
 				0873ED892BB6B94B0004F3A4 /* ViewHierarchyNavigator.swift in Sources */,
 				0873ED912BB6B9960004F3A4 /* Extension+UIView.swift in Sources */,
 				0873ED832BB6B94B0004F3A4 /* FocusedInputHolder.swift in Sources */,
 				0873ED672BB6B7390004F3A4 /* KeyboardControllerNativeTests.swift in Sources */,
+				081006A92C36904E00578E07 /* UIResponder.swift in Sources */,
+				081006AD2C36906900578E07 /* UIScrollView.swift in Sources */,
 				0873ED862BB6B94B0004F3A4 /* TextInput.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -311,9 +318,10 @@
 			files = (
 				0873ED922BB6B9960004F3A4 /* Extension+UIView.swift in Sources */,
 				0873ED732BB6B7390004F3A4 /* KeyboardControllerNativeUITestsLaunchTests.swift in Sources */,
-				0873ED8E2BB6B95A0004F3A4 /* Extensions.swift in Sources */,
 				0873ED712BB6B7390004F3A4 /* KeyboardControllerNativeUITests.swift in Sources */,
 				0873ED8A2BB6B94B0004F3A4 /* ViewHierarchyNavigator.swift in Sources */,
+				081006AA2C36904E00578E07 /* UIResponder.swift in Sources */,
+				081006AE2C36906900578E07 /* UIScrollView.swift in Sources */,
 				0873ED842BB6B94B0004F3A4 /* FocusedInputHolder.swift in Sources */,
 				0873ED872BB6B94B0004F3A4 /* TextInput.swift in Sources */,
 			);
