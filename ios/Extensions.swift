@@ -96,7 +96,7 @@ public extension UIView {
 }
 
 public extension UITextInput {
-  var isSelectionFitIntoLayout: Bool {
+  var canSelectionFitIntoLayout: Bool {
     guard let selectedRange = selectedTextRange else { return false }
 
     guard let range = textRange(from: selectedRange.start, to: selectedRange.end) else { return false }
