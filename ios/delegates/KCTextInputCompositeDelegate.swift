@@ -80,7 +80,15 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
 
   func textViewDidChangeSelection(_ textView: UITextView) {
     textViewDelegate?.textViewDidChangeSelection?(textView)
-    updateSelectionPosition(textInput: textView, sendEvent: onSelectionChange)
+    if textView.canSelectionFitIntoLayout {
+      updateSelectionPosition(textInput: textView, sendEvent: onSelectionChange)
+    } else {
+      // when multiline input grows we need to wait for layout to be updated
+      // otherwise start/end positions will be incorrect (0/-1)
+      DispatchQueue.main.asyncAfter(deadline: .now() + UIUtils.nextFrame) {
+        updateSelectionPosition(textInput: textView, sendEvent: self.onSelectionChange)
+      }
+    }
   }
 
   func textViewDidChange(_ textView: UITextView) {
