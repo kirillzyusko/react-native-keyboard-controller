@@ -14,11 +14,11 @@ class WindowDimensionListener(private val context: ThemedReactContext?) {
   private var lastDispatchedDimensions = Dimensions(0.0, 0.0)
 
   init {
-    // attach to content view only once
-    if (!isListenerAttached) {
-      isListenerAttached = true
+    // attach to content view only once per app instance
+    if (context != null && listenerID != context.hashCode()) {
+      listenerID = context.hashCode()
 
-      val content = context?.content
+      val content = context.content
 
       updateWindowDimensions(content)
 
@@ -52,6 +52,6 @@ class WindowDimensionListener(private val context: ThemedReactContext?) {
   }
 
   companion object {
-    private var isListenerAttached = false
+    private var listenerID = -1
   }
 }
