@@ -135,6 +135,7 @@ export default function ToolbarExample() {
           testID="TextInput#11"
         />
         <TextInput
+          contextMenuHidden
           keyboardType="numeric"
           placeholder="House number"
           title="House"
@@ -142,6 +143,7 @@ export default function ToolbarExample() {
           testID="TextInput#12"
         />
         <TextInput
+          contextMenuHidden
           keyboardType="numeric"
           placeholder="Flat number"
           title="Flat"
