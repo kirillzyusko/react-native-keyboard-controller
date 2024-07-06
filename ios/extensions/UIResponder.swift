@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 
+@objc
 public extension UIResponder {
   private weak static var _currentFirstResponder: UIResponder?
 
@@ -18,8 +19,20 @@ public extension UIResponder {
     return UIResponder._currentFirstResponder
   }
 
-  @objc internal func findFirstResponder(sender _: AnyObject) {
-    UIResponder._currentFirstResponder = self
+  internal func findFirstResponder(sender _: AnyObject) {
+    let type = String(describing: type(of: self))
+    // handle `contextMenuHidden` prop - in this case the parent is considered as a first responder
+    // (but actually its children is an actual input), so we apply correction here and point out
+    // to the actual first responder (first children)
+    let isChildrenActuallyFirstResponder =
+      type == "RCTMultilineTextInputView" ||
+      type == "RCTSinglelineTextInputView" ||
+      type == "RCTTextInputComponentView"
+    if isChildrenActuallyFirstResponder {
+      UIResponder._currentFirstResponder = (self as? UIView)?.subviews[0]
+    } else {
+      UIResponder._currentFirstResponder = self
+    }
   }
 }
 
