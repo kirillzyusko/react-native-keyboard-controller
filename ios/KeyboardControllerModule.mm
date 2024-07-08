@@ -74,10 +74,7 @@ RCT_EXPORT_METHOD(dismiss)
 #endif
 {
   dispatch_async(dispatch_get_main_queue(), ^{
-    [[UIApplication sharedApplication] sendAction:@selector(resignFirstResponder)
-                                               to:nil
-                                             from:nil
-                                         forEvent:nil];
+    [[UIResponder current] resignFirstResponder];
   });
 }
 
