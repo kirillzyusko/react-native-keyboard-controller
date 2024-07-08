@@ -2,12 +2,11 @@ import React, { forwardRef, useCallback, useMemo } from "react";
 import { findNodeHandle } from "react-native";
 import Reanimated, {
   interpolate,
-  runOnJS,
   scrollTo,
   useAnimatedReaction,
   useAnimatedRef,
-  useAnimatedScrollHandler,
   useAnimatedStyle,
+  useScrollViewOffset,
   useSharedValue,
 } from "react-native-reanimated";
 
@@ -87,7 +86,6 @@ const KeyboardAwareScrollView = forwardRef<
       bottomOffset = 0,
       disableScrollOnKeyboardHide = false,
       enabled = true,
-      onScroll: onScrollProps,
       extraKeyboardSpace = 0,
       ...rest
     },
@@ -96,7 +94,7 @@ const KeyboardAwareScrollView = forwardRef<
     const scrollViewAnimatedRef = useAnimatedRef<Reanimated.ScrollView>();
     const scrollViewTarget = useSharedValue<number | null>(null);
     const scrollPosition = useSharedValue(0);
-    const position = useSharedValue(0);
+    const position = useScrollViewOffset(scrollViewAnimatedRef);
     const currentKeyboardFrameHeight = useSharedValue(0);
     const keyboardHeight = useSharedValue(0);
     const keyboardWillAppear = useSharedValue(false);
@@ -107,20 +105,6 @@ const KeyboardAwareScrollView = forwardRef<
     const layout = useSharedValue<FocusedInputLayoutChangedEvent | null>(null);
 
     const { height } = useWindowDimensions();
-
-    const onScroll = useAnimatedScrollHandler(
-      {
-        onScroll: (event) => {
-          position.value = event.contentOffset.y;
-
-          if (onScrollProps) {
-            // @ts-expect-error https://github.com/software-mansion/react-native-reanimated/issues/6204
-            runOnJS(onScrollProps)({ nativeEvent: event });
-          }
-        },
-      },
-      [onScrollProps],
-    );
 
     const onRef = useCallback((assignedRef: Reanimated.ScrollView) => {
       if (typeof ref === "function") {
@@ -344,7 +328,6 @@ const KeyboardAwareScrollView = forwardRef<
         ref={onRef}
         {...rest}
         onLayout={onScrollViewLayout}
-        onScroll={onScroll}
         scrollEventThrottle={16}
       >
         {children}
