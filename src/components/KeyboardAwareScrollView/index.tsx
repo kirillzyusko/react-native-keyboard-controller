@@ -196,7 +196,7 @@ const KeyboardAwareScrollView = forwardRef<
 
         return 0;
       },
-      [bottomOffset, enabled, rest.snapToOffsets],
+      [bottomOffset, enabled, height, rest.snapToOffsets],
     );
 
     const onChangeText = useCallback(() => {
@@ -303,7 +303,7 @@ const KeyboardAwareScrollView = forwardRef<
           scrollPosition.value = position.value;
         },
       },
-      [height, maybeScroll, disableScrollOnKeyboardHide, extraKeyboardSpace],
+      [maybeScroll, disableScrollOnKeyboardHide, extraKeyboardSpace],
     );
 
     useAnimatedReaction(
