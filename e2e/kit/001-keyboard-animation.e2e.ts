@@ -1,6 +1,8 @@
 import { expectBitmapsToBeEqual } from "./asserts";
 import {
+  Env,
   closeKeyboard,
+  switchToEmojiKeyboard,
   waitAndTap,
   waitForElementById,
   waitForExpect,
@@ -17,6 +19,18 @@ describe("Example", () => {
     await waitForExpect(async () => {
       await expectBitmapsToBeEqual("KeyboardAnimationKeyboardIsShown");
     });
+  });
+
+  it("should have expected state when emoji keyboard is opened", async () => {
+    // this is available only on Android 12 right now:
+    // - Android 9 AOSP image can not switch to emoji
+    // - on iOS we are waiting for new API: https://github.com/wix/Detox/issues/4331
+    if (Env.softCheck) {
+      await switchToEmojiKeyboard();
+      await waitForExpect(async () => {
+        await expectBitmapsToBeEqual("KeyboardAnimationEmojiKeyboard");
+      });
+    }
   });
 
   it("should have expected state when keyboard is closed", async () => {
