@@ -27,7 +27,7 @@ describe("Interactive keyboard interactions", () => {
 
   it("should have expected state after the gesture", async () => {
     try {
-      await element(by.id(scrollable)).swipe("down", "fast", 0.5);
+      await element(by.id(scrollable)).swipe("down", "fast", 1);
     } catch (e) {
       // ignore exception, will be thrown on Android 9
     }
@@ -38,7 +38,7 @@ describe("Interactive keyboard interactions", () => {
 
   it("should react on the gesture up when keyboard closed", async () => {
     try {
-      await element(by.id(scrollable)).swipe("up", "fast", 0.5);
+      await element(by.id(scrollable)).swipe("up", "fast", 1);
     } catch (e) {
       // ignore exception, will be thrown on Android 9
     }
