@@ -21,7 +21,7 @@ describe("Interactive keyboard interactions", () => {
   it("should have expected state when keyboard is opened", async () => {
     await waitAndTap("chat.input");
     await waitForExpect(async () => {
-      await expectBitmapsToBeEqual("KeyboardInteractiveKeyboardIsShown");
+      await expectBitmapsToBeEqual("InteractiveKeyboardIsShown");
     });
   });
 
@@ -32,7 +32,7 @@ describe("Interactive keyboard interactions", () => {
       // ignore exception, will be thrown on Android 9
     }
     await waitForExpect(async () => {
-      await expectBitmapsToBeEqual("KeyboardInteractiveAfterGestureDown");
+      await expectBitmapsToBeEqual("InteractiveKeyboardAfterGestureDown");
     });
   });
 
@@ -46,7 +46,7 @@ describe("Interactive keyboard interactions", () => {
       // ignore exception, will be thrown on Android 9
     }
     await waitForExpect(async () => {
-      await expectBitmapsToBeEqual("KeyboardInteractiveAfterGestureUp");
+      await expectBitmapsToBeEqual("InteractiveKeyboardAfterGestureUp");
     });
   });
 });
