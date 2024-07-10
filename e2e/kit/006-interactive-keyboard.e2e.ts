@@ -38,7 +38,10 @@ describe("Interactive keyboard interactions", () => {
 
   it("should react on the gesture up when keyboard closed", async () => {
     try {
+      // show the keyboard on Android 12+
       await element(by.id(scrollable)).swipe("up", "fast", 1, 0.5, 0.5);
+      // scroll to the end of ScrollView to be sure UI is always identical
+      await element(by.id(scrollable)).swipe("up", "fast", 1, 0.5, 0.4);
     } catch (e) {
       // ignore exception, will be thrown on Android 9
     }
