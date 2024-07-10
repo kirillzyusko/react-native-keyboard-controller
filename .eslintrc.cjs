@@ -68,6 +68,18 @@ module.exports = {
         "newlines-between": "always",
       },
     ],
+    // jest
+    "jest/expect-expect": [
+      "warn",
+      {
+        assertFunctionNames: [
+          "expect",
+          "expectBitmapsToBeEqual",
+          "expectElementBitmapsToBeEqual",
+        ],
+        additionalTestBlockFunctions: [],
+      },
+    ],
   },
   overrides: [
     {

@@ -86,7 +86,11 @@ jobs:
       cancel-in-progress: true
     strategy:
       matrix:
-        devices: [{ api: 28, target: default }, { api: 31, target: default }]
+        devices:
+          [
+            { api: 28, target: default, soft-check: false },
+            { api: 31, target: google_apis, soft-check: true },
+          ]
     needs: build
     steps:
       - uses: actions/checkout@v4
@@ -138,7 +142,7 @@ jobs:
           path: |
             ~/.android/avd/*
             ~/.android/adb*
-          key: avd-${{ matrix.devices.api }}
+          key: avd-${{ matrix.devices.api }}-${{ matrix.devices.target }}
       - name: Run emulator and tests
         uses: reactivecircus/android-emulator-runner@v2.30.1
         with:
@@ -151,7 +155,7 @@ jobs:
           disable-animations: false
           avd-name: e2e_emulator_${{ matrix.devices.api }}
           arch: x86_64
-          script: yarn test-example:android-${{ matrix.devices.api }}
+          script: SOFT_CHECK=${{ matrix.devices.soft-check }} yarn test-example:android-${{ matrix.devices.api }}
       - uses: actions/upload-artifact@v4
         if: ${{ failure() }}
         with:

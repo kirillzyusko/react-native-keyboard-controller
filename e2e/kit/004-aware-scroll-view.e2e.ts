@@ -1,10 +1,12 @@
 import { expectBitmapsToBeEqual } from "./asserts";
 import {
+  Env,
   tap,
   typeText,
   waitAndReplace,
   waitAndTap,
   waitAndType,
+  waitForElementById,
   waitForExpect,
 } from "./helpers";
 
@@ -40,12 +42,25 @@ describe("AwareScrollView test cases", () => {
   it("should auto-scroll when new input gets focused", async () => {
     await waitAndReplace("TextInput#3", "\n\n");
     await waitAndTap("TextInput#4");
-    await waitForExpect(async () => {
-      await expectBitmapsToBeEqual(
-        "AwareScrollViewInputChanged",
-        BLINKING_CURSOR,
-      );
-    });
+
+    if (Env.softCheck) {
+      // on Android (not AOSP) focus and resize events are asynchronous
+      // so there can be a case when scrolling for current keyboard size
+      // has finished and then keyboard got resized (became smaller) and
+      // final distance is bigger than 50px
+      // Ideally I'd like to have an assert `.toBeAboveKeyboard(minDistance)`
+      // bit it's hard to achieve in detox (hard to get visible rect)
+      // so for such asynchronous operations we simply assure that the input is
+      // visible and don't check the pixel perfect match
+      await waitForElementById("TextInput#4");
+    } else {
+      await waitForExpect(async () => {
+        await expectBitmapsToBeEqual(
+          "AwareScrollViewInputChanged",
+          BLINKING_CURSOR,
+        );
+      });
+    }
   });
 
   it("should auto-scroll when user types a text", async () => {
@@ -61,12 +76,18 @@ describe("AwareScrollView test cases", () => {
 
   it("should scroll back when keyboard dismissed", async () => {
     await closeKeyboard();
-    await waitForExpect(async () => {
-      await expectBitmapsToBeEqual(
-        "AwareScrollViewKeyboardClosed",
-        BLINKING_CURSOR,
-      );
-    });
+
+    if (Env.softCheck) {
+      await waitForElementById("TextInput#2");
+      await waitForElementById("TextInput#6");
+    } else {
+      await waitForExpect(async () => {
+        await expectBitmapsToBeEqual(
+          "AwareScrollViewKeyboardClosed",
+          BLINKING_CURSOR,
+        );
+      });
+    }
   });
 
   it("shouldn't scroll back when keyboard dismissed if such behavior intentionally disabled", async () => {
