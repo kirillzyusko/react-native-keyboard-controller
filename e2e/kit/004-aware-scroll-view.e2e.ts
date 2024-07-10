@@ -44,6 +44,14 @@ describe("AwareScrollView test cases", () => {
     await waitAndTap("TextInput#4");
 
     if (softCheck) {
+      // on Android (not AOSP) focus and resize events are asynchronous
+      // so there can be a case when scrolling for current keyboard size
+      // has finished and then keyboard got resized (became smaller) and
+      // final distance is bigger than 50px
+      // Ideally I'd like to have an assert `.toBeAboveKeyboard(minDistance)`
+      // bit it's hard to achieve in detox (hard to get visible rect)
+      // so for such asynchronous operations we simply assure that the input is
+      // visible and don't check the pixel perfect match
       await waitForElementById("TextInput#4");
     } else {
       await waitForExpect(async () => {
