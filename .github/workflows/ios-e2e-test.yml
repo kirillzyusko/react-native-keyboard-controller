@@ -85,6 +85,8 @@ jobs:
         run: yarn build-example:ios
       - name: Use software keyboard
         run: defaults write com.apple.iphonesimulator ConnectHardwareKeyboard -bool NO
+      - name: Export SOFT_CHECK env variable
+        run: export SOFT_CHECK=false
       - name: Test app
         working-directory: e2e
         run: yarn test-example:ios

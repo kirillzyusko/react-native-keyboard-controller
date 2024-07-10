@@ -1,5 +1,6 @@
 import { expectBitmapsToBeEqual } from "./asserts";
 import {
+  softCheck,
   tap,
   typeText,
   waitAndReplace,
@@ -41,13 +42,17 @@ describe("AwareScrollView test cases", () => {
   it("should auto-scroll when new input gets focused", async () => {
     await waitAndReplace("TextInput#3", "\n\n");
     await waitAndTap("TextInput#4");
-    await waitForElementById("TextInput#4");
-    /*await waitForExpect(async () => {
-      await expectBitmapsToBeEqual(
-        "AwareScrollViewInputChanged",
-        BLINKING_CURSOR,
-      );
-    });*/
+
+    if (softCheck) {
+      await waitForElementById("TextInput#4");
+    } else {
+      await waitForExpect(async () => {
+        await expectBitmapsToBeEqual(
+          "AwareScrollViewInputChanged",
+          BLINKING_CURSOR,
+        );
+      });
+    }
   });
 
   it("should auto-scroll when user types a text", async () => {
@@ -63,14 +68,18 @@ describe("AwareScrollView test cases", () => {
 
   it("should scroll back when keyboard dismissed", async () => {
     await closeKeyboard();
-    await waitForElementById("TextInput#2");
-    await waitForElementById("TextInput#6");
-    /*await waitForExpect(async () => {
-      await expectBitmapsToBeEqual(
-        "AwareScrollViewKeyboardClosed",
-        BLINKING_CURSOR,
-      );
-    });*/
+
+    if (softCheck) {
+      await waitForElementById("TextInput#2");
+      await waitForElementById("TextInput#6");
+    } else {
+      await waitForExpect(async () => {
+        await expectBitmapsToBeEqual(
+          "AwareScrollViewKeyboardClosed",
+          BLINKING_CURSOR,
+        );
+      });
+    }
   });
 
   it("shouldn't scroll back when keyboard dismissed if such behavior intentionally disabled", async () => {

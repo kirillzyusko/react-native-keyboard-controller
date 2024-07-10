@@ -87,7 +87,10 @@ jobs:
     strategy:
       matrix:
         devices:
-          [{ api: 28, target: default }, { api: 31, target: google_apis }]
+          [
+            { api: 28, target: default, soft-check: false },
+            { api: 31, target: google_apis, soft-check: true },
+          ]
     needs: build
     steps:
       - uses: actions/checkout@v4
@@ -140,6 +143,8 @@ jobs:
             ~/.android/avd/*
             ~/.android/adb*
           key: avd-${{ matrix.devices.api }}-${{ matrix.devices.target }}
+      - name: Export SOFT_CHECK env variable
+        run: export SOFT_CHECK=${{ matrix.devices.soft-check }}
       - name: Run emulator and tests
         uses: reactivecircus/android-emulator-runner@v2.30.1
         with:
