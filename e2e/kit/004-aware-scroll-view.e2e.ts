@@ -1,6 +1,6 @@
 import { expectBitmapsToBeEqual } from "./asserts";
 import {
-  softCheck,
+  Env,
   tap,
   typeText,
   waitAndReplace,
@@ -43,7 +43,7 @@ describe("AwareScrollView test cases", () => {
     await waitAndReplace("TextInput#3", "\n\n");
     await waitAndTap("TextInput#4");
 
-    if (softCheck) {
+    if (Env.softCheck) {
       // on Android (not AOSP) focus and resize events are asynchronous
       // so there can be a case when scrolling for current keyboard size
       // has finished and then keyboard got resized (became smaller) and
@@ -77,7 +77,7 @@ describe("AwareScrollView test cases", () => {
   it("should scroll back when keyboard dismissed", async () => {
     await closeKeyboard();
 
-    if (softCheck) {
+    if (Env.softCheck) {
       await waitForElementById("TextInput#2");
       await waitForElementById("TextInput#6");
     } else {
