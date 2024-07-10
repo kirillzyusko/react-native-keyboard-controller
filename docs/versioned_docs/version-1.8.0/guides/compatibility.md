@@ -13,7 +13,7 @@ If you found an incompatibility or conflict with other open source libraries - d
 
 :::
 
-## React Native
+## `react-native`
 
 Below you can find an information about compatibility with `react-native` package per different architectures.
 
@@ -38,6 +38,12 @@ This library supports as minimal `react-native` version as possible. However it 
 | --------------- | -------------------- |
 | 1.7.0+          | 0.65.0+              |
 | 1.0.0+          | 0.62.0+              |
+
+## `react-native-reanimated`
+
+This library is heavily relies on `react-native-reanimated` primitives to bring advanced concepts for keyboard handling.
+
+The minimal supported version of `react-native-reanimated` is `2.3.0`.
 
 ## Third-party libraries compatibility
 
