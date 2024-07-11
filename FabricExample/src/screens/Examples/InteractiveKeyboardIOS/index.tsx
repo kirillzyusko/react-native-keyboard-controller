@@ -122,12 +122,13 @@ function InteractiveKeyboard() {
         onScroll={onScroll}
         automaticallyAdjustContentInsets={false}
         contentInsetAdjustmentBehavior="never"
+        testID="chat.scroll"
       >
         {history.map((message, index) => (
           <Message key={index} {...message} />
         ))}
       </Reanimated.ScrollView>
-      <AnimatedTextInput style={textInputStyle} />
+      <AnimatedTextInput testID="chat.input" style={textInputStyle} />
     </View>
   );
 }
