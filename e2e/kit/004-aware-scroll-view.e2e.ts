@@ -11,6 +11,14 @@ import {
 } from "./helpers";
 
 const BLINKING_CURSOR = 0.35;
+/**
+ * Detox doesn't provide the API for text selection, so we just use a double tap, but the problem is that
+ * if text contains special characters (comas, dots, etc.) then the selection will be until the special character
+ * and not the whole text. In this particular test we want to select the whole text, so we use a string without
+ * special characters.
+ */
+const PI_NUMBER_WITHOUT_COMA =
+  "31415926535897932384626433832795028841971693993751058209749445923078164062862";
 
 const closeKeyboard = async () => {
   // tap outside to close a keyboard
@@ -61,6 +69,19 @@ describe("AwareScrollView test cases", () => {
         );
       });
     }
+  });
+
+  it("should auto-scroll when text selection changed", async () => {
+    await waitAndReplace("TextInput#4", PI_NUMBER_WITHOUT_COMA);
+    await element(by.id("aware_scroll_view_container")).scroll(60, "up");
+    await element(by.id("TextInput#4")).multiTap(2);
+    await waitForExpect(async () => {
+      await expectBitmapsToBeEqual(
+        "AwareScrollViewTextSelectionChanged",
+        BLINKING_CURSOR,
+      );
+    });
+    await element(by.id("TextInput#4")).clearText();
   });
 
   it("should auto-scroll when user types a text", async () => {
