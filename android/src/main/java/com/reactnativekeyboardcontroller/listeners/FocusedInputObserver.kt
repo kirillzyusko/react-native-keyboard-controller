@@ -70,6 +70,8 @@ class FocusedInputObserver(val view: ReactViewGroup, private val context: Themed
     endY: Double,
   ) -> Unit = listener@{ start, end, startX, startY, endX, endY ->
     val input = lastFocusedInput ?: return@listener
+
+    syncUpLayout()
     context.dispatchEvent(
       view.id,
       FocusedInputSelectionChangedEvent(
