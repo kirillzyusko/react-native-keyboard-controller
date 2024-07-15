@@ -232,6 +232,8 @@ public class FocusedInputObserver: NSObject {
     guard let eventDict = event as? [String: Any] else {
       return
     }
+      
+    syncUpLayout()
 
     let target: [String: Any] = [
       "target": (currentResponder as UIResponder?).reactViewTag,
