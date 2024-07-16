@@ -78,6 +78,7 @@ export default function AwareScrollView({ navigation }: Props) {
             placeholder={`TextInput#${i}`}
             keyboardType={i % 2 === 0 ? "numeric" : "default"}
             onChangeText={setText}
+            contextMenuHidden={i === 4}
           />
         ))}
       </KeyboardAwareScrollView>
