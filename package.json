@@ -46,6 +46,7 @@
     "dismiss",
     "focused input",
     "text changed",
+    "selection changed",
     "avoiding view",
     "avoid keyboard",
     "sticky view",
