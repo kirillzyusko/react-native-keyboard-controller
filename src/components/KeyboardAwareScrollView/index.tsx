@@ -186,18 +186,31 @@ const KeyboardAwareScrollView = forwardRef<
       [bottomOffset, enabled, height, rest.snapToOffsets],
     );
 
-    const scrollFromCurrentPosition = useCallback(() => {
-      "worklet";
+    const scrollFromCurrentPosition = useCallback(
+      (customHeight?: number) => {
+        "worklet";
 
-      const prevScrollPosition = scrollPosition.value;
-      const prevLayout = layout.value;
+        const prevScrollPosition = scrollPosition.value;
+        const prevLayout = layout.value;
 
-      scrollPosition.value = position.value;
-      layout.value = input.value;
-      maybeScroll(keyboardHeight.value, true);
-      scrollPosition.value = prevScrollPosition;
-      layout.value = prevLayout;
-    }, [maybeScroll]);
+        if (!input.value?.layout) {
+          return;
+        }
+
+        layout.value = {
+          ...input.value,
+          layout: {
+            ...input.value.layout,
+            height: customHeight ?? input.value.layout.height,
+          },
+        };
+        scrollPosition.value = position.value;
+        maybeScroll(keyboardHeight.value, true);
+        scrollPosition.value = prevScrollPosition;
+        layout.value = prevLayout;
+      },
+      [maybeScroll],
+    );
     const onChangeText = useCallback(() => {
       "worklet";
 
@@ -214,7 +227,7 @@ const KeyboardAwareScrollView = forwardRef<
         "worklet";
 
         if (e.selection.start.position !== e.selection.end.position) {
-          scrollFromCurrentPosition();
+          scrollFromCurrentPosition(e.selection.end.y);
         }
       },
       [scrollFromCurrentPosition],
