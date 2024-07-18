@@ -10,7 +10,6 @@ import {
   waitAndTap,
   waitForElementById,
   waitForExpect,
-  waitForToBeFocused,
 } from "./helpers";
 
 describe("`KeyboardToolbar` specification", () => {
@@ -22,12 +21,10 @@ describe("`KeyboardToolbar` specification", () => {
 
   it("should have expected UI when first input is focused", async () => {
     await waitAndTap("TextInput#1");
-    await waitForExpect(async () => {
-      await expectElementBitmapsToBeEqual(
-        "keyboard.toolbar",
-        "ToolbarFirstInputFocused",
-      );
-    });
+    await expectElementBitmapsToBeEqual(
+      "keyboard.toolbar",
+      "ToolbarFirstInputFocused",
+    );
   });
 
   it("should show bottom sheet when `AutoFill Contacts` is pressed", async () => {
@@ -37,7 +34,7 @@ describe("`KeyboardToolbar` specification", () => {
 
   it("should set focus back when modal closed", async () => {
     await waitAndTap("autofill_contacts_close");
-    await waitForToBeFocused("TextInput#1");
+    await expect(element(by.id("TextInput#1"))).toBeFocused();
     await waitAndTap("autofill_contacts");
   });
 
@@ -50,51 +47,45 @@ describe("`KeyboardToolbar` specification", () => {
     // shouldn't render AutoFill Contacts anymore
     await expect(element(by.id("autofill_contacts"))).not.toExist();
     // should move focus to next field
-    await waitForToBeFocused("TextInput#2");
+    await expect(element(by.id("TextInput#2"))).toBeFocused();
     // should match to snapshot (active arrows, no "AutoFill Contacts" label)
-    await waitForExpect(async () => {
-      await expectElementBitmapsToBeEqual(
-        "keyboard.toolbar",
-        "ToolbarAllButtonsEnabled",
-      );
-    });
+    await expectElementBitmapsToBeEqual(
+      "keyboard.toolbar",
+      "ToolbarAllButtonsEnabled",
+    );
   });
 
   it("should skip a disabled fields", async () => {
     await waitAndTap("keyboard.toolbar.next");
-    await waitForToBeFocused("TextInput#5");
+    await expect(element(by.id("TextInput#5"))).toBeFocused();
   });
 
   it("should handle multiple clicks in row", async () => {
     await doActionNTimes(() => waitAndTap("keyboard.toolbar.next"), 3);
-    await waitForToBeFocused("TextInput#8");
+    await expect(element(by.id("TextInput#8"))).toBeFocused();
   });
 
   it("should handle `previous` clicks correctly", async () => {
     await waitAndTap("keyboard.toolbar.previous");
-    await waitForToBeFocused("TextInput#7");
+    await expect(element(by.id("TextInput#7"))).toBeFocused();
   });
 
   it("should have expected UI state when end of form reached", async () => {
     await doActionNTimes(() => waitAndTap("keyboard.toolbar.next"), 6);
-    await waitForToBeFocused("TextInput#13");
-    await waitForExpect(async () => {
-      await expectElementBitmapsToBeEqual(
-        "keyboard.toolbar",
-        "ToolbarLastInputFocused",
-      );
-    });
+    await expect(element(by.id("TextInput#13"))).toBeFocused();
+    await expectElementBitmapsToBeEqual(
+      "keyboard.toolbar",
+      "ToolbarLastInputFocused",
+    );
   });
 
   it("should enable next button when go to previous field from the last one", async () => {
     await waitAndTap("keyboard.toolbar.previous");
-    await waitForToBeFocused("TextInput#12");
-    await waitForExpect(async () => {
-      await expectElementBitmapsToBeEqual(
-        "keyboard.toolbar",
-        "ToolbarAllButtonsEnabled",
-      );
-    });
+    await expect(element(by.id("TextInput#12"))).toBeFocused();
+    await expectElementBitmapsToBeEqual(
+      "keyboard.toolbar",
+      "ToolbarAllButtonsEnabled",
+    );
   });
 
   it("should close keyboard when press `Done`", async () => {

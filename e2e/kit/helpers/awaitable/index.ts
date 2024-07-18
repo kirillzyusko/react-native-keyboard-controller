@@ -45,15 +45,6 @@ export const waitForElementNotToBeVisibleByText = async (
     .withTimeout(timeout);
 };
 
-export const waitForToBeFocused = async (
-  id: string,
-  timeout = DEFAULT_TIMEOUT,
-): Promise<void> => {
-  await waitFor(element(by.id(id)))
-    .toBeFocused()
-    .withTimeout(timeout);
-};
-
 export const doActionNTimes = async (
   action: () => Promise<void>,
   times: number,
