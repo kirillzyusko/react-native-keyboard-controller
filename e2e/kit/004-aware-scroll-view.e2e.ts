@@ -1,6 +1,7 @@
 import { expectBitmapsToBeEqual } from "./asserts";
 import {
   Env,
+  scrollUpUntilElementIsBarelyVisible,
   tap,
   typeText,
   waitAndReplace,
@@ -73,7 +74,10 @@ describe("AwareScrollView test cases", () => {
 
   it("should auto-scroll when text selection changed", async () => {
     await waitAndReplace("TextInput#4", PI_NUMBER_WITHOUT_COMA);
-    await element(by.id("aware_scroll_view_container")).scroll(60, "up");
+    await scrollUpUntilElementIsBarelyVisible(
+      "aware_scroll_view_container",
+      "TextInput#4",
+    );
     await element(by.id("TextInput#4")).multiTap(2);
     await waitForExpect(async () => {
       await expectBitmapsToBeEqual(
