@@ -29,7 +29,7 @@ public class ViewHierarchyNavigator: NSObject {
   public static func getAllInputFields() -> [TextInput] {
     var textInputs = [TextInput]()
 
-    guard let rootView = UIApplication.shared.keyWindow?.rootViewController?.view else {
+    guard let rootView = UIApplication.getTopViewController()?.view else {
       return []
     }
 
