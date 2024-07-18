@@ -233,6 +233,8 @@ public class FocusedInputObserver: NSObject {
       return
     }
 
+    syncUpLayout()
+
     let target: [String: Any] = [
       "target": (currentResponder as UIResponder?).reactViewTag,
     ]

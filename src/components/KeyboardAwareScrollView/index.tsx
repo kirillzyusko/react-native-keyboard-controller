@@ -24,7 +24,10 @@ import type {
   ScrollView,
   ScrollViewProps,
 } from "react-native";
-import type { FocusedInputLayoutChangedEvent } from "react-native-keyboard-controller";
+import type {
+  FocusedInputLayoutChangedEvent,
+  FocusedInputSelectionChangedEvent,
+} from "react-native-keyboard-controller";
 
 export type KeyboardAwareScrollViewProps = {
   /** The distance between keyboard and focused `TextInput` when keyboard is shown. Default is `0`. */
@@ -183,6 +186,31 @@ const KeyboardAwareScrollView = forwardRef<
       [bottomOffset, enabled, height, rest.snapToOffsets],
     );
 
+    const scrollFromCurrentPosition = useCallback(
+      (customHeight?: number) => {
+        "worklet";
+
+        const prevScrollPosition = scrollPosition.value;
+        const prevLayout = layout.value;
+
+        if (!input.value?.layout) {
+          return;
+        }
+
+        layout.value = {
+          ...input.value,
+          layout: {
+            ...input.value.layout,
+            height: customHeight ?? input.value.layout.height,
+          },
+        };
+        scrollPosition.value = position.value;
+        maybeScroll(keyboardHeight.value, true);
+        scrollPosition.value = prevScrollPosition;
+        layout.value = prevLayout;
+      },
+      [maybeScroll],
+    );
     const onChangeText = useCallback(() => {
       "worklet";
 
@@ -192,15 +220,18 @@ const KeyboardAwareScrollView = forwardRef<
         return;
       }
 
-      const prevScrollPosition = scrollPosition.value;
-      const prevLayout = layout.value;
+      scrollFromCurrentPosition();
+    }, [scrollFromCurrentPosition]);
+    const onSelectionChange = useCallback(
+      (e: FocusedInputSelectionChangedEvent) => {
+        "worklet";
 
-      scrollPosition.value = position.value;
-      layout.value = input.value;
-      maybeScroll(keyboardHeight.value, true);
-      scrollPosition.value = prevScrollPosition;
-      layout.value = prevLayout;
-    }, [maybeScroll]);
+        if (e.selection.start.position !== e.selection.end.position) {
+          scrollFromCurrentPosition(e.selection.end.y);
+        }
+      },
+      [scrollFromCurrentPosition],
+    );
 
     const onChangeTextHandler = useMemo(
       () => debounce(onChangeText, 200),
@@ -210,8 +241,9 @@ const KeyboardAwareScrollView = forwardRef<
     useFocusedInputHandler(
       {
         onChangeText: onChangeTextHandler,
+        onSelectionChange: onSelectionChange,
       },
-      [onChangeTextHandler],
+      [onChangeTextHandler, onSelectionChange],
     );
 
     useSmoothKeyboardHandler(
