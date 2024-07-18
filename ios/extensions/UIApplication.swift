@@ -20,7 +20,7 @@ public extension UIApplication {
       return getTopViewController(base: selected)
     }
 
-    if let presented = base?.presentedViewController {
+    if let presented = base?.presentedViewController, !presented.isBeingDismissed {
       return getTopViewController(base: presented)
     }
 
