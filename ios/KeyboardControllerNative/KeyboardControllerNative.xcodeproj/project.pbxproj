@@ -32,6 +32,9 @@
 		0873ED902BB6B9960004F3A4 /* Extension+UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0873ED8F2BB6B9960004F3A4 /* Extension+UIView.swift */; };
 		0873ED912BB6B9960004F3A4 /* Extension+UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0873ED8F2BB6B9960004F3A4 /* Extension+UIView.swift */; };
 		0873ED922BB6B9960004F3A4 /* Extension+UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0873ED8F2BB6B9960004F3A4 /* Extension+UIView.swift */; };
+		08A184132C4981D700BCE5DE /* UIApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A184122C4981D700BCE5DE /* UIApplication.swift */; };
+		08A184142C4981D700BCE5DE /* UIApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A184122C4981D700BCE5DE /* UIApplication.swift */; };
+		08A184152C4981D700BCE5DE /* UIApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A184122C4981D700BCE5DE /* UIApplication.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -68,6 +71,7 @@
 		0873ED802BB6B94B0004F3A4 /* TextInput.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TextInput.swift; path = ../../traversal/TextInput.swift; sourceTree = "<group>"; };
 		0873ED812BB6B94B0004F3A4 /* ViewHierarchyNavigator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ViewHierarchyNavigator.swift; path = ../../traversal/ViewHierarchyNavigator.swift; sourceTree = "<group>"; };
 		0873ED8F2BB6B9960004F3A4 /* Extension+UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Extension+UIView.swift"; sourceTree = "<group>"; };
+		08A184122C4981D700BCE5DE /* UIApplication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UIApplication.swift; path = ../../extensions/UIApplication.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,6 +122,7 @@
 		0873ED542BB6B7380004F3A4 /* KeyboardControllerNative */ = {
 			isa = PBXGroup;
 			children = (
+				08A184122C4981D700BCE5DE /* UIApplication.swift */,
 				081006AB2C36906800578E07 /* UIScrollView.swift */,
 				081006A72C36904E00578E07 /* UIResponder.swift */,
 				0873ED8F2BB6B9960004F3A4 /* Extension+UIView.swift */,
@@ -287,6 +292,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				08A184132C4981D700BCE5DE /* UIApplication.swift in Sources */,
 				0873ED902BB6B9960004F3A4 /* Extension+UIView.swift in Sources */,
 				0873ED582BB6B7380004F3A4 /* ContentView.swift in Sources */,
 				0873ED562BB6B7380004F3A4 /* KeyboardControllerNativeApp.swift in Sources */,
@@ -302,6 +308,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				08A184142C4981D700BCE5DE /* UIApplication.swift in Sources */,
 				0873ED892BB6B94B0004F3A4 /* ViewHierarchyNavigator.swift in Sources */,
 				0873ED912BB6B9960004F3A4 /* Extension+UIView.swift in Sources */,
 				0873ED832BB6B94B0004F3A4 /* FocusedInputHolder.swift in Sources */,
@@ -316,6 +323,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				08A184152C4981D700BCE5DE /* UIApplication.swift in Sources */,
 				0873ED922BB6B9960004F3A4 /* Extension+UIView.swift in Sources */,
 				0873ED732BB6B7390004F3A4 /* KeyboardControllerNativeUITestsLaunchTests.swift in Sources */,
 				0873ED712BB6B7390004F3A4 /* KeyboardControllerNativeUITests.swift in Sources */,
