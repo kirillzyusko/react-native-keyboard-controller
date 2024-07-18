@@ -9,19 +9,19 @@ import Foundation
 import UIKit
 
 public extension UIApplication {
-  static func getTopViewController(
+  static func topViewController(
     base: UIViewController? = UIApplication.shared.keyWindow?.rootViewController
   ) -> UIViewController? {
     if let nav = base as? UINavigationController {
-      return getTopViewController(base: nav.visibleViewController)
+      return topViewController(base: nav.visibleViewController)
     }
 
     if let tab = base as? UITabBarController, let selected = tab.selectedViewController {
-      return getTopViewController(base: selected)
+      return topViewController(base: selected)
     }
 
     if let presented = base?.presentedViewController, !presented.isBeingDismissed {
-      return getTopViewController(base: presented)
+      return topViewController(base: presented)
     }
 
     return base
