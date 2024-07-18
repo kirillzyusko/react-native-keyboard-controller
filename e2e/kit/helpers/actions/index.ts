@@ -119,6 +119,27 @@ export const scrollDownUntilElementIsVisible = async (
     .scroll(100, "down", NaN, 0.5);
 };
 
+export const scrollUpUntilElementIsBarelyVisible = async (
+  scrollViewId: string,
+  elementId: string,
+): Promise<void> => {
+  for (;;) {
+    await element(by.id(scrollViewId)).scroll(50, "up", 0.01, 0.5);
+    try {
+      // verify that we can interact with element
+      if (device.getPlatform() === "ios") {
+        await expect(element(by.id(elementId))).toBeVisible();
+      } else {
+        // on Android visible is always true
+        await element(by.id(elementId)).tap({ x: 0, y: 25 });
+      }
+    } catch (e) {
+      await element(by.id(scrollViewId)).scroll(35, "down", 0.01, 0.5);
+      break;
+    }
+  }
+};
+
 export const closeKeyboard = async (textInputId: string) => {
   if (device.getPlatform() === "android") {
     await device.pressBack();
