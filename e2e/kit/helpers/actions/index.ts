@@ -1,4 +1,5 @@
 import colors from "colors/safe";
+import { expect } from "detox";
 
 import { waitForElementById } from "../awaitable";
 
