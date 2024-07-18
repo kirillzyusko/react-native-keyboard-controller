@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://www.googletagmanager.com">
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-4JH9YK1X2Q"></script>
 <script>function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("js",new Date),gtag("config","G-4JH9YK1X2Q",{anonymize_ip:!0})</script><link rel="stylesheet" href="/react-native-keyboard-controller/assets/css/styles.9a3f8c3f.css">
-<script src="/react-native-keyboard-controller/assets/js/runtime~main.f26efe1b.js" defer="defer"></script>
+<script src="/react-native-keyboard-controller/assets/js/runtime~main.222238fb.js" defer="defer"></script>
 <script src="/react-native-keyboard-controller/assets/js/main.e5afd27b.js" defer="defer"></script>
 </head>
 <body class="navigation-with-keyboard">
@@ -22,7 +22,7 @@
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="comparison">Comparison<a href="#comparison" class="hash-link" aria-label="Direct link to Comparison" title="Direct link to Comparison">​</a></h2>
 <p>Current <code>react-native</code> ecosystem has a plenty of solutions that solves the problem of focused inputs being covered by keyboard. Each of them has its own advantages and disadvantages.</p>
 <p>Below is a table with the most important functions and their support in various implementations:</p>
-<table><thead><tr><th></th><th><a href="https://mateusz1913.github.io/react-native-avoid-softinput/" target="_blank" rel="noopener noreferrer">react-native-avoid-soft-input</a></th><th><a href="https://github.com/APSL/react-native-keyboard-aware-scroll-view" target="_blank" rel="noopener noreferrer">react-native-keyboard-aware-scroll-view</a></th><th><a href="https://github.com/douglasjunior/react-native-keyboard-manager" target="_blank" rel="noopener noreferrer">react-native-keyboard-manager</a></th><th><a href="/react-native-keyboard-controller/docs/api/components/keyboard-aware-scroll-view">react-native-keyboard-controller</a></th></tr></thead><tbody><tr><td>Respects keyboard animation</td><td>🟠 <sup><small>1</small></sup></td><td>❌</td><td>✅</td><td>✅</td></tr><tr><td>JS implementation</td><td>❌</td><td>✅</td><td>❌</td><td>🟠 <sup><small>2</small></sup></td></tr><tr><td>Reacts on focused input layout changes</td><td>❌</td><td>❌</td><td>🟠 <sup><small>3</small></sup></td><td>✅</td></tr><tr><td>Reacts on focus changes</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td></tr><tr><td>Auto-scroll when user is typing and input in non visible area</td><td>❌</td><td>❌</td><td>🟠 <sup><small>3</small></sup></td><td>✅</td></tr><tr><td>Android support</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td></tr><tr><td>Maintained</td><td>✅</td><td>❌</td><td>✅</td><td>✅</td></tr><tr><td>Support Fabric (new) architecture</td><td>✅</td><td>🟠 <sup><small>4</small></sup></td><td>❌</td><td>✅</td></tr></tbody></table>
+<table><thead><tr><th></th><th><a href="https://mateusz1913.github.io/react-native-avoid-softinput/" target="_blank" rel="noopener noreferrer">react-native-avoid-soft-input</a></th><th><a href="https://github.com/APSL/react-native-keyboard-aware-scroll-view" target="_blank" rel="noopener noreferrer">react-native-keyboard-aware-scroll-view</a></th><th><a href="https://github.com/douglasjunior/react-native-keyboard-manager" target="_blank" rel="noopener noreferrer">react-native-keyboard-manager</a></th><th><a href="/react-native-keyboard-controller/docs/api/components/keyboard-aware-scroll-view">react-native-keyboard-controller</a></th></tr></thead><tbody><tr><td>Respects keyboard animation</td><td>🟠 <sup><small>1</small></sup></td><td>❌</td><td>✅</td><td>✅</td></tr><tr><td>JS implementation</td><td>❌</td><td>✅</td><td>❌</td><td>🟠 <sup><small>2</small></sup></td></tr><tr><td>Reacts on focused input layout changes</td><td>❌</td><td>❌</td><td>🟠 <sup><small>3</small></sup></td><td>✅</td></tr><tr><td>Reacts on focus changes</td><td>✅</td><td>✅</td><td>✅</td><td>✅</td></tr><tr><td>Reacts on selection changes</td><td>❌</td><td>❌</td><td>🟠 <sup><small>3</small></sup></td><td>✅</td></tr><tr><td>Auto-scroll when user is typing and input in non visible area</td><td>❌</td><td>❌</td><td>🟠 <sup><small>3</small></sup></td><td>✅</td></tr><tr><td>Android support</td><td>✅</td><td>✅</td><td>❌</td><td>✅</td></tr><tr><td>Maintained</td><td>✅</td><td>❌</td><td>✅</td><td>✅</td></tr><tr><td>Support Fabric (new) architecture</td><td>✅</td><td>🟠 <sup><small>4</small></sup></td><td>❌</td><td>✅</td></tr></tbody></table>
 <blockquote>
 <p><sup>1</sup> <b>only</b> on <b>iOS</b></p>
 </blockquote>
@@ -35,7 +35,7 @@ exposed from native code</p>
 <p><sup>3</sup> achievable with
 <code>KeyboardManager.reloadLayoutIfNeeded()</code>
 usage in appropriate <code>TextInput</code> callbacks
-(<code>onLayout</code>/<code>onChangeText</code>)</p>
+(<code>onLayout</code>/<code>onChangeText</code>/<code>onSelectionChange</code>)</p>
 </blockquote>
 <blockquote>
 <p><sup>4</sup> since it&#x27;s JS based solution it supports new architecture, but it
