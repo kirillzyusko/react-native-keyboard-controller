@@ -19,7 +19,7 @@ describe("`KeyboardAvoidingView` specification", () => {
 
   it("should have expected UI when keyboard closed - package/padding", async () => {
     await waitForExpect(async () => {
-      await expectBitmapsToBeEqual("AvoidingViewInitial");
+      await expectBitmapsToBeEqual("AvoidingViewPackagePaddingInitial");
     });
   });
 
@@ -43,7 +43,7 @@ describe("`KeyboardAvoidingView` specification", () => {
 
   it("should have expected UI when keyboard closed - RN/padding", async () => {
     await waitForExpect(async () => {
-      await expectBitmapsToBeEqual("AvoidingViewInitial");
+      await expectBitmapsToBeEqual("AvoidingViewRNPaddingInitial");
     });
   });
 
