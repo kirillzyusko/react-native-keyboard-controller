@@ -62,8 +62,12 @@ describe("`KeyboardAvoidingView` specification", () => {
   });
 
   it("should toggle behavior and implementation - package/height", async () => {
+    // I do not know why but simple presses on button here hangs detox on Android
+    // but disabling synchronization fixes it
+    await device.disableSynchronization();
     await waitAndTap("keyboard_avoiding_view.behavior");
     await waitAndTap("keyboard_avoiding_view.implementation");
+    await device.enableSynchronization();
   });
 
   it("should have expected UI when keyboard closed - package/height", async () => {
@@ -97,22 +101,28 @@ describe("`KeyboardAvoidingView` specification", () => {
   });
 
   it("should have expected UI when keyboard opened - RN/height", async () => {
+    await device.disableSynchronization();
     await waitAndTap("keyboard_avoiding_view.password");
     await waitForExpect(async () => {
       await expectBitmapsToBeEqual("AvoidingViewRNHeightOpened");
     });
+    await device.enableSynchronization();
   });
 
   it("should have expected UI when keyboard gets closed - RN/height", async () => {
+    await device.disableSynchronization();
     await waitAndType("keyboard_avoiding_view.password", "\n");
     await waitForExpect(async () => {
       await expectBitmapsToBeEqual("AvoidingViewRNHeightClosed");
     });
+    await device.enableSynchronization();
   });
 
   it("should toggle behavior and implementation - package/position", async () => {
+    await device.disableSynchronization();
     await waitAndTap("keyboard_avoiding_view.behavior");
     await waitAndTap("keyboard_avoiding_view.implementation");
+    await device.enableSynchronization();
   });
 
   it("should have expected UI when keyboard closed - package/position", async () => {
