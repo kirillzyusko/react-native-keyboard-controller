@@ -18,6 +18,7 @@ describe("`KeyboardAvoidingView` specification", () => {
   });
 
   it("should have expected UI when keyboard closed - package/padding", async () => {
+    await waitAndTap("keyboard_avoiding_view.container");
     await waitForExpect(async () => {
       await expectBitmapsToBeEqual("AvoidingViewPackagePaddingInitial");
     });
