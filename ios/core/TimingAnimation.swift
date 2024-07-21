@@ -31,19 +31,27 @@ public class TimingAnimation: KeyboardAnimation {
     super.init(fromValue: fromValue, toValue: toValue, animation: animation)
   }
 
-  func bezier(t: CGFloat) -> CGFloat {
+  func bezier(t: CGFloat, valueForPoint: (CGPoint) -> CGFloat) -> CGFloat {
     let u = 1 - t
     let tt = t * t
     let uu = u * u
 
     // Calculate the terms for the Bézier curve
-    let term0 = uu * u * p0.y // Since P0 = (0,0), term0 contributes 0
-    let term1 = 3 * uu * t * p1.y // Since P1.y = 0
-    let term2 = 3 * u * tt * p2.y // Since P2.y = 1.0
-    let term3 = tt * t * p3.y // Since P3.y = 1, term3 = t^3
+    let term0 = uu * u * valueForPoint(p0) // P0
+    let term1 = 3 * uu * t * valueForPoint(p1) // P1
+    let term2 = 3 * u * tt * valueForPoint(p2) // P2
+    let term3 = tt * t * valueForPoint(p3) // P3
 
     // Sum all terms to get the Bézier value
     return term0 + term1 + term2 + term3
+  }
+
+  func bezierY(t: CGFloat) -> CGFloat {
+    return bezier(t: t) { $0.y }
+  }
+
+  func bezierX(t: CGFloat) -> CGFloat {
+    return bezier(t: t) { $0.x }
   }
 
   // public functions
@@ -53,7 +61,7 @@ public class TimingAnimation: KeyboardAnimation {
     let fraction = min(x / frames, 1)
     let t = findTForX(xTarget: fraction)
 
-    let progress = bezier(t: t)
+    let progress = bezierY(t: t)
 
     return fromValue + (toValue - fromValue) * CGFloat(progress)
   }
@@ -73,14 +81,18 @@ public class TimingAnimation: KeyboardAnimation {
     return t // Return the approximation of t
   }
 
-  func bezierX(t: CGFloat) -> CGFloat {
-    // Implement this to compute the x-coordinate of the Bezier curve at t
-    return (1 - t) * (1 - t) * (1 - t) * p0.x + 3 * (1 - t) * (1 - t) * t * p1.x + 3 * (1 - t) * t * t * p2.x + t * t * t * p3.x
+  func bezierDerivative(t: CGFloat, valueForPoint _: (CGPoint) -> CGFloat) -> CGFloat {
+    let u = 1 - t
+    let uu = u * u
+    let tt = t * t
+    let tu = t * u
+
+    // computing the derivative of the (x/y)-coordinate of the Bezier curve at t
+    return -3 * uu * p0.x + (3 * uu - 6 * tu) * p1.x + (6 * tu - 3 * tt) * p2.x + 3 * tt * p3.x
   }
 
-  func bezierXDerivative(t: CGFloat) -> CGFloat {
-    // Implement this to compute the derivative of the x-coordinate of the Bezier curve at t
-    return -3 * (1 - t) * (1 - t) * p0.x + (3 * (1 - t) * (1 - t) - 6 * t * (1 - t)) * p1.x + (6 * t * (1 - t) - 3 * t * t) * p2.x + 3 * t * t * p3.x
+  func bezierXDerivative(t: CGFloat) {
+    return bezierDerivative(t: t) { $0.x }
   }
 }
 
