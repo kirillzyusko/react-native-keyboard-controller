@@ -40,7 +40,6 @@ public class KeyboardMovementObserver: NSObject {
   private var duration = 0
   private var tag: NSNumber = -1
   private var animation: KeyboardAnimation?
-  var i = 0.0
 
   @objc public init(
     handler: @escaping (NSString, NSNumber, NSNumber, NSNumber, NSNumber) -> Void,
@@ -143,7 +142,7 @@ public class KeyboardMovementObserver: NSObject {
         // since it will be handled in `keyboardWillDisappear` function
         return
       }
-        
+
       prevKeyboardPosition = position
 
       onEvent(
@@ -272,19 +271,13 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   func initializeAnimation(fromValue: Double, toValue: Double) {
-    print(keyboardView?.layer.presentation()?.animation(forKey: "position"))
-      if let positionAnimation = keyboardView?.layer.presentation()?.animation(forKey: "position") {
-          if let springAnimation = positionAnimation as? CASpringAnimation {
-            animation = SpringAnimation(animation: springAnimation, fromValue: fromValue, toValue: toValue)
-              // Handle spring animation specifics here
-          } else if let basicAnimation = positionAnimation as? CABasicAnimation {
-              animation = TimingAnimation(animation: basicAnimation, fromValue: fromValue, toValue: toValue)
-          } else {
-              print("The animation is not a recognized type (not CASpringAnimation or CABasicAnimation).")
-          }
-      } else {
-          print("No animation found for key 'position'.")
-      }
+    guard let positionAnimation = keyboardView?.layer.presentation()?.animation(forKey: "position") else { return }
+
+    if let springAnimation = positionAnimation as? CASpringAnimation {
+      animation = SpringAnimation(animation: springAnimation, fromValue: fromValue, toValue: toValue)
+    } else if let basicAnimation = positionAnimation as? CABasicAnimation {
+      animation = TimingAnimation(animation: basicAnimation, fromValue: fromValue, toValue: toValue)
+    }
   }
 
   @objc func updateKeyboardFrame(link: CADisplayLink) {
@@ -300,15 +293,14 @@ public class KeyboardMovementObserver: NSObject {
       return
     }
 
-      if animation == nil {
-          initializeAnimation(fromValue: prevKeyboardPosition, toValue: keyboardHeight)
-          i = prevKeyboardPosition
-      }
-      
+    if animation == nil {
+      initializeAnimation(fromValue: prevKeyboardPosition, toValue: keyboardHeight)
+    }
+
     prevKeyboardPosition = keyboardPosition
 
     if let animation = animation {
-        let baseDuration = animation.timingAt(value: keyboardPosition)
+      let baseDuration = animation.timingAt(value: keyboardPosition)
 
       #if targetEnvironment(simulator)
         // on iOS simulator we can not use static interval
@@ -323,8 +315,6 @@ public class KeyboardMovementObserver: NSObject {
       #endif
 
       let position = CGFloat(animation.valueAt(time: duration))
-        print("At \(duration) Predicted: \(position).\n Base: \(baseDuration) -> \(animation.valueAt(time: baseDuration)) vs \(keyboardPosition). Timing: \(link.timestamp - animation.startTime)")
-        print("Diff: \((keyboardPosition - i) / (keyboardHeight - i))")
       // handles a case when final frame has final destination (i. e. 0 or 291)
       // but CASpringAnimation can never get to this final destination
       let race: (CGFloat, CGFloat) -> CGFloat = animation.isIncreasing ? max : min
