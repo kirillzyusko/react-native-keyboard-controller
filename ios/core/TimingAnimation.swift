@@ -91,7 +91,7 @@ public class TimingAnimation: KeyboardAnimation {
     return -3 * uu * p0.x + (3 * uu - 6 * tu) * p1.x + (6 * tu - 3 * tt) * p2.x + 3 * tt * p3.x
   }
 
-  func bezierXDerivative(t: CGFloat) {
+  func bezierXDerivative(t: CGFloat) -> CGFloat {
     return bezierDerivative(t: t) { $0.x }
   }
 }
