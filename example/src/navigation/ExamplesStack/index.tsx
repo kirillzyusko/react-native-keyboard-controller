@@ -83,7 +83,7 @@ const options = {
     title: "Native stack",
   },
   [ScreenNames.KEYBOARD_AVOIDING_VIEW]: {
-    title: "KeyboardAvoidingView",
+    title: "KAV",
   },
   [ScreenNames.ENABLED_DISABLED]: {
     title: "Enabled/disabled",

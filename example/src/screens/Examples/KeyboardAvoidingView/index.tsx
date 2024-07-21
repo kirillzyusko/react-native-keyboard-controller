@@ -29,12 +29,14 @@ export default function KeyboardAvoidingViewExample({ navigation }: Props) {
         <View style={styles.row}>
           <Text
             style={styles.header}
+            testID="keyboard_avoiding_view.implementation"
             onPress={() => setPackageImplementation((value) => !value)}
           >
             {isPackageImplementation ? "Package" : "RN"}
           </Text>
           <Text
             style={styles.header}
+            testID="keyboard_avoiding_view.behavior"
             onPress={() => {
               const index = behaviors.indexOf(behavior);
               setBehavior(
@@ -59,6 +61,7 @@ export default function KeyboardAvoidingViewExample({ navigation }: Props) {
       contentContainerStyle={styles.container}
       keyboardVerticalOffset={100}
       style={styles.content}
+      testID="keyboard_avoiding_view.container"
     >
       <View style={styles.inner}>
         <Text style={styles.heading}>Header</Text>
@@ -67,15 +70,20 @@ export default function KeyboardAvoidingViewExample({ navigation }: Props) {
             placeholder="Username"
             placeholderTextColor="#7C7C7C"
             style={styles.textInput}
+            testID="keyboard_avoiding_view.username"
           />
           <TextInput
             placeholder="Password"
             placeholderTextColor="#7C7C7C"
             style={styles.textInput}
+            testID="keyboard_avoiding_view.password"
             secureTextEntry
           />
         </View>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity
+          testID="keyboard_avoiding_view.submit"
+          style={styles.button}
+        >
           <Text style={styles.text}>Submit</Text>
         </TouchableOpacity>
       </View>
