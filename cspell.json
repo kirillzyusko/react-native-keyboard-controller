@@ -114,7 +114,8 @@
     "AOSP",
     "bezier",
     "bézier",
-    "Raphson"
+    "Raphson",
+    "desmos"
   ],
   "ignorePaths": [
     "node_modules",
