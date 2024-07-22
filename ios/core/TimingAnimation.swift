@@ -16,10 +16,8 @@ import QuartzCore
  * For more details on the Bézier curves, see [Desmos Graph](https://www.desmos.com/calculator/eynenh1aga?lang=en).
  */
 public class TimingAnimation: KeyboardAnimation {
-  private let p0: CGPoint
   private let p1: CGPoint
   private let p2: CGPoint
-  private let p3: CGPoint
 
   init(animation: CABasicAnimation, fromValue: Double, toValue: Double) {
     let timingFunction = animation.timingFunction
@@ -29,10 +27,8 @@ public class TimingAnimation: KeyboardAnimation {
     let p1 = CGPoint(x: CGFloat(controlPoints[0]), y: CGFloat(controlPoints[1]))
     let p2 = CGPoint(x: CGFloat(controlPoints[2]), y: CGFloat(controlPoints[3]))
 
-    p0 = CGPoint(x: 0.0, y: 0.0)
     self.p1 = p1
     self.p2 = p2
-    p3 = CGPoint(x: 1.0, y: 1.0)
 
     super.init(fromValue: fromValue, toValue: toValue, animation: animation)
   }
@@ -43,13 +39,14 @@ public class TimingAnimation: KeyboardAnimation {
     let uu = u * u
 
     // Calculate the terms for the Bézier curve
-    let term0 = uu * u * valueForPoint(p0) // P0
+    // term0 is evaluated as `0`, because P0(0, 0)
+    // let term0 = uu * u * valueForPoint(p0) // P0
     let term1 = 3 * uu * t * valueForPoint(p1) // P1
     let term2 = 3 * u * tt * valueForPoint(p2) // P2
-    let term3 = tt * t * valueForPoint(p3) // P3
+    let term3 = tt * t // * valueForPoint(p3), because P3(1, 1)
 
     // Sum all terms to get the Bézier value
-    return term0 + term1 + term2 + term3
+    return term1 + term2 + term3
   }
 
   func bezierY(t: CGFloat) -> CGFloat {
@@ -93,12 +90,14 @@ public class TimingAnimation: KeyboardAnimation {
     let tt = t * t
     let tu = t * u
 
-    let term0 = -3 * uu * valueForPoint(p0)
+    // term0 is evaluated as `0`, because P0(0, 0)
+    // let term0 = -3 * uu * valueForPoint(p0)
     let term1 = (3 * uu - 6 * tu) * valueForPoint(p1)
     let term2 = (6 * tu - 3 * tt) * valueForPoint(p2)
-    let term3 = 3 * tt * valueForPoint(p3)
+    let term3 = 3 * tt // * valueForPoint(p3), because P3(1, 1)
 
-    return term0 + term1 + term2 + term3
+    // Sum all terms to get the derivative
+    return term1 + term2 + term3
   }
 
   func bezierXDerivative(t: CGFloat) -> CGFloat {
