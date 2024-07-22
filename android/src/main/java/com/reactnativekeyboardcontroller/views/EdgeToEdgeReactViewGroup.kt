@@ -228,8 +228,7 @@ class EdgeToEdgeReactViewGroup(
             rootView,
             callback,
           )
-          // adds additional bottom padding
-          // ViewCompat.setOnApplyWindowInsetsListener(rootView, callback)
+          ViewCompat.setOnApplyWindowInsetsListener(rootView, callback)
 
           // imitating edge-to-edge mode behavior
           window.setSoftInputMode(SOFT_INPUT_ADJUST_NOTHING)
