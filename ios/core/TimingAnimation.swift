@@ -9,6 +9,12 @@ import Foundation
 import QuartzCore
 
 // swiftlint:disable identifier_name
+/**
+ * A class that handles timing animations using Bézier curves.
+ *
+ * This class calculates the progress of animations based on Bézier curve control points.
+ * For more details on the Bézier curves, see [Desmos Graph](https://www.desmos.com/calculator/eynenh1aga?lang=en).
+ */
 public class TimingAnimation: KeyboardAnimation {
   private let p0: CGPoint
   private let p1: CGPoint
