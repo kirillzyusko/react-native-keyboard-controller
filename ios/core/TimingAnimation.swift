@@ -81,14 +81,18 @@ public class TimingAnimation: KeyboardAnimation {
     return t // Return the approximation of t
   }
 
-  func bezierDerivative(t: CGFloat, valueForPoint _: (CGPoint) -> CGFloat) -> CGFloat {
+  func bezierDerivative(t: CGFloat, valueForPoint: (CGPoint) -> CGFloat) -> CGFloat {
     let u = 1 - t
     let uu = u * u
     let tt = t * t
     let tu = t * u
 
-    // computing the derivative of the (x/y)-coordinate of the Bezier curve at t
-    return -3 * uu * p0.x + (3 * uu - 6 * tu) * p1.x + (6 * tu - 3 * tt) * p2.x + 3 * tt * p3.x
+    let term0 = -3 * uu * valueForPoint(p0)
+    let term1 = (3 * uu - 6 * tu) * valueForPoint(p1)
+    let term2 = (6 * tu - 3 * tt) * valueForPoint(p2)
+    let term3 = 3 * tt * valueForPoint(p3)
+
+    return term0 + term1 + term2 + term3
   }
 
   func bezierXDerivative(t: CGFloat) -> CGFloat {
