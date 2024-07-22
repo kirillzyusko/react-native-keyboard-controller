@@ -143,6 +143,8 @@ public class KeyboardMovementObserver: NSObject {
         return
       }
 
+      prevKeyboardPosition = position
+
       onEvent(
         "onKeyboardMoveInteractive",
         position as NSNumber,
@@ -269,11 +271,13 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   func initializeAnimation(fromValue: Double, toValue: Double) {
-    let positionAnimation = keyboardView?.layer.presentation()?.animation(forKey: "position") as? CASpringAnimation
-    guard let keyboardAnimation = positionAnimation else {
-      return
+    guard let positionAnimation = keyboardView?.layer.presentation()?.animation(forKey: "position") else { return }
+
+    if let springAnimation = positionAnimation as? CASpringAnimation {
+      animation = SpringAnimation(animation: springAnimation, fromValue: fromValue, toValue: toValue)
+    } else if let basicAnimation = positionAnimation as? CABasicAnimation {
+      animation = TimingAnimation(animation: basicAnimation, fromValue: fromValue, toValue: toValue)
     }
-    animation = SpringAnimation(animation: keyboardAnimation, fromValue: fromValue, toValue: toValue)
   }
 
   @objc func updateKeyboardFrame(link: CADisplayLink) {
@@ -287,6 +291,10 @@ public class KeyboardMovementObserver: NSObject {
 
     if keyboardPosition == prevKeyboardPosition || keyboardFrameY == 0 {
       return
+    }
+
+    if animation == nil {
+      initializeAnimation(fromValue: prevKeyboardPosition, toValue: keyboardHeight)
     }
 
     prevKeyboardPosition = keyboardPosition
@@ -307,7 +315,6 @@ public class KeyboardMovementObserver: NSObject {
       #endif
 
       let position = CGFloat(animation.valueAt(time: duration))
-
       // handles a case when final frame has final destination (i. e. 0 or 291)
       // but CASpringAnimation can never get to this final destination
       let race: (CGFloat, CGFloat) -> CGFloat = animation.isIncreasing ? max : min

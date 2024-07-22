@@ -17,7 +17,7 @@ protocol KeyboardAnimationProtocol {
 }
 
 public class KeyboardAnimation: KeyboardAnimationProtocol {
-  private weak var animation: CAMediaTiming?
+  weak var animation: CAMediaTiming?
 
   // constructor variables
   let fromValue: Double

@@ -111,7 +111,11 @@
     "autoplayed",
     "bridgeless",
     "scrollview",
-    "AOSP"
+    "AOSP",
+    "bezier",
+    "bézier",
+    "Raphson",
+    "desmos"
   ],
   "ignorePaths": [
     "node_modules",
