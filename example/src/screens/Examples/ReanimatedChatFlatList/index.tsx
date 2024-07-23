@@ -28,6 +28,7 @@ const useGradualAnimation = () => {
       onMove: (e) => {
         "worklet";
 
+        // eslint-disable-next-line react-compiler/react-compiler
         height.value = e.height;
       },
       onEnd: (e) => {

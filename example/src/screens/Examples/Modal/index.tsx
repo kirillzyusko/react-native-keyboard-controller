@@ -38,6 +38,7 @@ export default function ModalExample() {
             onPress={() => setModalVisible(false)}
             testID="close_button"
           />
+          {/* eslint-disable-next-line react-compiler/react-compiler */}
           <KeyboardAnimationTemplate provider={useKeyboardAnimation} />
         </View>
       </Modal>

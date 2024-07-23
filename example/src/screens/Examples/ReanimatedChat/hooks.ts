@@ -16,6 +16,7 @@ export const useTelegramTransitions = () => {
           // on Android Telegram is not using androidx.core values and uses custom interpolation
           // duration is taken from here: https://github.com/DrKLO/Telegram/blob/e9a35cea54c06277c69d41b8e25d94b5d7ede065/TMessagesProj/src/main/java/org/telegram/ui/ActionBar/AdjustPanLayoutHelper.java#L39
           // and bezier is taken from: https://github.com/DrKLO/Telegram/blob/e9a35cea54c06277c69d41b8e25d94b5d7ede065/TMessagesProj/src/main/java/androidx/recyclerview/widget/ChatListItemAnimator.java#L40
+          // eslint-disable-next-line react-compiler/react-compiler
           height.value = withTiming(-e.height, {
             duration: 250,
             easing: Easing.bezier(

@@ -1,6 +1,14 @@
 module.exports = {
   root: true,
-  plugins: ["@typescript-eslint", "react", "react-native", "jest", "import"],
+  plugins: [
+    "@typescript-eslint",
+    "react",
+    "react-native",
+    "jest",
+    "import",
+    "react-compiler",
+    "eslint-comments",
+  ],
   extends: [
     "@react-native",
     "prettier",
@@ -8,6 +16,7 @@ module.exports = {
     "plugin:@typescript-eslint/recommended",
     "plugin:jest/recommended",
     "plugin:import/typescript",
+    "plugin:eslint-comments/recommended",
   ],
   settings: {
     "import/parsers": {
@@ -80,6 +89,10 @@ module.exports = {
         additionalTestBlockFunctions: [],
       },
     ],
+    // react-compiler
+    "react-compiler/react-compiler": "error",
+    // eslint-comments
+    "eslint-comments/no-unused-disable": "error",
   },
   overrides: [
     {

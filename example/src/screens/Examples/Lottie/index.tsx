@@ -38,6 +38,7 @@ function LottieAnimation() {
       onMove: (e) => {
         "worklet";
 
+        // eslint-disable-next-line react-compiler/react-compiler
         progress.value = e.progress;
       },
     },

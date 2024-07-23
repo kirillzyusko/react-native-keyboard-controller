@@ -18,6 +18,7 @@ export const useKeyboardAnimation = () => {
         "worklet";
 
         if (e.height > 0) {
+          // eslint-disable-next-line react-compiler/react-compiler
           isClosed.value = false;
           heightWhenOpened.value = e.height;
         }

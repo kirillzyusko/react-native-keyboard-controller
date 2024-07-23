@@ -29,6 +29,7 @@ const TextInputWithMicSelection = (props: TextInputProps) => {
   const position = useSharedValue({ x: 0, y: 0 });
 
   useEffect(() => {
+    // eslint-disable-next-line react-compiler/react-compiler
     tag.value = findNodeHandle(ref.current) ?? -1;
   }, []);
 

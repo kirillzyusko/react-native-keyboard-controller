@@ -85,6 +85,7 @@ const KeyboardAvoidingView = forwardRef<
       "worklet";
 
       if (keyboard.isClosed.value || initialFrame.value === null) {
+        // eslint-disable-next-line react-compiler/react-compiler
         initialFrame.value = layout;
       }
     }, []);
