@@ -218,7 +218,7 @@ class EdgeToEdgeReactViewGroup(
       uiManager?.resolveView(event.viewTag) as? ReactModalHostView
     } catch (ignore: Exception) {
       Log.w(TAG, "Can not resolve view for Modal#${event.viewTag}", ignore)
-      return
+      null
     }
 
     if (modal == null) {
