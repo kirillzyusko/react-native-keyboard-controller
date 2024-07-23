@@ -211,34 +211,38 @@ class EdgeToEdgeReactViewGroup(
 
   override fun onEventDispatch(event: Event<out Event<*>>?) {
     if (event?.eventName == MODAL_SHOW_EVENT) {
-      val view = uiManager?.resolveView(event.viewTag) as? ReactModalHostView
+      try {
+        val modal = uiManager?.resolveView(event.viewTag) as? ReactModalHostView
 
-      if (view != null) {
-        val window = view.dialog?.window
-        val rootView = window?.decorView?.rootView
+        if (modal != null) {
+          val window = modal.dialog?.window
+          val rootView = window?.decorView?.rootView
 
-        if (rootView != null) {
-          callback = KeyboardAnimationCallback(
-            view = rootView,
-            viewId = this@EdgeToEdgeReactViewGroup,
-            context = reactContext,
-            config = KeyboardAnimationCallbackConfig(
-              persistentInsetTypes = WindowInsetsCompat.Type.systemBars(),
-              deferredInsetTypes = WindowInsetsCompat.Type.ime(),
-              dispatchMode = WindowInsetsAnimationCompat.Callback.DISPATCH_MODE_CONTINUE_ON_SUBTREE,
-              hasTranslucentNavigationBar = isNavigationBarTranslucent,
-            ),
-          )
+          if (rootView != null) {
+            val callback = KeyboardAnimationCallback(
+              view = rootView,
+              viewId = this@EdgeToEdgeReactViewGroup,
+              context = reactContext,
+              config = KeyboardAnimationCallbackConfig(
+                persistentInsetTypes = WindowInsetsCompat.Type.systemBars(),
+                deferredInsetTypes = WindowInsetsCompat.Type.ime(),
+                dispatchMode = WindowInsetsAnimationCompat.Callback.DISPATCH_MODE_CONTINUE_ON_SUBTREE,
+                hasTranslucentNavigationBar = isNavigationBarTranslucent,
+              ),
+            )
 
-          ViewCompat.setWindowInsetsAnimationCallback(
-            rootView,
-            callback,
-          )
-          ViewCompat.setOnApplyWindowInsetsListener(rootView, callback)
+            ViewCompat.setWindowInsetsAnimationCallback(
+              rootView,
+              callback,
+            )
+            ViewCompat.setOnApplyWindowInsetsListener(rootView, callback)
 
-          // imitating edge-to-edge mode behavior
-          window.setSoftInputMode(SOFT_INPUT_ADJUST_NOTHING)
+            // imitating edge-to-edge mode behavior
+            window.setSoftInputMode(SOFT_INPUT_ADJUST_NOTHING)
+          }
         }
+      } catch (e: Exception) {
+        Log.w(TAG, "Can not setup keyboard animation listener for Modal#${event.viewTag}", e)
       }
     }
   }
