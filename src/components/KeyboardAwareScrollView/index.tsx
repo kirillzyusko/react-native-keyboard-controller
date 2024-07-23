@@ -197,6 +197,7 @@ const KeyboardAwareScrollView = forwardRef<
           return;
         }
 
+        // eslint-disable-next-line react-compiler/react-compiler
         layout.value = {
           ...input.value,
           layout: {

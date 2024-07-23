@@ -65,6 +65,7 @@ export const useSmoothKeyboardHandler: typeof useKeyboardHandler = (
       // dispatch `onEnd`
       if (evt.height === height.value) {
         handler.onEnd?.(evt);
+        // eslint-disable-next-line react-compiler/react-compiler
         persistedHeight.value = height.value;
       }
     },

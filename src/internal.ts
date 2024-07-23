@@ -37,6 +37,7 @@ export function useSharedHandlers<
   // that it will have all of them) and then update them in worklet thread (calls are
   // happening in FIFO order, so we will always have actual value).
   const updateSharedHandlers = () => {
+    // eslint-disable-next-line react-compiler/react-compiler
     handlers.value = jsHandlers.current;
   };
   const setHandlers = useCallback((handler: Handlers<T>) => {

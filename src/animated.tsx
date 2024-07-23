@@ -136,6 +136,7 @@ export const KeyboardProvider = ({
     "worklet";
 
     if (platforms.includes(OS)) {
+      // eslint-disable-next-line react-compiler/react-compiler
       progressSV.value = event.progress;
       heightSV.value = -event.height;
     }

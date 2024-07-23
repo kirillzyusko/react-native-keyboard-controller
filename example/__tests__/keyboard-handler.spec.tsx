@@ -25,6 +25,7 @@ function TestComponent() {
     {
       onStart: (e) => {
         "worklet";
+        // eslint-disable-next-line react-compiler/react-compiler
         height.value = e.height;
       },
       onMove: (e) => {
