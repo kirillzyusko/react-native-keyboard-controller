@@ -24,6 +24,7 @@ import com.reactnativekeyboardcontroller.extensions.requestApplyInsetsWhenAttach
 import com.reactnativekeyboardcontroller.extensions.rootView
 import com.reactnativekeyboardcontroller.extensions.setupWindowDimensionsListener
 import com.reactnativekeyboardcontroller.listeners.KeyboardAnimationCallback
+import com.reactnativekeyboardcontroller.listeners.KeyboardAnimationCallbackConfig
 
 private val TAG = EdgeToEdgeReactViewGroup::class.qualifiedName
 
@@ -137,11 +138,13 @@ class EdgeToEdgeReactViewGroup(
       callback = KeyboardAnimationCallback(
         view = this,
         viewId = this,
-        persistentInsetTypes = WindowInsetsCompat.Type.systemBars(),
-        deferredInsetTypes = WindowInsetsCompat.Type.ime(),
-        dispatchMode = WindowInsetsAnimationCompat.Callback.DISPATCH_MODE_CONTINUE_ON_SUBTREE,
         context = reactContext,
-        hasTranslucentNavigationBar = isNavigationBarTranslucent,
+        config = KeyboardAnimationCallbackConfig(
+          persistentInsetTypes = WindowInsetsCompat.Type.systemBars(),
+          deferredInsetTypes = WindowInsetsCompat.Type.ime(),
+          dispatchMode = WindowInsetsAnimationCompat.Callback.DISPATCH_MODE_CONTINUE_ON_SUBTREE,
+          hasTranslucentNavigationBar = isNavigationBarTranslucent,
+        ),
       )
 
       eventView?.let {
@@ -218,10 +221,13 @@ class EdgeToEdgeReactViewGroup(
           callback = KeyboardAnimationCallback(
             view = rootView,
             viewId = this@EdgeToEdgeReactViewGroup,
-            persistentInsetTypes = WindowInsetsCompat.Type.systemBars(),
-            deferredInsetTypes = WindowInsetsCompat.Type.ime(),
-            dispatchMode = WindowInsetsAnimationCompat.Callback.DISPATCH_MODE_CONTINUE_ON_SUBTREE,
             context = reactContext,
+            config = KeyboardAnimationCallbackConfig(
+              persistentInsetTypes = WindowInsetsCompat.Type.systemBars(),
+              deferredInsetTypes = WindowInsetsCompat.Type.ime(),
+              dispatchMode = WindowInsetsAnimationCompat.Callback.DISPATCH_MODE_CONTINUE_ON_SUBTREE,
+              hasTranslucentNavigationBar = isNavigationBarTranslucent,
+            ),
           )
 
           ViewCompat.setWindowInsetsAnimationCallback(

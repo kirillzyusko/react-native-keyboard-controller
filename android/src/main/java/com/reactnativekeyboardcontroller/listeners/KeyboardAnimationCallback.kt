@@ -26,15 +26,19 @@ import kotlin.math.abs
 private val TAG = KeyboardAnimationCallback::class.qualifiedName
 private val isResizeHandledInCallbackMethods = Build.VERSION.SDK_INT < Build.VERSION_CODES.R
 
+data class KeyboardAnimationCallbackConfig(
+  val persistentInsetTypes: Int,
+  val deferredInsetTypes: Int,
+  val dispatchMode: Int = WindowInsetsAnimationCompat.Callback.DISPATCH_MODE_STOP,
+  val hasTranslucentNavigationBar: Boolean = false,
+)
+
 class KeyboardAnimationCallback(
   val viewId: ReactViewGroup,
   val view: View,
-  val persistentInsetTypes: Int,
-  val deferredInsetTypes: Int,
-  dispatchMode: Int = DISPATCH_MODE_STOP,
   val context: ThemedReactContext?,
-  val hasTranslucentNavigationBar: Boolean = false,
-) : WindowInsetsAnimationCompat.Callback(dispatchMode), OnApplyWindowInsetsListener {
+  private val config: KeyboardAnimationCallbackConfig,
+) : WindowInsetsAnimationCompat.Callback(config.dispatchMode), OnApplyWindowInsetsListener {
   private val surfaceId = UIManagerHelper.getSurfaceId(viewId)
 
   // state variables
@@ -90,7 +94,7 @@ class KeyboardAnimationCallback(
   private var layoutObserver: FocusedInputObserver? = null
 
   init {
-    require(persistentInsetTypes and deferredInsetTypes == 0) {
+    require(config.persistentInsetTypes and config.deferredInsetTypes == 0) {
       "persistentInsetTypes and deferredInsetTypes can not contain any of " +
         " same WindowInsetsCompat.Type values"
     }
@@ -205,13 +209,13 @@ class KeyboardAnimationCallback(
     runningAnimations.find { it.isKeyboardAnimation && !animationsToSkip.contains(it) } ?: return insets
 
     // First we get the insets which are potentially deferred
-    val typesInset = insets.getInsets(deferredInsetTypes)
+    val typesInset = insets.getInsets(config.deferredInsetTypes)
     // Then we get the persistent inset types which are applied as padding during layout
-    var otherInset = insets.getInsets(persistentInsetTypes)
+    var otherInset = insets.getInsets(config.persistentInsetTypes)
 
     // Now that we subtract the two insets, to calculate the difference. We also coerce
     // the insets to be >= 0, to make sure we don't use negative insets.
-    if (hasTranslucentNavigationBar) {
+    if (config.hasTranslucentNavigationBar) {
       otherInset = Insets.NONE
     }
     val diff = Insets.subtract(typesInset, otherInset).let {
@@ -364,7 +368,7 @@ class KeyboardAnimationCallback(
     val insets = ViewCompat.getRootWindowInsets(view)
     val keyboardHeight = insets?.getInsets(WindowInsetsCompat.Type.ime())?.bottom ?: 0
     val navigationBar =
-      if (hasTranslucentNavigationBar) {
+      if (config.hasTranslucentNavigationBar) {
         0
       } else {
         insets?.getInsets(WindowInsetsCompat.Type.navigationBars())?.bottom ?: 0
