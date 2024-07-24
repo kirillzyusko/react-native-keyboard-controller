@@ -5,7 +5,7 @@ on:
     types: [created]
   workflow_dispatch:
 jobs:
-  build:
+  publish:
     runs-on: ubuntu-latest
     permissions:
       contents: read
