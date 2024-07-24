@@ -99,7 +99,7 @@ class KeyboardAnimationCallback(
         " same WindowInsetsCompat.Type values"
     }
 
-    layoutObserver = FocusedInputObserver(view = eventPropagationView, context = context)
+    layoutObserver = FocusedInputObserver(view = view, eventPropagationView = eventPropagationView, context = context)
     view.viewTreeObserver.addOnGlobalFocusChangeListener(focusListener)
   }
 

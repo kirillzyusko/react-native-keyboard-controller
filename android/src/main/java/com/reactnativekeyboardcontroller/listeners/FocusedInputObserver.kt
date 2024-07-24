@@ -1,6 +1,7 @@
 package com.reactnativekeyboardcontroller.listeners
 
 import android.text.TextWatcher
+import android.view.View
 import android.view.View.OnLayoutChangeListener
 import android.view.ViewTreeObserver.OnGlobalFocusChangeListener
 import com.facebook.react.bridge.Arguments
@@ -35,7 +36,11 @@ val noFocusedInputEvent = FocusedInputLayoutChangedEventData(
   parentScrollViewTarget = -1,
 )
 
-class FocusedInputObserver(val view: ReactViewGroup, private val context: ThemedReactContext?) {
+class FocusedInputObserver(
+  val view: View,
+  private val eventPropagationView: ReactViewGroup,
+  private val context: ThemedReactContext?,
+) {
   // constructor variables
   private val surfaceId = UIManagerHelper.getSurfaceId(view)
 
@@ -53,10 +58,10 @@ class FocusedInputObserver(val view: ReactViewGroup, private val context: Themed
   private val textListener: (String) -> Unit = { text ->
     syncUpLayout()
     context.dispatchEvent(
-      view.id,
+      eventPropagationView.id,
       FocusedInputTextChangedEvent(
         surfaceId,
-        view.id,
+        eventPropagationView.id,
         text = text,
       ),
     )
@@ -73,10 +78,10 @@ class FocusedInputObserver(val view: ReactViewGroup, private val context: Themed
 
     syncUpLayout()
     context.dispatchEvent(
-      view.id,
+      eventPropagationView.id,
       FocusedInputSelectionChangedEvent(
         surfaceId,
-        view.id,
+        eventPropagationView.id,
         event = FocusedInputSelectionChangedEventData(
           target = input.id,
           start = start,
@@ -90,7 +95,7 @@ class FocusedInputObserver(val view: ReactViewGroup, private val context: Themed
     )
   }
   private val focusListener = OnGlobalFocusChangeListener { oldFocus, newFocus ->
-    // unfocused or focused was changed
+    // unfocused or focus was changed
     if (newFocus == null || oldFocus != null) {
       lastFocusedInput?.removeOnLayoutChangeListener(layoutListener)
       lastFocusedInput?.removeTextChangedListener(textWatcher)
@@ -152,10 +157,10 @@ class FocusedInputObserver(val view: ReactViewGroup, private val context: Themed
     if (event != lastEventDispatched) {
       lastEventDispatched = event
       context.dispatchEvent(
-        view.id,
+        eventPropagationView.id,
         FocusedInputLayoutChangedEvent(
           surfaceId,
-          view.id,
+          eventPropagationView.id,
           event = event,
         ),
       )
