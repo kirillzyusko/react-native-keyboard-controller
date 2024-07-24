@@ -305,6 +305,35 @@ class KeyboardAnimationCallback(
     duration = 0
   }
 
+  fun syncKeyboardPosition() {
+    val keyboardHeight = getCurrentKeyboardHeight()
+    // update internal state
+    isKeyboardVisible = isKeyboardVisible()
+    prevKeyboardHeight = keyboardHeight
+    isTransitioning = false
+    duration = 0
+
+    context.emitEvent(
+      "KeyboardController::" + if (!isKeyboardVisible) "keyboardDidHide" else "keyboardDidShow",
+      getEventParams(keyboardHeight),
+    )
+    // dispatch `onMove` to update RN animated value and `onEnd` to indicate that transition finished
+    listOf("topKeyboardMove", "topKeyboardMoveEnd").forEach { eventName ->
+      context.dispatchEvent(
+        eventPropagationView.id,
+        KeyboardTransitionEvent(
+          surfaceId,
+          eventPropagationView.id,
+          eventName,
+          keyboardHeight,
+          if (!isKeyboardVisible) 0.0 else 1.0,
+          duration,
+          viewTagFocused,
+        ),
+      )
+    }
+  }
+
   fun destroy() {
     view.viewTreeObserver.removeOnGlobalFocusChangeListener(focusListener)
     layoutObserver?.destroy()
@@ -317,42 +346,20 @@ class KeyboardAnimationCallback(
     duration = 0
 
     context.emitEvent("KeyboardController::keyboardWillShow", getEventParams(keyboardHeight))
-    context.dispatchEvent(
-      eventPropagationView.id,
-      KeyboardTransitionEvent(
-        surfaceId,
+    listOf("topKeyboardMoveStart", "topKeyboardMove", "topKeyboardMoveEnd").forEach { eventName ->
+      context.dispatchEvent(
         eventPropagationView.id,
-        "topKeyboardMoveStart",
-        keyboardHeight,
-        1.0,
-        0,
-        viewTagFocused,
-      ),
-    )
-    context.dispatchEvent(
-      eventPropagationView.id,
-      KeyboardTransitionEvent(
-        surfaceId,
-        eventPropagationView.id,
-        "topKeyboardMove",
-        keyboardHeight,
-        1.0,
-        0,
-        viewTagFocused,
-      ),
-    )
-    context.dispatchEvent(
-      eventPropagationView.id,
-      KeyboardTransitionEvent(
-        surfaceId,
-        eventPropagationView.id,
-        "topKeyboardMoveEnd",
-        keyboardHeight,
-        1.0,
-        0,
-        viewTagFocused,
-      ),
-    )
+        KeyboardTransitionEvent(
+          surfaceId,
+          eventPropagationView.id,
+          eventName,
+          keyboardHeight,
+          1.0,
+          0,
+          viewTagFocused,
+        ),
+      )
+    }
     context.emitEvent("KeyboardController::keyboardDidShow", getEventParams(keyboardHeight))
 
     this.persistentKeyboardHeight = keyboardHeight

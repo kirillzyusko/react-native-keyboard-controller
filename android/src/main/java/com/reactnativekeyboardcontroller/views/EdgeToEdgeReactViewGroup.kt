@@ -4,20 +4,13 @@ import android.annotation.SuppressLint
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING
 import android.widget.FrameLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsAnimationCompat
 import androidx.core.view.WindowInsetsCompat
 import com.facebook.react.uimanager.ThemedReactContext
-import com.facebook.react.uimanager.UIManagerHelper
-import com.facebook.react.uimanager.common.UIManagerType
-import com.facebook.react.uimanager.events.Event
-import com.facebook.react.uimanager.events.EventDispatcherListener
-import com.facebook.react.views.modal.ReactModalHostView
 import com.facebook.react.views.view.ReactViewGroup
-import com.reactnativekeyboardcontroller.BuildConfig
 import com.reactnativekeyboardcontroller.extensions.content
 import com.reactnativekeyboardcontroller.extensions.removeSelf
 import com.reactnativekeyboardcontroller.extensions.requestApplyInsetsWhenAttached
@@ -25,14 +18,13 @@ import com.reactnativekeyboardcontroller.extensions.rootView
 import com.reactnativekeyboardcontroller.extensions.setupWindowDimensionsListener
 import com.reactnativekeyboardcontroller.listeners.KeyboardAnimationCallback
 import com.reactnativekeyboardcontroller.listeners.KeyboardAnimationCallbackConfig
+import com.reactnativekeyboardcontroller.modal.ModalAttachedWatcher
 
 private val TAG = EdgeToEdgeReactViewGroup::class.qualifiedName
 
 @Suppress("detekt:TooManyFunctions")
 @SuppressLint("ViewConstructor")
-class EdgeToEdgeReactViewGroup(
-  private val reactContext: ThemedReactContext,
-) : ReactViewGroup(reactContext), EventDispatcherListener {
+class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : ReactViewGroup(reactContext) {
   // props
   private var isStatusBarTranslucent = false
   private var isNavigationBarTranslucent = false
@@ -42,11 +34,16 @@ class EdgeToEdgeReactViewGroup(
   private var eventView: ReactViewGroup? = null
   private var wasMounted = false
   private var callback: KeyboardAnimationCallback? = null
+  private val config: KeyboardAnimationCallbackConfig
+    get() = KeyboardAnimationCallbackConfig(
+      persistentInsetTypes = WindowInsetsCompat.Type.systemBars(),
+      deferredInsetTypes = WindowInsetsCompat.Type.ime(),
+      dispatchMode = WindowInsetsAnimationCompat.Callback.DISPATCH_MODE_CONTINUE_ON_SUBTREE,
+      hasTranslucentNavigationBar = isNavigationBarTranslucent,
+    )
 
-  // react managers
-  private val archType = if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) UIManagerType.FABRIC else UIManagerType.DEFAULT
-  private val uiManager = UIManagerHelper.getUIManager(reactContext.reactApplicationContext, archType)
-  private val eventDispatcher = UIManagerHelper.getEventDispatcher(reactContext.reactApplicationContext, archType)
+  // managers/watchers
+  private val modalAttachedWatcher = ModalAttachedWatcher(this, reactContext, ::config)
 
   init {
     reactContext.setupWindowDimensionsListener()
@@ -139,12 +136,7 @@ class EdgeToEdgeReactViewGroup(
         view = this,
         eventPropagationView = this,
         context = reactContext,
-        config = KeyboardAnimationCallbackConfig(
-          persistentInsetTypes = WindowInsetsCompat.Type.systemBars(),
-          deferredInsetTypes = WindowInsetsCompat.Type.ime(),
-          dispatchMode = WindowInsetsAnimationCompat.Callback.DISPATCH_MODE_CONTINUE_ON_SUBTREE,
-          hasTranslucentNavigationBar = isNavigationBarTranslucent,
-        ),
+        config = config,
       )
 
       eventView?.let {
@@ -178,14 +170,14 @@ class EdgeToEdgeReactViewGroup(
     this.goToEdgeToEdge(true)
     this.setupWindowInsets()
     this.setupKeyboardCallbacks()
-    this.addModalAttachingObserver()
+    modalAttachedWatcher.enable()
   }
 
   private fun disable() {
     this.goToEdgeToEdge(false)
     this.setupWindowInsets()
     this.removeKeyboardCallbacks()
-    this.removeModalAttachingObserver()
+    modalAttachedWatcher.disable()
   }
   // endregion
 
@@ -208,59 +200,4 @@ class EdgeToEdgeReactViewGroup(
     }
   }
   // endregion
-
-  override fun onEventDispatch(event: Event<out Event<*>>?) {
-    if (event?.eventName != MODAL_SHOW_EVENT) {
-      return
-    }
-
-    val modal = try {
-      uiManager?.resolveView(event.viewTag) as? ReactModalHostView
-    } catch (ignore: Exception) {
-      Log.w(TAG, "Can not resolve view for Modal#${event.viewTag}", ignore)
-      null
-    }
-
-    if (modal == null) {
-      return
-    }
-
-    val window = modal.dialog?.window
-    val rootView = window?.decorView?.rootView
-
-    if (rootView != null) {
-      val callback = KeyboardAnimationCallback(
-        view = rootView,
-        eventPropagationView = this@EdgeToEdgeReactViewGroup,
-        context = reactContext,
-        config = KeyboardAnimationCallbackConfig(
-          persistentInsetTypes = WindowInsetsCompat.Type.systemBars(),
-          deferredInsetTypes = WindowInsetsCompat.Type.ime(),
-          dispatchMode = WindowInsetsAnimationCompat.Callback.DISPATCH_MODE_CONTINUE_ON_SUBTREE,
-          hasTranslucentNavigationBar = isNavigationBarTranslucent,
-        ),
-      )
-
-      ViewCompat.setWindowInsetsAnimationCallback(
-        rootView,
-        callback,
-      )
-      ViewCompat.setOnApplyWindowInsetsListener(rootView, callback)
-
-      // imitating edge-to-edge mode behavior
-      window.setSoftInputMode(SOFT_INPUT_ADJUST_NOTHING)
-    }
-  }
-
-  private fun addModalAttachingObserver() {
-    eventDispatcher?.addListener(this)
-  }
-
-  private fun removeModalAttachingObserver() {
-    eventDispatcher?.removeListener(this)
-  }
-
-  companion object {
-    private const val MODAL_SHOW_EVENT = "topShow"
-  }
 }
