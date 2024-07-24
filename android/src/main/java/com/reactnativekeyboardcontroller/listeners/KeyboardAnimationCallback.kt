@@ -34,12 +34,12 @@ data class KeyboardAnimationCallbackConfig(
 )
 
 class KeyboardAnimationCallback(
-  val viewId: ReactViewGroup,
+  val eventPropagationView: ReactViewGroup,
   val view: View,
   val context: ThemedReactContext?,
   private val config: KeyboardAnimationCallbackConfig,
 ) : WindowInsetsAnimationCompat.Callback(config.dispatchMode), OnApplyWindowInsetsListener {
-  private val surfaceId = UIManagerHelper.getSurfaceId(viewId)
+  private val surfaceId = UIManagerHelper.getSurfaceId(eventPropagationView)
 
   // state variables
   private var persistentKeyboardHeight = 0.0
@@ -63,10 +63,10 @@ class KeyboardAnimationCallback(
         // 100% included in onStart/onMove/onEnd life cycles, but triggering onStart/onEnd several time
         // can bring breaking changes
         context.dispatchEvent(
-          viewId.id,
+          eventPropagationView.id,
           KeyboardTransitionEvent(
             surfaceId,
-            viewId.id,
+            eventPropagationView.id,
             "topKeyboardMoveStart",
             this.persistentKeyboardHeight,
             1.0,
@@ -75,10 +75,10 @@ class KeyboardAnimationCallback(
           ),
         )
         context.dispatchEvent(
-          viewId.id,
+          eventPropagationView.id,
           KeyboardTransitionEvent(
             surfaceId,
-            viewId.id,
+            eventPropagationView.id,
             "topKeyboardMoveEnd",
             this.persistentKeyboardHeight,
             1.0,
@@ -99,7 +99,7 @@ class KeyboardAnimationCallback(
         " same WindowInsetsCompat.Type values"
     }
 
-    layoutObserver = FocusedInputObserver(view = viewId, context = context)
+    layoutObserver = FocusedInputObserver(view = eventPropagationView, context = context)
     view.viewTreeObserver.addOnGlobalFocusChangeListener(focusListener)
   }
 
@@ -184,10 +184,10 @@ class KeyboardAnimationCallback(
 
     Log.i(TAG, "HEIGHT:: $keyboardHeight TAG:: $viewTagFocused")
     context.dispatchEvent(
-      viewId.id,
+      eventPropagationView.id,
       KeyboardTransitionEvent(
         surfaceId,
-        viewId.id,
+        eventPropagationView.id,
         "topKeyboardMoveStart",
         keyboardHeight,
         if (!isKeyboardVisible) 0.0 else 1.0,
@@ -238,10 +238,10 @@ class KeyboardAnimationCallback(
 
     val event = if (InteractiveKeyboardProvider.isInteractive) "topKeyboardMoveInteractive" else "topKeyboardMove"
     context.dispatchEvent(
-      viewId.id,
+      eventPropagationView.id,
       KeyboardTransitionEvent(
         surfaceId,
-        viewId.id,
+        eventPropagationView.id,
         event,
         height,
         progress,
@@ -289,10 +289,10 @@ class KeyboardAnimationCallback(
       getEventParams(keyboardHeight),
     )
     context.dispatchEvent(
-      viewId.id,
+      eventPropagationView.id,
       KeyboardTransitionEvent(
         surfaceId,
-        viewId.id,
+        eventPropagationView.id,
         "topKeyboardMoveEnd",
         keyboardHeight,
         if (!isKeyboardVisible) 0.0 else 1.0,
@@ -318,10 +318,10 @@ class KeyboardAnimationCallback(
 
     context.emitEvent("KeyboardController::keyboardWillShow", getEventParams(keyboardHeight))
     context.dispatchEvent(
-      viewId.id,
+      eventPropagationView.id,
       KeyboardTransitionEvent(
         surfaceId,
-        viewId.id,
+        eventPropagationView.id,
         "topKeyboardMoveStart",
         keyboardHeight,
         1.0,
@@ -330,10 +330,10 @@ class KeyboardAnimationCallback(
       ),
     )
     context.dispatchEvent(
-      viewId.id,
+      eventPropagationView.id,
       KeyboardTransitionEvent(
         surfaceId,
-        viewId.id,
+        eventPropagationView.id,
         "topKeyboardMove",
         keyboardHeight,
         1.0,
@@ -342,10 +342,10 @@ class KeyboardAnimationCallback(
       ),
     )
     context.dispatchEvent(
-      viewId.id,
+      eventPropagationView.id,
       KeyboardTransitionEvent(
         surfaceId,
-        viewId.id,
+        eventPropagationView.id,
         "topKeyboardMoveEnd",
         keyboardHeight,
         1.0,

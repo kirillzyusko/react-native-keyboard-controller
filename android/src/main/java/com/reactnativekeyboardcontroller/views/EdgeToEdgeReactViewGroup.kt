@@ -137,7 +137,7 @@ class EdgeToEdgeReactViewGroup(
 
       callback = KeyboardAnimationCallback(
         view = this,
-        viewId = this,
+        eventPropagationView = this,
         context = reactContext,
         config = KeyboardAnimationCallbackConfig(
           persistentInsetTypes = WindowInsetsCompat.Type.systemBars(),
@@ -231,7 +231,7 @@ class EdgeToEdgeReactViewGroup(
     if (rootView != null) {
       val callback = KeyboardAnimationCallback(
         view = rootView,
-        viewId = this@EdgeToEdgeReactViewGroup,
+        eventPropagationView = this@EdgeToEdgeReactViewGroup,
         context = reactContext,
         config = KeyboardAnimationCallbackConfig(
           persistentInsetTypes = WindowInsetsCompat.Type.systemBars(),
