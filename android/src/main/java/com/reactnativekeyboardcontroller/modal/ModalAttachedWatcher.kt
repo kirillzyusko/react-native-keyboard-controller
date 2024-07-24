@@ -58,6 +58,7 @@ class ModalAttachedWatcher(
 
       dialog.setOnDismissListener {
         callback.syncKeyboardPosition()
+        callback.destroy()
       }
 
       // imitating edge-to-edge mode behavior
