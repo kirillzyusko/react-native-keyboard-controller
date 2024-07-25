@@ -26,15 +26,20 @@ import kotlin.math.abs
 private val TAG = KeyboardAnimationCallback::class.qualifiedName
 private val isResizeHandledInCallbackMethods = Build.VERSION.SDK_INT < Build.VERSION_CODES.R
 
-class KeyboardAnimationCallback(
-  val view: ReactViewGroup,
+data class KeyboardAnimationCallbackConfig(
   val persistentInsetTypes: Int,
   val deferredInsetTypes: Int,
-  dispatchMode: Int = DISPATCH_MODE_STOP,
-  val context: ThemedReactContext?,
+  val dispatchMode: Int = WindowInsetsAnimationCompat.Callback.DISPATCH_MODE_STOP,
   val hasTranslucentNavigationBar: Boolean = false,
-) : WindowInsetsAnimationCompat.Callback(dispatchMode), OnApplyWindowInsetsListener {
-  private val surfaceId = UIManagerHelper.getSurfaceId(view)
+)
+
+class KeyboardAnimationCallback(
+  val eventPropagationView: ReactViewGroup,
+  val view: View,
+  val context: ThemedReactContext?,
+  private val config: KeyboardAnimationCallbackConfig,
+) : WindowInsetsAnimationCompat.Callback(config.dispatchMode), OnApplyWindowInsetsListener {
+  private val surfaceId = UIManagerHelper.getSurfaceId(eventPropagationView)
 
   // state variables
   private var persistentKeyboardHeight = 0.0
@@ -58,10 +63,10 @@ class KeyboardAnimationCallback(
         // 100% included in onStart/onMove/onEnd life cycles, but triggering onStart/onEnd several time
         // can bring breaking changes
         context.dispatchEvent(
-          view.id,
+          eventPropagationView.id,
           KeyboardTransitionEvent(
             surfaceId,
-            view.id,
+            eventPropagationView.id,
             "topKeyboardMoveStart",
             this.persistentKeyboardHeight,
             1.0,
@@ -70,10 +75,10 @@ class KeyboardAnimationCallback(
           ),
         )
         context.dispatchEvent(
-          view.id,
+          eventPropagationView.id,
           KeyboardTransitionEvent(
             surfaceId,
-            view.id,
+            eventPropagationView.id,
             "topKeyboardMoveEnd",
             this.persistentKeyboardHeight,
             1.0,
@@ -89,12 +94,12 @@ class KeyboardAnimationCallback(
   private var layoutObserver: FocusedInputObserver? = null
 
   init {
-    require(persistentInsetTypes and deferredInsetTypes == 0) {
+    require(config.persistentInsetTypes and config.deferredInsetTypes == 0) {
       "persistentInsetTypes and deferredInsetTypes can not contain any of " +
         " same WindowInsetsCompat.Type values"
     }
 
-    layoutObserver = FocusedInputObserver(view = view, context = context)
+    layoutObserver = FocusedInputObserver(view = view, eventPropagationView = eventPropagationView, context = context)
     view.viewTreeObserver.addOnGlobalFocusChangeListener(focusListener)
   }
 
@@ -137,7 +142,7 @@ class KeyboardAnimationCallback(
       this.onKeyboardResized(keyboardHeight)
     }
 
-    return insets
+    return WindowInsetsCompat.CONSUMED
   }
 
   @Suppress("detekt:ReturnCount")
@@ -179,10 +184,10 @@ class KeyboardAnimationCallback(
 
     Log.i(TAG, "HEIGHT:: $keyboardHeight TAG:: $viewTagFocused")
     context.dispatchEvent(
-      view.id,
+      eventPropagationView.id,
       KeyboardTransitionEvent(
         surfaceId,
-        view.id,
+        eventPropagationView.id,
         "topKeyboardMoveStart",
         keyboardHeight,
         if (!isKeyboardVisible) 0.0 else 1.0,
@@ -204,13 +209,13 @@ class KeyboardAnimationCallback(
     runningAnimations.find { it.isKeyboardAnimation && !animationsToSkip.contains(it) } ?: return insets
 
     // First we get the insets which are potentially deferred
-    val typesInset = insets.getInsets(deferredInsetTypes)
+    val typesInset = insets.getInsets(config.deferredInsetTypes)
     // Then we get the persistent inset types which are applied as padding during layout
-    var otherInset = insets.getInsets(persistentInsetTypes)
+    var otherInset = insets.getInsets(config.persistentInsetTypes)
 
     // Now that we subtract the two insets, to calculate the difference. We also coerce
     // the insets to be >= 0, to make sure we don't use negative insets.
-    if (hasTranslucentNavigationBar) {
+    if (config.hasTranslucentNavigationBar) {
       otherInset = Insets.NONE
     }
     val diff = Insets.subtract(typesInset, otherInset).let {
@@ -233,10 +238,10 @@ class KeyboardAnimationCallback(
 
     val event = if (InteractiveKeyboardProvider.isInteractive) "topKeyboardMoveInteractive" else "topKeyboardMove"
     context.dispatchEvent(
-      view.id,
+      eventPropagationView.id,
       KeyboardTransitionEvent(
         surfaceId,
-        view.id,
+        eventPropagationView.id,
         event,
         height,
         progress,
@@ -284,10 +289,10 @@ class KeyboardAnimationCallback(
       getEventParams(keyboardHeight),
     )
     context.dispatchEvent(
-      view.id,
+      eventPropagationView.id,
       KeyboardTransitionEvent(
         surfaceId,
-        view.id,
+        eventPropagationView.id,
         "topKeyboardMoveEnd",
         keyboardHeight,
         if (!isKeyboardVisible) 0.0 else 1.0,
@@ -298,6 +303,35 @@ class KeyboardAnimationCallback(
 
     // reset to initial state
     duration = 0
+  }
+
+  fun syncKeyboardPosition() {
+    val keyboardHeight = getCurrentKeyboardHeight()
+    // update internal state
+    isKeyboardVisible = isKeyboardVisible()
+    prevKeyboardHeight = keyboardHeight
+    isTransitioning = false
+    duration = 0
+
+    context.emitEvent(
+      "KeyboardController::" + if (!isKeyboardVisible) "keyboardDidHide" else "keyboardDidShow",
+      getEventParams(keyboardHeight),
+    )
+    // dispatch `onMove` to update RN animated value and `onEnd` to indicate that transition finished
+    listOf("topKeyboardMove", "topKeyboardMoveEnd").forEach { eventName ->
+      context.dispatchEvent(
+        eventPropagationView.id,
+        KeyboardTransitionEvent(
+          surfaceId,
+          eventPropagationView.id,
+          eventName,
+          keyboardHeight,
+          if (!isKeyboardVisible) 0.0 else 1.0,
+          duration,
+          viewTagFocused,
+        ),
+      )
+    }
   }
 
   fun destroy() {
@@ -312,42 +346,20 @@ class KeyboardAnimationCallback(
     duration = 0
 
     context.emitEvent("KeyboardController::keyboardWillShow", getEventParams(keyboardHeight))
-    context.dispatchEvent(
-      view.id,
-      KeyboardTransitionEvent(
-        surfaceId,
-        view.id,
-        "topKeyboardMoveStart",
-        keyboardHeight,
-        1.0,
-        0,
-        viewTagFocused,
-      ),
-    )
-    context.dispatchEvent(
-      view.id,
-      KeyboardTransitionEvent(
-        surfaceId,
-        view.id,
-        "topKeyboardMove",
-        keyboardHeight,
-        1.0,
-        0,
-        viewTagFocused,
-      ),
-    )
-    context.dispatchEvent(
-      view.id,
-      KeyboardTransitionEvent(
-        surfaceId,
-        view.id,
-        "topKeyboardMoveEnd",
-        keyboardHeight,
-        1.0,
-        0,
-        viewTagFocused,
-      ),
-    )
+    listOf("topKeyboardMoveStart", "topKeyboardMove", "topKeyboardMoveEnd").forEach { eventName ->
+      context.dispatchEvent(
+        eventPropagationView.id,
+        KeyboardTransitionEvent(
+          surfaceId,
+          eventPropagationView.id,
+          eventName,
+          keyboardHeight,
+          1.0,
+          0,
+          viewTagFocused,
+        ),
+      )
+    }
     context.emitEvent("KeyboardController::keyboardDidShow", getEventParams(keyboardHeight))
 
     this.persistentKeyboardHeight = keyboardHeight
@@ -363,7 +375,7 @@ class KeyboardAnimationCallback(
     val insets = ViewCompat.getRootWindowInsets(view)
     val keyboardHeight = insets?.getInsets(WindowInsetsCompat.Type.ime())?.bottom ?: 0
     val navigationBar =
-      if (hasTranslucentNavigationBar) {
+      if (config.hasTranslucentNavigationBar) {
         0
       } else {
         insets?.getInsets(WindowInsetsCompat.Type.navigationBars())?.bottom ?: 0

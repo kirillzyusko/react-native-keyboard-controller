@@ -17,6 +17,8 @@ import com.reactnativekeyboardcontroller.extensions.requestApplyInsetsWhenAttach
 import com.reactnativekeyboardcontroller.extensions.rootView
 import com.reactnativekeyboardcontroller.extensions.setupWindowDimensionsListener
 import com.reactnativekeyboardcontroller.listeners.KeyboardAnimationCallback
+import com.reactnativekeyboardcontroller.listeners.KeyboardAnimationCallbackConfig
+import com.reactnativekeyboardcontroller.modal.ModalAttachedWatcher
 
 private val TAG = EdgeToEdgeReactViewGroup::class.qualifiedName
 
@@ -32,6 +34,16 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
   private var eventView: ReactViewGroup? = null
   private var wasMounted = false
   private var callback: KeyboardAnimationCallback? = null
+  private val config: KeyboardAnimationCallbackConfig
+    get() = KeyboardAnimationCallbackConfig(
+      persistentInsetTypes = WindowInsetsCompat.Type.systemBars(),
+      deferredInsetTypes = WindowInsetsCompat.Type.ime(),
+      dispatchMode = WindowInsetsAnimationCompat.Callback.DISPATCH_MODE_CONTINUE_ON_SUBTREE,
+      hasTranslucentNavigationBar = isNavigationBarTranslucent,
+    )
+
+  // managers/watchers
+  private val modalAttachedWatcher = ModalAttachedWatcher(this, reactContext, ::config)
 
   init {
     reactContext.setupWindowDimensionsListener()
@@ -122,11 +134,9 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
 
       callback = KeyboardAnimationCallback(
         view = this,
-        persistentInsetTypes = WindowInsetsCompat.Type.systemBars(),
-        deferredInsetTypes = WindowInsetsCompat.Type.ime(),
-        dispatchMode = WindowInsetsAnimationCompat.Callback.DISPATCH_MODE_CONTINUE_ON_SUBTREE,
+        eventPropagationView = this,
         context = reactContext,
-        hasTranslucentNavigationBar = isNavigationBarTranslucent,
+        config = config,
       )
 
       eventView?.let {
@@ -160,12 +170,14 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
     this.goToEdgeToEdge(true)
     this.setupWindowInsets()
     this.setupKeyboardCallbacks()
+    modalAttachedWatcher.enable()
   }
 
   private fun disable() {
     this.goToEdgeToEdge(false)
     this.setupWindowInsets()
     this.removeKeyboardCallbacks()
+    modalAttachedWatcher.disable()
   }
   // endregion
 
