@@ -42,8 +42,6 @@ jobs:
           xcode-version: "15.4"
       - name: Get Xcode version
         run: xcodebuild -version
-      - name: Install AppleSimulatorUtils
-        run: brew tap wix/brew && brew install applesimutils
       - name: Save yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
@@ -110,6 +108,8 @@ jobs:
       - uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: "15.4"
+      - name: Install AppleSimulatorUtils
+        run: brew tap wix/brew && brew install applesimutils
       - name: Install e2e dependencies
         run: yarn install --cwd e2e
       - name: Use software keyboard
