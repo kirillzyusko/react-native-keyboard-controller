@@ -16,6 +16,7 @@ const options: Record<string, NativeStackNavigationOptions> = {
   [ScreenNames.NATIVE]: {
     headerShown: false,
     statusBarTranslucent: true,
+    navigationBarColor: "#FFFFFF",
   },
 };
 
