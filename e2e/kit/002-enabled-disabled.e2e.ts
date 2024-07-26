@@ -7,7 +7,7 @@ import {
   waitForExpect,
 } from "./helpers";
 
-describe("Example", () => {
+describe("Disabled/enabled functionality", () => {
   it("should navigate to `Enabled/disabled` screen", async () => {
     await scrollDownUntilElementIsVisible(
       "main_scroll_view",

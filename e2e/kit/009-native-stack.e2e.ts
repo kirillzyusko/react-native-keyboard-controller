@@ -2,22 +2,24 @@ import { expectBitmapsToBeEqual } from "./asserts";
 import {
   Env,
   closeKeyboard,
+  scrollDownUntilElementIsVisible,
   switchToEmojiKeyboard,
   waitAndTap,
   waitForElementById,
   waitForExpect,
 } from "./helpers";
 
-describe("Simple keyboard animation", () => {
-  it("should navigate to `Animated transition` screen", async () => {
-    await waitAndTap("animated_transition");
+describe("Native stack", () => {
+  it("should navigate to `Native stack` screen", async () => {
+    await scrollDownUntilElementIsVisible("main_scroll_view", "native_stack");
+    await waitAndTap("native_stack");
     await waitForElementById("keyboard_animation_text_input");
   });
 
   it("should have expected state when keyboard is opened", async () => {
     await waitAndTap("keyboard_animation_text_input");
     await waitForExpect(async () => {
-      await expectBitmapsToBeEqual("KeyboardAnimationKeyboardIsShown");
+      await expectBitmapsToBeEqual("NativeStackKeyboardIsShown");
     });
   });
 
@@ -28,7 +30,7 @@ describe("Simple keyboard animation", () => {
     if (Env.softCheck) {
       await switchToEmojiKeyboard();
       await waitForExpect(async () => {
-        await expectBitmapsToBeEqual("KeyboardAnimationEmojiKeyboard");
+        await expectBitmapsToBeEqual("NativeStackEmojiKeyboard");
       });
     }
   });
@@ -36,7 +38,7 @@ describe("Simple keyboard animation", () => {
   it("should have expected state when keyboard is closed", async () => {
     await closeKeyboard("keyboard_animation_text_input");
     await waitForExpect(async () => {
-      await expectBitmapsToBeEqual("KeyboardAnimationKeyboardIsHidden");
+      await expectBitmapsToBeEqual("NativeStackKeyboardIsHidden");
     });
   });
 });
