@@ -101,11 +101,8 @@ export const clearAndType = async (id: string, text: string): Promise<void> => {
 export const switchToEmojiKeyboard = async () => {
   const uiDevice = device.getUiDevice();
   // see https://github.com/wix/Detox/issues/4331
-  // @ts-expect-error this is not part of official detox API
   const height = await uiDevice.getDisplayHeight();
-  // @ts-expect-error this is not part of official detox API
   const width = await uiDevice.getDisplayWidth();
-  // @ts-expect-error this is not part of official detox API
   await uiDevice.click(width * 0.3, height * 0.95);
 };
 
