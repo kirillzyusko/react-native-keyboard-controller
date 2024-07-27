@@ -86,7 +86,7 @@ jobs:
           name: ios-e2e-ipa
           path: example/ios/build/Build/Products/Release-iphonesimulator/KeyboardControllerExample.app/**
   e2e-test:
-    name: ⚙️ Automated test cases
+    name: ⚙️ Automated test cases (iOS-${{ matrix.devices.ios }})
     runs-on: macos-14
     timeout-minutes: 60
     env:
@@ -96,7 +96,7 @@ jobs:
       cancel-in-progress: true
     strategy:
       matrix:
-        devices: [{ ios: 17 }]
+        devices: [{ ios: 17, xcode: 15.4 }, { ios: 18, xcode: 16.0 }]
     needs: build
     steps:
       - uses: actions/checkout@v4
@@ -107,7 +107,7 @@ jobs:
           path: example/ios/build/Build/Products/Release-iphonesimulator/KeyboardControllerExample.app/
       - uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: "15.4"
+          xcode-version: ${{ matrix.devices.xcode }}
       - name: Install AppleSimulatorUtils
         run: brew tap wix/brew && brew install applesimutils
       - name: Save yarn cache directory path
@@ -129,7 +129,7 @@ jobs:
         run: defaults write com.apple.iphonesimulator ConnectHardwareKeyboard -bool NO
       - name: Test app
         working-directory: e2e
-        run: SOFT_CHECK=false yarn test-example:ios
+        run: SOFT_CHECK=false yarn test-example:ios-${{ matrix.devices.ios }}
       - uses: actions/upload-artifact@v4
         if: ${{ failure() }}
         with:

@@ -41,11 +41,18 @@ module.exports = {
     },
   },
   devices: {
-    simulator: {
+    simulator17: {
       type: "ios.simulator",
       device: {
         type: "iPhone 15 Pro",
         os: "iOS 17.5",
+      },
+    },
+    simulator18: {
+      type: "ios.simulator",
+      device: {
+        type: "iPhone 15 Pro",
+        os: "iOS 18.0",
       },
     },
     attached: {
@@ -69,12 +76,20 @@ module.exports = {
     },
   },
   configurations: {
-    "example.ios.sim.debug": {
-      device: "simulator",
+    "example.ios.sim-17.debug": {
+      device: "simulator17",
       app: "example.ios.debug",
     },
-    "example.ios.sim.release": {
-      device: "simulator",
+    "example.ios.sim-17.release": {
+      device: "simulator17",
+      app: "example.ios.release",
+    },
+    "example.ios.sim-18.debug": {
+      device: "simulator18",
+      app: "example.ios.debug",
+    },
+    "example.ios.sim-18.release": {
+      device: "simulator18",
       app: "example.ios.release",
     },
     "example.android.att.debug": {
