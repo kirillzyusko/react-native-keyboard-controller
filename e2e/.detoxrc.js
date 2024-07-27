@@ -59,8 +59,8 @@ module.exports = {
       type: "ios.simulator",
       device: {
         // TODO: switch to iPhone 16 Pro when it'll be released
-        type: "iPhone 13 Pro",
-        os: "iOS 17.5",
+        type: "iPhone 14",
+        os: "iOS 18.0",
       },
     },
     attached: {
