@@ -83,6 +83,14 @@ module.exports = {
     },
   },
   configurations: {
+    "example.ios.sim-16.debug": {
+      device: "simulator16",
+      app: "example.ios.debug",
+    },
+    "example.ios.sim-16.release": {
+      device: "simulator16",
+      app: "example.ios.release",
+    },
     "example.ios.sim-17.debug": {
       device: "simulator17",
       app: "example.ios.debug",
