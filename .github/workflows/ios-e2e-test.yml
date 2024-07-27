@@ -96,7 +96,12 @@ jobs:
       cancel-in-progress: true
     strategy:
       matrix:
-        devices: [{ ios: 17, xcode: "15.4" }, { ios: 18, xcode: "16-beta" }]
+        devices:
+          [
+            { ios: 16, xcode: "14.3.1" },
+            { ios: 17, xcode: "15.4" },
+            { ios: 18, xcode: "16-beta" },
+          ]
     needs: build
     steps:
       - uses: actions/checkout@v4
