@@ -22,10 +22,10 @@ on:
       - "src/**"
 
 jobs:
-  test:
-    name: ⚙️ Automated test cases
+  build:
+    name: 🏗️ Build E2E ipa
     runs-on: macos-14
-    timeout-minutes: 90
+    timeout-minutes: 60
     env:
       WORKING_DIRECTORY: example
     concurrency:
@@ -42,8 +42,6 @@ jobs:
           xcode-version: "15.4"
       - name: Get Xcode version
         run: xcodebuild -version
-      - name: Install AppleSimulatorUtils
-        run: brew tap wix/brew && brew install applesimutils
       - name: Save yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
@@ -83,11 +81,64 @@ jobs:
       - name: Build app
         working-directory: e2e
         run: yarn build-example:ios
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ios-e2e-ipa
+          path: example/ios/build/Build/Products/Release-iphonesimulator/KeyboardControllerExample.app/**
+  e2e-test:
+    name: ⚙️ Automated test cases (iOS-${{ matrix.devices.ios }})
+    runs-on: macos-14
+    timeout-minutes: 60
+    env:
+      WORKING_DIRECTORY: example
+    concurrency:
+      group: ios-e2e-${{ matrix.devices.ios }}-${{ github.ref }}
+      cancel-in-progress: true
+    strategy:
+      matrix:
+        devices:
+          [
+            { ios: 16, xcode: "14.3.1" },
+            { ios: 17, xcode: "15.4" },
+            { ios: 18, xcode: "16-beta" },
+          ]
+    needs: build
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download a single artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ios-e2e-ipa
+          path: example/ios/build/Build/Products/Release-iphonesimulator/KeyboardControllerExample.app/
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: ${{ matrix.devices.xcode }}
+      - name: Get Xcode version
+        run: xcodebuild -version
+      - name: List all available simulators
+        run: xcrun simctl list
+      - name: Install AppleSimulatorUtils
+        run: brew tap wix/brew && brew install applesimutils
+      - name: Save yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
+      - name: Restore node_modules from cache
+        uses: actions/cache@v4
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - name: Install root dependencies
+        run: yarn install
+      - name: Install e2e dependencies
+        run: yarn install --cwd e2e
       - name: Use software keyboard
         run: defaults write com.apple.iphonesimulator ConnectHardwareKeyboard -bool NO
       - name: Test app
         working-directory: e2e
-        run: SOFT_CHECK=false yarn test-example:ios
+        run: SOFT_CHECK=false yarn test-example:ios-${{ matrix.devices.ios }}
       - uses: actions/upload-artifact@v4
         if: ${{ failure() }}
         with:
