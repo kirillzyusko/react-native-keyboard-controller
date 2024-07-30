@@ -90,6 +90,7 @@ const KeyboardAwareScrollView = forwardRef<
       disableScrollOnKeyboardHide = false,
       enabled = true,
       extraKeyboardSpace = 0,
+      snapToOffsets,
       ...rest
     },
     ref,
@@ -158,7 +159,7 @@ const KeyboardAwareScrollView = forwardRef<
               0,
               scrollDistanceWithRespectToSnapPoints(
                 relativeScrollTo + scrollPosition.value,
-                rest.snapToOffsets,
+                snapToOffsets,
               ) - scrollPosition.value,
             ],
           );
@@ -183,7 +184,7 @@ const KeyboardAwareScrollView = forwardRef<
 
         return 0;
       },
-      [bottomOffset, enabled, height, rest.snapToOffsets],
+      [bottomOffset, enabled, height, snapToOffsets],
     );
 
     const scrollFromCurrentPosition = useCallback(
