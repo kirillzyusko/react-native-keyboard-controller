@@ -5,12 +5,15 @@ import KeyboardAnimationTemplate from "../../../components/KeyboardAnimation";
 import { randomColor } from "../../../utils";
 
 import type { StatusBarStyle } from "react-native";
+import { useKeyboardController } from "react-native-keyboard-controller";
 
 export default function StatusBarManipulation() {
   const [color, setColor] = useState("#00FF0000");
   const [barStyle, setBarStyle] = useState<StatusBarStyle>("light-content");
   const [hidden, setHidden] = useState(false);
   const [animated, setAnimated] = useState(true);
+  const [translucent, setTranslucent] = useState(true);
+  const {setEnabled, enabled} = useKeyboardController();
 
   return (
     <View style={{ flex: 1, backgroundColor: "pink" }}>
@@ -19,7 +22,7 @@ export default function StatusBarManipulation() {
         barStyle={barStyle}
         hidden={hidden}
         animated={animated}
-        translucent
+        translucent={translucent}
       />
       <KeyboardAnimationTemplate />
       <Button
@@ -41,6 +44,14 @@ export default function StatusBarManipulation() {
             barStyle === "light-content" ? "dark-content" : "light-content",
           )
         }
+      />
+      <Button
+        title={`Set ${!translucent ? "" : "not"} translucent`}
+        onPress={() => setTranslucent(!translucent)}
+      />
+      <Button
+        title={`${enabled ? "Disable" : "Enable"} module`}
+        onPress={() => setEnabled(!enabled)}
       />
     </View>
   );

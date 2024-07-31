@@ -12,7 +12,7 @@ import com.facebook.react.uimanager.events.Event
 import com.facebook.react.uimanager.events.EventDispatcher
 import com.reactnativekeyboardcontroller.listeners.WindowDimensionListener
 
-val ThemedReactContext.rootView: View?
+val ReactContext.rootView: View?
   get() = this.currentActivity?.window?.decorView?.rootView
 
 val ThemedReactContext.content: ViewGroup?

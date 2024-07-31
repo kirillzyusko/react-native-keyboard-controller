@@ -9,6 +9,8 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.UiThreadUtil
+import com.reactnativekeyboardcontroller.extensions.rootView
+import com.reactnativekeyboardcontroller.views.EdgeToEdgeReactViewGroup
 
 private val TAG = StatusBarManagerCompatModuleImpl::class.qualifiedName
 
@@ -52,17 +54,8 @@ class StatusBarManagerCompatModuleImpl(private val mReactContext: ReactApplicati
 
   @Suppress("detekt:UnusedParameter")
   fun setTranslucent(translucent: Boolean) {
-    // the status bar is translucent by default (once you wrapped App in Provider,
-    // and EdgeToEdgeReactViewGroup has been mounted and called
-    // `setDecorFitsSystemWindows(window, false)`. By default this library applies default padding
-    // which equal to StatusBar height, so it will have a default RN app behavior. Though once you
-    // need to set StatusBar as translucent, you will need to use `statusBarTranslucent` prop on
-    // `KeyboardProvider` (it will preventing of applying additional padding, and status bar will be
-    // translucent. Though it's important to note, that this value is not reactive (i. e. if you change
-    // `statusBarTranslucent` in runtime it will not have any effect. Just theoretically I could make
-    // it reactive, but I know, that most of apps or don't use StatusBar translucency at all or they are
-    // specifying it for entire app, so I don't see a lot of sense to make it reactive as of now. If your
-    // app requires to dynamically manage it - just shoot an issue and I will try to add a support fot that.
+    val view = mReactContext.rootView?.findViewWithTag<EdgeToEdgeReactViewGroup>(EdgeToEdgeReactViewGroup.VIEW_TAG)
+    view?.forceStatusBarTranslucent(translucent)
   }
 
   fun setStyle(style: String) {
