@@ -9,7 +9,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsAnimationCompat
 import androidx.core.view.WindowInsetsCompat
-import com.facebook.react.bridge.UiThreadUtil
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.views.view.ReactViewGroup
 import com.reactnativekeyboardcontroller.extensions.content
@@ -205,12 +204,10 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
 
   // region external methods
   fun forceStatusBarTranslucent(isStatusBarTranslucent: Boolean) {
-    UiThreadUtil.runOnUiThread {
-      if (active) {
-        this.isStatusBarTranslucent = isStatusBarTranslucent
-        this.setupWindowInsets()
-        this.requestApplyInsetsWhenAttached()
-      }
+    if (active && this.isStatusBarTranslucent != isStatusBarTranslucent) {
+      this.isStatusBarTranslucent = isStatusBarTranslucent
+      this.setupWindowInsets()
+      this.requestApplyInsetsWhenAttached()
     }
   }
   // endregion

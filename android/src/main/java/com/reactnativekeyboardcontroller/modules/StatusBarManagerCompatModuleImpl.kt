@@ -54,8 +54,10 @@ class StatusBarManagerCompatModuleImpl(private val mReactContext: ReactApplicati
 
   @Suppress("detekt:UnusedParameter")
   fun setTranslucent(translucent: Boolean) {
-    val view = mReactContext.rootView?.findViewWithTag<EdgeToEdgeReactViewGroup>(EdgeToEdgeReactViewGroup.VIEW_TAG)
-    view?.forceStatusBarTranslucent(translucent)
+    UiThreadUtil.runOnUiThread {
+      val view = mReactContext.rootView?.findViewWithTag<EdgeToEdgeReactViewGroup>(EdgeToEdgeReactViewGroup.VIEW_TAG)
+      view?.forceStatusBarTranslucent(translucent)
+    }
   }
 
   fun setStyle(style: String) {
