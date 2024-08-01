@@ -2,7 +2,7 @@ import "react-native-gesture-handler";
 
 import { NavigationContainer } from "@react-navigation/native";
 import * as React from "react";
-import { ActivityIndicator, StyleSheet } from "react-native";
+import { ActivityIndicator, StatusBar, StyleSheet } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 import {
@@ -42,6 +42,12 @@ export default function App() {
       <GestureHandlerRootView style={styles.root}>
         <KeyboardProvider statusBarTranslucent>
           <NavigationContainer linking={linking} fallback={spinner}>
+          <StatusBar
+              backgroundColor={"#FFFFFF00"}
+              translucent
+              animated
+              barStyle={"dark-content"}
+            />
             <RootStack />
           </NavigationContainer>
         </KeyboardProvider>
