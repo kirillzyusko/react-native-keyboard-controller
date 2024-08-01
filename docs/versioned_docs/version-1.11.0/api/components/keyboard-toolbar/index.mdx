@@ -112,9 +112,8 @@ Prop allowing you to specify the brand colors of your application for `KeyboardT
 
 ```ts
 import { DefaultKeyboardToolbarTheme, type KeyboardToolbarProps } from "react-native-keyboard-controller";
-type KeyboardToolbarTheme = KeyboardToolbarProps["theme"]
 
-const theme: KeyboardToolbarTheme = {
+const theme: KeyboardToolbarProps["theme"] = {
   ...DefaultKeyboardToolbarTheme,
   dark: {
     ...DefaultKeyboardToolbarTheme.dark,
