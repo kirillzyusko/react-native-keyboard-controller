@@ -111,7 +111,10 @@ A boolean prop indicating whether to show `next` and `prev` buttons. Can be usef
 Prop allowing you to specify the brand colors of your application for `KeyboardToolbar` component. If you want to re-use already platform specific colors you can import `DefaultKeyboardToolbarTheme` object and override colors only necessary colors:
 
 ```ts
-import { DefaultKeyboardToolbarTheme, KeyboardToolbarProps } from "react-native-keyboard-controller";
+import {
+  DefaultKeyboardToolbarTheme,
+  KeyboardToolbarProps,
+} from "react-native-keyboard-controller";
 
 const theme: KeyboardToolbarProps["theme"] = {
   ...DefaultKeyboardToolbarTheme,
