@@ -87,10 +87,11 @@ function InteractiveKeyboard({ navigation }: Props) {
   return (
     <View style={styles.container}>
       <KeyboardGestureArea
-        testID="chat.gesture"
         style={styles.content}
+        testID="chat.gesture"
         interpolator={interpolator}
         showOnSwipeUp
+        offset={50}
       >
         <Reanimated.ScrollView
           testID="chat.scroll"
