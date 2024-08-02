@@ -3,6 +3,7 @@ docs/.docusaurus/
 docs/build/
 lib/
 node_modules/
+vendor/
 
 *.lottie.json
 

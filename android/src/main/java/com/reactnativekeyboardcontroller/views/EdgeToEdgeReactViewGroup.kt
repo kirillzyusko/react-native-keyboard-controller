@@ -47,6 +47,7 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
 
   init {
     reactContext.setupWindowDimensionsListener()
+    tag = VIEW_TAG
   }
 
   // region View life cycles
@@ -200,4 +201,18 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
     }
   }
   // endregion
+
+  // region external methods
+  fun forceStatusBarTranslucent(isStatusBarTranslucent: Boolean) {
+    if (active && this.isStatusBarTranslucent != isStatusBarTranslucent) {
+      this.isStatusBarTranslucent = isStatusBarTranslucent
+      this.setupWindowInsets()
+      this.requestApplyInsetsWhenAttached()
+    }
+  }
+  // endregion
+
+  companion object {
+    val VIEW_TAG = EdgeToEdgeReactViewGroup::class.simpleName
+  }
 }
