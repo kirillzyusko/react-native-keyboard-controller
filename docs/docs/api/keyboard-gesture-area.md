@@ -24,6 +24,10 @@ This component is available only for Android >= 11. For iOS and Android < 11 it 
 
 ## Props
 
+### `offset`
+
+Extra distance to the keyboard. Default is `0`.
+
 ### `interpolator`
 
 String with possible values `linear` and `ios`:
@@ -42,7 +46,7 @@ A boolean prop which allows to customize interactive keyboard behavior. If set t
 ## Example
 
 ```tsx
-<KeyboardGestureArea interpolator="ios">
+<KeyboardGestureArea interpolator="ios" offset={50}>
   <ScrollView>
     {/* The other UI components of application in your tree */}
   </ScrollView>

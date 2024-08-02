@@ -5,6 +5,7 @@ class LinearInterpolator : Interpolator {
     dy: Int,
     absoluteFingerPosition: Int,
     keyboardPosition: Int,
+    offset: Int,
   ): Int {
     return dy
   }

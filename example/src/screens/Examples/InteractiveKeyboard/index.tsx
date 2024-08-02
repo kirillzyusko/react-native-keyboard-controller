@@ -91,6 +91,7 @@ function InteractiveKeyboard({ navigation }: Props) {
         testID="chat.gesture"
         interpolator={interpolator}
         showOnSwipeUp
+        offset={50}
       >
         <Reanimated.ScrollView
           testID="chat.scroll"
