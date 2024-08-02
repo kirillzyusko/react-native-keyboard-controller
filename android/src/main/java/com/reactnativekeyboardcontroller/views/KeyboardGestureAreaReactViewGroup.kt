@@ -131,7 +131,7 @@ class KeyboardGestureAreaReactViewGroup(private val reactContext: ThemedReactCon
           dy.roundToInt(),
           this.getWindowHeight() - event.rawY.toInt(),
           controller.getCurrentKeyboardHeight(),
-          offset
+          offset,
         )
 
         if (moveBy != 0) {
