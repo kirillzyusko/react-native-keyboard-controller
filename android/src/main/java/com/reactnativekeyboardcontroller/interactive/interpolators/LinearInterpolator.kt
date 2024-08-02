@@ -7,7 +7,6 @@ class LinearInterpolator : Interpolator {
     keyboardPosition: Int,
     offset: Int,
   ): Int {
-    // TODO: do we need to take offset into consideration?
     return dy
   }
 }
