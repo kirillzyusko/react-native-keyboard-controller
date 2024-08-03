@@ -120,21 +120,30 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
   const onPressNext = useCallback(
     (event: GestureResponderEvent) => {
       onNextCallback?.(event);
-      if (!event.isDefaultPrevented()) goToNextField();
+
+      if (!event.isDefaultPrevented()) {
+        goToNextField();
+      }
     },
     [onNextCallback],
   );
   const onPressPrev = useCallback(
     (event: GestureResponderEvent) => {
       onPrevCallback?.(event);
-      if (!event.isDefaultPrevented()) goToPrevField();
+
+      if (!event.isDefaultPrevented()) {
+        goToPrevField();
+      }
     },
     [onPrevCallback],
   );
   const onPressDone = useCallback(
     (event: GestureResponderEvent) => {
       onDoneCallback?.(event);
-      if (!event.isDefaultPrevented()) dismissKeyboard();
+
+      if (!event.isDefaultPrevented()) {
+        dismissKeyboard();
+      }
     },
     [onDoneCallback],
   );
