@@ -137,7 +137,7 @@ const Icon: KeyboardToolbarProps["icon"] = ({ type }) => {
 
 ### `onDoneCallback`
 
-A callback that is called when the user presses the **done** button. The callback receives an instance of `KeyboardToolbarButtonPressEvent` which can be used to cancel the default action, for advanced use-cases.
+A callback that is called when the user presses the **done** button. The callback receives an instance of `GestureResponderEvent` which can be used to cancel the default action, for advanced use-cases.
 
 ```tsx
 import { Platform } from "react-native";
@@ -158,7 +158,7 @@ const haptic = () =>
 
 ### `onNextCallback`
 
-A callback that is called when the user presses the **next** button. The callback receives an instance of `KeyboardToolbarButtonPressEvent` which can be used to cancel the default action, for advanced use-cases.
+A callback that is called when the user presses the **next** button. The callback receives an instance of `GestureResponderEvent` which can be used to cancel the default action, for advanced use-cases.
 
 ```tsx
 import { Platform } from "react-native";
@@ -179,7 +179,7 @@ const haptic = () =>
 
 ### `onPrevCallback`
 
-A callback that is called when the user presses the **previous** button. The callback receives an instance of `KeyboardToolbarButtonPressEvent` which can be used to cancel the default action, for advanced use-cases.
+A callback that is called when the user presses the **previous** button. The callback receives an instance of `GestureResponderEvent` which can be used to cancel the default action, for advanced use-cases.
 
 ```tsx
 import { Platform } from "react-native";

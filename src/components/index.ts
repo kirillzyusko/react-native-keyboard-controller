@@ -4,7 +4,6 @@ export { default as KeyboardAwareScrollView } from "./KeyboardAwareScrollView";
 export {
   default as KeyboardToolbar,
   DefaultKeyboardToolbarTheme,
-  KeyboardToolbarButtonPressEvent,
 } from "./KeyboardToolbar";
 export type { KeyboardAvoidingViewProps } from "./KeyboardAvoidingView";
 export type { KeyboardStickyViewProps } from "./KeyboardStickyView";

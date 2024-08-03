@@ -12,7 +12,6 @@ export {
   // keyboard toolbar
   KeyboardToolbar,
   DefaultKeyboardToolbarTheme,
-  KeyboardToolbarButtonPressEvent,
 } from "./components";
 export type {
   KeyboardAvoidingViewProps,

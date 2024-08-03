@@ -10,11 +10,11 @@ import useColorScheme from "../hooks/useColorScheme";
 
 import type { KeyboardToolbarTheme } from "./types";
 import type { PropsWithChildren } from "react";
-import type { ViewStyle } from "react-native";
+import type { GestureResponderEvent, ViewStyle } from "react-native";
 
 type ButtonProps = {
   disabled?: boolean;
-  onPress: () => void;
+  onPress: (event: GestureResponderEvent) => void;
   accessibilityLabel: string;
   accessibilityHint: string;
   testID: string;
