@@ -35,15 +35,15 @@ export type KeyboardToolbarProps = {
   /**
    * A callback that is called when the user presses the next button along with the default action.
    */
-  onNextCallback?: () => void;
+  onNextCallback?: (event: KeyboardToolbarButtonPressEvent) => void;
   /**
    * A callback that is called when the user presses the previous button along with the default action.
    */
-  onPrevCallback?: () => void;
+  onPrevCallback?: (event: KeyboardToolbarButtonPressEvent) => void;
   /**
    * A callback that is called when the user presses the done button along with the default action.
    */
-  onDoneCallback?: () => void;
+  onDoneCallback?: (event: KeyboardToolbarButtonPressEvent) => void;
   /**
    * A component that applies blur effect to the toolbar.
    */
@@ -53,6 +53,17 @@ export type KeyboardToolbarProps = {
    */
   opacity?: HEX;
 };
+
+export class KeyboardToolbarButtonPressEvent {
+  public cancelled: boolean = false;
+
+  constructor(public readonly type: "next" | "prev" | "done") {}
+
+  public cancel() {
+    this.cancelled = true;
+  }
+}
+
 const TEST_ID_KEYBOARD_TOOLBAR = "keyboard.toolbar";
 const TEST_ID_KEYBOARD_TOOLBAR_PREVIOUS = `${TEST_ID_KEYBOARD_TOOLBAR}.previous`;
 const TEST_ID_KEYBOARD_TOOLBAR_NEXT = `${TEST_ID_KEYBOARD_TOOLBAR}.next`;
@@ -116,16 +127,19 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
   const IconContainer = icon || Arrow;
 
   const onPressNext = useCallback(() => {
-    goToNextField();
-    onNextCallback?.();
+    const event = new KeyboardToolbarButtonPressEvent("next");
+    onNextCallback?.(event);
+    if (!event.cancelled) goToNextField();
   }, [onNextCallback]);
   const onPressPrev = useCallback(() => {
-    goToPrevField();
-    onPrevCallback?.();
+    const event = new KeyboardToolbarButtonPressEvent("prev");
+    onPrevCallback?.(event);
+    if (!event.cancelled) goToPrevField();
   }, [onPrevCallback]);
   const onPressDone = useCallback(() => {
-    dismissKeyboard();
-    onDoneCallback?.();
+    const event = new KeyboardToolbarButtonPressEvent("done");
+    onDoneCallback?.(event);
+    if (!event.cancelled) dismissKeyboard();
   }, [onDoneCallback]);
 
   return (
