@@ -137,7 +137,7 @@ const Icon: KeyboardToolbarProps["icon"] = ({ type }) => {
 
 ### `onDoneCallback`
 
-A callback that is called when the user presses the **done** button. The callback receives an instance of `GestureResponderEvent` which can be used to cancel the default action, for advanced use-cases.
+A callback that is called when the user presses the **done** button. The callback receives an instance of `GestureResponderEvent` which can be used to cancel the default action (for advanced use-cases).
 
 ```tsx
 import { Platform } from "react-native";
@@ -156,9 +156,22 @@ const haptic = () =>
 <KeyboardToolbar onDoneCallback={haptic} />;
 ```
 
+:::tip Prevent Default Action
+To prevent the default action, call `e.preventDefault()` inside the callback:
+
+```tsx
+<KeyboardToolbar
+  onDoneCallback={(e) => {
+    e.preventDefault(); // keyboard will not be dismissed, since we cancelled the default action
+  }}
+/>
+```
+
+:::
+
 ### `onNextCallback`
 
-A callback that is called when the user presses the **next** button. The callback receives an instance of `GestureResponderEvent` which can be used to cancel the default action, for advanced use-cases.
+A callback that is called when the user presses the **next** button. The callback receives an instance of `GestureResponderEvent` which can be used to cancel the default action (for advanced use-cases).
 
 ```tsx
 import { Platform } from "react-native";
@@ -177,9 +190,22 @@ const haptic = () =>
 <KeyboardToolbar onNextCallback={haptic} />;
 ```
 
+:::tip Prevent Default Action
+To prevent the default action, call `e.preventDefault()` inside the callback:
+
+```tsx
+<KeyboardToolbar
+  onNextCallback={(e) => {
+    e.preventDefault(); // the focus will not be moved to the next input
+  }}
+/>
+```
+
+:::
+
 ### `onPrevCallback`
 
-A callback that is called when the user presses the **previous** button. The callback receives an instance of `GestureResponderEvent` which can be used to cancel the default action, for advanced use-cases.
+A callback that is called when the user presses the **previous** button. The callback receives an instance of `GestureResponderEvent` which can be used to cancel the default action (for advanced use-cases).
 
 ```tsx
 import { Platform } from "react-native";
@@ -197,6 +223,19 @@ const haptic = () =>
 
 <KeyboardToolbar onPrevCallback={haptic} />;
 ```
+
+:::tip Prevent Default Action
+To prevent the default action, call `e.preventDefault()` inside the callback:
+
+```tsx
+<KeyboardToolbar
+  onPrevCallback={(e) => {
+    e.preventDefault(); // the focus will not be moved to the prev input
+  }}
+/>
+```
+
+:::
 
 ### `opacity`
 
