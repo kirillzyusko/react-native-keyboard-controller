@@ -8,6 +8,7 @@ module.exports = {
     "import",
     "react-compiler",
     "eslint-comments",
+    "prettier",
   ],
   extends: [
     "@react-native",
@@ -93,6 +94,8 @@ module.exports = {
     "react-compiler/react-compiler": "error",
     // eslint-comments
     "eslint-comments/no-unused-disable": "error",
+    // eslint
+    "curly": "error",
   },
   overrides: [
     {
