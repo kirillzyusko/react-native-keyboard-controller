@@ -203,6 +203,7 @@ export const KeyboardProvider = ({
     },
     [],
   );
+
   // effects
   useEffect(() => {
     if (enabled) {
