@@ -83,13 +83,13 @@ export default function KeyboardAnimation({
         </View>
         <View>
           <TextInput
-            testID="keyboard_animation_text_input"
             style={{
               width: 200,
               marginTop: 50,
               height: 50,
               backgroundColor: "yellow",
             }}
+            testID="keyboard_animation_text_input"
           />
           <View style={[styles.row, styles.center]}>
             <Animated.View

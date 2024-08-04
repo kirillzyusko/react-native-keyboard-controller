@@ -88,16 +88,16 @@ function InteractiveKeyboard({ navigation }: Props) {
   return (
     <View style={styles.container}>
       <KeyboardGestureArea
+        showOnSwipeUp
+        interpolator={interpolator}
+        offset={50}
         style={styles.content}
         testID="chat.gesture"
-        interpolator={interpolator}
-        showOnSwipeUp
-        offset={50}
       >
         <Reanimated.ScrollView
-          testID="chat.scroll"
           showsVerticalScrollIndicator={false}
           style={scrollViewStyle}
+          testID="chat.scroll"
         >
           <View style={styles.inverted}>
             <Reanimated.View style={fakeView} />
@@ -107,7 +107,7 @@ function InteractiveKeyboard({ navigation }: Props) {
           </View>
         </Reanimated.ScrollView>
       </KeyboardGestureArea>
-      <AnimatedTextInput testID="chat.input" style={textInputStyle} />
+      <AnimatedTextInput style={textInputStyle} testID="chat.input" />
     </View>
   );
 }

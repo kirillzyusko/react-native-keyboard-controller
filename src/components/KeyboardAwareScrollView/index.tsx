@@ -365,8 +365,8 @@ const KeyboardAwareScrollView = forwardRef<
       <Reanimated.ScrollView
         ref={onRef}
         {...rest}
-        onLayout={onScrollViewLayout}
         scrollEventThrottle={16}
+        onLayout={onScrollViewLayout}
       >
         {children}
         <Reanimated.View style={view} />

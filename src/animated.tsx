@@ -217,16 +217,16 @@ export const KeyboardProvider = ({
     <KeyboardContext.Provider value={context}>
       <KeyboardControllerViewAnimated
         enabled={enabled}
-        onKeyboardMoveReanimated={keyboardHandler}
-        onKeyboardMoveStart={OS === "ios" ? onKeyboardMove : undefined}
-        onKeyboardMove={OS === "android" ? onKeyboardMove : undefined}
-        onKeyboardMoveInteractive={onKeyboardMove}
-        onFocusedInputLayoutChangedReanimated={inputLayoutHandler}
-        onFocusedInputTextChangedReanimated={inputTextHandler}
-        onFocusedInputSelectionChangedReanimated={inputSelectionHandler}
         navigationBarTranslucent={navigationBarTranslucent}
         statusBarTranslucent={statusBarTranslucent}
         style={styles.container}
+        onFocusedInputLayoutChangedReanimated={inputLayoutHandler}
+        onFocusedInputSelectionChangedReanimated={inputSelectionHandler}
+        onFocusedInputTextChangedReanimated={inputTextHandler}
+        onKeyboardMove={OS === "android" ? onKeyboardMove : undefined}
+        onKeyboardMoveInteractive={onKeyboardMove}
+        onKeyboardMoveReanimated={keyboardHandler}
+        onKeyboardMoveStart={OS === "ios" ? onKeyboardMove : undefined}
       >
         {children}
       </KeyboardControllerViewAnimated>

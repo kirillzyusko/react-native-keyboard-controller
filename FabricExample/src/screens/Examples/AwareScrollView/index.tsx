@@ -31,8 +31,8 @@ export default function AwareScrollView({ navigation }: Props) {
       headerRight: () => (
         <Text
           style={styles.header}
-          onPress={handlePresentModalPress}
           testID="open_bottom_sheet_modal"
+          onPress={handlePresentModalPress}
         >
           Open config
         </Text>
@@ -43,13 +43,13 @@ export default function AwareScrollView({ navigation }: Props) {
   return (
     <>
       <KeyboardAwareScrollView
-        testID="aware_scroll_view_container"
         bottomOffset={50}
+        contentContainerStyle={styles.content}
+        disableScrollOnKeyboardHide={disableScrollOnKeyboardHide}
         enabled={enabled}
         snapToOffsets={snapToOffsetsEnabled ? snapToOffsets : undefined}
-        disableScrollOnKeyboardHide={disableScrollOnKeyboardHide}
         style={styles.container}
-        contentContainerStyle={styles.content}
+        testID="aware_scroll_view_container"
       >
         {snapToOffsetsEnabled && (
           <>
@@ -75,14 +75,14 @@ export default function AwareScrollView({ navigation }: Props) {
         {new Array(10).fill(0).map((_, i) => (
           <TextInput
             key={i}
-            placeholder={`TextInput#${i}`}
-            keyboardType={i % 2 === 0 ? "numeric" : "default"}
-            onChangeText={setText}
             contextMenuHidden={i === 4}
+            keyboardType={i % 2 === 0 ? "numeric" : "default"}
+            placeholder={`TextInput#${i}`}
+            onChangeText={setText}
           />
         ))}
       </KeyboardAwareScrollView>
-      <BottomSheet snapPoints={["40%"]} ref={bottomSheetModalRef} index={-1}>
+      <BottomSheet ref={bottomSheetModalRef} index={-1} snapPoints={["40%"]}>
         <Button
           testID="bottom_sheet_close_modal"
           title="Close modal"
@@ -101,8 +101,8 @@ export default function AwareScrollView({ navigation }: Props) {
         <View style={styles.switchContainer}>
           <Text>Toggle enabled</Text>
           <Switch
-            value={enabled}
             testID="bottom_sheet_toggle_enabled_state"
+            value={enabled}
             onChange={() => {
               setEnabled(!enabled);
             }}
@@ -112,8 +112,8 @@ export default function AwareScrollView({ navigation }: Props) {
         <View style={styles.switchContainer}>
           <Text>Toggle snapToOffsets</Text>
           <Switch
-            value={snapToOffsetsEnabled}
             testID="bottom_sheet_toggle_snap_to_offsets"
+            value={snapToOffsetsEnabled}
             onChange={() => {
               setSnapToOffsetsEnabled(!snapToOffsetsEnabled);
             }}

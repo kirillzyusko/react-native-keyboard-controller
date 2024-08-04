@@ -10,9 +10,9 @@ export default function EnabledDisabled() {
   return (
     <View style={{ flex: 1, paddingTop: 50 }}>
       <Button
+        testID="toggle_button"
         title={enabled ? "Enabled" : "Disabled"}
         onPress={() => setEnabled(!enabled)}
-        testID="toggle_button"
       />
       <KeyboardAnimationTemplate />
     </View>

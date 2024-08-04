@@ -17,7 +17,7 @@ function RectangleWithFocusedInputLayout() {
     };
   }, []);
 
-  return <Reanimated.View testID="view" style={style} />;
+  return <Reanimated.View style={style} testID="view" />;
 }
 
 describe("`useReanimatedFocusedInput` mocking", () => {

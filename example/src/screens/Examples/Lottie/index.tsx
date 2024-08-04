@@ -61,10 +61,10 @@ function LottieAnimation() {
   return (
     <View style={styles.container}>
       <ReanimatedLottieView
-        renderMode={Platform.OS === "ios" ? "SOFTWARE" : "AUTOMATIC"}
-        style={styles.lottie}
-        source={LockDebitCardMorph}
         animatedProps={animatedProps}
+        renderMode={Platform.OS === "ios" ? "SOFTWARE" : "AUTOMATIC"}
+        source={LockDebitCardMorph}
+        style={styles.lottie}
       />
       <TextInput style={styles.input} />
     </View>

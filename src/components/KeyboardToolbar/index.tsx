@@ -155,31 +155,31 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
         {showArrows && (
           <>
             <ButtonContainer
-              accessibilityLabel="Previous"
               accessibilityHint="Will move focus to previous field"
+              accessibilityLabel="Previous"
               disabled={isPrevDisabled}
-              onPress={onPressPrev}
               testID={TEST_ID_KEYBOARD_TOOLBAR_PREVIOUS}
               theme={theme}
+              onPress={onPressPrev}
             >
               <IconContainer
                 disabled={isPrevDisabled}
-                type="prev"
                 theme={theme}
+                type="prev"
               />
             </ButtonContainer>
             <ButtonContainer
-              accessibilityLabel="Next"
               accessibilityHint="Will move focus to next field"
+              accessibilityLabel="Next"
               disabled={isNextDisabled}
-              onPress={onPressNext}
               testID={TEST_ID_KEYBOARD_TOOLBAR_NEXT}
               theme={theme}
+              onPress={onPressNext}
             >
               <IconContainer
                 disabled={isNextDisabled}
-                type="next"
                 theme={theme}
+                type="next"
               />
             </ButtonContainer>
           </>
@@ -189,15 +189,15 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
           {content}
         </View>
         <ButtonContainer
-          accessibilityLabel="Done"
           accessibilityHint="Will close the keyboard"
-          onPress={onPressDone}
-          testID={TEST_ID_KEYBOARD_TOOLBAR_DONE}
+          accessibilityLabel="Done"
           rippleRadius={28}
           style={styles.doneButtonContainer}
+          testID={TEST_ID_KEYBOARD_TOOLBAR_DONE}
           theme={theme}
+          onPress={onPressDone}
         >
-          <Text style={doneStyle} maxFontSizeMultiplier={1.3}>
+          <Text maxFontSizeMultiplier={1.3} style={doneStyle}>
             {doneText || "Done"}
           </Text>
         </ButtonContainer>

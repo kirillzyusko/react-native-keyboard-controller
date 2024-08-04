@@ -79,28 +79,28 @@ const AutoFillContacts = ({ onContactSelected }: Props) => {
         <Text style={styles.autoFillContacts}>AutoFill Contacts</Text>
       </TouchableOpacity>
       <Modal
-        style={styles.container}
-        visible={visible}
-        animationType="slide"
         transparent
+        animationType="slide"
+        style={styles.container}
         testID="autofill_contacts_modal"
+        visible={visible}
       >
         <View style={styles.content}>
           <TouchableOpacity
-            onPress={handleCloseModalPress}
             style={styles.closeButton}
             testID="autofill_contacts_close"
+            onPress={handleCloseModalPress}
           >
             <Text style={styles.close}>Close</Text>
           </TouchableOpacity>
           {contacts.map((contact, i) => (
             <TouchableOpacity
               key={contact.name}
-              testID={`contact_${i}`}
               style={styles.contactButton}
+              testID={`contact_${i}`}
               onPress={() => handleContactSelection(contact)}
             >
-              <Image style={styles.avatar} source={{ uri: contact.image }} />
+              <Image source={{ uri: contact.image }} style={styles.avatar} />
               <Text style={styles.contactName}>{contact.name}</Text>
             </TouchableOpacity>
           ))}

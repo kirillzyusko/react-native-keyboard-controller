@@ -125,42 +125,42 @@ export default function TextInputMaskExample() {
   return (
     <View style={style.container}>
       <TextInputWithMicSelection
+        multiline
+        style={style.input}
+        onChangeText={onChangeText}
         onSelectionChange={({ nativeEvent }) =>
           setOriginalSelection(nativeEvent)
         }
-        onChangeText={onChangeText}
-        multiline
-        style={style.input}
       />
-      <Text testID="formatted_text" style={style.text}>
+      <Text style={style.text} testID="formatted_text">
         Formatted: {data.formatted}
       </Text>
-      <Text testID="extracted_text" style={style.text}>
+      <Text style={style.text} testID="extracted_text">
         Extracted: {data.extracted}
       </Text>
-      <Text testID="worklet_text" style={style.text}>
+      <Text style={style.text} testID="worklet_text">
         Worklet: {worklet}
       </Text>
-      <Text testID="selection_text" style={[style.text, style.bold]}>
+      <Text style={[style.text, style.bold]} testID="selection_text">
         Keyboard controller Selection:
       </Text>
-      <Text testID="selection_text_start_end" style={style.text}>
+      <Text style={style.text} testID="selection_text_start_end">
         start: {workletSelection.selection.start.position}, end:{" "}
         {workletSelection.selection.end.position}, target:{" "}
         {workletSelection.target}
       </Text>
-      <Text testID="selection_text_coordinates_start" style={style.text}>
+      <Text style={style.text} testID="selection_text_coordinates_start">
         startX: {Math.round(workletSelection.selection.start.x)}, startY:{" "}
         {Math.round(workletSelection.selection.start.y)}
       </Text>
-      <Text testID="selection_text_coordinates_end" style={style.text}>
+      <Text style={style.text} testID="selection_text_coordinates_end">
         endX: {Math.round(workletSelection.selection.end.x)}, endY:{" "}
         {Math.round(workletSelection.selection.end.y)}
       </Text>
-      <Text testID="original_selection_text" style={[style.text, style.bold]}>
+      <Text style={[style.text, style.bold]} testID="original_selection_text">
         Original selection:
       </Text>
-      <Text testID="selection_text_start_end" style={style.text}>
+      <Text style={style.text} testID="selection_text_start_end">
         start: {originalSelection?.selection.start}, end:{" "}
         {originalSelection?.selection.end}, target: {originalSelection?.target}
       </Text>

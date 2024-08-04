@@ -144,8 +144,8 @@ const KeyboardAvoidingView = forwardRef<
     return (
       <Reanimated.View
         ref={ref}
-        onLayout={onLayout}
         style={combinedStyles}
+        onLayout={onLayout}
         {...props}
       >
         {children}

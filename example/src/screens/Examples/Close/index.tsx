@@ -5,14 +5,14 @@ function CloseScreen() {
   return (
     <View>
       <Button
+        testID="close_keyboard_button"
         title="Close keyboard"
         onPress={() => KeyboardController.dismiss()}
-        testID="close_keyboard_button"
       />
       <TextInput
-        style={styles.input}
         placeholder="Touch to open the keyboard..."
         placeholderTextColor="#7C7C7C"
+        style={styles.input}
       />
     </View>
   );

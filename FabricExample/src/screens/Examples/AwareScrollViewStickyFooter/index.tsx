@@ -64,24 +64,24 @@ export default function AwareScrollViewStickyFooter({ navigation }: Props) {
       ]}
     >
       <KeyboardAwareScrollView
-        style={styles.container}
-        contentContainerStyle={styles.content}
         bottomOffset={(v1v2 ? footerHeight : 0) + 50}
+        contentContainerStyle={styles.content}
         keyboardShouldPersistTaps="handled"
+        style={styles.container}
       >
         {new Array(10).fill(0).map((_, i) => (
           <TextInput
             key={i}
-            placeholder={`TextInput#${i}`}
             keyboardType={i % 2 === 0 ? "numeric" : "default"}
+            placeholder={`TextInput#${i}`}
           />
         ))}
       </KeyboardAwareScrollView>
       {v1v2 && (
         <KeyboardStickyView offset={offset}>
-          <View onLayout={handleLayout} style={styles.footer}>
+          <View style={styles.footer} onLayout={handleLayout}>
             <Text style={styles.footerText}>A mocked sticky footer</Text>
-            <TextInput style={styles.inputInFooter} placeholder="Amount" />
+            <TextInput placeholder="Amount" style={styles.inputInFooter} />
             <Button title="Click me" />
           </View>
         </KeyboardStickyView>

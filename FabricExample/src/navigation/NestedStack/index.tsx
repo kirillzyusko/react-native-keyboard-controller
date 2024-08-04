@@ -23,8 +23,8 @@ const options: Record<string, NativeStackNavigationOptions> = {
 const NativeStack = () => (
   <Stack.Navigator initialRouteName={ScreenNames.NATIVE}>
     <Stack.Screen
-      name={ScreenNames.NATIVE}
       component={KeyboardAnimation}
+      name={ScreenNames.NATIVE}
       options={options[ScreenNames.NATIVE]}
     />
   </Stack.Navigator>

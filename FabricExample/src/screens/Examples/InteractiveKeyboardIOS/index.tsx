@@ -116,21 +116,21 @@ function InteractiveKeyboard() {
     <View style={styles.container}>
       <Reanimated.ScrollView
         ref={ref}
-        onContentSizeChange={scrollToBottom}
-        contentContainerStyle={contentContainerStyle}
-        keyboardDismissMode="interactive"
         // simulation of `automaticallyAdjustKeyboardInsets` behavior on RN < 0.73
         animatedProps={props}
-        onScroll={onScroll}
         automaticallyAdjustContentInsets={false}
+        contentContainerStyle={contentContainerStyle}
         contentInsetAdjustmentBehavior="never"
+        keyboardDismissMode="interactive"
         testID="chat.scroll"
+        onContentSizeChange={scrollToBottom}
+        onScroll={onScroll}
       >
         {history.map((message, index) => (
           <Message key={index} {...message} />
         ))}
       </Reanimated.ScrollView>
-      <AnimatedTextInput testID="chat.input" style={textInputStyle} />
+      <AnimatedTextInput style={textInputStyle} testID="chat.input" />
     </View>
   );
 }

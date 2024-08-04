@@ -74,16 +74,16 @@ export default function KeyboardAvoidingViewExample({ navigation }: Props) {
             testID="keyboard_avoiding_view.username"
           />
           <TextInput
+            secureTextEntry
             placeholder="Password"
             placeholderTextColor="#7C7C7C"
             style={styles.textInput}
             testID="keyboard_avoiding_view.password"
-            secureTextEntry
           />
         </View>
         <TouchableOpacity
-          testID="keyboard_avoiding_view.submit"
           style={styles.button}
+          testID="keyboard_avoiding_view.submit"
         >
           <Text style={styles.text}>Submit</Text>
         </TouchableOpacity>

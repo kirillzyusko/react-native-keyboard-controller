@@ -42,37 +42,37 @@ export default function ToolbarExample() {
         testID="toolbar.scrollView"
       >
         <TextInput
+          defaultValue={name}
           keyboardType="default"
           placeholder="Your name"
-          title="Name"
           testID="TextInput#1"
+          title="Name"
           onFocus={onShowAutoFill}
-          defaultValue={name}
         />
         <TextInput
           keyboardType="default"
+          multiline={false}
           placeholder="Your surname"
-          title="Surname"
           testID="TextInput#2"
+          title="Surname"
           onFocus={onHideAutoFill}
-          multiline={false}
         />
         <TextInput
-          keyboardType="default"
-          placeholder="example@gmail.com"
-          title="Email"
           editable={false}
+          keyboardType="default"
           multiline={false}
-          onFocus={onHideAutoFill}
+          placeholder="example@gmail.com"
           testID="TextInput#3"
+          title="Email"
+          onFocus={onHideAutoFill}
         />
         <TextInput
+          editable={false}
           keyboardType="default"
           placeholder="Tell us funny facts about you"
-          title="About you"
-          editable={false}
-          onFocus={onHideAutoFill}
           testID="TextInput#4"
+          title="About you"
+          onFocus={onHideAutoFill}
         />
         <View style={styles.row}>
           <View style={styles.birthday}>
@@ -80,9 +80,9 @@ export default function ToolbarExample() {
               keyboardType="numeric"
               multiline={false}
               placeholder="DD"
+              testID="TextInput#5"
               title="Day"
               onFocus={onHideAutoFill}
-              testID="TextInput#5"
             />
           </View>
           <View style={[styles.birthday, styles.withPadding]}>
@@ -90,9 +90,9 @@ export default function ToolbarExample() {
               keyboardType="numeric"
               multiline={false}
               placeholder="MM"
+              testID="TextInput#6"
               title="Month"
               onFocus={onHideAutoFill}
-              testID="TextInput#6"
             />
           </View>
           <View style={styles.birthday}>
@@ -100,68 +100,68 @@ export default function ToolbarExample() {
               keyboardType="numeric"
               multiline={false}
               placeholder="YYYY"
+              testID="TextInput#7"
               title="Year"
               onFocus={onHideAutoFill}
-              testID="TextInput#7"
             />
           </View>
         </View>
         <TextInput
           keyboardType="default"
           placeholder="Country"
+          testID="TextInput#8"
           title="Country"
           onFocus={onHideAutoFill}
-          testID="TextInput#8"
         />
         <TextInput
           keyboardType="default"
           placeholder="Region of the city"
+          testID="TextInput#9"
           title="Region"
           onFocus={onHideAutoFill}
-          testID="TextInput#9"
         />
         <TextInput
           keyboardType="default"
           placeholder="City where you currently live"
+          testID="TextInput#10"
           title="City"
           onFocus={onHideAutoFill}
-          testID="TextInput#10"
         />
         <TextInput
           keyboardType="default"
           placeholder="Street name"
+          testID="TextInput#11"
           title="Street"
           onFocus={onHideAutoFill}
-          testID="TextInput#11"
         />
         <TextInput
           contextMenuHidden
           keyboardType="numeric"
           placeholder="House number"
+          testID="TextInput#12"
           title="House"
           onFocus={onHideAutoFill}
-          testID="TextInput#12"
         />
         <TextInput
           contextMenuHidden
           keyboardType="numeric"
           placeholder="Flat number"
+          testID="TextInput#13"
           title="Flat"
           onFocus={onHideAutoFill}
-          testID="TextInput#13"
         />
       </KeyboardAwareScrollView>
       <KeyboardToolbar
+        blur={blur}
         content={
           showAutoFill ? (
             <AutoFillContacts onContactSelected={onContactSelected} />
           ) : null
         }
-        blur={blur}
         opacity={Platform.OS === "ios" ? "4F" : "DD"}
         onDoneCallback={haptic}
-        onPrevCallback={haptic}
         onNextCallback={haptic}
+        onPrevCallback={haptic}
       />
     </>
   );
@@ -191,8 +191,8 @@ const styles = StyleSheet.create({
 
 const blur = (
   <BlurView
-    blurType={Platform.OS === "ios" ? "chromeMaterial" : "light"}
     blurAmount={32}
+    blurType={Platform.OS === "ios" ? "chromeMaterial" : "light"}
     reducedTransparencyFallbackColor="white"
     style={styles.absolute}
   />

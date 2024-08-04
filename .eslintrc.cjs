@@ -40,6 +40,18 @@ module.exports = {
     ],
     // react-hooks
     "react-hooks/exhaustive-deps": "warn",
+    // react
+    "react/jsx-sort-props": [
+      "error",
+      {
+        callbacksLast: true,
+        shorthandFirst: true,
+        shorthandLast: false,
+        ignoreCase: true,
+        noSortAlphabetically: false,
+        reservedFirst: ["ref", "key"],
+      },
+    ],
     // typescript
     "@typescript-eslint/consistent-type-imports": [
       "error",

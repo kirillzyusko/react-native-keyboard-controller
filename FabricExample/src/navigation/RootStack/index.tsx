@@ -20,13 +20,13 @@ const options = {
 const RootStack = () => (
   <Stack.Navigator initialRouteName={ScreenNames.EXAMPLES}>
     <Stack.Screen
-      name={ScreenNames.EXAMPLES}
       component={ExampleMain}
+      name={ScreenNames.EXAMPLES}
       options={options[ScreenNames.EXAMPLES]}
     />
     <Stack.Screen
-      name={ScreenNames.EXAMPLES_STACK}
       component={ExamplesStack}
+      name={ScreenNames.EXAMPLES_STACK}
       options={options[ScreenNames.EXAMPLES_STACK]}
     />
   </Stack.Navigator>

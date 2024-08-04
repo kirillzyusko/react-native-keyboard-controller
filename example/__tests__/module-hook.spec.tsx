@@ -8,8 +8,8 @@ function SwitchModuleOnOff() {
 
   return (
     <Button
-      title="Toggle module"
       testID="toggle_module"
+      title="Toggle module"
       onPress={() => setEnabled(!enabled)}
     />
   );
