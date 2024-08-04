@@ -96,6 +96,8 @@ module.exports = {
     "eslint-comments/no-unused-disable": "error",
     // eslint
     "curly": "error",
+    "eqeqeq": ["error", "always"], // check “===”
+    "no-nested-ternary": "error",
   },
   overrides: [
     {
