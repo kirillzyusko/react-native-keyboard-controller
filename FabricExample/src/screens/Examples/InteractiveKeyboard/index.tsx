@@ -22,6 +22,7 @@ const AnimatedTextInput = Reanimated.createAnimatedComponent(TextInput);
 const useKeyboardAnimation = () => {
   const progress = useSharedValue(0);
   const height = useSharedValue(0);
+
   useKeyboardHandler({
     onMove: (e) => {
       "worklet";

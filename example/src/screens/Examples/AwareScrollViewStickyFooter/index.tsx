@@ -17,6 +17,7 @@ import type { LayoutChangeEvent } from "react-native";
 type Props = StackScreenProps<ExamplesStackParamList>;
 
 const variants = ["v1", "v2", "v3"] as const;
+
 type Variant = (typeof variants)[number];
 
 export default function AwareScrollViewStickyFooter({ navigation }: Props) {
@@ -43,6 +44,7 @@ export default function AwareScrollViewStickyFooter({ navigation }: Props) {
           style={styles.header}
           onPress={() => {
             const index = variants.indexOf(variant);
+
             setVariant(variants[index === variants.length - 1 ? 0 : index + 1]);
           }}
         >

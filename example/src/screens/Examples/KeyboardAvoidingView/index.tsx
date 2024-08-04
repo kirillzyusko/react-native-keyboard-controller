@@ -39,6 +39,7 @@ export default function KeyboardAvoidingViewExample({ navigation }: Props) {
             testID="keyboard_avoiding_view.behavior"
             onPress={() => {
               const index = behaviors.indexOf(behavior);
+
               setBehavior(
                 behaviors[index === behaviors.length - 1 ? 0 : index + 1],
               );

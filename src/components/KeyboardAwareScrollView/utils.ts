@@ -16,6 +16,7 @@ export const debounce = <F extends (...args: Parameters<F>) => ReturnType<F>>(
 
     if (now < wait) {
       value.time = t;
+
       return;
     }
 

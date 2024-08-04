@@ -6,10 +6,11 @@ const lightCodeTheme = themes.github;
 const darkCodeTheme = themes.dracula;
 
 let baseUrl = "/react-native-keyboard-controller/";
+
 if (process.env.PREVIEW_PATH) {
   baseUrl += process.env.PREVIEW_PATH;
 }
-  
+
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: "Keyboard Controller",

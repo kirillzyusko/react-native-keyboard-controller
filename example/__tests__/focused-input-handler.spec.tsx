@@ -59,9 +59,11 @@ function WhatUserSelected() {
 describe("`useFocusedInputHandler` specification", () => {
   it("should execute `onChangeText` handler and change corresponding elements", () => {
     let handlers: FocusedInputHandler = {};
+
     (useFocusedInputHandler as jest.Mock).mockImplementation(
       (handler) => (handlers = handler),
     );
+
     const onChangeText = (e: FocusedInputTextChangedEvent) =>
       handlers.onChangeText?.(e);
 
@@ -87,9 +89,11 @@ describe("`useFocusedInputHandler` specification", () => {
 
   it("should execute `onSelectionChange` handler and change corresponding elements", () => {
     let handlers: FocusedInputHandler = {};
+
     (useFocusedInputHandler as jest.Mock).mockImplementation(
       (handler) => (handlers = handler),
     );
+
     const onSelectionChange = (e: FocusedInputSelectionChangedEvent) =>
       handlers.onSelectionChange?.(e);
 

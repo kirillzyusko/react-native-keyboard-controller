@@ -165,6 +165,7 @@ const KeyboardAwareScrollView = forwardRef<
           );
           const targetScrollY =
             Math.max(interpolatedScrollTo, 0) + scrollPosition.value;
+
           scrollTo(scrollViewAnimatedRef, 0, targetScrollY, animated);
 
           return interpolatedScrollTo;
@@ -255,7 +256,9 @@ const KeyboardAwareScrollView = forwardRef<
 
           const keyboardWillChangeSize =
             keyboardHeight.value !== e.height && e.height > 0;
+
           keyboardWillAppear.value = e.height > 0 && keyboardHeight.value === 0;
+
           const keyboardWillHide = e.height === 0;
           const focusWasChanged =
             (tag.value !== e.target && e.target !== -1) ||
@@ -307,6 +310,7 @@ const KeyboardAwareScrollView = forwardRef<
             [0, keyboardHeight.value],
             [0, keyboardHeight.value + extraKeyboardSpace],
           );
+
           currentKeyboardFrameHeight.value = keyboardFrame;
 
           // if the user has set disableScrollOnKeyboardHide, only auto-scroll when the keyboard opens

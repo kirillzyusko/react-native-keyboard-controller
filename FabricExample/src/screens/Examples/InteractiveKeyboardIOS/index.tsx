@@ -34,6 +34,7 @@ const useKeyboardAnimation = () => {
       if (progress.value !== 1 && progress.value !== 0 && e.height !== 0) {
         // eslint-disable-next-line react-compiler/react-compiler
         shouldUseOnMoveHandler.value = true;
+
         return;
       }
 
