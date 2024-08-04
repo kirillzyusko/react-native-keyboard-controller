@@ -100,11 +100,19 @@ module.exports = {
     "no-nested-ternary": "error",
     "padding-line-between-statements": [
       "error",
-      { blankLine: "always", prev: "*", next: ["return", "try", "throw", "function", "for", "while", "do"] },
-      { blankLine: "always", prev: ["const", "let", "var"], next: "*"},
-      { blankLine: "any",    prev: ["const", "let", "var"], next: ["const", "let", "var"]},
-      { blankLine: "always", prev: "*", next: "if"},
-      { blankLine: "any",    prev: "if", next: "if"},
+      {
+        blankLine: "always",
+        prev: "*",
+        next: ["return", "try", "throw", "function", "for", "while", "do"],
+      },
+      { blankLine: "always", prev: ["const", "let", "var"], next: "*" },
+      {
+        blankLine: "any",
+        prev: ["const", "let", "var"],
+        next: ["const", "let", "var"],
+      },
+      { blankLine: "always", prev: "*", next: "if" },
+      { blankLine: "any", prev: "if", next: "if" },
     ],
   },
   overrides: [
