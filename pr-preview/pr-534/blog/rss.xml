@@ -25,7 +25,7 @@
 <p>These details allow you to draw elements behind the cursor, making interaction with focused inputs more intuitive:</p>
 <!-- -->
 <!-- -->
-<div class="center video"><video src="/react-native-keyboard-controller/pr-preview/pr-534/video/selection-demo.mov" width="65%" height="100%" playsinline="" autoplay="" muted="" loop=""></video></div>
+<div class="center video"><video autoplay="" loop="" muted="" playsinline="" height="100%" src="/react-native-keyboard-controller/pr-preview/pr-534/video/selection-demo.mov" width="65%"></video></div>
 <br>
 <p>Later on I'm planning to extend <code>KeyboardAwareScrollView</code> to react on selection tracking, so if your selection is overlapped with keyboard then <code>KeyboardAwareScrollView</code> will automatically scroll and avoid an overlap.</p>
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="keyboardtoolbar-enhancements"><code>KeyboardToolbar</code> enhancements<a href="https://kirillzyusko.github.io/react-native-keyboard-controller/pr-preview/pr-534/blog/release-1-12#keyboardtoolbar-enhancements" class="hash-link" aria-label="Direct link to keyboardtoolbar-enhancements" title="Direct link to keyboardtoolbar-enhancements">​</a></h2>
