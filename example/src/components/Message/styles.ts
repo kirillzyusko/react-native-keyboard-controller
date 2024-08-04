@@ -6,6 +6,7 @@ const container = {
   margin: 10,
   marginVertical: 5,
 };
+
 export default StyleSheet.create({
   senderContainer: {
     alignSelf: "flex-end",

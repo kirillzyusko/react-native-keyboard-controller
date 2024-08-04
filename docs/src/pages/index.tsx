@@ -9,6 +9,7 @@ import styles from "./index.module.css";
 
 function HomepageHeader() {
   const { siteConfig } = useDocusaurusContext();
+
   return (
     <header className={clsx("hero hero--primary", styles.heroBanner)}>
       <div className="container">
@@ -32,8 +33,8 @@ export default function Home(): JSX.Element {
 
   return (
     <Layout
-      title={`React Native Keyboard Controller · Control each frame of keyboard movement`}
       description={siteConfig.tagline}
+      title={`React Native Keyboard Controller · Control each frame of keyboard movement`}
     >
       <HomepageHeader />
       <main>

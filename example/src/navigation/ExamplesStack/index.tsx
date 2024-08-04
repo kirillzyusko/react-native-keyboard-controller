@@ -105,93 +105,93 @@ const options = {
 const ExamplesStack = () => (
   <Stack.Navigator>
     <Stack.Screen
-      name={ScreenNames.ANIMATED_EXAMPLE}
       component={KeyboardAnimation}
+      name={ScreenNames.ANIMATED_EXAMPLE}
       options={options[ScreenNames.ANIMATED_EXAMPLE]}
     />
     <Stack.Screen
-      name={ScreenNames.REANIMATED_CHAT}
       component={ReanimatedChat}
+      name={ScreenNames.REANIMATED_CHAT}
       options={options[ScreenNames.REANIMATED_CHAT]}
     />
     <Stack.Screen
-      name={ScreenNames.REANIMATED_CHAT_FLAT_LIST}
       component={ReanimatedChatFlatList}
+      name={ScreenNames.REANIMATED_CHAT_FLAT_LIST}
       options={options[ScreenNames.REANIMATED_CHAT]}
     />
     <Stack.Screen
-      name={ScreenNames.EVENTS}
       component={Events}
+      name={ScreenNames.EVENTS}
       options={options[ScreenNames.EVENTS]}
     />
     <Stack.Screen
-      name={ScreenNames.AWARE_SCROLL_VIEW}
       component={AwareScrollView}
+      name={ScreenNames.AWARE_SCROLL_VIEW}
       options={options[ScreenNames.AWARE_SCROLL_VIEW]}
     />
     <Stack.Screen
-      name={ScreenNames.AWARE_SCROLL_VIEW_STICKY_FOOTER}
       component={AwareScrollViewStickyFooter}
+      name={ScreenNames.AWARE_SCROLL_VIEW_STICKY_FOOTER}
       options={options[ScreenNames.AWARE_SCROLL_VIEW_STICKY_FOOTER]}
     />
     <Stack.Screen
-      name={ScreenNames.STATUS_BAR}
       component={StatusBar}
+      name={ScreenNames.STATUS_BAR}
       options={options[ScreenNames.STATUS_BAR]}
     />
     <Stack.Screen
-      name={ScreenNames.LOTTIE}
       component={LottieAnimation}
+      name={ScreenNames.LOTTIE}
       options={options[ScreenNames.LOTTIE]}
     />
     <Stack.Screen
-      name={ScreenNames.NON_UI_PROPS}
       component={NonUIProps}
+      name={ScreenNames.NON_UI_PROPS}
       options={options[ScreenNames.NON_UI_PROPS]}
     />
     <Stack.Screen
-      name={ScreenNames.INTERACTIVE_KEYBOARD}
       component={InteractiveKeyboard}
+      name={ScreenNames.INTERACTIVE_KEYBOARD}
       options={options[ScreenNames.INTERACTIVE_KEYBOARD]}
     />
     <Stack.Screen
-      name={ScreenNames.INTERACTIVE_KEYBOARD_IOS}
       component={InteractiveKeyboardIOS}
+      name={ScreenNames.INTERACTIVE_KEYBOARD_IOS}
       options={options[ScreenNames.INTERACTIVE_KEYBOARD_IOS]}
     />
     <Stack.Screen
-      name={ScreenNames.NATIVE_STACK}
       component={NativeStack}
+      name={ScreenNames.NATIVE_STACK}
       options={options[ScreenNames.NATIVE_STACK]}
     />
     <Stack.Screen
-      name={ScreenNames.KEYBOARD_AVOIDING_VIEW}
       component={KeyboardAvoidingViewExample}
+      name={ScreenNames.KEYBOARD_AVOIDING_VIEW}
       options={options[ScreenNames.KEYBOARD_AVOIDING_VIEW]}
     />
     <Stack.Screen
-      name={ScreenNames.ENABLED_DISABLED}
       component={EnabledDisabled}
+      name={ScreenNames.ENABLED_DISABLED}
       options={options[ScreenNames.ENABLED_DISABLED]}
     />
     <Stack.Screen
-      name={ScreenNames.CLOSE}
       component={CloseScreen}
+      name={ScreenNames.CLOSE}
       options={options[ScreenNames.CLOSE]}
     />
     <Stack.Screen
-      name={ScreenNames.FOCUSED_INPUT_HANDLERS}
       component={FocusedInputHandlers}
+      name={ScreenNames.FOCUSED_INPUT_HANDLERS}
       options={options[ScreenNames.FOCUSED_INPUT_HANDLERS]}
     />
     <Stack.Screen
-      name={ScreenNames.TOOLBAR}
       component={ToolbarExample}
+      name={ScreenNames.TOOLBAR}
       options={options[ScreenNames.TOOLBAR]}
     />
     <Stack.Screen
-      name={ScreenNames.MODAL}
       component={ModalExample}
+      name={ScreenNames.MODAL}
       options={options[ScreenNames.MODAL]}
     />
   </Stack.Navigator>

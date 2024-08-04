@@ -57,9 +57,9 @@ function ReanimatedChatFlatList() {
     <View style={styles.container}>
       <FlatList
         inverted
-        initialNumToRender={15}
         contentContainerStyle={styles.contentContainer}
         data={reversedMessages}
+        initialNumToRender={15}
         renderItem={RenderItem}
       />
       <TextInput style={styles.textInput} />

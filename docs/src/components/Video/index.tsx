@@ -12,13 +12,13 @@ export default function Video({ src, width = 100, ...props }: VideoProps) {
   return (
     <div className="center video">
       <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        height="100%"
         src={source}
         width={`${width}%`}
-        height="100%"
-        playsInline
-        autoPlay
-        muted
-        loop
         {...props}
       />
     </div>

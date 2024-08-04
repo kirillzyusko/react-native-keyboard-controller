@@ -9,8 +9,8 @@ function TestComponent() {
 
   return (
     <Animated.View
-      testID="view"
       style={{ transform: [{ translateY: height }] }}
+      testID="view"
     />
   );
 }

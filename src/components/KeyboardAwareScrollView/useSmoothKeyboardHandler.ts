@@ -54,6 +54,7 @@ export const useSmoothKeyboardHandler: typeof useKeyboardHandler = (
         height: animatedKeyboardHeight.value,
         progress: animatedKeyboardHeight.value / persistedHeight.value,
       };
+
       return event;
     },
     (evt) => {

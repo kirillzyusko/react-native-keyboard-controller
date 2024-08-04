@@ -21,6 +21,7 @@ type Props = StackScreenProps<ExamplesStackParamList>;
 
 function ReanimatedChat({ navigation }: Props) {
   const [isTGTransition, setTGTransition] = useState(false);
+
   useEffect(() => {
     navigation.setOptions({
       headerRight: () => (

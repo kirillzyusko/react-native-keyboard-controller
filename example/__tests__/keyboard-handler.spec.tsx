@@ -21,6 +21,7 @@ import type {
 
 function TestComponent() {
   const height = useSharedValue(0);
+
   useKeyboardHandler(
     {
       onStart: (e) => {
@@ -49,15 +50,17 @@ function TestComponent() {
     [],
   );
 
-  return <Reanimated.View testID="view" style={style} />;
+  return <Reanimated.View style={style} testID="view" />;
 }
 
 describe("keyboard handler specification", () => {
   it("should execute all handlers and change corresponding style properties", () => {
     let handlers: KeyboardHandler = {};
+
     (useKeyboardHandler as jest.Mock).mockImplementation(
       (handler) => (handlers = handler),
     );
+
     const onStart = (e: NativeEvent) => handlers.onStart?.(e);
     const onMove = (e: NativeEvent) => handlers.onMove?.(e);
     const onEnd = (e: NativeEvent) => handlers.onEnd?.(e);

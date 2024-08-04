@@ -52,6 +52,7 @@ const defaultContext: KeyboardAnimationContext = {
   setInputHandlers: NOOP,
   setEnabled: NOOP,
 };
+
 export const KeyboardContext = createContext(defaultContext);
 export const useKeyboardContext = () => {
   const context = useContext(KeyboardContext);

@@ -76,7 +76,7 @@ export function useAnimatedValue(
 ): Animated.Value {
   const ref = useRef<Animated.Value | null>(null);
 
-  if (ref.current == null) {
+  if (ref.current === null) {
     ref.current = new Animated.Value(initialValue, config);
   }
 

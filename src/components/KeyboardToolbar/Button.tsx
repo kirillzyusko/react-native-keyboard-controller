@@ -41,13 +41,13 @@ const ButtonIOS = ({
 
   return (
     <Container
-      accessibilityState={accessibilityState}
-      accessibilityRole="button"
-      accessibilityLabel={accessibilityLabel}
       accessibilityHint={accessibilityHint}
-      onPress={onPress}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityRole="button"
+      accessibilityState={accessibilityState}
       style={style}
       testID={testID}
+      onPress={onPress}
     >
       {children}
     </Container>
@@ -78,14 +78,14 @@ const ButtonAndroid = ({
 
   return (
     <TouchableNativeFeedback
-      accessibilityState={accessibilityState}
-      accessibilityRole="button"
-      accessibilityLabel={accessibilityLabel}
       accessibilityHint={accessibilityHint}
-      onPress={onPress}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityRole="button"
+      accessibilityState={accessibilityState}
       background={ripple}
-      testID={testID}
       style={style}
+      testID={testID}
+      onPress={onPress}
     >
       <View style={style}>{children}</View>
     </TouchableNativeFeedback>

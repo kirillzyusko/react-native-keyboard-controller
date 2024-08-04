@@ -41,11 +41,11 @@ export default function App() {
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
       <GestureHandlerRootView style={styles.root}>
         <KeyboardProvider statusBarTranslucent>
-          <NavigationContainer linking={linking} fallback={spinner}>
+          <NavigationContainer fallback={spinner} linking={linking}>
             <StatusBar
-              backgroundColor={"#FFFFFF00"}
-              translucent
               animated
+              translucent
+              backgroundColor={"#FFFFFF00"}
               barStyle={"dark-content"}
             />
             <RootStack />

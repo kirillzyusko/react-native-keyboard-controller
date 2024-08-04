@@ -14,10 +14,10 @@ const TextInput = (props: CustomTextInputProps) => {
     <>
       {!!title && <Text style={styles.title}>{title}</Text>}
       <TextInputRN
-        placeholderTextColor="#6c6c6c"
-        style={[styles.container, rest.editable === false && styles.disabled]}
         multiline
         numberOfLines={2}
+        placeholderTextColor="#6c6c6c"
+        style={[styles.container, rest.editable === false && styles.disabled]}
         testID={rest.placeholder}
         {...rest}
         placeholder={`${rest.placeholder} (${

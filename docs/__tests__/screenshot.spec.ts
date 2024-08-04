@@ -14,6 +14,7 @@ const stylesheet = fs.readFileSync(stylesheetPath).toString();
 function screenshotPathname(pathname: string) {
   test(`pathname ${pathname}`, async ({ page }) => {
     const url = siteUrl + pathname;
+
     await page.goto(url);
     // Wait for hydration, requires Docusaurus v2.4.3+
     // Docusaurus adds a <html data-has-hydrated="true"> once hydrated
@@ -32,6 +33,7 @@ test.describe("Docusaurus site screenshots", () => {
   const pathnames = extractSitemapPathnames(sitemapPath).filter(
     isNotVersionedDocsPathname,
   );
+
   console.log("Pathnames to screenshot:", pathnames);
   pathnames.forEach(screenshotPathname);
 });

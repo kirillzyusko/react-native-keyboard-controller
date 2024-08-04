@@ -34,18 +34,18 @@ export default function ComparisonTable({
         <tr style={withoutBorders}>
           <td style={withoutBorders}>
             <Lottie
-              className="lottie"
-              animationData={leftLottie}
-              style={lottieView}
               loop
+              animationData={leftLottie}
+              className="lottie"
+              style={lottieView}
             />
           </td>
           <td style={withoutBorders}>
             <Lottie
-              className="lottie"
-              animationData={rightLottie}
-              style={lottieView}
               loop
+              animationData={rightLottie}
+              className="lottie"
+              style={lottieView}
             />
           </td>
         </tr>

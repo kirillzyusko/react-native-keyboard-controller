@@ -11,6 +11,7 @@ import type {
 } from "./types";
 
 const NOOP = () => () => {};
+
 export const useAnimatedKeyboardHandler: KeyboardHandlerHook<
   Record<string, unknown>,
   EventWithName<NativeEvent>

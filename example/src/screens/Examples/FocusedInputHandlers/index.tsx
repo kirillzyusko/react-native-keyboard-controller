@@ -127,61 +127,61 @@ export default function TextInputMaskExample() {
   return (
     <View style={style.container}>
       <TextInputMask
-        mask="+1 ([000]) [000] [00] [00]"
-        onChangeText={onChangeText}
-        onSelectionChange={({ nativeEvent }) =>
-          setOriginalSelection(nativeEvent)
-        }
         keyboardType="phone-pad"
+        mask="+1 ([000]) [000] [00] [00]"
         placeholder="+1 (___) ___ __ __"
         placeholderTextColor="gray"
         style={style.input}
         testID="masked_input"
-      />
-      <TextInputWithMicSelection
+        onChangeText={onChangeText}
         onSelectionChange={({ nativeEvent }) =>
           setOriginalSelection(nativeEvent)
         }
-        onChangeText={onChangeText}
+      />
+      <TextInputWithMicSelection
         multiline
         style={style.input}
         testID="multiline_input"
+        onChangeText={onChangeText}
+        onSelectionChange={({ nativeEvent }) =>
+          setOriginalSelection(nativeEvent)
+        }
       />
-      <Text testID="formatted_text" style={style.text}>
+      <Text style={style.text} testID="formatted_text">
         Formatted: {data.formatted}
       </Text>
-      <Text testID="extracted_text" style={style.text}>
+      <Text style={style.text} testID="extracted_text">
         Extracted: {data.extracted}
       </Text>
-      <Text testID="worklet_text" style={style.text}>
+      <Text style={style.text} testID="worklet_text">
         Worklet: {worklet}
       </Text>
-      <Text testID="selection_text" style={[style.text, style.bold]}>
+      <Text style={[style.text, style.bold]} testID="selection_text">
         Keyboard controller Selection:
       </Text>
-      <Text testID="selection_text_start_end" style={style.text}>
+      <Text style={style.text} testID="selection_text_start_end">
         start: {workletSelection.selection.start.position}, end:{" "}
         {workletSelection.selection.end.position}
       </Text>
-      <Text testID="selection_text_target" style={style.text}>
+      <Text style={style.text} testID="selection_text_target">
         target: {workletSelection.target}
       </Text>
-      <Text testID="selection_text_coordinates_start" style={style.text}>
+      <Text style={style.text} testID="selection_text_coordinates_start">
         startX: {Math.round(workletSelection.selection.start.x)}, startY:{" "}
         {Math.round(workletSelection.selection.start.y)}
       </Text>
-      <Text testID="selection_text_coordinates_end" style={style.text}>
+      <Text style={style.text} testID="selection_text_coordinates_end">
         endX: {Math.round(workletSelection.selection.end.x)}, endY:{" "}
         {Math.round(workletSelection.selection.end.y)}
       </Text>
-      <Text testID="original_selection_text" style={[style.text, style.bold]}>
+      <Text style={[style.text, style.bold]} testID="original_selection_text">
         Original selection:
       </Text>
-      <Text testID="original_selection_text_start_end" style={style.text}>
+      <Text style={style.text} testID="original_selection_text_start_end">
         start: {originalSelection?.selection.start}, end:{" "}
         {originalSelection?.selection.end}
       </Text>
-      <Text testID="original_selection_text_target" style={style.text}>
+      <Text style={style.text} testID="original_selection_text_target">
         target: {originalSelection?.target}
       </Text>
     </View>

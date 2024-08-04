@@ -103,6 +103,7 @@ export const switchToEmojiKeyboard = async () => {
   // see https://github.com/wix/Detox/issues/4331
   const height = await uiDevice.getDisplayHeight();
   const width = await uiDevice.getDisplayWidth();
+
   await uiDevice.click(width * 0.3, height * 0.95);
 };
 
@@ -123,6 +124,7 @@ export const scrollUpUntilElementIsBarelyVisible = async (
 ): Promise<void> => {
   for (;;) {
     await element(by.id(scrollViewId)).scroll(50, "up", 0.01, 0.5);
+
     try {
       // verify that we can interact with element
       if (device.getPlatform() === "ios") {

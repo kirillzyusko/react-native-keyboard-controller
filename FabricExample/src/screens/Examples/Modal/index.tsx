@@ -17,9 +17,9 @@ export default function ModalExample() {
   return (
     <View style={styles.container}>
       <Button
+        testID="show_button"
         title={"Show Modal"}
         onPress={() => setModalVisible(true)}
-        testID="show_button"
       />
 
       <View style={styles.animationContainer}>
@@ -34,9 +34,9 @@ export default function ModalExample() {
       >
         <View style={styles.modalContainer}>
           <Button
+            testID="close_button"
             title={"Close Modal"}
             onPress={() => setModalVisible(false)}
-            testID="close_button"
           />
           {/* eslint-disable-next-line react-compiler/react-compiler */}
           <KeyboardAnimationTemplate provider={useKeyboardAnimation} />

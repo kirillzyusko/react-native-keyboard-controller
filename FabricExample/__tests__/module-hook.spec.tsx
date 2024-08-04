@@ -8,8 +8,8 @@ function SwitchModuleOnOff() {
 
   return (
     <Button
-      title="Toggle module"
       testID="toggle_module"
+      title="Toggle module"
       onPress={() => setEnabled(!enabled)}
     />
   );
@@ -18,10 +18,12 @@ function SwitchModuleOnOff() {
 describe("switching module on/off", () => {
   it("should call `setEnabled` with expected params", () => {
     const setEnabled = jest.fn();
+
     (useKeyboardController as jest.Mock).mockReturnValue({
       setEnabled,
       enabled: true,
     });
+
     const { getByTestId } = render(<SwitchModuleOnOff />);
 
     fireEvent.press(getByTestId("toggle_module"));

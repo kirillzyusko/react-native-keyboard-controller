@@ -8,6 +8,8 @@ module.exports = {
     "import",
     "react-compiler",
     "eslint-comments",
+    "prettier",
+    "react-perf",
   ],
   extends: [
     "@react-native",
@@ -17,6 +19,7 @@ module.exports = {
     "plugin:jest/recommended",
     "plugin:import/typescript",
     "plugin:eslint-comments/recommended",
+    "plugin:react-perf/recommended",
   ],
   settings: {
     "import/parsers": {
@@ -37,8 +40,36 @@ module.exports = {
         trailingComma: "all",
       },
     ],
-    // react
+    // react-hooks
     "react-hooks/exhaustive-deps": "warn",
+    // react
+    "react/jsx-sort-props": [
+      "error",
+      {
+        callbacksLast: true,
+        shorthandFirst: true,
+        shorthandLast: false,
+        ignoreCase: true,
+        noSortAlphabetically: false,
+        reservedFirst: ["ref", "key"],
+      },
+    ],
+    "react/jsx-no-bind": [
+      "warn",
+      {
+        // should be an error, but we need to fix a lot of places
+        ignoreDOMComponents: false,
+        ignoreRefs: false,
+        allowArrowFunctions: false,
+        allowFunctions: false,
+        allowBind: false,
+      },
+    ],
+    // react-perf
+    "react-perf/jsx-no-new-function-as-prop": "off", // because we have jsx-no-bind
+    "react-perf/jsx-no-jsx-as-prop": "warn",
+    "react-perf/jsx-no-new-array-as-prop": "warn",
+    "react-perf/jsx-no-new-object-as-prop": "warn",
     // typescript
     "@typescript-eslint/consistent-type-imports": [
       "error",
@@ -93,6 +124,28 @@ module.exports = {
     "react-compiler/react-compiler": "error",
     // eslint-comments
     "eslint-comments/no-unused-disable": "error",
+    // eslint
+    "curly": "error",
+    "eqeqeq": ["error", "always"], // check “===”
+    "no-nested-ternary": "error",
+    "padding-line-between-statements": [
+      "error",
+      {
+        blankLine: "always",
+        prev: "*",
+        next: ["return", "try", "throw", "function", "for", "while", "do"],
+      },
+      { blankLine: "always", prev: ["const", "let", "var"], next: "*" },
+      {
+        blankLine: "any",
+        prev: ["const", "let", "var"],
+        next: ["const", "let", "var"],
+      },
+      { blankLine: "always", prev: "*", next: "if" },
+      { blankLine: "any", prev: "if", next: "if" },
+    ],
+    "no-param-reassign": "error",
+    "max-lines": ["warn", { max: 300 }],
   },
   overrides: [
     {

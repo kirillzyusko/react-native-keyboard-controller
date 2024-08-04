@@ -16,7 +16,7 @@ function TestComponent() {
     [],
   );
 
-  return <Reanimated.View testID="view" style={style} />;
+  return <Reanimated.View style={style} testID="view" />;
 }
 
 describe("basic keyboard interaction", () => {

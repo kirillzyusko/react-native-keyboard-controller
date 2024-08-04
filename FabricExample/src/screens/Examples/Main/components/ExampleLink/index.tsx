@@ -19,9 +19,9 @@ const ExampleLink: FC<Props> = (props) => {
 
   return (
     <TouchableOpacity
+      style={styles.container}
       testID={testID}
       onPress={onCardPress}
-      style={styles.container}
     >
       <View style={styles.row}>
         <Text>

@@ -11,6 +11,7 @@ const scrollable =
 describe("Interactive keyboard interactions", () => {
   it("should navigate to `Interactive keyboard` screen", async () => {
     const item = `interactive_keyboard_${device.getPlatform()}`;
+
     await scrollDownUntilElementIsVisible(
       "main_scroll_view",
       `interactive_keyboard_${device.getPlatform()}`,

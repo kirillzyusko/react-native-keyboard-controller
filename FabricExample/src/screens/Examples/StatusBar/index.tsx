@@ -18,46 +18,46 @@ export default function StatusBarManipulation() {
   return (
     <View style={{ flex: 1, backgroundColor: "pink" }}>
       <StatusBar
+        animated={animated}
         backgroundColor={color}
         barStyle={barStyle}
         hidden={hidden}
-        animated={animated}
         translucent={translucent}
       />
       <KeyboardAnimationTemplate />
       <Button
+        testID="button.hidden"
         title={`Set ${hidden ? "shown" : "hidden"}`}
         onPress={() => setHidden(!hidden)}
-        testID="button.hidden"
       />
       <Button
+        testID="button.color"
         title="Update color"
         onPress={() => setColor(`${randomColor()}`)}
-        testID="button.color"
       />
       <Button
+        testID="button.animated"
         title={`Set ${!animated ? "" : "not"} animated`}
         onPress={() => setAnimated(!animated)}
-        testID="button.animated"
       />
       <Button
+        testID="button.bar_style"
         title={`Change ${barStyle}`}
         onPress={() =>
           setBarStyle(
             barStyle === "light-content" ? "dark-content" : "light-content",
           )
         }
-        testID="button.bar_style"
       />
       <Button
+        testID="button.translucent"
         title={`Set ${!translucent ? "" : "not"} translucent`}
         onPress={() => setTranslucent(!translucent)}
-        testID="button.translucent"
       />
       <Button
+        testID="button.enabled"
         title={`${enabled ? "Disable" : "Enable"} module`}
         onPress={() => setEnabled(!enabled)}
-        testID="button.enabled"
       />
     </View>
   );

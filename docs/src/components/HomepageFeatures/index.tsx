@@ -62,10 +62,10 @@ function Feature({ title, lottie, description }: FeatureItem) {
     <div className={clsx("col col--3")}>
       <div className="text--center">
         <Lottie
-          className="lottie"
-          animationData={lottie}
-          style={lottieStyle}
           loop
+          animationData={lottie}
+          className="lottie"
+          style={lottieStyle}
         />
       </div>
       <div className="text--center padding-horiz--md">
