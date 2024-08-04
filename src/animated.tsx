@@ -1,3 +1,4 @@
+/* eslint react/jsx-sort-props: off */
 import React, { useEffect, useMemo, useState } from "react";
 import { Animated, Platform, StyleSheet } from "react-native";
 import Reanimated, { useSharedValue } from "react-native-reanimated";
@@ -220,13 +221,14 @@ export const KeyboardProvider = ({
         navigationBarTranslucent={navigationBarTranslucent}
         statusBarTranslucent={statusBarTranslucent}
         style={styles.container}
+        // on*Reanimated prop must precede animated handlers to work correctly
+        onKeyboardMoveReanimated={keyboardHandler}
+        onKeyboardMoveStart={OS === "ios" ? onKeyboardMove : undefined}
+        onKeyboardMove={OS === "android" ? onKeyboardMove : undefined}
+        onKeyboardMoveInteractive={onKeyboardMove}
         onFocusedInputLayoutChangedReanimated={inputLayoutHandler}
         onFocusedInputSelectionChangedReanimated={inputSelectionHandler}
         onFocusedInputTextChangedReanimated={inputTextHandler}
-        onKeyboardMove={OS === "android" ? onKeyboardMove : undefined}
-        onKeyboardMoveInteractive={onKeyboardMove}
-        onKeyboardMoveReanimated={keyboardHandler}
-        onKeyboardMoveStart={OS === "ios" ? onKeyboardMove : undefined}
       >
         {children}
       </KeyboardControllerViewAnimated>
