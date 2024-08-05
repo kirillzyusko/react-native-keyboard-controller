@@ -155,7 +155,7 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
         {showArrows && (
           <>
             <ButtonContainer
-              accessibilityHint="Will move focus to previous field"
+              accessibilityHint="Moves focus to the previous field"
               accessibilityLabel="Previous"
               disabled={isPrevDisabled}
               testID={TEST_ID_KEYBOARD_TOOLBAR_PREVIOUS}
@@ -169,7 +169,7 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
               />
             </ButtonContainer>
             <ButtonContainer
-              accessibilityHint="Will move focus to next field"
+              accessibilityHint="Moves focus to the next field"
               accessibilityLabel="Next"
               disabled={isNextDisabled}
               testID={TEST_ID_KEYBOARD_TOOLBAR_NEXT}
@@ -189,7 +189,7 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
           {content}
         </View>
         <ButtonContainer
-          accessibilityHint="Will close the keyboard"
+          accessibilityHint="Closes the keyboard"
           accessibilityLabel="Done"
           rippleRadius={28}
           style={styles.doneButtonContainer}
