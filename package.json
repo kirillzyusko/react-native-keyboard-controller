@@ -42,8 +42,9 @@
   "keywords": [
     "react-native",
     "keyboard",
-    "animation",
+    "interactive",
     "dismiss",
+    "animation",
     "focused input",
     "text changed",
     "selection changed",

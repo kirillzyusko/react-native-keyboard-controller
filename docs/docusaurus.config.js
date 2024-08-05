@@ -205,7 +205,7 @@ const config = {
         {
           name: "keywords",
           content:
-            "react-native, keyboard, animation, ios, android, avoid keyboard, keyboard avoiding view, keyboard aware scroll view, sticky keyboard view, keyboard toolbar",
+            "react-native, keyboard, animation, ios, android, interactive keyboard dismiss, avoid keyboard, keyboard avoiding view, keyboard aware scroll view, sticky keyboard view, keyboard toolbar",
         },
       ],
       algolia: {
