@@ -1,12 +1,9 @@
-import {
-  useRef,
-  useEffect,
-  useMemo,
-  DependencyList,
-  EffectCallback,
-} from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { Animated, findNodeHandle } from "react-native";
+
 import { registerEventHandler, unregisterEventHandler } from "./event-handler";
+
+import type { DependencyList, EffectCallback } from "react";
 
 export const useSyncEffect = (
   effect: EffectCallback,
@@ -17,6 +14,7 @@ export const useSyncEffect = (
 
   const currentKey = useMemo(
     () => ({ a: Math.random() }),
+    // eslint-disable-next-line react-compiler/react-compiler
     deps as DependencyList,
   );
 
@@ -46,7 +44,9 @@ export function useEventHandlerRegistration<
     const ids = Object.keys(handler).map((handlerName) => {
       const eventName = map.get(handlerName as keyof H);
       const functionToCall = handler[handlerName as keyof H];
+
       console.log(functionToCall?.toString(), eventName, viewTag);
+
       if (eventName && viewTag) {
         return registerEventHandler(
           (event: Parameters<NonNullable<H[keyof H]>>[0]) => {

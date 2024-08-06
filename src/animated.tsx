@@ -1,5 +1,5 @@
 /* eslint react/jsx-sort-props: off */
-import React, { useEffect, useMemo, useState, useRef } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Animated, Platform, StyleSheet } from "react-native";
 import Reanimated, { useSharedValue } from "react-native-reanimated";
 
@@ -81,11 +81,11 @@ const keyboardEventsMap = new Map<keyof KeyboardHandler, string>([
   ["onStart", "onKeyboardMoveStart"],
   ["onMove", "onKeyboardMove"],
   ["onEnd", "onKeyboardMoveEnd"],
-  ["onInteractive", "onKeyboardMoveInteractive"]
+  ["onInteractive", "onKeyboardMoveInteractive"],
 ]);
 const focusedInputEventsMap = new Map<keyof FocusedInputHandler, string>([
   ["onChangeText", "onFocusedInputTextChanged"],
-  ["onSelectionChange", "onFocusedInputSelectionChanged"]
+  ["onSelectionChange", "onFocusedInputSelectionChanged"],
 ]);
 
 export const KeyboardProvider = ({
@@ -105,8 +105,14 @@ export const KeyboardProvider = ({
   const progressSV = useSharedValue(0);
   const heightSV = useSharedValue(0);
   const layout = useSharedValue<FocusedInputLayoutChangedEvent | null>(null);
-  const setKeyboardHandlers = useEventHandlerRegistration<KeyboardHandler>(keyboardEventsMap, viewTagRef);
-  const setInputHandlers = useEventHandlerRegistration<FocusedInputHandler>(focusedInputEventsMap, viewTagRef);
+  const setKeyboardHandlers = useEventHandlerRegistration<KeyboardHandler>(
+    keyboardEventsMap,
+    viewTagRef,
+  );
+  const setInputHandlers = useEventHandlerRegistration<FocusedInputHandler>(
+    focusedInputEventsMap,
+    viewTagRef,
+  );
   // memo
   const context = useMemo<KeyboardAnimationContext>(
     () => ({
