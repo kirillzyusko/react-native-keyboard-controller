@@ -6,11 +6,7 @@ import {
   EffectCallback,
 } from "react";
 import { Animated, findNodeHandle } from "react-native";
-import {
-  registerEventHandler,
-  unregisterEventHandler,
-  // TODO: in reanimated 3.15 the path was changed
-} from "react-native-reanimated/src/reanimated2/core";
+import { registerEventHandler, unregisterEventHandler } from "./event-handler";
 
 export const useSyncEffect = (
   effect: EffectCallback,
