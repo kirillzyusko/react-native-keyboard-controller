@@ -10,7 +10,6 @@ import {
   registerEventHandler,
   unregisterEventHandler,
   // TODO: in reanimated 3.15 the path was changed
-  // @ts-expect-error works for 3.12, but need to fix 3.15
 } from "react-native-reanimated/src/reanimated2/core";
 
 export const useSyncEffect = (
@@ -52,7 +51,7 @@ export function useEventHandlerRegistration<
       const eventName = map.get(handlerName as keyof H);
       const functionToCall = handler[handlerName as keyof H];
       console.log(functionToCall?.toString(), eventName, viewTag);
-      if (eventName && viewTagRef.current) {
+      if (eventName && viewTag) {
         return registerEventHandler(
           (event: Parameters<NonNullable<H[keyof H]>>[0]) => {
             "worklet";
@@ -63,6 +62,8 @@ export function useEventHandlerRegistration<
           viewTag,
         );
       }
+
+      return null;
     });
 
     return () => {
