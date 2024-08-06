@@ -1,0 +1,63 @@
+---
+slug: release-1-13
+title: Announcing upcoming 1.13 release 📣
+authors: [kirill]
+tags: [react-native, keyboard, modal, translucent status bar, offset]
+keywords:
+  [
+    react-native-keyboard-controller,
+    keyboard,
+    modal,
+    status bar translucent,
+    keyboard gesture area offset,
+  ]
+---
+
+I'm excited to announce the latest release, version `1.13.0`, of `react-native-keyboard-controller`!
+
+<!-- truncate -->
+
+## `Modal` support on Android
+
+Starting from the very first version of this library it was impossible to use the functionality of this library inside the `Modal`. It was caused by next factors:
+
+- the `Modal` window lives in its own view hierarchy;
+- `react-native` set `adjustResize` mode to `window` of the `Modal`.
+
+As a result whenever you tru to use `react-native-keyboard-controller` inside the `Modal` you will get a default behavior (but sometimes even mixed behaviors, i. e. hooks will report keyboard height and `Modal` content will be automatically resized).
+
+As a temporary workaround people were using a workaround with module disabling:
+
+```tsx
+import { useKeyboardController } from "react-native-keyboard-controller";
+
+// ... somewhere in your modal screen ...
+
+const { enabled, setEnabled } = useKeyboardController();
+
+useEffect(() => {
+  setEnabled(false);
+}, []);
+```
+
+To fallback to a fully default behavior. While it was working approach it still had some downsides, such as inconsistent keyboard handling/animations across the app.
+
+With the new release it's not a problem anymore - now you can use all hooks and components inside the `Modal` without additional hustle and it will just work out of the box.
+
+## Support for `StatusBar.translucent`
+
+The `StatusBar` integration was always a problematic because `react-native` uses deprecated methods that eventually breaks keyboard events. This module exports its own `StatusBarManagerCompat` module and uses this module automatically to handle `StatusBar` changes.
+
+The problem was in the fact that `StatusBarManagerCompat` module didn't react on `translucent` prop changes. Now it's not the case and you can disable/enable `translucent` property dynamically.
+
+:::info
+You may think that `statusBarTranslucent` prop on `KeyboardProvider` is not needed anymore, but I would recommend to keep it - it'll help to layout `KeyboardProvider` properly in one frame without frame jumps.
+:::
+
+## New `offset` prop for `KeyboardGestureArea`
+
+Starting from this release I'm adding more customization to interactive keyboard handling. Now on `Android` you can add `offset` property (which can be equal to your `TextInput` height) to your `KeyboardGestureArea` component - it'll allow you to extend the keyboard area and start dismiss gesture starting from the `TextInput` top border and not from the keyboard itself.
+
+## `react-native@0.75` support
+
+## What's next?
