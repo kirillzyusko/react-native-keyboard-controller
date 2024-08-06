@@ -66,7 +66,6 @@ PODS:
     - React-RCTText (= 0.75.0-rc.6)
     - React-RCTVibration (= 0.75.0-rc.6)
   - React-callinvoker (0.75.0-rc.6)
-  - React-Codegen (0.1.0)
   - React-Core (0.75.0-rc.6):
     - glog
     - hermes-engine
@@ -1652,14 +1651,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNReactNativeHapticFeedback (2.2.0):
-    - RCT-Folly
-    - RCTRequired
-    - RCTTypeSafety
-    - React-Codegen
-    - React-Core
-    - ReactCommon/turbomodule/core
-  - RNReanimated (3.14.0):
+  - RNReactNativeHapticFeedback (2.3.1):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1680,7 +1672,72 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNScreens (3.33.0):
+  - RNReanimated (3.15.0):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.01.01.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - RNReanimated/reanimated (= 3.15.0)
+    - RNReanimated/worklets (= 3.15.0)
+    - Yoga
+  - RNReanimated/reanimated (3.15.0):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.01.01.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
+  - RNReanimated/worklets (3.15.0):
+    - DoubleConversion
+    - glog
+    - hermes-engine
+    - RCT-Folly (= 2024.01.01.00)
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - Yoga
+  - RNScreens (3.34.0):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1701,9 +1758,9 @@ PODS:
     - ReactCodegen
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
-    - RNScreens/common (= 3.33.0)
+    - RNScreens/common (= 3.34.0)
     - Yoga
-  - RNScreens/common (3.33.0):
+  - RNScreens/common (3.34.0):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1806,7 +1863,6 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - lottie-ios
-    - React-Codegen
     - SocketRocket
 
 EXTERNAL SOURCES:
@@ -1969,7 +2025,6 @@ SPEC CHECKSUMS:
   RCTTypeSafety: 570d25d58d8795b1a146f5dee4965a05b6fdf8ac
   React: 98bef15f5713ae63f574001e3bcaf9a92c5a5424
   React-callinvoker: 098d6fa440e4c5e26e86d95ab1a27ffe92ccbba2
-  React-Codegen: 4b8b4817cea7a54b83851d4c1f91f79aa73de30a
   React-Core: ec4c0c63ca46f12e24bd380238b9272b3bc579cc
   React-CoreModules: 8e67736ac9022e7fa9a09d9c30c91e6e611d86bf
   React-cxxreact: a54e4a7230fc9c331ea59058cf39f1a41c0a7496
@@ -2024,9 +2079,9 @@ SPEC CHECKSUMS:
   ReactCommon: dcc6f8545034e6f3d82f9555b39a2c03c2ccd005
   RNCMaskedView: 090213d32d8b3bb83a4dcb7d12c18f0152591906
   RNGestureHandler: f769e1b9057085db07546aa3e259daa85c898dc7
-  RNReactNativeHapticFeedback: 616c35bdec7d20d4c524a7949ca9829c09e35f37
-  RNReanimated: bb5b1c59b5fc19a4e83c942cfe4ea49c5d959dd2
-  RNScreens: 532408837802bdc6dba08bfabdec620619bff608
+  RNReactNativeHapticFeedback: 31833c3ef341d716dbbd9d64e940f0c230db46f6
+  RNReanimated: 070deccceef093bec96ac3f87ef8c7f361caf754
+  RNScreens: de6e57426ba0e6cbc3fb5b4f496e7f08cb2773c2
   SocketRocket: abac6f5de4d4d62d24e11868d7a2f427e0ef940d
   Yoga: 132f64c229103548a5c95fe12e2ab492fbd5c793
 

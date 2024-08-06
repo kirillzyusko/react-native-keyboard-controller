@@ -1,0 +1,37 @@
+diff --git a/node_modules/@react-navigation/native-stack/src/types.tsx b/node_modules/@react-navigation/native-stack/src/types.tsx
+index 7f6215b..35df3c8 100644
+--- a/node_modules/@react-navigation/native-stack/src/types.tsx
++++ b/node_modules/@react-navigation/native-stack/src/types.tsx
+@@ -343,6 +343,12 @@ export type NativeStackNavigationOptions = {
+    * @platform android
+    */
+   navigationBarColor?: string;
++  /**
++   * Boolean indicating whether the content should be visible behind the navigation bar. Defaults to `false`.
++   *
++   * @platform android
++   */
++  navigationBarTranslucent?: boolean;
+   /**
+    * Sets the visibility of the navigation bar. Defaults to `false`.
+    *
+diff --git a/node_modules/@react-navigation/native-stack/src/views/NativeStackView.native.tsx b/node_modules/@react-navigation/native-stack/src/views/NativeStackView.native.tsx
+index 3d2bd43..bb89254 100644
+--- a/node_modules/@react-navigation/native-stack/src/views/NativeStackView.native.tsx
++++ b/node_modules/@react-navigation/native-stack/src/views/NativeStackView.native.tsx
+@@ -165,6 +165,7 @@ const SceneView = ({
+     autoHideHomeIndicator,
+     keyboardHandlingEnabled,
+     navigationBarColor,
++    navigationBarTranslucent,
+     navigationBarHidden,
+     orientation,
+     sheetAllowedDetents = 'large',
+@@ -297,6 +298,7 @@ const SceneView = ({
+       homeIndicatorHidden={autoHideHomeIndicator}
+       hideKeyboardOnSwipe={keyboardHandlingEnabled}
+       navigationBarColor={navigationBarColor}
++      navigationBarTranslucent={navigationBarTranslucent}
+       navigationBarHidden={navigationBarHidden}
+       replaceAnimation={animationTypeForReplace}
+       stackPresentation={presentation === 'card' ? 'push' : presentation}
