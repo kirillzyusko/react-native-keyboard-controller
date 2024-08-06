@@ -107,26 +107,3 @@ export const useFocusedInputTextHandler: FocusedInputTextHandlerHook<
     doDependenciesDiffer,
   );
 };
-
-export const useFocusedInputSelectionHandler: FocusedInputSelectionHandlerHook<
-  EventContext,
-  EventWithName<FocusedInputSelectionChangedEvent>
-> = (handlers, dependencies) => {
-  const { context, doDependenciesDiffer } = useHandler(handlers, dependencies);
-
-  return useEvent(
-    (event) => {
-      "worklet";
-      const { onFocusedInputSelectionChanged } = handlers;
-
-      if (
-        onFocusedInputSelectionChanged &&
-        event.eventName.endsWith("onFocusedInputSelectionChanged")
-      ) {
-        onFocusedInputSelectionChanged(event, context);
-      }
-    },
-    ["onFocusedInputSelectionChanged"],
-    doDependenciesDiffer,
-  );
-};

@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { KeyboardController } from "../bindings";
 import { AndroidSoftInputModes } from "../constants";
 import { useKeyboardContext } from "../context";
-import { uuid } from "../utils";
+import { useSyncEffect } from "../internal";
 
 import type { AnimatedContext, ReanimatedContext } from "../context";
 import type { FocusedInputHandler, KeyboardHandler } from "../types";
@@ -39,14 +39,10 @@ export function useGenericKeyboardHandler(
 ) {
   const context = useKeyboardContext();
 
-  useEffect(() => {
-    const key = uuid();
+  useSyncEffect(() => {
+    const cleanup = context.setKeyboardHandlers(handler);
 
-    context.setKeyboardHandlers({ [key]: handler });
-
-    return () => {
-      context.setKeyboardHandlers({ [key]: undefined });
-    };
+    return () => cleanup();
   }, deps);
 }
 
@@ -71,19 +67,15 @@ export function useReanimatedFocusedInput() {
 }
 
 export function useFocusedInputHandler(
-  handler?: FocusedInputHandler,
+  handler: FocusedInputHandler,
   deps?: DependencyList,
 ) {
   const context = useKeyboardContext();
 
-  useEffect(() => {
-    const key = uuid();
+  useSyncEffect(() => {
+    const cleanup = context.setInputHandlers(handler);
 
-    context.setInputHandlers({ [key]: handler });
-
-    return () => {
-      context.setInputHandlers({ [key]: undefined });
-    };
+    return () => cleanup();
   }, deps);
 }
 
