@@ -4,8 +4,6 @@ import type {
   EventWithName,
   FocusedInputLayoutChangedEvent,
   FocusedInputLayoutHandlerHook,
-  FocusedInputSelectionChangedEvent,
-  FocusedInputSelectionHandlerHook,
   FocusedInputTextChangedEvent,
   FocusedInputTextHandlerHook,
   KeyboardHandlerHook,
