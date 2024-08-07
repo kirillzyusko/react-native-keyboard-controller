@@ -43,7 +43,7 @@ export const useKeyboardAnimation = () => {
         // `onEnd` can be emitted before `onMove` and in this case
         // it may lead to choppy/glitchy/jumpy UI
         // see https://github.com/kirillzyusko/react-native-keyboard-controller/issues/327
-        if (e.duration === 0) {
+        if (e.duration === 0 || e.target === -1) {
           progress.value = e.progress;
           height.value = e.height;
         }
