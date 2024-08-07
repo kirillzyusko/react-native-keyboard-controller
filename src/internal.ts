@@ -13,13 +13,10 @@ export function useEventHandlerRegistration<
   viewTagRef: React.MutableRefObject<ComponentOrHandle>,
 ) {
   const onRegisterHandler = (handler: H) => {
-    console.log(handler);
     const viewTag = findNodeHandle(viewTagRef.current);
     const ids = Object.keys(handler).map((handlerName) => {
       const eventName = map.get(handlerName as keyof H);
       const functionToCall = handler[handlerName as keyof H];
-
-      console.log(functionToCall?.toString(), eventName, viewTag);
 
       if (eventName && viewTag) {
         return registerEventHandler(
@@ -36,10 +33,7 @@ export function useEventHandlerRegistration<
       return null;
     });
 
-    console.log("register", ids);
-
     return () => {
-      console.log("cleanup", ids);
       ids.forEach((id) => (id ? unregisterEventHandler(id) : null));
     };
   };
