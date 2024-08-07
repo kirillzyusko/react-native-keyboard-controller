@@ -1,37 +1,7 @@
-import { useEffect, useMemo, useRef } from "react";
+import { useRef } from "react";
 import { Animated, findNodeHandle } from "react-native";
 
 import { registerEventHandler, unregisterEventHandler } from "./event-handler";
-
-import type { DependencyList, EffectCallback } from "react";
-
-export const useSyncEffect = (
-  effect: EffectCallback,
-  deps?: DependencyList,
-): void => {
-  const key = useRef({});
-  const cleanupRef = useRef<ReturnType<typeof effect>>();
-
-  const currentKey = useMemo(
-    () => ({ a: Math.random() }),
-    // eslint-disable-next-line react-compiler/react-compiler
-    deps as DependencyList,
-  );
-
-  if (key.current !== currentKey) {
-    key.current = currentKey;
-    cleanupRef.current = effect();
-  }
-
-  useEffect(
-    () => () => {
-      if (cleanupRef.current) {
-        cleanupRef.current();
-      }
-    },
-    [currentKey],
-  );
-};
 
 type EventHandler = (event: never) => void;
 
@@ -61,6 +31,8 @@ export function useEventHandlerRegistration<
 
       return null;
     });
+
+    console.log("register", ids);
 
     return () => {
       console.log("cleanup", ids);

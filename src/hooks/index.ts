@@ -3,7 +3,8 @@ import { useEffect } from "react";
 import { KeyboardController } from "../bindings";
 import { AndroidSoftInputModes } from "../constants";
 import { useKeyboardContext } from "../context";
-import { useSyncEffect } from "../internal";
+
+import useSyncEffect from "./useSyncEffect";
 
 import type { AnimatedContext, ReanimatedContext } from "../context";
 import type { FocusedInputHandler, KeyboardHandler } from "../types";
