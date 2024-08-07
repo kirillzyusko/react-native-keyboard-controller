@@ -5,6 +5,7 @@ import Reanimated, { useSharedValue } from "react-native-reanimated";
 
 import { KeyboardControllerView } from "./bindings";
 import { KeyboardContext } from "./context";
+import { focusedInputEventsMap, keyboardEventsMap } from "./event-mappings";
 import { useAnimatedValue, useEventHandlerRegistration } from "./internal";
 import { applyMonkeyPatch, revertMonkeyPatch } from "./monkey-patch";
 import {
@@ -76,17 +77,6 @@ type KeyboardProviderProps = {
 // capture `Platform.OS` in separate variable to avoid deep workletization of entire RN package
 // see https://github.com/kirillzyusko/react-native-keyboard-controller/issues/393 and https://github.com/kirillzyusko/react-native-keyboard-controller/issues/294 for more details
 const OS = Platform.OS;
-
-const keyboardEventsMap = new Map<keyof KeyboardHandler, string>([
-  ["onStart", "onKeyboardMoveStart"],
-  ["onMove", "onKeyboardMove"],
-  ["onEnd", "onKeyboardMoveEnd"],
-  ["onInteractive", "onKeyboardMoveInteractive"],
-]);
-const focusedInputEventsMap = new Map<keyof FocusedInputHandler, string>([
-  ["onChangeText", "onFocusedInputTextChanged"],
-  ["onSelectionChange", "onFocusedInputSelectionChanged"],
-]);
 
 export const KeyboardProvider = ({
   children,
