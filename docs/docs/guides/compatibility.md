@@ -45,7 +45,7 @@ This library supports as minimal `react-native` version as possible. However it 
 
 This library is heavily relies on `react-native-reanimated` primitives to bring advanced concepts for keyboard handling.
 
-The minimal supported version of `react-native-reanimated` is `2.11.0`.
+The minimum supported version of `react-native-reanimated` is `3.0.0` (as officially supported by `react-native-reanimated` team).
 
 ## Third-party libraries compatibility
 
