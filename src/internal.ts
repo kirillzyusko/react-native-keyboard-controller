@@ -4,10 +4,14 @@ import { Animated, findNodeHandle } from "react-native";
 import { registerEventHandler, unregisterEventHandler } from "./event-handler";
 
 type EventHandler = (event: never) => void;
+type ComponentOrHandle = Parameters<typeof findNodeHandle>[0];
 
 export function useEventHandlerRegistration<
   H extends Partial<Record<string, EventHandler>>,
->(map: Map<keyof H, string>, viewTagRef: React.MutableRefObject<any>) {
+>(
+  map: Map<keyof H, string>,
+  viewTagRef: React.MutableRefObject<ComponentOrHandle>,
+) {
   const onRegisterHandler = (handler: H) => {
     console.log(handler);
     const viewTag = findNodeHandle(viewTagRef.current);

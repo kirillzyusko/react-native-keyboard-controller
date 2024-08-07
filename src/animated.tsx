@@ -23,11 +23,8 @@ import type {
 } from "./types";
 import type { ViewStyle } from "react-native";
 
-type KeyboardControllerViewComponent = React.FC<KeyboardControllerProps>;
 const KeyboardControllerViewAnimated = Reanimated.createAnimatedComponent(
-  Animated.createAnimatedComponent(
-    KeyboardControllerView,
-  ) as KeyboardControllerViewComponent,
+  Animated.createAnimatedComponent(KeyboardControllerView),
 );
 
 type Styles = {
@@ -85,7 +82,7 @@ export const KeyboardProvider = ({
   enabled: initiallyEnabled = true,
 }: KeyboardProviderProps) => {
   // ref
-  const viewTagRef = useRef<KeyboardControllerViewComponent | null>(null);
+  const viewTagRef = useRef<React.Component<KeyboardControllerProps>>(null);
   // state
   const [enabled, setEnabled] = useState(initiallyEnabled);
   // animated values
