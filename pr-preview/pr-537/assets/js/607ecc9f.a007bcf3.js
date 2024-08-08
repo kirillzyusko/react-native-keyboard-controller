@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[2633],{85128:e=>{e.exports=JSON.parse('{"label":"offset","permalink":"/react-native-keyboard-controller/pr-preview/pr-537/blog/tags/offset","allTagsPath":"/react-native-keyboard-controller/pr-preview/pr-537/blog/tags","count":1,"unlisted":false}')}}]);

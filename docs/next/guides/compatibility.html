@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://www.googletagmanager.com">
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-4JH9YK1X2Q"></script>
 <script>function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("js",new Date),gtag("config","G-4JH9YK1X2Q",{anonymize_ip:!0})</script><link rel="stylesheet" href="/react-native-keyboard-controller/assets/css/styles.9a3f8c3f.css">
-<script src="/react-native-keyboard-controller/assets/js/runtime~main.2291d2a7.js" defer="defer"></script>
+<script src="/react-native-keyboard-controller/assets/js/runtime~main.7db9d0b8.js" defer="defer"></script>
 <script src="/react-native-keyboard-controller/assets/js/main.35566214.js" defer="defer"></script>
 </head>
 <body class="navigation-with-keyboard">
@@ -27,7 +27,7 @@
 <table><thead><tr><th>library version</th><th>react-native version</th></tr></thead><tbody><tr><td>1.7.0+</td><td>0.65.0+</td></tr><tr><td>1.0.0+</td><td>0.62.0+</td></tr></tbody></table>
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="react-native-reanimated"><code>react-native-reanimated</code><a href="#react-native-reanimated" class="hash-link" aria-label="Direct link to react-native-reanimated" title="Direct link to react-native-reanimated">​</a></h2>
 <p>This library is heavily relies on <code>react-native-reanimated</code> primitives to bring advanced concepts for keyboard handling.</p>
-<p>The minimal supported version of <code>react-native-reanimated</code> is <code>2.11.0</code>.</p>
+<p>The minimum supported version of <code>react-native-reanimated</code> is <code>3.0.0</code> (as officially supported by <code>react-native-reanimated</code> team).</p>
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="third-party-libraries-compatibility">Third-party libraries compatibility<a href="#third-party-libraries-compatibility" class="hash-link" aria-label="Direct link to Third-party libraries compatibility" title="Direct link to Third-party libraries compatibility">​</a></h2>
 <p>Since this library uses <code>WindowInsetsCompat</code> API on Android it may conflict with other libraries if they are using deprecated API (if they are changing <code>window</code> flags directly).</p>
 <p>For example <code>react-native-screens</code> <a href="https://github.com/software-mansion/react-native-screens/pull/1451" target="_blank" rel="noopener noreferrer">were</a> using old API, so if you are using <code>StatusBar</code> management from <code>react-native-screens</code> you&#x27;ll need to use at least <code>3.14+</code> version. Otherwise it will <strong>break</strong> keyboard animations.</p>
