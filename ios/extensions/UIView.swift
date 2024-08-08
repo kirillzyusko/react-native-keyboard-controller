@@ -15,3 +15,13 @@ public extension UIView {
     return superview?.convert(frame, to: rootView)
   }
 }
+
+public extension Optional where Wrapped == UIView {
+  var framePositionInWindow: (Double, Double) {
+    let frameY = self?.layer.presentation()?.frame.origin.y ?? 0
+    let windowH = self?.window?.bounds.size.height ?? 0
+    let position = windowH - frameY
+
+    return (position, frameY)
+  }
+}

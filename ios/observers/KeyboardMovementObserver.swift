@@ -210,21 +210,24 @@ public class KeyboardMovementObserver: NSObject {
 
   @objc func keyboardDidAppear(_ notification: Notification) {
     if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+      let (position, _) = keyboardView.framePositionInWindow
       let keyboardHeight = keyboardFrame.cgRectValue.size.height
       tag = UIResponder.current.reactViewTag
       self.keyboardHeight = keyboardHeight
       let duration = Int(
         (notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double ?? 0) * 1000
       )
+      // always limit progress to the maximum possible value
+      let progress = min(position / self.keyboardHeight, 1.0)
 
       var data = [AnyHashable: Any]()
-      data["height"] = keyboardHeight
+      data["height"] = position
       data["duration"] = duration
       data["timestamp"] = Date.currentTimeStamp
       data["target"] = tag
 
       onCancelAnimation()
-      onEvent("onKeyboardMoveEnd", keyboardHeight as NSNumber, 1, duration as NSNumber, tag)
+      onEvent("onKeyboardMoveEnd", position as NSNumber, progress as NSNumber, duration as NSNumber, tag)
       onNotify("KeyboardController::keyboardDidShow", data)
 
       removeKeyboardWatcher()
@@ -285,9 +288,8 @@ public class KeyboardMovementObserver: NSObject {
       return
     }
 
-    let keyboardFrameY = keyboardView?.layer.presentation()?.frame.origin.y ?? 0
-    let keyboardWindowH = keyboardView?.window?.bounds.size.height ?? 0
-    var keyboardPosition = keyboardWindowH - keyboardFrameY
+    let (visibleKeyboardHeight, keyboardFrameY) = keyboardView.framePositionInWindow
+    var keyboardPosition = visibleKeyboardHeight
 
     if keyboardPosition == prevKeyboardPosition || keyboardFrameY == 0 {
       return

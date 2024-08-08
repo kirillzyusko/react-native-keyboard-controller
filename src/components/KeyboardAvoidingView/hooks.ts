@@ -34,19 +34,8 @@ export const useKeyboardAnimation = () => {
 
         isClosed.value = e.height === 0;
 
-        // `height` update happens in `onMove` handler
-        // in `onEnd` we need to update only if `onMove`
-        // wasn't called (i. e. duration === 0)
-        //
-        // we can not call this code without condition below
-        // because in some corner cases (iOS with `secureTextEntry`)
-        // `onEnd` can be emitted before `onMove` and in this case
-        // it may lead to choppy/glitchy/jumpy UI
-        // see https://github.com/kirillzyusko/react-native-keyboard-controller/issues/327
-        if (e.duration === 0) {
-          progress.value = e.progress;
-          height.value = e.height;
-        }
+        height.value = e.height;
+        progress.value = e.progress;
       },
     },
     [],
