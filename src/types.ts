@@ -47,6 +47,8 @@ export type EventWithName<T> = {
 
 // native View/Module declarations
 export type KeyboardControllerProps = {
+  //ref prop
+  ref?: React.Ref<React.Component<KeyboardControllerProps>>;
   // callback props
   onKeyboardMoveStart?: (
     e: NativeSyntheticEvent<EventWithName<NativeEvent>>,

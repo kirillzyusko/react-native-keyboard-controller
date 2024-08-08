@@ -4,6 +4,7 @@ docs/build/
 lib/
 node_modules/
 vendor/
+.gradle/
 
 *.lottie.json
 
