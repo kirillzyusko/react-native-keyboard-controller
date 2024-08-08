@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[2291],{47975:e=>{e.exports=JSON.parse('{"label":"bridgeless","permalink":"/react-native-keyboard-controller/pr-preview/pr-538/blog/tags/bridgeless","allTagsPath":"/react-native-keyboard-controller/pr-preview/pr-538/blog/tags","count":1,"unlisted":false}')}}]);
