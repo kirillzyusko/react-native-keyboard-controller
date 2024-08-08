@@ -217,6 +217,8 @@ public class KeyboardMovementObserver: NSObject {
       let duration = Int(
         (notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double ?? 0) * 1000
       )
+      // always limit progress to the maximum possible value
+      let progress = min(position / self.keyboardHeight, 1.0)
 
       var data = [AnyHashable: Any]()
       data["height"] = position
@@ -225,7 +227,7 @@ public class KeyboardMovementObserver: NSObject {
       data["target"] = tag
 
       onCancelAnimation()
-      onEvent("onKeyboardMoveEnd", position as NSNumber, (position / self.keyboardHeight) as NSNumber, duration as NSNumber, tag)
+      onEvent("onKeyboardMoveEnd", position as NSNumber, progress as NSNumber, duration as NSNumber, tag)
       onNotify("KeyboardController::keyboardDidShow", data)
 
       removeKeyboardWatcher()

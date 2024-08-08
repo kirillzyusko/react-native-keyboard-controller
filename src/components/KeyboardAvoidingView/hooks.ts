@@ -33,6 +33,9 @@ export const useKeyboardAnimation = () => {
         "worklet";
 
         isClosed.value = e.height === 0;
+
+        height.value = e.height;
+        progress.value = e.progress;
       },
     },
     [],
