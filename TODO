@@ -1,0 +1,2 @@
+- on iOS numeric keyboard have strange "default" accessoryView
+- on Android - RNS makes bar non translucent and adds padding
