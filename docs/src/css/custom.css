@@ -18,7 +18,7 @@
 }
 
 .menu__link {
-  word-break: break-all;
+  word-break: break-word;
 }
 
 /* For readability concerns, you should choose a lighter palette in dark mode. */
