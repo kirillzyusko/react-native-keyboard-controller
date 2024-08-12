@@ -1,0 +1,13 @@
+diff --git a/node_modules/react-native/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm b/node_modules/react-native/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm
+index 369cdf6..2b0af51 100644
+--- a/node_modules/react-native/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm
++++ b/node_modules/react-native/React/Fabric/Mounting/ComponentViews/TextInput/RCTTextInputComponentView.mm
+@@ -500,7 +500,7 @@ - (void)initializeReturnKeyType
+ {
+   returnKeyTypesSet = [NSSet setWithObjects:@(UIReturnKeyDone),
+                                             @(UIReturnKeyGo),
+-                                            @(UIReturnKeyDefault),
++                                            // @(UIReturnKeyDefault),
+                                             @(UIReturnKeyNext),
+                                             @(UIReturnKeySearch),
+                                             @(UIReturnKeySend),
