@@ -207,7 +207,7 @@ const KeyboardAwareScrollView = forwardRef<
     );
 
     const scrollFromCurrentPosition = useCallback(
-      (customHeight?: number) => {
+      (customHeight: number) => {
         "worklet";
 
         const prevScrollPosition = scrollPosition.value;
@@ -222,7 +222,7 @@ const KeyboardAwareScrollView = forwardRef<
           ...input.value,
           layout: {
             ...input.value.layout,
-            height: customHeight ?? input.value.layout.height,
+            height: customHeight ?? input.value.layout.height, // TODO: math.min? When we have multiline input with limited amount of lines, then custom height can be very big?
           },
         };
         scrollPosition.value = position.value;
@@ -232,17 +232,24 @@ const KeyboardAwareScrollView = forwardRef<
       },
       [maybeScroll],
     );
-    const onChangeText = useCallback(() => {
-      "worklet";
+    const onChangeText = useCallback(
+      (customHeight: number) => {
+        "worklet";
 
-      // if typing a text caused layout shift, then we need to ignore this handler
-      // because this event will be handled in `useAnimatedReaction` below
-      if (layout.value?.layout.height !== input.value?.layout.height) {
-        return;
-      }
+        // if typing a text caused layout shift, then we need to ignore this handler
+        // because this event will be handled in `useAnimatedReaction` below
+        if (layout.value?.layout.height !== input.value?.layout.height) {
+          return;
+        }
 
-      scrollFromCurrentPosition();
-    }, [scrollFromCurrentPosition]);
+        scrollFromCurrentPosition(customHeight);
+      },
+      [scrollFromCurrentPosition],
+    );
+    const onChangeTextHandler = useMemo(
+      () => debounce(onChangeText, 200),
+      [onChangeText],
+    );
     const onSelectionChange = useCallback(
       (e: FocusedInputSelectionChangedEvent) => {
         "worklet";
@@ -250,21 +257,17 @@ const KeyboardAwareScrollView = forwardRef<
         if (e.selection.start.position !== e.selection.end.position) {
           scrollFromCurrentPosition(e.selection.end.y);
         }
-      },
-      [scrollFromCurrentPosition],
-    );
 
-    const onChangeTextHandler = useMemo(
-      () => debounce(onChangeText, 200),
-      [onChangeText],
+        onChangeTextHandler(e.selection.end.y);
+      },
+      [scrollFromCurrentPosition, onChangeTextHandler],
     );
 
     useFocusedInputHandler(
       {
-        onChangeText: onChangeTextHandler,
         onSelectionChange: onSelectionChange,
       },
-      [onChangeTextHandler, onSelectionChange],
+      [onSelectionChange],
     );
 
     useSmoothKeyboardHandler(
