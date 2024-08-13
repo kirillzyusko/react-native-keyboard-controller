@@ -1,2 +1,4 @@
-- on iOS numeric keyboard have strange "default" accessoryView
-- on Android - RNS makes bar non translucent and adds padding
+- (x) on iOS numeric keyboard have strange "default" accessoryView - https://github.com/facebook/react-native/pull/43362#issuecomment-2284701128
+- (x) on Android - RNS makes bar non translucent and adds padding - 
+- (x) on iOS - Fabric removed haptic feedback
+- Fabric/iOS/KeyboardAwareScrollView - scroll position (sometimes works good)

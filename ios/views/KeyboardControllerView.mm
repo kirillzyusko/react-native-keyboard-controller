@@ -25,8 +25,6 @@
 #import <react/renderer/components/reactnativekeyboardcontroller/Props.h>
 #import <react/renderer/components/reactnativekeyboardcontroller/RCTComponentViewHelpers.h>
 
-#import <React/RCTBridge+Private.h>
-
 #import "KeyboardControllerModule-Header.h"
 #import "RCTFabricComponentsPlugins.h"
 
@@ -79,14 +77,10 @@ using namespace facebook::react;
                                     .width = width,
                                     .x = x,
                                     .y = y}});
-            // TODO: use built-in _eventEmitter once NativeAnimated module will use
-            // ModernEventEmitter
-            RCTBridge *bridge = [RCTBridge currentBridge];
-            if (bridge) {
-              FocusedInputLayoutChangedEvent *inputChangedEvent =
-                  [[FocusedInputLayoutChangedEvent alloc] initWithReactTag:@(self.tag) event:event];
-              [bridge.eventDispatcher sendEvent:inputChangedEvent];
-            }
+
+            FocusedInputLayoutChangedEvent *inputChangedEvent =
+                [[FocusedInputLayoutChangedEvent alloc] initWithReactTag:@(self.tag) event:event];
+            [self postNotificationForEventDispatcherObserversWithEvent:inputChangedEvent];
           }
         }
         onTextChangedHandler:^(NSString *text) {
@@ -97,14 +91,9 @@ using namespace facebook::react;
                     facebook::react::KeyboardControllerViewEventEmitter::OnFocusedInputTextChanged{
                         .text = std::string([text UTF8String])});
 
-            // TODO: use built-in _eventEmitter once NativeAnimated module will use
-            // ModernEventEmitter
-            RCTBridge *bridge = [RCTBridge currentBridge];
-            if (bridge) {
-              FocusedInputTextChangedEvent *textChangedEvent =
-                  [[FocusedInputTextChangedEvent alloc] initWithReactTag:@(self.tag) text:text];
-              [bridge.eventDispatcher sendEvent:textChangedEvent];
-            }
+            FocusedInputTextChangedEvent *textChangedEvent =
+                [[FocusedInputTextChangedEvent alloc] initWithReactTag:@(self.tag) text:text];
+            [self postNotificationForEventDispatcherObserversWithEvent:textChangedEvent];
           }
         }
         onSelectionChangedHandler:^(NSDictionary *event) {
@@ -132,15 +121,11 @@ using namespace facebook::react;
                                     .end = facebook::react::KeyboardControllerViewEventEmitter::
                                         OnFocusedInputSelectionChangedSelectionEnd{
                                             .x = endX, .y = endY, .position = end}}});
-            // TODO: use built-in _eventEmitter once NativeAnimated module will use
-            // ModernEventEmitter
-            RCTBridge *bridge = [RCTBridge currentBridge];
-            if (bridge) {
-              FocusedInputSelectionChangedEvent *selectionChangedEvent =
-                  [[FocusedInputSelectionChangedEvent alloc] initWithReactTag:@(self.tag)
-                                                                        event:event];
-              [bridge.eventDispatcher sendEvent:selectionChangedEvent];
-            }
+
+            FocusedInputSelectionChangedEvent *selectionChangedEvent =
+                [[FocusedInputSelectionChangedEvent alloc] initWithReactTag:@(self.tag)
+                                                                      event:event];
+            [self postNotificationForEventDispatcherObserversWithEvent:selectionChangedEvent];
           }
         }
         onFocusDidSet:^(NSDictionary *data) {
@@ -197,18 +182,14 @@ using namespace facebook::react;
                         .target = [target intValue]});
           }
 
-          // TODO: use built-in _eventEmitter once NativeAnimated module will use ModernEventEmitter
-          RCTBridge *bridge = [RCTBridge currentBridge];
-          if (bridge) {
-            KeyboardMoveEvent *keyboardMoveEvent =
-                [[KeyboardMoveEvent alloc] initWithReactTag:@(self.tag)
-                                                      event:event
-                                                     height:height
-                                                   progress:progress
-                                                   duration:duration
-                                                     target:target];
-            [bridge.eventDispatcher sendEvent:keyboardMoveEvent];
-          }
+          KeyboardMoveEvent *keyboardMoveEvent =
+              [[KeyboardMoveEvent alloc] initWithReactTag:@(self.tag)
+                                                    event:event
+                                                   height:height
+                                                 progress:progress
+                                                 duration:duration
+                                                   target:target];
+          [self postNotificationForEventDispatcherObserversWithEvent:keyboardMoveEvent];
         }
         onNotify:^(NSString *event, NSDictionary *data) {
           [KeyboardController.shared sendEvent:event body:data];
@@ -259,6 +240,16 @@ using namespace facebook::react;
 {
   [inputObserver unmount];
   [keyboardObserver unmount];
+}
+
+// TODO: once Fabric implements proper NativeAnimationDriver, this should be removed.
+- (void)postNotificationForEventDispatcherObserversWithEvent:(NSObject<RCTEvent> *)event
+{
+  NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:event, @"event", nil];
+  [[NSNotificationCenter defaultCenter]
+      postNotificationName:@"RCTNotifyEventDispatcherObserversOfEvent_DEPRECATED"
+                    object:nil
+                  userInfo:userInfo];
 }
 
 Class<RCTComponentViewProtocol> KeyboardControllerViewCls(void)
