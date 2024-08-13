@@ -1,0 +1,13 @@
+diff --git a/node_modules/react-native/Libraries/Text/TextInput/RCTBaseTextInputView.mm b/node_modules/react-native/Libraries/Text/TextInput/RCTBaseTextInputView.mm
+index 826ff3a..57a2368 100644
+--- a/node_modules/react-native/Libraries/Text/TextInput/RCTBaseTextInputView.mm
++++ b/node_modules/react-native/Libraries/Text/TextInput/RCTBaseTextInputView.mm
+@@ -680,7 +680,7 @@ - (void)initializeReturnKeyType
+ {
+   returnKeyTypesSet = [NSSet setWithObjects:@(UIReturnKeyDone),
+                                             @(UIReturnKeyGo),
+-                                            @(UIReturnKeyDefault),
++                                            // @(UIReturnKeyDefault),
+                                             @(UIReturnKeyNext),
+                                             @(UIReturnKeySearch),
+                                             @(UIReturnKeySend),

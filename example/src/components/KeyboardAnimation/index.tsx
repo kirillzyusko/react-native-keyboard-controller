@@ -40,8 +40,10 @@ type Props = {
 };
 
 export default function KeyboardAnimation({
+  // eslint-disable-next-line react-compiler/react-compiler
   provider = useKeyboardAnimation,
 }: Props) {
+  // eslint-disable-next-line react-compiler/react-compiler
   const { height, progress } = provider();
   const keyboard = useGradualKeyboardAnimation();
 

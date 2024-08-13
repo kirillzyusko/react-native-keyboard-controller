@@ -1,7 +1,7 @@
 import { BlurView } from "@react-native-community/blur";
 import React, { useCallback, useState } from "react";
 import { Platform, StyleSheet, View } from "react-native";
-import { trigger } from "react-native-haptic-feedback";
+// import { trigger } from "react-native-haptic-feedback";
 import {
   KeyboardAwareScrollView,
   KeyboardToolbar,
@@ -18,6 +18,7 @@ const options = {
   enableVibrateFallback: true,
   ignoreAndroidSystemSettings: false,
 };
+const trigger = () => null;
 const haptic = () =>
   trigger(Platform.OS === "ios" ? "impactLight" : "keyboardTap", options);
 
