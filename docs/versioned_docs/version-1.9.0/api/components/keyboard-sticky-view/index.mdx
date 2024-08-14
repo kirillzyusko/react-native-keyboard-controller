@@ -23,10 +23,11 @@ Unlike [KeyboardAvoidingView](../keyboard-avoiding-view.mdx) the `KeyboardSticky
 import ksv from "./ksv.lottie.json";
 import kav from "@site/src/components/KeyboardAvoidingViewComparison/kav-animated.lottie.json";
 import ComparisonTable from "@site/src/components/ComparisonTable";
+import Lottie from "@site/src/components/Lottie";
 
 <ComparisonTable
-  leftLottie={ksv}
-  rightLottie={kav}
+  left={<Lottie src={ksv} />}
+  right={<Lottie src={kav} />}
   leftText={
     <i>
       <code>KeyboardStickyView</code> - only footer is moving (container is not
