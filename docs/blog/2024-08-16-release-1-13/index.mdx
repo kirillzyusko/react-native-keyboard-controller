@@ -13,7 +13,9 @@ keywords:
   ]
 ---
 
-I'm excited to announce the latest release, version `1.13.0`, of `react-native-keyboard-controller`!
+I'm excited to announce the latest release, version `1.13.0`, of react-native-keyboard-controller! 🎉
+
+This update brings significant improvements and new features to enhance the way your React Native apps handle keyboard interactions. With better support for `Modal` components, dynamic `StatusBar` translucency, and new customization options for `KeyboardGestureArea`s, this release is designed to make your development process smoother and your app's user experience more seamless. 🚀
 
 <!-- truncate -->
 
@@ -95,13 +97,13 @@ This release brings support for `react-native@0.75`. Even though `1.12.x` should
 
 Starting from `1.12.0` you had an ability to customize the behavior of `KeyboardToolbar` buttons - you could run additional actions (and add haptic feedback for example). However before it wasn't possible to prevent default actions from happening, i. e. if you pressed next button, then focus would move to the next input.
 
-With this release you can now prevent default actions from happening by calling `e.preventDefault()` in `onNextCallback`, `onPrevCallback`, and `onDoneCallback` props. I think it's a great addition to the existing functionality, because sometimes you may need to have this functionality - for example if you have a custom input between two `TextInput`s (let's say calendar picker) and when you press next button (while you have a focus on first input) most likely you want to open a calendar picker and not skip an input field (which is the default behavior). So now you can call `e.preventDefault()` conditionally and perform your own action to achieve your custom requirements!
+With this release you can now prevent default actions from happening by calling `e.preventDefault()` in `onNextCallback`, `onPrevCallback`, and `onDoneCallback` props. I think it's a great addition to the existing functionality, because sometimes you may need to have this - for example if you have a custom input between two `TextInput`s (let's say a calendar picker) and when you press the next button (while you have a focus on the first input) most likely you want to open a calendar picker and not skip an input field (skipping the input field is the default behavior). So now you can call `e.preventDefault()` conditionally and perform your own action to achieve your custom requirements!
 
 ### Synchronous `worklet` handler mount
 
 Hooks such as `useKeyboardHandler` or `useFocusedInputHandler` used to mount `worklet` handlers asynchronously. In most of the cases it wasn't a problem, but if the keyboard performs an animation and worklet handler is not attached yet, then you will get a broken layout - keyboard will overlap elements etc.
 
-This release fixes this issue by mounting `worklet` handlers synchronously so it's not a problem anymore!
+This release fixes this issue by mounting `worklet` handlers synchronously so it's not a problem anymore! 😊
 
 ### Other bug fixes and improvements
 
@@ -116,3 +118,9 @@ Also this release aims to improve the stability of this library - I added a bund
 I hope such setup can help to catch bugs on as early stage as possible. But I'm not going to stop here - I'm also planning to add more tests, more runtimes (Android 15 is planned) and improve the stability of this library even more.
 
 ## What's next?
+
+The new `1.13.0` release is just a better revision of the `1.12.0` release. But since it brings quite a lot of new features and improvements I decided to publish it as a separate release.
+
+I'm planning to continuously improve this library and add more features. The ultimate goal is to fix all the bugs and implement all requested features.
+
+To stay tuned follow me on [Twitter](https://twitter.com/ziusko) and [GitHub](https://github.com/kirillzyusko) for updates, and feel free to contribute to the project by submitting issues or pull requests on GitHub. Let's continue to make `react-native-keyboard-controller` an essential tool for developers building high-quality mobile applications! 💪
