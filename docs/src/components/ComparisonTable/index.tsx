@@ -1,10 +1,8 @@
-import Lottie from "lottie-react";
 import React from "react";
 
 import type { CSSProperties } from "react";
 
 const withoutBorders = { border: "none" };
-const lottieView = { paddingLeft: "20%", paddingRight: "20%" };
 const label: CSSProperties = {
   ...withoutBorders,
   maxWidth: 400,
@@ -16,38 +14,24 @@ const labels = {
 };
 
 type Props = {
-  leftLottie: unknown;
+  left: React.ReactNode;
   leftText: React.ReactNode;
-  rightLottie: unknown;
+  right: React.ReactNode;
   rightText: React.ReactNode;
 };
 
 export default function ComparisonTable({
-  leftLottie,
+  left,
   leftText,
-  rightLottie,
+  right,
   rightText,
 }: Props): JSX.Element {
   return (
     <table>
       <tbody>
         <tr style={withoutBorders}>
-          <td style={withoutBorders}>
-            <Lottie
-              loop
-              animationData={leftLottie}
-              className="lottie"
-              style={lottieView}
-            />
-          </td>
-          <td style={withoutBorders}>
-            <Lottie
-              loop
-              animationData={rightLottie}
-              className="lottie"
-              style={lottieView}
-            />
-          </td>
+          <td style={withoutBorders}>{left}</td>
+          <td style={withoutBorders}>{right}</td>
         </tr>
         <tr style={labels}>
           <td style={label}>{leftText}</td>

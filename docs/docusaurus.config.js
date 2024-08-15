@@ -143,6 +143,10 @@ const config = {
                 to: "/docs/installation",
               },
               {
+                label: "Recipes",
+                to: "/docs/category/recipes",
+              },
+              {
                 label: "API",
                 to: "/docs/category/api-reference",
               },
