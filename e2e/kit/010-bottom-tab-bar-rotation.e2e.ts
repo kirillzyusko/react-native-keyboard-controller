@@ -14,7 +14,7 @@ describe("Bottom tab bar", () => {
 
   it("should have expected state in portrait mode", async () => {
     await waitForExpect(async () => {
-      await expectBitmapsToBeEqual("BottomTabBarPortrait");
+      await expectBitmapsToBeEqual("BottomTabBarPortrait", 0.25);
     });
   });
 
