@@ -1,10 +1,15 @@
 package com.reactnativekeyboardcontroller.views
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.res.Configuration
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.Surface
+import android.view.WindowManager
 import android.widget.FrameLayout
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsAnimationCompat
@@ -41,6 +46,9 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
       dispatchMode = WindowInsetsAnimationCompat.Callback.DISPATCH_MODE_CONTINUE_ON_SUBTREE,
       hasTranslucentNavigationBar = isNavigationBarTranslucent,
     )
+  // rotation management
+  private var isLandscape = false
+  private var rotation = 0
 
   // managers/watchers
   private val modalAttachedWatcher = ModalAttachedWatcher(this, reactContext, ::config)
@@ -68,6 +76,18 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
 
     this.removeKeyboardCallbacks()
   }
+
+  override fun onConfigurationChanged(newConfig: Configuration?) {
+    isLandscape = newConfig?.orientation == Configuration.ORIENTATION_LANDSCAPE
+
+    rotation = (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager)
+      .defaultDisplay.rotation
+
+    println("rotate $rotation")
+
+    this.setupWindowInsets()
+    this.requestApplyInsetsWhenAttached()
+  }
   // endregion
 
   // region State manager helpers
@@ -81,26 +101,27 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
           FrameLayout.LayoutParams.MATCH_PARENT,
         )
 
-        val shouldApplyZeroPaddingTop = !active || this.isStatusBarTranslucent
-        val shouldApplyZeroPaddingBottom = !active || this.isNavigationBarTranslucent
+        val shouldApplyZeroPaddingTop = !active || this.isStatusBarTranslucent || isLandscape
+        val shouldApplyZeroPaddingBottom = !active || this.isNavigationBarTranslucent || isLandscape
+        val navBarInsets = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
+        val systemBarInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
         params.setMargins(
-          0,
+          navBarInsets.left,
           if (shouldApplyZeroPaddingTop) {
             0
           } else {
-            (
-              insets?.getInsets(WindowInsetsCompat.Type.systemBars())?.top
-                ?: 0
-              )
+            systemBarInsets.top
           },
-          0,
+          navBarInsets.right,
           if (shouldApplyZeroPaddingBottom) {
             0
           } else {
-            insets?.getInsets(WindowInsetsCompat.Type.navigationBars())?.bottom
-              ?: 0
+            navBarInsets.bottom
           },
         )
+
+        println("$isLandscape ${navBarInsets.bottom} ${navBarInsets.right} ${navBarInsets.left}")
+        println("${params.leftMargin} ${params.topMargin} ${params.rightMargin} ${params.bottomMargin}")
 
         content?.layoutParams = params
 
