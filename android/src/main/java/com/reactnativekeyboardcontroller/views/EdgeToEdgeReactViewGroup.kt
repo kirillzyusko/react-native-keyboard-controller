@@ -1,15 +1,11 @@
 package com.reactnativekeyboardcontroller.views
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.res.Configuration
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import android.view.Surface
-import android.view.WindowManager
 import android.widget.FrameLayout
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsAnimationCompat
@@ -46,9 +42,6 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
       dispatchMode = WindowInsetsAnimationCompat.Callback.DISPATCH_MODE_CONTINUE_ON_SUBTREE,
       hasTranslucentNavigationBar = isNavigationBarTranslucent,
     )
-  // rotation management
-  private var isLandscape = false
-  private var rotation = 0
 
   // managers/watchers
   private val modalAttachedWatcher = ModalAttachedWatcher(this, reactContext, ::config)
@@ -78,15 +71,9 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
   }
 
   override fun onConfigurationChanged(newConfig: Configuration?) {
-    isLandscape = newConfig?.orientation == Configuration.ORIENTATION_LANDSCAPE
+    println("rotate")
 
-    rotation = (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager)
-      .defaultDisplay.rotation
-
-    println("rotate $rotation")
-
-    this.setupWindowInsets()
-    this.requestApplyInsetsWhenAttached()
+    this.reAttachWindowInsets()
   }
   // endregion
 
@@ -101,8 +88,8 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
           FrameLayout.LayoutParams.MATCH_PARENT,
         )
 
-        val shouldApplyZeroPaddingTop = !active || this.isStatusBarTranslucent || isLandscape
-        val shouldApplyZeroPaddingBottom = !active || this.isNavigationBarTranslucent || isLandscape
+        val shouldApplyZeroPaddingTop = !active || this.isStatusBarTranslucent
+        val shouldApplyZeroPaddingBottom = !active || this.isNavigationBarTranslucent
         val navBarInsets = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
         val systemBarInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
         params.setMargins(
@@ -120,7 +107,7 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
           },
         )
 
-        println("$isLandscape ${navBarInsets.bottom} ${navBarInsets.right} ${navBarInsets.left}")
+        println("${navBarInsets.bottom} ${navBarInsets.right} ${navBarInsets.left}")
         println("${params.leftMargin} ${params.topMargin} ${params.rightMargin} ${params.bottomMargin}")
 
         content?.layoutParams = params
@@ -185,6 +172,11 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
     // for more details
     Handler(Looper.getMainLooper()).post { view.removeSelf() }
   }
+
+  private fun reAttachWindowInsets() {
+    this.setupWindowInsets()
+    this.requestApplyInsetsWhenAttached()
+  }
   // endregion
 
   // region State managers
@@ -227,8 +219,7 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
   fun forceStatusBarTranslucent(isStatusBarTranslucent: Boolean) {
     if (active && this.isStatusBarTranslucent != isStatusBarTranslucent) {
       this.isStatusBarTranslucent = isStatusBarTranslucent
-      this.setupWindowInsets()
-      this.requestApplyInsetsWhenAttached()
+      this.reAttachWindowInsets()
     }
   }
   // endregion
