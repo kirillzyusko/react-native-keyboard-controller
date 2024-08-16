@@ -71,8 +71,6 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
   }
 
   override fun onConfigurationChanged(newConfig: Configuration?) {
-    println("rotate")
-
     this.reAttachWindowInsets()
   }
   // endregion
@@ -92,6 +90,7 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
         val shouldApplyZeroPaddingBottom = !active || this.isNavigationBarTranslucent
         val navBarInsets = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
         val systemBarInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+
         params.setMargins(
           navBarInsets.left,
           if (shouldApplyZeroPaddingTop) {
@@ -106,10 +105,6 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
             navBarInsets.bottom
           },
         )
-
-        println("${navBarInsets.bottom} ${navBarInsets.right} ${navBarInsets.left}")
-        println("${params.leftMargin} ${params.topMargin} ${params.rightMargin} ${params.bottomMargin}")
-
         content?.layoutParams = params
 
         val defaultInsets = ViewCompat.onApplyWindowInsets(v, insets)

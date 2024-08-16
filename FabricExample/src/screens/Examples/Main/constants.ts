@@ -111,4 +111,10 @@ export const examples: Example[] = [
     info: ScreenNames.MODAL,
     icons: "🌎",
   },
+  {
+    title: "Bottom tab bar",
+    testID: "bottom_tab_bar",
+    info: ScreenNames.BOTTOM_TAB_BAR,
+    icons: "🧱",
+  },
 ];
