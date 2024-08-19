@@ -19,6 +19,7 @@ import ReanimatedChat from "../../screens/Examples/ReanimatedChat";
 import ReanimatedChatFlatList from "../../screens/Examples/ReanimatedChatFlatList";
 import StatusBar from "../../screens/Examples/StatusBar";
 import ToolbarExample from "../../screens/Examples/Toolbar";
+import BottomTabBar from "../BottomTabBar";
 import NativeStack from "../NestedStack";
 
 export type ExamplesStackParamList = {
@@ -40,6 +41,7 @@ export type ExamplesStackParamList = {
   [ScreenNames.FOCUSED_INPUT_HANDLERS]: undefined;
   [ScreenNames.TOOLBAR]: undefined;
   [ScreenNames.MODAL]: undefined;
+  [ScreenNames.BOTTOM_TAB_BAR]: undefined;
 };
 
 const Stack = createStackNavigator<ExamplesStackParamList>();
@@ -99,6 +101,9 @@ const options = {
   },
   [ScreenNames.MODAL]: {
     title: "Modal",
+  },
+  [ScreenNames.BOTTOM_TAB_BAR]: {
+    headerShown: false,
   },
 };
 
@@ -193,6 +198,11 @@ const ExamplesStack = () => (
       component={ModalExample}
       name={ScreenNames.MODAL}
       options={options[ScreenNames.MODAL]}
+    />
+    <Stack.Screen
+      component={BottomTabBar}
+      name={ScreenNames.BOTTOM_TAB_BAR}
+      options={options[ScreenNames.BOTTOM_TAB_BAR]}
     />
   </Stack.Navigator>
 );

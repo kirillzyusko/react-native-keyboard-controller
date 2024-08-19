@@ -1,6 +1,7 @@
 package com.reactnativekeyboardcontroller.views
 
 import android.annotation.SuppressLint
+import android.content.res.Configuration
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
@@ -68,6 +69,10 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
 
     this.removeKeyboardCallbacks()
   }
+
+  override fun onConfigurationChanged(newConfig: Configuration?) {
+    this.reApplyWindowInsets()
+  }
   // endregion
 
   // region State manager helpers
@@ -83,25 +88,23 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
 
         val shouldApplyZeroPaddingTop = !active || this.isStatusBarTranslucent
         val shouldApplyZeroPaddingBottom = !active || this.isNavigationBarTranslucent
+        val navBarInsets = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
+        val systemBarInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+
         params.setMargins(
-          0,
+          navBarInsets.left,
           if (shouldApplyZeroPaddingTop) {
             0
           } else {
-            (
-              insets?.getInsets(WindowInsetsCompat.Type.systemBars())?.top
-                ?: 0
-              )
+            systemBarInsets.top
           },
-          0,
+          navBarInsets.right,
           if (shouldApplyZeroPaddingBottom) {
             0
           } else {
-            insets?.getInsets(WindowInsetsCompat.Type.navigationBars())?.bottom
-              ?: 0
+            navBarInsets.bottom
           },
         )
-
         content?.layoutParams = params
 
         val defaultInsets = ViewCompat.onApplyWindowInsets(v, insets)
@@ -164,6 +167,11 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
     // for more details
     Handler(Looper.getMainLooper()).post { view.removeSelf() }
   }
+
+  private fun reApplyWindowInsets() {
+    this.setupWindowInsets()
+    this.requestApplyInsetsWhenAttached()
+  }
   // endregion
 
   // region State managers
@@ -206,8 +214,7 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
   fun forceStatusBarTranslucent(isStatusBarTranslucent: Boolean) {
     if (active && this.isStatusBarTranslucent != isStatusBarTranslucent) {
       this.isStatusBarTranslucent = isStatusBarTranslucent
-      this.setupWindowInsets()
-      this.requestApplyInsetsWhenAttached()
+      this.reApplyWindowInsets()
     }
   }
   // endregion
