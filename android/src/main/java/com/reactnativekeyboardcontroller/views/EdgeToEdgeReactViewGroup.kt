@@ -71,7 +71,7 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
   }
 
   override fun onConfigurationChanged(newConfig: Configuration?) {
-    this.reAttachWindowInsets()
+    this.reApplyWindowInsets()
   }
   // endregion
 
@@ -168,7 +168,7 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
     Handler(Looper.getMainLooper()).post { view.removeSelf() }
   }
 
-  private fun reAttachWindowInsets() {
+  private fun reApplyWindowInsets() {
     this.setupWindowInsets()
     this.requestApplyInsetsWhenAttached()
   }
@@ -214,7 +214,7 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
   fun forceStatusBarTranslucent(isStatusBarTranslucent: Boolean) {
     if (active && this.isStatusBarTranslucent != isStatusBarTranslucent) {
       this.isStatusBarTranslucent = isStatusBarTranslucent
-      this.reAttachWindowInsets()
+      this.reApplyWindowInsets()
     }
   }
   // endregion
