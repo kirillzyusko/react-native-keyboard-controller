@@ -1,7 +1,7 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
-import { StyleSheet, Text } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
 import KeyboardAnimation from "../../screens/Examples/KeyboardAnimation";
 
@@ -30,7 +30,7 @@ export default function BottomTabBar() {
     <Tab.Navigator
       detachInactiveScreens={true}
       screenOptions={({ route }) => ({
-        tabBarItemStyle: styles.tabBar,
+        tabBarBackground: () => <View style={styles.tabBarBackground} />,
         tabBarIcon: () =>
           route.name === "HomeStack" ? (
             <Text style={styles.icon}>🏠</Text>
@@ -59,8 +59,11 @@ const styles = StyleSheet.create({
   },
   label: {
     color: "white",
+    marginHorizontal: 20,
   },
-  tabBar: {
+  tabBarBackground: {
     backgroundColor: "#2c2c2c",
+    width: "100%",
+    height: "100%",
   },
 });
