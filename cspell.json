@@ -115,7 +115,9 @@
     "bezier",
     "bézier",
     "Raphson",
-    "desmos"
+    "desmos",
+    "swmansion",
+    "rnscreens"
   ],
   "ignorePaths": [
     "node_modules",
