@@ -17,7 +17,6 @@ const options: Record<string, NativeStackNavigationOptions> = {
     headerShown: false,
     statusBarTranslucent: true,
     navigationBarColor: "#FFFFFF",
-    navigationBarTranslucent: true,
   },
 };
 

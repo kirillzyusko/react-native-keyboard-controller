@@ -71,7 +71,7 @@
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^11.0.0",
-    "@react-native/eslint-config": "^0.75.0-rc.6",
+    "@react-native/eslint-config": "^0.75.2",
     "@release-it/conventional-changelog": "^2.0.0",
     "@testing-library/react-hooks": "^8.0.1",
     "@types/jest": "^29.2.1",
@@ -94,7 +94,7 @@
     "pod-install": "^0.1.0",
     "prettier": "^2.8.8",
     "react": "18.3.1",
-    "react-native": "0.75.0-rc.6",
+    "react-native": "0.75.2",
     "react-native-builder-bob": "^0.18.0",
     "react-native-reanimated": "3.15.0",
     "react-test-renderer": "18.2.0",
