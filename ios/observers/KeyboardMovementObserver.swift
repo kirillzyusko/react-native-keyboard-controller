@@ -162,24 +162,16 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc func keyboardWillAppear(_ notification: Notification) {
-    if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+    let (duration, frame) = metaDataFromNotification(notification)
+    if let keyboardFrame = frame {
       tag = UIResponder.current.reactViewTag
       let keyboardHeight = keyboardFrame.cgRectValue.size.height
-      let duration = Int(
-        (notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double ?? 0) * 1000
-      )
       self.keyboardHeight = keyboardHeight
       self.duration = duration
 
-      var data = [AnyHashable: Any]()
-      data["height"] = keyboardHeight
-      data["duration"] = duration
-      data["timestamp"] = Date.currentTimeStamp
-      data["target"] = tag
-
       onRequestAnimation()
       onEvent("onKeyboardMoveStart", Float(keyboardHeight) as NSNumber, 1, duration as NSNumber, tag)
-      onNotify("KeyboardController::keyboardWillShow", data)
+      onNotify("KeyboardController::keyboardWillShow", getEventParams(keyboardHeight, duration))
 
       setupKeyboardWatcher()
       initializeAnimation(fromValue: prevKeyboardPosition, toValue: keyboardHeight)
@@ -187,21 +179,13 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc func keyboardWillDisappear(_ notification: Notification) {
-    let duration = Int(
-      (notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double ?? 0) * 1000
-    )
+    let (duration, _) = metaDataFromNotification(notification)
     tag = UIResponder.current.reactViewTag
     self.duration = duration
 
-    var data = [AnyHashable: Any]()
-    data["height"] = 0
-    data["duration"] = duration
-    data["timestamp"] = Date.currentTimeStamp
-    data["target"] = tag
-
     onRequestAnimation()
     onEvent("onKeyboardMoveStart", 0, 0, duration as NSNumber, tag)
-    onNotify("KeyboardController::keyboardWillHide", data)
+    onNotify("KeyboardController::keyboardWillHide", getEventParams(0, duration))
 
     setupKeyboardWatcher()
     removeKVObserver()
@@ -209,26 +193,18 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc func keyboardDidAppear(_ notification: Notification) {
-    if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+    let (duration, frame) = metaDataFromNotification(notification)
+    if let keyboardFrame = frame {
       let (position, _) = keyboardView.framePositionInWindow
       let keyboardHeight = keyboardFrame.cgRectValue.size.height
       tag = UIResponder.current.reactViewTag
       self.keyboardHeight = keyboardHeight
-      let duration = Int(
-        (notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double ?? 0) * 1000
-      )
       // always limit progress to the maximum possible value
       let progress = min(position / self.keyboardHeight, 1.0)
 
-      var data = [AnyHashable: Any]()
-      data["height"] = position
-      data["duration"] = duration
-      data["timestamp"] = Date.currentTimeStamp
-      data["target"] = tag
-
       onCancelAnimation()
       onEvent("onKeyboardMoveEnd", position as NSNumber, progress as NSNumber, duration as NSNumber, tag)
-      onNotify("KeyboardController::keyboardDidShow", data)
+      onNotify("KeyboardController::keyboardDidShow", getEventParams(position, duration))
 
       removeKeyboardWatcher()
       setupKVObserver()
@@ -237,19 +213,12 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc func keyboardDidDisappear(_ notification: Notification) {
-    let duration = Int(
-      (notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double ?? 0) * 1000
-    )
+    let (duration, _) = metaDataFromNotification(notification)
     tag = UIResponder.current.reactViewTag
-    var data = [AnyHashable: Any]()
-    data["height"] = 0
-    data["duration"] = duration
-    data["timestamp"] = Date.currentTimeStamp
-    data["target"] = tag
 
     onCancelAnimation()
     onEvent("onKeyboardMoveEnd", 0 as NSNumber, 0, duration as NSNumber, tag)
-    onNotify("KeyboardController::keyboardDidHide", data)
+    onNotify("KeyboardController::keyboardDidHide", getEventParams(0, duration))
 
     removeKeyboardWatcher()
     animation = nil
@@ -330,5 +299,24 @@ public class KeyboardMovementObserver: NSObject {
       duration as NSNumber,
       tag
     )
+  }
+
+  private func metaDataFromNotification(_ notification: Notification) -> (Int, NSValue?) {
+    let duration = Int(
+      (notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double ?? 0) * 1000
+    )
+    let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue
+
+    return (duration, keyboardFrame)
+  }
+
+  private func getEventParams(_ height: Double, _ duration: Int) -> [AnyHashable: Any] {
+    var data = [AnyHashable: Any]()
+    data["height"] = height
+    data["duration"] = duration
+    data["timestamp"] = Date.currentTimeStamp
+    data["target"] = tag
+
+    return data
   }
 }
