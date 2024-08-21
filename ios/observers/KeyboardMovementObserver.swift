@@ -40,6 +40,7 @@ public class KeyboardMovementObserver: NSObject {
   private var duration = 0
   private var tag: NSNumber = -1
   private var animation: KeyboardAnimation?
+  private var didShowDeadline: Int64 = 0
 
   @objc public init(
     handler: @escaping (NSString, NSNumber, NSNumber, NSNumber, NSNumber) -> Void,
@@ -168,6 +169,7 @@ public class KeyboardMovementObserver: NSObject {
       let keyboardHeight = keyboardFrame.cgRectValue.size.height
       self.keyboardHeight = keyboardHeight
       self.duration = duration
+      self.didShowDeadline = Date.currentTimeStamp + Int64(duration)
 
       onRequestAnimation()
       onEvent("onKeyboardMoveStart", Float(keyboardHeight) as NSNumber, 1, duration as NSNumber, tag)
@@ -193,18 +195,24 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc func keyboardDidAppear(_ notification: Notification) {
+    let timestamp = Date.currentTimeStamp
     let (duration, frame) = metaDataFromNotification(notification)
     if let keyboardFrame = frame {
       let (position, _) = keyboardView.framePositionInWindow
       let keyboardHeight = keyboardFrame.cgRectValue.size.height
       tag = UIResponder.current.reactViewTag
       self.keyboardHeight = keyboardHeight
+      // if the event is caught in between it's highly likely that it could be a "resize" event
+      // so we just read actual keyboard frame value in this case
+      let height = timestamp >= didShowDeadline ? keyboardHeight : position
       // always limit progress to the maximum possible value
-      let progress = min(position / self.keyboardHeight, 1.0)
+      let progress = min(height / self.keyboardHeight, 1.0)
+        
+        print("deadline: \(didShowDeadline) timestamp: \(timestamp) diff: \(timestamp - didShowDeadline) height: \(height) position: \(position)")
 
       onCancelAnimation()
-      onEvent("onKeyboardMoveEnd", position as NSNumber, progress as NSNumber, duration as NSNumber, tag)
-      onNotify("KeyboardController::keyboardDidShow", getEventParams(position, duration))
+      onEvent("onKeyboardMoveEnd", height as NSNumber, progress as NSNumber, duration as NSNumber, tag)
+      onNotify("KeyboardController::keyboardDidShow", getEventParams(height, duration))
 
       removeKeyboardWatcher()
       setupKVObserver()
