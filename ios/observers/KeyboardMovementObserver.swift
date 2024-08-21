@@ -169,7 +169,7 @@ public class KeyboardMovementObserver: NSObject {
       let keyboardHeight = keyboardFrame.cgRectValue.size.height
       self.keyboardHeight = keyboardHeight
       self.duration = duration
-      self.didShowDeadline = Date.currentTimeStamp + Int64(duration)
+      didShowDeadline = Date.currentTimeStamp + Int64(duration)
 
       onRequestAnimation()
       onEvent("onKeyboardMoveStart", Float(keyboardHeight) as NSNumber, 1, duration as NSNumber, tag)
@@ -207,8 +207,6 @@ public class KeyboardMovementObserver: NSObject {
       let height = timestamp >= didShowDeadline ? keyboardHeight : position
       // always limit progress to the maximum possible value
       let progress = min(height / self.keyboardHeight, 1.0)
-        
-        print("deadline: \(didShowDeadline) timestamp: \(timestamp) diff: \(timestamp - didShowDeadline) height: \(height) position: \(position)")
 
       onCancelAnimation()
       onEvent("onKeyboardMoveEnd", height as NSNumber, progress as NSNumber, duration as NSNumber, tag)
