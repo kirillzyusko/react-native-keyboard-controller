@@ -41,6 +41,13 @@ module.exports = {
     },
   },
   devices: {
+    simulator15: {
+      type: "ios.simulator",
+      device: {
+        type: "iPhone 13 Pro",
+        os: "iOS 15.5",
+      },
+    },
     simulator16: {
       type: "ios.simulator",
       device: {
@@ -84,6 +91,14 @@ module.exports = {
     },
   },
   configurations: {
+    "example.ios.sim-15.debug": {
+      device: "simulator15",
+      app: "example.ios.debug",
+    },
+    "example.ios.sim-15.release": {
+      device: "simulator15",
+      app: "example.ios.release",
+    },
     "example.ios.sim-16.debug": {
       device: "simulator16",
       app: "example.ios.debug",
