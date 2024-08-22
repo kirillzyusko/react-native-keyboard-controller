@@ -8,7 +8,7 @@ import Reanimated, {
   useSharedValue,
 } from "react-native-reanimated";
 
-import { useWindowDimensions } from "react-native-keyboard-controller";
+import { useWindowDimensions } from "../../hooks";
 
 import { useKeyboardAnimation } from "./hooks";
 
