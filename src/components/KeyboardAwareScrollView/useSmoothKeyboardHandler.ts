@@ -6,7 +6,7 @@ import {
   withTiming,
 } from "react-native-reanimated";
 
-import { useKeyboardHandler } from "react-native-keyboard-controller";
+import { useKeyboardHandler } from "../../hooks";
 
 const IS_ANDROID_ELEVEN_OR_HIGHER =
   Platform.OS === "android" && Platform.Version >= 30;

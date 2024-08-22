@@ -108,6 +108,7 @@ module.exports = {
         "newlines-between": "always",
       },
     ],
+    "import/no-cycle": ["error", { maxDepth: "∞" }],
     // jest
     "jest/expect-expect": [
       "warn",

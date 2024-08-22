@@ -14,7 +14,7 @@ import {
   useFocusedInputHandler,
   useReanimatedFocusedInput,
   useWindowDimensions,
-} from "react-native-keyboard-controller";
+} from "../../hooks";
 
 import { useSmoothKeyboardHandler } from "./useSmoothKeyboardHandler";
 import { debounce, scrollDistanceWithRespectToSnapPoints } from "./utils";
