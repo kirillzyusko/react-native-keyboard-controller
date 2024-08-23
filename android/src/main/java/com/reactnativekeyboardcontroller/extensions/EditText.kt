@@ -6,7 +6,7 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.EditText
-import android.widget.ScrollView
+import com.facebook.react.views.scroll.ReactScrollView
 import com.facebook.react.views.textinput.ReactEditText
 import com.reactnativekeyboardcontroller.ui.FrameScheduler
 import java.lang.reflect.Field
@@ -78,8 +78,8 @@ val EditText.parentScrollViewTarget: Int
     while (currentView != null) {
       val parentView = currentView.parent as? View
 
-      if (parentView is ScrollView) {
-        // If the parent is a vertical ScrollView, return its id
+      if (parentView is ReactScrollView && parentView.scrollEnabled) {
+        // If the parent is a vertical, scrollable ScrollView - return its id
         return parentView.id
       }
 

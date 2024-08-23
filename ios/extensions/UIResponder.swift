@@ -51,10 +51,11 @@ public extension Optional where Wrapped: UIResponder {
     var currentResponder: UIResponder? = self
 
     while let currentView = currentResponder {
-      // If the current responder is a vertical UIScrollView (excluding UITextView), return its tag
+      // If the current responder is a vertical, scrollable UIScrollView (excluding UITextView), return its tag
       if let scrollView = currentView as? UIScrollView,
          !(currentView is UITextView),
-         scrollView.frame.width >= scrollView.contentSize.width
+         scrollView.frame.width >= scrollView.contentSize.width,
+         scrollView.isScrollEnabled
       // it was fixed in swiftlint https://github.com/realm/SwiftLint/issues/3756 but a new release is not available yet
       // swiftlint:disable all
       {
