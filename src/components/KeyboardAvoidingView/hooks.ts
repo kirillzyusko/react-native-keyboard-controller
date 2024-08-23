@@ -1,9 +1,7 @@
 import { useSharedValue } from "react-native-reanimated";
 
-import {
-  useKeyboardContext,
-  useKeyboardHandler,
-} from "react-native-keyboard-controller";
+import { useKeyboardContext } from "../../context";
+import { useKeyboardHandler } from "../../hooks";
 
 export const useKeyboardAnimation = () => {
   const { reanimated } = useKeyboardContext();

@@ -4,7 +4,7 @@ import Reanimated, {
   useAnimatedStyle,
 } from "react-native-reanimated";
 
-import { useReanimatedKeyboardAnimation } from "react-native-keyboard-controller";
+import { useReanimatedKeyboardAnimation } from "../../hooks";
 
 import type { View, ViewProps } from "react-native";
 
