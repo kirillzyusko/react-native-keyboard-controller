@@ -35,6 +35,7 @@ Initially I had a choice which approach to use in order to send events about key
 
 While both `useAnimatedKeyboard` from `react-native-reanimated` and this library aims to provide the same functionality, there are some differences between them. Below you can find a comparison of the two libraries:
 
+<!-- prettier-ignore-start -->
 | |`react-native-keyboard-controller`|`react-native-reanimated`|
 |-|----------------------------------|-------------------------|
 |Map keyboard movement to animated value|✅|✅|
@@ -47,14 +48,16 @@ While both `useAnimatedKeyboard` from `react-native-reanimated` and this library
 |Works in `Modal` on Android|✅|🟠 <sup><small>2</small></sup>||
 |Is ready-to-use library for keyboard avoidance<sup><small>3</small></sup>|✅|❌|
 |`KeyboardToolbar` component|✅|❌|
+<!-- prettier-ignore-end -->
 
-
-
-> <sup>1</sup> You need to unmount all components that use `useAnimatedKeyboard` to disable module functionality, which can be hard to achieve if you are using deep Stack-navigators.
+> <sup>1</sup> You need to unmount all components that use `useAnimatedKeyboard`
+> to disable module functionality, which can be hard to achieve if you are using
+> deep Stack-navigators.
 
 > <sup>2</sup> Planned to be added in the future
 
-> <sup>3</sup> The `react-native-keyboard-controller` tracks focused input changes (apart of keyboard tracking) and thus brings advanced concepts for keyboard avoidance.
+> <sup>3</sup> The `react-native-keyboard-controller` tracks focused input changes
+> (apart of keyboard tracking) and thus brings advanced concepts for keyboard avoidance.
 
 To sum it up:
 
