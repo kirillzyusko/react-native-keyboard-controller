@@ -117,7 +117,9 @@
     "Raphson",
     "desmos",
     "swmansion",
-    "rnscreens"
+    "rnscreens",
+    "setinputmode",
+    "useanimatedkeyboard"
   ],
   "ignorePaths": [
     "node_modules",
