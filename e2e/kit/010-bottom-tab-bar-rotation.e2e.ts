@@ -3,6 +3,7 @@ import {
   closeKeyboard,
   scrollDownUntilElementIsVisible,
   waitAndTap,
+  waitForElementById,
   waitForExpect,
 } from "./helpers";
 
@@ -13,6 +14,7 @@ describe("Bottom tab bar", () => {
   });
 
   it("should have expected state in portrait mode", async () => {
+    await waitForElementById("keyboard_animation_text_input");
     await waitForExpect(async () => {
       await expectBitmapsToBeEqual("BottomTabBarPortrait", 0.25);
     });
