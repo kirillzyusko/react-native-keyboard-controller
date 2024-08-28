@@ -249,12 +249,16 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   func initializeAnimation(fromValue: Double, toValue: Double) {
-    guard let positionAnimation = keyboardView?.layer.presentation()?.animation(forKey: "position") else { return }
-
-    if let springAnimation = positionAnimation as? CASpringAnimation {
-      animation = SpringAnimation(animation: springAnimation, fromValue: fromValue, toValue: toValue)
-    } else if let basicAnimation = positionAnimation as? CABasicAnimation {
-      animation = TimingAnimation(animation: basicAnimation, fromValue: fromValue, toValue: toValue)
+    print("111 \(keyboardView?.layer.presentation()?.animationKeys())")
+    for key in ["position", "opacity"] {
+      if let keyboardAnimation = keyboardView?.layer.presentation()?.animation(forKey: key) {
+        if let springAnimation = keyboardAnimation as? CASpringAnimation {
+          animation = SpringAnimation(animation: springAnimation, fromValue: fromValue, toValue: toValue)
+        } else if let basicAnimation = keyboardAnimation as? CABasicAnimation {
+          animation = TimingAnimation(animation: basicAnimation, fromValue: fromValue, toValue: toValue)
+        }
+        return
+      }
     }
   }
 
@@ -275,6 +279,8 @@ public class KeyboardMovementObserver: NSObject {
     }
 
     prevKeyboardPosition = keyboardPosition
+
+    print(animation)
 
     if let animation = animation {
       let baseDuration = animation.timingAt(value: keyboardPosition)
