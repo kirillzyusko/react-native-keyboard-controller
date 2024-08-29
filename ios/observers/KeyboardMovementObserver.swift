@@ -249,7 +249,6 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   func initializeAnimation(fromValue: Double, toValue: Double) {
-    print("111 \(keyboardView?.layer.presentation()?.animationKeys())")
     for key in ["position", "opacity"] {
       if let keyboardAnimation = keyboardView?.layer.presentation()?.animation(forKey: key) {
         if let springAnimation = keyboardAnimation as? CASpringAnimation {
@@ -279,8 +278,6 @@ public class KeyboardMovementObserver: NSObject {
     }
 
     prevKeyboardPosition = keyboardPosition
-
-    print(animation)
 
     if let animation = animation {
       let baseDuration = animation.timingAt(value: keyboardPosition)
