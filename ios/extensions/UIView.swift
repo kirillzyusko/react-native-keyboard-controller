@@ -17,10 +17,18 @@ public extension UIView {
 }
 
 public extension Optional where Wrapped == UIView {
-  var framePositionInWindow: (Double, Double) {
+  var frameTransitionInWindow: (Double, Double) {
+    let areCrossFadeTransitionsEnabled = (self?.layer.presentation()?.animationKeys() ?? []).contains("opacity")
     let frameY = self?.layer.presentation()?.frame.origin.y ?? 0
     let windowH = self?.window?.bounds.size.height ?? 0
-    let position = windowH - frameY
+    var position = windowH - frameY
+
+    // when cross fade transitions enabled, then keyboard changes
+    // its `opacity` instead of `translateY`, so we handle it here
+    if areCrossFadeTransitionsEnabled {
+      let opacity = self?.layer.presentation()?.opacity ?? 0
+      position = CGFloat(opacity) * position
+    }
 
     return (position, frameY)
   }

@@ -198,7 +198,7 @@ public class KeyboardMovementObserver: NSObject {
     let timestamp = Date.currentTimeStamp
     let (duration, frame) = metaDataFromNotification(notification)
     if let keyboardFrame = frame {
-      let (position, _) = keyboardView.framePositionInWindow
+      let (position, _) = keyboardView.frameTransitionInWindow
       let keyboardHeight = keyboardFrame.cgRectValue.size.height
       tag = UIResponder.current.reactViewTag
       self.keyboardHeight = keyboardHeight
@@ -249,12 +249,15 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   func initializeAnimation(fromValue: Double, toValue: Double) {
-    guard let positionAnimation = keyboardView?.layer.presentation()?.animation(forKey: "position") else { return }
-
-    if let springAnimation = positionAnimation as? CASpringAnimation {
-      animation = SpringAnimation(animation: springAnimation, fromValue: fromValue, toValue: toValue)
-    } else if let basicAnimation = positionAnimation as? CABasicAnimation {
-      animation = TimingAnimation(animation: basicAnimation, fromValue: fromValue, toValue: toValue)
+    for key in ["position", "opacity"] {
+      if let keyboardAnimation = keyboardView?.layer.presentation()?.animation(forKey: key) {
+        if let springAnimation = keyboardAnimation as? CASpringAnimation {
+          animation = SpringAnimation(animation: springAnimation, fromValue: fromValue, toValue: toValue)
+        } else if let basicAnimation = keyboardAnimation as? CABasicAnimation {
+          animation = TimingAnimation(animation: basicAnimation, fromValue: fromValue, toValue: toValue)
+        }
+        return
+      }
     }
   }
 
@@ -263,7 +266,7 @@ public class KeyboardMovementObserver: NSObject {
       return
     }
 
-    let (visibleKeyboardHeight, keyboardFrameY) = keyboardView.framePositionInWindow
+    let (visibleKeyboardHeight, keyboardFrameY) = keyboardView.frameTransitionInWindow
     var keyboardPosition = visibleKeyboardHeight
 
     if keyboardPosition == prevKeyboardPosition || keyboardFrameY == 0 {
