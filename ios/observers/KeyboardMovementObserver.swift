@@ -198,7 +198,7 @@ public class KeyboardMovementObserver: NSObject {
     let timestamp = Date.currentTimeStamp
     let (duration, frame) = metaDataFromNotification(notification)
     if let keyboardFrame = frame {
-      let (position, _) = keyboardView.framePositionInWindow
+      let (position, _) = keyboardView.frameTransitionInWindow
       let keyboardHeight = keyboardFrame.cgRectValue.size.height
       tag = UIResponder.current.reactViewTag
       self.keyboardHeight = keyboardHeight
@@ -267,7 +267,7 @@ public class KeyboardMovementObserver: NSObject {
       return
     }
 
-    let (visibleKeyboardHeight, keyboardFrameY) = keyboardView.framePositionInWindow
+    let (visibleKeyboardHeight, keyboardFrameY) = keyboardView.frameTransitionInWindow
     var keyboardPosition = visibleKeyboardHeight
 
     if keyboardPosition == prevKeyboardPosition || keyboardFrameY == 0 {
