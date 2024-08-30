@@ -17,7 +17,7 @@ I'm glad to announce, that new upcoming release `1.2.0` brings a support for new
 
 Fortunately this library is backward compatible with old architecture and will be compiled conditionally depending on which architecture you are using. So don't be afraid of updating it to the latest version - it doesn't have any breaking changes!
 
-<div class="playwright">
+<div className="playwright">
   ![react native logo](./react-native.png#img-thumbnail)
 </div>
 

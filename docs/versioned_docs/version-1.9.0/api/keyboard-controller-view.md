@@ -29,11 +29,11 @@ A callback function which is fired when keyboard finished a transition from one 
 
 A callback function which is fired when layout of focused input gets changed.
 
-### `statusBarTranslucent` <div class="label android"></div>
+### `statusBarTranslucent` <div className="label android"></div>
 
 A boolean prop to indicate whether `StatusBar` should be translucent on `Android` or not.
 
-### `navigationBarTranslucent` <div class="label android"></div>
+### `navigationBarTranslucent` <div className="label android"></div>
 
 A boolean prop to indicate whether [NavigationBar](https://m2.material.io/design/platform-guidance/android-bars.html#android-navigation-bar) should be translucent on `Android` or not.
 
