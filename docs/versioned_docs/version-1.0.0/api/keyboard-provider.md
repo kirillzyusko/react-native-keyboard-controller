@@ -4,7 +4,7 @@
 
 ## Props
 
-### `statusBarTranslucent` <div class="label android"></div>
+### `statusBarTranslucent` <div className="label android"></div>
 
 A boolean prop to indicate whether `StatusBar` should be translucent on `Android` or not.
 
