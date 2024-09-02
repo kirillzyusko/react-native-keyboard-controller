@@ -3,13 +3,13 @@ package com.reactnativekeyboardcontroller.modules
 import android.animation.ArgbEvaluator
 import android.animation.ValueAnimator
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.UiThreadUtil
 import com.reactnativekeyboardcontroller.extensions.rootView
+import com.reactnativekeyboardcontroller.log.Logger
 import com.reactnativekeyboardcontroller.views.EdgeToEdgeReactViewGroup
 
 private val TAG = StatusBarManagerCompatModuleImpl::class.qualifiedName
@@ -31,7 +31,7 @@ class StatusBarManagerCompatModuleImpl(private val mReactContext: ReactApplicati
   fun setColor(color: Int, animated: Boolean) {
     val activity = mReactContext.currentActivity
     if (activity == null) {
-      Log.w(TAG, "StatusBarManagerCompatModule: Ignored status bar change, current activity is null.")
+      Logger.w(TAG, "StatusBarManagerCompatModule: Ignored status bar change, current activity is null.")
       return
     }
 
@@ -69,7 +69,7 @@ class StatusBarManagerCompatModuleImpl(private val mReactContext: ReactApplicati
     if (this.controller == null) {
       val activity = mReactContext.currentActivity
       if (activity == null) {
-        Log.w(
+        Logger.w(
           TAG,
           "StatusBarManagerCompatModule: can not get `WindowInsetsControllerCompat` because current activity is null.",
         )

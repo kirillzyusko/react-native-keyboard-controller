@@ -1,6 +1,5 @@
 package com.reactnativekeyboardcontroller.modal
 
-import android.util.Log
 import android.view.WindowManager
 import androidx.core.view.ViewCompat
 import com.facebook.react.uimanager.ThemedReactContext
@@ -13,6 +12,7 @@ import com.facebook.react.views.view.ReactViewGroup
 import com.reactnativekeyboardcontroller.BuildConfig
 import com.reactnativekeyboardcontroller.listeners.KeyboardAnimationCallback
 import com.reactnativekeyboardcontroller.listeners.KeyboardAnimationCallbackConfig
+import com.reactnativekeyboardcontroller.log.Logger
 
 private val TAG = ModalAttachedWatcher::class.qualifiedName
 
@@ -33,7 +33,7 @@ class ModalAttachedWatcher(
     val modal = try {
       uiManager?.resolveView(event.viewTag) as? ReactModalHostView
     } catch (ignore: Exception) {
-      Log.w(TAG, "Can not resolve view for Modal#${event.viewTag}", ignore)
+      Logger.w(TAG, "Can not resolve view for Modal#${event.viewTag}", ignore)
       null
     }
 

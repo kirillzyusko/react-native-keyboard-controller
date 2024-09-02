@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.widget.FrameLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
@@ -19,6 +18,7 @@ import com.reactnativekeyboardcontroller.extensions.rootView
 import com.reactnativekeyboardcontroller.extensions.setupWindowDimensionsListener
 import com.reactnativekeyboardcontroller.listeners.KeyboardAnimationCallback
 import com.reactnativekeyboardcontroller.listeners.KeyboardAnimationCallbackConfig
+import com.reactnativekeyboardcontroller.log.Logger
 import com.reactnativekeyboardcontroller.modal.ModalAttachedWatcher
 
 private val TAG = EdgeToEdgeReactViewGroup::class.qualifiedName
@@ -149,7 +149,7 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
         it.requestApplyInsetsWhenAttached()
       }
     } else {
-      Log.w(TAG, "Can not setup keyboard animation listener, since `currentActivity` is null")
+      Logger.w(TAG, "Can not setup keyboard animation listener, since `currentActivity` is null")
     }
   }
 
