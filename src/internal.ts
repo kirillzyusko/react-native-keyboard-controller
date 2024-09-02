@@ -13,25 +13,45 @@ export function useEventHandlerRegistration<
   viewTagRef: React.MutableRefObject<ComponentOrHandle>,
 ) {
   const onRegisterHandler = (handler: H) => {
-    const viewTag = findNodeHandle(viewTagRef.current);
-    const ids = Object.keys(handler).map((handlerName) => {
-      const eventName = map.get(handlerName as keyof H);
-      const functionToCall = handler[handlerName as keyof H];
+    const ids: (number | null)[] = [];
+    const proceedToRegistration = () => {
+      const viewTag = findNodeHandle(viewTagRef.current);
 
-      if (eventName && viewTag) {
-        return registerEventHandler(
-          (event: Parameters<NonNullable<H[keyof H]>>[0]) => {
-            "worklet";
-
-            functionToCall?.(event);
-          },
-          eventName,
-          viewTag,
+      if (__DEV__ && !viewTag) {
+        console.warn(
+          "Can not attach worklet handlers for `react-native-keyboard-controller` because view tag can not be resolved. Be sure that `KeyboardProvider` is fully mounted before registering handlers. If you think it is a bug in library, please open an issue.",
         );
       }
 
-      return null;
-    });
+      ids.push(
+        ...Object.keys(handler).map((handlerName) => {
+          const eventName = map.get(handlerName as keyof H);
+          const functionToCall = handler[handlerName as keyof H];
+
+          if (eventName && viewTag) {
+            return registerEventHandler(
+              (event: Parameters<NonNullable<H[keyof H]>>[0]) => {
+                "worklet";
+
+                functionToCall?.(event);
+              },
+              eventName,
+              viewTag,
+            );
+          }
+
+          return null;
+        }),
+      );
+    };
+
+    if (viewTagRef.current) {
+      proceedToRegistration();
+    } else {
+      // if ref is not available yet it can be a case when view is not mounted yet
+      // so we need to wait for it to be mounted and then proceed with registration
+      setImmediate(proceedToRegistration);
+    }
 
     return () => {
       ids.forEach((id) => (id ? unregisterEventHandler(id) : null));
