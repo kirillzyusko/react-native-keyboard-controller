@@ -117,4 +117,10 @@ export const examples: Example[] = [
     info: ScreenNames.BOTTOM_TAB_BAR,
     icons: "🧱",
   },
+  {
+    title: "Keyboard blur",
+    testID: "keyboard_blur",
+    info: ScreenNames.KEYBOARD_BLUR,
+    icons: "💤",
+  },
 ];

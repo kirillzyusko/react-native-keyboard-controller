@@ -21,4 +21,5 @@ export enum ScreenNames {
   TOOLBAR = "TOOLBAR",
   MODAL = "MODAL",
   BOTTOM_TAB_BAR = "BOTTOM_TAB_BAR",
+  KEYBOARD_BLUR = "KEYBOARD_BLUR",
 }

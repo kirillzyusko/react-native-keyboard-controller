@@ -19,6 +19,7 @@ import ReanimatedChat from "../../screens/Examples/ReanimatedChat";
 import ReanimatedChatFlatList from "../../screens/Examples/ReanimatedChatFlatList";
 import StatusBar from "../../screens/Examples/StatusBar";
 import ToolbarExample from "../../screens/Examples/Toolbar";
+import KeyboardBlur from "../../screens/Examples/KeyboardBlur";
 import BottomTabBar from "../BottomTabBar";
 import NativeStack from "../NestedStack";
 
@@ -104,6 +105,9 @@ const options = {
   },
   [ScreenNames.BOTTOM_TAB_BAR]: {
     headerShown: false,
+  },
+  [ScreenNames.KEYBOARD_BLUR]: {
+    title: "Keyboard blur",
   },
 };
 
@@ -203,6 +207,11 @@ const ExamplesStack = () => (
       component={BottomTabBar}
       name={ScreenNames.BOTTOM_TAB_BAR}
       options={options[ScreenNames.BOTTOM_TAB_BAR]}
+    />
+    <Stack.Screen
+      component={KeyboardBlur}
+      name={ScreenNames.KEYBOARD_BLUR}
+      options={options[ScreenNames.KEYBOARD_BLUR]}
     />
   </Stack.Navigator>
 );
