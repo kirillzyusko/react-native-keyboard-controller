@@ -13,25 +13,44 @@ export function useEventHandlerRegistration<
   viewTagRef: React.MutableRefObject<ComponentOrHandle>,
 ) {
   const onRegisterHandler = (handler: H) => {
-    const viewTag = findNodeHandle(viewTagRef.current);
-    const ids = Object.keys(handler).map((handlerName) => {
-      const eventName = map.get(handlerName as keyof H);
-      const functionToCall = handler[handlerName as keyof H];
+    const ids: (number | null)[] = [];
+    const attachWorkletHandlers = () => {
+      const viewTag = findNodeHandle(viewTagRef.current);
 
-      if (eventName && viewTag) {
-        return registerEventHandler(
-          (event: Parameters<NonNullable<H[keyof H]>>[0]) => {
-            "worklet";
-
-            functionToCall?.(event);
-          },
-          eventName,
-          viewTag,
+      if (__DEV__ && !viewTag) {
+        console.warn(
+          "Can not attach worklet handlers for `react-native-keyboard-controller` because view tag can not be resolved. Be sure that `KeyboardProvider` is fully mounted before registering handlers. If you think it is a bug in library, please open an issue.",
         );
       }
 
-      return null;
-    });
+      ids.push(
+        ...Object.keys(handler).map((handlerName) => {
+          const eventName = map.get(handlerName as keyof H);
+          const functionToCall = handler[handlerName as keyof H];
+
+          if (eventName && viewTag) {
+            return registerEventHandler(
+              (event: Parameters<NonNullable<H[keyof H]>>[0]) => {
+                "worklet";
+
+                functionToCall?.(event);
+              },
+              eventName,
+              viewTag,
+            );
+          }
+
+          return null;
+        }),
+      );
+    };
+
+    if (viewTagRef.current) {
+      attachWorkletHandlers();
+    } else {
+      // view may not be mounted yet - defer registration to next event loop
+      setImmediate(attachWorkletHandlers);
+    }
 
     return () => {
       ids.forEach((id) => (id ? unregisterEventHandler(id) : null));
