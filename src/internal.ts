@@ -14,7 +14,7 @@ export function useEventHandlerRegistration<
 ) {
   const onRegisterHandler = (handler: H) => {
     const ids: (number | null)[] = [];
-    const proceedToRegistration = () => {
+    const attachWorkletHandlers = () => {
       const viewTag = findNodeHandle(viewTagRef.current);
 
       if (__DEV__ && !viewTag) {
@@ -46,11 +46,10 @@ export function useEventHandlerRegistration<
     };
 
     if (viewTagRef.current) {
-      proceedToRegistration();
+      attachWorkletHandlers();
     } else {
-      // if ref is not available yet it can be a case when view is not mounted yet
-      // so we need to wait for it to be mounted and then proceed with registration
-      setImmediate(proceedToRegistration);
+      // view may not be mounted yet - defer registration to next event loop
+      setImmediate(attachWorkletHandlers);
     }
 
     return () => {
