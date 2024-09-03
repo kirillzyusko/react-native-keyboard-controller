@@ -1,6 +1,5 @@
 package com.reactnativekeyboardcontroller.extensions
 
-import android.util.Log
 import com.facebook.react.bridge.ReactContext
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.modules.core.DeviceEventManagerModule
@@ -9,6 +8,7 @@ import com.facebook.react.uimanager.UIManagerHelper
 import com.facebook.react.uimanager.events.Event
 import com.facebook.react.uimanager.events.EventDispatcher
 import com.reactnativekeyboardcontroller.listeners.WindowDimensionListener
+import com.reactnativekeyboardcontroller.log.Logger
 
 fun ThemedReactContext.setupWindowDimensionsListener() {
   WindowDimensionListener(this)
@@ -25,5 +25,5 @@ fun ThemedReactContext?.emitEvent(event: String, params: WritableMap) {
     ?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
     ?.emit(event, params)
 
-  Log.i("ThemedReactContext", event)
+  Logger.i("ThemedReactContext", event)
 }

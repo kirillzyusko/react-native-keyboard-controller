@@ -3,11 +3,11 @@ package com.reactnativekeyboardcontroller.extensions
 import android.os.Build
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.widget.EditText
 import com.facebook.react.views.scroll.ReactScrollView
 import com.facebook.react.views.textinput.ReactEditText
+import com.reactnativekeyboardcontroller.log.Logger
 import com.reactnativekeyboardcontroller.ui.FrameScheduler
 import java.lang.reflect.Field
 import kotlin.math.max
@@ -57,15 +57,15 @@ fun EditText.addOnTextChangedListener(action: (String) -> Unit): TextWatcher {
 
       textWatchListeners.add(0, listener)
     } else {
-      Log.w(
+      Logger.w(
         javaClass.simpleName,
         "Can not attach listener because `fieldValue` does not belong to `ArrayList<TextWatcher>`",
       )
     }
   } catch (e: ClassCastException) {
-    Log.w(javaClass.simpleName, "Can not attach listener because casting failed: ${e.message}")
+    Logger.w(javaClass.simpleName, "Can not attach listener because casting failed: ${e.message}")
   } catch (e: NoSuchFieldException) {
-    Log.w(javaClass.simpleName, "Can not attach listener because field `mListeners` not found: ${e.message}")
+    Logger.w(javaClass.simpleName, "Can not attach listener because field `mListeners` not found: ${e.message}")
   }
 
   return listener

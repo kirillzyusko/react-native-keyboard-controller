@@ -1,7 +1,6 @@
 package com.reactnativekeyboardcontroller.listeners
 
 import android.os.Build
-import android.util.Log
 import android.view.View
 import android.view.ViewTreeObserver.OnGlobalFocusChangeListener
 import androidx.core.graphics.Insets
@@ -21,6 +20,7 @@ import com.reactnativekeyboardcontroller.extensions.dp
 import com.reactnativekeyboardcontroller.extensions.emitEvent
 import com.reactnativekeyboardcontroller.extensions.isKeyboardAnimation
 import com.reactnativekeyboardcontroller.interactive.InteractiveKeyboardProvider
+import com.reactnativekeyboardcontroller.log.Logger
 import kotlin.math.abs
 
 private val TAG = KeyboardAnimationCallback::class.qualifiedName
@@ -137,7 +137,7 @@ class KeyboardAnimationCallback(
     val isKeyboardSizeEqual = this.persistentKeyboardHeight == keyboardHeight
 
     if (isKeyboardFullyVisible && !isKeyboardSizeEqual && !isResizeHandledInCallbackMethods) {
-      Log.i(TAG, "onApplyWindowInsets: ${this.persistentKeyboardHeight} -> $keyboardHeight")
+      Logger.i(TAG, "onApplyWindowInsets: ${this.persistentKeyboardHeight} -> $keyboardHeight")
       layoutObserver?.syncUpLayout()
       this.onKeyboardResized(keyboardHeight)
     }
@@ -182,7 +182,7 @@ class KeyboardAnimationCallback(
       getEventParams(keyboardHeight),
     )
 
-    Log.i(TAG, "HEIGHT:: $keyboardHeight TAG:: $viewTagFocused")
+    Logger.i(TAG, "HEIGHT:: $keyboardHeight TAG:: $viewTagFocused")
     context.dispatchEvent(
       eventPropagationView.id,
       KeyboardTransitionEvent(
@@ -229,9 +229,9 @@ class KeyboardAnimationCallback(
       progress = abs((height / persistentKeyboardHeight)).let { if (it.isNaN()) 0.0 else it }
     } catch (e: ArithmeticException) {
       // do nothing, just log an exception send progress as 0
-      Log.w(TAG, "Caught arithmetic exception during `progress` calculation: $e")
+      Logger.w(TAG, "Caught arithmetic exception during `progress` calculation: $e")
     }
-    Log.i(
+    Logger.i(
       TAG,
       "DiffY: $diffY $height $progress ${InteractiveKeyboardProvider.isInteractive} $viewTagFocused",
     )

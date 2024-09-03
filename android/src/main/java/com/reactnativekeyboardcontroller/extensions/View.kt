@@ -2,9 +2,9 @@ package com.reactnativekeyboardcontroller.extensions
 
 import android.graphics.Rect
 import android.os.Build
-import android.util.Log
 import android.view.View
 import androidx.annotation.RequiresApi
+import com.reactnativekeyboardcontroller.log.Logger
 
 /**
  * Call this every time when using [ViewCompat.setOnApplyWindowInsetsListener]
@@ -43,7 +43,7 @@ fun View.copyBoundsInWindow(rect: Rect) {
     getLocationInWindow(tmpIntArr)
     rect.offset(tmpIntArr[0], tmpIntArr[1])
   } else {
-    Log.w("View.copyBoundsInWindow", "Can not copy bounds as view is not attached to window")
+    Logger.w("View.copyBoundsInWindow", "Can not copy bounds as view is not attached to window")
   }
 }
 
