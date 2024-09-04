@@ -60,11 +60,32 @@ jobs:
         run: yarn
       - name: Install e2e dependencies
         run: yarn install --cwd e2e
-      - name: Restore buildcache
-        uses: mikehardy/buildcache-action@v2
-        continue-on-error: true
+      - name: Install Ccache
+        uses: hendrikmuhs/ccache-action@v1.2
         with:
-          cache_key: react-native-keyboard-controller-e2e
+          max-size: 5G
+          key: ${{ runner.os }}-ccache-${{ hashFiles('example/ios/Podfile.lock') }}
+      #- name: Install ccache
+      #  run: brew install ccache
+      #- name: Configure ccache
+      #  run: |
+      #    ln -s $(which ccache) /usr/local/bin/gcc
+      #    ln -s $(which ccache) /usr/local/bin/g++
+      #    ln -s $(which ccache) /usr/local/bin/cc
+      #    ln -s $(which ccache) /usr/local/bin/c++
+      #    ln -s $(which ccache) /usr/local/bin/clang
+      #    ln -s $(which ccache) /usr/local/bin/clang++
+      - name: Check ccheck
+        run: which gcc
+      - name: Setup ccache behavior
+        run: |
+          export CCACHE_SLOPPINESS=clang_index_store,file_stat_matches,include_file_ctime,include_file_mtime,ivfsoverlay,pch_defines,modules,system_headers,time_macros
+          export CCACHE_FILECLONE=true
+          export CCACHE_DEPEND=true
+          export CCACHE_INODECACHE=true
+      - name: Check ccache stats
+        run: |
+          ccache -s
       - name: Restore Pods cache
         uses: actions/cache@v4
         with:
