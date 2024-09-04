@@ -65,6 +65,7 @@ jobs:
         with:
           max-size: 5G
           key: ${{ runner.os }}-ccache-${{ hashFiles('example/ios/Podfile.lock') }}
+          create-symlink: true
       #- name: Install ccache
       #  run: brew install ccache
       #- name: Configure ccache
@@ -79,10 +80,12 @@ jobs:
         run: which gcc
       - name: Setup ccache behavior
         run: |
-          export CCACHE_SLOPPINESS=clang_index_store,file_stat_matches,include_file_ctime,include_file_mtime,ivfsoverlay,pch_defines,modules,system_headers,time_macros
-          export CCACHE_FILECLONE=true
-          export CCACHE_DEPEND=true
-          export CCACHE_INODECACHE=true
+          echo "CCACHE_SLOPPINESS=clang_index_store,file_stat_matches,include_file_ctime,include_file_mtime,ivfsoverlay,pch_defines,modules,system_headers,time_macros" >> $GITHUB_ENV
+          echo "CCACHE_FILECLONE=true" >> $GITHUB_ENV
+          echo "CCACHE_DEPEND=true" >> $GITHUB_ENV
+          echo "CCACHE_INODECACHE=true" >> $GITHUB_ENV
+      - name: Print environment variable
+        run: echo $CCACHE_INODECACHE
       - name: Check ccache stats
         run: |
           ccache -s
