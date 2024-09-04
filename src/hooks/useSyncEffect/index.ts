@@ -27,8 +27,17 @@ const useSyncEffect: typeof useEffect = (effect, deps) => {
   }
 
   useEffect(() => {
+    // strict mode double effect invocation handling
+    if (deps !== cachedDeps.current) {
+      cleanupRef.current = effect();
+      cachedDeps.current = deps;
+    }
+  }, deps);
+
+  useEffect(() => {
     return () => {
       cleanupRef.current?.();
+      cachedDeps.current = null;
     };
   }, []);
 };

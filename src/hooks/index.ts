@@ -1,10 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 
 import { KeyboardController } from "../bindings";
 import { AndroidSoftInputModes } from "../constants";
 import { useKeyboardContext } from "../context";
-
-import useSyncEffect from "./useSyncEffect";
 
 import type { AnimatedContext, ReanimatedContext } from "../context";
 import type { FocusedInputHandler, KeyboardHandler } from "../types";
@@ -40,7 +38,7 @@ export function useGenericKeyboardHandler(
 ) {
   const context = useKeyboardContext();
 
-  useSyncEffect(() => {
+  useLayoutEffect(() => {
     const cleanup = context.setKeyboardHandlers(handler);
 
     return () => cleanup();
@@ -73,7 +71,7 @@ export function useFocusedInputHandler(
 ) {
   const context = useKeyboardContext();
 
-  useSyncEffect(() => {
+  useLayoutEffect(() => {
     const cleanup = context.setInputHandlers(handler);
 
     return () => cleanup();
