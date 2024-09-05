@@ -60,11 +60,18 @@ jobs:
         run: yarn
       - name: Install e2e dependencies
         run: yarn install --cwd e2e
-      - name: Restore buildcache
-        uses: mikehardy/buildcache-action@v2
-        continue-on-error: true
+      - name: Install Ccache
+        uses: hendrikmuhs/ccache-action@v1.2
         with:
-          cache_key: react-native-keyboard-controller-e2e
+          max-size: 1.5G
+          key: ${{ runner.os }}-ccache-e2e-ios
+          create-symlink: true
+      - name: Setup ccache behavior
+        run: |
+          echo "CCACHE_SLOPPINESS=clang_index_store,file_stat_matches,include_file_ctime,include_file_mtime,ivfsoverlay,pch_defines,modules,system_headers,time_macros" >> $GITHUB_ENV
+          echo "CCACHE_FILECLONE=true" >> $GITHUB_ENV
+          echo "CCACHE_DEPEND=true" >> $GITHUB_ENV
+          echo "CCACHE_INODECACHE=true" >> $GITHUB_ENV
       - name: Restore Pods cache
         uses: actions/cache@v4
         with:
