@@ -46,6 +46,8 @@ jobs:
         run: yarn install --frozen-lockfile --cwd example
       - name: ccache
         uses: hendrikmuhs/ccache-action@v1.2
+        with:
+          create-symlink: true
       - name: Restore Android ccache
         uses: actions/cache/restore@v4
         with:
@@ -75,7 +77,7 @@ jobs:
       - name: Run Gradle Build for example/android/
         run: cd example/android && ./gradlew assembleDebug --build-cache && cd ../..
       - name: Save Android ccache
-        if: ${{ github.ref == 'refs/heads/main' || contains(github.ref, '-stable') }}
+        #  if: ${{ github.ref == 'refs/heads/main' || contains(github.ref, '-stable') }}
         uses: actions/cache/save@v4
         with:
           path: /github/home/.cache/ccache
