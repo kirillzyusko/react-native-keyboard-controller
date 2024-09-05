@@ -44,7 +44,17 @@ jobs:
             ${{ runner.os }}-yarn-
       - name: Install node_modules for example/
         run: yarn install --frozen-lockfile --cwd example
-
+      - name: Restore Android ccache
+        uses: actions/cache/restore@v4
+        with:
+          path: /github/home/.cache/ccache
+          key: v1-ccache-android-${{ github.job }}-${{ github.ref }}
+          restore-keys: |
+            v1-ccache-android-${{ github.job }}-
+            v1-ccache-android-
+      - name: Show ccache stats
+        shell: bash
+        run: ccache -s -v
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
         with:
@@ -62,3 +72,12 @@ jobs:
             ${{ runner.os }}-gradle-
       - name: Run Gradle Build for example/android/
         run: cd example/android && ./gradlew assembleDebug --build-cache && cd ../..
+      - name: Save Android ccache
+        if: ${{ github.ref == 'refs/heads/main' || contains(github.ref, '-stable') }}
+        uses: actions/cache/save@v4
+        with:
+          path: /github/home/.cache/ccache
+          key: v1-ccache-android-${{ github.job }}-${{ github.ref }}
+      - name: Show ccache stats
+        shell: bash
+        run: ccache -s -v
