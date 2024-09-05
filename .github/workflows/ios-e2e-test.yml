@@ -63,32 +63,15 @@ jobs:
       - name: Install Ccache
         uses: hendrikmuhs/ccache-action@v1.2
         with:
-          max-size: 5G
-          key: ${{ runner.os }}-ccache-${{ hashFiles('example/ios/Podfile.lock') }}
+          max-size: 1.5G
+          key: ${{ runner.os }}-ccache-e2e-ios
           create-symlink: true
-      #- name: Install ccache
-      #  run: brew install ccache
-      #- name: Configure ccache
-      #  run: |
-      #    ln -s $(which ccache) /usr/local/bin/gcc
-      #    ln -s $(which ccache) /usr/local/bin/g++
-      #    ln -s $(which ccache) /usr/local/bin/cc
-      #    ln -s $(which ccache) /usr/local/bin/c++
-      #    ln -s $(which ccache) /usr/local/bin/clang
-      #    ln -s $(which ccache) /usr/local/bin/clang++
-      - name: Check ccheck
-        run: which gcc
       - name: Setup ccache behavior
         run: |
           echo "CCACHE_SLOPPINESS=clang_index_store,file_stat_matches,include_file_ctime,include_file_mtime,ivfsoverlay,pch_defines,modules,system_headers,time_macros" >> $GITHUB_ENV
           echo "CCACHE_FILECLONE=true" >> $GITHUB_ENV
           echo "CCACHE_DEPEND=true" >> $GITHUB_ENV
           echo "CCACHE_INODECACHE=true" >> $GITHUB_ENV
-      - name: Print environment variable
-        run: echo $CCACHE_INODECACHE
-      - name: Check ccache stats
-        run: |
-          ccache -s
       - name: Restore Pods cache
         uses: actions/cache@v4
         with:
