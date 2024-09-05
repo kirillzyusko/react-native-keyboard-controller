@@ -45,12 +45,6 @@ jobs:
       - name: Install node_modules for example/
         run: yarn install --frozen-lockfile --cwd example
 
-      - name: Install Ccache
-        uses: hendrikmuhs/ccache-action@v1.2
-        with:
-          max-size: 1.5G
-          key: ${{ runner.os }}-ccache-example-android
-          create-symlink: true
       - name: Restore Gradle cache
         uses: actions/cache@v4
         with:
