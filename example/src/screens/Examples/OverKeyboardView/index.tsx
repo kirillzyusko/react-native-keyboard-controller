@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Modal, TextInput, TouchableOpacity, View } from "react-native";
+// import { TouchableOpacity } from "react-native-gesture-handler";
 import {
   KeyboardEvents,
   OverKeyboardView,
@@ -40,19 +41,9 @@ export default function OverKeyboardViewExample() {
         }}
       />
       {isShow && (
-        <OverKeyboardView>
-          <View style={{ flex: 1, alignItems: "center" }}>
-            <TouchableOpacity onPress={console.log}>
-              <View
-                style={{
-                  backgroundColor: "pink",
-                  width: 100,
-                  height: 100,
-                  borderRadius: 50,
-                  marginTop: 700,
-                }}
-              />
-            </TouchableOpacity>
+        <OverKeyboardView style={{flex: 1, height: 400, backgroundColor: "green"}}>
+          <View style={{flex: 1, height: 400, backgroundColor: "red" }}>
+            <View style={{width: 200, height: 200, backgroundColor: "red"}} />
           </View>
         </OverKeyboardView>
       )}

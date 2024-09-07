@@ -23,8 +23,8 @@ import com.facebook.react.uimanager.events.EventDispatcher
 import com.facebook.react.views.view.ReactViewGroup
 
 @SuppressLint("ViewConstructor")
-class OverKeyboardViewGroup(private val reactContext: ThemedReactContext) : ReactViewGroup(reactContext) {
-  val dispatcher = UIManagerHelper.getEventDispatcherForReactTag(reactContext, this.id)
+class OverKeyboardHostView(private val reactContext: ThemedReactContext) : ReactViewGroup(reactContext) {
+  private val dispatcher = UIManagerHelper.getEventDispatcherForReactTag(reactContext, this.id)
   private var windowManager: WindowManager = reactContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
   private var view: View = View(reactContext).apply {
     layoutParams = LayoutParams(
@@ -46,7 +46,7 @@ class OverKeyboardViewGroup(private val reactContext: ThemedReactContext) : Reac
   }
 
   override fun addView(child: View?, index: Int, params: LayoutParams?) {
-    val hostView = OverKeyboardView(reactContext)
+    val hostView = OverKeyboardRootViewGroup(reactContext)
     hostView.addView(child)
     hostView.eventDispatcher = dispatcher
     val layoutParams = WindowManager.LayoutParams(
@@ -65,7 +65,7 @@ class OverKeyboardViewGroup(private val reactContext: ThemedReactContext) : Reac
 }
 
 @SuppressLint("ViewConstructor")
-class OverKeyboardView(private val reactContext: ThemedReactContext) : ReactViewGroup(reactContext) {
+class OverKeyboardRootViewGroup(private val reactContext: ThemedReactContext) : ReactViewGroup(reactContext), RootView {
   private val jsTouchDispatcher: JSTouchDispatcher = JSTouchDispatcher(this)
   private var jsPointerDispatcher: JSPointerDispatcher? = null
   internal var eventDispatcher: EventDispatcher? = null
@@ -76,6 +76,7 @@ class OverKeyboardView(private val reactContext: ThemedReactContext) : ReactView
     }
   }
 
+  // region Touch events handling
   override fun onInterceptTouchEvent(event: MotionEvent): Boolean {
     eventDispatcher?.let { eventDispatcher ->
       jsTouchDispatcher.handleTouchEvent(event, eventDispatcher)
@@ -106,7 +107,14 @@ class OverKeyboardView(private val reactContext: ThemedReactContext) : ReactView
     return super.onHoverEvent(event)
   }
 
-  /*override fun onChildStartedNativeGesture(childView: View, ev: MotionEvent) {
+  override fun requestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {
+    // No-op - override in order to still receive events to onInterceptTouchEvent
+    // even when some other view disallow that
+  }
+  // endregion
+
+  // region RootView methods
+  override fun onChildStartedNativeGesture(childView: View, ev: MotionEvent) {
     eventDispatcher?.let { eventDispatcher ->
       jsTouchDispatcher.onChildStartedNativeGesture(ev, eventDispatcher)
       jsPointerDispatcher?.onChildStartedNativeGesture(childView, ev, eventDispatcher)
@@ -116,10 +124,10 @@ class OverKeyboardView(private val reactContext: ThemedReactContext) : ReactView
   override fun onChildEndedNativeGesture(childView: View, ev: MotionEvent) {
     eventDispatcher?.let { jsTouchDispatcher.onChildEndedNativeGesture(ev, it) }
     jsPointerDispatcher?.onChildEndedNativeGesture()
-  }*/
-
-  override fun requestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {
-    // No-op - override in order to still receive events to onInterceptTouchEvent
-    // even when some other view disallow that
   }
+
+  override fun handleException(t: Throwable) {
+    reactContext.reactApplicationContext.handleException(RuntimeException(t))
+  }
+  // endregion
 }
