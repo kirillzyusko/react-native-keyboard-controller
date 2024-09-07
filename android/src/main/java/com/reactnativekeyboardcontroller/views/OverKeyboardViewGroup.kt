@@ -35,7 +35,7 @@ class OverKeyboardHostView(private val reactContext: ThemedReactContext) : React
   override fun onDetachedFromWindow() {
     super.onDetachedFromWindow()
 
-    windowManager.removeView(hostView)
+    hide()
   }
 
   override fun addView(child: View?, index: Int) {
@@ -75,6 +75,12 @@ class OverKeyboardHostView(private val reactContext: ThemedReactContext) : React
     // Now add the view to the WindowManager
     windowManager.addView(hostView, layoutParams)
   }
+
+  fun hide() {
+    if (hostView.isAttached) {
+      windowManager.removeView(hostView)
+    }
+  }
 }
 
 @SuppressLint("ViewConstructor")
@@ -82,12 +88,25 @@ class OverKeyboardRootViewGroup(private val reactContext: ThemedReactContext) : 
   private val jsTouchDispatcher: JSTouchDispatcher = JSTouchDispatcher(this)
   private var jsPointerDispatcher: JSPointerDispatcher? = null
   internal var eventDispatcher: EventDispatcher? = null
+  internal var isAttached = false;
 
   init {
     if (ReactFeatureFlags.dispatchPointerEvents) {
       jsPointerDispatcher = JSPointerDispatcher(this)
     }
   }
+
+  // region Lifecycles
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+    isAttached = true
+  }
+
+  override fun onDetachedFromWindow() {
+    super.onDetachedFromWindow()
+    isAttached = false
+  }
+  // endregion
 
   // region Touch events handling
   override fun onInterceptTouchEvent(event: MotionEvent): Boolean {

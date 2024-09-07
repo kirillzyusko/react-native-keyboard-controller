@@ -14,6 +14,10 @@ export default function OverKeyboardViewExample() {
     const subscription = KeyboardEvents.addListener("keyboardDidShow", (e) => {
       console.log(1, e);
       setShow(true);
+
+      setTimeout(() => {
+        setShow(false);
+      }, 5000);
     });
 
     return subscription.remove;
@@ -42,7 +46,7 @@ export default function OverKeyboardViewExample() {
       />
       <OverKeyboardView visible={isShow} style={{flex: 1, height: 400, backgroundColor: "green"}}>
         <View style={{flex: 1, height: 400, backgroundColor: "red" }}>
-          <View style={{width: 200, height: 200, backgroundColor: "yellow"}} />
+          <View style={{marginTop: 200, marginLeft: 200, width: 200, height: 200, backgroundColor: "blue"}} />
         </View>
       </OverKeyboardView>
     </View>

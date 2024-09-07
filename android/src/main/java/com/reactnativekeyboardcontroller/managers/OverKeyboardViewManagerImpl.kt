@@ -13,6 +13,8 @@ class OverKeyboardViewManagerImpl(mReactContext: ReactApplicationContext) {
   fun setVisible(view: OverKeyboardHostView, value: Boolean) {
     if (value) {
       view.show()
+    } else {
+      view.hide()
     }
   }
 
