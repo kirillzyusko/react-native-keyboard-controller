@@ -2,6 +2,7 @@ package com.reactnativekeyboardcontroller
 
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.uimanager.ThemedReactContext
+import com.facebook.react.uimanager.annotations.ReactProp
 import com.facebook.react.views.view.ReactViewManager
 import com.reactnativekeyboardcontroller.managers.OverKeyboardViewManagerImpl
 import com.reactnativekeyboardcontroller.views.OverKeyboardHostView
@@ -13,5 +14,10 @@ class OverKeyboardViewManager(mReactContext: ReactApplicationContext) : ReactVie
 
   override fun createViewInstance(reactContext: ThemedReactContext): OverKeyboardHostView {
     return manager.createViewInstance(reactContext)
+  }
+
+  @ReactProp(name = "visible")
+  fun setVisible(view: OverKeyboardHostView, value: Boolean) {
+    manager.setVisible(view, value)
   }
 }

@@ -40,13 +40,11 @@ export default function OverKeyboardViewExample() {
           marginTop: 50,
         }}
       />
-      {isShow && (
-        <OverKeyboardView style={{flex: 1, height: 400, backgroundColor: "green"}}>
-          <View style={{flex: 1, height: 400, backgroundColor: "red" }}>
-            <View style={{width: 200, height: 200, backgroundColor: "red"}} />
-          </View>
-        </OverKeyboardView>
-      )}
+      <OverKeyboardView visible={isShow} style={{flex: 1, height: 400, backgroundColor: "green"}}>
+        <View style={{flex: 1, height: 400, backgroundColor: "red" }}>
+          <View style={{width: 200, height: 200, backgroundColor: "yellow"}} />
+        </View>
+      </OverKeyboardView>
     </View>
   );
 }

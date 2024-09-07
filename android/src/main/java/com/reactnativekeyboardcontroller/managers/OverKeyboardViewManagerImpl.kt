@@ -10,6 +10,12 @@ class OverKeyboardViewManagerImpl(mReactContext: ReactApplicationContext) {
     return OverKeyboardHostView(reactContext)
   }
 
+  fun setVisible(view: OverKeyboardHostView, value: Boolean) {
+    if (value) {
+      view.show()
+    }
+  }
+
   companion object {
     const val NAME = "OverKeyboardView"
   }

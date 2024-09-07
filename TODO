@@ -1,7 +1,7 @@
 - iOS implementation
 - crash on Android when you hide a keyboard
 - RNGH on Android
-- Android hot reloading
+- (x) Android hot reloading <- pass all events from HostView to underlying view + visible property
 - docs
 - landing page - create immersive keyboard experience: draw over and behind the keyboard to deliver best possible uxer experience to your application
 - lottie animation

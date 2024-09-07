@@ -26,17 +26,10 @@ import com.facebook.react.views.view.ReactViewGroup
 class OverKeyboardHostView(private val reactContext: ThemedReactContext) : ReactViewGroup(reactContext) {
   private val dispatcher = UIManagerHelper.getEventDispatcherForReactTag(reactContext, this.id)
   private var windowManager: WindowManager = reactContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-  private var view: View = View(reactContext).apply {
-    layoutParams = LayoutParams(
-      LayoutParams.MATCH_PARENT,
-      LayoutParams.MATCH_PARENT // Height in pixels
-    )
-    setBackgroundColor(Color.argb(128, 255, 0, 0))
-  }
-  private var hostView: View? = null
+  private var hostView: OverKeyboardRootViewGroup = OverKeyboardRootViewGroup(reactContext)
 
   init {
-
+    hostView.eventDispatcher = dispatcher
   }
 
   override fun onDetachedFromWindow() {
@@ -45,10 +38,30 @@ class OverKeyboardHostView(private val reactContext: ThemedReactContext) : React
     windowManager.removeView(hostView)
   }
 
-  override fun addView(child: View?, index: Int, params: LayoutParams?) {
-    val hostView = OverKeyboardRootViewGroup(reactContext)
-    hostView.addView(child)
-    hostView.eventDispatcher = dispatcher
+  override fun addView(child: View?, index: Int) {
+    UiThreadUtil.assertOnUiThread()
+    hostView.addView(child, index)
+  }
+
+  override fun getChildCount(): Int = hostView.childCount
+
+  override fun getChildAt(index: Int): View? = hostView.getChildAt(index)
+
+  override fun removeView(child: View?) {
+    UiThreadUtil.assertOnUiThread()
+
+    if (child != null) {
+      hostView.removeView(child)
+    }
+  }
+
+  override fun removeViewAt(index: Int) {
+    UiThreadUtil.assertOnUiThread()
+    val child = getChildAt(index)
+    hostView.removeView(child)
+  }
+
+  fun show() {
     val layoutParams = WindowManager.LayoutParams(
       WindowManager.LayoutParams.MATCH_PARENT, // Width
       WindowManager.LayoutParams.MATCH_PARENT, // Height in pixels
