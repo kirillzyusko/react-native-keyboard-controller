@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Modal, TextInput, TouchableOpacity, View } from "react-native";
-// import { TouchableOpacity } from "react-native-gesture-handler";
+import { Modal, TextInput, View } from "react-native";
+import { Gesture, GestureHandlerRootView } from "react-native-gesture-handler";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import {
   KeyboardEvents,
   OverKeyboardView,
@@ -15,9 +16,9 @@ export default function OverKeyboardViewExample() {
       console.log(1, e);
       setShow(true);
 
-      setTimeout(() => {
+      /*setTimeout(() => {
         setShow(false);
-      }, 5000);
+      }, 5000);*/
     });
 
     return subscription.remove;
@@ -44,9 +45,25 @@ export default function OverKeyboardViewExample() {
           marginTop: 50,
         }}
       />
-      <OverKeyboardView visible={isShow} style={{flex: 1, height: 400, backgroundColor: "green"}}>
-        <View style={{flex: 1, height: 400, backgroundColor: "red" }}>
-          <View style={{marginTop: 200, marginLeft: 200, width: 200, height: 200, backgroundColor: "blue"}} />
+      <OverKeyboardView visible={isShow}>
+        <View
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "red",
+          }}
+        >
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <TouchableOpacity>
+              <View
+                style={{
+                  width: 200,
+                  height: 200,
+                  backgroundColor: "blue",
+                }}
+              />
+            </TouchableOpacity>
+          </GestureHandlerRootView>
         </View>
       </OverKeyboardView>
     </View>

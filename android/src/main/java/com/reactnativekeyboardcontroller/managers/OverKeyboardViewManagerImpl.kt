@@ -6,6 +6,7 @@ import com.reactnativekeyboardcontroller.views.OverKeyboardHostView
 
 @Suppress("detekt:UnusedPrivateProperty")
 class OverKeyboardViewManagerImpl(mReactContext: ReactApplicationContext) {
+
   fun createViewInstance(reactContext: ThemedReactContext): OverKeyboardHostView {
     return OverKeyboardHostView(reactContext)
   }

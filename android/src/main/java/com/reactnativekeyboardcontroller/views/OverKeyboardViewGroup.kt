@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.graphics.PixelFormat
+import android.graphics.Point
 import android.util.Log
 import android.view.Gravity
 import android.view.MotionEvent
@@ -16,11 +17,16 @@ import com.facebook.react.bridge.UiThreadUtil
 import com.facebook.react.config.ReactFeatureFlags
 import com.facebook.react.uimanager.JSPointerDispatcher
 import com.facebook.react.uimanager.JSTouchDispatcher
+import com.facebook.react.uimanager.LayoutShadowNode
+import com.facebook.react.uimanager.ReactShadowNodeImpl
 import com.facebook.react.uimanager.RootView
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.UIManagerHelper
+import com.facebook.react.uimanager.ViewManagerDelegate
 import com.facebook.react.uimanager.events.EventDispatcher
+import com.facebook.react.views.modal.ReactModalHostManager
 import com.facebook.react.views.view.ReactViewGroup
+import com.reactnativekeyboardcontroller.views.OverKeyboardHostHelper.getModalHostSize
 
 @SuppressLint("ViewConstructor")
 class OverKeyboardHostView(private val reactContext: ThemedReactContext) : ReactViewGroup(reactContext) {
@@ -32,6 +38,7 @@ class OverKeyboardHostView(private val reactContext: ThemedReactContext) : React
     hostView.eventDispatcher = dispatcher
   }
 
+  // region Lifecycles
   override fun onDetachedFromWindow() {
     super.onDetachedFromWindow()
 
@@ -60,6 +67,11 @@ class OverKeyboardHostView(private val reactContext: ThemedReactContext) : React
     val child = getChildAt(index)
     hostView.removeView(child)
   }
+
+  override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
+    // Do nothing as we are laid out by UIManager
+  }
+  // endregion
 
   fun show() {
     val layoutParams = WindowManager.LayoutParams(
@@ -163,3 +175,75 @@ class OverKeyboardRootViewGroup(private val reactContext: ThemedReactContext) : 
   }
   // endregion
 }
+
+/**
+ * We implement the Modal by using an Android Dialog. That will fill the entire window of the
+ * application. To get layout to work properly, we need to layout all the elements within the
+ * Modal's inner content view as if they can fill the entire window. To do that, we need to
+ * explicitly set the styleWidth and styleHeight on the LayoutShadowNode of the child of this node
+ * to be the window size. This will then cause the children of the Modal to layout as if they can
+ * fill the window.
+ */
+internal class OverKeyboardHostShadowNode : LayoutShadowNode() {
+  /**
+   * We need to set the styleWidth and styleHeight of the one child (represented by the
+   * <View></View> within the <RCTModalHostView></RCTModalHostView> in Modal.js. This needs to fill
+   * the entire window.
+   */
+  override fun addChildAt(child: ReactShadowNodeImpl, i: Int) {
+    super.addChildAt(child, i)
+    val modalSize = getModalHostSize(themedContext)
+    child.setStyleWidth(modalSize.x.toFloat())
+    child.setStyleHeight(modalSize.y.toFloat())
+  }
+}
+
+/** Helper class for OverKeyboard. */
+internal object OverKeyboardHostHelper {
+  private val MIN_POINT = Point()
+  private val MAX_POINT = Point()
+  private val SIZE_POINT = Point()
+
+  /**
+   * To get the size of the screen, we use information from the WindowManager and default Display.
+   * We don't use DisplayMetricsHolder, or Display#getSize() because they return values that include
+   * the status bar. We only want the values of what will actually be shown on screen. We use
+   * Display#getSize() to determine if the screen is in portrait or landscape. We don't use
+   * getRotation because the 'natural' rotation will be portrait on phones and landscape on tablets.
+   * This should only be called on the native modules/shadow nodes thread.
+   */
+  @Suppress("DEPRECATION")
+  @JvmStatic
+  fun getModalHostSize(context: Context): Point {
+    val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+    val display = wm.defaultDisplay
+    // getCurrentSizeRange will return the min and max width and height that the window can be
+    display.getCurrentSizeRange(MIN_POINT, MAX_POINT)
+    // getSize will return the dimensions of the screen in its current orientation
+    display.getSize(SIZE_POINT)
+
+    val attrs = intArrayOf(android.R.attr.windowFullscreen)
+    val theme = context.theme
+    val ta = theme.obtainStyledAttributes(attrs)
+    val windowFullscreen = ta.getBoolean(0, false)
+
+    // We need to add the status bar height to the height if we have a fullscreen window,
+    // because Display.getCurrentSizeRange doesn't include it.
+    val resources = context.resources
+    @SuppressLint("DiscouragedApi", "InternalInsetResource")
+    val statusBarId = resources.getIdentifier("status_bar_height", "dimen", "android")
+    var statusBarHeight = 0
+    if (windowFullscreen && statusBarId > 0) {
+      statusBarHeight = resources.getDimension(statusBarId).toInt()
+    }
+
+    return if (SIZE_POINT.x < SIZE_POINT.y) {
+      // If we are vertical the width value comes from min width and height comes from max height
+      Point(MIN_POINT.x, MAX_POINT.y + statusBarHeight)
+    } else {
+      // If we are horizontal the width value comes from max width and height comes from min height
+      Point(MAX_POINT.x, MIN_POINT.y + statusBarHeight)
+    }
+  }
+}
+
