@@ -64,6 +64,11 @@ jobs:
         run: yarn
       - name: Install e2e dependencies
         run: yarn install --cwd e2e
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          gradle-version: wrapper
+          cache-read-only: false
       - name: Restore Gradle cache
         uses: actions/cache@v4
         with:
