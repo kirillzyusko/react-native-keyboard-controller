@@ -1,6 +1,46 @@
+---
+sidebar_position: 7
+keywords:
+  [
+    react-native-keyboard-controller,
+    keyboard,
+    show view over keyboard,
+    show menu over keyboard,
+  ]
+---
+
+# OverKeyboardView
+
+import Lottie from "lottie-react";
+import lottie from "@site/src/components/HomepageFeatures/interactive.lottie.json";
+
+<div style={{ display: "flex", justifyContent: "center", marginBottom: 20 }}>
+  <Lottie
+    className="lottie"
+    animationData={lottie}
+    style={{ width: 400, height: 400 }}
+    loop
+  />
+</div>
+
+A primitive to show any view over the keyboard without dismissing it 🔥. It's useful for showing a menu, a tooltip, a custom view, etc. Works on both iOS and Android.
+
+:::info `KeyboardProvider` presence
+This component can be used without `KeyboardProvider`, i. e. if you want to use only this component from the library, then wrapping entire app in `KeyboardProvider` is not a mandatory step.
+:::
+
+## Props
+
+### `visible`
+
+A boolean prop indicating whether the view is visible or not. If it's `true` then it shows the view over the keyboard. If it's `false` then it hides the view.
+
+## Example
+
+```tsx
 import React, { useEffect, useState } from "react";
-import { Modal, TextInput, View } from "react-native";
-import { Gesture, GestureHandlerRootView } from "react-native-gesture-handler";
+import { TextInput, View } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import {
   KeyboardEvents,
@@ -66,3 +106,4 @@ export default function OverKeyboardViewExample() {
     </View>
   );
 }
+```
