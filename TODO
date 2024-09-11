@@ -5,6 +5,6 @@
 - (x) RNGH on Android - GestureHandlerRootView
 - (x) Android hot reloading <- pass all events from HostView to underlying view + visible property
 - (x) docs
+- (x) lottie animation
 - landing page - create immersive keyboard experience: draw over and behind the keyboard to deliver best possible user experience to your application
-- lottie animation
 - add to comparison to reanimated
