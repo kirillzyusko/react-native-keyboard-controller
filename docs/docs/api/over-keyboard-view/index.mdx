@@ -4,6 +4,9 @@ keywords:
   [
     react-native-keyboard-controller,
     keyboard,
+    modal,
+    over keyboard,
+    over keyboard view,
     show view over keyboard,
     show menu over keyboard,
   ]
@@ -24,6 +27,8 @@ import lottie from "./over-keyboard-view.lottie.json";
 </div>
 
 A primitive to show any view over the keyboard without dismissing it 🔥. It's useful for showing a menu, a tooltip, a custom view, etc. Works on both iOS and Android.
+
+You may think about it as a slightly better alternative to `Modal` that don't dismiss the keyboard while it's showing thus bringing better user experience.
 
 :::info `KeyboardProvider` presence
 This component can be used without `KeyboardProvider`, i. e. if you want to use only this component from the library, then wrapping entire app in `KeyboardProvider` is not a mandatory step.
