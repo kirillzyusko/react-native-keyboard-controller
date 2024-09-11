@@ -19,3 +19,4 @@ export type {
   KeyboardAwareScrollViewProps,
   KeyboardToolbarProps,
 } from "./components";
+export { OverKeyboardView } from "./views";

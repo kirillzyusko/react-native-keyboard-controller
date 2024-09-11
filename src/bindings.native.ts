@@ -57,5 +57,5 @@ export const KeyboardGestureArea: React.FC<KeyboardGestureAreaProps> =
   Platform.OS === "android" && Platform.Version >= 30
     ? require("./specs/KeyboardGestureAreaNativeComponent").default
     : ({ children }: KeyboardGestureAreaProps) => children;
-export const OverKeyboardView: React.FC<OverKeyboardViewProps> =
+export const RCTOverKeyboardView: React.FC<OverKeyboardViewProps> =
   require("./specs/OverKeyboardViewNativeComponent").default;

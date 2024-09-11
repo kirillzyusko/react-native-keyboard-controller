@@ -16,9 +16,10 @@ export default function OverKeyboardViewExample() {
       console.log(1, e);
       setShow(true);
 
-      /*setTimeout(() => {
+      setTimeout(() => {
+        console.log("set to false");
         setShow(false);
-      }, 5000);*/
+      }, 5000);
     });
 
     return subscription.remove;
@@ -28,7 +29,7 @@ export default function OverKeyboardViewExample() {
   useEffect(() => {
     const subscription = KeyboardEvents.addListener("keyboardDidHide", (e) => {
       console.log(2, e);
-      setShow(false);
+      // setShow(false);
     });
 
     return subscription.remove;
@@ -46,22 +47,19 @@ export default function OverKeyboardViewExample() {
         }}
       />
       <OverKeyboardView visible={isShow}>
-        {/* Temporary solution - OKV should always have an empty view as a first children */}
-        <View>
-          <GestureHandlerRootView
-            style={{ flex: 1, justifyContent: "flex-end", alignItems: "center" }}
-          >
-            <TouchableOpacity>
-              <View
-                style={{
-                  width: 200,
-                  height: 200,
-                  backgroundColor: "blue",
-                }}
-              />
-            </TouchableOpacity>
-          </GestureHandlerRootView>
-        </View>
+        <GestureHandlerRootView
+          style={{ flex: 1, justifyContent: "flex-end", alignItems: "center" }}
+        >
+          <TouchableOpacity onPress={() => setShow(false)} style={{marginTop: 600}}>
+            <View
+              style={{
+                width: 200,
+                height: 200,
+                backgroundColor: "blue",
+              }}
+            />
+          </TouchableOpacity>
+        </GestureHandlerRootView>
       </OverKeyboardView>
     </View>
   );
