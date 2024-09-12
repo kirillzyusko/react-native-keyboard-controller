@@ -1,11 +1,26 @@
-- iOS implementation
-- crash on Android when you hide a keyboard
+- (x) iOS implementation
 - (x) incorrect positioning of elements - why view can be stretched to full screen?
 - (x) why justifyContent: "center" and flex: 1 doesn't work - first view must be without a style because otherwise styling is kind of conflicting with native styles
 - (x) RNGH on Android - GestureHandlerRootView
 - (x) Android hot reloading <- pass all events from HostView to underlying view + visible property
 - (x) docs
 - (x) lottie animation
+
+### Docs
+
 - landing page - create immersive keyboard experience: draw over and behind the keyboard to deliver best possible user experience to your application
 - add to comparison to reanimated
+
+### E2E
+
 - e2e tests
+
+### Bugs
+
+- crash on Android when you hide a keyboard
+- Fabric (iOS/Android)
+- handle touches on iOS
+- stretch view to full screen (iOS)/ {flex: 1}
+- overlap navigationBar on Android
+- cleanup Android implementation (create 3 separate files)
+- iOS hot reload
