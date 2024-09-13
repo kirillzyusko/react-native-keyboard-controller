@@ -7,7 +7,6 @@ import interactive from "./interactive.lottie.json";
 import styles from "./styles.module.css";
 import textInputs from "./text-inputs.lottie.json";
 import transform from "./transform.lottie.json";
-import HoverableKeyboard from "../HoverableKeyboard";
 
 type FeatureItem = {
   title: string;
@@ -60,7 +59,7 @@ const lottieStyle = {
 
 function Feature({ title, lottie, description }: FeatureItem) {
   return (
-    <div className={clsx("col col--2")}>
+    <div className={clsx("col col--3")}>
       <div className="text--center">
         <Lottie
           loop
@@ -85,16 +84,6 @@ export default function HomepageFeatures(): JSX.Element {
           {FeatureList.map((props, idx) => (
             <Feature key={idx} {...props} />
           ))}
-          <div className={clsx("col col--2")} style={{ marginTop: 20 }}>
-            <HoverableKeyboard />
-            <div className="text--center padding-horiz--md">
-              <h3>Focused input changes</h3>
-              <p>
-                Provide additional handlers and get every change in any focused
-                input
-              </p>
-            </div>
-          </div>
         </div>
       </div>
     </section>
