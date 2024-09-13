@@ -7,6 +7,7 @@ export default function FrameSVG({ onHoverFocus, onHoverBlur }: Props) {
   return (
     <svg
       viewBox="0 0 413 804.93"
+      style={{width: "100%", height: "100%"}}
       xmlns="http://www.w3.org/2000/svg"
       onMouseEnter={onHoverFocus}
       onMouseLeave={onHoverBlur}

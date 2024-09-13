@@ -303,3 +303,8 @@ h3 .label {
 .dot-3 {
   animation-delay: 0.4s;
 }
+
+.interactive-animation {
+  height: 400px;
+  margin-bottom: 24px;
+}
