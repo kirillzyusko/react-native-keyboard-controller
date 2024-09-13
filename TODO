@@ -8,7 +8,7 @@
 
 ### Docs
 
-- landing page - create immersive keyboard experience: draw over and behind the keyboard to deliver best possible user experience to your application
+- landing page - create immersive keyboard experience: draw over and behind the keyboard to deliver best possible user experience to your application without keyboard shuttering and annoying jumps
 - add to comparison to reanimated
 
 ### E2E
@@ -18,9 +18,11 @@
 ### Bugs
 
 - (x) handle touches on iOS <- used `RCTTouchHandler`
-- crash on Android when you hide a keyboard
-- Fabric (iOS/Android)
+- (x) crash on Android when you hide a keyboard
+- (x) overlap navigationBar on Android
+- (x) cleanup Android implementation (create 3 separate files)
+- Fabric iOS
+- Fabric Android
 - stretch view to full screen (iOS)/ {flex: 1}
-- overlap navigationBar on Android
-- cleanup Android implementation (create 3 separate files)
 - iOS hot reload
+- iOS + gesture handler

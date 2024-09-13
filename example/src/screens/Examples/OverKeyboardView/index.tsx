@@ -33,19 +33,25 @@ export default function OverKeyboardViewExample() {
         onPress={() => setShow(false)}
       />
       <OverKeyboardView visible={isShow}>
-        <View style={{ flex: 1, backgroundColor: "pink" }}>
-        <TouchableOpacity
-          style={{ marginTop: 600, backgroundColor: "red" }}
-          onPress={() => setShow(false)}
+        <View
+          style={{
+            flex: 1,
+            justifyContent: "flex-end",
+            alignItems: "center",
+          }}
         >
-          <View
-            style={{
-              width: 200,
-              height: 200,
-              backgroundColor: "blue",
-            }}
-          />
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={{ backgroundColor: "red" }}
+            onPress={() => setShow(false)}
+          >
+            <View
+              style={{
+                width: 200,
+                height: 200,
+                backgroundColor: "blue",
+              }}
+            />
+          </TouchableOpacity>
         </View>
       </OverKeyboardView>
     </View>

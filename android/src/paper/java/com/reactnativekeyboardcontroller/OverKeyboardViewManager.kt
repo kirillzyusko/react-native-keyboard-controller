@@ -5,10 +5,9 @@ import com.facebook.react.uimanager.LayoutShadowNode
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.ViewGroupManager
 import com.facebook.react.uimanager.annotations.ReactProp
-import com.facebook.react.views.view.ReactViewManager
 import com.reactnativekeyboardcontroller.managers.OverKeyboardViewManagerImpl
-import com.reactnativekeyboardcontroller.views.OverKeyboardHostShadowNode
-import com.reactnativekeyboardcontroller.views.OverKeyboardHostView
+import com.reactnativekeyboardcontroller.views.overlay.OverKeyboardHostShadowNode
+import com.reactnativekeyboardcontroller.views.overlay.OverKeyboardHostView
 
 class OverKeyboardViewManager(mReactContext: ReactApplicationContext) : ViewGroupManager<OverKeyboardHostView>() {
   private val manager = OverKeyboardViewManagerImpl(mReactContext)
