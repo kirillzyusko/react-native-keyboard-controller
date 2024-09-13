@@ -11,10 +11,10 @@ export default function FrameSVG({ onHoverFocus, onHoverBlur }: Props) {
       onMouseEnter={onHoverFocus}
       onMouseLeave={onHoverBlur}
     >
-      <g data-name="Слой 6" id="Слой_6">
+      <g data-name="Layer 6" id="Layer_6">
         <rect fill="#3b3b3b" height="804.93" rx="47.76" width="413" />
       </g>
-      <g data-name="Слой 5" id="Слой_5">
+      <g data-name="Layer 5" id="Layer_5">
         <rect
           fill="#fff"
           height="771.21"
@@ -78,7 +78,7 @@ export default function FrameSVG({ onHoverFocus, onHoverBlur }: Props) {
           y="352.34"
         />
       </g>
-      <g data-name="Слой 8" id="Слой_8">
+      <g data-name="Layer 8" id="Layer_8">
         <path d="M16.63,491.75H396.37a0,0,0,0,1,0,0V760.12A28.34,28.34,0,0,1,368,788.46H36.64a20,20,0,0,1-20-20V491.75A0,0,0,0,1,16.63,491.75Z" />
         <g className="keyboard-button-group">
           <path
@@ -543,7 +543,7 @@ export default function FrameSVG({ onHoverFocus, onHoverBlur }: Props) {
           />
         </g>
       </g>
-      <g data-name="Слой 4" id="Слой_4">
+      <g data-name="Layer 4" id="Layer_4">
         <path
           d="M157.62,30.6H324.79V50.26a14,14,0,0,1-14.05,14.05H171.67a14,14,0,0,1-14-14.05Z"
           fill="#3b3b3b"
@@ -551,7 +551,7 @@ export default function FrameSVG({ onHoverFocus, onHoverBlur }: Props) {
           transform="translate(-34 -30.6)"
         />
       </g>
-      <g data-name="Слой 10" id="Слой_10">
+      <g data-name="Layer 10" id="Layer_10">
         <rect
           fill="#59c3e6"
           height="54.13"
