@@ -168,5 +168,5 @@ module.exports = {
     "react-native/react-native": true,
     "jest/globals": true,
   },
-  ignorePatterns: ["node_modules/**", "lib/**", "scripts/**"],
+  ignorePatterns: ["node_modules/**", "lib/**", "scripts/**", "docs/build/**"],
 };
