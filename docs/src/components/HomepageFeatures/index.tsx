@@ -85,12 +85,15 @@ export default function HomepageFeatures(): JSX.Element {
           {FeatureList.map((props, idx) => (
             <Feature key={idx} {...props} />
           ))}
-          <div className={clsx("col col--2")} style={{marginTop: 20}}>
-          <HoverableKeyboard />
-          <div className="text--center padding-horiz--md">
-        <h3>Focused input changes</h3>
-        <p>Provide additional handlers and get every change in any focused input</p>
-      </div>
+          <div className={clsx("col col--2")} style={{ marginTop: 20 }}>
+            <HoverableKeyboard />
+            <div className="text--center padding-horiz--md">
+              <h3>Focused input changes</h3>
+              <p>
+                Provide additional handlers and get every change in any focused
+                input
+              </p>
+            </div>
           </div>
         </div>
       </div>
