@@ -2,8 +2,8 @@ import React, { useCallback, useEffect, useRef } from "react";
 
 import HoverableKeyboardSVG from "./HoverableKeyboardSVG";
 
-const alphabet = "zxcvbnmasdfghjklqwertyuiop ";
-const storyToTell = "Hello, World!".toLowerCase();
+const alphabet = "zxcvbnmasdfghjklqwertyuiop_";
+const storyToTell = "Hello, World!".toLowerCase().replace(/ /g, "_");
 
 function HoverableKeyboard() {
   const timerRef = useRef(null);

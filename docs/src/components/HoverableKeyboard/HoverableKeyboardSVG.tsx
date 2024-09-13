@@ -487,7 +487,7 @@ export default function FrameSVG({ onHoverFocus, onHoverBlur }: Props) {
             className="keyboard-button"
             d="M147.84,701.59a5.07,5.07,0,0,1,5.07-5.07H327.08a5.06,5.06,0,0,1,5.06,5.07V735a5.06,5.06,0,0,1-5.06,5.07H152.91a5.07,5.07,0,0,1-5.07-5.07Z"
             fill="#646464"
-            id=" "
+            id="_"
             transform="translate(-34 -30.6)"
           />
           <path
