@@ -18,14 +18,14 @@ class OverKeyboardViewManager: RCTViewManager {
 
 class OverKeyboardView: UIView {
     private var contentView = UIView(frame: CGRect.zero)
-    private var overlayWindow: UIWindow?
-    private weak var w: UIWindow?
+    private var touchHandler: RCTTouchHandler?
     
     init(frame: CGRect, bridge: RCTBridge) {
         super.init(frame: frame)
         
         // eagerly initialize the extension
         let _ = UIWindow.sharedKeyboardWindowObserver
+        touchHandler = RCTTouchHandler(bridge: bridge)
     }
     
     @available(*, unavailable)
@@ -52,13 +52,13 @@ class OverKeyboardView: UIView {
     private func showInLastWindow() {
 print(UIApplication.shared.connectedScenes)
             
-        /*let window = UIWindow.topWindow
+        let window = UIWindow.topWindow
         window?.addSubview(contentView)
         contentView.frame = window?.bounds ?? .zero
         // contentView.frame.height = window?.bounds.height ??0
-        contentView.subviews[0].frame = window?.bounds ?? .zero*/
-        
-        let customView2 = UIView()
+        contentView.subviews[0].frame = window?.bounds ?? .zero
+        touchHandler?.attach(to: contentView)
+        /*let customView2 = UIView()
         customView2.backgroundColor = UIColor.red
             customView2.layer.zPosition = CGFloat(MAXFLOAT)
         customView2.frame = CGRect(x: 0, y: 600, width: 100, height: 100)
@@ -68,10 +68,13 @@ print(UIApplication.shared.connectedScenes)
         contentView.frame = fullScreenBound
         contentView.backgroundColor = UIColor.red
         contentView.subviews[0].frame = fullScreenBound
-        contentView.subviews[0].backgroundColor = UIColor.green
+        contentView.subviews[0].backgroundColor = UIColor.green*/
     }
     
     private func hide() {
-        contentView.removeFromSuperview()
+        if (!contentView.subviews.isEmpty) {
+            contentView.removeFromSuperview()
+            touchHandler?.detach(from: contentView)
+        }
     }
 }

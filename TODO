@@ -17,9 +17,9 @@
 
 ### Bugs
 
+- (x) handle touches on iOS <- used `RCTTouchHandler`
 - crash on Android when you hide a keyboard
 - Fabric (iOS/Android)
-- handle touches on iOS
 - stretch view to full screen (iOS)/ {flex: 1}
 - overlap navigationBar on Android
 - cleanup Android implementation (create 3 separate files)
