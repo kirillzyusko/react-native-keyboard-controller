@@ -273,8 +273,8 @@ h3 .label {
 
 @keyframes typing {
   0% {transform: translateY(0px);}
-  25% {transform: translateY(-7px);}
-  50% {transform: translateY(0px);}
+  25% {transform: translateY(0px);}
+  50% {transform: translateY(-5px);}
   100% {transform: translateY(0px);}
 }
 
