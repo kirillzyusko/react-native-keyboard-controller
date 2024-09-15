@@ -4,9 +4,9 @@ PODS:
   - FBLazyVector (0.75.3)
   - fmt (9.1.0)
   - glog (0.3.5)
-  - hermes-engine (0.75.2):
-    - hermes-engine/Pre-built (= 0.75.2)
-  - hermes-engine/Pre-built (0.75.2)
+  - hermes-engine (0.75.3):
+    - hermes-engine/Pre-built (= 0.75.3)
+  - hermes-engine/Pre-built (0.75.3)
   - InputMask (6.1.0)
   - lottie-ios (4.4.1)
   - lottie-react-native (6.7.2):
@@ -1938,7 +1938,7 @@ SPEC CHECKSUMS:
   FBLazyVector: 7b438dceb9f904bd85ca3c31d64cce32a035472b
   fmt: 4c2741a687cc09f0634a2e2c72a838b99f1ff120
   glog: 69ef571f3de08433d766d614c73a9838a06bf7eb
-  hermes-engine: 3b6e0717ca847e2fc90a201e59db36caf04dee88
+  hermes-engine: 8d2103d6c0176779aea4e25df6bb1410f9946680
   InputMask: 71d291dc54d2deaeac6512afb6ec2304228c0bb7
   lottie-ios: e047b1d2e6239b787cc5e9755b988869cf190494
   lottie-react-native: 31197e5c65aa7cb59e6affcefaf901588bb708c4
