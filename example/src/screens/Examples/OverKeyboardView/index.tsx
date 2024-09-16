@@ -1,5 +1,13 @@
+import { BlurView } from "@react-native-community/blur";
 import React, { useEffect, useState } from "react";
-import { Button, Modal, TextInput, TouchableOpacity, View } from "react-native";
+import {
+  Button,
+  Modal,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { Gesture, GestureHandlerRootView } from "react-native-gesture-handler";
 // import { TouchableOpacity } from "react-native-gesture-handler";
 import {
@@ -33,6 +41,12 @@ export default function OverKeyboardViewExample() {
         onPress={() => setShow(false)}
       />
       <OverKeyboardView visible={isShow}>
+        {/*<BlurView
+          blurAmount={8}
+          blurType="chromeMaterialLight"
+          overlayColor="transparent"
+          style={StyleSheet.absoluteFill}
+        />*/}
         <View
           style={{
             flex: 1,
