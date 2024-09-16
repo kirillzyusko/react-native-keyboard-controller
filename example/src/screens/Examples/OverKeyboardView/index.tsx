@@ -6,6 +6,7 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from "react-native";
 import { Gesture, GestureHandlerRootView } from "react-native-gesture-handler";
@@ -43,30 +44,32 @@ export default function OverKeyboardViewExample() {
       <OverKeyboardView visible={isShow}>
         {/*<BlurView
           blurAmount={8}
-          blurType="chromeMaterialLight"
+          blurType="light"
           overlayColor="transparent"
           style={StyleSheet.absoluteFill}
         />*/}
-        <View
-          style={{
-            flex: 1,
-            justifyContent: "flex-end",
-            alignItems: "center",
-          }}
+        <TouchableWithoutFeedback
+          style={{ flex: 1 }}
+          onPress={() => setShow(false)}
         >
-          <TouchableOpacity
-            style={{ backgroundColor: "red" }}
-            onPress={() => setShow(false)}
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "flex-end",
+              alignItems: "center",
+            }}
           >
-            <View
-              style={{
-                width: 200,
-                height: 200,
-                backgroundColor: "blue",
-              }}
-            />
-          </TouchableOpacity>
-        </View>
+            <TouchableOpacity onPress={() => setShow(false)}>
+              <View
+                style={{
+                  width: 200,
+                  height: 200,
+                  backgroundColor: "blue",
+                }}
+              />
+            </TouchableOpacity>
+          </View>
+        </TouchableWithoutFeedback>
       </OverKeyboardView>
     </View>
   );

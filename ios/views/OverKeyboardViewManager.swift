@@ -50,25 +50,13 @@ class OverKeyboardView: UIView {
 
     
     private func showInLastWindow() {
-print(UIApplication.shared.connectedScenes)
-            
+        contentView.frame = window?.bounds ?? .zero
+        contentView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        
         let window = UIWindow.topWindow
         window?.addSubview(contentView)
-        contentView.frame = window?.bounds ?? .zero
-        // contentView.frame.height = window?.bounds.height ??0
-        contentView.subviews[0].frame = window?.bounds ?? .zero
+        
         touchHandler?.attach(to: contentView)
-        /*let customView2 = UIView()
-        customView2.backgroundColor = UIColor.red
-            customView2.layer.zPosition = CGFloat(MAXFLOAT)
-        customView2.frame = CGRect(x: 0, y: 600, width: 100, height: 100)
-        var windowCount = UIApplication.shared.windows.count
-        UIApplication.shared.windows.last?.addSubview(contentView)
-        let fullScreenBound = UIApplication.shared.windows.last?.bounds ?? .zero
-        contentView.frame = fullScreenBound
-        contentView.backgroundColor = UIColor.red
-        contentView.subviews[0].frame = fullScreenBound
-        contentView.subviews[0].backgroundColor = UIColor.green*/
     }
     
     private func hide() {

@@ -110,7 +110,7 @@ export type KeyboardGestureAreaProps = {
 } & ViewProps;
 export type OverKeyboardViewProps = {
   visible: boolean;
-} & ViewProps;
+};
 
 export type Direction = "next" | "prev" | "current";
 export type KeyboardControllerModule = {
