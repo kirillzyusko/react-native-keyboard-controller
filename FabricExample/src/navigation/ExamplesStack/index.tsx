@@ -15,6 +15,7 @@ import KeyboardAvoidingViewExample from "../../screens/Examples/KeyboardAvoiding
 import LottieAnimation from "../../screens/Examples/Lottie";
 import ModalExample from "../../screens/Examples/Modal";
 import NonUIProps from "../../screens/Examples/NonUIProps";
+import OverKeyboardView from "../../screens/Examples/OverKeyboardView";
 import ReanimatedChat from "../../screens/Examples/ReanimatedChat";
 import ReanimatedChatFlatList from "../../screens/Examples/ReanimatedChatFlatList";
 import StatusBar from "../../screens/Examples/StatusBar";
@@ -42,6 +43,7 @@ export type ExamplesStackParamList = {
   [ScreenNames.TOOLBAR]: undefined;
   [ScreenNames.MODAL]: undefined;
   [ScreenNames.BOTTOM_TAB_BAR]: undefined;
+  [ScreenNames.OVER_KEYBOARD_VIEW]: undefined;
 };
 
 const Stack = createStackNavigator<ExamplesStackParamList>();
@@ -104,6 +106,9 @@ const options = {
   },
   [ScreenNames.BOTTOM_TAB_BAR]: {
     headerShown: false,
+  },
+  [ScreenNames.OVER_KEYBOARD_VIEW]: {
+    title: "Over keyboard view",
   },
 };
 
@@ -203,6 +208,11 @@ const ExamplesStack = () => (
       component={BottomTabBar}
       name={ScreenNames.BOTTOM_TAB_BAR}
       options={options[ScreenNames.BOTTOM_TAB_BAR]}
+    />
+    <Stack.Screen
+      component={OverKeyboardView}
+      name={ScreenNames.OVER_KEYBOARD_VIEW}
+      options={options[ScreenNames.OVER_KEYBOARD_VIEW]}
     />
   </Stack.Navigator>
 );

@@ -210,8 +210,8 @@ const ExamplesStack = () => (
       options={options[ScreenNames.BOTTOM_TAB_BAR]}
     />
     <Stack.Screen
-      name={ScreenNames.OVER_KEYBOARD_VIEW}
       component={OverKeyboardView}
+      name={ScreenNames.OVER_KEYBOARD_VIEW}
       options={options[ScreenNames.OVER_KEYBOARD_VIEW]}
     />
   </Stack.Navigator>
