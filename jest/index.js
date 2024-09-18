@@ -74,6 +74,7 @@ const mock = {
   // views
   KeyboardControllerView: "KeyboardControllerView",
   KeyboardGestureArea: "KeyboardGestureArea",
+  OverKeyboardView: "OverKeyboardView",
   // providers
   KeyboardProvider: "KeyboardProvider",
   // components
