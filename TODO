@@ -25,5 +25,5 @@
 - (x) stretch view to full screen (iOS)/ {flex: 1} - we can specify window/height manually in JS? Do we need to have a fix on Android then? (yes, otherwise nav bar may not be covered and click in this area will lead to crash)
 - (x) Fabric Android
 - (x) Fabric iOS
-- iOS hot reload
+- (x) iOS hot reload
 - iOS + gesture handler
