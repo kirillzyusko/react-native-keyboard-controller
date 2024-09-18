@@ -9,13 +9,16 @@ import Foundation
 import UIKit
 import ObjectiveC
 
-extension UIWindow {
+@objc
+public extension UIWindow {
     static let sharedKeyboardWindowObserver = KeyboardWindowObserver()
     
-    class KeyboardWindowObserver {
+    @objc
+    class KeyboardWindowObserver : NSObject {
             private weak var keyboardWindow: UIWindow?
 
-            init() {
+        override init() {
+            super.init()
                 NotificationCenter.default.addObserver(
                     self,
                     selector: #selector(windowDidBecomeVisible(_:)),
