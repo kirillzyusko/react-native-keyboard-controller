@@ -1,45 +1,27 @@
 import { BlurView } from "@react-native-community/blur";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   Button,
-  Modal,
   StyleSheet,
   TextInput,
   TouchableOpacity,
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import { Gesture, GestureHandlerRootView } from "react-native-gesture-handler";
+// import { GestureHandlerRootView } from "react-native-gesture-handler";
 // import { TouchableOpacity } from "react-native-gesture-handler";
-import {
-  KeyboardEvents,
-  OverKeyboardView,
-} from "react-native-keyboard-controller";
-import { FullWindowOverlay } from "react-native-screens";
+import { OverKeyboardView } from "react-native-keyboard-controller";
 
 export default function OverKeyboardViewExample() {
   const [isShow, setShow] = useState(false);
 
   return (
     <View>
-      <TextInput
-        style={{
-          backgroundColor: "yellow",
-          width: 200,
-          height: 50,
-          alignSelf: "center",
-          marginTop: 150,
-        }}
-      />
+      <TextInput style={styles.input} testID="over_keyboard_view.input" />
       <Button
         testID="over_keyboard_view.show"
         title="Show"
         onPress={() => setShow(true)}
-      />
-      <Button
-        testID="over_keyboard_view.hide"
-        title="Hide"
-        onPress={() => setShow(false)}
       />
       <OverKeyboardView visible={isShow}>
         {/*<BlurView
@@ -50,23 +32,15 @@ export default function OverKeyboardViewExample() {
         />*/}
         <TouchableWithoutFeedback
           style={{ flex: 1 }}
+          testID="over_keyboard_view.background"
           onPress={() => setShow(false)}
         >
-          <View
-            style={{
-              flex: 1,
-              justifyContent: "flex-end",
-              alignItems: "center",
-            }}
-          >
-            <TouchableOpacity onPress={() => setShow(false)}>
-              <View
-                style={{
-                  width: 200,
-                  height: 200,
-                  backgroundColor: "blue",
-                }}
-              />
+          <View style={styles.container}>
+            <TouchableOpacity
+              testID="over_keyboard_view.content"
+              onPress={() => setShow(false)}
+            >
+              <View style={styles.background} />
             </TouchableOpacity>
           </View>
         </TouchableWithoutFeedback>
@@ -74,3 +48,23 @@ export default function OverKeyboardViewExample() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "flex-end",
+    alignItems: "center",
+  },
+  background: {
+    width: 200,
+    height: 200,
+    backgroundColor: "blue",
+  },
+  input: {
+    backgroundColor: "yellow",
+    width: 200,
+    height: 50,
+    alignSelf: "center",
+    marginTop: 150,
+  },
+});
