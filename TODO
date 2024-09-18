@@ -14,6 +14,7 @@
 ### E2E
 
 - e2e tests
+- fix freeze on iOS (Main thread is always busy, why?)
 
 ### Bugs
 
