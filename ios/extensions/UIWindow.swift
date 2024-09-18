@@ -6,44 +6,44 @@
 //
 
 import Foundation
-import UIKit
 import ObjectiveC
+import UIKit
 
 @objc
 public extension UIWindow {
-    static let sharedKeyboardWindowObserver = KeyboardWindowObserver()
-    
-    @objc
-    class KeyboardWindowObserver : NSObject {
-            private weak var keyboardWindow: UIWindow?
+  static let sharedKeyboardWindowObserver = KeyboardWindowObserver()
 
-        override init() {
-            super.init()
-                NotificationCenter.default.addObserver(
-                    self,
-                    selector: #selector(windowDidBecomeVisible(_:)),
-                    name: UIWindow.didBecomeVisibleNotification,
-                    object: nil
-                )
-            }
+  @objc
+  class KeyboardWindowObserver: NSObject {
+    private weak var keyboardWindow: UIWindow?
 
-            @objc private func windowDidBecomeVisible(_ notification: Notification) {
-                guard let window = notification.object as? UIWindow else { return }
-
-                // Check if the window is of UIRemoteKeyboardWindow class
-                let type = String(describing: window)
-                if type.range(of: "UIRemoteKeyboardWindow") != nil {
-                    keyboardWindow = window
-                }
-            }
-
-            func getTopWindow() -> UIWindow? {
-                // Return the keyboard window if it's available, otherwise return the last window
-                return keyboardWindow ?? UIApplication.shared.windows.last
-            }
-        }
-    
-    static var topWindow: UIWindow? {
-        return sharedKeyboardWindowObserver.getTopWindow()
+    override init() {
+      super.init()
+      NotificationCenter.default.addObserver(
+        self,
+        selector: #selector(windowDidBecomeVisible(_:)),
+        name: UIWindow.didBecomeVisibleNotification,
+        object: nil
+      )
     }
+
+    @objc private func windowDidBecomeVisible(_ notification: Notification) {
+      guard let window = notification.object as? UIWindow else { return }
+
+      // Check if the window is of UIRemoteKeyboardWindow class
+      let type = String(describing: window)
+      if type.range(of: "UIRemoteKeyboardWindow") != nil {
+        keyboardWindow = window
+      }
+    }
+
+    func getTopWindow() -> UIWindow? {
+      // Return the keyboard window if it's available, otherwise return the last window
+      return keyboardWindow ?? UIApplication.shared.windows.last
+    }
+  }
+
+  static var topWindow: UIWindow? {
+    return sharedKeyboardWindowObserver.getTopWindow()
+  }
 }

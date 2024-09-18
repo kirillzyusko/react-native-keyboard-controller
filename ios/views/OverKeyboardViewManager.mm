@@ -39,12 +39,14 @@ RCT_EXPORT_MODULE(OverKeyboardViewManager)
 // Expose the `visible` prop to React Native
 RCT_EXPORT_VIEW_PROPERTY(visible, BOOL)
 
-+ (BOOL)requiresMainQueueSetup {
++ (BOOL)requiresMainQueueSetup
+{
   return NO;
 }
 
 #ifndef RCT_NEW_ARCH_ENABLED
-- (UIView *)view {
+- (UIView *)view
+{
   return [[OverKeyboardView alloc] initWithBridge:self.bridge];
 }
 #endif
@@ -58,11 +60,11 @@ RCT_EXPORT_VIEW_PROPERTY(visible, BOOL)
 #endif
 
 @implementation OverKeyboardView {
-    UIView *_contentView;
+  UIView *_contentView;
 #ifdef RCT_NEW_ARCH_ENABLED
   RCTSurfaceTouchHandler *_touchHandler;
 #else
-    RCTTouchHandler *_touchHandler;
+  RCTTouchHandler *_touchHandler;
 #endif
 }
 
@@ -77,30 +79,31 @@ RCT_EXPORT_VIEW_PROPERTY(visible, BOOL)
 + (void)load
 {
   [super load];
-  
+
   // Eagerly initialize the observer
   [UIWindow sharedKeyboardWindowObserver];
 }
 
 // MARK: Constructor
 #ifdef RCT_NEW_ARCH_ENABLED
-- (instancetype)init {
-    NSLog(@"123");
-    if (self = [super init]) {
-        _touchHandler = [RCTSurfaceTouchHandler new];
-        _contentView = [[UIView alloc] initWithFrame:CGRectZero];
-      }
-      return self;
+- (instancetype)init
+{
+  if (self = [super init]) {
+    _touchHandler = [RCTSurfaceTouchHandler new];
+    _contentView = [[UIView alloc] initWithFrame:CGRectZero];
+  }
+  return self;
 }
 #else
-- (instancetype)initWithBridge:(RCTBridge *)bridge {
-    self = [super initWithFrame:CGRectZero];
-    if (self) {
-        _contentView = [[UIView alloc] initWithFrame:CGRectZero];
-        
-        _touchHandler = [[RCTTouchHandler alloc] initWithBridge:bridge];
-    }
-    return self;
+- (instancetype)initWithBridge:(RCTBridge *)bridge
+{
+  self = [super initWithFrame:CGRectZero];
+  if (self) {
+    _contentView = [[UIView alloc] initWithFrame:CGRectZero];
+
+    _touchHandler = [[RCTTouchHandler alloc] initWithBridge:bridge];
+  }
+  return self;
 }
 #endif
 
@@ -123,51 +126,58 @@ RCT_EXPORT_VIEW_PROPERTY(visible, BOOL)
 #endif
 
 #ifndef RCT_NEW_ARCH_ENABLED
-- (void)setVisible:(BOOL)visible {
-    if (visible) {
-        [self show];
-    } else {
-        [self hide];
-    }
+- (void)setVisible:(BOOL)visible
+{
+  if (visible) {
+    [self show];
+  } else {
+    [self hide];
+  }
 }
 #endif
 
-- (void)addSubview:(UIView *)view {
-    [_contentView addSubview:view];
+- (void)addSubview:(UIView *)view
+{
+  [_contentView addSubview:view];
 }
 
 #ifdef RCT_NEW_ARCH_ENABLED
-- (void)mountChildComponentView:(UIView<RCTComponentViewProtocol> *)childComponentView index:(NSInteger)index
+- (void)mountChildComponentView:(UIView<RCTComponentViewProtocol> *)childComponentView
+                          index:(NSInteger)index
 {
-    [_contentView insertSubview:childComponentView atIndex:index];
+  [_contentView insertSubview:childComponentView atIndex:index];
 }
 
-- (void)unmountChildComponentView:(UIView<RCTComponentViewProtocol> *)childComponentView index:(NSInteger)index
+- (void)unmountChildComponentView:(UIView<RCTComponentViewProtocol> *)childComponentView
+                            index:(NSInteger)index
 {
-    [childComponentView removeFromSuperview];
+  [childComponentView removeFromSuperview];
 }
 #endif
 
-- (void)show {
-    if (_visible) {
-        return;
-    }
-    _visible = true;
-    _contentView.frame = self.window.bounds;
-    _contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    UIWindow *topWindow = [UIWindow topWindow];
-    [topWindow addSubview:_contentView];
-    
-    [_touchHandler attachToView:_contentView];
+- (void)show
+{
+  if (_visible) {
+    return;
+  }
+  _visible = true;
+  _contentView.frame = self.window.bounds;
+  _contentView.autoresizingMask =
+      UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+  UIWindow *topWindow = [UIWindow topWindow];
+  [topWindow addSubview:_contentView];
+
+  [_touchHandler attachToView:_contentView];
 }
 
-- (void)hide {
-    if (!_visible) {
-        return;
-    }
-    _visible = false;
-    [_contentView removeFromSuperview];
-    [_touchHandler detachFromView:_contentView];
+- (void)hide
+{
+  if (!_visible) {
+    return;
+  }
+  _visible = false;
+  [_contentView removeFromSuperview];
+  [_touchHandler detachFromView:_contentView];
 }
 
 #ifdef RCT_NEW_ARCH_ENABLED

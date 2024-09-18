@@ -69,7 +69,7 @@ class OverKeyboardHostView(private val reactContext: ThemedReactContext) : React
       WindowManager.LayoutParams.TYPE_APPLICATION_PANEL,
       // Ensures touches outside the view pass through to other windows
       WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-      PixelFormat.TRANSLUCENT
+      PixelFormat.TRANSLUCENT,
     )
 
     // Now add the view to the WindowManager
@@ -88,7 +88,7 @@ class OverKeyboardRootViewGroup(private val reactContext: ThemedReactContext) : 
   private val jsTouchDispatcher: JSTouchDispatcher = JSTouchDispatcher(this)
   private var jsPointerDispatcher: JSPointerDispatcher? = null
   internal var eventDispatcher: EventDispatcher? = null
-  internal var isAttached = false;
+  internal var isAttached = false
 
   init {
     if (ReactFeatureFlags.dispatchPointerEvents) {
