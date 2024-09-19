@@ -26,89 +26,96 @@ import lottie from "./over-keyboard-view.lottie.json";
   />
 </div>
 
-A primitive to show any view over the keyboard without dismissing it 🔥. It's useful for showing a menu, a tooltip, a custom view, etc. Works on both iOS and Android.
+A simple way to display any view over the keyboard without hiding or closing it 🔥. It's perfect for displaying menus, tooltips, custom views, and more. Supports both iOS and Android.
 
-You may think about it as a slightly better alternative to `Modal` that don't dismiss the keyboard while it's showing thus bringing better user experience.
+Think of it as a better alternative to `Modal`, offering an improved user experience by keeping the keyboard open while the view is displayed.
 
 :::info `KeyboardProvider` presence
-This component can be used without `KeyboardProvider`, i. e. if you want to use only this component from the library, then wrapping entire app in `KeyboardProvider` is not a mandatory step.
+This component works independently of `KeyboardProvider`. If you're only using this component from the library, wrapping your entire app in `KeyboardProvider` is not required.
+:::
+
+:::tip
+Unlike `Modal` component the `OverKeyboardView` is not supposed to have too many props for customization.
+
+By default it is transparent, it stretches to **full screen** without **any animation** (i. e. `animationType`, `presentationStyle`, `statusBarTranslucent`, `transparent` properties will not be supported). To support effect of these properties you can use third party libraries like `react-native-reanimated` to create custom animations, `react-native-safe-area-context` to handle safe area insets, etc.
 :::
 
 ## Props
 
 ### `visible`
 
-A boolean prop indicating whether the view is visible or not. If it's `true` then it shows the view over the keyboard. If it's `false` then it hides the view.
+A boolean prop indicating whether the view is visible or not. If it's `true` then view is shown on the screen. If it's `false` then view is hidden.
 
 ## Example
 
 ```tsx
-import React, { useEffect, useState } from "react";
-import { TextInput, View } from "react-native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { TouchableOpacity } from "react-native-gesture-handler";
+import React, { useState } from "react";
 import {
-  KeyboardEvents,
-  OverKeyboardView,
-} from "react-native-keyboard-controller";
+  Button,
+  StyleSheet,
+  TextInput,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
+import {
+  GestureHandlerRootView,
+  TouchableOpacity,
+} from "react-native-gesture-handler";
+import { OverKeyboardView } from "react-native-keyboard-controller";
 
 export default function OverKeyboardViewExample() {
   const [isShow, setShow] = useState(false);
 
-  // show
-  useEffect(() => {
-    const subscription = KeyboardEvents.addListener("keyboardDidShow", (e) => {
-      console.log(1, e);
-      setShow(true);
-
-      /*setTimeout(() => {
-        setShow(false);
-      }, 5000);*/
-    });
-
-    return subscription.remove;
-  }, []);
-
-  // hide
-  useEffect(() => {
-    const subscription = KeyboardEvents.addListener("keyboardDidHide", (e) => {
-      console.log(2, e);
-      setShow(false);
-    });
-
-    return subscription.remove;
-  }, []);
-
   return (
     <View>
-      <TextInput
-        style={{
-          backgroundColor: "yellow",
-          width: 200,
-          height: 50,
-          alignSelf: "center",
-          marginTop: 50,
-        }}
+      <TextInput style={styles.input} testID="over_keyboard_view.input" />
+      <Button
+        testID="over_keyboard_view.show"
+        title="Show"
+        onPress={() => setShow(true)}
       />
       <OverKeyboardView visible={isShow}>
-        {/* Temporary solution - OKV should always have an empty view as a first children */}
-        <View>
-          <GestureHandlerRootView
-            style={{ flex: 1, justifyContent: "flex-end", alignItems: "center" }}
+        <GestureHandlerRootView style={styles.fullScreen}>
+          <TouchableWithoutFeedback
+            style={styles.fullScreen}
+            testID="over_keyboard_view.background"
+            onPress={() => setShow(false)}
           >
-            <TouchableOpacity>
-              <View
-                style={{
-                  width: 200,
-                  height: 200,
-                  backgroundColor: "blue",
-                }}
-              />
-            </TouchableOpacity>
-          </GestureHandlerRootView>
-        </View>
+            <View style={styles.container}>
+              <TouchableOpacity
+                testID="over_keyboard_view.content"
+                onPress={() => setShow(false)}
+              >
+                <View style={styles.background} />
+              </TouchableOpacity>
+            </View>
+          </TouchableWithoutFeedback>
+        </GestureHandlerRootView>
       </OverKeyboardView>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  fullScreen: {
+    flex: 1,
+  },
+  container: {
+    flex: 1,
+    justifyContent: "flex-end",
+    alignItems: "center",
+  },
+  background: {
+    width: 200,
+    height: 200,
+    backgroundColor: "blue",
+  },
+  input: {
+    backgroundColor: "yellow",
+    width: 200,
+    height: 50,
+    alignSelf: "center",
+    marginTop: 150,
+  },
+});
 ```
