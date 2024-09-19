@@ -4,12 +4,10 @@ import {
   Button,
   StyleSheet,
   TextInput,
-  TouchableOpacity,
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-// import { GestureHandlerRootView } from "react-native-gesture-handler";
-// import { TouchableOpacity } from "react-native-gesture-handler";
+import { GestureHandlerRootView, TouchableOpacity } from "react-native-gesture-handler";
 import { OverKeyboardView } from "react-native-keyboard-controller";
 
 export default function OverKeyboardViewExample() {
@@ -30,26 +28,31 @@ export default function OverKeyboardViewExample() {
           overlayColor="transparent"
           style={StyleSheet.absoluteFill}
         />*/}
-        <TouchableWithoutFeedback
-          style={{ flex: 1 }}
-          testID="over_keyboard_view.background"
-          onPress={() => setShow(false)}
-        >
-          <View style={styles.container}>
-            <TouchableOpacity
-              testID="over_keyboard_view.content"
-              onPress={() => setShow(false)}
-            >
-              <View style={styles.background} />
-            </TouchableOpacity>
-          </View>
-        </TouchableWithoutFeedback>
+        <GestureHandlerRootView style={styles.fullScreen}>
+          <TouchableWithoutFeedback
+            style={styles.fullScreen}
+            testID="over_keyboard_view.background"
+            onPress={() => setShow(false)}
+          >
+            <View style={styles.container}>
+              <TouchableOpacity
+                testID="over_keyboard_view.content"
+                onPress={() => setShow(false)}
+              >
+                <View style={styles.background} />
+              </TouchableOpacity>
+            </View>
+          </TouchableWithoutFeedback>
+        </GestureHandlerRootView>
       </OverKeyboardView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  fullScreen: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     justifyContent: "flex-end",

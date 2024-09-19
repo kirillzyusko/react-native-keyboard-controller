@@ -107,6 +107,38 @@ RCT_EXPORT_VIEW_PROPERTY(visible, BOOL)
 }
 #endif
 
+// MARK: touch handling
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
+{
+  BOOL canReceiveTouchEvents = ([self isUserInteractionEnabled] && ![self isHidden] && _visible);
+  if (!canReceiveTouchEvents) {
+    return nil;
+  }
+
+  // `hitSubview` is the topmost subview which was hit. The hit point can
+  // be outside the bounds of `view` (e.g., if -clipsToBounds is NO).
+  UIView *hitSubview = nil;
+  BOOL isPointInside = [self pointInside:point withEvent:event];
+  if (![self clipsToBounds] || isPointInside) {
+    // TODO: should we take zIndex into consideration?
+    // The default behaviour of UIKit is that if a view does not contain a point,
+    // then no subviews will be returned from hit testing, even if they contain
+    // the hit point. By doing hit testing directly on the subviews, we bypass
+    // the strict containment policy (i.e., UIKit guarantees that every ancestor
+    // of the hit view will return YES from -pointInside:withEvent:). See:
+    //  - https://developer.apple.com/library/ios/qa/qa2013/qa1812.html
+    for (UIView *subview in [_contentView.subviews reverseObjectEnumerator]) {
+      CGPoint convertedPoint = [subview convertPoint:point fromView:self];
+      hitSubview = [subview hitTest:convertedPoint withEvent:event];
+      if (hitSubview != nil) {
+        break;
+      }
+    }
+  }
+  return hitSubview;
+}
+
+// MARK: props updater
 #ifdef RCT_NEW_ARCH_ENABLED
 - (void)updateProps:(Props::Shared const &)props oldProps:(Props::Shared const &)oldProps
 {
@@ -123,9 +155,7 @@ RCT_EXPORT_VIEW_PROPERTY(visible, BOOL)
 
   [super updateProps:props oldProps:oldProps];
 }
-#endif
-
-#ifndef RCT_NEW_ARCH_ENABLED
+#else
 - (void)setVisible:(BOOL)visible
 {
   if (visible) {
@@ -136,11 +166,7 @@ RCT_EXPORT_VIEW_PROPERTY(visible, BOOL)
 }
 #endif
 
-- (void)addSubview:(UIView *)view
-{
-  [_contentView addSubview:view];
-}
-
+// MARK: child management
 #ifdef RCT_NEW_ARCH_ENABLED
 - (void)mountChildComponentView:(UIView<RCTComponentViewProtocol> *)childComponentView
                           index:(NSInteger)index
@@ -153,6 +179,11 @@ RCT_EXPORT_VIEW_PROPERTY(visible, BOOL)
 {
   [childComponentView removeFromSuperview];
 }
+#else
+- (void)addSubview:(UIView *)view
+{
+  [_contentView addSubview:view];
+}
 #endif
 
 - (void)show
@@ -164,10 +195,10 @@ RCT_EXPORT_VIEW_PROPERTY(visible, BOOL)
   _contentView.frame = self.window.bounds;
   _contentView.autoresizingMask =
       UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+  [_touchHandler attachToView:_contentView];
+
   UIWindow *topWindow = [UIWindow topWindow];
   [topWindow addSubview:_contentView];
-
-  [_touchHandler attachToView:_contentView];
 }
 
 - (void)hide

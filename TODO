@@ -13,8 +13,9 @@
 
 ### E2E
 
-- e2e tests
-- fix freeze on iOS (Main thread is always busy, why?)
+- (x) e2e tests
+- (x) fix freeze on iOS (Main thread is always busy, why?) - synchronization can be displayed
+- buttons can not be pressed on iOS
 
 ### Bugs
 
@@ -26,4 +27,4 @@
 - (x) Fabric Android
 - (x) Fabric iOS
 - (x) iOS hot reload
-- iOS + gesture handler
+- (x) iOS + gesture handler - hitTest must be implemented

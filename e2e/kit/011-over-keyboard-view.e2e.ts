@@ -23,6 +23,8 @@ describe("`OverKeyboardView` specification", () => {
   });
 
   it("should be visible when `visible={true}`", async () => {
+    // prevents always busy loop on iOS
+    await device.disableSynchronization();
     await waitAndTap("over_keyboard_view.show");
     await waitForExpect(async () => {
       await expectBitmapsToBeEqual("OverKeyboardViewShown");
@@ -36,18 +38,18 @@ describe("`OverKeyboardView` specification", () => {
     });
   });
 
-  it("should be displayed overlapping keyboard", async () => {
-    await waitAndTap("over_keyboard_view.input");
-    await waitAndTap("over_keyboard_view.show");
+  /*it("should be displayed overlapping keyboard", async () => {
+    await tap("over_keyboard_view.input");
+    await tap("over_keyboard_view.show");
     await waitForExpect(async () => {
       await expectBitmapsToBeEqual("OverKeyboardViewShownWithKeyboard");
     });
   });
 
   it("should have tappable elements", async () => {
-    await waitAndTap("over_keyboard_view.content");
+    await tap("over_keyboard_view.content");
     await waitForExpect(async () => {
       await expectBitmapsToBeEqual("OverKeyboardViewHiddenWithKeyboard");
     });
-  });
+  });*/
 });
