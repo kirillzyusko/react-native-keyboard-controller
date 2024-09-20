@@ -6,8 +6,8 @@ import type {
   KeyboardControllerProps,
   KeyboardEventsModule,
   KeyboardGestureAreaProps,
-  WindowDimensionsEventsModule,
   OverKeyboardViewProps,
+  WindowDimensionsEventsModule,
 } from "./types";
 
 const LINKING_ERROR =

@@ -6,8 +6,8 @@ import type {
   KeyboardControllerProps,
   KeyboardEventsModule,
   KeyboardGestureAreaProps,
-  WindowDimensionsEventsModule,
   OverKeyboardViewProps,
+  WindowDimensionsEventsModule,
 } from "./types";
 import type { EmitterSubscription } from "react-native";
 

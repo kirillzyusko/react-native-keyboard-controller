@@ -1,7 +1,7 @@
 - (x) iOS implementation
 - (x) incorrect positioning of elements - why view can be stretched to full screen?
 - (x) why justifyContent: "center" and flex: 1 doesn't work - first view must be without a style because otherwise styling is kind of conflicting with native styles
-- (x) RNGH on Android - GestureHandlerRootView
+- (x) react-native-gesture-handler on Android - GestureHandlerRootView
 - (x) Android hot reloading <- pass all events from HostView to underlying view + visible property
 - (x) docs
 - (x) lottie animation
@@ -14,7 +14,7 @@
 ### E2E
 
 - (x) e2e tests
-- (x) fix freeze on iOS (Main thread is always busy, why?) - synchronization can be displayed
+- (x) fix freeze on iOS (Main thread is always busy, why?) - synchronization can be disabled
 - buttons can not be pressed on iOS
 
 ### Bugs
