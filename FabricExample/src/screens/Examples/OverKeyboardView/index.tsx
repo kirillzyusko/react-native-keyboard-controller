@@ -1,4 +1,4 @@
-import { BlurView } from "@react-native-community/blur";
+// import { BlurView } from "@react-native-community/blur";
 import React, { useState } from "react";
 import {
   Button,
@@ -7,7 +7,10 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import { GestureHandlerRootView, TouchableOpacity } from "react-native-gesture-handler";
+import {
+  GestureHandlerRootView,
+  TouchableOpacity,
+} from "react-native-gesture-handler";
 import { OverKeyboardView } from "react-native-keyboard-controller";
 
 export default function OverKeyboardViewExample() {

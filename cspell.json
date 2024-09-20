@@ -121,7 +121,9 @@
     "setinputmode",
     "useanimatedkeyboard",
     "Hoverable",
-    "zxcvbnmasdfghjklqwertyuiop"
+    "zxcvbnmasdfghjklqwertyuiop",
+    "autoresizing",
+    "focusable"
   ],
   "ignorePaths": [
     "node_modules",

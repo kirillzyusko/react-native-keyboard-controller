@@ -26,7 +26,7 @@ class OverKeyboardHostView(private val reactContext: ThemedReactContext) : React
     hostView.eventDispatcher = dispatcher
   }
 
-  // region Lifecycles
+  // region life cycles
   override fun onDetachedFromWindow() {
     super.onDetachedFromWindow()
 
@@ -96,7 +96,7 @@ class OverKeyboardRootViewGroup(private val reactContext: ThemedReactContext) : 
     }
   }
 
-  // region Lifecycles
+  // region life cycles
   override fun onAttachedToWindow() {
     super.onAttachedToWindow()
     isAttached = true
