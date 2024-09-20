@@ -13,7 +13,6 @@ import UIKit
 public extension UIWindow {
   static let sharedKeyboardWindowObserver = KeyboardWindowObserver()
 
-  @objc
   class KeyboardWindowObserver: NSObject {
     private weak var keyboardWindow: UIWindow?
 
