@@ -108,7 +108,7 @@ const options = {
     headerShown: false,
   },
   [ScreenNames.OVER_KEYBOARD_VIEW]: {
-    title: "Over keyboard view",
+    title: "View over keyboard",
   },
 };
 
