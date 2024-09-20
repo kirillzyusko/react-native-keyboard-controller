@@ -15,7 +15,7 @@
 
 - (x) e2e tests
 - (x) fix freeze on iOS (Main thread is always busy, why?) - synchronization can be disabled
-- buttons can not be pressed on iOS
+- (-) buttons can not be pressed on iOS <- submit issue to detox
 
 ### Bugs
 

@@ -6,7 +6,9 @@ import {
   waitForExpect,
 } from "./helpers";
 
-describe("`OverKeyboardView` specification", () => {
+const test = device.getPlatform() === "ios" ? describe.skip : describe;
+
+test("`OverKeyboardView` specification", () => {
   it("should navigate to `OverKeyboardView` screen", async () => {
     await scrollDownUntilElementIsVisible(
       "main_scroll_view",
@@ -23,8 +25,6 @@ describe("`OverKeyboardView` specification", () => {
   });
 
   it("should be visible when `visible={true}`", async () => {
-    // prevents always busy loop on iOS
-    await device.disableSynchronization();
     await waitAndTap("over_keyboard_view.show");
     await waitForExpect(async () => {
       await expectBitmapsToBeEqual("OverKeyboardViewShown");
@@ -38,18 +38,18 @@ describe("`OverKeyboardView` specification", () => {
     });
   });
 
-  /*it("should be displayed overlapping keyboard", async () => {
-    await tap("over_keyboard_view.input");
-    await tap("over_keyboard_view.show");
+  it("should be displayed overlapping keyboard", async () => {
+    await waitAndTap("over_keyboard_view.input");
+    await waitAndTap("over_keyboard_view.show");
     await waitForExpect(async () => {
       await expectBitmapsToBeEqual("OverKeyboardViewShownWithKeyboard");
     });
   });
 
   it("should have tappable elements", async () => {
-    await tap("over_keyboard_view.content");
+    await waitAndTap("over_keyboard_view.content");
     await waitForExpect(async () => {
       await expectBitmapsToBeEqual("OverKeyboardViewHiddenWithKeyboard");
     });
-  });*/
+  });
 });
