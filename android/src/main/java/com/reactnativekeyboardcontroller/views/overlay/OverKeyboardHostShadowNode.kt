@@ -2,7 +2,7 @@ package com.reactnativekeyboardcontroller.views.overlay
 
 import com.facebook.react.uimanager.LayoutShadowNode
 import com.facebook.react.uimanager.ReactShadowNodeImpl
-import com.reactnativekeyboardcontroller.views.overlay.OverKeyboardHostHelper.getModalHostSize
+import com.reactnativekeyboardcontroller.extensions.getDisplaySize
 
 /**
  * We implement the OverKeyboardView by using an Android WindowManager. That will fill the entire window of the
@@ -20,7 +20,7 @@ internal class OverKeyboardHostShadowNode : LayoutShadowNode() {
    */
   override fun addChildAt(child: ReactShadowNodeImpl, i: Int) {
     super.addChildAt(child, i)
-    val modalSize = getModalHostSize(themedContext)
+    val modalSize = themedContext.getDisplaySize()
     child.setStyleWidth(modalSize.x.toFloat())
     child.setStyleHeight(modalSize.y.toFloat())
   }
