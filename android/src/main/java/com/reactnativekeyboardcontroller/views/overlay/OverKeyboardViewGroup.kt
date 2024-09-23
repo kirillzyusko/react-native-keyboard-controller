@@ -63,8 +63,8 @@ class OverKeyboardHostView(private val reactContext: ThemedReactContext) : React
 
   fun show() {
     val layoutParams = WindowManager.LayoutParams(
-      WindowManager.LayoutParams.MATCH_PARENT, // Width
-      WindowManager.LayoutParams.MATCH_PARENT, // Height in pixels
+      WindowManager.LayoutParams.MATCH_PARENT,
+      WindowManager.LayoutParams.MATCH_PARENT,
       // This type ensures it floats over other application windows but under system windows
       WindowManager.LayoutParams.TYPE_APPLICATION_PANEL,
       // Ensures touches outside the view pass through to other windows
@@ -72,7 +72,6 @@ class OverKeyboardHostView(private val reactContext: ThemedReactContext) : React
       PixelFormat.TRANSLUCENT,
     )
 
-    // Now add the view to the WindowManager
     windowManager.addView(hostView, layoutParams)
   }
 

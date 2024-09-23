@@ -99,9 +99,8 @@ RCT_EXPORT_VIEW_PROPERTY(visible, BOOL)
 {
   self = [super initWithFrame:CGRectZero];
   if (self) {
-    _contentView = [[UIView alloc] initWithFrame:CGRectZero];
-
     _touchHandler = [[RCTTouchHandler alloc] initWithBridge:bridge];
+    _contentView = [[UIView alloc] initWithFrame:CGRectZero];
   }
   return self;
 }
