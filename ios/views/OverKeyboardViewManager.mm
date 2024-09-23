@@ -81,7 +81,7 @@ RCT_EXPORT_VIEW_PROPERTY(visible, BOOL)
   [super load];
 
   // Eagerly initialize the observer
-  [UIWindow sharedKeyboardWindowObserver];
+  (void)[UIWindow sharedKeyboardWindowObserver];
 }
 
 // MARK: Constructor
