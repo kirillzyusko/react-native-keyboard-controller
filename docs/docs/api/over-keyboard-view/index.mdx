@@ -119,3 +119,7 @@ const styles = StyleSheet.create({
   },
 });
 ```
+
+## Limitations
+
+- at the moment it's not possible to write e2e tests using [Detox](https://github.com/wix/Detox) on **iOS** (Android tests are working fine) because clicks are not propagated to the `OverKeyboardView` component (I'm actively working to fix that).
