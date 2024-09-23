@@ -8,6 +8,7 @@ import {
   KeyboardProvider,
   KeyboardStickyView,
   KeyboardToolbar,
+  OverKeyboardView,
 } from "react-native-keyboard-controller";
 
 function EmptyView() {
@@ -63,6 +64,14 @@ function KeyboardToolbarTest() {
   return <KeyboardToolbar content={<EmptyView />} />;
 }
 
+function OverKeyboardViewTest() {
+  return (
+    <OverKeyboardView visible={true}>
+      <EmptyView />
+    </OverKeyboardView>
+  );
+}
+
 describe("components rendering", () => {
   it("should render `KeyboardControllerView`", () => {
     expect(render(<KeyboardControllerViewTest />)).toMatchSnapshot();
@@ -86,5 +95,9 @@ describe("components rendering", () => {
 
   it("should render `KeyboardToolbar`", () => {
     expect(render(<KeyboardToolbarTest />)).toMatchSnapshot();
+  });
+
+  it("should render `OverKeyboardView`", () => {
+    expect(render(<OverKeyboardViewTest />)).toMatchSnapshot();
   });
 });

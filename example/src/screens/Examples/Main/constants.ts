@@ -117,4 +117,10 @@ export const examples: Example[] = [
     info: ScreenNames.BOTTOM_TAB_BAR,
     icons: "🧱",
   },
+  {
+    title: "Over keyboard view",
+    testID: "over_keyboard_view",
+    info: ScreenNames.OVER_KEYBOARD_VIEW,
+    icons: "🤫",
+  },
 ];

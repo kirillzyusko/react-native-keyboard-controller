@@ -1,3 +1,4 @@
+import type { PropsWithChildren } from "react";
 import type {
   EmitterSubscription,
   NativeSyntheticEvent,
@@ -108,6 +109,9 @@ export type KeyboardGestureAreaProps = {
    */
   offset?: number;
 } & ViewProps;
+export type OverKeyboardViewProps = PropsWithChildren<{
+  visible: boolean;
+}>;
 
 export type Direction = "next" | "prev" | "current";
 export type KeyboardControllerModule = {

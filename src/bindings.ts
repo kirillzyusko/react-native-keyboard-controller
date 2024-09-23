@@ -6,6 +6,7 @@ import type {
   KeyboardControllerProps,
   KeyboardEventsModule,
   KeyboardGestureAreaProps,
+  OverKeyboardViewProps,
   WindowDimensionsEventsModule,
 } from "./types";
 import type { EmitterSubscription } from "react-native";
@@ -37,3 +38,5 @@ export const KeyboardControllerView =
   View as unknown as React.FC<KeyboardControllerProps>;
 export const KeyboardGestureArea =
   View as unknown as React.FC<KeyboardGestureAreaProps>;
+export const RCTOverKeyboardView =
+  View as unknown as React.FC<OverKeyboardViewProps>;

@@ -54,6 +54,10 @@ class KeyboardControllerPackage : TurboReactPackage() {
   }
 
   override fun createViewManagers(reactContext: ReactApplicationContext): List<ViewManager<*, *>> {
-    return listOf(KeyboardControllerViewManager(reactContext), KeyboardGestureAreaViewManager(reactContext))
+    return listOf(
+      KeyboardControllerViewManager(reactContext),
+      KeyboardGestureAreaViewManager(reactContext),
+      OverKeyboardViewManager(reactContext),
+    )
   }
 }
