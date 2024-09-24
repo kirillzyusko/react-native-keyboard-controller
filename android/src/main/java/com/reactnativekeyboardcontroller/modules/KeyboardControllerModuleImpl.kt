@@ -22,10 +22,10 @@ class KeyboardControllerModuleImpl(private val mReactContext: ReactApplicationCo
 
   fun dismiss() {
     val activity = mReactContext.currentActivity
-    val view: View? = activity?.currentFocus
+    val view: View? = FocusedInputHolder.get()
 
     if (view != null) {
-      val imm = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+      val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
       imm?.hideSoftInputFromWindow(view.windowToken, 0)
     }
   }
@@ -35,8 +35,7 @@ class KeyboardControllerModuleImpl(private val mReactContext: ReactApplicationCo
       return FocusedInputHolder.focus()
     }
 
-    val activity = mReactContext.currentActivity
-    val view: View? = activity?.currentFocus
+    val view: View? = FocusedInputHolder.get()
 
     if (view != null) {
       ViewHierarchyNavigator.setFocusTo(direction, view)
