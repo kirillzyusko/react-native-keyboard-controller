@@ -38,6 +38,8 @@ export type KeyboardAwareScrollViewProps = {
   enabled?: boolean;
   /** Adjusting the bottom spacing of KeyboardAwareScrollView. Default is `0` */
   extraKeyboardSpace?: number;
+  /** Custom component for `ScrollView`. Default is `ScrollView` */
+  ScrollViewComponent?: React.ComponentType<ScrollViewProps>;
 } & ScrollViewProps;
 
 /*
@@ -90,6 +92,7 @@ const KeyboardAwareScrollView = forwardRef<
       disableScrollOnKeyboardHide = false,
       enabled = true,
       extraKeyboardSpace = 0,
+      ScrollViewComponent = Reanimated.ScrollView,
       snapToOffsets,
       ...rest
     },
@@ -362,7 +365,7 @@ const KeyboardAwareScrollView = forwardRef<
     );
 
     return (
-      <Reanimated.ScrollView
+      <ScrollViewComponent
         ref={onRef}
         {...rest}
         scrollEventThrottle={16}
@@ -370,7 +373,7 @@ const KeyboardAwareScrollView = forwardRef<
       >
         {children}
         <Reanimated.View style={view} />
-      </Reanimated.ScrollView>
+      </ScrollViewComponent>
     );
   },
 );

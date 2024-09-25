@@ -66,6 +66,21 @@ Below is a table with the most important functions and their support in various 
 
 Inherits [ScrollView Props](https://reactnative.dev/docs/scrollview#props).
 
+### `ScrollViewComponent`
+
+Custom component that will be used as a `ScrollView`. Default is `ScrollView`.
+
+:::tip When to use it?
+If you want to use `ScrollView` from `react-native-gesture-handler` you can pass it as a `ScrollViewComponent` prop.
+
+```tsx
+import { ScrollView } from "react-native-gesture-handler";
+
+<KeyboardAwareScrollView ScrollViewComponent={ScrollView} />;
+```
+
+:::
+
 ### `bottomOffset`
 
 The distance between keyboard and focused `TextInput` when keyboard is shown. Default is `0`.
