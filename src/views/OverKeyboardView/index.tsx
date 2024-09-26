@@ -6,13 +6,14 @@ import { useWindowDimensions } from "../../hooks";
 
 import type { OverKeyboardViewProps } from "../../types";
 import type { PropsWithChildren } from "react";
+import type { ViewStyle } from "react-native";
 
 const OverKeyboardView = ({
   children,
   visible,
 }: PropsWithChildren<OverKeyboardViewProps>) => {
   const { height, width } = useWindowDimensions();
-  const inner = useMemo(
+  const inner: ViewStyle = useMemo(
     () => ({ position: "absolute", height, width }),
     [height, width],
   );
