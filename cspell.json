@@ -27,6 +27,7 @@
     "instancetype",
     "androidx",
     "swiftlint",
+    "swiftformat",
     "detekt",
     "docsearch",
     "searchbox",
