@@ -1,6 +1,7 @@
 disabled_rules:
   # trailing comma is forced by swiftformat
   - trailing_comma
+  - for_where
 
 line_length:
   warning: 120
