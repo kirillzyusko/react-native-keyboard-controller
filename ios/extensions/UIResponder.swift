@@ -55,7 +55,8 @@ public extension Optional where Wrapped: UIResponder {
       if let scrollView = currentView as? UIScrollView,
          !(currentView is UITextView),
          scrollView.frame.width >= scrollView.contentSize.width,
-         scrollView.isScrollEnabled {
+         scrollView.isScrollEnabled
+      {
         return scrollView.reactViewTag
       }
 
