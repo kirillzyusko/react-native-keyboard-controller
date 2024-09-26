@@ -12,7 +12,10 @@ const OverKeyboardView = ({
   visible,
 }: PropsWithChildren<OverKeyboardViewProps>) => {
   const { height, width } = useWindowDimensions();
-  const inner = useMemo(() => ({ height, width }), [height, width]);
+  const inner = useMemo(
+    () => ({ position: "absolute", height, width }),
+    [height, width],
+  );
 
   return (
     <RCTOverKeyboardView visible={visible}>
