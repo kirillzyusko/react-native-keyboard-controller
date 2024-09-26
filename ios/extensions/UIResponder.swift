@@ -55,11 +55,7 @@ public extension Optional where Wrapped: UIResponder {
       if let scrollView = currentView as? UIScrollView,
          !(currentView is UITextView),
          scrollView.frame.width >= scrollView.contentSize.width,
-         scrollView.isScrollEnabled
-      // it was fixed in swiftlint https://github.com/realm/SwiftLint/issues/3756 but a new release is not available yet
-      // swiftlint:disable all
-      {
-        // swiftlint:enable all
+         scrollView.isScrollEnabled {
         return scrollView.reactViewTag
       }
 
