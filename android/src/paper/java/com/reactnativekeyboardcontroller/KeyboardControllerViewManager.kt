@@ -14,7 +14,8 @@ class KeyboardControllerViewManager(
 
   override fun getName(): String = KeyboardControllerViewManagerImpl.NAME
 
-  override fun createViewInstance(reactContext: ThemedReactContext): EdgeToEdgeReactViewGroup = manager.createViewInstance(reactContext)
+  override fun createViewInstance(reactContext: ThemedReactContext): EdgeToEdgeReactViewGroup =
+    manager.createViewInstance(reactContext)
 
   @ReactProp(name = "enabled")
   fun setEnabled(
@@ -40,5 +41,6 @@ class KeyboardControllerViewManager(
     manager.setNavigationBarTranslucent(view, isNavigationBarTranslucent)
   }
 
-  override fun getExportedCustomDirectEventTypeConstants(): MutableMap<String, Any> = manager.getExportedCustomDirectEventTypeConstants()
+  override fun getExportedCustomDirectEventTypeConstants(): MutableMap<String, Any> =
+    manager.getExportedCustomDirectEventTypeConstants()
 }

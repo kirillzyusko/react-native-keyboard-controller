@@ -9,7 +9,8 @@ import com.reactnativekeyboardcontroller.views.EdgeToEdgeReactViewGroup
 class KeyboardControllerViewManagerImpl(
   mReactContext: ReactApplicationContext,
 ) {
-  fun createViewInstance(reactContext: ThemedReactContext): EdgeToEdgeReactViewGroup = EdgeToEdgeReactViewGroup(reactContext)
+  fun createViewInstance(reactContext: ThemedReactContext): EdgeToEdgeReactViewGroup =
+    EdgeToEdgeReactViewGroup(reactContext)
 
   fun setEnabled(
     view: EdgeToEdgeReactViewGroup,

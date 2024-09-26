@@ -24,7 +24,8 @@ class OverKeyboardViewManager(
 
   override fun getName(): String = OverKeyboardViewManagerImpl.NAME
 
-  override fun createViewInstance(context: ThemedReactContext): OverKeyboardHostView = manager.createViewInstance(context)
+  override fun createViewInstance(context: ThemedReactContext): OverKeyboardHostView =
+    manager.createViewInstance(context)
 
   override fun createShadowNodeInstance(): LayoutShadowNode = OverKeyboardHostShadowNode()
 

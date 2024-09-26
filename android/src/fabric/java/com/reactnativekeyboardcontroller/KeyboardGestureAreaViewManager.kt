@@ -22,7 +22,8 @@ class KeyboardGestureAreaViewManager(
 
   override fun getName(): String = KeyboardGestureAreaViewManagerImpl.NAME
 
-  override fun createViewInstance(context: ThemedReactContext): KeyboardGestureAreaReactViewGroup = manager.createViewInstance(context)
+  override fun createViewInstance(context: ThemedReactContext): KeyboardGestureAreaReactViewGroup =
+    manager.createViewInstance(context)
 
   @ReactProp(name = "offset")
   override fun setOffset(

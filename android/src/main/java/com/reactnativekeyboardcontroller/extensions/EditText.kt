@@ -162,7 +162,14 @@ class KeyboardControllerSelectionWatcher(
         cursorPositionEndX = right + cursorWidth
         cursorPositionEndY = bottom.toFloat()
 
-        action(start, end, cursorPositionStartX.dp, cursorPositionStartY.dp, cursorPositionEndX.dp, cursorPositionEndY.dp)
+        action(
+          start,
+          end,
+          cursorPositionStartX.dp,
+          cursorPositionStartY.dp,
+          cursorPositionEndX.dp,
+          cursorPositionEndY.dp,
+        )
       }
     }
 

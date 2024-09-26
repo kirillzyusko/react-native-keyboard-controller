@@ -42,5 +42,6 @@ class KeyboardControllerViewManager(
     value: Boolean,
   ) = manager.setEnabled(view as EdgeToEdgeReactViewGroup, value)
 
-  override fun getExportedCustomDirectEventTypeConstants(): MutableMap<String, Any> = manager.getExportedCustomDirectEventTypeConstants()
+  override fun getExportedCustomDirectEventTypeConstants(): MutableMap<String, Any> =
+    manager.getExportedCustomDirectEventTypeConstants()
 }
