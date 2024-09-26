@@ -23,6 +23,9 @@
     "!android/gradlew.bat",
     "!ios/build",
     "!ios/KeyboardControllerNative",
+    "!ios/.swiftlint.yml",
+    "!ios/.swiftformat",
+    "!ios/.clang-format",
     "!**/__tests__",
     "!**/__fixtures__",
     "!**/__mocks__"
