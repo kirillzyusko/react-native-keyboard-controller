@@ -30,12 +30,13 @@ class ModalAttachedWatcher(
       return
     }
 
-    val modal = try {
-      uiManager?.resolveView(event.viewTag) as? ReactModalHostView
-    } catch (ignore: Exception) {
-      Logger.w(TAG, "Can not resolve view for Modal#${event.viewTag}", ignore)
-      null
-    }
+    val modal =
+      try {
+        uiManager?.resolveView(event.viewTag) as? ReactModalHostView
+      } catch (ignore: Exception) {
+        Logger.w(TAG, "Can not resolve view for Modal#${event.viewTag}", ignore)
+        null
+      }
 
     if (modal == null) {
       return
@@ -46,12 +47,13 @@ class ModalAttachedWatcher(
     val rootView = window?.decorView?.rootView
 
     if (rootView != null) {
-      val callback = KeyboardAnimationCallback(
-        view = rootView,
-        eventPropagationView = view,
-        context = reactContext,
-        config = config(),
-      )
+      val callback =
+        KeyboardAnimationCallback(
+          view = rootView,
+          eventPropagationView = view,
+          context = reactContext,
+          config = config(),
+        )
 
       ViewCompat.setWindowInsetsAnimationCallback(rootView, callback)
       ViewCompat.setOnApplyWindowInsetsListener(rootView, callback)

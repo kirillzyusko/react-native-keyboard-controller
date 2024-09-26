@@ -14,14 +14,21 @@ fun ThemedReactContext.setupWindowDimensionsListener() {
   WindowDimensionListener(this)
 }
 
-fun ThemedReactContext?.dispatchEvent(viewId: Int, event: Event<*>) {
+fun ThemedReactContext?.dispatchEvent(
+  viewId: Int,
+  event: Event<*>,
+) {
   val eventDispatcher: EventDispatcher? =
     UIManagerHelper.getEventDispatcherForReactTag(this as ReactContext, viewId)
   eventDispatcher?.dispatchEvent(event)
 }
 
-fun ThemedReactContext?.emitEvent(event: String, params: WritableMap) {
-  this?.reactApplicationContext
+fun ThemedReactContext?.emitEvent(
+  event: String,
+  params: WritableMap,
+) {
+  this
+    ?.reactApplicationContext
     ?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
     ?.emit(event, params)
 

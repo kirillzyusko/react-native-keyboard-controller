@@ -18,16 +18,18 @@ fun View.requestApplyInsetsWhenAttached() {
     requestApplyInsets()
   } else {
     // We're not attached to the hierarchy, add a listener to request when we are
-    addOnAttachStateChangeListener(object : View.OnAttachStateChangeListener {
-      override fun onViewAttachedToWindow(v: View) {
-        v.removeOnAttachStateChangeListener(this)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
-          v.requestApplyInsets()
+    addOnAttachStateChangeListener(
+      object : View.OnAttachStateChangeListener {
+        override fun onViewAttachedToWindow(v: View) {
+          v.removeOnAttachStateChangeListener(this)
+          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
+            v.requestApplyInsets()
+          }
         }
-      }
 
-      override fun onViewDetachedFromWindow(v: View) = Unit
-    })
+        override fun onViewDetachedFromWindow(v: View) = Unit
+      },
+    )
   }
 }
 

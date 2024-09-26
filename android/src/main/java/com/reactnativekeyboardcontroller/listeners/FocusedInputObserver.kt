@@ -25,16 +25,17 @@ import com.reactnativekeyboardcontroller.extensions.screenLocation
 import com.reactnativekeyboardcontroller.traversal.FocusedInputHolder
 import com.reactnativekeyboardcontroller.traversal.ViewHierarchyNavigator
 
-val noFocusedInputEvent = FocusedInputLayoutChangedEventData(
-  x = 0.0,
-  y = 0.0,
-  width = 0.0,
-  height = 0.0,
-  absoluteX = 0.0,
-  absoluteY = 0.0,
-  target = -1,
-  parentScrollViewTarget = -1,
-)
+val noFocusedInputEvent =
+  FocusedInputLayoutChangedEventData(
+    x = 0.0,
+    y = 0.0,
+    width = 0.0,
+    height = 0.0,
+    absoluteX = 0.0,
+    absoluteY = 0.0,
+    target = -1,
+    parentScrollViewTarget = -1,
+  )
 
 class FocusedInputObserver(
   val view: View,
@@ -82,50 +83,52 @@ class FocusedInputObserver(
       FocusedInputSelectionChangedEvent(
         surfaceId,
         eventPropagationView.id,
-        event = FocusedInputSelectionChangedEventData(
-          target = input.id,
-          start = start,
-          end = end,
-          startX = startX,
-          startY = startY,
-          endX = endX,
-          endY = endY,
-        ),
+        event =
+          FocusedInputSelectionChangedEventData(
+            target = input.id,
+            start = start,
+            end = end,
+            startX = startX,
+            startY = startY,
+            endX = endX,
+            endY = endY,
+          ),
       ),
     )
   }
-  private val focusListener = OnGlobalFocusChangeListener { oldFocus, newFocus ->
-    // unfocused or focus was changed
-    if (newFocus == null || oldFocus != null) {
-      lastFocusedInput?.removeOnLayoutChangeListener(layoutListener)
-      lastFocusedInput?.removeTextChangedListener(textWatcher)
-      selectionSubscription?.invoke()
-      lastFocusedInput = null
-    }
-    if (newFocus is ReactEditText) {
-      lastFocusedInput = newFocus
-      newFocus.addOnLayoutChangeListener(layoutListener)
-      this.syncUpLayout()
-      textWatcher = newFocus.addOnTextChangedListener(textListener)
-      selectionSubscription = newFocus.addOnSelectionChangedListener(selectionListener)
-      FocusedInputHolder.set(newFocus)
+  private val focusListener =
+    OnGlobalFocusChangeListener { oldFocus, newFocus ->
+      // unfocused or focus was changed
+      if (newFocus == null || oldFocus != null) {
+        lastFocusedInput?.removeOnLayoutChangeListener(layoutListener)
+        lastFocusedInput?.removeTextChangedListener(textWatcher)
+        selectionSubscription?.invoke()
+        lastFocusedInput = null
+      }
+      if (newFocus is ReactEditText) {
+        lastFocusedInput = newFocus
+        newFocus.addOnLayoutChangeListener(layoutListener)
+        this.syncUpLayout()
+        textWatcher = newFocus.addOnTextChangedListener(textListener)
+        selectionSubscription = newFocus.addOnSelectionChangedListener(selectionListener)
+        FocusedInputHolder.set(newFocus)
 
-      val allInputFields = ViewHierarchyNavigator.getAllInputFields(context?.rootView)
-      val currentIndex = allInputFields.indexOf(newFocus)
+        val allInputFields = ViewHierarchyNavigator.getAllInputFields(context?.rootView)
+        val currentIndex = allInputFields.indexOf(newFocus)
 
-      context.emitEvent(
-        "KeyboardController::focusDidSet",
-        Arguments.createMap().apply {
-          putInt("current", currentIndex)
-          putInt("count", allInputFields.size)
-        },
-      )
+        context.emitEvent(
+          "KeyboardController::focusDidSet",
+          Arguments.createMap().apply {
+            putInt("current", currentIndex)
+            putInt("count", allInputFields.size)
+          },
+        )
+      }
+      // unfocused
+      if (newFocus == null) {
+        dispatchEventToJS(noFocusedInputEvent)
+      }
     }
-    // unfocused
-    if (newFocus == null) {
-      dispatchEventToJS(noFocusedInputEvent)
-    }
-  }
 
   init {
     view.viewTreeObserver.addOnGlobalFocusChangeListener(focusListener)
@@ -135,16 +138,17 @@ class FocusedInputObserver(
     val input = lastFocusedInput ?: return
 
     val (x, y) = input.screenLocation
-    val event = FocusedInputLayoutChangedEventData(
-      x = input.x.dp,
-      y = input.y.dp,
-      width = input.width.toFloat().dp,
-      height = input.height.toFloat().dp,
-      absoluteX = x.toFloat().dp,
-      absoluteY = y.toFloat().dp,
-      target = input.id,
-      parentScrollViewTarget = input.parentScrollViewTarget,
-    )
+    val event =
+      FocusedInputLayoutChangedEventData(
+        x = input.x.dp,
+        y = input.y.dp,
+        width = input.width.toFloat().dp,
+        height = input.height.toFloat().dp,
+        absoluteX = x.toFloat().dp,
+        absoluteY = y.toFloat().dp,
+        target = input.id,
+        parentScrollViewTarget = input.parentScrollViewTarget,
+      )
 
     dispatchEventToJS(event)
   }

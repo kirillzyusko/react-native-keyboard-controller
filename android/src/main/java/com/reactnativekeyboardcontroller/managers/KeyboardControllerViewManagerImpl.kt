@@ -6,40 +6,50 @@ import com.facebook.react.uimanager.ThemedReactContext
 import com.reactnativekeyboardcontroller.views.EdgeToEdgeReactViewGroup
 
 @Suppress("detekt:UnusedPrivateProperty")
-class KeyboardControllerViewManagerImpl(mReactContext: ReactApplicationContext) {
-  fun createViewInstance(reactContext: ThemedReactContext): EdgeToEdgeReactViewGroup {
-    return EdgeToEdgeReactViewGroup(reactContext)
-  }
+class KeyboardControllerViewManagerImpl(
+  mReactContext: ReactApplicationContext,
+) {
+  fun createViewInstance(reactContext: ThemedReactContext): EdgeToEdgeReactViewGroup = EdgeToEdgeReactViewGroup(reactContext)
 
-  fun setEnabled(view: EdgeToEdgeReactViewGroup, enabled: Boolean) {
+  fun setEnabled(
+    view: EdgeToEdgeReactViewGroup,
+    enabled: Boolean,
+  ) {
     view.setActive(enabled)
   }
 
-  fun setStatusBarTranslucent(view: EdgeToEdgeReactViewGroup, isStatusBarTranslucent: Boolean) {
+  fun setStatusBarTranslucent(
+    view: EdgeToEdgeReactViewGroup,
+    isStatusBarTranslucent: Boolean,
+  ) {
     view.setStatusBarTranslucent(isStatusBarTranslucent)
   }
 
-  fun setNavigationBarTranslucent(view: EdgeToEdgeReactViewGroup, isNavigationBarTranslucent: Boolean) {
+  fun setNavigationBarTranslucent(
+    view: EdgeToEdgeReactViewGroup,
+    isNavigationBarTranslucent: Boolean,
+  ) {
     view.setNavigationBarTranslucent(isNavigationBarTranslucent)
   }
 
   fun getExportedCustomDirectEventTypeConstants(): MutableMap<String, Any> {
-    val map: MutableMap<String, Any> = MapBuilder.of(
-      "topKeyboardMove",
-      MapBuilder.of("registrationName", "onKeyboardMove"),
-      "topKeyboardMoveStart",
-      MapBuilder.of("registrationName", "onKeyboardMoveStart"),
-      "topKeyboardMoveEnd",
-      MapBuilder.of("registrationName", "onKeyboardMoveEnd"),
-      "topKeyboardMoveInteractive",
-      MapBuilder.of("registrationName", "onKeyboardMoveInteractive"),
-      "topFocusedInputLayoutChanged",
-      MapBuilder.of("registrationName", "onFocusedInputLayoutChanged"),
-      "topFocusedInputTextChanged",
-      MapBuilder.of("registrationName", "onFocusedInputTextChanged"),
-      "topFocusedInputSelectionChanged",
-      MapBuilder.of("registrationName", "onFocusedInputSelectionChanged"),
-    )
+    val map: MutableMap<String, Any> =
+      MapBuilder.of(
+        "topKeyboardMove",
+        MapBuilder.of("registrationName", "onKeyboardMove"),
+        "topKeyboardMoveStart",
+        MapBuilder.of("registrationName", "onKeyboardMoveStart"),
+        "topKeyboardMoveEnd",
+        MapBuilder.of("registrationName", "onKeyboardMoveEnd"),
+        "topKeyboardMoveInteractive",
+        MapBuilder.of("registrationName", "onKeyboardMoveInteractive"),
+        "topFocusedInputLayoutChanged",
+        MapBuilder.of("registrationName", "onFocusedInputLayoutChanged"),
+        "topFocusedInputTextChanged",
+        MapBuilder.of("registrationName", "onFocusedInputTextChanged"),
+        "topFocusedInputSelectionChanged",
+        MapBuilder.of("registrationName", "onFocusedInputSelectionChanged"),
+      )
 
     return map
   }

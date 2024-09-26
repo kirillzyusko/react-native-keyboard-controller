@@ -14,7 +14,9 @@ import com.reactnativekeyboardcontroller.views.EdgeToEdgeReactViewGroup
 
 private val TAG = StatusBarManagerCompatModuleImpl::class.qualifiedName
 
-class StatusBarManagerCompatModuleImpl(private val mReactContext: ReactApplicationContext) {
+class StatusBarManagerCompatModuleImpl(
+  private val mReactContext: ReactApplicationContext,
+) {
   private var controller: WindowInsetsControllerCompat? = null
 
   fun setHidden(hidden: Boolean) {
@@ -28,7 +30,10 @@ class StatusBarManagerCompatModuleImpl(private val mReactContext: ReactApplicati
   }
 
   @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-  fun setColor(color: Int, animated: Boolean) {
+  fun setColor(
+    color: Int,
+    animated: Boolean,
+  ) {
     val activity = mReactContext.currentActivity
     if (activity == null) {
       Logger.w(TAG, "StatusBarManagerCompatModule: Ignored status bar change, current activity is null.")

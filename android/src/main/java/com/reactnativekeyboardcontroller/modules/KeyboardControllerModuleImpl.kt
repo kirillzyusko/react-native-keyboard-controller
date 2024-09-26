@@ -9,7 +9,9 @@ import com.facebook.react.bridge.UiThreadUtil
 import com.reactnativekeyboardcontroller.traversal.FocusedInputHolder
 import com.reactnativekeyboardcontroller.traversal.ViewHierarchyNavigator
 
-class KeyboardControllerModuleImpl(private val mReactContext: ReactApplicationContext) {
+class KeyboardControllerModuleImpl(
+  private val mReactContext: ReactApplicationContext,
+) {
   private val mDefaultMode: Int = getCurrentMode()
 
   fun setInputMode(mode: Int) {
@@ -51,14 +53,13 @@ class KeyboardControllerModuleImpl(private val mReactContext: ReactApplicationCo
     }
   }
 
-  private fun getCurrentMode(): Int {
-    return mReactContext
+  private fun getCurrentMode(): Int =
+    mReactContext
       .currentActivity
       ?.window
       ?.attributes
       ?.softInputMode
       ?: WindowManager.LayoutParams.SOFT_INPUT_STATE_UNSPECIFIED
-  }
 
   companion object {
     const val NAME = "KeyboardController"

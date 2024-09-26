@@ -7,7 +7,10 @@ import com.facebook.react.bridge.UiThreadUtil
 import com.reactnativekeyboardcontroller.extensions.focus
 
 object ViewHierarchyNavigator {
-  fun setFocusTo(direction: String, view: View) {
+  fun setFocusTo(
+    direction: String,
+    view: View,
+  ) {
     val input = if (direction == "next") findNextEditText(view) else findPreviousEditText(view)
 
     UiThreadUtil.runOnUiThread {
@@ -35,16 +38,15 @@ object ViewHierarchyNavigator {
     return editTexts
   }
 
-  private fun findNextEditText(currentFocus: View): EditText? {
-    return findEditTextInDirection(currentFocus, 1)
-  }
+  private fun findNextEditText(currentFocus: View): EditText? = findEditTextInDirection(currentFocus, 1)
 
-  private fun findPreviousEditText(currentFocus: View): EditText? {
-    return findEditTextInDirection(currentFocus, -1)
-  }
+  private fun findPreviousEditText(currentFocus: View): EditText? = findEditTextInDirection(currentFocus, -1)
 
   @Suppress("detekt:ReturnCount")
-  private fun findEditTextInDirection(currentFocus: View, direction: Int): EditText? {
+  private fun findEditTextInDirection(
+    currentFocus: View,
+    direction: Int,
+  ): EditText? {
     // Attempt to find the parent view group, return null if not found or not a ViewGroup
     val parentViewGroup = currentFocus.parent as? ViewGroup ?: return null
 
@@ -66,7 +68,10 @@ object ViewHierarchyNavigator {
     return findEditTextInDirection(parentViewGroup, direction)
   }
 
-  private fun findEditTextInHierarchy(viewGroup: ViewGroup, direction: Int): EditText? {
+  private fun findEditTextInHierarchy(
+    viewGroup: ViewGroup,
+    direction: Int,
+  ): EditText? {
     val range = if (direction > 0) 0 until viewGroup.childCount else viewGroup.childCount - 1 downTo 0
 
     for (i in range) {
@@ -78,7 +83,10 @@ object ViewHierarchyNavigator {
     return null
   }
 
-  private fun findEditTextOrGoDeeper(child: View, direction: Int): EditText? {
+  private fun findEditTextOrGoDeeper(
+    child: View,
+    direction: Int,
+  ): EditText? {
     var result: EditText? = null
 
     if (isValidTextInput(child)) {
@@ -91,7 +99,5 @@ object ViewHierarchyNavigator {
     return result
   }
 
-  private fun isValidTextInput(view: View?): Boolean {
-    return view is EditText && view.isEnabled
-  }
+  private fun isValidTextInput(view: View?): Boolean = view is EditText && view.isEnabled
 }

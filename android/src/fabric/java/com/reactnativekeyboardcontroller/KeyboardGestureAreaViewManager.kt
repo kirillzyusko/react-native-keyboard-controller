@@ -11,39 +11,48 @@ import com.facebook.react.views.view.ReactViewManager
 import com.reactnativekeyboardcontroller.managers.KeyboardGestureAreaViewManagerImpl
 import com.reactnativekeyboardcontroller.views.KeyboardGestureAreaReactViewGroup
 
-class KeyboardGestureAreaViewManager(mReactContext: ReactApplicationContext) :
-  ReactViewManager(),
+class KeyboardGestureAreaViewManager(
+  mReactContext: ReactApplicationContext,
+) : ReactViewManager(),
   KeyboardGestureAreaManagerInterface<ReactViewGroup> {
   private val manager = KeyboardGestureAreaViewManagerImpl(mReactContext)
   private val mDelegate = KeyboardGestureAreaManagerDelegate(this)
 
-  override fun getDelegate(): ViewManagerDelegate<ReactViewGroup?> {
-    return mDelegate
-  }
+  override fun getDelegate(): ViewManagerDelegate<ReactViewGroup?> = mDelegate
 
   override fun getName(): String = KeyboardGestureAreaViewManagerImpl.NAME
 
-  override fun createViewInstance(context: ThemedReactContext): KeyboardGestureAreaReactViewGroup {
-    return manager.createViewInstance(context)
-  }
+  override fun createViewInstance(context: ThemedReactContext): KeyboardGestureAreaReactViewGroup = manager.createViewInstance(context)
 
   @ReactProp(name = "offset")
-  override fun setOffset(view: ReactViewGroup, value: Double) {
+  override fun setOffset(
+    view: ReactViewGroup,
+    value: Double,
+  ) {
     manager.setOffset(view as KeyboardGestureAreaReactViewGroup, value)
   }
 
   @ReactProp(name = "interpolator")
-  override fun setInterpolator(view: ReactViewGroup, value: String?) {
+  override fun setInterpolator(
+    view: ReactViewGroup,
+    value: String?,
+  ) {
     manager.setInterpolator(view as KeyboardGestureAreaReactViewGroup, value ?: "linear")
   }
 
   @ReactProp(name = "showOnSwipeUp")
-  override fun setShowOnSwipeUp(view: ReactViewGroup, value: Boolean) {
+  override fun setShowOnSwipeUp(
+    view: ReactViewGroup,
+    value: Boolean,
+  ) {
     manager.setScrollKeyboardOnScreenWhenNotVisible(view as KeyboardGestureAreaReactViewGroup, value)
   }
 
   @ReactProp(name = "enableSwipeToDismiss")
-  override fun setEnableSwipeToDismiss(view: ReactViewGroup?, value: Boolean) {
+  override fun setEnableSwipeToDismiss(
+    view: ReactViewGroup?,
+    value: Boolean,
+  ) {
     manager.setScrollKeyboardOffScreenWhenVisible(view as KeyboardGestureAreaReactViewGroup, value)
   }
 }

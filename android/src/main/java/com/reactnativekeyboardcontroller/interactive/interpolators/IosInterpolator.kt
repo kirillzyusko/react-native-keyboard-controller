@@ -8,8 +8,10 @@ class IosInterpolator : Interpolator {
     offset: Int,
   ): Int {
     if (
-      absoluteFingerPosition <= keyboardPosition + offset || // user over scrolled keyboard
-      dy <= 0 // user scrolls up
+      // user over scrolled keyboard
+      absoluteFingerPosition <= keyboardPosition + offset ||
+      // user scrolls up
+      dy <= 0
     ) {
       return dy
     }

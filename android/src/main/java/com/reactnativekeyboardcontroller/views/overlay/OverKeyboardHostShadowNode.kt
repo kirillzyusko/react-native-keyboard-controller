@@ -18,7 +18,10 @@ internal class OverKeyboardHostShadowNode : LayoutShadowNode() {
    * <View></View> within the <RCTOverKeyboardView></RCTOverKeyboardView> in OverKeyboardView.tsx.
    * This needs to fill the entire window.
    */
-  override fun addChildAt(child: ReactShadowNodeImpl, i: Int) {
+  override fun addChildAt(
+    child: ReactShadowNodeImpl,
+    i: Int,
+  ) {
     super.addChildAt(child, i)
     val modalSize = themedContext.getDisplaySize()
     child.setStyleWidth(modalSize.x.toFloat())

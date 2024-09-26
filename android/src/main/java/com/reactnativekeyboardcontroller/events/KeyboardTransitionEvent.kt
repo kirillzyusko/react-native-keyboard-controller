@@ -19,10 +19,11 @@ class KeyboardTransitionEvent(
   // All events for a given view can be coalesced?
   override fun getCoalescingKey(): Short = 0
 
-  override fun getEventData(): WritableMap? = Arguments.createMap().apply {
-    putDouble("progress", progress)
-    putDouble("height", height)
-    putInt("duration", duration)
-    putInt("target", target)
-  }
+  override fun getEventData(): WritableMap? =
+    Arguments.createMap().apply {
+      putDouble("progress", progress)
+      putDouble("height", height)
+      putInt("duration", duration)
+      putInt("target", target)
+    }
 }

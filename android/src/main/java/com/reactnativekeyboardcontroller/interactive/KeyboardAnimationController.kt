@@ -73,7 +73,8 @@ internal class KeyboardAnimationController {
     }
 
     // Keep track of the IME insets, and the IME visibility, at the start of the request
-    isImeShownAtStart = ViewCompat.getRootWindowInsets(view)
+    isImeShownAtStart = ViewCompat
+      .getRootWindowInsets(view)
       ?.isVisible(WindowInsetsCompat.Type.ime()) == true
 
     // Create a cancellation signal, which we pass to controlWindowInsetsAnimation() below
@@ -114,7 +115,10 @@ internal class KeyboardAnimationController {
    * @param view The view which is triggering this request
    * @param velocityY the velocity of the touch gesture which caused this call
    */
-  fun startAndFling(view: View, velocityY: Float) = startControlRequest(view) {
+  fun startAndFling(
+    view: View,
+    velocityY: Float,
+  ) = startControlRequest(view) {
     animateToFinish(velocityY)
   }
 
@@ -127,11 +131,12 @@ internal class KeyboardAnimationController {
    * @return the amount of [dy] consumed by the inset animation, in pixels
    */
   fun insetBy(dy: Int): Int {
-    val controller = insetsAnimationController
-      ?: throw IllegalStateException(
-        "Current WindowInsetsAnimationController is null." +
-          "This should only be called if isAnimationInProgress() returns true",
-      )
+    val controller =
+      insetsAnimationController
+        ?: throw IllegalStateException(
+          "Current WindowInsetsAnimationController is null." +
+            "This should only be called if isAnimationInProgress() returns true",
+        )
 
     InteractiveKeyboardProvider.isInteractive = true
     // Call updateInsetTo() with the new inset value
@@ -147,11 +152,12 @@ internal class KeyboardAnimationController {
    * @return the distance moved by the inset animation, in pixels
    */
   fun insetTo(inset: Int): Int {
-    val controller = insetsAnimationController
-      ?: throw IllegalStateException(
-        "Current WindowInsetsAnimationController is null." +
-          "This should only be called if isAnimationInProgress() returns true",
-      )
+    val controller =
+      insetsAnimationController
+        ?: throw IllegalStateException(
+          "Current WindowInsetsAnimationController is null." +
+            "This should only be called if isAnimationInProgress() returns true",
+        )
 
     val hiddenBottom = controller.hiddenStateInsets.bottom
     val shownBottom = controller.shownStateInsets.bottom
@@ -182,23 +188,17 @@ internal class KeyboardAnimationController {
   /**
    * Return `true` if an inset animation is in progress.
    */
-  fun isInsetAnimationInProgress(): Boolean {
-    return insetsAnimationController != null
-  }
+  fun isInsetAnimationInProgress(): Boolean = insetsAnimationController != null
 
   /**
    * Return `true` if an inset animation is currently finishing.
    */
-  fun isInsetAnimationFinishing(): Boolean {
-    return currentSpringAnimation != null
-  }
+  fun isInsetAnimationFinishing(): Boolean = currentSpringAnimation != null
 
   /**
    * Return `true` if a request to control an inset animation is in progress.
    */
-  fun isInsetAnimationRequestPending(): Boolean {
-    return pendingRequestCancellationSignal != null
-  }
+  fun isInsetAnimationRequestPending(): Boolean = pendingRequestCancellationSignal != null
 
   /**
    * Cancel the current [WindowInsetsAnimationControllerCompat]. We immediately finish
@@ -280,10 +280,11 @@ internal class KeyboardAnimationController {
     when {
       // If we have a velocity, we can use it's direction to determine
       // the visibility. Upwards == visible
-      velocityY != null -> animateImeToVisibility(
-        visible = velocityY < 0,
-        velocityY = velocityY,
-      )
+      velocityY != null ->
+        animateImeToVisibility(
+          visible = velocityY < 0,
+          velocityY = velocityY,
+        )
       // The current inset matches either the shown/hidden inset, finish() immediately
       current == shown -> {
         InteractiveKeyboardProvider.shown = true
@@ -307,11 +308,12 @@ internal class KeyboardAnimationController {
   }
 
   fun getCurrentKeyboardHeight(): Int {
-    val controller = insetsAnimationController
-      ?: throw IllegalStateException(
-        "Current WindowInsetsAnimationController is null." +
-          "This should only be called if isAnimationInProgress() returns true",
-      )
+    val controller =
+      insetsAnimationController
+        ?: throw IllegalStateException(
+          "Current WindowInsetsAnimationController is null." +
+            "This should only be called if isAnimationInProgress() returns true",
+        )
 
     return controller.currentInsets.bottom
   }
@@ -356,37 +358,40 @@ internal class KeyboardAnimationController {
     velocityY: Float? = null,
   ) {
     @Suppress("detekt:UseCheckOrError")
-    val controller = insetsAnimationController
-      ?: throw IllegalStateException("Controller should not be null")
+    val controller =
+      insetsAnimationController
+        ?: throw IllegalStateException("Controller should not be null")
 
-    currentSpringAnimation = springAnimationOf(
-      setter = {
-        insetTo(it.roundToInt())
-      },
-      getter = { controller.currentInsets.bottom.toFloat() },
-      finalPosition = when {
-        visible -> controller.shownStateInsets.bottom.toFloat()
-        else -> controller.hiddenStateInsets.bottom.toFloat()
-      },
-    ).withSpringForceProperties {
-      // Tweak the damping value, to remove any bounciness.
-      dampingRatio = SpringForce.DAMPING_RATIO_NO_BOUNCY
-      // The stiffness value controls the strength of the spring animation, which
-      // controls the speed. Medium (the default) is a good value, but feel free to
-      // play around with this value.
-      stiffness = SpringForce.STIFFNESS_MEDIUM
-    }.apply {
-      if (velocityY != null) {
-        setStartVelocity(velocityY)
-      }
-      addEndListener { anim, _, _, _ ->
-        if (anim == currentSpringAnimation) {
-          currentSpringAnimation = null
+    currentSpringAnimation =
+      springAnimationOf(
+        setter = {
+          insetTo(it.roundToInt())
+        },
+        getter = { controller.currentInsets.bottom.toFloat() },
+        finalPosition =
+          when {
+            visible -> controller.shownStateInsets.bottom.toFloat()
+            else -> controller.hiddenStateInsets.bottom.toFloat()
+          },
+      ).withSpringForceProperties {
+        // Tweak the damping value, to remove any bounciness.
+        dampingRatio = SpringForce.DAMPING_RATIO_NO_BOUNCY
+        // The stiffness value controls the strength of the spring animation, which
+        // controls the speed. Medium (the default) is a good value, but feel free to
+        // play around with this value.
+        stiffness = SpringForce.STIFFNESS_MEDIUM
+      }.apply {
+        if (velocityY != null) {
+          setStartVelocity(velocityY)
         }
-        // Once the animation has ended, finish the controller
-        finish()
-      }
-    }.also { it.start() }
+        addEndListener { anim, _, _, _ ->
+          if (anim == currentSpringAnimation) {
+            currentSpringAnimation = null
+          }
+          // Once the animation has ended, finish the controller
+          finish()
+        }
+      }.also { it.start() }
   }
 }
 
