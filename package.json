@@ -21,6 +21,7 @@
     "!android/gradle",
     "!android/gradlew",
     "!android/gradlew.bat",
+    "!android/.editorconfig",
     "!ios/build",
     "!ios/KeyboardControllerNative",
     "!**/__tests__",
