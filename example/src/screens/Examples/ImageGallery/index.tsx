@@ -8,7 +8,11 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import {
+  Gesture,
+  GestureDetector,
+  GestureHandlerRootView,
+} from "react-native-gesture-handler";
 import { OverKeyboardView } from "react-native-keyboard-controller";
 import Reanimated, {
   interpolate,
@@ -130,16 +134,19 @@ const SharedTransition = ({
 
   return (
     <OverKeyboardView visible={visible}>
-      <TouchableOpacity
-        activeOpacity={1}
-        style={styles.container}
-        onPress={hide}
-      >
-        <Reanimated.View style={background} />
-      </TouchableOpacity>
-      <GestureDetector gesture={gesture}>
-        <Reanimated.Image src={image.img} style={style} />
-      </GestureDetector>
+      <GestureHandlerRootView style={styles.container}>
+        <TouchableOpacity
+          activeOpacity={1}
+          style={styles.container}
+          onPress={hide}
+        >
+          <Reanimated.View style={background} />
+        </TouchableOpacity>
+
+        <GestureDetector gesture={gesture}>
+          <Reanimated.Image src={image.img} style={style} />
+        </GestureDetector>
+      </GestureHandlerRootView>
     </OverKeyboardView>
   );
 };
