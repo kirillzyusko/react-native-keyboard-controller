@@ -11,9 +11,12 @@ import { colors } from "./colors";
 
 import type { HEX, KeyboardToolbarTheme } from "./types";
 import type { ReactNode } from "react";
-import type { GestureResponderEvent } from "react-native";
+import type { GestureResponderEvent, ViewProps } from "react-native";
 
-export type KeyboardToolbarProps = {
+export type KeyboardToolbarProps = Omit<
+  ViewProps,
+  "style" | "testID" | "children"
+> & {
   /** An element that is shown in the middle of the toolbar. */
   content?: JSX.Element | null;
   /** A set of dark/light colors consumed by toolbar component. */
@@ -81,6 +84,7 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
   onDoneCallback,
   blur = null,
   opacity = DEFAULT_OPACITY,
+  ...rest
 }) => {
   const colorScheme = useColorScheme();
   const [inputs, setInputs] = useState({
@@ -145,7 +149,7 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
   );
 
   return (
-    <KeyboardStickyView offset={offset}>
+    <KeyboardStickyView offset={offset} {...rest}>
       <View style={toolbarStyle} testID={TEST_ID_KEYBOARD_TOOLBAR}>
         {blur}
         {showArrows && (
