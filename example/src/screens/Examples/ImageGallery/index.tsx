@@ -15,11 +15,12 @@ import {
 } from "react-native-gesture-handler";
 import { OverKeyboardView } from "react-native-keyboard-controller";
 import Reanimated, {
+  Easing,
   interpolate,
   runOnJS,
   useAnimatedStyle,
   useSharedValue,
-  withSpring,
+  withTiming,
 } from "react-native-reanimated";
 
 const images = [
@@ -41,7 +42,11 @@ const images = [
 ];
 const IMAGES_PER_ROW = 3;
 const INITIAL_SCALE = 1 / IMAGES_PER_ROW;
-const SPRING_CONFIG = { stiffness: 1000, damping: 500, mass: 3 };
+const ANIMATION_DURATION = 350;
+const SPRING_CONFIG = {
+  duration: ANIMATION_DURATION,
+  easing: Easing.inOut(Easing.ease),
+};
 
 const { width, height } = Dimensions.get("window");
 
@@ -62,15 +67,15 @@ const SharedTransition = ({
 
   useEffect(() => {
     // eslint-disable-next-line react-compiler/react-compiler
-    progress.value = withSpring(visible ? 1 : INITIAL_SCALE, SPRING_CONFIG);
-    opacity.value = withSpring(visible ? 1 : 0, SPRING_CONFIG);
+    progress.value = withTiming(visible ? 1 : INITIAL_SCALE, SPRING_CONFIG);
+    opacity.value = withTiming(visible ? 1 : 0, SPRING_CONFIG);
   }, [visible]);
 
   const hide = useCallback(() => {
-    progress.value = withSpring(INITIAL_SCALE, SPRING_CONFIG, () => {
+    progress.value = withTiming(INITIAL_SCALE, SPRING_CONFIG, () => {
       runOnJS(onClose)();
     });
-    opacity.value = withSpring(0, SPRING_CONFIG);
+    opacity.value = withTiming(0, SPRING_CONFIG);
   }, [onClose]);
 
   const gesture = Gesture.Pan()
@@ -82,9 +87,9 @@ const SharedTransition = ({
     })
     .onEnd(() => {
       offset.value = {
-        y: withSpring(0, SPRING_CONFIG),
+        y: withTiming(0, SPRING_CONFIG),
       };
-      opacity.value = withSpring(1, SPRING_CONFIG);
+      opacity.value = withTiming(1, SPRING_CONFIG);
     });
 
   const style = useAnimatedStyle(
@@ -143,9 +148,11 @@ const SharedTransition = ({
           <Reanimated.View style={background} />
         </TouchableOpacity>
 
-        <GestureDetector gesture={gesture}>
-          <Reanimated.Image src={image.img} style={style} />
-        </GestureDetector>
+        {!!image.img && (
+          <GestureDetector gesture={gesture}>
+            <Reanimated.Image fadeDuration={0} src={image.img} style={style} />
+          </GestureDetector>
+        )}
       </GestureHandlerRootView>
     </OverKeyboardView>
   );
@@ -165,6 +172,15 @@ const ImagePreview = ({
   onShowImage,
 }: ImagePreviewProps) => {
   const ref = useRef<Image>(null);
+  const [isModalFullyVisible, setModalFullyVisible] = useState(isModalVisible);
+
+  useEffect(() => {
+    if (isModalVisible) {
+      setTimeout(() => setModalFullyVisible(true), ANIMATION_DURATION);
+    } else {
+      setModalFullyVisible(false);
+    }
+  }, [isModalVisible]);
 
   const onPressHandler = useCallback(() => {
     ref.current?.measure((x, y, w, h, pageX, pageY) => {
@@ -174,10 +190,10 @@ const ImagePreview = ({
 
   return (
     <TouchableOpacity onPress={onPressHandler}>
-      {modal === src && isModalVisible ? (
+      {modal === src && isModalFullyVisible ? (
         <View style={styles.image} />
       ) : (
-        <Image ref={ref} src={src} style={styles.image} />
+        <Image ref={ref} fadeDuration={0} src={src} style={styles.image} />
       )}
     </TouchableOpacity>
   );
