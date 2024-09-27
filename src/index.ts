@@ -12,6 +12,7 @@ export {
   // keyboard toolbar
   KeyboardToolbar,
   DefaultKeyboardToolbarTheme,
+  KEYBOARD_TOOLBAR_HEIGHT,
 } from "./components";
 export type {
   KeyboardAvoidingViewProps,
