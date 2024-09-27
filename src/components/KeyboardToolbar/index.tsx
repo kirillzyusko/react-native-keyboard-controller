@@ -149,8 +149,8 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
   );
 
   return (
-    <KeyboardStickyView offset={offset} {...rest}>
-      <View style={toolbarStyle} testID={TEST_ID_KEYBOARD_TOOLBAR}>
+    <KeyboardStickyView offset={offset}>
+      <View style={toolbarStyle} testID={TEST_ID_KEYBOARD_TOOLBAR} {...rest}>
         {blur}
         {showArrows && (
           <>
