@@ -214,7 +214,11 @@ function ImageGallery() {
   return (
     <>
       <View style={styles.container}>
-        <TextInput placeholder="Search" style={styles.search} />
+        <TextInput
+          placeholder="Search"
+          placeholderTextColor="#4c4c4c"
+          style={styles.search}
+        />
         <ScrollView
           contentContainerStyle={styles.container}
           keyboardShouldPersistTaps="always"
