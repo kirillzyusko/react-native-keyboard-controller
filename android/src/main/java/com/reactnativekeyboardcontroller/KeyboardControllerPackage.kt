@@ -12,8 +12,11 @@ import com.reactnativekeyboardcontroller.modules.StatusBarManagerCompatModuleImp
 
 class KeyboardControllerPackage : TurboReactPackage() {
   @Nullable
-  override fun getModule(name: String, reactContext: ReactApplicationContext): NativeModule? {
-    return when (name) {
+  override fun getModule(
+    name: String,
+    reactContext: ReactApplicationContext,
+  ): NativeModule? =
+    when (name) {
       KeyboardControllerModuleImpl.NAME -> {
         KeyboardControllerModule(reactContext)
       }
@@ -24,40 +27,39 @@ class KeyboardControllerPackage : TurboReactPackage() {
         null
       }
     }
-  }
 
-  override fun getReactModuleInfoProvider(): ReactModuleInfoProvider {
-    return ReactModuleInfoProvider {
+  override fun getReactModuleInfoProvider(): ReactModuleInfoProvider =
+    ReactModuleInfoProvider {
       val moduleInfos: MutableMap<String, ReactModuleInfo> = HashMap()
       val isTurboModule = BuildConfig.IS_NEW_ARCHITECTURE_ENABLED
 
-      moduleInfos[KeyboardControllerModuleImpl.NAME] = ReactModuleInfo(
-        KeyboardControllerModuleImpl.NAME,
-        KeyboardControllerModuleImpl.NAME,
-        false, // canOverrideExistingModule
-        false, // needsEagerInit
-        true, // hasConstants
-        false, // isCxxModule
-        isTurboModule, // isTurboModule
-      )
-      moduleInfos[StatusBarManagerCompatModuleImpl.NAME] = ReactModuleInfo(
-        StatusBarManagerCompatModuleImpl.NAME,
-        StatusBarManagerCompatModuleImpl.NAME,
-        false, // canOverrideExistingModule
-        false, // needsEagerInit
-        true, // hasConstants
-        false, // isCxxModule
-        isTurboModule, // isTurboModule
-      )
+      moduleInfos[KeyboardControllerModuleImpl.NAME] =
+        ReactModuleInfo(
+          KeyboardControllerModuleImpl.NAME,
+          KeyboardControllerModuleImpl.NAME,
+          false, // canOverrideExistingModule
+          false, // needsEagerInit
+          true, // hasConstants
+          false, // isCxxModule
+          isTurboModule, // isTurboModule
+        )
+      moduleInfos[StatusBarManagerCompatModuleImpl.NAME] =
+        ReactModuleInfo(
+          StatusBarManagerCompatModuleImpl.NAME,
+          StatusBarManagerCompatModuleImpl.NAME,
+          false, // canOverrideExistingModule
+          false, // needsEagerInit
+          true, // hasConstants
+          false, // isCxxModule
+          isTurboModule, // isTurboModule
+        )
       moduleInfos
     }
-  }
 
-  override fun createViewManagers(reactContext: ReactApplicationContext): List<ViewManager<*, *>> {
-    return listOf(
+  override fun createViewManagers(reactContext: ReactApplicationContext): List<ViewManager<*, *>> =
+    listOf(
       KeyboardControllerViewManager(reactContext),
       KeyboardGestureAreaViewManager(reactContext),
       OverKeyboardViewManager(reactContext),
     )
-  }
 }

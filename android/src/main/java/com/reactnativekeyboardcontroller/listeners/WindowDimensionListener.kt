@@ -8,9 +8,14 @@ import com.reactnativekeyboardcontroller.extensions.content
 import com.reactnativekeyboardcontroller.extensions.dp
 import com.reactnativekeyboardcontroller.extensions.emitEvent
 
-data class Dimensions(val width: Double, val height: Double)
+data class Dimensions(
+  val width: Double,
+  val height: Double,
+)
 
-class WindowDimensionListener(private val context: ThemedReactContext?) {
+class WindowDimensionListener(
+  private val context: ThemedReactContext?,
+) {
   private var lastDispatchedDimensions = Dimensions(0.0, 0.0)
 
   init {
@@ -33,10 +38,11 @@ class WindowDimensionListener(private val context: ThemedReactContext?) {
       return
     }
 
-    val newDimensions = Dimensions(
-      content.width.toFloat().dp,
-      content.height.toFloat().dp + content.marginTop.toFloat().dp,
-    )
+    val newDimensions =
+      Dimensions(
+        content.width.toFloat().dp,
+        content.height.toFloat().dp + content.marginTop.toFloat().dp,
+      )
 
     if (newDimensions != lastDispatchedDimensions) {
       lastDispatchedDimensions = newDimensions

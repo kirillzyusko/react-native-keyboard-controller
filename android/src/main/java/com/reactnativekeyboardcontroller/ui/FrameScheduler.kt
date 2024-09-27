@@ -7,20 +7,23 @@ import android.view.Choreographer
  *
  * @property callback The function to be executed on each frame.
  */
-class FrameScheduler(private val callback: () -> Unit) {
+class FrameScheduler(
+  private val callback: () -> Unit,
+) {
   /**
    * A FrameCallback instance responsible for running the provided callback
    * on each frame and rescheduling itself for the next frame.
    */
-  private val frameCallback = object : Choreographer.FrameCallback {
-    override fun doFrame(frameTimeNanoSeconds: Long) {
-      // Execute the callback
-      callback()
+  private val frameCallback =
+    object : Choreographer.FrameCallback {
+      override fun doFrame(frameTimeNanoSeconds: Long) {
+        // Execute the callback
+        callback()
 
-      // Re-post the callback to the next frame
-      Choreographer.getInstance().postFrameCallback(this)
+        // Re-post the callback to the next frame
+        Choreographer.getInstance().postFrameCallback(this)
+      }
     }
-  }
 
   /**
    * Starts the frame callback, which will continuously call the provided function

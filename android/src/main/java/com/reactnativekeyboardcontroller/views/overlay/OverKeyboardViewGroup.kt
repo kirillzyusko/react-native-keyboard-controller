@@ -17,7 +17,9 @@ import com.facebook.react.uimanager.events.EventDispatcher
 import com.facebook.react.views.view.ReactViewGroup
 
 @SuppressLint("ViewConstructor")
-class OverKeyboardHostView(private val reactContext: ThemedReactContext) : ReactViewGroup(reactContext) {
+class OverKeyboardHostView(
+  private val reactContext: ThemedReactContext,
+) : ReactViewGroup(reactContext) {
   private val dispatcher = UIManagerHelper.getEventDispatcherForReactTag(reactContext, this.id)
   private var windowManager: WindowManager = reactContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
   private var hostView: OverKeyboardRootViewGroup = OverKeyboardRootViewGroup(reactContext)
@@ -33,7 +35,10 @@ class OverKeyboardHostView(private val reactContext: ThemedReactContext) : React
     hide()
   }
 
-  override fun addView(child: View?, index: Int) {
+  override fun addView(
+    child: View?,
+    index: Int,
+  ) {
     UiThreadUtil.assertOnUiThread()
     hostView.addView(child, index)
   }
@@ -56,21 +61,28 @@ class OverKeyboardHostView(private val reactContext: ThemedReactContext) : React
     hostView.removeView(child)
   }
 
-  override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
+  override fun onLayout(
+    changed: Boolean,
+    l: Int,
+    t: Int,
+    r: Int,
+    b: Int,
+  ) {
     // Do nothing as we are laid out by UIManager
   }
   // endregion
 
   fun show() {
-    val layoutParams = WindowManager.LayoutParams(
-      WindowManager.LayoutParams.MATCH_PARENT,
-      WindowManager.LayoutParams.MATCH_PARENT,
-      // This type ensures it floats over other application windows but under system windows
-      WindowManager.LayoutParams.TYPE_APPLICATION_PANEL,
-      // Ensures touches outside the view pass through to other windows
-      WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-      PixelFormat.TRANSLUCENT,
-    )
+    val layoutParams =
+      WindowManager.LayoutParams(
+        WindowManager.LayoutParams.MATCH_PARENT,
+        WindowManager.LayoutParams.MATCH_PARENT,
+        // This type ensures it floats over other application windows but under system windows
+        WindowManager.LayoutParams.TYPE_APPLICATION_PANEL,
+        // Ensures touches outside the view pass through to other windows
+        WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+        PixelFormat.TRANSLUCENT,
+      )
 
     windowManager.addView(hostView, layoutParams)
   }
@@ -83,7 +95,10 @@ class OverKeyboardHostView(private val reactContext: ThemedReactContext) : React
 }
 
 @SuppressLint("ViewConstructor")
-class OverKeyboardRootViewGroup(private val reactContext: ThemedReactContext) : ReactViewGroup(reactContext), RootView {
+class OverKeyboardRootViewGroup(
+  private val reactContext: ThemedReactContext,
+) : ReactViewGroup(reactContext),
+  RootView {
   private val jsTouchDispatcher: JSTouchDispatcher = JSTouchDispatcher(this)
   private var jsPointerDispatcher: JSPointerDispatcher? = null
   internal var eventDispatcher: EventDispatcher? = null
@@ -145,14 +160,20 @@ class OverKeyboardRootViewGroup(private val reactContext: ThemedReactContext) : 
   // endregion
 
   // region RootView methods
-  override fun onChildStartedNativeGesture(childView: View, ev: MotionEvent) {
+  override fun onChildStartedNativeGesture(
+    childView: View,
+    ev: MotionEvent,
+  ) {
     eventDispatcher?.let { eventDispatcher ->
       jsTouchDispatcher.onChildStartedNativeGesture(ev, eventDispatcher)
       jsPointerDispatcher?.onChildStartedNativeGesture(childView, ev, eventDispatcher)
     }
   }
 
-  override fun onChildEndedNativeGesture(childView: View, ev: MotionEvent) {
+  override fun onChildEndedNativeGesture(
+    childView: View,
+    ev: MotionEvent,
+  ) {
     eventDispatcher?.let { jsTouchDispatcher.onChildEndedNativeGesture(ev, it) }
     jsPointerDispatcher?.onChildEndedNativeGesture()
   }

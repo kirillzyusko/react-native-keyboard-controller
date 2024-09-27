@@ -7,32 +7,45 @@ import com.facebook.react.views.view.ReactViewManager
 import com.reactnativekeyboardcontroller.managers.KeyboardGestureAreaViewManagerImpl
 import com.reactnativekeyboardcontroller.views.KeyboardGestureAreaReactViewGroup
 
-class KeyboardGestureAreaViewManager(mReactContext: ReactApplicationContext) : ReactViewManager() {
+class KeyboardGestureAreaViewManager(
+  mReactContext: ReactApplicationContext,
+) : ReactViewManager() {
   private val manager = KeyboardGestureAreaViewManagerImpl(mReactContext)
 
   override fun getName(): String = KeyboardGestureAreaViewManagerImpl.NAME
 
-  override fun createViewInstance(reactContext: ThemedReactContext): KeyboardGestureAreaReactViewGroup {
-    return manager.createViewInstance(reactContext)
-  }
+  override fun createViewInstance(reactContext: ThemedReactContext): KeyboardGestureAreaReactViewGroup =
+    manager.createViewInstance(reactContext)
 
   @ReactProp(name = "offset")
-  fun setInterpolator(view: KeyboardGestureAreaReactViewGroup, offset: Double) {
+  fun setInterpolator(
+    view: KeyboardGestureAreaReactViewGroup,
+    offset: Double,
+  ) {
     manager.setOffset(view, offset)
   }
 
   @ReactProp(name = "interpolator")
-  fun setInterpolator(view: KeyboardGestureAreaReactViewGroup, interpolator: String) {
+  fun setInterpolator(
+    view: KeyboardGestureAreaReactViewGroup,
+    interpolator: String,
+  ) {
     manager.setInterpolator(view, interpolator)
   }
 
   @ReactProp(name = "showOnSwipeUp")
-  fun setScrollKeyboardOnScreenWhenNotVisible(view: KeyboardGestureAreaReactViewGroup, value: Boolean) {
+  fun setScrollKeyboardOnScreenWhenNotVisible(
+    view: KeyboardGestureAreaReactViewGroup,
+    value: Boolean,
+  ) {
     manager.setScrollKeyboardOnScreenWhenNotVisible(view, value)
   }
 
   @ReactProp(name = "enableSwipeToDismiss")
-  fun setScrollKeyboardOffScreenWhenVisible(view: KeyboardGestureAreaReactViewGroup, value: Boolean) {
+  fun setScrollKeyboardOffScreenWhenVisible(
+    view: KeyboardGestureAreaReactViewGroup,
+    value: Boolean,
+  ) {
     manager.setScrollKeyboardOffScreenWhenVisible(view, value)
   }
 }

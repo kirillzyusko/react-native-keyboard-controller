@@ -13,29 +13,29 @@ import com.reactnativekeyboardcontroller.managers.OverKeyboardViewManagerImpl
 import com.reactnativekeyboardcontroller.views.overlay.OverKeyboardHostShadowNode
 import com.reactnativekeyboardcontroller.views.overlay.OverKeyboardHostView
 
-class OverKeyboardViewManager(mReactContext: ReactApplicationContext) :
-  ReactViewManager(),
+class OverKeyboardViewManager(
+  mReactContext: ReactApplicationContext,
+) : ReactViewManager(),
   OverKeyboardViewManagerInterface<ReactViewGroup> {
   private val manager = OverKeyboardViewManagerImpl(mReactContext)
   private val mDelegate = OverKeyboardViewManagerDelegate(this)
 
-  override fun getDelegate(): ViewManagerDelegate<ReactViewGroup?> {
-    return mDelegate
-  }
+  override fun getDelegate(): ViewManagerDelegate<ReactViewGroup?> = mDelegate
 
   override fun getName(): String = OverKeyboardViewManagerImpl.NAME
 
-  override fun createViewInstance(context: ThemedReactContext): OverKeyboardHostView {
-    return manager.createViewInstance(context)
-  }
+  override fun createViewInstance(context: ThemedReactContext): OverKeyboardHostView =
+    manager.createViewInstance(context)
 
   override fun createShadowNodeInstance(): LayoutShadowNode = OverKeyboardHostShadowNode()
 
-  override fun getShadowNodeClass(): Class<out LayoutShadowNode> =
-    OverKeyboardHostShadowNode::class.java
+  override fun getShadowNodeClass(): Class<out LayoutShadowNode> = OverKeyboardHostShadowNode::class.java
 
   @ReactProp(name = "visible")
-  override fun setVisible(view: ReactViewGroup?, value: Boolean) {
+  override fun setVisible(
+    view: ReactViewGroup?,
+    value: Boolean,
+  ) {
     manager.setVisible(view as OverKeyboardHostView, value)
   }
 }

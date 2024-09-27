@@ -20,14 +20,17 @@ import com.reactnativekeyboardcontroller.interactive.interpolators.LinearInterpo
 import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 
-val interpolators = mapOf(
-  "linear" to LinearInterpolator(),
-  "ios" to IosInterpolator(),
-)
+val interpolators =
+  mapOf(
+    "linear" to LinearInterpolator(),
+    "ios" to IosInterpolator(),
+  )
 
 @Suppress("detekt:TooManyFunctions")
 @SuppressLint("ViewConstructor")
-class KeyboardGestureAreaReactViewGroup(private val reactContext: ThemedReactContext) : ReactViewGroup(reactContext) {
+class KeyboardGestureAreaReactViewGroup(
+  private val reactContext: ThemedReactContext,
+) : ReactViewGroup(reactContext) {
   // internal state management
   private var isHandling = false
   private var lastTouchX = 0f
@@ -127,12 +130,13 @@ class KeyboardGestureAreaReactViewGroup(private val reactContext: ThemedReactCon
         }
         // If we currently have control, we can update the IME insets to 'scroll'
         // the IME in
-        val moveBy = this.interpolator.interpolate(
-          dy.roundToInt(),
-          this.getWindowHeight() - event.rawY.toInt(),
-          controller.getCurrentKeyboardHeight(),
-          offset,
-        )
+        val moveBy =
+          this.interpolator.interpolate(
+            dy.roundToInt(),
+            this.getWindowHeight() - event.rawY.toInt(),
+            controller.getCurrentKeyboardHeight(),
+            offset,
+          )
 
         if (moveBy != 0) {
           controller.insetBy(moveBy)
@@ -141,8 +145,10 @@ class KeyboardGestureAreaReactViewGroup(private val reactContext: ThemedReactCon
         !controller.isInsetAnimationRequestPending() &&
         shouldStartRequest(
           dy = dy,
-          imeVisible = ViewCompat.getRootWindowInsets(this)
-            ?.isVisible(WindowInsetsCompat.Type.ime()) == true,
+          imeVisible =
+            ViewCompat
+              .getRootWindowInsets(this)
+              ?.isVisible(WindowInsetsCompat.Type.ime()) == true,
         )
       ) {
         // If we don't currently have control (and a request isn't pending),
@@ -210,7 +216,10 @@ class KeyboardGestureAreaReactViewGroup(private val reactContext: ThemedReactCon
    * Returns true if the given [dy], [IME visibility][imeVisible], and constructor options
    * support a IME animation request.
    */
-  private fun shouldStartRequest(dy: Float, imeVisible: Boolean) = when {
+  private fun shouldStartRequest(
+    dy: Float,
+    imeVisible: Boolean,
+  ) = when {
     // If the user is scroll up, return true if scrollImeOnScreenWhenNotVisible is true, and
     // the IME is not currently visible
     dy < 0 -> !imeVisible && scrollKeyboardOnScreenWhenNotVisible

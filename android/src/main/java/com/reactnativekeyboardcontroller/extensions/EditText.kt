@@ -22,22 +22,33 @@ import kotlin.math.min
 fun EditText.addOnTextChangedListener(action: (String) -> Unit): TextWatcher {
   var lastText: String? = null
 
-  val listener = object : TextWatcher {
-    @Suppress("detekt:EmptyFunctionBlock")
-    override fun afterTextChanged(s: Editable?) {}
+  val listener =
+    object : TextWatcher {
+      @Suppress("detekt:EmptyFunctionBlock")
+      override fun afterTextChanged(s: Editable?) = Unit
 
-    @Suppress("detekt:EmptyFunctionBlock")
-    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+      @Suppress("detekt:EmptyFunctionBlock")
+      override fun beforeTextChanged(
+        s: CharSequence?,
+        start: Int,
+        count: Int,
+        after: Int,
+      ) = Unit
 
-    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-      val currentText = s.toString()
+      override fun onTextChanged(
+        s: CharSequence?,
+        start: Int,
+        before: Int,
+        count: Int,
+      ) {
+        val currentText = s.toString()
 
-      if (currentText != lastText) {
-        lastText = currentText
-        action(currentText)
+        if (currentText != lastText) {
+          lastText = currentText
+          action(currentText)
+        }
       }
     }
-  }
 
   // we can not simply call `addTextChangedListener(listener)`, because the issue
   // https://github.com/kirillzyusko/react-native-keyboard-controller/issues/324
@@ -106,52 +117,61 @@ class KeyboardControllerSelectionWatcher(
   private var lastSelectionStart: Int = -1
   private var lastSelectionEnd: Int = -1
 
-  private val frameScheduler = FrameScheduler {
-    val start = editText.selectionStart
-    val end = editText.selectionEnd
+  private val frameScheduler =
+    FrameScheduler {
+      val start = editText.selectionStart
+      val end = editText.selectionEnd
 
-    if (lastSelectionStart != start || lastSelectionEnd != end) {
-      lastSelectionStart = start
-      lastSelectionEnd = end
+      if (lastSelectionStart != start || lastSelectionEnd != end) {
+        lastSelectionStart = start
+        lastSelectionEnd = end
 
-      val view = editText
-      val layout = view.layout
+        val view = editText
+        val layout = view.layout
 
-      if (layout === null) {
-        return@FrameScheduler
+        if (layout === null) {
+          return@FrameScheduler
+        }
+
+        val cursorPositionStartX: Float
+        val cursorPositionStartY: Float
+        val cursorPositionEndX: Float
+        val cursorPositionEndY: Float
+
+        val realStart = min(start, end)
+        val realEnd = max(start, end)
+
+        val lineStart = layout.getLineForOffset(realStart)
+        val baselineStart = layout.getLineBaseline(lineStart)
+        val ascentStart = layout.getLineAscent(lineStart)
+
+        cursorPositionStartX = layout.getPrimaryHorizontal(realStart)
+        cursorPositionStartY = (baselineStart + ascentStart).toFloat()
+
+        val lineEnd = layout.getLineForOffset(realEnd)
+
+        val right = layout.getPrimaryHorizontal(realEnd)
+        val bottom = layout.getLineBottom(lineEnd) + layout.getLineAscent(lineEnd)
+        val cursorWidth =
+          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            view.textCursorDrawable?.intrinsicWidth ?: 0
+          } else {
+            0
+          }
+
+        cursorPositionEndX = right + cursorWidth
+        cursorPositionEndY = bottom.toFloat()
+
+        action(
+          start,
+          end,
+          cursorPositionStartX.dp,
+          cursorPositionStartY.dp,
+          cursorPositionEndX.dp,
+          cursorPositionEndY.dp,
+        )
       }
-
-      val cursorPositionStartX: Float
-      val cursorPositionStartY: Float
-      val cursorPositionEndX: Float
-      val cursorPositionEndY: Float
-
-      val realStart = min(start, end)
-      val realEnd = max(start, end)
-
-      val lineStart = layout.getLineForOffset(realStart)
-      val baselineStart = layout.getLineBaseline(lineStart)
-      val ascentStart = layout.getLineAscent(lineStart)
-
-      cursorPositionStartX = layout.getPrimaryHorizontal(realStart)
-      cursorPositionStartY = (baselineStart + ascentStart).toFloat()
-
-      val lineEnd = layout.getLineForOffset(realEnd)
-
-      val right = layout.getPrimaryHorizontal(realEnd)
-      val bottom = layout.getLineBottom(lineEnd) + layout.getLineAscent(lineEnd)
-      val cursorWidth = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-        view.textCursorDrawable?.intrinsicWidth ?: 0
-      } else {
-        0
-      }
-
-      cursorPositionEndX = right + cursorWidth
-      cursorPositionEndY = bottom.toFloat()
-
-      action(start, end, cursorPositionStartX.dp, cursorPositionStartY.dp, cursorPositionEndX.dp, cursorPositionEndY.dp)
     }
-  }
 
   fun setup() {
     frameScheduler.start()

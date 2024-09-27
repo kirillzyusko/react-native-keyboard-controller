@@ -38,7 +38,8 @@ class KeyboardAnimationCallback(
   val view: View,
   val context: ThemedReactContext?,
   private val config: KeyboardAnimationCallbackConfig,
-) : WindowInsetsAnimationCompat.Callback(config.dispatchMode), OnApplyWindowInsetsListener {
+) : WindowInsetsAnimationCompat.Callback(config.dispatchMode),
+  OnApplyWindowInsetsListener {
   private val surfaceId = UIManagerHelper.getSurfaceId(eventPropagationView)
 
   // state variables
@@ -51,46 +52,47 @@ class KeyboardAnimationCallback(
   private var animationsToSkip = hashSetOf<WindowInsetsAnimationCompat>()
 
   // listeners
-  private val focusListener = OnGlobalFocusChangeListener { oldFocus, newFocus ->
-    if (newFocus is ReactEditText) {
-      viewTagFocused = newFocus.id
+  private val focusListener =
+    OnGlobalFocusChangeListener { oldFocus, newFocus ->
+      if (newFocus is ReactEditText) {
+        viewTagFocused = newFocus.id
 
-      // keyboard is visible and focus has been changed
-      if (this.isKeyboardVisible && oldFocus !== null) {
-        // imitate iOS behavior and send two instant start/end events containing an info about new tag
-        // 1. onStart/onMove/onEnd can be still dispatched after, if keyboard change size (numeric -> alphabetic type)
-        // 2. event should be send only when keyboard is visible, since this event arrives earlier -> `tag` will be
-        // 100% included in onStart/onMove/onEnd life cycles, but triggering onStart/onEnd several time
-        // can bring breaking changes
-        context.dispatchEvent(
-          eventPropagationView.id,
-          KeyboardTransitionEvent(
-            surfaceId,
+        // keyboard is visible and focus has been changed
+        if (this.isKeyboardVisible && oldFocus !== null) {
+          // imitate iOS behavior and send two instant start/end events containing an info about new tag
+          // 1. onStart/onMove/onEnd can be still dispatched after, if keyboard change size (numeric -> alphabetic type)
+          // 2. event should be send only when keyboard is visible, since this event arrives earlier -> `tag` will be
+          // 100% included in onStart/onMove/onEnd life cycles, but triggering onStart/onEnd several time
+          // can bring breaking changes
+          context.dispatchEvent(
             eventPropagationView.id,
-            "topKeyboardMoveStart",
-            this.persistentKeyboardHeight,
-            1.0,
-            0,
-            viewTagFocused,
-          ),
-        )
-        context.dispatchEvent(
-          eventPropagationView.id,
-          KeyboardTransitionEvent(
-            surfaceId,
+            KeyboardTransitionEvent(
+              surfaceId,
+              eventPropagationView.id,
+              "topKeyboardMoveStart",
+              this.persistentKeyboardHeight,
+              1.0,
+              0,
+              viewTagFocused,
+            ),
+          )
+          context.dispatchEvent(
             eventPropagationView.id,
-            "topKeyboardMoveEnd",
-            this.persistentKeyboardHeight,
-            1.0,
-            0,
-            viewTagFocused,
-          ),
-        )
-        context.emitEvent("KeyboardController::keyboardWillShow", getEventParams(this.persistentKeyboardHeight))
-        context.emitEvent("KeyboardController::keyboardDidShow", getEventParams(this.persistentKeyboardHeight))
+            KeyboardTransitionEvent(
+              surfaceId,
+              eventPropagationView.id,
+              "topKeyboardMoveEnd",
+              this.persistentKeyboardHeight,
+              1.0,
+              0,
+              viewTagFocused,
+            ),
+          )
+          context.emitEvent("KeyboardController::keyboardWillShow", getEventParams(this.persistentKeyboardHeight))
+          context.emitEvent("KeyboardController::keyboardDidShow", getEventParams(this.persistentKeyboardHeight))
+        }
       }
     }
-  }
   private var layoutObserver: FocusedInputObserver? = null
 
   init {
@@ -113,7 +115,10 @@ class KeyboardAnimationCallback(
    * have to implement `onApplyWindowInsets` listener and simulate onStart/onProgress/onEnd
    * events when keyboard changes its size.
    */
-  override fun onApplyWindowInsets(v: View, insets: WindowInsetsCompat): WindowInsetsCompat {
+  override fun onApplyWindowInsets(
+    v: View,
+    insets: WindowInsetsCompat,
+  ): WindowInsetsCompat {
     val keyboardHeight = getCurrentKeyboardHeight()
     // when keyboard appears values will be (false && true)
     // when keyboard disappears values will be (true && false)
@@ -218,9 +223,10 @@ class KeyboardAnimationCallback(
     if (config.hasTranslucentNavigationBar) {
       otherInset = Insets.NONE
     }
-    val diff = Insets.subtract(typesInset, otherInset).let {
-      Insets.max(it, Insets.NONE)
-    }
+    val diff =
+      Insets.subtract(typesInset, otherInset).let {
+        Insets.max(it, Insets.NONE)
+      }
     val diffY = (diff.bottom - diff.top).toFloat()
     val height = diffY.dp
 

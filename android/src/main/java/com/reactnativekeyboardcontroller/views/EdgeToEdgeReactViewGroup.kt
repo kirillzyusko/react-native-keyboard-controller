@@ -25,7 +25,9 @@ private val TAG = EdgeToEdgeReactViewGroup::class.qualifiedName
 
 @Suppress("detekt:TooManyFunctions")
 @SuppressLint("ViewConstructor")
-class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : ReactViewGroup(reactContext) {
+class EdgeToEdgeReactViewGroup(
+  private val reactContext: ThemedReactContext,
+) : ReactViewGroup(reactContext) {
   // props
   private var isStatusBarTranslucent = false
   private var isNavigationBarTranslucent = false
@@ -36,12 +38,13 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
   private var wasMounted = false
   private var callback: KeyboardAnimationCallback? = null
   private val config: KeyboardAnimationCallbackConfig
-    get() = KeyboardAnimationCallbackConfig(
-      persistentInsetTypes = WindowInsetsCompat.Type.systemBars(),
-      deferredInsetTypes = WindowInsetsCompat.Type.ime(),
-      dispatchMode = WindowInsetsAnimationCompat.Callback.DISPATCH_MODE_CONTINUE_ON_SUBTREE,
-      hasTranslucentNavigationBar = isNavigationBarTranslucent,
-    )
+    get() =
+      KeyboardAnimationCallbackConfig(
+        persistentInsetTypes = WindowInsetsCompat.Type.systemBars(),
+        deferredInsetTypes = WindowInsetsCompat.Type.ime(),
+        dispatchMode = WindowInsetsAnimationCompat.Callback.DISPATCH_MODE_CONTINUE_ON_SUBTREE,
+        hasTranslucentNavigationBar = isNavigationBarTranslucent,
+      )
 
   // managers/watchers
   private val modalAttachedWatcher = ModalAttachedWatcher(this, reactContext, ::config)
@@ -81,10 +84,11 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
     if (rootView != null) {
       ViewCompat.setOnApplyWindowInsetsListener(rootView) { v, insets ->
         val content = reactContext.content
-        val params = FrameLayout.LayoutParams(
-          FrameLayout.LayoutParams.MATCH_PARENT,
-          FrameLayout.LayoutParams.MATCH_PARENT,
-        )
+        val params =
+          FrameLayout.LayoutParams(
+            FrameLayout.LayoutParams.MATCH_PARENT,
+            FrameLayout.LayoutParams.MATCH_PARENT,
+          )
 
         val shouldApplyZeroPaddingTop = !active || this.isStatusBarTranslucent
         val shouldApplyZeroPaddingBottom = !active || this.isNavigationBarTranslucent
@@ -136,12 +140,13 @@ class EdgeToEdgeReactViewGroup(private val reactContext: ThemedReactContext) : R
       val root = reactContext.content
       root?.addView(eventView)
 
-      callback = KeyboardAnimationCallback(
-        view = this,
-        eventPropagationView = this,
-        context = reactContext,
-        config = config,
-      )
+      callback =
+        KeyboardAnimationCallback(
+          view = this,
+          eventPropagationView = this,
+          context = reactContext,
+          config = config,
+        )
 
       eventView?.let {
         ViewCompat.setWindowInsetsAnimationCallback(it, callback)

@@ -36,8 +36,16 @@ class ViewHierarchyNavigatorTest {
 
     editText1 = EditText(context).apply { id = 1 }
     editText2 = EditText(context).apply { id = 2 }
-    editText3 = EditText(context).apply { id = 3; isEnabled = false }
-    editText4 = EditText(context).apply { id = 4; isEnabled = false }
+    editText3 =
+      EditText(context).apply {
+        id = 3
+        isEnabled = false
+      }
+    editText4 =
+      EditText(context).apply {
+        id = 4
+        isEnabled = false
+      }
     editText5 = EditText(context).apply { id = 5 }
     editText6 = EditText(context).apply { id = 6 }
     editText7 = EditText(context).apply { id = 7 }
@@ -48,25 +56,26 @@ class ViewHierarchyNavigatorTest {
     editText12 = EditText(context).apply { id = 12 }
     editText13 = EditText(context).apply { id = 13 }
 
-    layout = LinearLayout(context).apply {
-      addView(editText1)
-      addView(editText2)
-      addView(editText3)
-      addView(editText4)
-      addView(
-        LinearLayout(context).apply {
-          addView(editText5)
-          addView(editText6)
-          addView(editText7)
-        },
-      )
-      addView(editText8)
-      addView(editText9)
-      addView(editText10)
-      addView(editText11)
-      addView(editText12)
-      addView(editText13)
-    }
+    layout =
+      LinearLayout(context).apply {
+        addView(editText1)
+        addView(editText2)
+        addView(editText3)
+        addView(editText4)
+        addView(
+          LinearLayout(context).apply {
+            addView(editText5)
+            addView(editText6)
+            addView(editText7)
+          },
+        )
+        addView(editText8)
+        addView(editText9)
+        addView(editText10)
+        addView(editText11)
+        addView(editText12)
+        addView(editText13)
+      }
   }
 
   @Test

@@ -14,7 +14,8 @@ class FocusedInputTextChangedEvent(
   // All events for a given view can be coalesced
   override fun getCoalescingKey(): Short = 0
 
-  override fun getEventData(): WritableMap? = Arguments.createMap().apply {
-    putString("text", text)
-  }
+  override fun getEventData(): WritableMap? =
+    Arguments.createMap().apply {
+      putString("text", text)
+    }
 }

@@ -11,9 +11,7 @@ object FocusedInputHolder {
     input = WeakReference(textInput)
   }
 
-  fun get(): EditText? {
-    return input?.get()
-  }
+  fun get(): EditText? = input?.get()
 
   fun focus() {
     input?.get()?.focus()
