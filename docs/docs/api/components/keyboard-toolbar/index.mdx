@@ -36,6 +36,7 @@ import toolbar from "./toolbar.lottie.json";
 - **Supports dark/light theme** 🌓: Adapts to the theme settings of the user's device for a seamless experience.
 - **Extended accessibility support** 🔍: Ensures that all users, including those with disabilities, can navigate through inputs effectively.
 - **Full control over the buttons behavior** 🔧: Customize the actions triggered by the next, previous, and done buttons according to your needs.
+- **Extends ViewProps** 📜: Supports all the props that `View` component has.
 
 ## Props
 
@@ -280,6 +281,8 @@ import { StyleSheet, Text, TextInput as TextInputRN, View } from "react-native";
 import {
   KeyboardAwareScrollView,
   KeyboardToolbar,
+  // This is useful when you want to offset your content based on the toolbar default height.
+  KEYBOARD_TOOLBAR_HEIGHT,
 } from "react-native-keyboard-controller";
 
 import type {
@@ -291,7 +294,10 @@ import type {
 export default function ToolbarExample() {
   return (
     <>
-      <KeyboardAwareScrollView bottomOffset={35} style={scrollViewStyles}>
+      <KeyboardAwareScrollView
+        bottomOffset={KEYBOARD_TOOLBAR_HEIGHT}
+        style={scrollViewStyles}
+      >
         <TextInput placeholder="Your name" title="Name" />
         <TextInput placeholder="Your surname" title="Surname" />
         <TextInput
