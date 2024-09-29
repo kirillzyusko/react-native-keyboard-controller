@@ -8,6 +8,7 @@ import CloseScreen from "../../screens/Examples/Close";
 import EnabledDisabled from "../../screens/Examples/EnabledDisabled";
 import Events from "../../screens/Examples/Events";
 import FocusedInputHandlers from "../../screens/Examples/FocusedInputHandlers";
+import ImageGallery from "../../screens/Examples/ImageGallery";
 import InteractiveKeyboard from "../../screens/Examples/InteractiveKeyboard";
 import InteractiveKeyboardIOS from "../../screens/Examples/InteractiveKeyboardIOS";
 import KeyboardAnimation from "../../screens/Examples/KeyboardAnimation";
@@ -44,6 +45,7 @@ export type ExamplesStackParamList = {
   [ScreenNames.MODAL]: undefined;
   [ScreenNames.BOTTOM_TAB_BAR]: undefined;
   [ScreenNames.OVER_KEYBOARD_VIEW]: undefined;
+  [ScreenNames.IMAGE_GALLERY]: undefined;
 };
 
 const Stack = createStackNavigator<ExamplesStackParamList>();
@@ -109,6 +111,9 @@ const options = {
   },
   [ScreenNames.OVER_KEYBOARD_VIEW]: {
     title: "View over keyboard",
+  },
+  [ScreenNames.IMAGE_GALLERY]: {
+    title: "Image gallery",
   },
 };
 
@@ -213,6 +218,11 @@ const ExamplesStack = () => (
       component={OverKeyboardView}
       name={ScreenNames.OVER_KEYBOARD_VIEW}
       options={options[ScreenNames.OVER_KEYBOARD_VIEW]}
+    />
+    <Stack.Screen
+      component={ImageGallery}
+      name={ScreenNames.IMAGE_GALLERY}
+      options={options[ScreenNames.IMAGE_GALLERY]}
     />
   </Stack.Navigator>
 );

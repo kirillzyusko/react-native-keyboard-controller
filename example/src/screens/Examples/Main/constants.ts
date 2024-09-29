@@ -123,4 +123,10 @@ export const examples: Example[] = [
     info: ScreenNames.OVER_KEYBOARD_VIEW,
     icons: "🤫",
   },
+  {
+    title: "Image gallery (SET)",
+    testID: "image_gallery",
+    info: ScreenNames.IMAGE_GALLERY,
+    icons: "🖼️",
+  },
 ];
