@@ -281,8 +281,6 @@ import { StyleSheet, Text, TextInput as TextInputRN, View } from "react-native";
 import {
   KeyboardAwareScrollView,
   KeyboardToolbar,
-  // This is useful when you want to offset your content based on the toolbar default height.
-  KEYBOARD_TOOLBAR_HEIGHT,
 } from "react-native-keyboard-controller";
 
 import type {
@@ -294,10 +292,7 @@ import type {
 export default function ToolbarExample() {
   return (
     <>
-      <KeyboardAwareScrollView
-        bottomOffset={KEYBOARD_TOOLBAR_HEIGHT}
-        style={scrollViewStyles}
-      >
+      <KeyboardAwareScrollView bottomOffset={35} style={scrollViewStyles}>
         <TextInput placeholder="Your name" title="Name" />
         <TextInput placeholder="Your surname" title="Surname" />
         <TextInput
