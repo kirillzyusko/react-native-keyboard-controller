@@ -4,7 +4,7 @@
         <title>Keyboard Controller Blog</title>
         <link>https://kirillzyusko.github.io/react-native-keyboard-controller/pr-preview/pr-604/blog</link>
         <description>Keyboard Controller Blog</description>
-        <lastBuildDate>Sat, 12 Oct 2024 00:00:00 GMT</lastBuildDate>
+        <lastBuildDate>Tue, 01 Oct 2024 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <language>en</language>
@@ -12,7 +12,7 @@
             <title><![CDATA[New OverKeyboardView component]]></title>
             <link>https://kirillzyusko.github.io/react-native-keyboard-controller/pr-preview/pr-604/blog/over-keyboard-view</link>
             <guid>https://kirillzyusko.github.io/react-native-keyboard-controller/pr-preview/pr-604/blog/over-keyboard-view</guid>
-            <pubDate>Sat, 12 Oct 2024 00:00:00 GMT</pubDate>
+            <pubDate>Tue, 01 Oct 2024 00:00:00 GMT</pubDate>
             <description><![CDATA[Meet new OverKeyboardView component and corresponding 1.14.0 release! 🎉]]></description>
             <content:encoded><![CDATA[<p>Meet new <code>OverKeyboardView</code> component and corresponding <code>1.14.0</code> release! 🎉</p>
 <!-- -->
