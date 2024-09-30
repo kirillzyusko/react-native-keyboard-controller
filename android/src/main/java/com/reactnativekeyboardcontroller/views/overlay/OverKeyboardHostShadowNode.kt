@@ -23,8 +23,8 @@ internal class OverKeyboardHostShadowNode : LayoutShadowNode() {
     i: Int,
   ) {
     super.addChildAt(child, i)
-    val modalSize = themedContext.getDisplaySize()
-    child.setStyleWidth(modalSize.x.toFloat())
-    child.setStyleHeight(modalSize.y.toFloat())
+    val displaySize = themedContext.getDisplaySize()
+    child.setStyleWidth(displaySize.x.toFloat())
+    child.setStyleHeight(displaySize.y.toFloat())
   }
 }
