@@ -14,14 +14,22 @@ const OverKeyboardView = ({
   const { height, width } = useWindowDimensions();
   const inner = useMemo(() => ({ height, width }), [height, width]);
   const style = useMemo(
-    () => [styles.absolute, Platform.OS === "ios" ? inner : undefined],
+    () => [
+      styles.absolute,
+      // On iOS - stretch view to full window dimensions to make yoga work
+      // On Android Fabric we temporarily use the same approach
+      // @ts-expect-error `_IS_FABRIC` is injected by REA
+      Platform.OS === "ios" || global._IS_FABRIC ? inner : undefined,
+    ],
     [inner],
   );
 
   return (
     <RCTOverKeyboardView visible={visible}>
-      {/* On iOS - stretch view to full window dimensions to make yoga work */}
-      <View style={style}>{children}</View>
+      {/* `OverKeyboardView` should always have a single child */}
+      <View collapsable={false} style={style}>
+        {children}
+      </View>
     </RCTOverKeyboardView>
   );
 };
