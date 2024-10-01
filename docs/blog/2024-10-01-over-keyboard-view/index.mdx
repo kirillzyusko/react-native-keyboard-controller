@@ -1,0 +1,75 @@
+---
+slug: over-keyboard-view
+title: New OverKeyboardView component
+authors: [kirill]
+tags: [react-native, keyboard, modal, over keyboard view]
+keywords:
+  [react-native-keyboard-controller, keyboard, modal, over keyboard view]
+---
+
+Meet new `OverKeyboardView` component and corresponding `1.14.0` release! 🎉
+
+import Lottie from "lottie-react";
+import lottie from "../../docs/api/over-keyboard-view/over-keyboard-view.lottie.json";
+
+<div style={{ display: "flex", justifyContent: "center", marginBottom: 20 }}>
+  <Lottie
+    className="lottie"
+    animationData={lottie}
+    style={{ width: 400, height: 400 }}
+    loop
+  />
+</div>
+
+<!-- truncate -->
+
+## What is `OverKeyboardView`?
+
+`OverKeyboardView` is a new component that allows you to display your content **over** the keyboard. It's a great way to create a _modal-like_ experience with a natural transitions between windows in your application without closing or hiding the keyboard. Say "no" to instant keyboard transitions, jumps, glitches, bouncy UI and other things and use the component that "just works":
+
+import Video from "@site/src/components/Video";
+
+<div style={{ paddingBottom: 20 }}>
+  <Video src="/video/over-keyboard-view-shared-transitions.mp4" width={30} />
+</div>
+
+This component is perfect for countless applications! Whether you're building a photo gallery app or crafting a custom context menu that floats seamlessly over the screen (keeping the content behind visible while keyboard stays open) - the `OverKeyboardView` is the solution you've been waiting for!
+
+## How to use it?
+
+To use `OverKeyboardView` you need to wrap your content with it and pass `visible` prop to it. When `visible` is `true` the content will be displayed over the keyboard.
+
+```tsx
+import { OverKeyboardView } from "react-native-keyboard-controller";
+
+const App = () => {
+  const [visible, setVisible] = useState(false);
+
+  return (
+    <OverKeyboardView visible={visible}>
+      {/* Your content here */}
+    </OverKeyboardView>
+  );
+};
+```
+
+You can also check a dedicated [API page](/docs/api/over-keyboard-view) to learn more about it.
+
+## What's else packed in a new release?
+
+Apart of a new feature this release contains mostly bugfixes that touches an integration aspect, such as:
+
+- `KeyboardToolbar` can work in `Modal` on Android ([#590](https://github.com/kirillzyusko/react-native-keyboard-controller/pull/590));
+- `KeyboardAwareScrollView` can use `ScrollView` from `react-native-gesture-handler` ([#595](https://github.com/kirillzyusko/react-native-keyboard-controller/pull/595));
+- `OverKeyboardView` in invisible state is not hiding `ScrollView` ([#598](https://github.com/kirillzyusko/react-native-keyboard-controller/pull/598));
+- `OverKeyboardView` works with `GestureDetector` on Android ([#602](https://github.com/kirillzyusko/react-native-keyboard-controller/pull/602));
+
+Other than that I also improved documentation of the package, update linters and did other various maintenance tasks.
+
+## What's next?
+
+I see that the library becomes more and more popular, and next several months I'd like to focus on making stability of this library better. It's already pretty stable and good, but when it comes to the integration in big projects people are encountering some issues and reporting it. So my near-term goal is to improve the stability of the library and make it more stable for everyone.
+
+If you have a pain-points when you have to deal with keyboard in `react-native` applications, please feel free to contribute to the project by submitting issues or pull requests on GitHub. Let's continue to make `react-native-keyboard-controller` an essential tool for developers building high-quality mobile applications! 💪
+
+To stay tuned follow me on [Twitter](https://twitter.com/ziusko) and [GitHub](https://github.com/kirillzyusko) for updates. Thank you for your support! 😊
