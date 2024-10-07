@@ -64,6 +64,7 @@ public class KeyboardAnimation: KeyboardAnimationProtocol {
 
     // Check the direction of the animation
     let isIncreasing = isIncreasing
+    var iterations = 0
 
     while (upperBound - lowerBound) > tolerance {
       tGuess = (lowerBound + upperBound) / 2
@@ -75,7 +76,10 @@ public class KeyboardAnimation: KeyboardAnimationProtocol {
       } else {
         upperBound = tGuess
       }
+        iterations+=1
     }
+      
+      // print("ITERATIONS TA: ", iterations)
 
     return tGuess / Double(speed)
   }

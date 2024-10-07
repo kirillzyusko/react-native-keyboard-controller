@@ -290,7 +290,7 @@ public class KeyboardMovementObserver: NSObject {
         print("inverse took", time2, baseDuration)
         print("SLOW IN TIMES: ", time2 / time)
         
-        
+        print(UIUtils.a)
         
 
       #if targetEnvironment(simulator)

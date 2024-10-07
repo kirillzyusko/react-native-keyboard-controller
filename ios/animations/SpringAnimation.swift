@@ -57,6 +57,7 @@ public final class SpringAnimation: KeyboardAnimation {
   }
     
     override func inverse(value y: Double) -> Double {
+        var iterations = 0
         let x0 = toValue - fromValue
                let epsilon = 1e-6
                let maxIterations = 100
@@ -90,6 +91,7 @@ public final class SpringAnimation: KeyboardAnimation {
                            break
                        }
                        t = t_new
+                       iterations += 1
                    }
                } else {
                    // Critically damped (zeta >= 1)
@@ -120,9 +122,10 @@ public final class SpringAnimation: KeyboardAnimation {
                        }
                        
                        t = t_new
+                       iterations+=1
                    }
                }
-               
+               // print("ITERATIONS", iterations)
         return t / Double(speed)
     }
 }
