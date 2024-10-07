@@ -15,13 +15,13 @@ import QuartzCore
  * This class calculates the progress of animations based on Bézier curve control points.
  * For more details on the Bézier curves, see [Desmos Graph](https://www.desmos.com/calculator/eynenh1aga?lang=en).
  */
-public class TimingAnimation: KeyboardAnimation {
+public final class TimingAnimation: KeyboardAnimation {
   private let p1: CGPoint
   private let p2: CGPoint
 
   init(animation: CABasicAnimation, fromValue: Double, toValue: Double) {
     let timingFunction = animation.timingFunction
-    var controlPoints: [Float] = [0, 0, 0, 0]
+    var controlPoints: ContiguousArray<Float> = ContiguousArray([0, 0, 0, 0])
     timingFunction?.getControlPoint(at: 1, values: &controlPoints[0])
     timingFunction?.getControlPoint(at: 2, values: &controlPoints[2])
     let p1 = CGPoint(x: CGFloat(controlPoints[0]), y: CGFloat(controlPoints[1]))
@@ -33,7 +33,20 @@ public class TimingAnimation: KeyboardAnimation {
     super.init(fromValue: fromValue, toValue: toValue, animation: animation)
   }
 
-  func bezier(t: CGFloat, valueForPoint: (CGPoint) -> CGFloat) -> CGFloat {
+  // public functions
+  override func valueAt(time: Double) -> Double {
+    let x = time * Double(speed)
+    let frames = (animation?.duration ?? 0.0) * Double(speed)
+    let fraction = min(x / frames, 1)
+    let t = findTForX(xTarget: fraction)
+
+    let progress = bezierY(t: t)
+
+    return fromValue + (toValue - fromValue) * CGFloat(progress)
+  }
+
+  // private functions
+  private func bezier(t: CGFloat, valueForPoint: (CGPoint) -> CGFloat) -> CGFloat {
     let u = 1 - t
     let tt = t * t
     let uu = u * u
@@ -49,27 +62,15 @@ public class TimingAnimation: KeyboardAnimation {
     return term1 + term2 + term3
   }
 
-  func bezierY(t: CGFloat) -> CGFloat {
+  private func bezierY(t: CGFloat) -> CGFloat {
     return bezier(t: t) { $0.y }
   }
 
-  func bezierX(t: CGFloat) -> CGFloat {
+  private func bezierX(t: CGFloat) -> CGFloat {
     return bezier(t: t) { $0.x }
   }
 
-  // public functions
-  override func valueAt(time: Double) -> Double {
-    let x = time * Double(speed)
-    let frames = (animation?.duration ?? 0.0) * Double(speed)
-    let fraction = min(x / frames, 1)
-    let t = findTForX(xTarget: fraction)
-
-    let progress = bezierY(t: t)
-
-    return fromValue + (toValue - fromValue) * CGFloat(progress)
-  }
-
-  func findTForX(xTarget: CGFloat, epsilon: CGFloat = 0.0001, maxIterations: Int = 100) -> CGFloat {
+  private func findTForX(xTarget: CGFloat, epsilon: CGFloat = 0.0001, maxIterations: Int = 100) -> CGFloat {
     var t: CGFloat = 0.5 // Start with an initial guess of t = 0.5
     for _ in 0 ..< maxIterations {
       let currentX = bezierX(t: t) // Compute the x-coordinate at t
@@ -84,7 +85,7 @@ public class TimingAnimation: KeyboardAnimation {
     return t // Return the approximation of t
   }
 
-  func bezierDerivative(t: CGFloat, valueForPoint: (CGPoint) -> CGFloat) -> CGFloat {
+  private func bezierDerivative(t: CGFloat, valueForPoint: (CGPoint) -> CGFloat) -> CGFloat {
     let u = 1 - t
     let uu = u * u
     let tt = t * t
@@ -100,7 +101,7 @@ public class TimingAnimation: KeyboardAnimation {
     return term1 + term2 + term3
   }
 
-  func bezierXDerivative(t: CGFloat) -> CGFloat {
+  private func bezierXDerivative(t: CGFloat) -> CGFloat {
     return bezierDerivative(t: t) { $0.x }
   }
 }
