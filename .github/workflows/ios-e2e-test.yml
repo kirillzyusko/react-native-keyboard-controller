@@ -95,7 +95,7 @@ jobs:
   e2e-test:
     name: ⚙️ Automated test cases (iOS-${{ matrix.devices.ios }})
     runs-on: macos-${{ matrix.devices.macos }}
-    timeout-minutes: 60
+    timeout-minutes: 90
     env:
       WORKING_DIRECTORY: example
     concurrency:
@@ -108,7 +108,7 @@ jobs:
             { ios: 15, xcode: "13.4.1", macos: 12 },
             { ios: 16, xcode: "14.3.1", macos: 14 },
             { ios: 17, xcode: "15.4", macos: 14 },
-            { ios: 18, xcode: "16-beta", macos: 14 },
+            { ios: 18, xcode: "16.0", macos: 14 },
           ]
     needs: build
     steps:
