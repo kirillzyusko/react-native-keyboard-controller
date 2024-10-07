@@ -56,34 +56,74 @@ public final class SpringAnimation: KeyboardAnimation {
     return y
   }
     
-    @inline(__always)
-    override func deriative(t: Double, x0: Double) -> Double {
-        if zeta < 1 {
-            // Under damped
-            let A = (v0 + zeta * omega0 * x0) / omega1
-            let a = zeta * omega0
-            let b = omega1
-            
-            let envelope = exp(-a * t)
-            let sinTerm = sin(b * t)
-            let cosTerm = cos(b * t)
-            let S = A * sinTerm + x0 * cosTerm
-            
-            // Derivative computation
-            let dSdt = A * b * cosTerm - x0 * b * sinTerm
-            let dy_dt = -(-a * envelope * S + envelope * dSdt)
-            
-            return dy_dt
-        } else {
-            let B = v0 + omega0 * x0
-            let envelope = exp(-omega0 * t)
-            let S = x0 + B * t
-                            
-            // Derivative computation
-            let dy_dt = omega0 * envelope * S - envelope * B
-            
-            return dy_dt
-        }
+    override func inverse(value y: Double) -> Double {
+        let x0 = toValue - fromValue
+               let epsilon = 1e-6
+               let maxIterations = 100
+               var t = 0.25 // Initial guess
+               
+               if zeta < 1 {
+                   // Under damped
+                   let A = (v0 + zeta * omega0 * x0) / omega1
+                   let a = zeta * omega0
+                   let b = omega1
+                   
+                   for _ in 0..<maxIterations {
+                       let envelope = exp(-a * t)
+                       let sinTerm = sin(b * t)
+                       let cosTerm = cos(b * t)
+                       let S = A * sinTerm + x0 * cosTerm
+                       let y_t = toValue - envelope * S - y
+                       
+                       // Derivative computation
+                       let dSdt = A * b * cosTerm - x0 * b * sinTerm
+                       let dy_dt = -(-a * envelope * S + envelope * dSdt)
+                       
+                       if abs(dy_dt) < epsilon {
+                           break // Avoid division by zero
+                       }
+                       
+                       let t_new = t - y_t / dy_dt
+                       
+                       if abs(t_new - t) < epsilon {
+                           t = t_new
+                           break
+                       }
+                       t = t_new
+                   }
+               } else {
+                   // Critically damped (zeta >= 1)
+                   let B = v0 + omega0 * x0
+                   
+                   for _ in 0..<maxIterations {
+                       let envelope = exp(-omega0 * t)
+                       let S = x0 + B * t
+                       let y_t = toValue - envelope * S - y
+                       
+                       // Derivative computation
+                       let dy_dt = omega0 * envelope * S - envelope * B
+                       
+                       if abs(dy_dt) < epsilon {
+                           break // Avoid division by zero
+                       }
+                       
+                       var t_new = t - y_t / dy_dt
+                       
+                       // Ensure t_new stays positive
+                       if t_new < 0 {
+                           t_new = t / 2
+                       }
+                       
+                       if abs(t_new - t) < epsilon {
+                           t = t_new
+                           break
+                       }
+                       
+                       t = t_new
+                   }
+               }
+               
+        return t / Double(speed)
     }
 }
 

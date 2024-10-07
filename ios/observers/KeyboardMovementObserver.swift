@@ -281,11 +281,14 @@ public class KeyboardMovementObserver: NSObject {
 
     if let animation = animation {
        var s = Date()
-        animation.timingAt(value: keyboardPosition)
-        print("timingA took", Date().timeIntervalSince(s) * 1000)
+        let b = animation.timingAt(value: keyboardPosition)
+        let time = Date().timeIntervalSince(s) * 1000
+        print("timingA took", time, b)
         s = Date()
       let baseDuration = animation.inverse(value: keyboardPosition)
-        print("inverse took", Date().timeIntervalSince(s) * 1000)
+        let time2 = Date().timeIntervalSince(s) * 1000
+        print("inverse took", time2, baseDuration)
+        print("SLOW IN TIMES: ", time2 / time)
         
         
         
