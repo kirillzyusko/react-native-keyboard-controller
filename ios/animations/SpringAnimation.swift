@@ -55,6 +55,35 @@ public final class SpringAnimation: KeyboardAnimation {
 
     return y
   }
+    
+    override func deriative(t: Double, x0: Double) -> Double {
+        if zeta < 1 {
+            // Under damped
+            let A = (v0 + zeta * omega0 * x0) / omega1
+            let a = zeta * omega0
+            let b = omega1
+            
+            let envelope = exp(-a * t)
+            let sinTerm = sin(b * t)
+            let cosTerm = cos(b * t)
+            let S = A * sinTerm + x0 * cosTerm
+            
+            // Derivative computation
+            let dSdt = A * b * cosTerm - x0 * b * sinTerm
+            let dy_dt = -(-a * envelope * S + envelope * dSdt)
+            
+            return dy_dt
+        } else {
+            let B = v0 + omega0 * x0
+            let envelope = exp(-omega0 * t)
+            let S = x0 + B * t
+                            
+            // Derivative computation
+            let dy_dt = omega0 * envelope * S - envelope * B
+            
+            return dy_dt
+        }
+    }
 }
 
 // swiftlint:enable identifier_name
