@@ -280,8 +280,15 @@ public class KeyboardMovementObserver: NSObject {
     prevKeyboardPosition = keyboardPosition
 
     if let animation = animation {
+       var s = Date()
+        animation.timingAt(value: keyboardPosition)
+        print("timingA took", Date().timeIntervalSince(s) * 1000)
+        s = Date()
       let baseDuration = animation.inverse(value: keyboardPosition)
-        print(baseDuration)
+        print("inverse took", Date().timeIntervalSince(s) * 1000)
+        
+        
+        
 
       #if targetEnvironment(simulator)
         // on iOS simulator we can not use static interval

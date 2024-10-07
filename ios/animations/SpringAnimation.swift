@@ -56,6 +56,7 @@ public final class SpringAnimation: KeyboardAnimation {
     return y
   }
     
+    @inline(__always)
     override func deriative(t: Double, x0: Double) -> Double {
         if zeta < 1 {
             // Under damped
