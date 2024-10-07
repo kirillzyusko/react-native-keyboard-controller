@@ -10,7 +10,7 @@ import Foundation
 import QuartzCore
 
 // swiftlint:disable identifier_name
-public class SpringAnimation: KeyboardAnimation {
+public final class SpringAnimation: KeyboardAnimation {
   // internal variables
   private let zeta: Double // Damping ratio
   private let omega0: Double // Undamped angular frequency of the oscillator
