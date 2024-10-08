@@ -50,7 +50,7 @@ final class SpringAnimationPerformanceTest: XCTestCase {
     }
     
     func testTimingAtPerformance() throws {
-        self.measure(metrics: [XCTCPUMetric()]) {
+        self.measure(metrics: [XCTCPUMetric(), XCTClockMetric()]) {
             for value in stride(from: 0.0, through: 336.0, by: 0.001) {
                 let _ = animation?.timingAt(value: value)
             }
