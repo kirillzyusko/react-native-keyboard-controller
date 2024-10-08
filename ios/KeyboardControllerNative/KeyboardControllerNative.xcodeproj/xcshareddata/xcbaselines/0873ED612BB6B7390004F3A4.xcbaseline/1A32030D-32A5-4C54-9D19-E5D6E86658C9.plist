@@ -15,6 +15,34 @@
 					<key>baselineIntegrationDisplayName</key>
 					<string>Local Baseline</string>
 				</dict>
+				<key>com.apple.dt.XCTMetric_CPU.cycles</key>
+				<dict>
+					<key>baselineAverage</key>
+					<real>661079.494600</real>
+					<key>baselineIntegrationDisplayName</key>
+					<string>Local Baseline</string>
+				</dict>
+				<key>com.apple.dt.XCTMetric_CPU.instructions_retired</key>
+				<dict>
+					<key>baselineAverage</key>
+					<real>2435867.520200</real>
+					<key>baselineIntegrationDisplayName</key>
+					<string>Local Baseline</string>
+				</dict>
+				<key>com.apple.dt.XCTMetric_CPU.time</key>
+				<dict>
+					<key>baselineAverage</key>
+					<real>0.210547</real>
+					<key>baselineIntegrationDisplayName</key>
+					<string>Local Baseline</string>
+				</dict>
+				<key>com.apple.dt.XCTMetric_Memory.physical</key>
+				<dict>
+					<key>baselineAverage</key>
+					<real>26.214400</real>
+					<key>baselineIntegrationDisplayName</key>
+					<string>Local Baseline</string>
+				</dict>
 			</dict>
 			<key>testValueAtPerformance()</key>
 			<dict>
