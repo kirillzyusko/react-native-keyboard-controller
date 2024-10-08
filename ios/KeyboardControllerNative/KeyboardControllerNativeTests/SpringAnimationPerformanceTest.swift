@@ -19,7 +19,7 @@ final class SpringAnimationPerformanceTest: XCTestCase {
     caSpringAnimation.initialVelocity = 0
 
     animation = SpringAnimation(animation: caSpringAnimation, fromValue: 0, toValue: 336)
-      
+
     options.iterationCount = 10
   }
 
