@@ -26,13 +26,25 @@ final class SpringAnimationPerformanceTest: XCTestCase {
 
     func testValueAt() throws {
         XCTAssertEqual(animation?.valueAt(time: 0.250), 316.52488444019065)
+        XCTAssertEqual(animation?.valueAt(time: 0.125), 223.44512762669416)
+        XCTAssertEqual(animation?.valueAt(time: 0.325), 329.82914080062113)
+        XCTAssertEqual(animation?.valueAt(time: 0.500), 335.6307289072886)
+        XCTAssertEqual(animation?.valueAt(time: 0.0), 0.0)
+        XCTAssertEqual(animation?.valueAt(time: 0.080), 144.11039189726017)
+    }
+    
+    func testTimingAt() throws {
+        XCTAssertEqual(animation?.timingAt(value: 160), 0.08782196044921875)
+        XCTAssertEqual(animation?.timingAt(value: 0), 7.62939453125e-06)
+        XCTAssertEqual(animation?.timingAt(value: 316.52488444019065), 0.24999237060546875)
+        XCTAssertEqual(animation?.timingAt(value: 329.82914080062113), 0.32500457763671875)
     }
 
     func testValueAtPerformance() throws {
         // This is an example of a performance test case.
         self.measure {
             for time in stride(from: 0.0, through: 0.500, by: 0.001) {
-                animation?.valueAt(time: time)
+                let _ = animation?.valueAt(time: time)
             }
         }
     }
