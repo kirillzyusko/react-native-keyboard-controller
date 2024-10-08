@@ -40,7 +40,6 @@ final class SpringAnimationPerformanceTest: XCTestCase {
   }
 
   func testCriticallyDampedValueAtPerformance() throws {
-    // This is an example of a performance test case.
     measure(metrics: [XCTCPUMetric(), XCTClockMetric()], options: options) {
       for time in stride(from: 0.0, through: 0.500, by: 0.00001) {
         _ = criticallyDampedAnimation.valueAt(time: time)
