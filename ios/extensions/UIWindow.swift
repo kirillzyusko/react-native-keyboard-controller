@@ -38,7 +38,7 @@ public extension UIWindow {
 
     func getTopWindow() -> UIWindow? {
       // Return the keyboard window if it's available, otherwise return the last window
-      return keyboardWindow ?? UIApplication.shared.windows.last
+      return keyboardWindow ?? UIApplication.shared.activeWindow
     }
   }
 
