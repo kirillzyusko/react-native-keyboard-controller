@@ -42,4 +42,13 @@ final class TimingAnimationPerformanceTest: XCTestCase {
       }
     }
   }
+
+  func testTimingAtPerformance() throws {
+    let animation = TimingAnimation(animation: timingAnimation, fromValue: 122, toValue: 291)
+    measure(metrics: [XCTCPUMetric(), XCTClockMetric()], options: options) {
+      for value in stride(from: 122, through: 291, by: 0.001) {
+        _ = animation.timingAt(value: value)
+      }
+    }
+  }
 }
