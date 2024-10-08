@@ -28,7 +28,11 @@ final class TimingAnimationPerformanceTest: XCTestCase {
   }()
 
   var animation: TimingAnimation {
-    return TimingAnimation(animation: timingAnimation, fromValue: TimingAnimationPerformanceTest.fromValue, toValue: TimingAnimationPerformanceTest.toValue)
+    return TimingAnimation(
+      animation: timingAnimation,
+      fromValue: TimingAnimationPerformanceTest.fromValue,
+      toValue: TimingAnimationPerformanceTest.toValue
+    )
   }
 
   func testTimingAnimationValueAt() throws {
@@ -49,7 +53,11 @@ final class TimingAnimationPerformanceTest: XCTestCase {
 
   func testTimingAtPerformance() throws {
     measure(metrics: [XCTCPUMetric(), XCTClockMetric()], options: options) {
-      for value in stride(from: TimingAnimationPerformanceTest.fromValue, through: TimingAnimationPerformanceTest.toValue, by: 0.001) {
+      for value in stride(
+        from: TimingAnimationPerformanceTest.fromValue,
+        through: TimingAnimationPerformanceTest.toValue,
+        by: 0.001
+      ) {
         _ = animation.timingAt(value: value)
       }
     }
