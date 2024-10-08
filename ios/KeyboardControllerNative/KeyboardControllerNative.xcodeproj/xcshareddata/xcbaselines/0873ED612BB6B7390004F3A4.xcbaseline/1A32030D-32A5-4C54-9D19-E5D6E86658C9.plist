@@ -32,14 +32,14 @@
 				<key>com.apple.dt.XCTMetric_CPU.time</key>
 				<dict>
 					<key>baselineAverage</key>
-					<real>0.218000</real>
+					<real>0.245000</real>
 					<key>baselineIntegrationDisplayName</key>
 					<string>Local Baseline</string>
 				</dict>
 				<key>com.apple.dt.XCTMetric_Clock.time.monotonic</key>
 				<dict>
 					<key>baselineAverage</key>
-					<real>0.210481</real>
+					<real>0.256000</real>
 					<key>baselineIntegrationDisplayName</key>
 					<string>Local Baseline</string>
 				</dict>

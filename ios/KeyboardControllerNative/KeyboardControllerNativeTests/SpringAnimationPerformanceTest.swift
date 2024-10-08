@@ -8,6 +8,7 @@
 import XCTest
 
 final class SpringAnimationPerformanceTest: XCTestCase {
+  let options = XCTMeasureOptions()
   let caSpringAnimation = CASpringAnimation()
   var animation: SpringAnimation?
 
@@ -18,6 +19,8 @@ final class SpringAnimationPerformanceTest: XCTestCase {
     caSpringAnimation.initialVelocity = 0
 
     animation = SpringAnimation(animation: caSpringAnimation, fromValue: 0, toValue: 336)
+      
+    options.iterationCount = 10
   }
 
   override func tearDownWithError() throws {
@@ -50,7 +53,7 @@ final class SpringAnimationPerformanceTest: XCTestCase {
   }
 
   func testTimingAtPerformance() throws {
-    measure(metrics: [XCTCPUMetric(), XCTClockMetric()]) {
+    measure(metrics: [XCTCPUMetric(), XCTClockMetric()], options: options) {
       for value in stride(from: 0.0, through: 336.0, by: 0.001) {
         _ = animation?.timingAt(value: value)
       }
