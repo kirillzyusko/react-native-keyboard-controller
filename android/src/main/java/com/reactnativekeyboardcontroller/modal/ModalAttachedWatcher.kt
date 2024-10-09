@@ -1,32 +1,18 @@
 package com.reactnativekeyboardcontroller.modal
 
-import android.os.Build
-import android.os.Handler
-import android.os.Looper
-import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver
 import android.view.WindowManager
-import android.widget.FrameLayout
-import android.widget.LinearLayout
 import androidx.core.view.ViewCompat
-import com.facebook.react.bridge.GuardedRunnable
-import com.facebook.react.bridge.UiThreadUtil
-import com.facebook.react.uimanager.RootView
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.UIManagerHelper
-import com.facebook.react.uimanager.UIManagerModule
 import com.facebook.react.uimanager.common.UIManagerType
 import com.facebook.react.uimanager.events.Event
 import com.facebook.react.uimanager.events.EventDispatcherListener
 import com.facebook.react.views.modal.ReactModalHostView
 import com.facebook.react.views.view.ReactViewGroup
 import com.reactnativekeyboardcontroller.BuildConfig
-import com.reactnativekeyboardcontroller.extensions.content
-import com.reactnativekeyboardcontroller.extensions.getDisplaySize
 import com.reactnativekeyboardcontroller.extensions.hostView
 import com.reactnativekeyboardcontroller.extensions.removeSelf
-import com.reactnativekeyboardcontroller.extensions.requestApplyInsetsWhenAttached
 import com.reactnativekeyboardcontroller.extensions.rootView
 import com.reactnativekeyboardcontroller.listeners.KeyboardAnimationCallback
 import com.reactnativekeyboardcontroller.listeners.KeyboardAnimationCallbackConfig
@@ -77,26 +63,24 @@ class ModalAttachedWatcher(
           config = config(),
         )
 
-        println("2222")
+      println("2222")
       (rootView as ViewGroup?)?.addView(eventView)
       this.callback()?.suspended = true
-        ViewCompat.setWindowInsetsAnimationCallback(rootView, callback)
-        ViewCompat.setOnApplyWindowInsetsListener(eventView, callback)
+      ViewCompat.setWindowInsetsAnimationCallback(rootView, callback)
+      ViewCompat.setOnApplyWindowInsetsListener(eventView, callback)
 
+      // when modal is shown the keyboard will be hidden by default
+      callback.syncKeyboardPosition(0.0, false)
 
+      dialog?.setOnDismissListener {
+        callback.syncKeyboardPosition()
+        callback.destroy()
+        eventView.removeSelf()
+        this.callback()?.suspended = false
+      }
 
-  // when modal is shown the keyboard will be hidden by default
-  callback.syncKeyboardPosition(0.0, false)
-
-        dialog?.setOnDismissListener {
-          callback.syncKeyboardPosition()
-          callback.destroy()
-          eventView.removeSelf()
-          this.callback()?.suspended = false
-        }
-
-        // imitating edge-to-edge mode behavior
-        window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
+      // imitating edge-to-edge mode behavior
+      window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING)
     }
   }
 

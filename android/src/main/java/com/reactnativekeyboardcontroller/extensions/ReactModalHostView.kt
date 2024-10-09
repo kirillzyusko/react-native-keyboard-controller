@@ -1,10 +1,6 @@
 package com.reactnativekeyboardcontroller.extensions
 
-import android.text.Editable
-import android.text.TextWatcher
-import android.widget.EditText
 import com.facebook.react.views.modal.ReactModalHostView
-import com.facebook.react.views.textinput.ReactEditText
 import com.facebook.react.views.view.ReactViewGroup
 import com.reactnativekeyboardcontroller.log.Logger
 import java.lang.reflect.Field
@@ -24,5 +20,5 @@ fun ReactModalHostView.hostView(): ReactViewGroup? {
     Logger.w(javaClass.simpleName, "Can not attach listener because field `mListeners` not found: ${e.message}")
   }
 
-   return null
+  return null
 }

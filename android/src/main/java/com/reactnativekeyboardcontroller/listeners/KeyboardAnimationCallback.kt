@@ -315,7 +315,10 @@ class KeyboardAnimationCallback(
     duration = 0
   }
 
-  fun syncKeyboardPosition(height: Double? = null, isVisible: Boolean? = null) {
+  fun syncKeyboardPosition(
+    height: Double? = null,
+    isVisible: Boolean? = null,
+  ) {
     val keyboardHeight = height ?: getCurrentKeyboardHeight()
     // update internal state
     isKeyboardVisible = isVisible ?: isKeyboardVisible()
