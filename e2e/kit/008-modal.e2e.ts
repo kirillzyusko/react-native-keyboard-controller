@@ -63,7 +63,7 @@ describe("Modal integration", () => {
 
   it("should restore initial state before Modal show", async () => {
     await waitForExpect(async () => {
-      await expectBitmapsToBeEqual("ModalKeyboardClosed");
+      await expectBitmapsToBeEqual("ModalBeforeOpening");
     });
   });
 });
