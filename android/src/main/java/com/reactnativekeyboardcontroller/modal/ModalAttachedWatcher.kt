@@ -18,6 +18,7 @@ import com.reactnativekeyboardcontroller.listeners.KeyboardAnimationCallbackConf
 import com.reactnativekeyboardcontroller.log.Logger
 
 private val TAG = ModalAttachedWatcher::class.qualifiedName
+private val areEventsComingFromOwnWindow = !Keyboard.ARE_TRANSITIONS_EMULATED
 
 class ModalAttachedWatcher(
   private val view: ReactViewGroup,
@@ -67,19 +68,27 @@ class ModalAttachedWatcher(
       // on Android < 12 all events for `WindowInsetsAnimationCallback`
       // go through main `rootView`, so we don't need to stop main
       // callback - otherwise keyboard transitions will not be animated
-      this.callback()?.suspended = !Keyboard.ARE_TRANSITIONS_EMULATED
+      this.callback()?.suspend(areEventsComingFromOwnWindow)
       ViewCompat.setWindowInsetsAnimationCallback(rootView, callback)
       ViewCompat.setOnApplyWindowInsetsListener(eventView, callback)
 
-      // TODO: no need to call when ARE_TRANSITIONS_EMULATED?
-      // when modal is shown the keyboard will be hidden by default
-      callback.syncKeyboardPosition(0.0, false)
+      if (areEventsComingFromOwnWindow) {
+        // when modal is shown then keyboard will be hidden by default
+        //
+        // - if events are coming from main window - then keyboard position
+        //   will be synchronized from main window callback
+        // - if events are coming from modal window - then we need to update
+        //   position ourself, because callback can be attached after keyboard
+        //   auto-dismissal and we may miss some events and keyboard position
+        //   will be outdated
+        callback.syncKeyboardPosition(0.0, false)
+      }
 
       dialog?.setOnDismissListener {
         callback.syncKeyboardPosition()
         callback.destroy()
         eventView.removeSelf()
-        this.callback()?.suspended = false
+        this.callback()?.suspend(false)
       }
 
       // imitating edge-to-edge mode behavior

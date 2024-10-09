@@ -47,7 +47,7 @@ class EdgeToEdgeReactViewGroup(
       )
 
   // managers/watchers
-  private val modalAttachedWatcher = ModalAttachedWatcher(this, reactContext, ::config) { this.callback }
+  private val modalAttachedWatcher = ModalAttachedWatcher(this, reactContext, ::config, ::getKeyboardCallback)
 
   init {
     reactContext.setupWindowDimensionsListener()
@@ -193,6 +193,10 @@ class EdgeToEdgeReactViewGroup(
     this.removeKeyboardCallbacks()
     modalAttachedWatcher.disable()
   }
+  // endregion
+
+  // region Helpers
+  private fun getKeyboardCallback(): KeyboardAnimationCallback? = this.callback
   // endregion
 
   // region Props setters
