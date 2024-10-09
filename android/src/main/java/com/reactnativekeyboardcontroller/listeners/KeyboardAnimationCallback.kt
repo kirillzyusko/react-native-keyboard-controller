@@ -14,6 +14,7 @@ import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.UIManagerHelper
 import com.facebook.react.views.textinput.ReactEditText
 import com.facebook.react.views.view.ReactViewGroup
+import com.reactnativekeyboardcontroller.constants.Keyboard
 import com.reactnativekeyboardcontroller.events.KeyboardTransitionEvent
 import com.reactnativekeyboardcontroller.extensions.dispatchEvent
 import com.reactnativekeyboardcontroller.extensions.dp
@@ -24,7 +25,7 @@ import com.reactnativekeyboardcontroller.log.Logger
 import kotlin.math.abs
 
 private val TAG = KeyboardAnimationCallback::class.qualifiedName
-private val isResizeHandledInCallbackMethods = Build.VERSION.SDK_INT < Build.VERSION_CODES.R
+private val isResizeHandledInCallbackMethods = Keyboard.ARE_TRANSITIONS_EMULATED
 
 data class KeyboardAnimationCallbackConfig(
   val persistentInsetTypes: Int,
@@ -378,7 +379,7 @@ class KeyboardAnimationCallback(
     this.persistentKeyboardHeight = keyboardHeight
   }
 
-  public fun isKeyboardVisible(): Boolean {
+  private fun isKeyboardVisible(): Boolean {
     val insets = ViewCompat.getRootWindowInsets(view)
 
     return insets?.isVisible(WindowInsetsCompat.Type.ime()) ?: false

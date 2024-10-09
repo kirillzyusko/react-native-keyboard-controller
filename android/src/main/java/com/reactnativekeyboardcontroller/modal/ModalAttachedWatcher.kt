@@ -11,8 +11,8 @@ import com.facebook.react.uimanager.events.EventDispatcherListener
 import com.facebook.react.views.modal.ReactModalHostView
 import com.facebook.react.views.view.ReactViewGroup
 import com.reactnativekeyboardcontroller.BuildConfig
+import com.reactnativekeyboardcontroller.constants.Keyboard
 import com.reactnativekeyboardcontroller.extensions.removeSelf
-import com.reactnativekeyboardcontroller.extensions.rootView
 import com.reactnativekeyboardcontroller.listeners.KeyboardAnimationCallback
 import com.reactnativekeyboardcontroller.listeners.KeyboardAnimationCallbackConfig
 import com.reactnativekeyboardcontroller.log.Logger
@@ -64,10 +64,14 @@ class ModalAttachedWatcher(
         )
 
       rootView.addView(eventView)
-      this.callback()?.suspended = true
+      // on Android < 12 all events for `WindowInsetsAnimationCallback`
+      // go through main `rootView`, so we don't need to stop main
+      // callback - otherwise keyboard transitions will not be animated
+      this.callback()?.suspended = !Keyboard.ARE_TRANSITIONS_EMULATED
       ViewCompat.setWindowInsetsAnimationCallback(rootView, callback)
       ViewCompat.setOnApplyWindowInsetsListener(eventView, callback)
 
+      // TODO: no need to call when ARE_TRANSITIONS_EMULATED?
       // when modal is shown the keyboard will be hidden by default
       callback.syncKeyboardPosition(0.0, false)
 
