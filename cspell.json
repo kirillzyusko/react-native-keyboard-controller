@@ -52,6 +52,7 @@
     "workletization",
     "RCTUI",
     "XCUI",
+    "XCTCPU",
     "endregion",
     "autoreleasepool",
     "jsbundle",
@@ -124,7 +125,8 @@
     "Hoverable",
     "zxcvbnmasdfghjklqwertyuiop",
     "autoresizing",
-    "focusable"
+    "focusable",
+    "iphonesimulator"
   ],
   "ignorePaths": [
     "node_modules",

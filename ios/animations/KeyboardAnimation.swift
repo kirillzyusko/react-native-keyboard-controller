@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import QuartzCore
 
 protocol KeyboardAnimationProtocol {
   var startTime: CFTimeInterval { get }
