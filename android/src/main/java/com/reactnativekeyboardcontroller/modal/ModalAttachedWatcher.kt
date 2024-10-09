@@ -47,14 +47,14 @@ class ModalAttachedWatcher(
       return
     }
 
-    val host = modal.hostView()
     val dialog = modal.dialog
     val window = dialog?.window
     val rootView = window?.decorView?.rootView as ViewGroup?
 
     if (rootView != null) {
-      val eventView = ReactViewGroup(reactContext)
-      eventView.layoutParams = ViewGroup.LayoutParams(0, 0)
+      val eventView = ReactViewGroup(reactContext).apply {
+        layoutParams = ViewGroup.LayoutParams(0, 0)
+      }
       val callback =
         KeyboardAnimationCallback(
           view = rootView,
@@ -63,8 +63,7 @@ class ModalAttachedWatcher(
           config = config(),
         )
 
-      println("2222")
-      (rootView as ViewGroup?)?.addView(eventView)
+      rootView.addView(eventView)
       this.callback()?.suspended = true
       ViewCompat.setWindowInsetsAnimationCallback(rootView, callback)
       ViewCompat.setOnApplyWindowInsetsListener(eventView, callback)
