@@ -148,7 +148,7 @@ class KeyboardAnimationCallback(
       this.onKeyboardResized(keyboardHeight)
     }
 
-    return WindowInsetsCompat.CONSUMED
+    return insets
   }
 
   @Suppress("detekt:ReturnCount")
