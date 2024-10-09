@@ -11,7 +11,6 @@ import com.facebook.react.uimanager.events.EventDispatcherListener
 import com.facebook.react.views.modal.ReactModalHostView
 import com.facebook.react.views.view.ReactViewGroup
 import com.reactnativekeyboardcontroller.BuildConfig
-import com.reactnativekeyboardcontroller.extensions.hostView
 import com.reactnativekeyboardcontroller.extensions.removeSelf
 import com.reactnativekeyboardcontroller.extensions.rootView
 import com.reactnativekeyboardcontroller.listeners.KeyboardAnimationCallback
@@ -52,9 +51,10 @@ class ModalAttachedWatcher(
     val rootView = window?.decorView?.rootView as ViewGroup?
 
     if (rootView != null) {
-      val eventView = ReactViewGroup(reactContext).apply {
-        layoutParams = ViewGroup.LayoutParams(0, 0)
-      }
+      val eventView =
+        ReactViewGroup(reactContext).apply {
+          layoutParams = ViewGroup.LayoutParams(0, 0)
+        }
       val callback =
         KeyboardAnimationCallback(
           view = rootView,
