@@ -126,7 +126,8 @@
     "zxcvbnmasdfghjklqwertyuiop",
     "autoresizing",
     "focusable",
-    "iphonesimulator"
+    "iphonesimulator",
+    "suspendable"
   ],
   "ignorePaths": [
     "node_modules",

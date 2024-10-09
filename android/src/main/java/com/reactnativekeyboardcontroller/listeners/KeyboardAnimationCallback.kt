@@ -24,7 +24,7 @@ import com.reactnativekeyboardcontroller.log.Logger
 import kotlin.math.abs
 
 private val TAG = KeyboardAnimationCallback::class.qualifiedName
-private val isResizeHandledInCallbackMethods = Keyboard.ARE_TRANSITIONS_EMULATED
+private val isResizeHandledInCallbackMethods = Keyboard.IS_ANIMATION_EMULATED
 
 data class KeyboardAnimationCallbackConfig(
   val persistentInsetTypes: Int,

@@ -18,7 +18,7 @@ import com.reactnativekeyboardcontroller.listeners.KeyboardAnimationCallbackConf
 import com.reactnativekeyboardcontroller.log.Logger
 
 private val TAG = ModalAttachedWatcher::class.qualifiedName
-private val areEventsComingFromOwnWindow = !Keyboard.ARE_TRANSITIONS_EMULATED
+private val areEventsComingFromOwnWindow = !Keyboard.IS_ANIMATION_EMULATED
 
 class ModalAttachedWatcher(
   private val view: ReactViewGroup,
