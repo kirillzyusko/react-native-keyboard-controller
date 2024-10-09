@@ -47,7 +47,7 @@ class EdgeToEdgeReactViewGroup(
       )
 
   // managers/watchers
-  private val modalAttachedWatcher = ModalAttachedWatcher(this, reactContext, ::config)
+  private val modalAttachedWatcher = ModalAttachedWatcher(this, reactContext, ::config) { this.callback }
 
   init {
     reactContext.setupWindowDimensionsListener()

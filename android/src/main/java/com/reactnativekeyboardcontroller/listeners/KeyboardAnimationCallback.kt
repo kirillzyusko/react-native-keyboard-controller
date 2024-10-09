@@ -50,6 +50,7 @@ class KeyboardAnimationCallback(
   private var duration = 0
   private var viewTagFocused = -1
   private var animationsToSkip = hashSetOf<WindowInsetsAnimationCompat>()
+  public var suspended = false
 
   // listeners
   private val focusListener =
@@ -209,6 +210,9 @@ class KeyboardAnimationCallback(
     runningAnimations: List<WindowInsetsAnimationCompat>,
   ): WindowInsetsCompat {
     // onProgress() is called when any of the running animations progress...
+    if (suspended) {
+      return insets
+    }
 
     // ignore non-keyboard animation or animation that we intentionally want to skip
     runningAnimations.find { it.isKeyboardAnimation && !animationsToSkip.contains(it) } ?: return insets
@@ -262,7 +266,7 @@ class KeyboardAnimationCallback(
   override fun onEnd(animation: WindowInsetsAnimationCompat) {
     super.onEnd(animation)
 
-    if (!animation.isKeyboardAnimation) {
+    if (!animation.isKeyboardAnimation || suspended) {
       return
     }
 
@@ -311,10 +315,10 @@ class KeyboardAnimationCallback(
     duration = 0
   }
 
-  fun syncKeyboardPosition() {
-    val keyboardHeight = getCurrentKeyboardHeight()
+  fun syncKeyboardPosition(height: Double? = null, isVisible: Boolean? = null) {
+    val keyboardHeight = height ?: getCurrentKeyboardHeight()
     // update internal state
-    isKeyboardVisible = isKeyboardVisible()
+    isKeyboardVisible = isVisible ?: isKeyboardVisible()
     prevKeyboardHeight = keyboardHeight
     isTransitioning = false
     duration = 0
@@ -371,7 +375,7 @@ class KeyboardAnimationCallback(
     this.persistentKeyboardHeight = keyboardHeight
   }
 
-  private fun isKeyboardVisible(): Boolean {
+  public fun isKeyboardVisible(): Boolean {
     val insets = ViewCompat.getRootWindowInsets(view)
 
     return insets?.isVisible(WindowInsetsCompat.Type.ime()) ?: false
