@@ -27,6 +27,12 @@ export const useKeyboardAnimation = () => {
         progress.value = e.progress;
         height.value = e.height;
       },
+      onInteractive: (e) => {
+        "worklet";
+
+        progress.value = e.progress;
+        height.value = e.height;
+      },
       onEnd: (e) => {
         "worklet";
 
