@@ -2,6 +2,7 @@ package com.reactnativekeyboardcontroller.modules
 
 import android.animation.ArgbEvaluator
 import android.animation.ValueAnimator
+import android.app.Activity
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.view.WindowInsetsCompat
@@ -11,6 +12,7 @@ import com.facebook.react.bridge.UiThreadUtil
 import com.reactnativekeyboardcontroller.extensions.rootView
 import com.reactnativekeyboardcontroller.log.Logger
 import com.reactnativekeyboardcontroller.views.EdgeToEdgeReactViewGroup
+import java.lang.ref.WeakReference
 
 private val TAG = StatusBarManagerCompatModuleImpl::class.qualifiedName
 
@@ -18,6 +20,7 @@ class StatusBarManagerCompatModuleImpl(
   private val mReactContext: ReactApplicationContext,
 ) {
   private var controller: WindowInsetsControllerCompat? = null
+  private var lastActivity = WeakReference<Activity?>(null)
 
   fun setHidden(hidden: Boolean) {
     UiThreadUtil.runOnUiThread {
@@ -71,8 +74,9 @@ class StatusBarManagerCompatModuleImpl(
   }
 
   private fun getController(): WindowInsetsControllerCompat? {
-    if (this.controller == null) {
-      val activity = mReactContext.currentActivity
+    val activity = mReactContext.currentActivity
+
+    if (this.controller == null || activity != lastActivity.get()) {
       if (activity == null) {
         Logger.w(
           TAG,
@@ -82,6 +86,7 @@ class StatusBarManagerCompatModuleImpl(
       }
 
       val window = activity.window
+      lastActivity = WeakReference(activity)
 
       this.controller = WindowInsetsControllerCompat(window, window.decorView)
     }
