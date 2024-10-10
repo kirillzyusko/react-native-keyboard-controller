@@ -42,9 +42,6 @@ jobs:
           xcode-version: "15.4"
       - name: Get Xcode version
         run: xcodebuild -version
-      - uses: muukii/actions-xcode-install-simulator@main
-        with:
-          ios_version: "15.5"
       - name: Save yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
@@ -97,7 +94,7 @@ jobs:
           path: example/ios/build/Build/Products/Release-iphonesimulator/KeyboardControllerExample.app/**
   e2e-test:
     name: ⚙️ Automated test cases (iOS-${{ matrix.devices.ios }})
-    runs-on: macos-${{ matrix.devices.macos }}
+    runs-on: macos-14
     timeout-minutes: 90
     env:
       WORKING_DIRECTORY: example
@@ -108,10 +105,10 @@ jobs:
       matrix:
         devices:
           [
-            { ios: 15, xcode: "13.4.1", macos: 12 },
-            { ios: 16, xcode: "14.3.1", macos: 14 },
-            { ios: 17, xcode: "15.4", macos: 14 },
-            { ios: 18, xcode: "16.0", macos: 14 },
+            { ios: 15, xcode: "14.3.1" },
+            { ios: 16, xcode: "14.3.1" },
+            { ios: 17, xcode: "15.4" },
+            { ios: 18, xcode: "16.0" },
           ]
     needs: build
     steps:
@@ -126,6 +123,9 @@ jobs:
           xcode-version: ${{ matrix.devices.xcode }}
       - name: Get Xcode version
         run: xcodebuild -version
+      - uses: muukii/actions-xcode-install-simulator@main
+        with:
+          ios_version: "15.5"
       - name: List all available simulators
         run: xcrun simctl list
       - name: Install AppleSimulatorUtils
