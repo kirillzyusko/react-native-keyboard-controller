@@ -1,6 +1,5 @@
 package com.reactnativekeyboardcontroller.listeners
 
-import android.os.Build
 import android.view.View
 import android.view.ViewTreeObserver.OnGlobalFocusChangeListener
 import androidx.core.graphics.Insets
@@ -14,6 +13,7 @@ import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.UIManagerHelper
 import com.facebook.react.views.textinput.ReactEditText
 import com.facebook.react.views.view.ReactViewGroup
+import com.reactnativekeyboardcontroller.constants.Keyboard
 import com.reactnativekeyboardcontroller.events.KeyboardTransitionEvent
 import com.reactnativekeyboardcontroller.extensions.dispatchEvent
 import com.reactnativekeyboardcontroller.extensions.dp
@@ -24,7 +24,7 @@ import com.reactnativekeyboardcontroller.log.Logger
 import kotlin.math.abs
 
 private val TAG = KeyboardAnimationCallback::class.qualifiedName
-private val isResizeHandledInCallbackMethods = Build.VERSION.SDK_INT < Build.VERSION_CODES.R
+private val isResizeHandledInCallbackMethods = Keyboard.IS_ANIMATION_EMULATED
 
 data class KeyboardAnimationCallbackConfig(
   val persistentInsetTypes: Int,
@@ -33,13 +33,22 @@ data class KeyboardAnimationCallbackConfig(
   val hasTranslucentNavigationBar: Boolean = false,
 )
 
+interface Suspendable {
+  var isSuspended: Boolean
+
+  fun suspend(suspended: Boolean) {
+    isSuspended = suspended
+  }
+}
+
 class KeyboardAnimationCallback(
   val eventPropagationView: ReactViewGroup,
   val view: View,
   val context: ThemedReactContext?,
   private val config: KeyboardAnimationCallbackConfig,
 ) : WindowInsetsAnimationCompat.Callback(config.dispatchMode),
-  OnApplyWindowInsetsListener {
+  OnApplyWindowInsetsListener,
+  Suspendable {
   private val surfaceId = UIManagerHelper.getSurfaceId(eventPropagationView)
 
   // state variables
@@ -50,6 +59,7 @@ class KeyboardAnimationCallback(
   private var duration = 0
   private var viewTagFocused = -1
   private var animationsToSkip = hashSetOf<WindowInsetsAnimationCompat>()
+  override var isSuspended: Boolean = false
 
   // listeners
   private val focusListener =
@@ -147,7 +157,7 @@ class KeyboardAnimationCallback(
       this.onKeyboardResized(keyboardHeight)
     }
 
-    return WindowInsetsCompat.CONSUMED
+    return insets
   }
 
   @Suppress("detekt:ReturnCount")
@@ -155,7 +165,7 @@ class KeyboardAnimationCallback(
     animation: WindowInsetsAnimationCompat,
     bounds: WindowInsetsAnimationCompat.BoundsCompat,
   ): WindowInsetsAnimationCompat.BoundsCompat {
-    if (!animation.isKeyboardAnimation) {
+    if (!animation.isKeyboardAnimation || isSuspended) {
       return bounds
     }
 
@@ -211,7 +221,13 @@ class KeyboardAnimationCallback(
     // onProgress() is called when any of the running animations progress...
 
     // ignore non-keyboard animation or animation that we intentionally want to skip
-    runningAnimations.find { it.isKeyboardAnimation && !animationsToSkip.contains(it) } ?: return insets
+    val shouldSkipAnimation =
+      runningAnimations.find {
+        it.isKeyboardAnimation && !animationsToSkip.contains(it)
+      } == null
+    if (isSuspended || shouldSkipAnimation) {
+      return insets
+    }
 
     // First we get the insets which are potentially deferred
     val typesInset = insets.getInsets(config.deferredInsetTypes)
@@ -262,7 +278,7 @@ class KeyboardAnimationCallback(
   override fun onEnd(animation: WindowInsetsAnimationCompat) {
     super.onEnd(animation)
 
-    if (!animation.isKeyboardAnimation) {
+    if (!animation.isKeyboardAnimation || isSuspended) {
       return
     }
 
@@ -311,10 +327,13 @@ class KeyboardAnimationCallback(
     duration = 0
   }
 
-  fun syncKeyboardPosition() {
-    val keyboardHeight = getCurrentKeyboardHeight()
+  fun syncKeyboardPosition(
+    height: Double? = null,
+    isVisible: Boolean? = null,
+  ) {
+    val keyboardHeight = height ?: getCurrentKeyboardHeight()
     // update internal state
-    isKeyboardVisible = isKeyboardVisible()
+    isKeyboardVisible = isVisible ?: isKeyboardVisible()
     prevKeyboardHeight = keyboardHeight
     isTransitioning = false
     duration = 0
