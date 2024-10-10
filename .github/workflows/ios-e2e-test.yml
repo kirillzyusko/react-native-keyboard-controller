@@ -105,7 +105,7 @@ jobs:
       matrix:
         devices:
           [
-            { ios: 15, xcode: "14.3.1" },
+            { ios: 15, xcode: "14.3.1", runtime: "15.5" },
             { ios: 16, xcode: "14.3.1" },
             { ios: 17, xcode: "15.4" },
             { ios: 18, xcode: "16.0" },
@@ -123,9 +123,15 @@ jobs:
           xcode-version: ${{ matrix.devices.xcode }}
       - name: Get Xcode version
         run: xcodebuild -version
-      - uses: muukii/actions-xcode-install-simulator@main
+      - name: Install additional iOS runtimes
+        if: ${{ matrix.devices.runtime != '' && matrix.devices.runtime != null }}
+        uses: nick-fields/retry@v3
         with:
-          ios_version: "15.5"
+          timeout_minutes: 10
+          max_attempts: 3
+          command: |
+            brew tap robotsandpencils/made
+            sudo xcodes runtimes install --keep-archive 'iOS ${{ matrix.devices.runtime }}'
       - name: List all available simulators
         run: xcrun simctl list
       - name: Install AppleSimulatorUtils
