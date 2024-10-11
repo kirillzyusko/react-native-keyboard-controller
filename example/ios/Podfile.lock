@@ -1282,7 +1282,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-keyboard-controller (1.14.0):
+  - react-native-keyboard-controller (1.14.1):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1972,7 +1972,7 @@ SPEC CHECKSUMS:
   React-Mapbuffer: 714f2fae68edcabfc332b754e9fbaa8cfc68fdd4
   React-microtasksnativemodule: 4943ad8f99be8ccf5a63329fa7d269816609df9e
   react-native-blur: 42522e76bf44daf9a16d341408caeb900b5f9424
-  react-native-keyboard-controller: 204deea9195d3c02711741a6df20fc9e374a060f
+  react-native-keyboard-controller: 827e8dfe3d07c6739150db2a6a94ea239b127fbc
   react-native-safe-area-context: a240ad4b683349e48b1d51fed1611138d1bdad97
   react-native-text-input-mask: 22ca8eeef84d42a896f79428f7d175a5eb8b1c4e
   React-nativeconfig: 4a9543185905fe41014c06776bf126083795aed9
