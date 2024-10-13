@@ -106,6 +106,14 @@ RCT_EXPORT_VIEW_PROPERTY(visible, BOOL)
 }
 #endif
 
+// MARK: lifecycle methods
+- (void)didMoveToSuperview
+{
+  if (self.superview == nil) {
+    [self hide];
+  }
+}
+
 // MARK: touch handling
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
 {
