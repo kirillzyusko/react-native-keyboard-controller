@@ -11,7 +11,7 @@ import UIKit
 
 public extension UIView {
   var globalFrame: CGRect? {
-    let rootView = UIApplication.shared.keyWindow?.rootViewController?.view
+    let rootView = UIApplication.shared.activeWindow?.rootViewController?.view
     return superview?.convert(frame, to: rootView)
   }
 }
