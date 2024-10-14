@@ -37,8 +37,11 @@ public extension UIWindow {
     }
 
     func getTopWindow() -> UIWindow? {
+      let keyboardView = KeyboardView.find()
       // Return the keyboard window if it's available, otherwise return the last window
-      return keyboardWindow ?? UIApplication.shared.activeWindow
+      return (keyboardWindow != nil && keyboardView != nil && keyboardView.isVisibleInHierarchy())
+        ? keyboardWindow
+        : UIApplication.shared.activeWindow
     }
   }
 
