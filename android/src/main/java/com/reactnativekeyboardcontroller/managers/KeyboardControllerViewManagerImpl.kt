@@ -3,6 +3,10 @@ package com.reactnativekeyboardcontroller.managers
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.common.MapBuilder
 import com.facebook.react.uimanager.ThemedReactContext
+import com.reactnativekeyboardcontroller.events.FocusedInputLayoutChangedEvent
+import com.reactnativekeyboardcontroller.events.FocusedInputSelectionChangedEvent
+import com.reactnativekeyboardcontroller.events.FocusedInputTextChangedEvent
+import com.reactnativekeyboardcontroller.events.KeyboardTransitionEvent
 import com.reactnativekeyboardcontroller.views.EdgeToEdgeReactViewGroup
 
 @Suppress("detekt:UnusedPrivateProperty")
@@ -36,19 +40,19 @@ class KeyboardControllerViewManagerImpl(
   fun getExportedCustomDirectEventTypeConstants(): MutableMap<String, Any> {
     val map: MutableMap<String, Any> =
       MapBuilder.of(
-        "topKeyboardMove",
+        KeyboardTransitionEvent.Move.value,
         MapBuilder.of("registrationName", "onKeyboardMove"),
-        "topKeyboardMoveStart",
+        KeyboardTransitionEvent.Start.value,
         MapBuilder.of("registrationName", "onKeyboardMoveStart"),
-        "topKeyboardMoveEnd",
+        KeyboardTransitionEvent.End.value,
         MapBuilder.of("registrationName", "onKeyboardMoveEnd"),
-        "topKeyboardMoveInteractive",
+        KeyboardTransitionEvent.Interactive.value,
         MapBuilder.of("registrationName", "onKeyboardMoveInteractive"),
-        "topFocusedInputLayoutChanged",
+        FocusedInputLayoutChangedEvent.EVENT_NAME,
         MapBuilder.of("registrationName", "onFocusedInputLayoutChanged"),
-        "topFocusedInputTextChanged",
+        FocusedInputTextChangedEvent.EVENT_NAME,
         MapBuilder.of("registrationName", "onFocusedInputTextChanged"),
-        "topFocusedInputSelectionChanged",
+        FocusedInputSelectionChangedEvent.EVENT_NAME,
         MapBuilder.of("registrationName", "onFocusedInputSelectionChanged"),
       )
 

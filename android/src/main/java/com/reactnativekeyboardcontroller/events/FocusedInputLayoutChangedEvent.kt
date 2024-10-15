@@ -20,7 +20,7 @@ class FocusedInputLayoutChangedEvent(
   viewId: Int,
   private val event: FocusedInputLayoutChangedEventData,
 ) : Event<FocusedInputLayoutChangedEvent>(surfaceId, viewId) {
-  override fun getEventName() = "topFocusedInputLayoutChanged"
+  override fun getEventName() = EVENT_NAME
 
   // All events for a given view can be coalesced
   override fun getCoalescingKey(): Short = 0
@@ -41,4 +41,8 @@ class FocusedInputLayoutChangedEvent(
         },
       )
     }
+
+  companion object {
+    const val EVENT_NAME = "topFocusedInputLayoutChanged"
+  }
 }
