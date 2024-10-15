@@ -33,11 +33,13 @@ class KeyboardTransitionEvent(
     const val END_EVENT_NAME = "topKeyboardMoveEnd"
     const val INTERACTIVE_EVENT_NAME = "topKeyboardMoveInteractive"
 
-    enum class EventName(val value: String) {
+    enum class EventName(
+      val value: String,
+    ) {
       Move(MOVE_EVENT_NAME),
       Start(START_EVENT_NAME),
       End(END_EVENT_NAME),
-      Interactive(INTERACTIVE_EVENT_NAME)
+      Interactive(INTERACTIVE_EVENT_NAME),
     }
 
     val Move get() = EventName.Move

@@ -258,7 +258,12 @@ class KeyboardAnimationCallback(
       "DiffY: $diffY $height $progress ${InteractiveKeyboardProvider.isInteractive} $viewTagFocused",
     )
 
-    val event = if (InteractiveKeyboardProvider.isInteractive) KeyboardTransitionEvent.Interactive else KeyboardTransitionEvent.Move
+    val event =
+      if (InteractiveKeyboardProvider.isInteractive) {
+        KeyboardTransitionEvent.Interactive
+      } else {
+        KeyboardTransitionEvent.Move
+      }
     context.dispatchEvent(
       eventPropagationView.id,
       KeyboardTransitionEvent(
@@ -371,7 +376,11 @@ class KeyboardAnimationCallback(
     duration = 0
 
     context.emitEvent("KeyboardController::keyboardWillShow", getEventParams(keyboardHeight))
-    listOf(KeyboardTransitionEvent.Start, KeyboardTransitionEvent.Move, KeyboardTransitionEvent.End).forEach { eventName ->
+    listOf(
+      KeyboardTransitionEvent.Start,
+      KeyboardTransitionEvent.Move,
+      KeyboardTransitionEvent.End,
+    ).forEach { eventName ->
       context.dispatchEvent(
         eventPropagationView.id,
         KeyboardTransitionEvent(
