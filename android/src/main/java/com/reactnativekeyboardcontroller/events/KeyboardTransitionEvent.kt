@@ -28,23 +28,18 @@ class KeyboardTransitionEvent(
     }
 
   companion object {
-    const val MOVE_EVENT_NAME = "topKeyboardMove"
-    const val START_EVENT_NAME = "topKeyboardMoveStart"
-    const val END_EVENT_NAME = "topKeyboardMoveEnd"
-    const val INTERACTIVE_EVENT_NAME = "topKeyboardMoveInteractive"
-
     enum class EventName(
       val value: String,
     ) {
-      Move(MOVE_EVENT_NAME),
-      Start(START_EVENT_NAME),
-      End(END_EVENT_NAME),
-      Interactive(INTERACTIVE_EVENT_NAME),
+      Move("topKeyboardMove"),
+      Start("topKeyboardMoveStart"),
+      End("topKeyboardMoveEnd"),
+      Interactive("topKeyboardMoveInteractive"),
     }
 
-    val Move get() = EventName.Move
-    val Start get() = EventName.Start
-    val End get() = EventName.End
-    val Interactive get() = EventName.Interactive
+    val Move = EventName.Move
+    val Start = EventName.Start
+    val End = EventName.End
+    val Interactive = EventName.Interactive
   }
 }
