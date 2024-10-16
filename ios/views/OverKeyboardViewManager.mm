@@ -102,9 +102,18 @@ RCT_EXPORT_VIEW_PROPERTY(visible, BOOL)
     _touchHandler = [[RCTTouchHandler alloc] initWithBridge:bridge];
     _contentView = [[UIView alloc] initWithFrame:CGRectZero];
   }
+  [[NSNotificationCenter defaultCenter] addObserver:self
+                                           selector:@selector(hide)
+                                               name:RCTJavaScriptWillStartLoadingNotification
+                                             object:nil];
   return self;
 }
 #endif
+
+- (void)dealloc
+{
+  [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
 
 // MARK: lifecycle methods
 - (void)didMoveToSuperview
