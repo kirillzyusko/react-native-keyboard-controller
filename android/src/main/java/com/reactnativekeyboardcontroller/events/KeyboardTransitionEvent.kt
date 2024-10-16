@@ -8,13 +8,13 @@ import com.facebook.react.uimanager.events.Event
 class KeyboardTransitionEvent(
   surfaceId: Int,
   viewId: Int,
-  private val event: String,
+  private val event: EventName,
   private val height: Double,
   private val progress: Double,
   private val duration: Int,
   private val target: Int,
 ) : Event<KeyboardTransitionEvent>(surfaceId, viewId) {
-  override fun getEventName() = event
+  override fun getEventName() = event.value
 
   // All events for a given view can be coalesced?
   override fun getCoalescingKey(): Short = 0
@@ -26,4 +26,20 @@ class KeyboardTransitionEvent(
       putInt("duration", duration)
       putInt("target", target)
     }
+
+  companion object {
+    enum class EventName(
+      val value: String,
+    ) {
+      Move("topKeyboardMove"),
+      Start("topKeyboardMoveStart"),
+      End("topKeyboardMoveEnd"),
+      Interactive("topKeyboardMoveInteractive"),
+    }
+
+    val Move = EventName.Move
+    val Start = EventName.Start
+    val End = EventName.End
+    val Interactive = EventName.Interactive
+  }
 }

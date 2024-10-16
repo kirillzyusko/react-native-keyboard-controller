@@ -79,7 +79,7 @@ class KeyboardAnimationCallback(
             KeyboardTransitionEvent(
               surfaceId,
               eventPropagationView.id,
-              "topKeyboardMoveStart",
+              KeyboardTransitionEvent.Start,
               this.persistentKeyboardHeight,
               1.0,
               0,
@@ -91,7 +91,7 @@ class KeyboardAnimationCallback(
             KeyboardTransitionEvent(
               surfaceId,
               eventPropagationView.id,
-              "topKeyboardMoveEnd",
+              KeyboardTransitionEvent.End,
               this.persistentKeyboardHeight,
               1.0,
               0,
@@ -203,7 +203,7 @@ class KeyboardAnimationCallback(
       KeyboardTransitionEvent(
         surfaceId,
         eventPropagationView.id,
-        "topKeyboardMoveStart",
+        KeyboardTransitionEvent.Start,
         keyboardHeight,
         if (!isKeyboardVisible) 0.0 else 1.0,
         duration,
@@ -258,7 +258,12 @@ class KeyboardAnimationCallback(
       "DiffY: $diffY $height $progress ${InteractiveKeyboardProvider.isInteractive} $viewTagFocused",
     )
 
-    val event = if (InteractiveKeyboardProvider.isInteractive) "topKeyboardMoveInteractive" else "topKeyboardMove"
+    val event =
+      if (InteractiveKeyboardProvider.isInteractive) {
+        KeyboardTransitionEvent.Interactive
+      } else {
+        KeyboardTransitionEvent.Move
+      }
     context.dispatchEvent(
       eventPropagationView.id,
       KeyboardTransitionEvent(
@@ -315,7 +320,7 @@ class KeyboardAnimationCallback(
       KeyboardTransitionEvent(
         surfaceId,
         eventPropagationView.id,
-        "topKeyboardMoveEnd",
+        KeyboardTransitionEvent.End,
         keyboardHeight,
         if (!isKeyboardVisible) 0.0 else 1.0,
         duration,
@@ -343,7 +348,7 @@ class KeyboardAnimationCallback(
       getEventParams(keyboardHeight),
     )
     // dispatch `onMove` to update RN animated value and `onEnd` to indicate that transition finished
-    listOf("topKeyboardMove", "topKeyboardMoveEnd").forEach { eventName ->
+    listOf(KeyboardTransitionEvent.Move, KeyboardTransitionEvent.End).forEach { eventName ->
       context.dispatchEvent(
         eventPropagationView.id,
         KeyboardTransitionEvent(
@@ -371,7 +376,11 @@ class KeyboardAnimationCallback(
     duration = 0
 
     context.emitEvent("KeyboardController::keyboardWillShow", getEventParams(keyboardHeight))
-    listOf("topKeyboardMoveStart", "topKeyboardMove", "topKeyboardMoveEnd").forEach { eventName ->
+    listOf(
+      KeyboardTransitionEvent.Start,
+      KeyboardTransitionEvent.Move,
+      KeyboardTransitionEvent.End,
+    ).forEach { eventName ->
       context.dispatchEvent(
         eventPropagationView.id,
         KeyboardTransitionEvent(
