@@ -204,10 +204,10 @@ public class FocusedInputObserver: NSObject {
   }
 
   private func substituteDelegateBack(_ input: UIResponder?) {
-    if let textField = input as? UITextField {
-      textField.delegate = delegate.activeDelegate as? UITextFieldDelegate
-    } else if let textView = input as? UITextView {
-      (textView as? RCTUITextView)?.setForceDelegate(delegate.activeDelegate as? UITextViewDelegate)
+    if let textField = input as? UITextField, let oldDelegate = delegate.activeDelegate as? UITextFieldDelegate {
+      textField.delegate = oldDelegate
+    } else if let textView = input as? UITextView, let oldDelegate = delegate.activeDelegate as? UITextViewDelegate {
+      (textView as? RCTUITextView)?.setForceDelegate(oldDelegate)
     }
   }
 
