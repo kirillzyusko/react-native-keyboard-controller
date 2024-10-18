@@ -1,6 +1,7 @@
 const path = require("path");
 
 const { getDefaultConfig, mergeConfig } = require("@react-native/metro-config");
+const { withSentryConfig } = require("@sentry/react-native/metro");
 const escape = require("escape-string-regexp");
 const exclusionList = require("metro-config/src/defaults/exclusionList");
 
@@ -48,4 +49,6 @@ const config = {
   },
 };
 
-module.exports = mergeConfig(getDefaultConfig(__dirname), config);
+module.exports = withSentryConfig(
+  mergeConfig(getDefaultConfig(__dirname), config),
+);

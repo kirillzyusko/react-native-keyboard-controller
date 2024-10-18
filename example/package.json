@@ -18,6 +18,7 @@
     "@react-navigation/native": "^6.1.18",
     "@react-navigation/native-stack": "^6.11.0",
     "@react-navigation/stack": "^6.4.1",
+    "@sentry/react-native": "5.31.1",
     "lottie-react-native": "^6.7.2",
     "react": "18.3.1",
     "react-native": "0.75.3",
