@@ -1,11 +1,7 @@
 ---
-sidebar_position: 5 
+sidebar_position: 5
 description: Troubleshooting guide
-keywords:
-  [
-    react-native-keyboard-controller,
-    troubleshooting,
-  ]
+keywords: [react-native-keyboard-controller, troubleshooting]
 ---
 
 # Troubleshooting

@@ -1,5 +1,5 @@
 ---
-sidebar_position: 6 
+sidebar_position: 6
 description: Frequently asked questions and answers on them
 keywords:
   [
