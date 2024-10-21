@@ -1,3 +1,9 @@
+---
+sidebar_position: 5
+description: Troubleshooting guide
+keywords: [react-native-keyboard-controller, troubleshooting]
+---
+
 # Troubleshooting
 
 This section attempts to outline issues that users frequently encounter when first getting accustomed to using `react-native-keyboard-controller`. These issues may or may not be related to `react-native-keyboard-controller`.
