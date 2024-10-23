@@ -8,6 +8,7 @@ on:
 
 permissions:
   pull-requests: write
+  actions: read
 
 jobs:
   comment:
@@ -29,9 +30,11 @@ jobs:
           echo "OLD_SIZE=$(cat old-size.txt)" >> "$GITHUB_OUTPUT"
           echo "DIFF=$(cat diff.txt)" >> "$GITHUB_OUTPUT"
           echo "SIGN=$(cat sign.txt)" >> "$GITHUB_OUTPUT"
+          echo "PR_NUMBER=$(cat pr-number.txt)" >> "$GITHUB_OUTPUT"
 
       - uses: marocchino/sticky-pull-request-comment@v2
         with:
+          number: ${{ steps.size-data.outputs.PR_NUMBER }}
           message: |
             ### 📊 Package size report
             | Current size | Target Size | Difference |

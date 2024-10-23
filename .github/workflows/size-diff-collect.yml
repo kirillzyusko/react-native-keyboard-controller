@@ -59,6 +59,7 @@ jobs:
           echo "${{ steps.old-size.outputs.OLD_SIZE }}" > old-size.txt
           echo "${{ steps.diff.outputs.DIFF }}" > diff.txt
           echo "${{ steps.diff.outputs.SIGN }}" > sign.txt
+          echo "${{ github.event.pull_request.number }}" > pr-number.txt
 
       - name: Upload size data
         uses: actions/upload-artifact@v4
@@ -69,3 +70,4 @@ jobs:
             old-size.txt
             diff.txt
             sign.txt
+            pr-number.txt
