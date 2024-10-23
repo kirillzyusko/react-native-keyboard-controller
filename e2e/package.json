@@ -1,6 +1,6 @@
 {
   "name": "e2e-tests",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Set of E2E tests for react-native-keyboard-controller package",
   "main": "index.js",
   "scripts": {
