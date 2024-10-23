@@ -1,0 +1,36 @@
+name: 🧪 Size diff (collect)
+
+on:
+  pull_request:
+    paths-ignore:
+      - "example/**"
+      - "FabricExample/**"
+      - "docs/**"
+
+jobs:
+  collect-size:
+    name: 🔬 Collect npm package size
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18.19.0
+          cache: yarn
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Calculate package size (current)
+        id: new-size
+        run: echo "NEW_SIZE=$(node scripts/size.js)" >> "$GITHUB_ENV"
+
+      - name: Upload size artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: package-size
+          path: size.txt
+
+      - run: echo $NEW_SIZE > size.txt
