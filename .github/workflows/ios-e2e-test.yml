@@ -84,7 +84,7 @@ jobs:
             ${{ runner.os }}-pods-
       - name: Install pods
         working-directory: ${{ env.WORKING_DIRECTORY }}/ios
-        run: pod install
+        run: export USE_CCACHE=1 && pod install
       - name: Build app
         working-directory: e2e
         run: yarn build-example:ios
