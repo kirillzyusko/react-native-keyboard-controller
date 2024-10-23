@@ -1,35 +1,39 @@
-name: 📝 Post size diff
+name: 📝 Create size diff comment
 
 on:
   workflow_run:
-    workflows: ["🧪 Size diff (collect)"]
+    workflows: ["🧪 Size calculation"]
     types:
       - completed
 
+permissions:
+  pull-requests: write
+
 jobs:
-  post-comment:
-    name: 📊 Post npm package size diff
+  comment:
+    name: 💬 Post size diff comment
     runs-on: ubuntu-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    permissions:
-      pull-requests: write # Allows commenting on the PR
-
+    if: github.event.workflow_run.conclusion == 'success'
     steps:
-      - name: Download size artifact
-        uses: actions/download-artifact@v3
+      - name: Download size data
+        uses: actions/download-artifact@v4
         with:
-          name: package-size
+          name: size-data
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id }}
 
-      - name: Extract size data
+      - name: Read size data
+        id: size-data
         run: |
-          OLD_SIZE=$(cat size.txt)
-          echo "OLD_SIZE=$OLD_SIZE" >> $GITHUB_ENV
+          echo "NEW_SIZE=$(cat new-size.txt)" >> "$GITHUB_OUTPUT"
+          echo "OLD_SIZE=$(cat old-size.txt)" >> "$GITHUB_OUTPUT"
+          echo "DIFF=$(cat diff.txt)" >> "$GITHUB_OUTPUT"
+          echo "SIGN=$(cat sign.txt)" >> "$GITHUB_OUTPUT"
 
-      - name: Comment on PR
-        uses: marocchino/sticky-pull-request-comment@v2
+      - uses: marocchino/sticky-pull-request-comment@v2
         with:
           message: |
             ### 📊 Package size report
-            | Current size  | Target Size   | Difference               |
+            | Current size | Target Size | Difference |
             | ------------- | ------------- | ------------------------ |
-            | ${{ env.NEW_SIZE }} bytes | ${{ env.OLD_SIZE }} bytes | ${{ env.DIFF }} bytes ${{ env.SIGN }} |
+            | ${{ steps.size-data.outputs.NEW_SIZE }} bytes | ${{ steps.size-data.outputs.OLD_SIZE }} bytes | ${{ steps.size-data.outputs.DIFF }} bytes ${{ steps.size-data.outputs.SIGN }} |

@@ -1,4 +1,4 @@
-name: 🧪 Size diff (collect)
+name: 🧪 Size calculation
 
 on:
   pull_request:
@@ -7,13 +7,18 @@ on:
       - "FabricExample/**"
       - "docs/**"
 
+permissions:
+  contents: read
+
 jobs:
-  collect-size:
-    name: 🔬 Collect npm package size
+  calculate-sizes:
+    name: 🔬 Calculate package sizes
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout to target branch
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.ref }}
 
       - uses: actions/setup-node@v4
         with:
@@ -23,14 +28,37 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Calculate package size (current)
+      - name: Calculate size of package (target)
+        id: old-size
+        run: echo "OLD_SIZE=$(node scripts/size.js)" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Pack
+        run: npm pack --json
+
+      - name: Calculate size of package (current)
         id: new-size
-        run: echo "NEW_SIZE=$(node scripts/size.js)" >> "$GITHUB_ENV"
+        run: echo "NEW_SIZE=$(node scripts/size.js)" >> "$GITHUB_OUTPUT"
 
-      - name: Upload size artifact
-        uses: actions/upload-artifact@v3
+      - name: Calculate difference
+        id: diff
+        env:
+          NEW_SIZE: ${{ steps.new-size.outputs.NEW_SIZE }}
+          OLD_SIZE: ${{ steps.old-size.outputs.OLD_SIZE }}
+        run: |
+          echo "DIFF=$((NEW_SIZE - OLD_SIZE))" >> "$GITHUB_OUTPUT"
+          echo "SIGN=$([ $((NEW_SIZE - OLD_SIZE)) -gt 0 ] && echo "📈" || echo "📉")" >> "$GITHUB_OUTPUT"
+
+      - name: Upload size data
+        uses: actions/upload-artifact@v4
         with:
-          name: package-size
-          path: size.txt
-
-      - run: echo $NEW_SIZE > size.txt
+          name: size-data
+          path: |
+            echo "${{ steps.new-size.outputs.NEW_SIZE }}" > new-size.txt
+            echo "${{ steps.old-size.outputs.OLD_SIZE }}" > old-size.txt
+            echo "${{ steps.diff.outputs.DIFF }}" > diff.txt
+            echo "${{ steps.diff.outputs.SIGN }}" > sign.txt
