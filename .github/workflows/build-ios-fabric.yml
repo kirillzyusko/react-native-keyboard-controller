@@ -85,7 +85,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-fabric-pods-
       - name: Install Pods
-        run: pod install
+        run: export USE_CCACHE=1 && pod install
       - name: Install xcpretty
         run: gem install xcpretty
       - name: Build App
