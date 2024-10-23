@@ -3,9 +3,11 @@ import React, { useCallback, useState } from "react";
 import { Platform, StyleSheet, View } from "react-native";
 import { trigger } from "react-native-haptic-feedback";
 import {
+  DefaultKeyboardToolbarTheme,
   KeyboardAwareScrollView,
   KeyboardToolbar,
 } from "react-native-keyboard-controller";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import TextInput from "../../../components/TextInput";
 
@@ -153,6 +155,23 @@ export default function ToolbarExample() {
       </KeyboardAwareScrollView>
       <KeyboardToolbar
         blur={blur}
+        container={({ children }) => (
+          <SafeAreaView
+            style={{
+              height: "100%",
+              backgroundColor: DefaultKeyboardToolbarTheme.light.background,
+              // paddingHorizontal: 50,
+              width: "100%",
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+            edges={["left", "right"]}
+            mode="padding"
+          >
+            {children}
+          </SafeAreaView>
+        )}
         content={
           showAutoFill ? (
             <AutoFillContacts onContactSelected={onContactSelected} />
