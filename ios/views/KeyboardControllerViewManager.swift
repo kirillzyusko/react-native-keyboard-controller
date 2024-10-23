@@ -7,11 +7,31 @@ class KeyboardControllerViewManager: RCTViewManager {
   override func view() -> (KeyboardControllerView) {
     return KeyboardControllerView(frame: CGRect.zero, bridge: bridge)
   }
+
+  @objc
+  public func moveTo(_ tag: NSNumber, to: NSNumber) {
+    print(to)
+    DispatchQueue.main.async {
+      KeyboardView.find()?.layer.presentation()?.frame.origin.y += CGFloat(to)
+      print(KeyboardView.find()?.layer.presentation()?.frame.origin.y)
+      
+      /*if let window = UIWindow.topWindow {
+        // Get the current frame of the window
+        var frame = window.frame
+        
+        // Move the window horizontally by adjusting the x-coordinate
+        frame.origin.y += CGFloat(to)  // Move the window 50 points to the right (use -50 to move left)
+        
+        // Apply the updated frame to the window
+        window.frame = frame
+      }*/
+    }
+  }
 }
 
 class KeyboardControllerView: UIView {
   // internal variables
-  private var keyboardObserver: KeyboardMovementObserver?
+  public var keyboardObserver: KeyboardMovementObserver?
   private var inputObserver: FocusedInputObserver?
   private var eventDispatcher: RCTEventDispatcherProtocol
   private var bridge: RCTBridge
@@ -50,7 +70,8 @@ class KeyboardControllerView: UIView {
     )
     keyboardObserver = KeyboardMovementObserver(
       handler: { [weak self] event, height, progress, duration, target in
-        self?.onEvent(event: event, height: height, progress: progress, duration: duration, target: target)
+        self?.onEvent(
+          event: event, height: height, progress: progress, duration: duration, target: target)
       },
       onNotify: { [weak self] event, data in
         self?.onNotify(event: event, data: data)
@@ -101,7 +122,9 @@ class KeyboardControllerView: UIView {
     eventDispatcher.send(FocusedInputSelectionChangedEvent(reactTag: reactTag, event: event))
   }
 
-  func onEvent(event: NSString, height: NSNumber, progress: NSNumber, duration: NSNumber, target: NSNumber) {
+  func onEvent(
+    event: NSString, height: NSNumber, progress: NSNumber, duration: NSNumber, target: NSNumber
+  ) {
     guard isJSThreadReady() else { return }
 
     eventDispatcher.send(

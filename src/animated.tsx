@@ -1,7 +1,17 @@
 /* eslint react/jsx-sort-props: off */
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Animated, Platform, StyleSheet } from "react-native";
-import Reanimated, { useSharedValue } from "react-native-reanimated";
+import Reanimated, {
+  dispatchCommand,
+  useAnimatedRef,
+  useSharedValue,
+} from "react-native-reanimated";
 
 import { KeyboardControllerView } from "./bindings";
 import { KeyboardContext } from "./context";
@@ -82,7 +92,8 @@ export const KeyboardProvider = ({
   enabled: initiallyEnabled = true,
 }: KeyboardProviderProps) => {
   // ref
-  const viewTagRef = useRef<React.Component<KeyboardControllerProps>>(null);
+  const viewTagRef =
+    useAnimatedRef<React.Component<KeyboardControllerProps>>(null);
   // state
   const [enabled, setEnabled] = useState(initiallyEnabled);
   // animated values
@@ -100,9 +111,14 @@ export const KeyboardProvider = ({
     focusedInputEventsMap,
     viewTagRef,
   );
+  const moveTo = useCallback((to: number) => {
+    "worklet";
+    dispatchCommand(viewTagRef, "moveTo", [to]);
+  }, []);
   // memo
   const context = useMemo<KeyboardAnimationContext>(
     () => ({
+      moveTo,
       enabled,
       animated: { progress: progress, height: Animated.multiply(height, -1) },
       reanimated: { progress: progressSV, height: heightSV },

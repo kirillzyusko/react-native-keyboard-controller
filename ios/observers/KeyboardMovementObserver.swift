@@ -19,7 +19,7 @@ public class KeyboardMovementObserver: NSObject {
   var onCancelAnimation: () -> Void
   // progress tracker
   private var _keyboardView: UIView?
-  private var keyboardView: UIView? {
+  public var keyboardView: UIView? {
     let windowsCount = UIApplication.shared.windows.count
 
     if _keyboardView == nil || windowsCount != _windowsCount {
@@ -268,7 +268,7 @@ public class KeyboardMovementObserver: NSObject {
 
     let (visibleKeyboardHeight, keyboardFrameY) = keyboardView.frameTransitionInWindow
     var keyboardPosition = visibleKeyboardHeight
-
+print(keyboardView)
     if keyboardPosition == prevKeyboardPosition || keyboardFrameY == 0 {
       return
     }
