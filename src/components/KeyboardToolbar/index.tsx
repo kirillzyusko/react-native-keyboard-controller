@@ -19,6 +19,7 @@ export type KeyboardToolbarProps = Omit<
 > & {
   /** An element that is shown in the middle of the toolbar. */
   content?: JSX.Element | null;
+  container?: JSX.Element | null;
   /** A set of dark/light colors consumed by toolbar component. */
   theme?: KeyboardToolbarTheme;
   /** Custom text for done button. */
@@ -68,12 +69,17 @@ const dismissKeyboard = () => KeyboardController.dismiss();
 const goToNextField = () => KeyboardController.setFocusTo("next");
 const goToPrevField = () => KeyboardController.setFocusTo("prev");
 
+// SafeAreaView
+// unistyles
+// context
+
 /**
  * `KeyboardToolbar` is a component that is shown above the keyboard with `Prev`/`Next` and
  * `Done` buttons.
  */
 const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
   content,
+  container,
   theme = colors,
   doneText,
   button,
@@ -84,6 +90,7 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
   onDoneCallback,
   blur = null,
   opacity = DEFAULT_OPACITY,
+  style,
   ...rest
 }) => {
   const colorScheme = useColorScheme();
@@ -111,11 +118,13 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
       {
         backgroundColor: `${theme[colorScheme].background}${opacity}`,
       },
+      style,
     ],
     [colorScheme, opacity, theme],
   );
   const ButtonContainer = button || Button;
   const IconContainer = icon || Arrow;
+  const Container = container || React.Fragment;
 
   const onPressNext = useCallback(
     (event: GestureResponderEvent) => {
@@ -151,56 +160,58 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
   return (
     <KeyboardStickyView offset={offset}>
       <View {...rest} style={toolbarStyle} testID={TEST_ID_KEYBOARD_TOOLBAR}>
-        {blur}
-        {showArrows && (
-          <>
-            <ButtonContainer
-              accessibilityHint="Moves focus to the previous field"
-              accessibilityLabel="Previous"
-              disabled={isPrevDisabled}
-              testID={TEST_ID_KEYBOARD_TOOLBAR_PREVIOUS}
-              theme={theme}
-              onPress={onPressPrev}
-            >
-              <IconContainer
+        <Container>
+          {blur}
+          {showArrows && (
+            <>
+              <ButtonContainer
+                accessibilityHint="Moves focus to the previous field"
+                accessibilityLabel="Previous"
                 disabled={isPrevDisabled}
+                testID={TEST_ID_KEYBOARD_TOOLBAR_PREVIOUS}
                 theme={theme}
-                type="prev"
-              />
-            </ButtonContainer>
-            <ButtonContainer
-              accessibilityHint="Moves focus to the next field"
-              accessibilityLabel="Next"
-              disabled={isNextDisabled}
-              testID={TEST_ID_KEYBOARD_TOOLBAR_NEXT}
-              theme={theme}
-              onPress={onPressNext}
-            >
-              <IconContainer
+                onPress={onPressPrev}
+              >
+                <IconContainer
+                  disabled={isPrevDisabled}
+                  theme={theme}
+                  type="prev"
+                />
+              </ButtonContainer>
+              <ButtonContainer
+                accessibilityHint="Moves focus to the next field"
+                accessibilityLabel="Next"
                 disabled={isNextDisabled}
+                testID={TEST_ID_KEYBOARD_TOOLBAR_NEXT}
                 theme={theme}
-                type="next"
-              />
-            </ButtonContainer>
-          </>
-        )}
+                onPress={onPressNext}
+              >
+                <IconContainer
+                  disabled={isNextDisabled}
+                  theme={theme}
+                  type="next"
+                />
+              </ButtonContainer>
+            </>
+          )}
 
-        <View style={styles.flex} testID={TEST_ID_KEYBOARD_TOOLBAR_CONTENT}>
-          {content}
-        </View>
-        <ButtonContainer
-          accessibilityHint="Closes the keyboard"
-          accessibilityLabel="Done"
-          rippleRadius={28}
-          style={styles.doneButtonContainer}
-          testID={TEST_ID_KEYBOARD_TOOLBAR_DONE}
-          theme={theme}
-          onPress={onPressDone}
-        >
-          <Text maxFontSizeMultiplier={1.3} style={doneStyle}>
-            {doneText || "Done"}
-          </Text>
-        </ButtonContainer>
+          <View style={styles.flex} testID={TEST_ID_KEYBOARD_TOOLBAR_CONTENT}>
+            {content}
+          </View>
+          <ButtonContainer
+            accessibilityHint="Closes the keyboard"
+            accessibilityLabel="Done"
+            rippleRadius={28}
+            style={styles.doneButtonContainer}
+            testID={TEST_ID_KEYBOARD_TOOLBAR_DONE}
+            theme={theme}
+            onPress={onPressDone}
+          >
+            <Text maxFontSizeMultiplier={1.3} style={doneStyle}>
+              {doneText || "Done"}
+            </Text>
+          </ButtonContainer>
+        </Container>
       </View>
     </KeyboardStickyView>
   );
