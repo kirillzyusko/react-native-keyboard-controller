@@ -53,12 +53,19 @@ jobs:
           echo "DIFF=$((NEW_SIZE - OLD_SIZE))" >> "$GITHUB_OUTPUT"
           echo "SIGN=$([ $((NEW_SIZE - OLD_SIZE)) -gt 0 ] && echo "📈" || echo "📉")" >> "$GITHUB_OUTPUT"
 
+      - name: Create size data files
+        run: |
+          echo "${{ steps.new-size.outputs.NEW_SIZE }}" > new-size.txt
+          echo "${{ steps.old-size.outputs.OLD_SIZE }}" > old-size.txt
+          echo "${{ steps.diff.outputs.DIFF }}" > diff.txt
+          echo "${{ steps.diff.outputs.SIGN }}" > sign.txt
+
       - name: Upload size data
         uses: actions/upload-artifact@v4
         with:
           name: size-data
           path: |
-            echo "${{ steps.new-size.outputs.NEW_SIZE }}" > new-size.txt
-            echo "${{ steps.old-size.outputs.OLD_SIZE }}" > old-size.txt
-            echo "${{ steps.diff.outputs.DIFF }}" > diff.txt
-            echo "${{ steps.diff.outputs.SIGN }}" > sign.txt
+            new-size.txt
+            old-size.txt
+            diff.txt
+            sign.txt
