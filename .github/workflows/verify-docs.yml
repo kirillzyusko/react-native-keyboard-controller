@@ -49,6 +49,7 @@ jobs:
   preview:
     runs-on: ubuntu-latest
     name: 🛫 Deploy preview
+    if: ${{ !github.event.pull_request.head.repo.fork }}
     defaults:
       run:
         working-directory: docs
