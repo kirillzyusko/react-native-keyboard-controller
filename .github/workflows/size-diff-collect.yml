@@ -71,3 +71,4 @@ jobs:
             diff.txt
             sign.txt
             pr-number.txt
+          retention-days: 1
