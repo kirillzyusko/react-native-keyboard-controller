@@ -131,7 +131,7 @@ jobs:
           max_attempts: 3
           command: |
             brew tap robotsandpencils/made
-            sudo xcodes runtimes install --keep-archive 'iOS ${{ matrix.devices.runtime }}'
+            xcodes runtimes install --keep-archive 'iOS ${{ matrix.devices.runtime }}'
       - name: List all available simulators
         run: xcrun simctl list
       - name: Install AppleSimulatorUtils
