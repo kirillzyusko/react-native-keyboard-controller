@@ -13,7 +13,10 @@ import {
   GestureDetector,
   GestureHandlerRootView,
 } from "react-native-gesture-handler";
-import { OverKeyboardView } from "react-native-keyboard-controller";
+import {
+  OverKeyboardView,
+  useKeyboardContext,
+} from "react-native-keyboard-controller";
 import Reanimated, {
   Easing,
   interpolate,
@@ -64,6 +67,7 @@ const SharedTransition = ({
   const progress = useSharedValue(INITIAL_SCALE);
   const opacity = useSharedValue(0);
   const offset = useSharedValue({ y: 0 });
+  const { moveTo } = useKeyboardContext();
 
   useEffect(() => {
     // eslint-disable-next-line react-compiler/react-compiler
@@ -81,6 +85,8 @@ const SharedTransition = ({
   const gesture = Gesture.Pan()
     .onUpdate((e) => {
       const y = e.translationY / IMAGES_PER_ROW;
+
+      moveTo(y);
 
       offset.value = { y };
       opacity.value = 1 - Math.abs(e.translationY / (height / 2));
@@ -132,7 +138,7 @@ const SharedTransition = ({
     () => ({
       flex: 1,
       backgroundColor: "black",
-      opacity: opacity.value,
+      opacity: 0, // opacity.value,
     }),
     [],
   );
