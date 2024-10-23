@@ -33,6 +33,8 @@ const withSharedValue = <T>(value: T): SharedValue<T> => ({
   addListener: NOOP,
   removeListener: NOOP,
   modify: NOOP,
+  get: () => value,
+  set: NOOP,
 });
 const DEFAULT_SHARED_VALUE = withSharedValue(0);
 const DEFAULT_LAYOUT = withSharedValue<FocusedInputLayoutChangedEvent | null>(
