@@ -127,7 +127,8 @@
     "autoresizing",
     "focusable",
     "iphonesimulator",
-    "suspendable"
+    "suspendable",
+    "gesturehandler"
   ],
   "ignorePaths": [
     "node_modules",
