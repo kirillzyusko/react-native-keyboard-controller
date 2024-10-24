@@ -11,7 +11,7 @@
     "postinstall": "patch-package"
   },
   "dependencies": {
-    "@gorhom/bottom-sheet": "^5.0.4",
+    "@gorhom/bottom-sheet": "4.6.4",
     "@react-native-community/blur": "^4.4.1",
     "@react-native-masked-view/masked-view": "^0.3.1",
     "@react-navigation/bottom-tabs": "^6.6.1",
