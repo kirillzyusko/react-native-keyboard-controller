@@ -258,6 +258,7 @@ const KeyboardAwareScrollView = forwardRef<
           return;
         }
 
+        console.debug("maybeScroll - onChangeText");
         scrollFromCurrentPosition(customHeight);
       },
       [scrollFromCurrentPosition],
@@ -271,6 +272,7 @@ const KeyboardAwareScrollView = forwardRef<
         "worklet";
 
         if (e.selection.start.position !== e.selection.end.position) {
+          console.debug("onSelectionChange - onChangeText");
           scrollFromCurrentPosition(e.selection.end.y);
         }
 
@@ -336,6 +338,7 @@ const KeyboardAwareScrollView = forwardRef<
           if (focusWasChanged && !keyboardWillAppear.value) {
             // update position on scroll value, so `onEnd` handler
             // will pick up correct values
+            console.debug("maybeScroll - onStart");
             position.value += maybeScroll(e.height, true);
           }
         },
@@ -346,6 +349,7 @@ const KeyboardAwareScrollView = forwardRef<
 
           // if the user has set disableScrollOnKeyboardHide, only auto-scroll when the keyboard opens
           if (!disableScrollOnKeyboardHide || keyboardWillAppear.value) {
+            console.debug("maybeScroll - onMove");
             maybeScroll(e.height);
           }
         },
@@ -375,6 +379,7 @@ const KeyboardAwareScrollView = forwardRef<
           const prevLayout = layout.value;
 
           layout.value = input.value;
+          console.debug("maybeScroll - animated reaction");
           scrollPosition.value += maybeScroll(keyboardHeight.value, true);
           layout.value = prevLayout;
         }
