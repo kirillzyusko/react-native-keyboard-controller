@@ -10,7 +10,7 @@ import com.facebook.react.uimanager.RootView
 interface RootViewCompat : RootView {
   @Deprecated(
     "This method shouldn't be used anymore.",
-    ReplaceWith("onChildStartedNativeGesture(View childView, MotionEvent ev)")
+    ReplaceWith("onChildStartedNativeGesture(View childView, MotionEvent ev)"),
   )
   override fun onChildStartedNativeGesture(ev: MotionEvent?) {
     onChildStartedNativeGesture(null, ev)
