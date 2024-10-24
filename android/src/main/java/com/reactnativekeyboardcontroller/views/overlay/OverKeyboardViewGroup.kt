@@ -10,7 +10,6 @@ import com.facebook.react.bridge.UiThreadUtil
 import com.facebook.react.config.ReactFeatureFlags
 import com.facebook.react.uimanager.JSPointerDispatcher
 import com.facebook.react.uimanager.JSTouchDispatcher
-import com.facebook.react.uimanager.RootView
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.UIManagerHelper
 import com.facebook.react.uimanager.events.EventDispatcher
@@ -98,7 +97,7 @@ class OverKeyboardHostView(
 class OverKeyboardRootViewGroup(
   private val reactContext: ThemedReactContext,
 ) : ReactViewGroup(reactContext),
-  RootView {
+  RootViewCompat {
   private val jsTouchDispatcher: JSTouchDispatcher = JSTouchDispatcher(this)
   private var jsPointerDispatcher: JSPointerDispatcher? = null
   internal var eventDispatcher: EventDispatcher? = null
