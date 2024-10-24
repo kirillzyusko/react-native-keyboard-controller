@@ -118,8 +118,6 @@
     "bézier",
     "Raphson",
     "desmos",
-    "swmansion",
-    "rnscreens",
     "setinputmode",
     "useanimatedkeyboard",
     "Hoverable",
@@ -127,8 +125,7 @@
     "autoresizing",
     "focusable",
     "iphonesimulator",
-    "suspendable",
-    "gesturehandler"
+    "suspendable"
   ],
   "ignorePaths": [
     "node_modules",
@@ -140,7 +137,8 @@
     "**/*.xcworkspacedata",
     "**/*.svg",
     "**/*.storyboard",
-    "cspell.json"
+    "cspell.json",
+    "**/patches/**"
   ],
   "useGitignore": true
 }
