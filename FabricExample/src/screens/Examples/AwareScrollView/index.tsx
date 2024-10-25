@@ -1,6 +1,6 @@
 import BottomSheet from "@gorhom/bottom-sheet";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Button, Switch, Text, View } from "react-native";
+import { Button, Platform, Switch, Text, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 
 import TextInput from "../../../components/TextInput";
@@ -75,7 +75,7 @@ export default function AwareScrollView({ navigation }: Props) {
         {new Array(10).fill(0).map((_, i) => (
           <TextInput
             key={i}
-            contextMenuHidden={i === 4}
+            contextMenuHidden={i === 4 && Platform.OS === "ios"}
             keyboardType={i % 2 === 0 ? "numeric" : "default"}
             placeholder={`TextInput#${i}`}
             onChangeText={setText}
