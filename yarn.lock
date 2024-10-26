@@ -7685,6 +7685,11 @@ react-native-builder-bob@^0.18.0:
   optionalDependencies:
     jetifier "^2.0.0"
 
+react-native-is-edge-to-edge@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-is-edge-to-edge/-/react-native-is-edge-to-edge-1.0.0.tgz#2187d7fa237354e12fddd0f9e84410a850988dbb"
+  integrity sha512-O+6OnYqey8lMyNvWZhWZF6NPBCvZNyeGX6qPvt7EJy310sVa4r05M0enxtmiVZl2xgj5vBJkYhROd5mSmZ/4mA==
+
 react-native-reanimated@3.16.1:
   version "3.16.1"
   resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-3.16.1.tgz#7c3cb256adb8fb436f57911d0e8e7cae68e28a67"

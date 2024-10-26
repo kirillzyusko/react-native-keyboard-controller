@@ -22,6 +22,7 @@ import type {
   NativeEvent,
 } from "./types";
 import type { ViewStyle } from "react-native";
+import { isEdgeToEdge } from "react-native-is-edge-to-edge";
 
 const KeyboardControllerViewAnimated = Reanimated.createAnimatedComponent(
   Animated.createAnimatedComponent(KeyboardControllerView),
@@ -187,6 +188,18 @@ export const KeyboardProvider = ({
     } else {
       revertMonkeyPatch();
     }
+
+    if (__DEV__) {
+      if (
+        isEdgeToEdge() &&
+        (statusBarTranslucent !== undefined ||
+          navigationBarTranslucent !== undefined)
+      ) {
+        console.warn(
+          "statusBarTranslucent and navigationBarTranslucent props are ignored when using react-native-edge-to-edge",
+        );
+      }
+    }
   }, [enabled]);
 
   return (
@@ -194,8 +207,8 @@ export const KeyboardProvider = ({
       <KeyboardControllerViewAnimated
         ref={viewTagRef}
         enabled={enabled}
-        navigationBarTranslucent={navigationBarTranslucent}
-        statusBarTranslucent={statusBarTranslucent}
+        navigationBarTranslucent={isEdgeToEdge() || navigationBarTranslucent}
+        statusBarTranslucent={isEdgeToEdge() || statusBarTranslucent}
         style={styles.container}
         // on*Reanimated prop must precede animated handlers to work correctly
         onKeyboardMoveReanimated={keyboardHandler}

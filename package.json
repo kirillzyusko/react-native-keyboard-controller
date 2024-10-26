@@ -74,6 +74,9 @@
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
+  "dependencies": {
+    "react-native-is-edge-to-edge": "^1.0.0"
+  },
   "devDependencies": {
     "@commitlint/config-conventional": "^11.0.0",
     "@react-native/eslint-config": "^0.75.3",
