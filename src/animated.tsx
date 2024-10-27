@@ -24,6 +24,8 @@ import type {
 } from "./types";
 import type { ViewStyle } from "react-native";
 
+const IS_EDGE_TO_EDGE = isEdgeToEdge();
+
 const KeyboardControllerViewAnimated = Reanimated.createAnimatedComponent(
   Animated.createAnimatedComponent(KeyboardControllerView),
 );
@@ -193,7 +195,7 @@ export const KeyboardProvider = ({
   useEffect(() => {
     if (__DEV__) {
       if (
-        isEdgeToEdge() &&
+        IS_EDGE_TO_EDGE &&
         (statusBarTranslucent !== undefined ||
           navigationBarTranslucent !== undefined)
       ) {
@@ -209,8 +211,8 @@ export const KeyboardProvider = ({
       <KeyboardControllerViewAnimated
         ref={viewTagRef}
         enabled={enabled}
-        navigationBarTranslucent={isEdgeToEdge() || navigationBarTranslucent}
-        statusBarTranslucent={isEdgeToEdge() || statusBarTranslucent}
+        navigationBarTranslucent={IS_EDGE_TO_EDGE || navigationBarTranslucent}
+        statusBarTranslucent={IS_EDGE_TO_EDGE || statusBarTranslucent}
         style={styles.container}
         // on*Reanimated prop must precede animated handlers to work correctly
         onKeyboardMoveReanimated={keyboardHandler}
