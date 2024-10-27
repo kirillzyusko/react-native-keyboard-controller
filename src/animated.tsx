@@ -1,6 +1,10 @@
 /* eslint react/jsx-sort-props: off */
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Animated, Platform, StyleSheet } from "react-native";
+import {
+  controlEdgeToEdgeValues,
+  isEdgeToEdge,
+} from "react-native-is-edge-to-edge";
 import Reanimated, { useSharedValue } from "react-native-reanimated";
 
 import { KeyboardControllerView } from "./bindings";
@@ -22,6 +26,8 @@ import type {
   NativeEvent,
 } from "./types";
 import type { ViewStyle } from "react-native";
+
+const IS_EDGE_TO_EDGE = isEdgeToEdge();
 
 const KeyboardControllerViewAnimated = Reanimated.createAnimatedComponent(
   Animated.createAnimatedComponent(KeyboardControllerView),
@@ -189,13 +195,17 @@ export const KeyboardProvider = ({
     }
   }, [enabled]);
 
+  if (__DEV__) {
+    controlEdgeToEdgeValues({ statusBarTranslucent, navigationBarTranslucent });
+  }
+
   return (
     <KeyboardContext.Provider value={context}>
       <KeyboardControllerViewAnimated
         ref={viewTagRef}
         enabled={enabled}
-        navigationBarTranslucent={navigationBarTranslucent}
-        statusBarTranslucent={statusBarTranslucent}
+        navigationBarTranslucent={IS_EDGE_TO_EDGE || navigationBarTranslucent}
+        statusBarTranslucent={IS_EDGE_TO_EDGE || statusBarTranslucent}
         style={styles.container}
         // on*Reanimated prop must precede animated handlers to work correctly
         onKeyboardMoveReanimated={keyboardHandler}

@@ -4637,6 +4637,11 @@ react-native-gesture-handler@2.18.1:
     invariant "^2.2.4"
     prop-types "^15.7.2"
 
+react-native-is-edge-to-edge@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/react-native-is-edge-to-edge/-/react-native-is-edge-to-edge-1.1.1.tgz#78ee045dab74868a4d1c37df9058c4bdecc28e62"
+  integrity sha512-F/CPckyjLgQNOv8BaUorSyjNv7Ev3eLuzWT+BrIp4504Zw1LAa44M3FPGz5E2nZMcvHHbSmBLHei5M3g+gmLHA==
+
 "react-native-keyboard-controller@link:..":
   version "0.0.0"
   uid ""
