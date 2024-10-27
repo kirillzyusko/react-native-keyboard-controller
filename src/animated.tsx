@@ -1,7 +1,10 @@
 /* eslint react/jsx-sort-props: off */
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Animated, Platform, StyleSheet } from "react-native";
-import { isEdgeToEdge } from "react-native-is-edge-to-edge";
+import {
+  controlEdgeToEdgeValues,
+  isEdgeToEdge,
+} from "react-native-is-edge-to-edge";
 import Reanimated, { useSharedValue } from "react-native-reanimated";
 
 import { KeyboardControllerView } from "./bindings";
@@ -192,19 +195,9 @@ export const KeyboardProvider = ({
     }
   }, [enabled]);
 
-  useEffect(() => {
-    if (__DEV__) {
-      if (
-        IS_EDGE_TO_EDGE &&
-        (statusBarTranslucent !== undefined ||
-          navigationBarTranslucent !== undefined)
-      ) {
-        console.warn(
-          "statusBarTranslucent and navigationBarTranslucent props are ignored when using edge-to-edge",
-        );
-      }
-    }
-  }, [statusBarTranslucent, navigationBarTranslucent]);
+  if (__DEV__) {
+    controlEdgeToEdgeValues({ statusBarTranslucent, navigationBarTranslucent });
+  }
 
   return (
     <KeyboardContext.Provider value={context}>
