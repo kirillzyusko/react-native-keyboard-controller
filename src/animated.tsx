@@ -198,7 +198,7 @@ export const KeyboardProvider = ({
           navigationBarTranslucent !== undefined)
       ) {
         console.warn(
-          "statusBarTranslucent and navigationBarTranslucent props are ignored when using react-native-edge-to-edge",
+          "statusBarTranslucent and navigationBarTranslucent props are ignored when using edge-to-edge",
         );
       }
     }
