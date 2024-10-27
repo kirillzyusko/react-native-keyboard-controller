@@ -188,7 +188,9 @@ export const KeyboardProvider = ({
     } else {
       revertMonkeyPatch();
     }
+  }, [enabled]);
 
+  useEffect(() => {
     if (__DEV__) {
       if (
         isEdgeToEdge() &&
@@ -200,7 +202,7 @@ export const KeyboardProvider = ({
         );
       }
     }
-  }, [enabled]);
+  }, [statusBarTranslucent, navigationBarTranslucent]);
 
   return (
     <KeyboardContext.Provider value={context}>
