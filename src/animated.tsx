@@ -1,6 +1,7 @@
 /* eslint react/jsx-sort-props: off */
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Animated, Platform, StyleSheet } from "react-native";
+import { isEdgeToEdge } from "react-native-is-edge-to-edge";
 import Reanimated, { useSharedValue } from "react-native-reanimated";
 
 import { KeyboardControllerView } from "./bindings";
@@ -22,7 +23,6 @@ import type {
   NativeEvent,
 } from "./types";
 import type { ViewStyle } from "react-native";
-import { isEdgeToEdge } from "react-native-is-edge-to-edge";
 
 const KeyboardControllerViewAnimated = Reanimated.createAnimatedComponent(
   Animated.createAnimatedComponent(KeyboardControllerView),
