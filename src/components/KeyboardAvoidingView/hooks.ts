@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useSharedValue } from "react-native-reanimated";
 
 import { useKeyboardContext } from "../../context";
@@ -5,10 +6,15 @@ import { useKeyboardHandler } from "../../hooks";
 
 export const useKeyboardAnimation = () => {
   const { reanimated } = useKeyboardContext();
-  const heightWhenOpened = useSharedValue(-reanimated.height.value);
-  const height = useSharedValue(-reanimated.height.value);
-  const progress = useSharedValue(reanimated.progress.value);
-  const isClosed = useSharedValue(reanimated.progress.value === 0);
+
+  // calculate it only once on mount, to avoid `SharedValue` reads during a render
+  const [initialHeight] = useState(() => -reanimated.height.value);
+  const [initialProgress] = useState(() => reanimated.progress.value);
+
+  const heightWhenOpened = useSharedValue(initialHeight);
+  const height = useSharedValue(initialHeight);
+  const progress = useSharedValue(initialProgress);
+  const isClosed = useSharedValue(initialProgress === 0);
 
   useKeyboardHandler(
     {
