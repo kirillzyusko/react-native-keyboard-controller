@@ -5,7 +5,8 @@
         <!-- Customize your theme here. -->
         <item name="android:editTextBackground">@drawable/rn_edit_text_material</item>
 
-        <!-- Optional: set to transparent if your app is drawing behind the status bar. -->
+        <!-- Optional: If not using react-native-edge-to-edge, set to
+             transparent if your app is drawing behind the status bar. -->
         <item name="android:statusBarColor">
           @android:color/transparent
         </item>
