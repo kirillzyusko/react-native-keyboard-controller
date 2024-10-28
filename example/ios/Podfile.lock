@@ -1303,7 +1303,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - react-native-safe-area-context (4.11.1):
+  - react-native-safe-area-context (4.12.0):
     - React-Core
   - react-native-text-input-mask (3.1.5):
     - InputMask (~> 6.1.0)
@@ -2005,7 +2005,7 @@ SPEC CHECKSUMS:
   React-microtasksnativemodule: 1f580b56eca388dbc696a083ba6125e869194415
   react-native-blur: a1bf334589f44658a58a859b1f3defe28e367fcf
   react-native-keyboard-controller: 29054d1bd59d692dc672c45199bb3cdd52aefb4e
-  react-native-safe-area-context: 5141f11858b033636f1788b14f32eaba92cee810
+  react-native-safe-area-context: 142fade490cbebbe428640b8cbdb09daf17e8191
   react-native-text-input-mask: 22ca8eeef84d42a896f79428f7d175a5eb8b1c4e
   React-nativeconfig: 72c10ff34863148ef90df9c9c8eacba99d2faaaa
   React-NativeModulesApple: 5ec49182fa000b2215ee1bed03e2867f8323ccf5
