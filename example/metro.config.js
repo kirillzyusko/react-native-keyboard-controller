@@ -8,10 +8,7 @@ const pack = require("../package.json");
 
 const root = path.resolve(__dirname, "..");
 
-const modules = Object.keys({
-  ...pack.peerDependencies,
-  ...pack.dependencies,
-});
+const modules = Object.keys(pack.peerDependencies);
 
 /**
  * Metro configuration
