@@ -4747,10 +4747,10 @@ react-native-haptic-feedback@2.3.1:
   resolved "https://registry.yarnpkg.com/react-native-haptic-feedback/-/react-native-haptic-feedback-2.3.1.tgz#2ef4ac7d4f63ac06bd64b659f509362f127b16e5"
   integrity sha512-dPfjV4iVHfhVyfG+nRd88ygjahbdup7KFZDM5L2aNIAzqbNtKxHZn5O1pHegwSj1t15VJliu0GyTX7XpBDeXUw==
 
-react-native-is-edge-to-edge@^1.1.4:
-  version "1.1.4"
-  resolved "https://registry.yarnpkg.com/react-native-is-edge-to-edge/-/react-native-is-edge-to-edge-1.1.4.tgz#8d0c4e1337912977eeb55f0bbbbdedfb2e29e638"
-  integrity sha512-S3WNZkqRt1lHxvzvoJ5aC24fo/fdHyGdK4XP0NxJN99fR07YkPmGDpglpiT2h5Zh/ii1GdrWQdhtdmPtecPoHA==
+react-native-is-edge-to-edge@^1.1.5:
+  version "1.1.5"
+  resolved "https://registry.yarnpkg.com/react-native-is-edge-to-edge/-/react-native-is-edge-to-edge-1.1.5.tgz#9dff7a1fad17ceb39ff48192c9ddaff5c72a637a"
+  integrity sha512-zt/0wLKBYTdoQdaZEvN9Ghi8Kz3Fo3LaWMzWZyJl7aLhvCNPebyi0DW449+PzC5xpIQdfcmumwkaB9VpymvViQ==
 
 "react-native-keyboard-controller@link:..":
   version "0.0.0"
