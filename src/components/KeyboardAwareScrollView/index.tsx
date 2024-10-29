@@ -326,6 +326,14 @@ const KeyboardAwareScrollView = forwardRef<
 
           keyboardHeight.value = e.height;
           scrollPosition.value = position.value;
+
+          const keyboardFrame = interpolate(
+            e.height,
+            [0, keyboardHeight.value],
+            [0, keyboardHeight.value + extraKeyboardSpace],
+          );
+
+          currentKeyboardFrameHeight.value = keyboardFrame;
         },
       },
       [maybeScroll, disableScrollOnKeyboardHide, extraKeyboardSpace],
