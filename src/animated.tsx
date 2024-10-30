@@ -137,7 +137,7 @@ export const KeyboardProvider = ({
             },
           },
         ],
-        { useNativeDriver: true },
+        { useNativeDriver: Platform.OS === "web" ? false : true },
       ),
     [],
   );
