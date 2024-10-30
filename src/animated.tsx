@@ -137,7 +137,8 @@ export const KeyboardProvider = ({
             },
           },
         ],
-        { useNativeDriver: true },
+        // Setting useNativeDriver to true on web triggers a warning due to the absence of a native driver for web. Therefore, it is set to false.
+        { useNativeDriver: Platform.OS !== "web" },
       ),
     [],
   );
