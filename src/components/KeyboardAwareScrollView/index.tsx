@@ -27,6 +27,7 @@ import type {
 import type {
   FocusedInputLayoutChangedEvent,
   FocusedInputSelectionChangedEvent,
+  NativeEvent,
 } from "react-native-keyboard-controller";
 
 export type KeyboardAwareScrollViewProps = {
@@ -190,6 +191,20 @@ const KeyboardAwareScrollView = forwardRef<
       },
       [bottomOffset, enabled, height, snapToOffsets],
     );
+    const syncKeyboardFrame = useCallback(
+      (e: NativeEvent) => {
+        "worklet";
+
+        const keyboardFrame = interpolate(
+          e.height,
+          [0, keyboardHeight.value],
+          [0, keyboardHeight.value + extraKeyboardSpace],
+        );
+
+        currentKeyboardFrameHeight.value = keyboardFrame;
+      },
+      [extraKeyboardSpace],
+    );
 
     const scrollFromCurrentPosition = useCallback(
       (customHeight?: number) => {
@@ -308,13 +323,7 @@ const KeyboardAwareScrollView = forwardRef<
         onMove: (e) => {
           "worklet";
 
-          const keyboardFrame = interpolate(
-            e.height,
-            [0, keyboardHeight.value],
-            [0, keyboardHeight.value + extraKeyboardSpace],
-          );
-
-          currentKeyboardFrameHeight.value = keyboardFrame;
+          syncKeyboardFrame(e);
 
           // if the user has set disableScrollOnKeyboardHide, only auto-scroll when the keyboard opens
           if (!disableScrollOnKeyboardHide || keyboardWillAppear.value) {
@@ -326,9 +335,11 @@ const KeyboardAwareScrollView = forwardRef<
 
           keyboardHeight.value = e.height;
           scrollPosition.value = position.value;
+
+          syncKeyboardFrame(e);
         },
       },
-      [maybeScroll, disableScrollOnKeyboardHide, extraKeyboardSpace],
+      [maybeScroll, disableScrollOnKeyboardHide, syncKeyboardFrame],
     );
 
     useAnimatedReaction(
