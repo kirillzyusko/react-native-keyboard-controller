@@ -38,6 +38,10 @@ export type KeyboardAwareScrollViewProps = {
   enabled?: boolean;
   /** Adjusting the bottom spacing of KeyboardAwareScrollView. Default is `0` */
   extraKeyboardSpace?: number;
+   /** Used if inverted Flatlist/Flashlist is being used */
+  inverted?: boolean;
+  /** Ajdusting the offset for the content when keyboard is shown on inverted Flatlist/Flashlist on screen with BottomTab navigation */
+  tabBarHeight?: number;
   /** Custom component for `ScrollView`. Default is `ScrollView` */
   ScrollViewComponent?: React.ComponentType<ScrollViewProps>;
 } & ScrollViewProps;
@@ -94,6 +98,8 @@ const KeyboardAwareScrollView = forwardRef<
       extraKeyboardSpace = 0,
       ScrollViewComponent = Reanimated.ScrollView,
       snapToOffsets,
+      inverted = false,
+      tabBarHeight = 0,
       ...rest
     },
     ref,
@@ -349,8 +355,9 @@ const KeyboardAwareScrollView = forwardRef<
     );
 
     const view = useAnimatedStyle(
-      () =>
-        enabled
+      () => {
+        const invertedOffset = inverted ? -tabBarHeight : 0;
+        return enabled
           ? {
               // animations become choppy when scrolling to the end of the `ScrollView` (when the last input is focused)
               // this happens because the layout recalculates on every frame. To avoid this we slightly increase padding
@@ -358,9 +365,10 @@ const KeyboardAwareScrollView = forwardRef<
               // from 0 to `keyboardHeight`, and here our padding is `keyboardHeight + 1`. It allows us not to re-run layout
               // re-calculation on every animation frame and it helps to achieve smooth animation.
               // see: https://github.com/kirillzyusko/react-native-keyboard-controller/pull/342
-              paddingBottom: currentKeyboardFrameHeight.value + 1,
+              paddingBottom: currentKeyboardFrameHeight.value + invertedOffset + 1,
             }
-          : {},
+            : {}
+        },
       [enabled],
     );
 
@@ -371,8 +379,9 @@ const KeyboardAwareScrollView = forwardRef<
         scrollEventThrottle={16}
         onLayout={onScrollViewLayout}
       >
+        {inverted ? <Reanimated.View style={view} /> : null}
         {children}
-        <Reanimated.View style={view} />
+        {!inverted ? <Reanimated.View style={view} /> : null}
       </ScrollViewComponent>
     );
   },
