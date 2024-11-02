@@ -44,6 +44,13 @@ public extension Optional where Wrapped == UIResponder {
       return (self as? UIView)?.superview?.reactTag ?? -1
     #endif
   }
+  
+  var nativeID: String? {
+    if let superview = (self as? UIView)?.superview as? UIView {
+      return superview.nativeID as String?
+            }
+    return nil
+  }
 }
 
 public extension Optional where Wrapped: UIResponder {
