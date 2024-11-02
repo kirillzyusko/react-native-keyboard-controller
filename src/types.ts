@@ -92,7 +92,7 @@ export type KeyboardControllerProps = {
 } & ViewProps;
 
 export type KeyboardGestureAreaProps = {
-  interpolator: "ios" | "linear";
+  interpolator?: "ios" | "linear";
   /**
    * Whether to allow to show a keyboard from dismissed state by swipe up.
    * Default to `false`.
@@ -108,6 +108,10 @@ export type KeyboardGestureAreaProps = {
    * Extra distance to the keyboard.
    */
   offset?: number;
+  /**
+   * A corresponding `nativeID` value from the corresponding `TextInput`.
+   */
+  textInputNativeID?: string;
 } & ViewProps;
 export type OverKeyboardViewProps = PropsWithChildren<{
   visible: boolean;
