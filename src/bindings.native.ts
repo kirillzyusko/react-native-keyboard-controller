@@ -55,7 +55,7 @@ export const WindowDimensionsEvents: WindowDimensionsEventsModule = {
 export const KeyboardControllerView: React.FC<KeyboardControllerProps> =
   require("./specs/KeyboardControllerViewNativeComponent").default;
 export const KeyboardGestureArea: React.FC<KeyboardGestureAreaProps> =
-  Platform.OS === "android" && Platform.Version >= 30
+  (Platform.OS === "android" && Platform.Version >= 30) || Platform.OS === "ios"
     ? require("./specs/KeyboardGestureAreaNativeComponent").default
     : ({ children }: KeyboardGestureAreaProps) => children;
 export const RCTOverKeyboardView: React.FC<OverKeyboardViewProps> =

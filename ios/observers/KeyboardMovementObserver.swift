@@ -41,6 +41,10 @@ public class KeyboardMovementObserver: NSObject {
   private var tag: NSNumber = -1
   private var animation: KeyboardAnimation?
   private var didShowDeadline: Int64 = 0
+  // TODO: should we move all interactive stuff into separate file?
+  // Or just move new functionality there?
+  // interactive keyboard
+  private var inputAccessoryView: UIView?
 
   @objc public init(
     handler: @escaping (NSString, NSNumber, NSNumber, NSNumber, NSNumber) -> Void,
@@ -200,7 +204,8 @@ public class KeyboardMovementObserver: NSObject {
     if let keyboardFrame = frame {
       let (position, _) = keyboardView.frameTransitionInWindow
       let keyboardHeight = keyboardFrame.cgRectValue.size.height
-      tag = UIResponder.current.reactViewTag
+      let responder = UIResponder.current
+      tag = responder.reactViewTag
       self.keyboardHeight = keyboardHeight
       // if the event is caught in between it's highly likely that it could be a "resize" event
       // so we just read actual keyboard frame value in this case
@@ -215,6 +220,17 @@ public class KeyboardMovementObserver: NSObject {
       removeKeyboardWatcher()
       setupKVObserver()
       animation = nil
+
+      if let activeTextInput = responder as? TextInput,
+        let offset = KeyboardOffsetProvider.shared.getOffset(
+          forTextInputNativeID: responder.nativeID),
+        responder?.inputAccessoryView == nil
+      {
+        inputAccessoryView = InvisibleInputAccessoryView(height: CGFloat(offset))
+
+        activeTextInput.inputAccessoryView = inputAccessoryView
+        activeTextInput.reloadInputViews()
+      }
     }
   }
 
