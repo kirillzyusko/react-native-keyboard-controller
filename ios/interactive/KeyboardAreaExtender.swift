@@ -11,20 +11,47 @@ class KeyboardAreaExtender : NSObject {
   @objc public static let shared = KeyboardAreaExtender()
   
   private override init() {
-    
+    super.init()
+    NotificationCenter.default.addObserver(
+      self,
+      selector: #selector(keyboardDidAppear),
+      name: UIResponder.keyboardDidShowNotification,
+      object: nil
+    )
   }
   
-  public var offset: Int {
+  deinit {
+    NotificationCenter.default.removeObserver(self)
+  }
+  
+  public var offset: CGFloat {
     get {
-      return currentInputAccessoryView?.frame?.height ?? 0
+      return currentInputAccessoryView?.frame.height ?? 0
     }
   }
   
-  public func remove() {
-    
+  public func hide() {
+    // currentInputAccessoryView?.updateHeight(to: 0.0)
+    // superview?.layoutIfNeeded()
   }
   
-  public func updateHeight(newHeight to: CGFloat) {
-    currentInputAccessoryView?.updateHeight(to: newHeight)
+  public func updateHeight(_ to: CGFloat, _ nativeID: String) {
+    if (UIResponder.current.nativeID == nativeID) {
+      currentInputAccessoryView?.updateHeight(to: to)
+    }
+  }
+  
+  @objc private func keyboardDidAppear(_ notification: Notification) {
+    let responder = UIResponder.current
+    if let activeTextInput = responder as? TextInput,
+      let offset = KeyboardOffsetProvider.shared.getOffset(
+        forTextInputNativeID: responder.nativeID),
+      responder?.inputAccessoryView == nil
+    {
+      currentInputAccessoryView = InvisibleInputAccessoryView(height: CGFloat(offset))
+
+      activeTextInput.inputAccessoryView = currentInputAccessoryView
+      activeTextInput.reloadInputViews()
+    }
   }
 }
