@@ -36,15 +36,20 @@ public class KeyboardMovementObserver: NSObject {
   private var hasKVObserver = false
   private var isMounted = false
   // state variables
-  private var keyboardHeight: CGFloat = 0.0
+  private var _keyboardHeight: CGFloat = 0.0
+  private var keyboardHeight: CGFloat {
+    get {
+      print("\(_keyboardHeight) - \(KeyboardAreaExtender.shared.offset)")
+      return _keyboardHeight - KeyboardAreaExtender.shared.offset
+    }
+    set {
+      _keyboardHeight = newValue
+    }
+  }
   private var duration = 0
   private var tag: NSNumber = -1
   private var animation: KeyboardAnimation?
   private var didShowDeadline: Int64 = 0
-  // TODO: should we move all interactive stuff into separate file?
-  // Or just move new functionality there?
-  // interactive keyboard
-  private var inputAccessoryView: UIView?
 
   @objc public init(
     handler: @escaping (NSString, NSNumber, NSNumber, NSNumber, NSNumber) -> Void,
@@ -125,7 +130,7 @@ public class KeyboardMovementObserver: NSObject {
       }
       // if keyboard height is not equal to its bounds - we can ignore
       // values, since they'll be invalid and will cause UI jumps
-      if keyboardView?.bounds.size.height != keyboardHeight {
+      if keyboardView?.bounds.size.height != _keyboardHeight {
         return
       }
 
@@ -135,11 +140,13 @@ public class KeyboardMovementObserver: NSObject {
       let keyboardFrameY = changeValue.cgPointValue.y
       let keyboardWindowH = keyboardView?.window?.bounds.size.height ?? 0
       let keyboardPosition = keyboardWindowH - keyboardFrameY
-      let position = CGFloat.interpolate(
-        inputRange: [keyboardHeight / 2, -keyboardHeight / 2],
-        outputRange: [keyboardHeight, 0],
-        currentValue: keyboardPosition
-      )
+
+      let position =
+        CGFloat.interpolate(
+          inputRange: [_keyboardHeight / 2, -_keyboardHeight / 2],
+          outputRange: [_keyboardHeight, 0],
+          currentValue: keyboardPosition
+        ) - KeyboardAreaExtender.shared.offset
 
       if position == 0 {
         // it will be triggered before `keyboardWillDisappear` and
@@ -149,7 +156,10 @@ public class KeyboardMovementObserver: NSObject {
       }
 
       prevKeyboardPosition = position
-
+      /// TODO: needs here? Why in onStart/onEnd after interactive gesture we get keyboard height as 386?
+      (UIResponder.current?.inputAccessoryView as? InvisibleInputAccessoryView)?.updateHeight(to: 0)
+      UIResponder.current?.inputAccessoryView?.superview?.layoutIfNeeded()
+      ///
       onEvent(
         "onKeyboardMoveInteractive",
         position as NSNumber,
@@ -176,11 +186,14 @@ public class KeyboardMovementObserver: NSObject {
       didShowDeadline = Date.currentTimeStamp + Int64(duration)
 
       onRequestAnimation()
-      onEvent("onKeyboardMoveStart", Float(keyboardHeight) as NSNumber, 1, duration as NSNumber, tag)
-      onNotify("KeyboardController::keyboardWillShow", buildEventParams(keyboardHeight, duration, tag))
+      onEvent(
+        "onKeyboardMoveStart", Float(self.keyboardHeight) as NSNumber, 1, duration as NSNumber, tag)
+      onNotify(
+        "KeyboardController::keyboardWillShow", buildEventParams(self.keyboardHeight, duration, tag)
+      )
 
       setupKeyboardWatcher()
-      initializeAnimation(fromValue: prevKeyboardPosition, toValue: keyboardHeight)
+      initializeAnimation(fromValue: prevKeyboardPosition, toValue: self.keyboardHeight)
     }
   }
 
@@ -204,33 +217,24 @@ public class KeyboardMovementObserver: NSObject {
     if let keyboardFrame = frame {
       let (position, _) = keyboardView.frameTransitionInWindow
       let keyboardHeight = keyboardFrame.cgRectValue.size.height
-      let responder = UIResponder.current
-      tag = responder.reactViewTag
+      tag = UIResponder.current.reactViewTag
       self.keyboardHeight = keyboardHeight
       // if the event is caught in between it's highly likely that it could be a "resize" event
       // so we just read actual keyboard frame value in this case
-      let height = timestamp >= didShowDeadline ? keyboardHeight : position
+      let height =
+        timestamp >= didShowDeadline
+        ? self.keyboardHeight : position - KeyboardAreaExtender.shared.offset
       // always limit progress to the maximum possible value
       let progress = min(height / self.keyboardHeight, 1.0)
 
       onCancelAnimation()
-      onEvent("onKeyboardMoveEnd", height as NSNumber, progress as NSNumber, duration as NSNumber, tag)
+      onEvent(
+        "onKeyboardMoveEnd", height as NSNumber, progress as NSNumber, duration as NSNumber, tag)
       onNotify("KeyboardController::keyboardDidShow", buildEventParams(height, duration, tag))
 
       removeKeyboardWatcher()
       setupKVObserver()
       animation = nil
-
-      if let activeTextInput = responder as? TextInput,
-        let offset = KeyboardOffsetProvider.shared.getOffset(
-          forTextInputNativeID: responder.nativeID),
-        responder?.inputAccessoryView == nil
-      {
-        inputAccessoryView = InvisibleInputAccessoryView(height: CGFloat(offset))
-
-        activeTextInput.inputAccessoryView = inputAccessoryView
-        activeTextInput.reloadInputViews()
-      }
     }
   }
 
@@ -255,7 +259,7 @@ public class KeyboardMovementObserver: NSObject {
     }
 
     displayLink = CADisplayLink(target: self, selector: #selector(updateKeyboardFrame))
-    displayLink?.preferredFramesPerSecond = 120 // will fallback to 60 fps for devices without Pro Motion display
+    displayLink?.preferredFramesPerSecond = 120  // will fallback to 60 fps for devices without Pro Motion display
     displayLink?.add(to: .main, forMode: .common)
   }
 
@@ -268,9 +272,11 @@ public class KeyboardMovementObserver: NSObject {
     for key in ["position", "opacity"] {
       if let keyboardAnimation = keyboardView?.layer.presentation()?.animation(forKey: key) {
         if let springAnimation = keyboardAnimation as? CASpringAnimation {
-          animation = SpringAnimation(animation: springAnimation, fromValue: fromValue, toValue: toValue)
+          animation = SpringAnimation(
+            animation: springAnimation, fromValue: fromValue, toValue: toValue)
         } else if let basicAnimation = keyboardAnimation as? CABasicAnimation {
-          animation = TimingAnimation(animation: basicAnimation, fromValue: fromValue, toValue: toValue)
+          animation = TimingAnimation(
+            animation: basicAnimation, fromValue: fromValue, toValue: toValue)
         }
         return
       }
