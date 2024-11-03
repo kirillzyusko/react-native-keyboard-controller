@@ -16,6 +16,7 @@ public class KeyboardOffsetProvider: NSObject {
     private var offsetMap: [String: NSNumber] = [:]
 
     @objc public func setOffset(forTextInputNativeID nativeID: String, offset: NSNumber) {
+      KeyboardAreaExtender.shared.updateHeight(CGFloat(offset), nativeID)
         offsetMap[nativeID] = offset
     }
 
