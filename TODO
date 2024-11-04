@@ -1,0 +1,4 @@
+- (x) close after interactive gesture - sudden jump of 75 pixels -> fixed by detaching iav during `onInteractive`
+- (x) keyboard hidden -> remove inputAccessoryView - done in resignFirstResponder
+- show after interactive - keyboard height is 386
+- iOS 16 - after attaching fake iav we dispatch onEnd with height - 248 (298 - 50)

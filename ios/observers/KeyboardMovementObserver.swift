@@ -46,6 +46,7 @@ public class KeyboardMovementObserver: NSObject {
       _keyboardHeight = newValue
     }
   }
+
   private var duration = 0
   private var tag: NSNumber = -1
   private var animation: KeyboardAnimation?
@@ -156,7 +157,7 @@ public class KeyboardMovementObserver: NSObject {
       }
 
       prevKeyboardPosition = position
-      /// TODO: needs here? Why in onStart/onEnd after interactive gesture we get keyboard height as 386?
+      // TODO: needs here? Why in onStart/onEnd after interactive gesture we get keyboard height as 386?
       (UIResponder.current?.inputAccessoryView as? InvisibleInputAccessoryView)?.updateHeight(to: 0)
       UIResponder.current?.inputAccessoryView?.superview?.layoutIfNeeded()
       ///
