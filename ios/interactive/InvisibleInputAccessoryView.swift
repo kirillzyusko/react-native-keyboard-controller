@@ -9,42 +9,42 @@ import Foundation
 import UIKit
 
 public class InvisibleInputAccessoryView: UIView {
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        setupView()
-    }
-  
-  public convenience init(height: CGFloat) {
-    self.init(frame: CGRect.init(x: 0, y: 0, width: 0, height: height))
+  override init(frame: CGRect) {
+    super.init(frame: frame)
+    setupView()
   }
 
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        setupView()
-    }
+  public convenience init(height: CGFloat) {
+    self.init(frame: CGRect(x: 0, y: 0, width: 0, height: height))
+  }
 
-    public override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
-            // Return false to allow touch events to pass through
-            return false
-        }
+  required init?(coder aDecoder: NSCoder) {
+    super.init(coder: aDecoder)
+    setupView()
+  }
 
-    public func updateHeight(to newHeight: CGFloat) {
-      self.frame = CGRect.init(x: 0, y: 0, width: 0, height: newHeight)
+  override public func point(inside _: CGPoint, with _: UIEvent?) -> Bool {
+    // Return false to allow touch events to pass through
+    return false
+  }
 
-        // Invalidate intrinsic content size to trigger a layout update
-        invalidateIntrinsicContentSize()
-        self.layoutIfNeeded()
-    }
+  public func updateHeight(to newHeight: CGFloat) {
+    frame = CGRect(x: 0, y: 0, width: 0, height: newHeight)
 
-    public override var intrinsicContentSize: CGSize {
-      return CGSize(width: UIView.noIntrinsicMetric, height: self.frame.height)
-    }
+    // Invalidate intrinsic content size to trigger a layout update
+    invalidateIntrinsicContentSize()
+    layoutIfNeeded()
+  }
 
-    private func setupView() {
-      isUserInteractionEnabled = false
-      // TODO: Set the background color to transparent
-      backgroundColor = UIColor.red
-      // self.backgroundColor = .clear
-      autoresizingMask = .flexibleHeight
-    }
+  override public var intrinsicContentSize: CGSize {
+    return CGSize(width: UIView.noIntrinsicMetric, height: frame.height)
+  }
+
+  private func setupView() {
+    isUserInteractionEnabled = false
+    // TODO: Set the background color to transparent
+    backgroundColor = UIColor.red
+    // self.backgroundColor = .clear
+    autoresizingMask = .flexibleHeight
+  }
 }
