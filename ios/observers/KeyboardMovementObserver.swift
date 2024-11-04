@@ -51,6 +51,7 @@ public class KeyboardMovementObserver: NSObject {
   private var tag: NSNumber = -1
   private var animation: KeyboardAnimation?
   private var didShowDeadline: Int64 = 0
+  private var shouldIgnoreKeyboardEvents = false
 
   @objc public init(
     handler: @escaping (NSString, NSNumber, NSNumber, NSNumber, NSNumber) -> Void,
@@ -95,6 +96,13 @@ public class KeyboardMovementObserver: NSObject {
       name: UIResponder.keyboardDidHideNotification,
       object: nil
     )
+    NotificationCenter.default.addObserver(
+      forName: .shouldIgnoreKeyboardEvents, object: nil, queue: .main
+    ) { notification in
+      if let userInfo = notification.userInfo, let value = userInfo["ignore"] as? Bool {
+        self.shouldIgnoreKeyboardEvents = value
+      }
+    }
   }
 
   private func setupKVObserver() {
@@ -129,9 +137,10 @@ public class KeyboardMovementObserver: NSObject {
       if displayLink != nil {
         return
       }
+      print("\(keyboardView?.bounds.size.height)  \(_keyboardHeight)")
       // if keyboard height is not equal to its bounds - we can ignore
       // values, since they'll be invalid and will cause UI jumps
-      if keyboardView?.bounds.size.height != _keyboardHeight {
+      if (keyboardView?.bounds.size.height ?? 0) != _keyboardHeight {
         return
       }
 
@@ -178,6 +187,8 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc func keyboardWillAppear(_ notification: Notification) {
+    guard !shouldIgnoreKeyboardEvents else { return }
+    print("keyboardWillAppear \(Date.currentTimeStamp)")
     let (duration, frame) = notification.keyboardMetaData()
     if let keyboardFrame = frame {
       tag = UIResponder.current.reactViewTag
@@ -199,6 +210,8 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc func keyboardWillDisappear(_ notification: Notification) {
+    guard !shouldIgnoreKeyboardEvents else { return }
+    print("keyboardWillDisappear \(Date.currentTimeStamp)")
     let (duration, _) = notification.keyboardMetaData()
     tag = UIResponder.current.reactViewTag
     self.duration = duration
@@ -213,6 +226,7 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc func keyboardDidAppear(_ notification: Notification) {
+    print("keyboardDidAppear \(Date.currentTimeStamp)")
     let timestamp = Date.currentTimeStamp
     let (duration, frame) = notification.keyboardMetaData()
     if let keyboardFrame = frame {
@@ -220,11 +234,19 @@ public class KeyboardMovementObserver: NSObject {
       let keyboardHeight = keyboardFrame.cgRectValue.size.height
       tag = UIResponder.current.reactViewTag
       self.keyboardHeight = keyboardHeight
+
+      guard !shouldIgnoreKeyboardEvents else {
+        shouldIgnoreKeyboardEvents = false
+        return
+      }
+
       // if the event is caught in between it's highly likely that it could be a "resize" event
       // so we just read actual keyboard frame value in this case
       let height =
         timestamp >= didShowDeadline
         ? self.keyboardHeight : position - KeyboardAreaExtender.shared.offset
+      print("Using \(timestamp >= didShowDeadline ? "self.keyboardHeight" : "position")")
+      print("\(timestamp) vs \(didShowDeadline)")
       // always limit progress to the maximum possible value
       let progress = min(height / self.keyboardHeight, 1.0)
 
@@ -240,6 +262,8 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc func keyboardDidDisappear(_ notification: Notification) {
+    guard !shouldIgnoreKeyboardEvents else { return }
+    print("keyboardDidDisappear \(Date.currentTimeStamp)")
     let (duration, _) = notification.keyboardMetaData()
     tag = UIResponder.current.reactViewTag
 
