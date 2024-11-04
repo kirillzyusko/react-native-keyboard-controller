@@ -50,6 +50,10 @@ class KeyboardAreaExtender: NSObject {
 
       activeTextInput.inputAccessoryView = currentInputAccessoryView
       activeTextInput.reloadInputViews()
+
+      NotificationCenter.default.post(name: .shouldIgnoreKeyboardEvents, object: nil, userInfo: ["ignore": true])
+
+      print("Attaching `inputAccessoryView` \(Date.currentTimeStamp)")
     }
   }
 }
