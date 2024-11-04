@@ -9,28 +9,28 @@ import Foundation
 
 @objc(KeyboardOffsetProvider)
 public class KeyboardOffsetProvider: NSObject {
-    @objc public static let shared = KeyboardOffsetProvider()
-    
-    private override init() {}
-    
-    private var offsetMap: [String: NSNumber] = [:]
+  @objc public static let shared = KeyboardOffsetProvider()
 
-    @objc public func setOffset(forTextInputNativeID nativeID: String, offset: NSNumber) {
-      KeyboardAreaExtender.shared.updateHeight(CGFloat(offset), nativeID)
-        offsetMap[nativeID] = offset
-    }
+  override private init() {}
 
-    @objc public func getOffset(forTextInputNativeID nativeID: String?) -> NSNumber? {
-      guard let unwrappedNativeID = nativeID else { return nil }
-        return offsetMap[unwrappedNativeID]
-    }
-    
-    @objc public func hasOffset(forTextInputNativeID nativeID: String?) -> Bool {
-      guard let unwrappedNativeID = nativeID else { return false }
-        return offsetMap[unwrappedNativeID] != nil
-    }
+  private var offsetMap: [String: NSNumber] = [:]
 
-    @objc public func removeOffset(forTextInputNativeID nativeID: String) {
-        offsetMap.removeValue(forKey: nativeID)
-    }
+  @objc public func setOffset(forTextInputNativeID nativeID: String, offset: NSNumber) {
+    KeyboardAreaExtender.shared.updateHeight(CGFloat(offset), nativeID)
+    offsetMap[nativeID] = offset
+  }
+
+  @objc public func getOffset(forTextInputNativeID nativeID: String?) -> NSNumber? {
+    guard let unwrappedNativeID = nativeID else { return nil }
+    return offsetMap[unwrappedNativeID]
+  }
+
+  @objc public func hasOffset(forTextInputNativeID nativeID: String?) -> Bool {
+    guard let unwrappedNativeID = nativeID else { return false }
+    return offsetMap[unwrappedNativeID] != nil
+  }
+
+  @objc public func removeOffset(forTextInputNativeID nativeID: String) {
+    offsetMap.removeValue(forKey: nativeID)
+  }
 }
