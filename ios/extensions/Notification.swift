@@ -15,3 +15,7 @@ extension Notification {
     return (duration, keyboardFrame)
   }
 }
+
+extension Notification.Name {
+  static let shouldIgnoreKeyboardEvents = Notification.Name("shouldIgnoreKeyboardEvents")
+}
