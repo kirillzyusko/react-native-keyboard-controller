@@ -244,7 +244,7 @@ public class KeyboardMovementObserver: NSObject {
       // so we just read actual keyboard frame value in this case
       let height =
         timestamp >= didShowDeadline
-        ? self.keyboardHeight : position - KeyboardAreaExtender.shared.offset
+        ? self.keyboardHeight : position
       print("Using \(timestamp >= didShowDeadline ? "self.keyboardHeight" : "position")")
       print("\(timestamp) vs \(didShowDeadline)")
       // always limit progress to the maximum possible value
