@@ -138,7 +138,7 @@ public class KeyboardMovementObserver: NSObject {
       print("\(keyboardView?.bounds.size.height)  \(_keyboardHeight)")
       // if keyboard height is not equal to its bounds - we can ignore
       // values, since they'll be invalid and will cause UI jumps
-      if (keyboardView?.bounds.size.height ?? 0) != _keyboardHeight {
+      if floor(keyboardView?.bounds.size.height ?? 0) != floor(_keyboardHeight) {
         return
       }
 
@@ -164,8 +164,7 @@ public class KeyboardMovementObserver: NSObject {
 
       prevKeyboardPosition = position
       // TODO: needs here? Why in onStart/onEnd after interactive gesture we get keyboard height as 386?
-      (UIResponder.current?.inputAccessoryView as? InvisibleInputAccessoryView)?.updateHeight(to: 0)
-      UIResponder.current?.inputAccessoryView?.superview?.layoutIfNeeded()
+      (UIResponder.current?.inputAccessoryView as? InvisibleInputAccessoryView)?.hide()
       ///
       onEvent(
         "onKeyboardMoveInteractive",
