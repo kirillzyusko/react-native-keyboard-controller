@@ -31,8 +31,7 @@ extension UIResponder {
       print("Performing custom actions before the original resignFirstResponder")
 
       if let textField = self as? TextInput {
-        (textField.inputAccessoryView as? InvisibleInputAccessoryView)?.updateHeight(to: 0)
-        textField.inputAccessoryView?.superview?.layoutIfNeeded()
+        (textField.inputAccessoryView as? InvisibleInputAccessoryView)?.hide()
       }
 
       // Postpone execution of the original resignFirstResponder
