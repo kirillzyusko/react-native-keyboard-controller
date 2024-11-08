@@ -36,6 +36,11 @@ public class InvisibleInputAccessoryView: UIView {
     layoutIfNeeded()
   }
 
+  public func hide() {
+    updateHeight(to: 0.0)
+    superview?.layoutIfNeeded()
+  }
+
   override public var intrinsicContentSize: CGSize {
     return CGSize(width: UIView.noIntrinsicMetric, height: frame.height)
   }
