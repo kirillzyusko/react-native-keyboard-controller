@@ -16,23 +16,25 @@ class JSPointerDispatcherCompat(
     eventDispatcher: EventDispatcher?,
     isCapture: Boolean,
   ) {
-    val method =
-      try {
-       // The RN version with 3 arguments (i.e., RN >= 0.72)
+    try {
+      // Try to get the method with 3 parameters (for RN >= 0.72)
+      val method =
         JSPointerDispatcher::class.java.getMethod(
           "handleMotionEvent",
           MotionEvent::class.java,
           EventDispatcher::class.java,
           Boolean::class.javaPrimitiveType,
         )
-      } catch (_: NoSuchMethodException) {
-        // The RN version with 2 arguments (i.e., RN < 0.72)
+      method.invoke(this, event, eventDispatcher, isCapture)
+    } catch (_: NoSuchMethodException) {
+      // Fallback to 2-parameter version (for RN < 0.72)
+      val method =
         JSPointerDispatcher::class.java.getMethod(
           "handleMotionEvent",
           MotionEvent::class.java,
           EventDispatcher::class.java,
         )
-      }
-    method.invoke(this, event, eventDispatcher, isCapture)
+      method.invoke(this, event, eventDispatcher)
+    }
   }
 }
