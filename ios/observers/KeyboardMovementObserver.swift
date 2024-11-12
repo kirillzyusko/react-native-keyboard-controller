@@ -163,7 +163,7 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc func keyboardWillAppear(_ notification: Notification) {
-    let (duration, frame) = metaDataFromNotification(notification)
+    let (duration, frame) = notification.keyboardMetaData()
     if let keyboardFrame = frame {
       tag = UIResponder.current.reactViewTag
       let keyboardHeight = keyboardFrame.cgRectValue.size.height
@@ -181,7 +181,7 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc func keyboardWillDisappear(_ notification: Notification) {
-    let (duration, _) = metaDataFromNotification(notification)
+    let (duration, _) = notification.keyboardMetaData()
     tag = UIResponder.current.reactViewTag
     self.duration = duration
 
@@ -196,7 +196,7 @@ public class KeyboardMovementObserver: NSObject {
 
   @objc func keyboardDidAppear(_ notification: Notification) {
     let timestamp = Date.currentTimeStamp
-    let (duration, frame) = metaDataFromNotification(notification)
+    let (duration, frame) = notification.keyboardMetaData()
     if let keyboardFrame = frame {
       let (position, _) = keyboardView.frameTransitionInWindow
       let keyboardHeight = keyboardFrame.cgRectValue.size.height
@@ -219,7 +219,7 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc func keyboardDidDisappear(_ notification: Notification) {
-    let (duration, _) = metaDataFromNotification(notification)
+    let (duration, _) = notification.keyboardMetaData()
     tag = UIResponder.current.reactViewTag
 
     onCancelAnimation()
@@ -308,15 +308,6 @@ public class KeyboardMovementObserver: NSObject {
       duration as NSNumber,
       tag
     )
-  }
-
-  private func metaDataFromNotification(_ notification: Notification) -> (Int, NSValue?) {
-    let duration = Int(
-      (notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double ?? 0) * 1000
-    )
-    let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue
-
-    return (duration, keyboardFrame)
   }
 
   private func getEventParams(_ height: Double, _ duration: Int) -> [AnyHashable: Any] {
