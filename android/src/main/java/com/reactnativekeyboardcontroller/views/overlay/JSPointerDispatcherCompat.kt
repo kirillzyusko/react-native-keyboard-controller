@@ -18,6 +18,7 @@ class JSPointerDispatcherCompat(
   ) {
     val method =
       try {
+       // The RN version with 3 arguments (i.e., RN >= 0.72)
         JSPointerDispatcher::class.java.getMethod(
           "handleMotionEvent",
           MotionEvent::class.java,
@@ -25,6 +26,7 @@ class JSPointerDispatcherCompat(
           Boolean::class.javaPrimitiveType,
         )
       } catch (_: NoSuchMethodException) {
+        // The RN version with 2 arguments (i.e., RN < 0.72)
         JSPointerDispatcher::class.java.getMethod(
           "handleMotionEvent",
           MotionEvent::class.java,
