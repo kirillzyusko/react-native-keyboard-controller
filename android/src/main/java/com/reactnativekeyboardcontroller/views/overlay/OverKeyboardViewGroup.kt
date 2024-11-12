@@ -8,7 +8,6 @@ import android.view.View
 import android.view.WindowManager
 import com.facebook.react.bridge.UiThreadUtil
 import com.facebook.react.config.ReactFeatureFlags
-import com.facebook.react.uimanager.JSPointerDispatcher
 import com.facebook.react.uimanager.JSTouchDispatcher
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.UIManagerHelper
@@ -99,13 +98,13 @@ class OverKeyboardRootViewGroup(
 ) : ReactViewGroup(reactContext),
   RootViewCompat {
   private val jsTouchDispatcher: JSTouchDispatcher = JSTouchDispatcher(this)
-  private var jsPointerDispatcher: JSPointerDispatcher? = null
+  private var jsPointerDispatcher: JSPointerDispatcherCompat? = null
   internal var eventDispatcher: EventDispatcher? = null
   internal var isAttached = false
 
   init {
     if (ReactFeatureFlags.dispatchPointerEvents) {
-      jsPointerDispatcher = JSPointerDispatcher(this)
+      jsPointerDispatcher = JSPointerDispatcherCompat(this)
     }
   }
 
@@ -125,7 +124,7 @@ class OverKeyboardRootViewGroup(
   override fun onInterceptTouchEvent(event: MotionEvent): Boolean {
     eventDispatcher?.let { eventDispatcher ->
       jsTouchDispatcher.handleTouchEvent(event, eventDispatcher)
-      jsPointerDispatcher?.handleMotionEvent(event, eventDispatcher, true)
+      jsPointerDispatcher?.handleMotionEventCompat(event, eventDispatcher, true)
     }
     return super.onInterceptTouchEvent(event)
   }
@@ -134,7 +133,7 @@ class OverKeyboardRootViewGroup(
   override fun onTouchEvent(event: MotionEvent): Boolean {
     eventDispatcher?.let { eventDispatcher ->
       jsTouchDispatcher.handleTouchEvent(event, eventDispatcher)
-      jsPointerDispatcher?.handleMotionEvent(event, eventDispatcher, false)
+      jsPointerDispatcher?.handleMotionEventCompat(event, eventDispatcher, false)
     }
     super.onTouchEvent(event)
     // In case when there is no children interested in handling touch event, we return true from
@@ -143,12 +142,16 @@ class OverKeyboardRootViewGroup(
   }
 
   override fun onInterceptHoverEvent(event: MotionEvent): Boolean {
-    eventDispatcher?.let { jsPointerDispatcher?.handleMotionEvent(event, it, true) }
+    eventDispatcher?.let {
+      jsPointerDispatcher?.handleMotionEventCompat(event, eventDispatcher, true)
+    }
     return super.onHoverEvent(event)
   }
 
   override fun onHoverEvent(event: MotionEvent): Boolean {
-    eventDispatcher?.let { jsPointerDispatcher?.handleMotionEvent(event, it, false) }
+    eventDispatcher?.let { 
+      jsPointerDispatcher?.handleMotionEventCompat(event, eventDispatcher, false)
+    }
     return super.onHoverEvent(event)
   }
 
