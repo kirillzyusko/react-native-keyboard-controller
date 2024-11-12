@@ -24,7 +24,7 @@ class JSPointerDispatcherCompat(
           EventDispatcher::class.java,
           Boolean::class.javaPrimitiveType,
         )
-      } catch (e: NoSuchMethodException) {
+      } catch (_: NoSuchMethodException) {
         JSPointerDispatcher::class.java.getMethod(
           "handleMotionEvent",
           MotionEvent::class.java,
