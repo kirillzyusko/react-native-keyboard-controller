@@ -11,30 +11,42 @@ import com.facebook.react.uimanager.events.EventDispatcher
 class JSPointerDispatcherCompat(
   private val viewGroup: ViewGroup,
 ) : JSPointerDispatcher(viewGroup) {
+  private val handleMotionEventMethod: Method? by lazy {
+    try {
+      // Try to get the 3-parameter method (for RN >= 0.72)
+      JSPointerDispatcher::class.java.getMethod(
+        "handleMotionEvent",
+        MotionEvent::class.java,
+        EventDispatcher::class.java,
+        Boolean::class.javaPrimitiveType,
+      )
+    } catch (_: NoSuchMethodException) {
+      try {
+        // Fallback to 2-parameter method (for RN < 0.72)
+        JSPointerDispatcher::class.java.getMethod(
+          "handleMotionEvent",
+          MotionEvent::class.java,
+          EventDispatcher::class.java,
+        )
+      } catch (_: NoSuchMethodException) {
+        null
+      }
+    }
+  }
+
   fun handleMotionEventCompat(
     event: MotionEvent?,
     eventDispatcher: EventDispatcher?,
     isCapture: Boolean,
   ) {
-    try {
-      // Try to get the method with 3 parameters (for RN >= 0.72)
-      val method =
-        JSPointerDispatcher::class.java.getMethod(
-          "handleMotionEvent",
-          MotionEvent::class.java,
-          EventDispatcher::class.java,
-          Boolean::class.javaPrimitiveType,
-        )
-      method.invoke(this, event, eventDispatcher, isCapture)
-    } catch (_: NoSuchMethodException) {
-      // Fallback to 2-parameter version (for RN < 0.72)
-      val method =
-        JSPointerDispatcher::class.java.getMethod(
-          "handleMotionEvent",
-          MotionEvent::class.java,
-          EventDispatcher::class.java,
-        )
-      method.invoke(this, event, eventDispatcher)
+    handleMotionEventMethod?.let { method ->
+      val parameters =
+        if (method.parameterCount == 3) {
+          arrayOf(event, eventDispatcher, isCapture)
+        } else {
+          arrayOf(event, eventDispatcher)
+        }
+      method.invoke(this, *parameters)
     }
   }
 }
