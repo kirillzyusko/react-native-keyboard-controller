@@ -143,14 +143,14 @@ class OverKeyboardRootViewGroup(
 
   override fun onInterceptHoverEvent(event: MotionEvent): Boolean {
     eventDispatcher?.let {
-      jsPointerDispatcher?.handleMotionEventCompat(event, eventDispatcher, true)
+      jsPointerDispatcher?.handleMotionEventCompat(event, it, true)
     }
     return super.onHoverEvent(event)
   }
 
   override fun onHoverEvent(event: MotionEvent): Boolean {
     eventDispatcher?.let {
-      jsPointerDispatcher?.handleMotionEventCompat(event, eventDispatcher, false)
+      jsPointerDispatcher?.handleMotionEventCompat(event, it, false)
     }
     return super.onHoverEvent(event)
   }

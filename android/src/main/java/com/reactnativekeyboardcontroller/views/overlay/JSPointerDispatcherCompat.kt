@@ -41,7 +41,7 @@ class JSPointerDispatcherCompat(
     isCapture: Boolean,
   ) {
     handleMotionEventMethod?.let { method ->
-      if (method.parameterCount == THREE_PARAMETERS) {
+      if (method.parameterCount == RN_72_PARAMS_COUNT) {
         method.invoke(this, event, eventDispatcher, isCapture)
       } else {
         method.invoke(this, event, eventDispatcher)
@@ -51,6 +51,6 @@ class JSPointerDispatcherCompat(
 
   companion object {
     private const val HANDLE_MOTION_EVENT = "handleMotionEvent"
-    private const val THREE_PARAMETERS = 3
+    private const val RN_72_PARAMS_COUNT = 3
   }
 }
