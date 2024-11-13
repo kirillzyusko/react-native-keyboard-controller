@@ -121,10 +121,12 @@ export type KeyboardControllerModule = {
   // all platforms
   dismiss: () => void;
   setFocusTo: (direction: Direction) => void;
+};
+export type KeyboardControllerNativeModule = {
   // native event module stuff
   addListener: (eventName: string) => void;
   removeListeners: (count: number) => void;
-};
+} & KeyboardControllerModule;
 
 // Event module declarations
 export type KeyboardControllerEvents =
