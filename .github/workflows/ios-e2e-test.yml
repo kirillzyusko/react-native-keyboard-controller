@@ -130,7 +130,7 @@ jobs:
         uses: ./.github/actions/retry-with-timeout
         with:
           command: "xcodes runtimes install --keep-archive 'iOS ${{ matrix.devices.runtime }}'"
-          timeout: 600 # 10 minutes
+          timeout: 180 # 10 minutes
           max_retries: 3
           retry_interval: 60
       - name: List all available simulators
