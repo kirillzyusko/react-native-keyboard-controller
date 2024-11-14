@@ -66,9 +66,7 @@ module.exports = {
       type: "ios.simulator",
       device: {
         type: "iPhone 16 Pro",
-        // temporarily not lock OS version, because we are using beta XCode
-        // and depending on the runner the OS version can be 18.0 or 18.1
-        // os: "iOS 18.0",
+        os: "iOS 18.0",
       },
     },
     attached: {
