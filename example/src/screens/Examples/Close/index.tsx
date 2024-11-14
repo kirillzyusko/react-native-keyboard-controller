@@ -7,7 +7,7 @@ function CloseScreen() {
       <Button
         testID="close_keyboard_button"
         title="Close keyboard"
-        onPress={() => KeyboardController.dismiss()}
+        onPress={KeyboardController.dismiss}
       />
       <TextInput
         placeholder="Touch to open the keyboard..."

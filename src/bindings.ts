@@ -18,8 +18,6 @@ export const KeyboardController: KeyboardControllerModule = {
   setInputMode: NOOP,
   dismiss: NOOP,
   setFocusTo: NOOP,
-  addListener: NOOP,
-  removeListeners: NOOP,
 };
 export const KeyboardEvents: KeyboardEventsModule = {
   addListener: () => ({ remove: NOOP } as EmitterSubscription),
