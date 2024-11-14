@@ -64,10 +64,6 @@ const KEYBOARD_TOOLBAR_HEIGHT = 42;
 const DEFAULT_OPACITY: HEX = "FF";
 const offset = { closed: KEYBOARD_TOOLBAR_HEIGHT };
 
-const dismissKeyboard = () => KeyboardController.dismiss();
-const goToNextField = () => KeyboardController.setFocusTo("next");
-const goToPrevField = () => KeyboardController.setFocusTo("prev");
-
 /**
  * `KeyboardToolbar` is a component that is shown above the keyboard with `Prev`/`Next` and
  * `Done` buttons.
@@ -122,7 +118,7 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
       onNextCallback?.(event);
 
       if (!event.isDefaultPrevented()) {
-        goToNextField();
+        KeyboardController.setFocusTo("next");
       }
     },
     [onNextCallback],
@@ -132,7 +128,7 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
       onPrevCallback?.(event);
 
       if (!event.isDefaultPrevented()) {
-        goToPrevField();
+        KeyboardController.setFocusTo("prev");
       }
     },
     [onPrevCallback],
@@ -142,7 +138,7 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
       onDoneCallback?.(event);
 
       if (!event.isDefaultPrevented()) {
-        dismissKeyboard();
+        KeyboardController.dismiss();
       }
     },
     [onDoneCallback],
