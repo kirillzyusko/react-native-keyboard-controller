@@ -37,7 +37,7 @@ runs:
           local start_time=$(date +%s)
 
           # Run the command with sudo in the background
-          eval "$command" &
+          $command &
           local sudo_pid=$!
 
           # Wait briefly to allow sudo to spawn its child process
