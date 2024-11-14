@@ -124,13 +124,45 @@ jobs:
         run: xcodebuild -version
       - name: Install additional iOS runtimes
         if: ${{ matrix.devices.runtime != '' && matrix.devices.runtime != null }}
-        uses: nick-fields/retry@v3
-        with:
-          timeout_minutes: 10
-          max_attempts: 3
-          command: |
-            brew tap robotsandpencils/made
-            sudo xcodes runtimes install --keep-archive 'iOS ${{ matrix.devices.runtime }}'
+        run: |
+          # Set the parameters for retry logic
+          TIMEOUT=600  # Timeout for each attempt in seconds (10 minutes)
+          MAX_RETRIES=3
+          RETRY_INTERVAL=60  # Wait time between retries in seconds (1 minute)
+          RETRY_COUNT=0
+          SUCCESS=0
+
+          # Start the retry loop
+          while [[ $RETRY_COUNT -lt $MAX_RETRIES ]]; do
+            echo "Attempt $((RETRY_COUNT + 1)) of $MAX_RETRIES to install iOS runtime..."
+
+            # Execute the command with timeout
+            COMMAND_EXIT_CODE=0
+            timeout $TIMEOUT bash -c "brew tap robotsandpencils/made && sudo xcodes runtimes install --keep-archive 'iOS ${{ matrix.devices.runtime }}'" || COMMAND_EXIT_CODE=$?
+
+            # Check if the command succeeded
+            if [[ $COMMAND_EXIT_CODE -eq 0 ]]; then
+              SUCCESS=1
+              echo "iOS runtime installation successful."
+              break
+            elif [[ $COMMAND_EXIT_CODE -eq 124 ]]; then
+              echo "Installation timed out after ${TIMEOUT} seconds"
+            else
+              echo "Installation failed with exit code $COMMAND_EXIT_CODE"
+            fi
+
+            echo "Retrying installation in $RETRY_INTERVAL seconds..."
+            sleep $RETRY_INTERVAL
+
+            # Increment the retry counter
+            RETRY_COUNT=$((RETRY_COUNT + 1))
+          done
+
+          # Exit with error if all attempts failed
+          if [[ $SUCCESS -eq 0 ]]; then
+            echo "All attempts to install iOS runtime failed."
+            exit 1
+          fi
       - name: List all available simulators
         run: xcrun simctl list
       - name: Install AppleSimulatorUtils
