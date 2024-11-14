@@ -1,5 +1,5 @@
-name: "Retry with Timeout"
-description: "Retries a command with a specified timeout and max retries."
+name: "Retry sudo with Timeout"
+description: "Retries a sudo command with a specified timeout and max retries."
 author: "Kiryl Ziusko"
 inputs:
   command:
@@ -82,12 +82,13 @@ runs:
             echo "Command execution successful."
             break
           elif [[ $COMMAND_EXIT_CODE -eq 124 ]]; then
-            echo "Command timed out after ${TIMEOUT} seconds. Retrying..."
+            echo "Command timed out after ${TIMEOUT} seconds."
           else
             echo "Command failed with exit code $COMMAND_EXIT_CODE"
-            echo "Retrying command in $RETRY_INTERVAL seconds..."
-            sleep $RETRY_INTERVAL
           fi
+
+          echo "Retrying command in $RETRY_INTERVAL seconds..."
+          sleep $RETRY_INTERVAL
 
           # Increment the retry counter
           RETRY_COUNT=$((RETRY_COUNT + 1))

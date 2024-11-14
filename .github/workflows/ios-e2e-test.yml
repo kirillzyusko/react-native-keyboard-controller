@@ -127,7 +127,7 @@ jobs:
         run: brew tap robotsandpencils/made
       - name: Install additional iOS runtimes
         if: ${{ matrix.devices.runtime != '' && matrix.devices.runtime != null }}
-        uses: ./.github/actions/retry-with-timeout
+        uses: ./.github/actions/retry-sudo-with-timeout
         with:
           command: "xcodes runtimes install --keep-archive 'iOS ${{ matrix.devices.runtime }}'"
           timeout: 180 # 10 minutes
