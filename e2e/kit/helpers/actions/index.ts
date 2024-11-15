@@ -2,6 +2,7 @@ import colors from "colors/safe";
 import { expect } from "detox";
 
 import { waitForElementById } from "../awaitable";
+import { getDevicePreference } from "../env/devicePreferences";
 
 const TIMEOUT_FOR_LONG_OPERATIONS = 30000;
 
@@ -99,12 +100,22 @@ export const clearAndType = async (id: string, text: string): Promise<void> => {
 };
 
 export const switchToEmojiKeyboard = async () => {
-  const uiDevice = device.getUiDevice();
-  // see https://github.com/wix/Detox/issues/4331
-  const height = await uiDevice.getDisplayHeight();
-  const width = await uiDevice.getDisplayWidth();
+  const emojiButtonCoordinates = getDevicePreference().emojiButtonCoordinates;
 
-  await uiDevice.click(width * 0.3, height * 0.95);
+  // emoji button is not available
+  if (!emojiButtonCoordinates) {
+    return;
+  }
+
+  // on Android we need to use UiDevice, because keyboard is a third party application,
+  // so we have to press through the screen (not the app)
+  if (device.getPlatform() === "android") {
+    const uiDevice = device.getUiDevice();
+
+    await uiDevice.click(emojiButtonCoordinates.x, emojiButtonCoordinates.y);
+  } else {
+    await device.tap(emojiButtonCoordinates);
+  }
 };
 
 export const scrollDownUntilElementIsVisible = async (

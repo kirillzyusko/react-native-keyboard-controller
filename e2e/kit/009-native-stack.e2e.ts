@@ -1,6 +1,5 @@
 import { expectBitmapsToBeEqual } from "./asserts";
 import {
-  Env,
   closeKeyboard,
   scrollDownUntilElementIsVisible,
   switchToEmojiKeyboard,
@@ -24,21 +23,19 @@ describe("Native stack", () => {
   });
 
   it("should have expected state when emoji keyboard is opened", async () => {
-    // this is available only on Android 12 right now:
-    // - Android 9 AOSP image can not switch to emoji
-    // - on iOS we are waiting for new API: https://github.com/wix/Detox/issues/4331
-    if (Env.softCheck) {
-      await switchToEmojiKeyboard();
-      await waitForExpect(async () => {
-        await expectBitmapsToBeEqual("NativeStackEmojiKeyboard");
-      });
-    }
+    await switchToEmojiKeyboard();
+    await waitForExpect(async () => {
+      await expectBitmapsToBeEqual("NativeStackEmojiKeyboard");
+    });
   });
 
   it("should have expected state when keyboard is closed", async () => {
+    // only on iOS 15 we get busy loop...
+    await device.disableSynchronization();
     await closeKeyboard("keyboard_animation_text_input");
     await waitForExpect(async () => {
       await expectBitmapsToBeEqual("NativeStackKeyboardIsHidden");
     });
+    await device.enableSynchronization();
   });
 });

@@ -6,9 +6,8 @@ import pixelmatch from "pixelmatch";
 import { PNG } from "pngjs";
 
 import { delay } from "../helpers";
+import parseDeviceName from "../utils/parseDeviceName";
 
-const parseDeviceName = (name: string) =>
-  name.split("(").pop()?.replace(")", "");
 const getDirFromFilePath = (path: string) =>
   path.substring(0, path.lastIndexOf("/"));
 
