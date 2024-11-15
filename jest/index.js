@@ -51,6 +51,7 @@ const mock = {
     setDefaultMode: jest.fn(),
     dismiss: jest.fn().mockReturnValue(Promise.resolve()),
     setFocusTo: jest.fn(),
+    isVisible: jest.fn().mockReturnValue(false),
   },
   AndroidSoftInputModes: {
     SOFT_INPUT_ADJUST_NOTHING: 48,

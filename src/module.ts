@@ -2,19 +2,19 @@ import { KeyboardControllerNative, KeyboardEvents } from "./bindings";
 
 import type { KeyboardControllerModule } from "./types";
 
-let isVisible = false;
+let isClosed = false;
 
 KeyboardEvents.addListener("keyboardDidHide", () => {
-  isVisible = false;
+  isClosed = true;
 });
 
 KeyboardEvents.addListener("keyboardDidShow", () => {
-  isVisible = true;
+  isClosed = false;
 });
 
 const dismiss = async (): Promise<void> => {
   return new Promise((resolve) => {
-    if (!isVisible) {
+    if (isClosed) {
       resolve();
 
       return;
@@ -28,10 +28,12 @@ const dismiss = async (): Promise<void> => {
     KeyboardControllerNative.dismiss();
   });
 };
+const isVisible = () => !isClosed;
 
 export const KeyboardController: KeyboardControllerModule = {
   setDefaultMode: KeyboardControllerNative.setDefaultMode,
   setInputMode: KeyboardControllerNative.setInputMode,
   setFocusTo: KeyboardControllerNative.setFocusTo,
   dismiss: dismiss,
+  isVisible,
 };

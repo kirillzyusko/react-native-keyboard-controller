@@ -121,6 +121,7 @@ export type KeyboardControllerModule = {
   // all platforms
   dismiss: () => Promise<void>;
   setFocusTo: (direction: Direction) => void;
+  isVisible: () => boolean;
 };
 export type KeyboardControllerNativeModule = {
   // android only
