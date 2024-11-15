@@ -108,7 +108,7 @@ jobs:
             { ios: 15, xcode: "15.4", macos: 14, runtime: "15.5" },
             { ios: 16, xcode: "15.4", macos: 14, runtime: "16.4" },
             { ios: 17, xcode: "15.4", macos: 14 },
-            { ios: 18, xcode: "16.0", macos: 15 },
+            { ios: 18, xcode: "16.1", macos: 15 },
           ]
     needs: build
     steps:
