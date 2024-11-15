@@ -49,7 +49,7 @@ const mock = {
   KeyboardController: {
     setInputMode: jest.fn(),
     setDefaultMode: jest.fn(),
-    dismiss: jest.fn(),
+    dismiss: jest.fn().mockReturnValue(Promise.resolve()),
     setFocusTo: jest.fn(),
   },
   AndroidSoftInputModes: {
