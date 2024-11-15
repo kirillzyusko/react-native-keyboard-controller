@@ -24,7 +24,7 @@ on:
 jobs:
   build:
     name: 🏗️ Build E2E ipa
-    runs-on: macos-14
+    runs-on: macos-15
     timeout-minutes: 60
     env:
       WORKING_DIRECTORY: example
