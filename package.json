@@ -79,7 +79,8 @@
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^11.0.0",
-    "@react-native/eslint-config": "^0.75.3",
+    "@react-native/babel-preset": "0.76.2",
+    "@react-native/eslint-config": "0.76.2",
     "@release-it/conventional-changelog": "^2.0.0",
     "@testing-library/react-hooks": "^8.0.1",
     "@types/jest": "^29.2.1",
@@ -92,6 +93,7 @@
     "eslint-config-prettier": "^8.5.0",
     "eslint-import-resolver-typescript": "^3.6.1",
     "eslint-plugin-eslint-comments": "^3.2.0",
+    "eslint-plugin-ft-flow": "^3.0.11",
     "eslint-plugin-import": "^2.28.1",
     "eslint-plugin-jest": "^26.5.3",
     "eslint-plugin-prettier": "^4.2.1",
@@ -102,12 +104,12 @@
     "pod-install": "^0.1.0",
     "prettier": "^2.8.8",
     "react": "18.3.1",
-    "react-native": "0.75.3",
+    "react-native": "0.76.2",
     "react-native-builder-bob": "^0.18.0",
     "react-native-reanimated": "3.16.1",
     "react-test-renderer": "18.2.0",
     "release-it": "^14.2.2",
-    "typescript": "5.0.4"
+    "typescript": "5.6.3"
   },
   "peerDependencies": {
     "react": "*",

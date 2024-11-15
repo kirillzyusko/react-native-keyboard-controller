@@ -118,8 +118,6 @@
     "bézier",
     "Raphson",
     "desmos",
-    "swmansion",
-    "rnscreens",
     "setinputmode",
     "useanimatedkeyboard",
     "Hoverable",
@@ -139,7 +137,8 @@
     "**/*.xcworkspacedata",
     "**/*.svg",
     "**/*.storyboard",
-    "cspell.json"
+    "cspell.json",
+    "**/patches/**"
   ],
   "useGitignore": true
 }
