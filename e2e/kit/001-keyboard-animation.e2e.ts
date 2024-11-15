@@ -1,7 +1,7 @@
 import { expectBitmapsToBeEqual } from "./asserts";
 import {
+  closeKeyboard,
   switchToEmojiKeyboard,
-  tapInMiddleOfScreen,
   waitAndTap,
   waitForElementById,
   waitForExpect,
@@ -28,11 +28,12 @@ describe("Simple keyboard animation", () => {
   });
 
   it("should have expected state when keyboard is closed", async () => {
-    // test `KeyboardController.dismiss` as inline `onPress` handler
-    // we can't touch the element directly, because we may violate 75% of the visibility rule
-    await tapInMiddleOfScreen();
+    // only on iOS 15 we get busy loop...
+    await device.disableSynchronization();
+    await closeKeyboard("keyboard_animation_text_input");
     await waitForExpect(async () => {
       await expectBitmapsToBeEqual("KeyboardAnimationKeyboardIsHidden");
     });
+    await device.enableSynchronization();
   });
 });

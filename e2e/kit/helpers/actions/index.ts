@@ -107,25 +107,15 @@ export const switchToEmojiKeyboard = async () => {
     return;
   }
 
-  tapOnScreenAt(emojiButtonCoordinates);
-};
-
-export const tapOnScreenAt = async (point: Detox.Point2D): Promise<void> => {
   // on Android we need to use UiDevice, because keyboard is a third party application,
   // so we have to press through the screen (not the app)
   if (device.getPlatform() === "android") {
     const uiDevice = device.getUiDevice();
 
-    await uiDevice.click(point.x, point.y);
+    await uiDevice.click(emojiButtonCoordinates.x, emojiButtonCoordinates.y);
   } else {
-    await device.tap(point);
+    await device.tap(emojiButtonCoordinates);
   }
-};
-
-export const tapInMiddleOfScreen = async (): Promise<void> => {
-  const { width, height } = getDevicePreference();
-
-  await tapOnScreenAt({ x: width / 2, y: height / 2 });
 };
 
 export const scrollDownUntilElementIsVisible = async (
