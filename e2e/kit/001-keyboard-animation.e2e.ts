@@ -1,6 +1,5 @@
 import { expectBitmapsToBeEqual } from "./asserts";
 import {
-  // closeKeyboard,
   switchToEmojiKeyboard,
   tapInMiddleOfScreen,
   waitAndTap,
