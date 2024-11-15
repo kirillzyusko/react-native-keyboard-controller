@@ -6,9 +6,7 @@ import {
   waitForExpect,
 } from "./helpers";
 
-const test = device.getPlatform() === "ios" ? describe.skip : describe;
-
-test("`OverKeyboardView` specification", () => {
+describe("`OverKeyboardView` specification", () => {
   it("should navigate to `OverKeyboardView` screen", async () => {
     await scrollDownUntilElementIsVisible(
       "main_scroll_view",

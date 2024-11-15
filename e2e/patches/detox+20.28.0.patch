@@ -1,0 +1,21 @@
+diff --git a/node_modules/detox/android/detox/src/full/java/com/wix/detox/espresso/DetoxMatcher.java b/node_modules/detox/android/detox/src/full/java/com/wix/detox/espresso/DetoxMatcher.java
+index 8005c74..cb47bf5 100644
+--- a/node_modules/detox/android/detox/src/full/java/com/wix/detox/espresso/DetoxMatcher.java
++++ b/node_modules/detox/android/detox/src/full/java/com/wix/detox/espresso/DetoxMatcher.java
+@@ -6,6 +6,7 @@ import static androidx.test.espresso.matcher.ViewMatchers.isChecked;
+ import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
+ import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+ import static androidx.test.espresso.matcher.ViewMatchers.isFocused;
++import static androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast;
+ import static androidx.test.espresso.matcher.ViewMatchers.isNotChecked;
+ import static androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility;
+ import static com.wix.detox.espresso.matcher.ViewMatchers.matcherForDisplayingAtLeast;
+@@ -89,7 +90,7 @@ public class DetoxMatcher {
+     }
+ 
+     public static Matcher<View> matcherForSufficientlyVisible(int pct) {
+-        return matcherForDisplayingAtLeast(pct);
++        return isDisplayingAtLeast(pct);
+     }
+ 
+     public static Matcher<View> matcherForNotVisible() {
