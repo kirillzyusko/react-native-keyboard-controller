@@ -18,7 +18,8 @@ describe("`OverKeyboardView` specification", () => {
   it("should have expected state when view is not visible", async () => {
     await waitForElementById("over_keyboard_view.input");
     await waitForExpect(async () => {
-      await expectBitmapsToBeEqual("OverKeyboardViewNotShown");
+      // iOS home indicator may have different color
+      await expectBitmapsToBeEqual("OverKeyboardViewNotShown", 0.2);
     });
   });
 
