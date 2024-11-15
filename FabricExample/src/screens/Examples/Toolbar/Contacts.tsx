@@ -7,10 +7,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import {
-  KeyboardController,
-  KeyboardEvents,
-} from "react-native-keyboard-controller";
+import { KeyboardController } from "react-native-keyboard-controller";
 
 export type Contact = {
   image: string;
@@ -45,13 +42,9 @@ type Props = {
 
 const AutoFillContacts = ({ onContactSelected }: Props) => {
   const [visible, setVisible] = useState(false);
-  const handlePresentModalPress = useCallback(() => {
-    const subscription = KeyboardEvents.addListener("keyboardDidHide", () => {
-      setVisible(true);
-      subscription.remove();
-    });
-
-    KeyboardController.dismiss();
+  const handlePresentModalPress = useCallback(async () => {
+    await KeyboardController.dismiss();
+    setVisible(true);
   }, []);
 
   const handleCloseModalPress = useCallback(() => {
