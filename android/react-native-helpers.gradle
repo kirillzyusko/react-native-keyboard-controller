@@ -4,23 +4,17 @@ def safeAppExtGet(prop, fallback) {
 }
 
 // Let's detect react-native's directory, it will be used to determine RN's version
-// https://github.com/software-mansion/react-native-reanimated/blob/cda4627c3337c33674f05f755b7485165c6caca9/android/build.gradle#L88
+// https://github.com/software-mansion/react-native-reanimated/blob/36c291a15880c78a94dd125c51484630546ceb7c/packages/react-native-reanimated/android/build.gradle#L73
 def resolveReactNativeDirectory() {
   def reactNativeLocation = safeAppExtGet("REACT_NATIVE_NODE_MODULES_DIR", null)
   if (reactNativeLocation != null) {
     return file(reactNativeLocation)
   }
 
-  // monorepo workaround
-  // react-native can be hoisted or in project's own node_modules
-  def reactNativeFromProjectNodeModules = file("${rootProject.projectDir}/../node_modules/react-native")
-  if (reactNativeFromProjectNodeModules.exists()) {
-    return reactNativeFromProjectNodeModules
-  }
-
-  def reactNativeFromNodeModules = file("${projectDir}/../../react-native")
-  if (reactNativeFromNodeModules.exists()) {
-    return reactNativeFromNodeModules
+  // Fallback to node resolver for custom directory structures like monorepos.
+  def reactNativePackage = file(["node", "--print", "require.resolve('react-native/package.json')"].execute(null, rootDir).text.trim())
+  if (reactNativePackage.exists()) {
+      return reactNativePackage.parentFile
   }
 
   throw new GradleException(
