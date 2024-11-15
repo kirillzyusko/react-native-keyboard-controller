@@ -122,15 +122,17 @@ jobs:
           xcode-version: ${{ matrix.devices.xcode }}
       - name: Get Xcode version
         run: xcodebuild -version
+      # needed for additional runtime installation
+      - name: Install Xcodes
+        run: brew tap robotsandpencils/made
       - name: Install additional iOS runtimes
         if: ${{ matrix.devices.runtime != '' && matrix.devices.runtime != null }}
-        uses: nick-fields/retry@v3
+        uses: ./.github/actions/retry-sudo-with-timeout
         with:
-          timeout_minutes: 10
-          max_attempts: 3
-          command: |
-            brew tap robotsandpencils/made
-            sudo xcodes runtimes install --keep-archive 'iOS ${{ matrix.devices.runtime }}'
+          command: "xcodes runtimes install --keep-archive 'iOS ${{ matrix.devices.runtime }}'"
+          timeout: 600 # 10 minutes
+          max_retries: 3
+          retry_interval: 60
       - name: List all available simulators
         run: xcrun simctl list
       - name: Install AppleSimulatorUtils

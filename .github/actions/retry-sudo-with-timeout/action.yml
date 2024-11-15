@@ -1,0 +1,101 @@
+name: "Retry sudo with Timeout"
+description: "Retries a sudo command with a specified timeout and max retries."
+author: "Kiryl Ziusko"
+inputs:
+  command:
+    description: "The command to run with retry and timeout"
+    required: true
+  timeout:
+    description: "Timeout in seconds for each attempt"
+    required: true
+    default: 600
+  max_retries:
+    description: "Maximum number of retry attempts"
+    required: true
+    default: 3
+  retry_interval:
+    description: "Interval in seconds between retries"
+    required: true
+    default: 60
+runs:
+  using: "composite"
+  steps:
+    - name: Execute command with retry and timeout
+      shell: bash
+      run: |
+        # Parameters
+        TIMEOUT=${{ inputs.timeout }}
+        MAX_RETRIES=${{ inputs.max_retries }}
+        RETRY_INTERVAL=${{ inputs.retry_interval }}
+        COMMAND="${{ inputs.command }}"
+
+        RETRY_COUNT=0
+        SUCCESS=0
+
+        run_with_timeout() {
+          local command="$1"
+          local start_time=$(date +%s)
+
+          # Run the command with sudo in the background
+          sudo bash -c "$command" &
+          local sudo_pid=$!
+
+          # Wait briefly to allow sudo to spawn its child process
+          sleep 2
+
+          # Find the child process of sudo (actual command)
+          local child_pid=$(pgrep -P $sudo_pid)
+
+          # Monitor the child process for timeout
+          while sudo kill -0 $child_pid 2>/dev/null; do
+            local current_time=$(date +%s)
+            local elapsed_time=$((current_time - start_time))
+
+            # If timeout is exceeded, kill the child process
+            if [[ $elapsed_time -ge $TIMEOUT ]]; then
+              echo "Command timed out after ${TIMEOUT} seconds. Killing process $child_pid."
+              sudo kill -9 $child_pid
+              wait $child_pid 2>/dev/null
+              return 124  # Return code 124 for timeout
+            fi
+
+            # Sleep briefly to avoid a busy loop
+            sleep 5
+          done
+
+          # Wait for sudo command to finish and capture exit code
+          wait $sudo_pid
+          return $?
+        }
+
+        # Start the retry loop
+        while [[ $RETRY_COUNT -lt $MAX_RETRIES ]]; do
+          echo "Attempt $((RETRY_COUNT + 1)) of $MAX_RETRIES for command..."
+
+          # Execute the command with targeted timeout
+          COMMAND_EXIT_CODE=0
+          run_with_timeout "$COMMAND" || COMMAND_EXIT_CODE=$?
+
+          # Check if the command succeeded
+          if [[ $COMMAND_EXIT_CODE -eq 0 ]]; then
+            SUCCESS=1
+            echo "Command execution successful."
+            break
+          elif [[ $COMMAND_EXIT_CODE -eq 124 ]]; then
+            echo "Command timed out after ${TIMEOUT} seconds."
+          else
+            echo "Command failed with exit code $COMMAND_EXIT_CODE"
+          fi
+
+          echo "Retrying command in $RETRY_INTERVAL seconds..."
+          sleep $RETRY_INTERVAL
+
+          # Increment the retry counter
+          RETRY_COUNT=$((RETRY_COUNT + 1))
+        done
+
+        # Exit with error if all attempts failed
+        if [[ $SUCCESS -eq 0 ]]; then
+          echo "All attempts to execute command failed."
+          exit 1
+        fi
