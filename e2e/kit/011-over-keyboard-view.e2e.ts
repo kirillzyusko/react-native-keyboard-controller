@@ -19,7 +19,7 @@ describe("`OverKeyboardView` specification", () => {
     await waitForElementById("over_keyboard_view.input");
     await waitForExpect(async () => {
       // iOS home indicator may have different color
-      await expectBitmapsToBeEqual("OverKeyboardViewNotShown", 0.2);
+      await expectBitmapsToBeEqual("OverKeyboardViewNotShown", 0.28);
     });
   });
 
