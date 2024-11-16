@@ -6,6 +6,7 @@
 //  Copyright © 2024 Facebook. All rights reserved.
 //
 
+import Foundation
 import UIKit
 
 public protocol TextInput: UIView {
