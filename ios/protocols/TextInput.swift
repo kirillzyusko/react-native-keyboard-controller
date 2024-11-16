@@ -1,8 +1,9 @@
 //
 //  TextInput.swift
-//  Pods
+//  KeyboardController
 //
-//  Created by Kiryl Ziusko on 01/11/2024.
+//  Created by Kiryl Ziusko on 27/01/2024.
+//  Copyright © 2024 Facebook. All rights reserved.
 //
 
 import UIKit
