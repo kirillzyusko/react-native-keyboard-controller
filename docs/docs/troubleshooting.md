@@ -69,7 +69,7 @@ See [this issue](https://github.com/kirillzyusko/react-native-keyboard-controlle
 
 ## `MutexLockWithTimeout` C++ exception
 
-This exception is thrown when you are trying to use `KeyboardProvider` or `KeyboardAwareScrollView` on Android with new architecture enabled. A top of stacktrace will look like this:
+This exception is thrown when you are trying to use `KeyboardProvider` or `KeyboardAwareScrollView` on Android with the new architecture enabled. A top of stacktrace will look like this:
 
 ```bash
 NonPI::MutexLockWithTimeout at line 384 within libc
@@ -81,6 +81,7 @@ offset c01000) (facebook::react::ShadowTree::mount const at line 348 within spli
 offset c01000) (facebook::react::ShadowTree::tryCommit const at line 2612 within split_config.arm64_v8a.apk
 ```
 
-To fix this problem you have two ways to fix it:
-- enable `allowRecursiveCommitsWithSynchronousMountOnAndroid` feature flag (TODO: put more links on how to do that)
+You have two ways to fix this problem:
+
+- enable `allowRecursiveCommitsWithSynchronousMountOnAndroid` feature flag (see [react-native-reanimated#6418](https://github.com/software-mansion/react-native-reanimated/issues/6418#issuecomment-2296107100) and [react-native-keyboard-controller](https://github.com/kirillzyusko/react-native-keyboard-controller/issues/687))
 - upgrade to `react-native@0.77+` (starting from this version this flag is enabled by default).
