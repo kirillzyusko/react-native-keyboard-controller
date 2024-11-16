@@ -56,4 +56,12 @@ class KeyboardGestureAreaViewManager(
   ) {
     manager.setScrollKeyboardOffScreenWhenVisible(view as KeyboardGestureAreaReactViewGroup, value)
   }
+
+  @ReactProp(name = "textInputNativeID")
+  override fun setTextInputNativeID(
+    view: ReactViewGroup?,
+    value: String,
+  ) {
+    // no-op
+  }
 }
