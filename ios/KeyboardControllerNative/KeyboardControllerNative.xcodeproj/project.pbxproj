@@ -13,6 +13,9 @@
 		081006AC2C36906900578E07 /* UIScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 081006AB2C36906800578E07 /* UIScrollView.swift */; };
 		081006AD2C36906900578E07 /* UIScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 081006AB2C36906800578E07 /* UIScrollView.swift */; };
 		081006AE2C36906900578E07 /* UIScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 081006AB2C36906800578E07 /* UIScrollView.swift */; };
+		0837001A2CE8C74C00D67BBF /* TextInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 083700192CE8C74C00D67BBF /* TextInput.swift */; };
+		0837001B2CE8C74C00D67BBF /* TextInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 083700192CE8C74C00D67BBF /* TextInput.swift */; };
+		0837001C2CE8C74C00D67BBF /* TextInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 083700192CE8C74C00D67BBF /* TextInput.swift */; };
 		0850CCBA2CB49ECC000C0F8D /* SpringAnimationPerformanceTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0850CCB92CB49ECC000C0F8D /* SpringAnimationPerformanceTest.swift */; };
 		0850CCC22CB49F74000C0F8D /* SpringAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0850CCBF2CB49F74000C0F8D /* SpringAnimation.swift */; };
 		0850CCC32CB49F74000C0F8D /* SpringAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0850CCBF2CB49F74000C0F8D /* SpringAnimation.swift */; };
@@ -36,9 +39,6 @@
 		0873ED822BB6B94B0004F3A4 /* FocusedInputHolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0873ED7F2BB6B94B0004F3A4 /* FocusedInputHolder.swift */; };
 		0873ED832BB6B94B0004F3A4 /* FocusedInputHolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0873ED7F2BB6B94B0004F3A4 /* FocusedInputHolder.swift */; };
 		0873ED842BB6B94B0004F3A4 /* FocusedInputHolder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0873ED7F2BB6B94B0004F3A4 /* FocusedInputHolder.swift */; };
-		0873ED852BB6B94B0004F3A4 /* TextInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0873ED802BB6B94B0004F3A4 /* TextInput.swift */; };
-		0873ED862BB6B94B0004F3A4 /* TextInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0873ED802BB6B94B0004F3A4 /* TextInput.swift */; };
-		0873ED872BB6B94B0004F3A4 /* TextInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0873ED802BB6B94B0004F3A4 /* TextInput.swift */; };
 		0873ED882BB6B94B0004F3A4 /* ViewHierarchyNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0873ED812BB6B94B0004F3A4 /* ViewHierarchyNavigator.swift */; };
 		0873ED892BB6B94B0004F3A4 /* ViewHierarchyNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0873ED812BB6B94B0004F3A4 /* ViewHierarchyNavigator.swift */; };
 		0873ED8A2BB6B94B0004F3A4 /* ViewHierarchyNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0873ED812BB6B94B0004F3A4 /* ViewHierarchyNavigator.swift */; };
@@ -71,6 +71,7 @@
 /* Begin PBXFileReference section */
 		081006A72C36904E00578E07 /* UIResponder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UIResponder.swift; path = ../../extensions/UIResponder.swift; sourceTree = "<group>"; };
 		081006AB2C36906800578E07 /* UIScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UIScrollView.swift; path = ../../extensions/UIScrollView.swift; sourceTree = "<group>"; };
+		083700192CE8C74C00D67BBF /* TextInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TextInput.swift; path = "../../../example/node_modules/react-native-keyboard-controller/ios/protocols/TextInput.swift"; sourceTree = "<group>"; };
 		0850CCB92CB49ECC000C0F8D /* SpringAnimationPerformanceTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpringAnimationPerformanceTest.swift; sourceTree = "<group>"; };
 		0850CCBF2CB49F74000C0F8D /* SpringAnimation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SpringAnimation.swift; path = ../../animations/SpringAnimation.swift; sourceTree = "<group>"; };
 		0850CCC02CB49F74000C0F8D /* KeyboardAnimation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = KeyboardAnimation.swift; path = ../../animations/KeyboardAnimation.swift; sourceTree = "<group>"; };
@@ -87,7 +88,6 @@
 		0873ED702BB6B7390004F3A4 /* KeyboardControllerNativeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardControllerNativeUITests.swift; sourceTree = "<group>"; };
 		0873ED722BB6B7390004F3A4 /* KeyboardControllerNativeUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardControllerNativeUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		0873ED7F2BB6B94B0004F3A4 /* FocusedInputHolder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FocusedInputHolder.swift; path = ../../traversal/FocusedInputHolder.swift; sourceTree = "<group>"; };
-		0873ED802BB6B94B0004F3A4 /* TextInput.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TextInput.swift; path = ../../traversal/TextInput.swift; sourceTree = "<group>"; };
 		0873ED812BB6B94B0004F3A4 /* ViewHierarchyNavigator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ViewHierarchyNavigator.swift; path = ../../traversal/ViewHierarchyNavigator.swift; sourceTree = "<group>"; };
 		0873ED8F2BB6B9960004F3A4 /* Extension+UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Extension+UIView.swift"; sourceTree = "<group>"; };
 		08833D512CB56DB9007D4380 /* TimingAnimationPerformanceTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimingAnimationPerformanceTest.swift; sourceTree = "<group>"; };
@@ -151,8 +151,8 @@
 				081006A72C36904E00578E07 /* UIResponder.swift */,
 				0873ED8F2BB6B9960004F3A4 /* Extension+UIView.swift */,
 				0873ED7F2BB6B94B0004F3A4 /* FocusedInputHolder.swift */,
-				0873ED802BB6B94B0004F3A4 /* TextInput.swift */,
 				0873ED812BB6B94B0004F3A4 /* ViewHierarchyNavigator.swift */,
+				083700192CE8C74C00D67BBF /* TextInput.swift */,
 				0873ED552BB6B7380004F3A4 /* KeyboardControllerNativeApp.swift */,
 				0873ED572BB6B7380004F3A4 /* ContentView.swift */,
 				0873ED592BB6B7390004F3A4 /* Assets.xcassets */,
@@ -326,10 +326,10 @@
 				0873ED882BB6B94B0004F3A4 /* ViewHierarchyNavigator.swift in Sources */,
 				081006A82C36904E00578E07 /* UIResponder.swift in Sources */,
 				081006AC2C36906900578E07 /* UIScrollView.swift in Sources */,
+				0837001C2CE8C74C00D67BBF /* TextInput.swift in Sources */,
 				0850CCC52CB49F74000C0F8D /* KeyboardAnimation.swift in Sources */,
 				0850CCC22CB49F74000C0F8D /* SpringAnimation.swift in Sources */,
 				0873ED822BB6B94B0004F3A4 /* FocusedInputHolder.swift in Sources */,
-				0873ED852BB6B94B0004F3A4 /* TextInput.swift in Sources */,
 				0850CCCC2CB4A096000C0F8D /* UIUtils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -349,9 +349,9 @@
 				0850CCC62CB49F74000C0F8D /* KeyboardAnimation.swift in Sources */,
 				0850CCC32CB49F74000C0F8D /* SpringAnimation.swift in Sources */,
 				081006AD2C36906900578E07 /* UIScrollView.swift in Sources */,
-				0873ED862BB6B94B0004F3A4 /* TextInput.swift in Sources */,
 				0850CCCD2CB4A096000C0F8D /* UIUtils.swift in Sources */,
 				08833D522CB56DB9007D4380 /* TimingAnimationPerformanceTest.swift in Sources */,
+				0837001A2CE8C74C00D67BBF /* TextInput.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -367,10 +367,10 @@
 				0873ED8A2BB6B94B0004F3A4 /* ViewHierarchyNavigator.swift in Sources */,
 				081006AA2C36904E00578E07 /* UIResponder.swift in Sources */,
 				081006AE2C36906900578E07 /* UIScrollView.swift in Sources */,
+				0837001B2CE8C74C00D67BBF /* TextInput.swift in Sources */,
 				0850CCC72CB49F74000C0F8D /* KeyboardAnimation.swift in Sources */,
 				0850CCC42CB49F74000C0F8D /* SpringAnimation.swift in Sources */,
 				0873ED842BB6B94B0004F3A4 /* FocusedInputHolder.swift in Sources */,
-				0873ED872BB6B94B0004F3A4 /* TextInput.swift in Sources */,
 				0850CCCE2CB4A096000C0F8D /* UIUtils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
