@@ -44,7 +44,11 @@ A corresponding `nativeID` value from the corresponding `TextInput`.
 ## Example
 
 ```tsx
-<KeyboardGestureArea interpolator="ios" offset={50} textInputNativeID="composer">
+<KeyboardGestureArea
+  interpolator="ios"
+  offset={50}
+  textInputNativeID="composer"
+>
   <ScrollView>
     {/* The other UI components of application in your tree */}
   </ScrollView>
