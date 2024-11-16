@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useState } from "react";
-import { TextInput, View } from "react-native";
+import { TextInput } from "react-native";
 import {
   KeyboardGestureArea,
   useKeyboardHandler,
