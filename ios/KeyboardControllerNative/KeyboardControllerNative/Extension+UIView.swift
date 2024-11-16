@@ -12,4 +12,8 @@ public extension UIView {
   var reactTag: NSNumber {
     return tag as NSNumber
   }
+  
+  var nativeID: String {
+    return accessibilityIdentifier ?? ""
+  }
 }
