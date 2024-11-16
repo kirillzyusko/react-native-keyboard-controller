@@ -6,6 +6,9 @@
 //  Copyright © 2024 Facebook. All rights reserved.
 //
 
+import Foundation
+import UIKit
+
 public protocol TextInput: AnyObject {
   // default common methods/properties
   var inputAccessoryView: UIView? { get set }
