@@ -125,7 +125,8 @@
     "autoresizing",
     "focusable",
     "iphonesimulator",
-    "suspendable"
+    "suspendable",
+    "libc"
   ],
   "ignorePaths": [
     "node_modules",

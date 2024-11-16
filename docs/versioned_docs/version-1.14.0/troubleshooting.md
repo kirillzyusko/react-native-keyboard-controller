@@ -66,3 +66,22 @@ Since part of this library is written using `swift` language - your project need
 Sometimes you may see that animation performance is poor. If you are using `sentry@5` make sure `enableStallTracking` is disabled (i. e. `enableStallTracking: false`) or upgrade to `sentry@6`,
 
 See [this issue](https://github.com/kirillzyusko/react-native-keyboard-controller/issues/641) for more details.
+
+## `MutexLockWithTimeout` C++ exception
+
+This exception is thrown when you are trying to use `KeyboardProvider` or `KeyboardAwareScrollView` on Android with the new architecture enabled. A top of stacktrace will look like this:
+
+```bash
+NonPI::MutexLockWithTimeout at line 384 within libc
+offset 726000) (std::__ndk1::mutex::lock at line 12 within split_config.arm64_v8a.apk
+offset c01000) (facebook::react::Binding::schedulerDidFinishTransaction at line 84 within split_config.arm64_v8a.apk
+offset c01000) (facebook::react::Scheduler::uiManagerDidFinishTransaction at line 68 within split_config.arm64_v8a.apk
+offset c01000) (facebook::react::UIManager::shadowTreeDidFinishTransaction const at line 64 within split_config.arm64_v8a.apk
+offset c01000) (facebook::react::ShadowTree::mount const at line 348 within split_config.arm64_v8a.apk
+offset c01000) (facebook::react::ShadowTree::tryCommit const at line 2612 within split_config.arm64_v8a.apk
+```
+
+You have two ways to fix this problem:
+
+- enable `allowRecursiveCommitsWithSynchronousMountOnAndroid` feature flag (see [react-native-reanimated#6418](https://github.com/software-mansion/react-native-reanimated/issues/6418#issuecomment-2296107100) and [react-native-keyboard-controller](https://github.com/kirillzyusko/react-native-keyboard-controller/issues/687))
+- upgrade to `react-native@0.77+` (starting from this version this flag is enabled by default).
