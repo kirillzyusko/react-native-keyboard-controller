@@ -34,8 +34,8 @@ using namespace facebook::react;
 RCT_EXPORT_MODULE(KeyboardGestureAreaManager)
 
 // Expose props to React Native
-RCT_EXPORT_VIEW_PROPERTY(textInputNativeID, NSString*)
-RCT_EXPORT_VIEW_PROPERTY(offset, NSNumber*)
+RCT_EXPORT_VIEW_PROPERTY(textInputNativeID, NSString *)
+RCT_EXPORT_VIEW_PROPERTY(offset, NSNumber *)
 
 + (BOOL)requiresMainQueueSetup
 {
@@ -81,7 +81,6 @@ RCT_EXPORT_VIEW_PROPERTY(offset, NSNumber*)
 - (instancetype)init
 {
   if (self = [super init]) {
-
   }
   return self;
 }
@@ -90,7 +89,6 @@ RCT_EXPORT_VIEW_PROPERTY(offset, NSNumber*)
 {
   self = [super initWithFrame:CGRectZero];
   if (self) {
-
   }
 
   return self;
@@ -122,14 +120,14 @@ RCT_EXPORT_VIEW_PROPERTY(offset, NSNumber*)
   [super updateProps:props oldProps:oldProps];
 }
 #else
-- (void)setOffset:(NSNumber*)offset
+- (void)setOffset:(NSNumber *)offset
 {
   // [[KeyboardOffsetProvider shared] removeOffsetForTextInputNativeID:_textInputNativeID];
   [[KeyboardOffsetProvider shared] setOffsetForTextInputNativeID:_textInputNativeID offset:offset];
   _offset = offset;
 }
 
-- (void)setTextInputNativeID:(NSString*)textInputNativeID
+- (void)setTextInputNativeID:(NSString *)textInputNativeID
 {
   [[KeyboardOffsetProvider shared] removeOffsetForTextInputNativeID:_textInputNativeID];
   [[KeyboardOffsetProvider shared] setOffsetForTextInputNativeID:textInputNativeID offset:_offset];
