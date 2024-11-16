@@ -59,8 +59,8 @@ class KeyboardGestureAreaViewManager(
 
   @ReactProp(name = "textInputNativeID")
   override fun setTextInputNativeID(
-    view: ReactViewGroup?,
-    value: String,
+    view: ReactViewGroup,
+    value: String?,
   ) {
     // no-op
   }
