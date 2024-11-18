@@ -83,5 +83,5 @@ This method sets focus to the selected field. Possible values:
 - `next` - set focus to the next field.
 
 ```ts
-setFocusTo("next");
+KeyboardController.setFocusTo("next");
 ```
