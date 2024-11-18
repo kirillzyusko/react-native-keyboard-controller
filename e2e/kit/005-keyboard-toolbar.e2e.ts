@@ -9,9 +9,9 @@ import {
   scrollDownUntilElementIsVisible,
   tap,
   waitAndTap,
+  waitForCompletion,
   waitForElementById,
   waitForExpect,
-  waitForCompletion,
 } from "./helpers";
 
 describe("`KeyboardToolbar` specification", () => {
