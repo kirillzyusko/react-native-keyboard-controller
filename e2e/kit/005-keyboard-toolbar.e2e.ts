@@ -36,6 +36,10 @@ describe("`KeyboardToolbar` specification", () => {
   it("should set focus back when modal closed", async () => {
     await waitAndTap("autofill_contacts_close");
     await expect(element(by.id("TextInput#1"))).toBeFocused();
+    await expectElementBitmapsToBeEqual(
+      "keyboard.toolbar",
+      "ToolbarFirstInputFocused",
+    );
     await tap("autofill_contacts");
   });
 
