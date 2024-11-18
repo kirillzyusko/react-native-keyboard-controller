@@ -70,6 +70,20 @@ The equivalent method from `react-native` relies on specific internal components
 In contrast, the described method enables keyboard dismissal for any focused input, extending functionality beyond the limitations of the default implementation.
 :::
 
+### `isVisible`
+
+```ts
+static isVisible(): boolean;
+```
+
+This method returns `true` if keyboard is currently visible and `false` otherwise.
+
+```ts
+if (KeyboardController.isVisible()) {
+  // do something
+}
+```
+
 ### `setFocusTo`
 
 ```ts
