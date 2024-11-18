@@ -37,7 +37,11 @@ class KeyboardControllerModuleImpl(
 
   fun setFocusTo(direction: String) {
     if (direction == "current") {
-      return FocusedInputHolder.focus()
+      UiThreadUtil.runOnUiThread {
+        FocusedInputHolder.focus()
+      }
+
+      return
     }
 
     val view: View? = FocusedInputHolder.get()
