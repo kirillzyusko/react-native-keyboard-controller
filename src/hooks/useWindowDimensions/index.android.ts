@@ -24,6 +24,11 @@ export const useWindowDimensions = () => {
       },
     );
 
+    // we might have missed an update between reading a value in render and
+    // `addListener` in this handler, so we set it here. If there was
+    // no change, React will filter out this update as a no-op.
+    setDimensions(initialDimensions);
+
     return () => {
       subscription.remove();
     };
