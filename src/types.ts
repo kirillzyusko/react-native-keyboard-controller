@@ -119,14 +119,20 @@ export type KeyboardControllerModule = {
   setDefaultMode: () => void;
   setInputMode: (mode: number) => void;
   // all platforms
-  dismiss: () => void;
+  dismiss: () => Promise<void>;
   setFocusTo: (direction: Direction) => void;
 };
 export type KeyboardControllerNativeModule = {
+  // android only
+  setDefaultMode: () => void;
+  setInputMode: (mode: number) => void;
+  // all platforms
+  dismiss: () => void;
+  setFocusTo: (direction: Direction) => void;
   // native event module stuff
   addListener: (eventName: string) => void;
   removeListeners: (count: number) => void;
-} & KeyboardControllerModule;
+};
 
 // Event module declarations
 export type KeyboardControllerEvents =

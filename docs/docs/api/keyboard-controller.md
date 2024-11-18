@@ -22,6 +22,10 @@ The `KeyboardController` module in React Native provides a convenient set of met
 
 ### `setInputMode` <div className="label android"></div>
 
+```ts
+static setInputMode(mode: AndroidSoftInputModes): void;
+```
+
 This method is used to dynamically change the `windowSoftInputMode` (`softwareKeyboardLayoutMode` in Expo terminology) during runtime in an Android application. It takes an argument that specifies the desired input mode. The example provided sets the input mode to `SOFT_INPUT_ADJUST_RESIZE`:
 
 ```ts
@@ -38,6 +42,10 @@ A combination of `adjustResize` + `edge-to-edge` mode will result in behavior si
 
 ### `setDefaultMode` <div className="label android"></div>
 
+```ts
+static setDefaultMode(): void;
+```
+
 This method is used to restore the default `windowSoftInputMode` (`softwareKeyboardLayoutMode` in Expo terminology) declared in the `AndroidManifest.xml` (or `app.json` in Expo case). It resets the input mode to the default value:
 
 ```ts
@@ -46,10 +54,14 @@ KeyboardController.setDefaultMode();
 
 ### `dismiss`
 
-This method is used to hide the keyboard. It triggers the dismissal of the keyboard:
+```ts
+static dismiss(): Promise<void>;
+```
+
+This method is used to hide the keyboard. It triggers the dismissal of the keyboard. The method returns promise that will be resolved only when keyboard is fully hidden (if keyboard is already hidden it will resolve immediately):
 
 ```ts
-KeyboardController.dismiss();
+await KeyboardController.dismiss();
 ```
 
 :::info What is the difference comparing to `react-native` implementation?
@@ -60,6 +72,10 @@ In contrast, the described method enables keyboard dismissal for any focused inp
 
 ### `setFocusTo`
 
+```ts
+static setFocusTo(direction: "prev" | "current" | "next"): void;
+```
+
 This method sets focus to the selected field. Possible values:
 
 - `prev` - set focus to the previous field;
@@ -67,5 +83,5 @@ This method sets focus to the selected field. Possible values:
 - `next` - set focus to the next field.
 
 ```ts
-setFocusTo("next");
+KeyboardController.setFocusTo("next");
 ```

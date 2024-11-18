@@ -3,6 +3,7 @@ export * from "./animated";
 export * from "./context";
 export * from "./hooks";
 export * from "./constants";
+export * from "./module";
 export * from "./types";
 
 export {

@@ -1,7 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
-import { FocusedInputEvents, KeyboardController } from "../../bindings";
+import { FocusedInputEvents } from "../../bindings";
+import { KeyboardController } from "../../module";
 import useColorScheme from "../hooks/useColorScheme";
 import KeyboardStickyView from "../KeyboardStickyView";
 
