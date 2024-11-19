@@ -9,6 +9,7 @@ import {
   scrollDownUntilElementIsVisible,
   tap,
   waitAndTap,
+  waitForCompletion,
   waitForElementById,
   waitForExpect,
 } from "./helpers";
@@ -36,7 +37,9 @@ describe("`KeyboardToolbar` specification", () => {
   it("should set focus back when modal closed", async () => {
     await waitAndTap("autofill_contacts_close");
     await expect(element(by.id("TextInput#1"))).toBeFocused();
-    await tap("autofill_contacts");
+    await waitForCompletion(async () => {
+      await tap("autofill_contacts");
+    });
   });
 
   it("should do correct actions when contact gets selected", async () => {

@@ -27,14 +27,21 @@ class KeyboardControllerModuleImpl(
     val view: View? = FocusedInputHolder.get()
 
     if (view != null) {
-      val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-      imm?.hideSoftInputFromWindow(view.windowToken, 0)
+      UiThreadUtil.runOnUiThread {
+        val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+        imm?.hideSoftInputFromWindow(view.windowToken, 0)
+        view.clearFocus()
+      }
     }
   }
 
   fun setFocusTo(direction: String) {
     if (direction == "current") {
-      return FocusedInputHolder.focus()
+      UiThreadUtil.runOnUiThread {
+        FocusedInputHolder.focus()
+      }
+
+      return
     }
 
     val view: View? = FocusedInputHolder.get()

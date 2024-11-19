@@ -13,6 +13,8 @@ function CloseScreen() {
         placeholder="Touch to open the keyboard..."
         placeholderTextColor="#7C7C7C"
         style={styles.input}
+        onBlur={() => console.log("blur")}
+        onFocus={() => console.log("focus")}
       />
     </View>
   );

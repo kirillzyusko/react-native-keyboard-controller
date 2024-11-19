@@ -63,3 +63,7 @@ const options = {
 export const waitForExpect = async (expectation: () => Promise<void>) => {
   await retry(expectation, options);
 };
+
+export const waitForCompletion = async (operation: () => Promise<void>) => {
+  await retry(operation, options);
+};
