@@ -11,6 +11,7 @@ import Button from "./Button";
 import { colors } from "./colors";
 
 import type { HEX, KeyboardToolbarTheme } from "./types";
+import type { KeyboardStickyViewProps } from "../KeyboardStickyView";
 import type { ReactNode } from "react";
 import type { GestureResponderEvent, ViewProps } from "react-native";
 
@@ -53,7 +54,7 @@ export type KeyboardToolbarProps = Omit<
    * A value for container opacity in hexadecimal format (e.g. `ff`). Default value is `ff`.
    */
   opacity?: HEX;
-};
+} & Pick<KeyboardStickyViewProps, "offset">;
 
 const TEST_ID_KEYBOARD_TOOLBAR = "keyboard.toolbar";
 const TEST_ID_KEYBOARD_TOOLBAR_PREVIOUS = `${TEST_ID_KEYBOARD_TOOLBAR}.previous`;
@@ -63,7 +64,6 @@ const TEST_ID_KEYBOARD_TOOLBAR_DONE = `${TEST_ID_KEYBOARD_TOOLBAR}.done`;
 
 const KEYBOARD_TOOLBAR_HEIGHT = 42;
 const DEFAULT_OPACITY: HEX = "FF";
-const offset = { closed: KEYBOARD_TOOLBAR_HEIGHT };
 
 /**
  * `KeyboardToolbar` is a component that is shown above the keyboard with `Prev`/`Next` and
@@ -81,6 +81,7 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
   onDoneCallback,
   blur = null,
   opacity = DEFAULT_OPACITY,
+  offset: { closed = 0, opened = 0 } = {},
   ...rest
 }) => {
   const colorScheme = useColorScheme();
@@ -110,6 +111,10 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
       },
     ],
     [colorScheme, opacity, theme],
+  );
+  const offset = useMemo(
+    () => ({ closed: closed + KEYBOARD_TOOLBAR_HEIGHT, opened }),
+    [closed, opened],
   );
   const ButtonContainer = button || Button;
   const IconContainer = icon || Arrow;
