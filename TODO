@@ -2,4 +2,11 @@
 - (x) keyboard hidden -> remove inputAccessoryView - done in resignFirstResponder
 - (x) iOS 16 - after attaching fake iav we dispatch onEnd with height - 248 (298 - 50) -> ignore events after attaching iav, because in keyboardDidAppear `position` can be a random value (291 or 341)
 - (x) text input grow -> can not make interactive gesture (Optional(424.6666666666667)  424.66666666666674) - maybe because of frequent conversions to CGFloat? <- fixed via rounding
-- show after interactive - keyboard height is 386
+- 1 show after interactive - keyboard height is 386
+- 2 show after interactive - iav is not attached again
+- 3 two events get dispatched when we remove iav in onInteractive - (dispatch `shouldIgnoreKeyboardEvents` in .hide (KEA)? - doesn't work because swizzle calls .hide when keyboard appear)
+
+::  call actual code for hide only once
+::: dispatch ignore event when we actually hide iav (will fix 3)
+::: (add `lastOffset`) - will fix 1 <- last time when I added it was resetting somehow, need to figure out where and why exactly
+::: add code in `keyboardDidAppear` in KAE to increase/attach iav again (will fix 2)
