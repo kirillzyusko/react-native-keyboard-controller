@@ -51,7 +51,7 @@ public class KeyboardMovementObserver: NSObject {
   private var tag: NSNumber = -1
   private var animation: KeyboardAnimation?
   private var didShowDeadline: Int64 = 0
-  // class intances
+  // external class instances
   private let eventsIgnorer = KeyboardEventsIgnorer()
 
   @objc public init(
@@ -161,7 +161,7 @@ public class KeyboardMovementObserver: NSObject {
 
       prevKeyboardPosition = position
       // TODO: needs here? Why in onStart/onEnd after interactive gesture we get keyboard height as 386?
-      (UIResponder.current?.inputAccessoryView as? InvisibleInputAccessoryView)?.hide()
+      KeyboardAreaExtender.shared.hide()
       ///
       onEvent(
         "onKeyboardMoveInteractive",

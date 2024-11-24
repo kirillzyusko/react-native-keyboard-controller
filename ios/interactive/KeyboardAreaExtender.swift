@@ -29,8 +29,7 @@ class KeyboardAreaExtender: NSObject {
   }
 
   public func hide() {
-    // currentInputAccessoryView?.updateHeight(to: 0.0)
-    // superview?.layoutIfNeeded()
+    currentInputAccessoryView?.hide()
   }
 
   public func updateHeight(_ to: CGFloat, _ nativeID: String) {
@@ -46,7 +45,7 @@ class KeyboardAreaExtender: NSObject {
          forTextInputNativeID: responder.nativeID),
        responder?.inputAccessoryView == nil
     {
-      currentInputAccessoryView = InvisibleInputAccessoryView(height: CGFloat(offset))
+      currentInputAccessoryView = InvisibleInputAccessoryView(height: CGFloat(truncating: offset))
 
       activeTextInput.inputAccessoryView = currentInputAccessoryView
       activeTextInput.reloadInputViews()
