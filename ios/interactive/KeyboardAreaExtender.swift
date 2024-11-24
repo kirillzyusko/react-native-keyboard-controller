@@ -39,6 +39,7 @@ class KeyboardAreaExtender: NSObject {
   }
 
   @objc private func keyboardDidAppear(_: Notification) {
+    print("KEA - keyboardDidAppear \(Date.currentTimeStamp)")
     let responder = UIResponder.current
     if let activeTextInput = responder as? TextInput,
        let offset = KeyboardOffsetProvider.shared.getOffset(
@@ -50,7 +51,9 @@ class KeyboardAreaExtender: NSObject {
       activeTextInput.inputAccessoryView = currentInputAccessoryView
       activeTextInput.reloadInputViews()
 
-      NotificationCenter.default.post(name: .shouldIgnoreKeyboardEvents, object: nil, userInfo: ["ignore": true])
+      NotificationCenter.default.post(
+        name: .shouldIgnoreKeyboardEvents, object: nil, userInfo: ["ignore": true]
+      )
 
       print("Attaching `inputAccessoryView` \(Date.currentTimeStamp)")
     }
