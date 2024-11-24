@@ -51,7 +51,8 @@ public class KeyboardMovementObserver: NSObject {
   private var tag: NSNumber = -1
   private var animation: KeyboardAnimation?
   private var didShowDeadline: Int64 = 0
-  private var shouldIgnoreKeyboardEvents = false
+  // class intances
+  private let eventsIgnorer = KeyboardEventsIgnorer()
 
   @objc public init(
     handler: @escaping (NSString, NSNumber, NSNumber, NSNumber, NSNumber) -> Void,
@@ -96,11 +97,6 @@ public class KeyboardMovementObserver: NSObject {
       name: UIResponder.keyboardDidHideNotification,
       object: nil
     )
-    NotificationCenter.default.addObserver(forName: .shouldIgnoreKeyboardEvents, object: nil, queue: .main) { notification in
-      if let userInfo = notification.userInfo, let value = userInfo["ignore"] as? Bool {
-        self.shouldIgnoreKeyboardEvents = value
-      }
-    }
   }
 
   private func setupKVObserver() {
@@ -183,7 +179,7 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc func keyboardWillAppear(_ notification: Notification) {
-    guard !shouldIgnoreKeyboardEvents else { return }
+    guard !eventsIgnorer.shouldIgnoreKeyboardEvents else { return }
     print("keyboardWillAppear \(Date.currentTimeStamp)")
     let (duration, frame) = notification.keyboardMetaData()
     if let keyboardFrame = frame {
@@ -203,7 +199,7 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc func keyboardWillDisappear(_ notification: Notification) {
-    guard !shouldIgnoreKeyboardEvents else { return }
+    guard !eventsIgnorer.shouldIgnoreKeyboardEvents else { return }
     print("keyboardWillDisappear \(Date.currentTimeStamp)")
     let (duration, _) = notification.keyboardMetaData()
     tag = UIResponder.current.reactViewTag
@@ -228,8 +224,8 @@ public class KeyboardMovementObserver: NSObject {
       tag = UIResponder.current.reactViewTag
       self.keyboardHeight = keyboardHeight
 
-      guard !shouldIgnoreKeyboardEvents else {
-        shouldIgnoreKeyboardEvents = false
+      guard !eventsIgnorer.shouldIgnoreKeyboardEvents else {
+        eventsIgnorer.shouldIgnoreKeyboardEvents = false
         return
       }
 
@@ -252,7 +248,7 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc func keyboardDidDisappear(_ notification: Notification) {
-    guard !shouldIgnoreKeyboardEvents else { return }
+    guard !eventsIgnorer.shouldIgnoreKeyboardEvents else { return }
     print("keyboardDidDisappear \(Date.currentTimeStamp)")
     let (duration, _) = notification.keyboardMetaData()
     tag = UIResponder.current.reactViewTag
