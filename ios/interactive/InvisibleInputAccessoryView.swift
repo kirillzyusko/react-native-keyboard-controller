@@ -9,6 +9,8 @@ import Foundation
 import UIKit
 
 public class InvisibleInputAccessoryView: UIView {
+  var isShown = true
+
   override init(frame: CGRect) {
     super.init(frame: frame)
     setupView()
@@ -37,6 +39,9 @@ public class InvisibleInputAccessoryView: UIView {
   }
 
   public func hide() {
+    guard isShown else { return }
+    isShown = false
+    print("hide")
     updateHeight(to: 0.0)
     superview?.layoutIfNeeded()
   }
@@ -48,8 +53,8 @@ public class InvisibleInputAccessoryView: UIView {
   private func setupView() {
     isUserInteractionEnabled = false
     // TODO: Set the background color to transparent
-    // backgroundColor = UIColor.red
-    backgroundColor = .clear
+    backgroundColor = UIColor.red
+    // backgroundColor = .clear
     autoresizingMask = .flexibleHeight
   }
 }
