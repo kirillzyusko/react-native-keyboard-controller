@@ -165,10 +165,6 @@ public class KeyboardMovementObserver: NSObject {
         -1,
         tag
       )
-      
-      // TODO: needs here? Why in onStart/onEnd after interactive gesture we get keyboard height as 386?
-      KeyboardAreaExtender.shared.hide()
-      ///
     }
   }
 
@@ -211,7 +207,7 @@ public class KeyboardMovementObserver: NSObject {
 
     setupKeyboardWatcher()
     removeKVObserver()
-    initializeAnimation(fromValue: prevKeyboardPosition, toValue: 0)
+    initializeAnimation(fromValue: prevKeyboardPosition + KeyboardAreaExtender.shared.offset, toValue: 0)
   }
 
   @objc func keyboardDidAppear(_ notification: Notification) {
@@ -231,7 +227,7 @@ public class KeyboardMovementObserver: NSObject {
 
       // if the event is caught in between it's highly likely that it could be a "resize" event
       // so we just read actual keyboard frame value in this case
-      let height = timestamp >= didShowDeadline ? self.keyboardHeight : position
+      let height = timestamp >= didShowDeadline ? self.keyboardHeight : position - KeyboardAreaExtender.shared.offset
       print("Using \(timestamp >= didShowDeadline ? "self.keyboardHeight" : "position")")
       print("\(timestamp) vs \(didShowDeadline)")
       // always limit progress to the maximum possible value
@@ -305,7 +301,7 @@ public class KeyboardMovementObserver: NSObject {
     }
 
     if animation == nil {
-      initializeAnimation(fromValue: prevKeyboardPosition, toValue: keyboardHeight)
+      initializeAnimation(fromValue: prevKeyboardPosition, toValue: self._keyboardHeight)
     }
 
     prevKeyboardPosition = keyboardPosition
@@ -329,7 +325,9 @@ public class KeyboardMovementObserver: NSObject {
       // handles a case when final frame has final destination (i. e. 0 or 291)
       // but CASpringAnimation can never get to this final destination
       let race: (CGFloat, CGFloat) -> CGFloat = animation.isIncreasing ? max : min
-      keyboardPosition = race(position, keyboardPosition)
+      keyboardPosition = race(position, keyboardPosition) - KeyboardAreaExtender.shared.offset
+      
+      print("\(visibleKeyboardHeight) -> \(position)")
     }
 
     onEvent(
