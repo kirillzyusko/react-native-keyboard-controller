@@ -211,8 +211,7 @@ public class KeyboardMovementObserver: NSObject {
 
     setupKeyboardWatcher()
     removeKVObserver()
-    initializeAnimation(
-      fromValue: prevKeyboardPosition + KeyboardAreaExtender.shared.offset, toValue: 0)
+    initializeAnimation(fromValue: prevKeyboardPosition, toValue: 0)
   }
 
   @objc func keyboardDidAppear(_ notification: Notification) {
@@ -304,7 +303,7 @@ public class KeyboardMovementObserver: NSObject {
     }
 
     let (visibleKeyboardHeight, keyboardFrameY) = keyboardView.frameTransitionInWindow
-    var keyboardPosition = visibleKeyboardHeight
+    var keyboardPosition = visibleKeyboardHeight - KeyboardAreaExtender.shared.offset
 
     if keyboardPosition == prevKeyboardPosition || keyboardFrameY == 0 {
       return
@@ -335,9 +334,9 @@ public class KeyboardMovementObserver: NSObject {
       // handles a case when final frame has final destination (i. e. 0 or 291)
       // but CASpringAnimation can never get to this final destination
       let race: (CGFloat, CGFloat) -> CGFloat = animation.isIncreasing ? max : min
-      keyboardPosition = race(position, keyboardPosition) - KeyboardAreaExtender.shared.offset
+      keyboardPosition = race(position, keyboardPosition)
 
-      print("\(visibleKeyboardHeight) -> \(position)")
+      print("\(visibleKeyboardHeight) -> \(position). \(KeyboardAreaExtender.shared.offset)")
     }
 
     onEvent(
