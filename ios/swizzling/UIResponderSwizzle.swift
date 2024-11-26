@@ -35,6 +35,7 @@ extension UIResponder {
       // Postpone execution of the original resignFirstResponder
       DispatchQueue.main.asyncAfter(deadline: .now() + UIUtils.nextFrame) {
         (self as? TextInput)?.inputAccessoryView = nil
+        KeyboardAreaExtender.shared.remove()
         // Call the original resignFirstResponder
         _ = self.callOriginalResignFirstResponder(originalSelector)
       }
