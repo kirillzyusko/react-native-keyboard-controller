@@ -51,8 +51,6 @@ public class KeyboardMovementObserver: NSObject {
   private var tag: NSNumber = -1
   private var animation: KeyboardAnimation?
   private var didShowDeadline: Int64 = 0
-  // external class instances
-  private let eventsIgnorer = KeyboardEventsIgnorer()
 
   @objc public init(
     handler: @escaping (NSString, NSNumber, NSNumber, NSNumber, NSNumber) -> Void,
@@ -159,9 +157,7 @@ public class KeyboardMovementObserver: NSObject {
       }
 
       prevKeyboardPosition = position
-      // TODO: needs here? Why in onStart/onEnd after interactive gesture we get keyboard height as 386?
-      KeyboardAreaExtender.shared.hide()
-      ///
+
       onEvent(
         "onKeyboardMoveInteractive",
         position as NSNumber,
@@ -169,6 +165,10 @@ public class KeyboardMovementObserver: NSObject {
         -1,
         tag
       )
+      
+      // TODO: needs here? Why in onStart/onEnd after interactive gesture we get keyboard height as 386?
+      KeyboardAreaExtender.shared.hide()
+      ///
     }
   }
 
@@ -179,7 +179,7 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc func keyboardWillAppear(_ notification: Notification) {
-    guard !eventsIgnorer.shouldIgnoreKeyboardEvents else { return }
+    guard !KeyboardEventsIgnorer.shared.shouldIgnore else { return }
     print("keyboardWillAppear \(Date.currentTimeStamp)")
     let (duration, frame) = notification.keyboardMetaData()
     if let keyboardFrame = frame {
@@ -199,7 +199,7 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc func keyboardWillDisappear(_ notification: Notification) {
-    guard !eventsIgnorer.shouldIgnoreKeyboardEvents else { return }
+    guard !KeyboardEventsIgnorer.shared.shouldIgnore else { return }
     print("keyboardWillDisappear \(Date.currentTimeStamp)")
     let (duration, _) = notification.keyboardMetaData()
     tag = UIResponder.current.reactViewTag
@@ -224,8 +224,8 @@ public class KeyboardMovementObserver: NSObject {
       tag = UIResponder.current.reactViewTag
       self.keyboardHeight = keyboardHeight
 
-      guard !eventsIgnorer.shouldIgnoreKeyboardEvents else {
-        eventsIgnorer.shouldIgnoreKeyboardEvents = false
+      guard !KeyboardEventsIgnorer.shared.shouldIgnore else {
+        KeyboardEventsIgnorer.shared.shouldIgnoreKeyboardEvents = false
         return
       }
 
@@ -248,7 +248,7 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc func keyboardDidDisappear(_ notification: Notification) {
-    guard !eventsIgnorer.shouldIgnoreKeyboardEvents else { return }
+    guard !KeyboardEventsIgnorer.shared.shouldIgnore else { return }
     print("keyboardDidDisappear \(Date.currentTimeStamp)")
     let (duration, _) = notification.keyboardMetaData()
     tag = UIResponder.current.reactViewTag
