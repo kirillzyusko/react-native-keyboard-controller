@@ -31,9 +31,6 @@ extension UIResponder {
       print("Performing custom actions before the original resignFirstResponder")
 
       KeyboardAreaExtender.shared.hide()
-      // if let textField = self as? TextInput {
-      //  (textField.inputAccessoryView as? InvisibleInputAccessoryView)?.hide()
-      // }
 
       // Postpone execution of the original resignFirstResponder
       DispatchQueue.main.asyncAfter(deadline: .now() + UIUtils.nextFrame) {
