@@ -29,7 +29,14 @@ class KeyboardAreaExtender: NSObject {
   }
 
   public func hide() {
-    currentInputAccessoryView?.hide()
+    if (currentInputAccessoryView?.isShown ?? false) {
+      print("hide iav")
+      NotificationCenter.default.post(
+        name: .shouldIgnoreKeyboardEvents, object: nil, userInfo: ["ignore": true]
+      )
+      currentInputAccessoryView?.hide()
+    }
+    print("ignore hide")
   }
 
   public func updateHeight(_ to: CGFloat, _ nativeID: String) {

@@ -7,10 +7,20 @@
 
 import Foundation
 
-class KeyboardEventsIgnorer {
-  var shouldIgnoreKeyboardEvents = false
+@objc(KeyboardEventsIgnorer)
+public class KeyboardEventsIgnorer : NSObject {
+  @objc public static let shared = KeyboardEventsIgnorer()
 
-  init() {
+  var shouldIgnoreKeyboardEvents = false
+  @objc public var isInteractiveGesture = false
+  
+  public var shouldIgnore : Bool {
+    print("KeyboardEventsIgnorer \(shouldIgnoreKeyboardEvents) \(isInteractiveGesture)")
+    return shouldIgnoreKeyboardEvents || isInteractiveGesture
+  }
+
+  override init() {
+    super.init()
     NotificationCenter.default.addObserver(
       self,
       selector: #selector(handleIgnoreKeyboardEventsNotification),
