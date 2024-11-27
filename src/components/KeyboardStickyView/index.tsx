@@ -1,8 +1,5 @@
 import React, { forwardRef, useMemo } from "react";
-import Reanimated, {
-  interpolate,
-  useAnimatedStyle,
-} from "react-native-reanimated";
+import Reanimated, { clamp, useAnimatedStyle } from "react-native-reanimated";
 
 import { useReanimatedKeyboardAnimation } from "../../hooks";
 
@@ -32,13 +29,13 @@ const KeyboardStickyView = forwardRef<
     { children, offset: { closed = 0, opened = 0 } = {}, style, ...props },
     ref,
   ) => {
-    const { height, progress } = useReanimatedKeyboardAnimation();
+    const { height } = useReanimatedKeyboardAnimation();
 
     const stickyViewStyle = useAnimatedStyle(() => {
-      const offset = interpolate(progress.value, [0, 1], [closed, opened]);
+      const offset = clamp(height.value, closed, opened + height.value);
 
       return {
-        transform: [{ translateY: height.value + offset }],
+        transform: [{ translateY: offset }],
       };
     }, [closed, opened]);
 
