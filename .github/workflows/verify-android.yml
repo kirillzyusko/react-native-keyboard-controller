@@ -1,5 +1,8 @@
 name: 📱 Validate Android
 
+env:
+  REACT_NATIVE_VERSION: 0.76.2
+
 on:
   push:
     branches:
@@ -40,7 +43,7 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile --cwd ..
       - name: Run Gradle Lint
-        run: ./gradlew lint
+        run: ./gradlew lint -PreactNativeVersion=${{ env.REACT_NATIVE_VERSION }}
   android-build:
     runs-on: ubuntu-latest
     name: 🏗️ Android Build
@@ -57,7 +60,7 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile --cwd ..
       - name: Run Gradle Assemble
-        run: ./gradlew assembleDebug
+        run: ./gradlew assembleDebug -PreactNativeVersion=${{ env.REACT_NATIVE_VERSION }}
   detekt:
     runs-on: ubuntu-latest
     name: 🧬 Run detekt
@@ -93,4 +96,4 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile --cwd ..
       - name: Run Unit Tests
-        run: ./gradlew testDebugUnitTest
+        run: ./gradlew testDebugUnitTest -PreactNativeVersion=${{ env.REACT_NATIVE_VERSION }}
