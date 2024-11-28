@@ -28,29 +28,31 @@ export type KeyboardAvoidingViewBaseProps = {
   keyboardVerticalOffset?: number;
 } & ViewProps;
 
-export type KeyboardAvoidingViewProps =
-  | (KeyboardAvoidingViewBaseProps & {
-      /**
-       * Specify how to react to the presence of the keyboard.
-       */
-      behavior?: "position";
+export type KeyboardAvoidingViewProps = KeyboardAvoidingViewBaseProps &
+  (
+    | {
+        /**
+         * Specify how to react to the presence of the keyboard.
+         */
+        behavior?: "position";
 
-      /**
-       * Style of the content container when `behavior` is 'position'.
-       */
-      contentContainerStyle?: ViewProps["style"];
-    })
-  | (KeyboardAvoidingViewBaseProps & {
-      /**
-       * Specify how to react to the presence of the keyboard.
-       */
-      behavior?: "height" | "padding";
+        /**
+         * Style of the content container when `behavior` is 'position'.
+         */
+        contentContainerStyle?: ViewProps["style"];
+      }
+    | {
+        /**
+         * Specify how to react to the presence of the keyboard.
+         */
+        behavior?: "height" | "padding";
 
-      /**
-       * `contentContainerStyle` is not allowed for these behaviors.
-       */
-      contentContainerStyle?: never;
-    });
+        /**
+         * `contentContainerStyle` is not allowed for these behaviors.
+         */
+        contentContainerStyle?: never;
+      }
+  );
 
 const defaultLayout: LayoutRectangle = {
   x: 0,
