@@ -6,24 +6,27 @@ const values = {
     height: new Animated.Value(0),
   },
   reanimated: {
-    progress: { value: 0 },
-    height: { value: 0 },
+    progress: { value: 0, get: jest.fn().mockReturnValue(0), set: jest.fn() },
+    height: { value: 0, get: jest.fn().mockReturnValue(0), set: jest.fn() },
+  },
+};
+const inputData = {
+  target: 1,
+  parentScrollViewTarget: -1,
+  layout: {
+    x: 0,
+    y: 0,
+    width: 200,
+    height: 40,
+    absoluteX: 0,
+    absoluteY: 100,
   },
 };
 const focusedInput = {
   input: {
-    value: {
-      target: 1,
-      parentScrollViewTarget: -1,
-      layout: {
-        x: 0,
-        y: 0,
-        width: 200,
-        height: 40,
-        absoluteX: 0,
-        absoluteY: 100,
-      },
-    },
+    value: inputData,
+    get: jest.fn().mockReturnValue(inputData),
+    set: jest.fn(),
   },
 };
 
