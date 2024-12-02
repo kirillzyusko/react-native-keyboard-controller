@@ -24,7 +24,7 @@ class KeyboardControllerModuleImpl(
 
   fun dismiss() {
     val activity = mReactContext.currentActivity
-    val view: View? = FocusedInputHolder.get()
+    val view: View? = FocusedInputHolder.get() ?: activity?.currentFocus
 
     if (view != null) {
       UiThreadUtil.runOnUiThread {
