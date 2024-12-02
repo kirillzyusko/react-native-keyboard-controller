@@ -36,7 +36,7 @@ const KeyboardStickyView = forwardRef<
       children,
       offset: { closed = 0, opened = 0 } = {},
       style,
-      enabled,
+      enabled = true,
       ...props
     },
     ref,
