@@ -82,6 +82,7 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
   blur = null,
   opacity = DEFAULT_OPACITY,
   offset: { closed = 0, opened = 0 } = {},
+  enabled = true,
   ...rest
 }) => {
   const colorScheme = useColorScheme();
@@ -151,7 +152,7 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
   );
 
   return (
-    <KeyboardStickyView offset={offset}>
+    <KeyboardStickyView offset={offset} enabled={enabled}>
       <View {...rest} style={toolbarStyle} testID={TEST_ID_KEYBOARD_TOOLBAR}>
         {blur}
         {showArrows && (
