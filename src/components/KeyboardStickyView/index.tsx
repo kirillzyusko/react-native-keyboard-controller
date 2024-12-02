@@ -22,6 +22,9 @@ export type KeyboardStickyViewProps = {
      */
     opened?: number;
   };
+
+  /** Controls whether this `KeyboardStickyView` instance should take effect. Default is `true` */
+  enabled?: boolean;
 } & ViewProps;
 
 const KeyboardStickyView = forwardRef<
@@ -29,7 +32,13 @@ const KeyboardStickyView = forwardRef<
   React.PropsWithChildren<KeyboardStickyViewProps>
 >(
   (
-    { children, offset: { closed = 0, opened = 0 } = {}, style, ...props },
+    {
+      children,
+      offset: { closed = 0, opened = 0 } = {},
+      style,
+      enabled,
+      ...props
+    },
     ref,
   ) => {
     const { height, progress } = useReanimatedKeyboardAnimation();
@@ -38,9 +47,9 @@ const KeyboardStickyView = forwardRef<
       const offset = interpolate(progress.value, [0, 1], [closed, opened]);
 
       return {
-        transform: [{ translateY: height.value + offset }],
+        transform: [{ translateY: enabled ? height.value + offset : 0 }],
       };
-    }, [closed, opened]);
+    }, [closed, opened, enabled]);
 
     const styles = useMemo(
       () => [style, stickyViewStyle],
