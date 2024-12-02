@@ -310,7 +310,7 @@ public class KeyboardMovementObserver: NSObject {
     }
 
     if animation == nil {
-      initializeAnimation(fromValue: prevKeyboardPosition, toValue: self._keyboardHeight)
+      initializeAnimation(fromValue: prevKeyboardPosition, toValue: self.keyboardHeight)
     }
 
     prevKeyboardPosition = keyboardPosition
