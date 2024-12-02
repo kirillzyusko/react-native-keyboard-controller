@@ -47,7 +47,7 @@ const KeyboardStickyView = forwardRef<
       const offset = interpolate(progress.value, [0, 1], [closed, opened]);
 
       return {
-        transform: [{ translateY: enabled ? height.value + offset : 0 }],
+        transform: [{ translateY: enabled ? height.value + offset : closed }],
       };
     }, [closed, opened, enabled]);
 
