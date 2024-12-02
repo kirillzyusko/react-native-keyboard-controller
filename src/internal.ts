@@ -48,8 +48,8 @@ export function useEventHandlerRegistration<
     if (viewTagRef.current) {
       attachWorkletHandlers();
     } else {
-      // view may not be mounted yet - defer registration to next event loop
-      setImmediate(attachWorkletHandlers);
+      // view may not be mounted yet - defer registration until call-stack becomes empty
+      queueMicrotask(attachWorkletHandlers);
     }
 
     return () => {
