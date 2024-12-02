@@ -6,7 +6,7 @@
 - (x) 2 show after interactive - iav is not attached again
 - (x) 3 two events get dispatched when we remove iav in onInteractive - (dispatch `shouldIgnoreKeyboardEvents` in .hide (KEA)? - doesn't work because swizzle calls .hide when keyboard appear)
 - (x) 4 two events get dispatched after 2nd onInteractive (fix with pan gesture responder - when it's active ignore plain keyboard events)
-- 5 TimingAnimation is unsynchronized
+- (x) 5 TimingAnimation is unsynchronized
 - 6 hide interactively -> tap input many times -> keyboard is shown and composer is not moving and it looks like events are broken
 
 ::  (x) call actual code for hide only once
