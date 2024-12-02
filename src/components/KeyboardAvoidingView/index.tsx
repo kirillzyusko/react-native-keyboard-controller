@@ -14,17 +14,7 @@ import { useKeyboardAnimation } from "./hooks";
 
 import type { LayoutRectangle, ViewProps } from "react-native";
 
-export type KeyboardAvoidingViewProps = {
-  /**
-   * Specify how to react to the presence of the keyboard.
-   */
-  behavior?: "height" | "position" | "padding";
-
-  /**
-   * Style of the content container when `behavior` is 'position'.
-   */
-  contentContainerStyle?: ViewProps["style"];
-
+export type KeyboardAvoidingViewBaseProps = {
   /**
    * Controls whether this `KeyboardAvoidingView` instance should take effect.
    * This is useful when more than one is on the screen. Defaults to true.
@@ -37,6 +27,32 @@ export type KeyboardAvoidingViewProps = {
    */
   keyboardVerticalOffset?: number;
 } & ViewProps;
+
+export type KeyboardAvoidingViewProps = KeyboardAvoidingViewBaseProps &
+  (
+    | {
+        /**
+         * Specify how to react to the presence of the keyboard.
+         */
+        behavior?: "position";
+
+        /**
+         * Style of the content container when `behavior` is 'position'.
+         */
+        contentContainerStyle?: ViewProps["style"];
+      }
+    | {
+        /**
+         * Specify how to react to the presence of the keyboard.
+         */
+        behavior?: "height" | "padding";
+
+        /**
+         * `contentContainerStyle` is not allowed for these behaviors.
+         */
+        contentContainerStyle?: never;
+      }
+  );
 
 const defaultLayout: LayoutRectangle = {
   x: 0,
