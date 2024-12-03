@@ -2,12 +2,13 @@
 - (x) keyboard hidden -> remove inputAccessoryView - done in resignFirstResponder
 - (x) iOS 16 - after attaching fake iav we dispatch onEnd with height - 248 (298 - 50) -> ignore events after attaching iav, because in keyboardDidAppear `position` can be a random value (291 or 341)
 - (x) text input grow -> can not make interactive gesture (Optional(424.6666666666667)  424.66666666666674) - maybe because of frequent conversions to CGFloat? <- fixed via rounding
-- 1 show after interactive - keyboard height is 386
+- (x) 1 show after interactive - keyboard height is 386
 - (x) 2 show after interactive - iav is not attached again
 - (x) 3 two events get dispatched when we remove iav in onInteractive - (dispatch `shouldIgnoreKeyboardEvents` in .hide (KEA)? - doesn't work because swizzle calls .hide when keyboard appear)
 - (x) 4 two events get dispatched after 2nd onInteractive (fix with pan gesture responder - when it's active ignore plain keyboard events)
 - (x) 5 TimingAnimation is unsynchronized
 - 6 hide interactively -> tap input many times -> keyboard is shown and composer is not moving and it looks like events are broken
+- 7 remove pan gesture responder stuff
 
 ::  (x) call actual code for hide only once
 ::: (x) dispatch ignore event when we actually hide iav (will fix 3)
