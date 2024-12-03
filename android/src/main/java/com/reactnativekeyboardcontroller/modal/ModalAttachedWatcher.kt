@@ -71,7 +71,8 @@ class ModalAttachedWatcher(
         // go through main `rootView`, so we don't need to stop main
         // callback - otherwise keyboard transitions will not be animated
         this.callback()?.suspend(true)
-        // attaching callback to Modal on Android < 12 can cause ghost animation, see: https://github.com/kirillzyusko/react-native-keyboard-controller/issues/714
+        // attaching callback to Modal on Android < 12 can cause ghost animations, see: https://github.com/kirillzyusko/react-native-keyboard-controller/pull/718
+        // and overall attaching additional callbacks (if animation events go through the main window) is not necessary
         ViewCompat.setWindowInsetsAnimationCallback(rootView, callback)
         ViewCompat.setOnApplyWindowInsetsListener(eventView, callback)
 
