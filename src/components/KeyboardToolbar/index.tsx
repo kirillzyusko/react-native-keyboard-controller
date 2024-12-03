@@ -54,7 +54,7 @@ export type KeyboardToolbarProps = Omit<
    * A value for container opacity in hexadecimal format (e.g. `ff`). Default value is `ff`.
    */
   opacity?: HEX;
-} & Pick<KeyboardStickyViewProps, "offset">;
+} & Pick<KeyboardStickyViewProps, "offset" | "enabled">;
 
 const TEST_ID_KEYBOARD_TOOLBAR = "keyboard.toolbar";
 const TEST_ID_KEYBOARD_TOOLBAR_PREVIOUS = `${TEST_ID_KEYBOARD_TOOLBAR}.previous`;
@@ -82,6 +82,7 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
   blur = null,
   opacity = DEFAULT_OPACITY,
   offset: { closed = 0, opened = 0 } = {},
+  enabled = true,
   ...rest
 }) => {
   const colorScheme = useColorScheme();
@@ -151,7 +152,7 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
   );
 
   return (
-    <KeyboardStickyView offset={offset}>
+    <KeyboardStickyView enabled={enabled} offset={offset}>
       <View {...rest} style={toolbarStyle} testID={TEST_ID_KEYBOARD_TOOLBAR}>
         {blur}
         {showArrows && (
