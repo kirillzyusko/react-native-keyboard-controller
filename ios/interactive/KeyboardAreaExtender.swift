@@ -64,9 +64,9 @@ class KeyboardAreaExtender: NSObject {
     print("KEA - keyboardDidAppear \(Date.currentTimeStamp)")
     let responder = UIResponder.current
     if let activeTextInput = responder as? TextInput,
-      let offset = KeyboardOffsetProvider.shared.getOffset(
-        forTextInputNativeID: responder.nativeID),
-      responder?.inputAccessoryView == nil
+       let offset = KeyboardOffsetProvider.shared.getOffset(
+         forTextInputNativeID: responder.nativeID),
+       responder?.inputAccessoryView == nil
     {
       currentInputAccessoryView = InvisibleInputAccessoryView(height: CGFloat(truncating: offset))
 
