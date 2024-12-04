@@ -9,6 +9,18 @@
 - (x) 5 TimingAnimation is unsynchronized
 - 6 hide interactively -> tap input many times -> keyboard is shown and composer is not moving and it looks like events are broken
 - 7 remove pan gesture responder stuff
+- 8 resolve swiftlint issues
+- 9 resolve various flickers (test iOS 15 - 18)
+- 10 iOS 15 sometimes keyboardDidDisappear gets triggered before onKeyboardMove events (duration = 85)
+- 11 iOS 15 sometimes we resign responder too early in when dismissed with interactive and it produces several junky frames (in the end composer disappears and appears)
+
+Test scenarios:
+- tap and show keyboard
+- tap on screen to hide a keyboard
+- tap and show keyboard
+- swipe down to hide a keyboard
+- tap and show keyboard
+- swipe down and up to show a keyboard
 
 ::  (x) call actual code for hide only once
 ::: (x) dispatch ignore event when we actually hide iav (will fix 3)
