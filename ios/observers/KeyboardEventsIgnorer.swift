@@ -8,13 +8,13 @@
 import Foundation
 
 @objc(KeyboardEventsIgnorer)
-public class KeyboardEventsIgnorer : NSObject {
+public class KeyboardEventsIgnorer: NSObject {
   @objc public static let shared = KeyboardEventsIgnorer()
 
   var shouldIgnoreKeyboardEvents = false
   @objc public var isInteractiveGesture = false
-  
-  public var shouldIgnore : Bool {
+
+  public var shouldIgnore: Bool {
     print("KeyboardEventsIgnorer \(shouldIgnoreKeyboardEvents) \(isInteractiveGesture)")
     return shouldIgnoreKeyboardEvents || isInteractiveGesture
   }
