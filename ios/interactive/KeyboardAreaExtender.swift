@@ -70,12 +70,15 @@ class KeyboardAreaExtender: NSObject {
     {
       currentInputAccessoryView = InvisibleInputAccessoryView(height: CGFloat(truncating: offset))
 
-      activeTextInput.inputAccessoryView = currentInputAccessoryView
-      activeTextInput.reloadInputViews()
-
+      // we need to send this event before we actually attach the IAV
+      // since on some OS versions (iOS 15 for example), `reloadInputViews`
+      // will trigger `keyboardDidAppear` listener immediately
       NotificationCenter.default.post(
         name: .shouldIgnoreKeyboardEvents, object: nil, userInfo: ["ignore": true]
       )
+
+      activeTextInput.inputAccessoryView = currentInputAccessoryView
+      activeTextInput.reloadInputViews()
 
       print("Attaching `inputAccessoryView` \(Date.currentTimeStamp)")
     }
