@@ -52,7 +52,7 @@ public class InvisibleInputAccessoryView: UIView {
 
   private func setupView() {
     isUserInteractionEnabled = false
-    // TODO: Set the background color to transparent
+    // for debug purposes
     // backgroundColor = UIColor.red.withAlphaComponent(0.2)
     backgroundColor = .clear
     autoresizingMask = .flexibleHeight
