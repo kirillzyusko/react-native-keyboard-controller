@@ -301,7 +301,7 @@ public class KeyboardMovementObserver: NSObject {
     }
 
     if animation == nil {
-      initializeAnimation(fromValue: prevKeyboardPosition, toValue: self.keyboardHeight)
+      initializeAnimation(fromValue: prevKeyboardPosition, toValue: keyboardHeight)
     }
 
     prevKeyboardPosition = keyboardPosition
@@ -326,7 +326,7 @@ public class KeyboardMovementObserver: NSObject {
       // but CASpringAnimation can never get to this final destination
       let race: (CGFloat, CGFloat) -> CGFloat = animation.isIncreasing ? max : min
       keyboardPosition = race(position, keyboardPosition)
-      
+
       print("\(visibleKeyboardHeight) -> \(position). \(KeyboardAreaExtender.shared.offset)")
     }
 
