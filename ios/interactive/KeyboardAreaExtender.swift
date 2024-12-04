@@ -50,9 +50,9 @@ class KeyboardAreaExtender: NSObject {
     currentInputAccessoryView = nil
   }
 
-  public func updateHeight(_ to: CGFloat, _ nativeID: String) {
+  public func updateHeight(to newHeight: CGFloat, for nativeID: String) {
     if UIResponder.current.nativeID == nativeID {
-      currentInputAccessoryView?.updateHeight(to: to)
+      currentInputAccessoryView?.updateHeight(to: newHeight)
     }
   }
 
@@ -64,9 +64,9 @@ class KeyboardAreaExtender: NSObject {
     print("KEA - keyboardDidAppear \(Date.currentTimeStamp)")
     let responder = UIResponder.current
     if let activeTextInput = responder as? TextInput,
-       let offset = KeyboardOffsetProvider.shared.getOffset(
-         forTextInputNativeID: responder.nativeID),
-       responder?.inputAccessoryView == nil
+      let offset = KeyboardOffsetProvider.shared.getOffset(
+        forTextInputNativeID: responder.nativeID),
+      responder?.inputAccessoryView == nil
     {
       currentInputAccessoryView = InvisibleInputAccessoryView(height: CGFloat(truncating: offset))
 
