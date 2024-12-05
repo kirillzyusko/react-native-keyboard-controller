@@ -7,12 +7,12 @@
 - (x) 3 two events get dispatched when we remove iav in onInteractive - (dispatch `shouldIgnoreKeyboardEvents` in .hide (KEA)? - doesn't work because swizzle calls .hide when keyboard appear)
 - (x) 4 two events get dispatched after 2nd onInteractive (fix with pan gesture responder - when it's active ignore plain keyboard events)
 - (x) 5 TimingAnimation is unsynchronized
-- 6 hide interactively -> tap input many times -> keyboard is shown and composer is not moving and it looks like events are broken
+- (x) 6 hide interactively -> tap input many times -> keyboard is shown and composer is not moving and it looks like events are broken -> for RCTRootView we need to resign synchronously
 - 7 remove pan gesture responder stuff
 - 8 resolve swiftlint issues
 - 9 resolve various flickers (test iOS 15 - 18)
-- 10 iOS 15 sometimes keyboardDidDisappear gets triggered before onKeyboardMove events (duration = 85)
-- 11 iOS 15 sometimes we resign responder too early in when dismissed with interactive and it produces several junky frames (in the end composer disappears and appears)
+- 10 iOS 15 sometimes keyboardDidDisappear gets triggered before onKeyboardMove events (duration = 85) --> caused by constant usage of onMove?
+- 11 iOS 15 sometimes we resign responder too early in when dismissed with interactive and it produces several junky frames (in the end composer disappears and appears) --> caused by constant usage of onMove?
 
 Test scenarios:
 - tap and show keyboard

@@ -22,13 +22,19 @@ extension UIResponder {
     originalResignFirstResponder = method_getImplementation(originalMethod)
 
     let swizzledImplementation: @convention(block) (UIResponder) -> Bool = { (self) in
-      // Check the type of inputAccessoryView and call original method immediately if not InvisibleInputAccessoryView
-      if let textField = self as? TextInput, !(textField.inputAccessoryView is InvisibleInputAccessoryView) {
+      // Check the type of responder
+      if let textField = self as? TextInput {
+        // check inputAccessoryView and call original method immediately if not InvisibleInputAccessoryView
+        if !(textField.inputAccessoryView is InvisibleInputAccessoryView) {
+          return self.callOriginalResignFirstResponder(originalSelector)
+        }
+      } else {
+        // If casting to TextInput fails
         return self.callOriginalResignFirstResponder(originalSelector)
       }
 
       // Add your custom behavior here
-      print("Performing custom actions before the original resignFirstResponder")
+      print("Performing custom actions before the original resignFirstResponder \(self as? TextInput)")
 
       KeyboardAreaExtender.shared.hide()
 
@@ -41,7 +47,7 @@ extension UIResponder {
       }
 
       // We need to return a value immediately, even though the actual action is delayed
-      return true
+      return false
     }
 
     let implementation = imp_implementationWithBlock(swizzledImplementation)
