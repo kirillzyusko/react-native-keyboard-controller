@@ -12,7 +12,9 @@
 - 8 resolve swiftlint issues
 - 9 resolve various flickers (test iOS 15 - 18)
 - 10 iOS 15 sometimes keyboardDidDisappear gets triggered before onKeyboardMove events (duration = 85) --> caused by constant usage of onMove?
-- 11 iOS 15 sometimes we resign responder too early in when dismissed with interactive and it produces several junky frames (in the end composer disappears and appears) --> caused by constant usage of onMove?
+- 11 iOS 15 sometimes we resign responder too early in when dismissed with interactive and it produces several junky frames (in the end composer disappears and appears) --> caused by constant usage of onMove? --> UI fixed by removing lastOffset (progress is still NaN)
+- (x) 12 remove the code with lastOffset (this is not needed as we hide view only in resignFirstResponder)
+- 13 test how switching between two inputs works?
 
 Test scenarios:
 - tap and show keyboard
