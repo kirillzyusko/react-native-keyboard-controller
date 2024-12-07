@@ -13,14 +13,14 @@ public class KeyboardControllerModuleImpl: NSObject {
   @objc
   public static func dismiss(_ keepFocus: Bool) {
     guard let input = UIResponder.current as? TextInput else { return }
-    
-    if (keepFocus) {
+
+    if keepFocus {
       let tapGuesture = UITapGestureRecognizer(target: self, action: #selector(onTextInputTapped(_:)))
       input.addGestureRecognizer(tapGuesture)
-      
+
       input.inputView = UIView()
       input.reloadInputViews()
-      
+
       NotificationCenter.default.addObserver(
         self,
         selector: #selector(onResponderResigned(_:)),
@@ -44,14 +44,14 @@ public class KeyboardControllerModuleImpl: NSObject {
       input.becomeFirstResponder()
     }
   }
-  
+
   @objc static func onResponderResigned(_ notification: Notification) {
     guard let input = notification.object as? TextInput else { return }
-    
+
     // Clear the custom `inputView` when the responder resigns
     input.inputView = nil
     input.reloadInputViews()
-    
+
     // Clean up observer
     NotificationCenter.default.removeObserver(self, name: UITextField.textDidEndEditingNotification, object: input)
   }
