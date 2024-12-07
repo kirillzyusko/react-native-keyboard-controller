@@ -21,6 +21,8 @@ import com.reactnativekeyboardcontroller.extensions.emitEvent
 import com.reactnativekeyboardcontroller.extensions.isKeyboardAnimation
 import com.reactnativekeyboardcontroller.interactive.InteractiveKeyboardProvider
 import com.reactnativekeyboardcontroller.log.Logger
+import com.reactnativekeyboardcontroller.transformers.getKeyboardTypeFromInputType
+import com.reactnativekeyboardcontroller.traversal.FocusedInputHolder
 import kotlin.math.abs
 
 private val TAG = KeyboardAnimationCallback::class.qualifiedName
@@ -425,6 +427,7 @@ class KeyboardAnimationCallback(
     params.putInt("duration", duration)
     params.putDouble("timestamp", System.currentTimeMillis().toDouble())
     params.putInt("target", viewTagFocused)
+    params.putString("type", getKeyboardTypeFromInputType(FocusedInputHolder.get()?.inputType))
 
     return params
   }

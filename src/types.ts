@@ -2,6 +2,7 @@ import type { PropsWithChildren } from "react";
 import type {
   EmitterSubscription,
   NativeSyntheticEvent,
+  TextInputProps,
   ViewProps,
 } from "react-native";
 
@@ -146,6 +147,7 @@ export type KeyboardEventData = {
   duration: number;
   timestamp: number;
   target: number;
+  type: TextInputProps["keyboardType"];
 };
 export type KeyboardEventsModule = {
   addListener: (
