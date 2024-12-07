@@ -84,6 +84,14 @@ if (KeyboardController.isVisible()) {
 }
 ```
 
+### `state`
+
+```ts
+static state(): KeyboardEventData | null;
+```
+
+This method returns the last keyboard state. It returns `null` if keyboard was not shown in the app yet.
+
 ### `setFocusTo`
 
 ```ts
