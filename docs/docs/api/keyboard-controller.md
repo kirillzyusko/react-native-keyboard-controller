@@ -55,13 +55,19 @@ KeyboardController.setDefaultMode();
 ### `dismiss`
 
 ```ts
-static dismiss(): Promise<void>;
+static dismiss(options?: DismissOptions): Promise<void>;
 ```
 
 This method is used to hide the keyboard. It triggers the dismissal of the keyboard. The method returns promise that will be resolved only when keyboard is fully hidden (if keyboard is already hidden it will resolve immediately):
 
 ```ts
 await KeyboardController.dismiss();
+```
+
+If you want to hide a keyboard and keep focus then you can pass `keepFocus` option:
+
+```ts
+await KeyboardController.dismiss({ keepFocus: true });
 ```
 
 :::info What is the difference comparing to `react-native` implementation?

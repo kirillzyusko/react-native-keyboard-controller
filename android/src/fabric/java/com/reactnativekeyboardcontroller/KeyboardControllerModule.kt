@@ -18,8 +18,8 @@ class KeyboardControllerModule(
     module.setDefaultMode()
   }
 
-  override fun dismiss() {
-    module.dismiss()
+  override fun dismiss(keepFocus: Boolean) {
+    module.dismiss(keepFocus)
   }
 
   override fun setFocusTo(direction: String) {
