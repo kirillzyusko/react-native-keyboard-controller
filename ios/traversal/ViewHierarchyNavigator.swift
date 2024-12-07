@@ -14,7 +14,10 @@ public class ViewHierarchyNavigator: NSObject {
   @objc public static func setFocusTo(direction: String) {
     DispatchQueue.main.async {
       if direction == "current" {
-        FocusedInputHolder.shared.focus()
+        let input = FocusedInputHolder.shared.get()
+        input?.inputView = nil
+        input?.reloadInputViews()
+        input?.focus()
         return
       }
 

@@ -1,6 +1,6 @@
 import { KeyboardControllerNative, KeyboardEvents } from "./bindings";
 
-import type { KeyboardControllerModule } from "./types";
+import type { DismissOptions, KeyboardControllerModule } from "./types";
 
 let isClosed = false;
 
@@ -12,7 +12,9 @@ KeyboardEvents.addListener("keyboardDidShow", () => {
   isClosed = false;
 });
 
-const dismiss = async (): Promise<void> => {
+const dismiss = async (
+  { keepFocus }: DismissOptions = { keepFocus: false },
+): Promise<void> => {
   return new Promise((resolve) => {
     if (isClosed) {
       resolve();
@@ -25,7 +27,7 @@ const dismiss = async (): Promise<void> => {
       subscription.remove();
     });
 
-    KeyboardControllerNative.dismiss();
+    KeyboardControllerNative.dismiss(keepFocus);
   });
 };
 const isVisible = () => !isClosed;
