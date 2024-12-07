@@ -15,8 +15,8 @@ public class KeyboardControllerModuleImpl: NSObject {
     guard let input = UIResponder.current as? TextInput else { return }
 
     if keepFocus {
-      let tapGuesture = UITapGestureRecognizer(target: self, action: #selector(onTextInputTapped(_:)))
-      input.addGestureRecognizer(tapGuesture)
+      let tapGesture = UITapGestureRecognizer(target: self, action: #selector(onTextInputTapped(_:)))
+      input.addGestureRecognizer(tapGesture)
 
       input.inputView = UIView()
       input.reloadInputViews()
