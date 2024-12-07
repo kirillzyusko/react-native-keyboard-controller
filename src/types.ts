@@ -114,12 +114,15 @@ export type OverKeyboardViewProps = PropsWithChildren<{
 }>;
 
 export type Direction = "next" | "prev" | "current";
+export type DismissOptions = {
+  keepFocus: boolean;
+};
 export type KeyboardControllerModule = {
   // android only
   setDefaultMode: () => void;
   setInputMode: (mode: number) => void;
   // all platforms
-  dismiss: () => Promise<void>;
+  dismiss: (options?: DismissOptions) => Promise<void>;
   setFocusTo: (direction: Direction) => void;
   isVisible: () => boolean;
 };
@@ -128,7 +131,7 @@ export type KeyboardControllerNativeModule = {
   setDefaultMode: () => void;
   setInputMode: (mode: number) => void;
   // all platforms
-  dismiss: () => void;
+  dismiss: (keepFocus: boolean) => void;
   setFocusTo: (direction: Direction) => void;
   // native event module stuff
   addListener: (eventName: string) => void;

@@ -8,7 +8,7 @@ export interface Spec extends TurboModule {
   // methods
   setInputMode(mode: number): void;
   setDefaultMode(): void;
-  dismiss(): void;
+  dismiss(keepFocus: boolean): void;
   setFocusTo(direction: string): void;
 
   // event emitter

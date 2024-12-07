@@ -68,13 +68,13 @@ RCT_EXPORT_METHOD(setInputMode : (nonnull NSNumber *)mode)
 }
 
 #ifdef RCT_NEW_ARCH_ENABLED
-- (void)dismiss
+- (void)dismiss:(BOOL)keepFocus
 #else
-RCT_EXPORT_METHOD(dismiss)
+RCT_EXPORT_METHOD(dismiss : (BOOL)keepFocus)
 #endif
 {
   dispatch_async(dispatch_get_main_queue(), ^{
-    [[UIResponder current] resignFirstResponder];
+    [KeyboardControllerModuleImpl dismiss:keepFocus];
   });
 }
 
