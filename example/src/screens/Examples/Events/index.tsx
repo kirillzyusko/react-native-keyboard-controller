@@ -24,7 +24,7 @@ function EventsListener() {
       Toast.show({
         type: "info",
         text1: "⬆️ ⌨️ Keyboard will show",
-        text2: `📲 Height: ${e.height}, duration: ${e.duration}ms, delay: ${delay}ms`,
+        text2: `📲 Height: ${e.height}, duration: ${e.duration}ms, delay: ${delay}ms, type: ${e.type}`,
       });
     });
     const shown = KeyboardEvents.addListener("keyboardDidShow", (e) => {
@@ -33,7 +33,7 @@ function EventsListener() {
       Toast.show({
         type: "success",
         text1: "⌨️ Keyboard is shown",
-        text2: `👋 Height: ${e.height}, duration: ${e.duration}ms, delay: ${delay}ms`,
+        text2: `👋 Height: ${e.height}, duration: ${e.duration}ms, delay: ${delay}ms, type: ${e.type}`,
       });
     });
     const hide = KeyboardEvents.addListener("keyboardWillHide", (e) => {
@@ -42,7 +42,7 @@ function EventsListener() {
       Toast.show({
         type: "info",
         text1: "⬇️ ⌨️ Keyboard will hide",
-        text2: `📲 Height: ${e.height}, duration: ${e.duration}ms, delay: ${delay}ms`,
+        text2: `📲 Height: ${e.height}, duration: ${e.duration}ms, delay: ${delay}ms, type: ${e.type}`,
       });
     });
     const hid = KeyboardEvents.addListener("keyboardDidHide", (e) => {
@@ -51,7 +51,7 @@ function EventsListener() {
       Toast.show({
         type: "error",
         text1: "⌨️ Keyboard is hidden",
-        text2: `🤐 Height: ${e.height}, duration: ${e.duration}ms, delay: ${delay}ms`,
+        text2: `🤐 Height: ${e.height}, duration: ${e.duration}ms, delay: ${delay}ms, type: ${e.type}`,
       });
     });
 
@@ -63,7 +63,7 @@ function EventsListener() {
     };
   }, []);
 
-  return <TextInput style={styles.input} />;
+  return <TextInput keyboardType="url" style={styles.input} />;
 }
 
 export default function Events() {
