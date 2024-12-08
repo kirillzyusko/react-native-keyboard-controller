@@ -1,5 +1,6 @@
 package com.reactnativekeyboardcontroller.extensions
 
+import android.content.res.Configuration
 import com.facebook.react.bridge.ReactContext
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.modules.core.DeviceEventManagerModule
@@ -34,3 +35,12 @@ fun ThemedReactContext?.emitEvent(
 
   Logger.i("ThemedReactContext", event)
 }
+
+val ThemedReactContext?.appearance: String
+  get() = this?.let {
+    when (it.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
+      Configuration.UI_MODE_NIGHT_NO -> "light"
+      Configuration.UI_MODE_NIGHT_YES -> "dark"
+      else -> "default"
+    }
+  } ?: "default"
