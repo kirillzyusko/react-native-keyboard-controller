@@ -2,10 +2,6 @@ package com.reactnativekeyboardcontroller.transformers
 
 import android.text.InputType
 
-private const val INPUT_TYPE_KEYBOARD_NUMBER_PAD = InputType.TYPE_CLASS_NUMBER
-private const val INPUT_TYPE_KEYBOARD_DECIMAL_PAD = INPUT_TYPE_KEYBOARD_NUMBER_PAD or InputType.TYPE_NUMBER_FLAG_DECIMAL
-private const val INPUT_TYPE_KEYBOARD_NUMBERED = INPUT_TYPE_KEYBOARD_DECIMAL_PAD or InputType.TYPE_NUMBER_FLAG_SIGNED
-
 fun getKeyboardTypeFromInputType(inputType: Int?): String {
   if (inputType == null) {
     return "default"
