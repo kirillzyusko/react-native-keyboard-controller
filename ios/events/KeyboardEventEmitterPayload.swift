@@ -29,9 +29,7 @@ public class KeyboardTypeConverter: NSObject {
   }
 }
 
-public func buildEventParams(_ height: Double, _ duration: Int, _ responder: UIResponder?)
-  -> [AnyHashable: Any]
-{
+public func buildEventParams(_ height: Double, _ duration: Int, _ responder: UIResponder?) -> [AnyHashable: Any] {
   var data = [AnyHashable: Any]()
 
   data["height"] = height
