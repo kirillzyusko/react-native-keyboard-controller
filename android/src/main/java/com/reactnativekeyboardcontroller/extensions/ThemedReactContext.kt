@@ -37,10 +37,11 @@ fun ThemedReactContext?.emitEvent(
 }
 
 val ThemedReactContext?.appearance: String
-  get() = this?.let {
-    when (it.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
-      Configuration.UI_MODE_NIGHT_NO -> "light"
-      Configuration.UI_MODE_NIGHT_YES -> "dark"
-      else -> "default"
-    }
-  } ?: "default"
+  get() =
+    this?.let {
+      when (it.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
+        Configuration.UI_MODE_NIGHT_NO -> "light"
+        Configuration.UI_MODE_NIGHT_YES -> "dark"
+        else -> "default"
+      }
+    } ?: "default"
