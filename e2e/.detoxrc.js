@@ -66,7 +66,7 @@ module.exports = {
       type: "ios.simulator",
       device: {
         type: "iPhone 16 Pro",
-        os: "iOS 18.0",
+        os: "iOS 18.1",
       },
     },
     attached: {
