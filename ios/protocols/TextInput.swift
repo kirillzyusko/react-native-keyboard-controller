@@ -11,6 +11,7 @@ import UIKit
 
 public protocol TextInput: AnyObject {
   var keyboardType: UIKeyboardType { get }
+  var keyboardAppearance: UIKeyboardAppearance { get }
   func focus()
 }
 

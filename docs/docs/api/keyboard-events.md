@@ -32,6 +32,7 @@ type KeyboardEventData = {
   timestamp: number; // timestamp of the event from native thread
   target: number; // tag of the focused TextInput
   type: string; // `keyboardType` property from focused `TextInput`
+  appearance: string; // `keyboardAppearance` property from focused `TextInput`
 };
 ```
 
