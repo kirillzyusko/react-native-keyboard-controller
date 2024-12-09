@@ -173,7 +173,7 @@ public class KeyboardMovementObserver: NSObject {
 
       onRequestAnimation()
       onEvent("onKeyboardMoveStart", Float(keyboardHeight) as NSNumber, 1, duration as NSNumber, tag)
-      onNotify("KeyboardController::keyboardWillShow", getEventParams(keyboardHeight, duration))
+      onNotify("KeyboardController::keyboardWillShow", buildEventParams(keyboardHeight, duration, tag))
 
       setupKeyboardWatcher()
       initializeAnimation(fromValue: prevKeyboardPosition, toValue: keyboardHeight)
@@ -187,7 +187,7 @@ public class KeyboardMovementObserver: NSObject {
 
     onRequestAnimation()
     onEvent("onKeyboardMoveStart", 0, 0, duration as NSNumber, tag)
-    onNotify("KeyboardController::keyboardWillHide", getEventParams(0, duration))
+    onNotify("KeyboardController::keyboardWillHide", buildEventParams(0, duration, tag))
 
     setupKeyboardWatcher()
     removeKVObserver()
@@ -210,7 +210,7 @@ public class KeyboardMovementObserver: NSObject {
 
       onCancelAnimation()
       onEvent("onKeyboardMoveEnd", height as NSNumber, progress as NSNumber, duration as NSNumber, tag)
-      onNotify("KeyboardController::keyboardDidShow", getEventParams(height, duration))
+      onNotify("KeyboardController::keyboardDidShow", buildEventParams(height, duration, tag))
 
       removeKeyboardWatcher()
       setupKVObserver()
@@ -224,7 +224,7 @@ public class KeyboardMovementObserver: NSObject {
 
     onCancelAnimation()
     onEvent("onKeyboardMoveEnd", 0 as NSNumber, 0, duration as NSNumber, tag)
-    onNotify("KeyboardController::keyboardDidHide", getEventParams(0, duration))
+    onNotify("KeyboardController::keyboardDidHide", buildEventParams(0, duration, tag))
 
     removeKeyboardWatcher()
     animation = nil
@@ -308,15 +308,5 @@ public class KeyboardMovementObserver: NSObject {
       duration as NSNumber,
       tag
     )
-  }
-
-  private func getEventParams(_ height: Double, _ duration: Int) -> [AnyHashable: Any] {
-    var data = [AnyHashable: Any]()
-    data["height"] = height
-    data["duration"] = duration
-    data["timestamp"] = Date.currentTimeStamp
-    data["target"] = tag
-
-    return data
   }
 }

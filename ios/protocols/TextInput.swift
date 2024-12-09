@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 
 public protocol TextInput: AnyObject {
+  var keyboardType: UIKeyboardType { get }
   func focus()
 }
 
