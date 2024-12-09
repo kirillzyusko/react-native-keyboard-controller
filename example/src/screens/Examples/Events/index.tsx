@@ -63,7 +63,7 @@ function EventsListener() {
     };
   }, []);
 
-  return <TextInput keyboardType="url" style={styles.input} />;
+  return <TextInput keyboardType="numeric" style={styles.input} />;
 }
 
 export default function Events() {
