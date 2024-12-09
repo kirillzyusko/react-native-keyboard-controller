@@ -16,10 +16,10 @@ keywords:
 
 This library exposes 4 events which are available on all platforms:
 
-- keyboardWillShow
-- keyboardWillHide
-- keyboardDidShow
-- keyboardDidHide
+- `keyboardWillShow` - emitted when the keyboard is about to appear.
+- `keyboardWillHide` - emitted when the keyboard is about to disappear.
+- `keyboardDidShow` - emitted when the keyboard has completed its animation and is fully visible on the screen.
+- `keyboardDidHide` - emitted when the keyboard has completed its animation and is fully hidden.
 
 ## Event structure
 
@@ -31,6 +31,7 @@ type KeyboardEventData = {
   duration: number; // duration of the animation
   timestamp: number; // timestamp of the event from native thread
   target: number; // tag of the focused TextInput
+  type: string; // `keyboardType` property from focused `TextInput`
 };
 ```
 
