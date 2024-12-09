@@ -15,6 +15,7 @@
 - 11 iOS 15 sometimes we resign responder too early in when dismissed with interactive and it produces several junky frames (in the end composer disappears and appears) --> caused by constant usage of onMove? --> UI fixed by removing lastOffset (progress is still NaN)
 - (x) 12 remove the code with lastOffset (this is not needed as we hide view only in resignFirstResponder)
 - 13 test how switching between two inputs works?
+- 14 fix a crash when you re-enter the page
 
 Test scenarios:
 - tap and show keyboard
@@ -23,6 +24,8 @@ Test scenarios:
 - swipe down to hide a keyboard
 - tap and show keyboard
 - swipe down and up to show a keyboard
+- change focus to new input - be sure offset is not added
+- change focus to input with offset - be sure offset attached again
 
 ::  (x) call actual code for hide only once
 ::: (x) dispatch ignore event when we actually hide iav (will fix 3)
