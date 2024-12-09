@@ -165,18 +165,15 @@ public class KeyboardMovementObserver: NSObject {
   @objc func keyboardWillAppear(_ notification: Notification) {
     let (duration, frame) = notification.keyboardMetaData()
     if let keyboardFrame = frame {
-      let responder = UIResponder.current
-      tag = responder.reactViewTag
+      tag = UIResponder.current.reactViewTag
       let keyboardHeight = keyboardFrame.cgRectValue.size.height
       self.keyboardHeight = keyboardHeight
       self.duration = duration
       didShowDeadline = Date.currentTimeStamp + Int64(duration)
 
       onRequestAnimation()
-      onEvent(
-        "onKeyboardMoveStart", Float(keyboardHeight) as NSNumber, 1, duration as NSNumber, tag)
-      onNotify(
-        "KeyboardController::keyboardWillShow", buildEventParams(keyboardHeight, duration, tag))
+      onEvent("onKeyboardMoveStart", Float(keyboardHeight) as NSNumber, 1, duration as NSNumber, tag)
+      onNotify("KeyboardController::keyboardWillShow", buildEventParams(keyboardHeight, duration, tag))
 
       setupKeyboardWatcher()
       initializeAnimation(fromValue: prevKeyboardPosition, toValue: keyboardHeight)
@@ -185,8 +182,7 @@ public class KeyboardMovementObserver: NSObject {
 
   @objc func keyboardWillDisappear(_ notification: Notification) {
     let (duration, _) = notification.keyboardMetaData()
-    let responder = UIResponder.current
-    tag = responder.reactViewTag
+    tag = UIResponder.current.reactViewTag
     self.duration = duration
 
     onRequestAnimation()
@@ -204,8 +200,7 @@ public class KeyboardMovementObserver: NSObject {
     if let keyboardFrame = frame {
       let (position, _) = keyboardView.frameTransitionInWindow
       let keyboardHeight = keyboardFrame.cgRectValue.size.height
-      let responder = UIResponder.current
-      tag = responder.reactViewTag
+      tag = UIResponder.current.reactViewTag
       self.keyboardHeight = keyboardHeight
       // if the event is caught in between it's highly likely that it could be a "resize" event
       // so we just read actual keyboard frame value in this case
@@ -214,8 +209,7 @@ public class KeyboardMovementObserver: NSObject {
       let progress = min(height / self.keyboardHeight, 1.0)
 
       onCancelAnimation()
-      onEvent(
-        "onKeyboardMoveEnd", height as NSNumber, progress as NSNumber, duration as NSNumber, tag)
+      onEvent("onKeyboardMoveEnd", height as NSNumber, progress as NSNumber, duration as NSNumber, tag)
       onNotify("KeyboardController::keyboardDidShow", buildEventParams(height, duration, tag))
 
       removeKeyboardWatcher()
@@ -226,8 +220,7 @@ public class KeyboardMovementObserver: NSObject {
 
   @objc func keyboardDidDisappear(_ notification: Notification) {
     let (duration, _) = notification.keyboardMetaData()
-    let responder = UIResponder.current
-    tag = responder.reactViewTag
+    tag = UIResponder.current.reactViewTag
 
     onCancelAnimation()
     onEvent("onKeyboardMoveEnd", 0 as NSNumber, 0, duration as NSNumber, tag)
@@ -246,7 +239,7 @@ public class KeyboardMovementObserver: NSObject {
     }
 
     displayLink = CADisplayLink(target: self, selector: #selector(updateKeyboardFrame))
-    displayLink?.preferredFramesPerSecond = 120  // will fallback to 60 fps for devices without Pro Motion display
+    displayLink?.preferredFramesPerSecond = 120 // will fallback to 60 fps for devices without Pro Motion display
     displayLink?.add(to: .main, forMode: .common)
   }
 
@@ -259,11 +252,9 @@ public class KeyboardMovementObserver: NSObject {
     for key in ["position", "opacity"] {
       if let keyboardAnimation = keyboardView?.layer.presentation()?.animation(forKey: key) {
         if let springAnimation = keyboardAnimation as? CASpringAnimation {
-          animation = SpringAnimation(
-            animation: springAnimation, fromValue: fromValue, toValue: toValue)
+          animation = SpringAnimation(animation: springAnimation, fromValue: fromValue, toValue: toValue)
         } else if let basicAnimation = keyboardAnimation as? CABasicAnimation {
-          animation = TimingAnimation(
-            animation: basicAnimation, fromValue: fromValue, toValue: toValue)
+          animation = TimingAnimation(animation: basicAnimation, fromValue: fromValue, toValue: toValue)
         }
         return
       }
