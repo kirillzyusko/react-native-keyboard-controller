@@ -10,12 +10,15 @@ import UIKit
 
 @objc(KeyboardControllerModuleImpl)
 public class KeyboardControllerModuleImpl: NSObject {
+  private static let keyboardRevealGestureName = "keyboardRevealGesture"
+
   @objc
   public static func dismiss(_ keepFocus: Bool) {
     guard let input = UIResponder.current as? TextInput else { return }
 
     if keepFocus {
       let tapGesture = UITapGestureRecognizer(target: self, action: #selector(onTextInputTapped(_:)))
+      tapGesture.name = keyboardRevealGestureName
       input.addGestureRecognizer(tapGesture)
 
       input.inputView = UIView()
@@ -36,11 +39,8 @@ public class KeyboardControllerModuleImpl: NSObject {
     if gesture.state == .ended {
       guard let input = UIResponder.current as? TextInput else { return }
 
-      // set your custom input view or nil for default keyboard
-      input.inputView = nil
-      input.reloadInputViews()
+      cleanup(input)
 
-      input.removeGestureRecognizer(gesture)
       input.becomeFirstResponder()
     }
   }
@@ -48,11 +48,19 @@ public class KeyboardControllerModuleImpl: NSObject {
   @objc static func onResponderResigned(_ notification: Notification) {
     guard let input = notification.object as? TextInput else { return }
 
-    // Clear the custom `inputView` when the responder resigns
+    cleanup(input)
+  }
+
+  static func cleanup(_ input: TextInput) {
     input.inputView = nil
     input.reloadInputViews()
 
-    // Clean up observer
+    if let gestures = input.gestureRecognizers {
+      for gesture in gestures where gesture.name == keyboardRevealGestureName {
+        input.removeGestureRecognizer(gesture)
+      }
+    }
+
     NotificationCenter.default.removeObserver(self, name: UITextField.textDidEndEditingNotification, object: input)
   }
 }
