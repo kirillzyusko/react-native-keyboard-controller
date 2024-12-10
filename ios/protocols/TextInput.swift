@@ -9,7 +9,9 @@
 import Foundation
 import UIKit
 
-public protocol TextInput: AnyObject {
+public protocol TextInput: UIView {
+  // default common methods/properties
+  var inputView: UIView? { get set }
   var keyboardType: UIKeyboardType { get }
   var keyboardAppearance: UIKeyboardAppearance { get }
   func focus()

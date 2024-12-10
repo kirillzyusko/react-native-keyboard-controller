@@ -22,7 +22,7 @@ class KeyboardControllerModuleImpl(
     setSoftInputMode(mDefaultMode)
   }
 
-  fun dismiss() {
+  fun dismiss(keepFocus: Boolean) {
     val activity = mReactContext.currentActivity
     val view: View? = FocusedInputHolder.get()
 
@@ -30,7 +30,9 @@ class KeyboardControllerModuleImpl(
       UiThreadUtil.runOnUiThread {
         val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
         imm?.hideSoftInputFromWindow(view.windowToken, 0)
-        view.clearFocus()
+        if (!keepFocus) {
+          view.clearFocus()
+        }
       }
     }
   }
