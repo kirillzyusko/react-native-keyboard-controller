@@ -1,0 +1,91 @@
+---
+slug: mastering-keyboard-dismissal
+title: Mastering keyboard dismissal 🥷🏼
+authors: [kirill]
+tags: [react-native, keyboard, dismiss, state, isVisible]
+keywords:
+  [react-native-keyboard-controller, keyboard, dismiss, state, isVisible]
+---
+
+Today I'm glad to announce a new `1.15.0` version of `react-native-keyboard-controller` 🎉
+
+This release mainly focuses on various ways to dismiss a keyboard, so let's go and see which new features this release brings 👇
+
+<!-- truncate -->
+
+## Changes to `.dismiss()` method
+
+### `dismiss()` method now returns a promise
+
+Previously, the `dismiss()` method was synchronous, which meant that you couldn't determine the moment when keyboard is fully hidden. Typically many people were using one time listener that was resolving a promise or executing the code that had to be executed after keyboard dismissal. The code could look like this:
+
+```tsx
+import {
+  KeyboardController,
+  KeyboardEvents,
+} from "react-native-keyboard-controller";
+
+const subscription = KeyboardEvents.addListener("keyboardDidHide", () => {
+  setVisible(true);
+  subscription.remove();
+});
+
+KeyboardController.dismiss();
+```
+
+Now, `.dismiss()` returns a promise, so you can use it in `async` way:
+
+```ts
+import { KeyboardController } from "react-native-keyboard-controller";
+
+await KeyboardController.dismiss();
+setVisible(true);
+```
+
+Much cleaner and more readable code! 💪
+
+### `dismiss()` now blurs input by default
+
+The previous behavior of `dismiss()` was keeping the focus on the input on Android and was blurring the input on iOS. This behavior was not very intuitive and such inconsistency could causing a lot of issues. Now, the default behavior is to blur the input on both platforms 😎
+
+Though a rhetorical question might be raised - I like the old behavior, when input still hold the focus 🤷‍♂️ We hear you! 👇
+
+### `dismiss()` now accepts a `keepFocus` parameter
+
+Sometimes you might want to keep the focus on the input, even after keyboard is dismissed. This way users can understand which field was focused the last. If you want to achieve this behavior, you can pass `keepFocus` parameter to `dismiss()` method:
+
+```ts
+KeyboardController.dismiss({ keepFocus: true });
+```
+
+## New `KeyboardController` API methods
+
+We finished with dismissal part, but the counter part of dismissal is checking current keyboard state. This release is packed with 2 new methods that aims to simplify the keyboard state checks 😊
+
+### New `.isVisible()` method
+
+### New `.state()` method
+
+## Better `KeyboardStickyView` and `KeyboardToolbar` interoperability
+
+### `KeyboardToolbar` now accepts `KeyboardStickyView` props
+
+### `KeyboardStickyView` got new `enabled` prop
+
+## `KeyboardEvents` metadata enhancements
+
+### New `type` property
+
+### New `appearance` property
+
+## `KeyboardGestureArea` with `offset` on iOS 🔥
+
+The cherry on the cake of this release is making `KeyboardGestureArea` available on iOS 🍒
+
+This component got new property `textInputNativeID` which is available on iOS only and `offset` property is cross-platform now.
+
+:::tip Why `textInputNativeID` was added?
+Short answer - to keep a release backward compatible.
+
+Long answer - before on iOS `KeyboardGestureArea` was returning `React.Fragment`. I think some people were relying on this fact, that `KeyboardGestureArea` doesn't do anything on iOS, so if this component starts to change a behavior instantly it may produce a hard migration. So to avoid this I added a new property `textInputNativeID` which acts as a switch (unless it's specified `KeyboardGestureArea` will not do anything useful on iOS). Also this property allows to selectively add offset for given inputs.
+:::
