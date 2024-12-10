@@ -15,6 +15,7 @@ import com.facebook.react.views.textinput.ReactEditText
 import com.facebook.react.views.view.ReactViewGroup
 import com.reactnativekeyboardcontroller.constants.Keyboard
 import com.reactnativekeyboardcontroller.events.KeyboardTransitionEvent
+import com.reactnativekeyboardcontroller.extensions.appearance
 import com.reactnativekeyboardcontroller.extensions.dispatchEvent
 import com.reactnativekeyboardcontroller.extensions.dp
 import com.reactnativekeyboardcontroller.extensions.emitEvent
@@ -428,6 +429,7 @@ class KeyboardAnimationCallback(
     params.putDouble("timestamp", System.currentTimeMillis().toDouble())
     params.putInt("target", viewTagFocused)
     params.putString("type", FocusedInputHolder.get()?.keyboardType)
+    params.putString("appearance", context.appearance)
 
     return params
   }

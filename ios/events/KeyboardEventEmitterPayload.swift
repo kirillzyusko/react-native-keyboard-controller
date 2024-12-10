@@ -17,6 +17,7 @@ public func buildEventParams(_ height: Double, _ duration: Int, _ tag: NSNumber)
   data["timestamp"] = Date.currentTimeStamp
   data["target"] = tag
   data["type"] = input?.keyboardType.name ?? "default"
+  data["appearance"] = input?.keyboardAppearance.name ?? "default"
 
   return data
 }
