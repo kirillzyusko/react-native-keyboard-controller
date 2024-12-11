@@ -26,6 +26,6 @@
 
 #endif
 // TODO: should be array? How to specify multiple different offsets for different inputs?
-@property (nonatomic, assign) NSNumber *offset;
-@property (nonatomic, assign) NSString *textInputNativeID;
+@property (nonatomic, strong) NSNumber *offset;
+@property (nonatomic, strong) NSString *textInputNativeID;
 @end
