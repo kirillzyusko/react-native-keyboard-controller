@@ -34,7 +34,7 @@ extension UIResponder {
       }
 
       // Add your custom behavior here
-      print("Performing custom actions before the original resignFirstResponder \(self as? TextInput)")
+      print("Performing custom actions before the original resignFirstResponder \(Date.currentTimeStamp)")
 
       KeyboardAreaExtender.shared.hide()
 
