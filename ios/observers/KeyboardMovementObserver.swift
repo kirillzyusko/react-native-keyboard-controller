@@ -175,6 +175,7 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc func keyboardWillAppear(_ notification: Notification) {
+    print("keyboardWillAppear - attempt \(Date.currentTimeStamp)")
     guard !KeyboardEventsIgnorer.shared.shouldIgnore else { return }
     print("keyboardWillAppear \(Date.currentTimeStamp)")
     let (duration, frame) = notification.keyboardMetaData()
@@ -195,7 +196,8 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc func keyboardWillDisappear(_ notification: Notification) {
-    guard !KeyboardEventsIgnorer.shared.shouldIgnore else { return }
+    print("keyboardWillDisappear - attempt \(Date.currentTimeStamp)")
+    // guard !KeyboardEventsIgnorer.shared.shouldIgnore else { return }
     print("keyboardWillDisappear \(Date.currentTimeStamp)")
     let (duration, _) = notification.keyboardMetaData()
     tag = UIResponder.current.reactViewTag
@@ -244,7 +246,8 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc func keyboardDidDisappear(_ notification: Notification) {
-    guard !KeyboardEventsIgnorer.shared.shouldIgnore else { return }
+    print("keyboardDidDisappear - attempt \(Date.currentTimeStamp)")
+    // guard !KeyboardEventsIgnorer.shared.shouldIgnore else { return }
     print("keyboardDidDisappear \(Date.currentTimeStamp)")
     let (duration, _) = notification.keyboardMetaData()
     tag = UIResponder.current.reactViewTag
