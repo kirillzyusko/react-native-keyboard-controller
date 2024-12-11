@@ -100,11 +100,6 @@ RCT_EXPORT_VIEW_PROPERTY(offset, NSNumber *)
 }
 #endif
 
-- (void)dealloc
-{
-  [[KeyboardOffsetProvider shared] removeOffsetForTextInputNativeID:_textInputNativeID];
-}
-
 // MARK: Gesture Recognizers
 - (void)setupGestureRecognizers
 {
@@ -137,6 +132,7 @@ RCT_EXPORT_VIEW_PROPERTY(offset, NSNumber *)
 {
   if (self.superview == nil) {
     // unmounted
+    [[KeyboardOffsetProvider shared] removeOffsetForTextInputNativeID:_textInputNativeID];
   }
 }
 
