@@ -16,8 +16,8 @@
 - (x) 12 remove the code with lastOffset (this is not needed as we hide view only in resignFirstResponder)
 - 13 test how switching between two inputs works?
 - (x) 14 fix a crash when you re-enter the page - use `strong` modifier
-- 15 iPhone 15 - progress NaN in last onMove
-- 16 iPhone 15 - re-enter the page and offset is not added (it's removed)
+- 15 iPhone iOS 15 - progress NaN in last onMove
+- (x) 16 iPhone iOS 15 - re-enter the page and offset is not added (it's removed)
 
 Test scenarios:
 - tap and show keyboard
