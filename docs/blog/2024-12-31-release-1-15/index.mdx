@@ -72,13 +72,21 @@ You can use it to check keyboard visibility on demand without a need to create l
 
 The new method returns the last keyboard state. It returns `null` if keyboard was not shown in the app yet.
 
-This method acts similar to `Keyboard.metrics()` from `react-native` and returns the current keyboard state. The reason why it is named `state` instead of `metrics` is because it returns a different data structure and it's not a drop-in replacement for `Keyboard.metrics()`. However you can achieve the same results using `KeyboardController.state()` (because it gives an access to `height` value) and even more - you can other properties, such as `type`, `appearance`, `target`, `timestamp` and others to get more information about the keyboard.
+This method acts similar to `Keyboard.metrics()` from `react-native` and returns the current keyboard state. The reason why it is named `state` instead of `metrics` is because it returns a different data structure and it's not a drop-in replacement for `Keyboard.metrics()`. However you can achieve the same results using `KeyboardController.state()` (because it gives an access to `height` value) and even more - you can use other properties, such as `type`, `appearance`, `target`, `timestamp` etc. to get more information about the keyboard.
 
 ## Better `KeyboardStickyView` and `KeyboardToolbar` interoperability
 
 ### `KeyboardToolbar` now accepts `KeyboardStickyView` props
 
+The `KeyboardToolbar` is based on `KeyboardStickyView`. However before it wasn't exposing some of `KeyboardStickyView` properties.
+
+Now I fixed that problem and `KeyboardToolbar` now accepts the same properties that `KeyboardStickyView` accepts making a better interoperability between these two components.
+
 ### `KeyboardStickyView` got new `enabled` prop
+
+Before `KeyboardAwareScrollView` and `KeyboardAvoidingView` had `enabled` property, but somehow I forgot to add that property to `KeyboardStickyView` 😬. The `1.15.0` release fixes this problem and now `KeyboardStickyView` also has `enabled` property.
+
+When this property is turned on, then `KeyboardStickyView` follows the keyboard. When property disabled, then it just moves the component into a position as keyboard wasn't shown yet.
 
 ## `KeyboardEvents` metadata enhancements
 
@@ -86,16 +94,16 @@ This release enhances `KeyboardEventData` with new properties.
 
 ### New `type` property
 
+In this release I added new `type` property which reflects [keyboardType](https://reactnative.dev/docs/textinput#keyboardtype) value. Using this property you can understand more about which keyboard type is shown at the moment.
+
 ### New `appearance` property
 
-## `KeyboardGestureArea` with `offset` on iOS 🔥
+This release adds a new `appearance` property which reflects keyboard appearance and can be one of `light`/`dark`/`default` values. This property is available on iOS and Android.
 
-The cherry on the cake of this release is making `KeyboardGestureArea` available on iOS 🍒
+## What's next?
 
-This component got new property `textInputNativeID` which is available on iOS only and `offset` property is cross-platform now.
+The main goal of this release was making `KeyboardGestureArea` available on iOS. I implemented necessary changes in [this PR](https://github.com/kirillzyusko/react-native-keyboard-controller/pull/727) (which would allow to use `offset` property for interactive dismissal). But when I decided to test Fabric I discovered many issues, which basically makes this component unusable on iOS. Since I already merged many PRs that extend library functionality I decided not to pause release process for months and prepare `1.15.0` now. I'm not abandoning the idea of adding `offset` to interactive keyboard dismissal. I just think it's not a right time for the release of this feature.
 
-:::tip Why `textInputNativeID` was added?
-Short answer - to keep a release backward compatible.
+As support timeline for this release I'm planning to resolve some old known issues in the library to be sure this library is bug-free and can be used in various complex applications!
 
-Long answer - before on iOS `KeyboardGestureArea` was returning `React.Fragment`. I think some developers were relying on this fact, that `KeyboardGestureArea` doesn't do anything on iOS, so if this component starts to change a behavior instantly it may produce a hard migration. So to avoid this I added a new property `textInputNativeID` which acts as a switch (unless it's specified `KeyboardGestureArea` will not do anything useful on iOS). Also this property allows to selectively add offset for given inputs.
-:::
+Stay tuned and follow me on [Twitter](https://twitter.com/ziusko) and [GitHub](https://github.com/kirillzyusko) for updates. Thank you for your support! 😊
