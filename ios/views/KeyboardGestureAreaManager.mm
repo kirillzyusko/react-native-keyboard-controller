@@ -53,14 +53,13 @@ RCT_EXPORT_VIEW_PROPERTY(offset, NSNumber *)
 
 // MARK: View
 #ifdef RCT_NEW_ARCH_ENABLED
-@interface KeyboardGestureArea () <RCTKeyboardGestureAreaViewProtocol, UIGestureRecognizerDelegate>
+@interface KeyboardGestureArea () <RCTKeyboardGestureAreaViewProtocol>
 #else
-@interface KeyboardGestureArea () <UIGestureRecognizerDelegate>
+@interface KeyboardGestureArea ()
 #endif
 @end
 
 @implementation KeyboardGestureArea {
-  UIPanGestureRecognizer *_panGestureRecognizer;
 }
 
 #ifdef RCT_NEW_ARCH_ENABLED
@@ -84,7 +83,6 @@ RCT_EXPORT_VIEW_PROPERTY(offset, NSNumber *)
 - (instancetype)init
 {
   if (self = [super init]) {
-    [self setupGestureRecognizers];
   }
   return self;
 }
@@ -93,39 +91,11 @@ RCT_EXPORT_VIEW_PROPERTY(offset, NSNumber *)
 {
   self = [super initWithFrame:CGRectZero];
   if (self) {
-    [self setupGestureRecognizers];
   }
 
   return self;
 }
 #endif
-
-// MARK: Gesture Recognizers
-- (void)setupGestureRecognizers
-{
-  _panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
-  _panGestureRecognizer.delegate = self; // Set delegate to enable simultaneous recognition
-  [self addGestureRecognizer:_panGestureRecognizer];
-}
-
-- (void)handlePanGesture:(UIPanGestureRecognizer *)gestureRecognizer
-{
-  if (gestureRecognizer.state == UIGestureRecognizerStateBegan) {
-    [KeyboardEventsIgnorer shared].isInteractiveGesture = YES;
-  }
-  if (gestureRecognizer.state == UIGestureRecognizerStateEnded) {
-    NSLog(@"set to false");
-    [KeyboardEventsIgnorer shared].isInteractiveGesture = NO;
-  }
-  
-}
-
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer
-    shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
-{
-  // Allow simultaneous gesture recognition
-  return YES;
-}
 
 // MARK: lifecycle methods
 - (void)didMoveToSuperview
