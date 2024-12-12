@@ -1,15 +1,34 @@
 ---
-slug: mastering-keyboard-dismissal
-title: Mastering keyboard dismissal 🥷🏼
+slug: mastering-keyboard-management
+title: Mastering keyboard management 🥷🏼
 authors: [kirill]
-tags: [react-native, keyboard, dismiss, state, isVisible]
+tags:
+  [
+    react-native,
+    keyboard,
+    dismiss,
+    keepFocus,
+    state,
+    isVisible,
+    type,
+    appearance,
+  ]
 keywords:
-  [react-native-keyboard-controller, keyboard, dismiss, state, isVisible]
+  [
+    react-native-keyboard-controller,
+    keyboard,
+    dismiss,
+    keepFocus,
+    state,
+    isVisible,
+    type,
+    appearance,
+  ]
 ---
 
 Today I'm glad to announce a new `1.15.0` version of `react-native-keyboard-controller` 🎉
 
-This release mainly focuses on various ways to dismiss a keyboard and API enhancements, so let's go and see which new features this release brings 👇
+This release mainly focuses on managing keyboard state, improving keyboard dismissal interactions and API enhancements, so let's go and see which new features this release brings 👇
 
 <!-- truncate -->
 
@@ -46,9 +65,9 @@ Much cleaner and more readable code! 💪
 
 ### `dismiss` now blurs input by default
 
-The previous behavior of `dismiss` was keeping the focus on the input on Android and was blurring the input on iOS. This behavior was not very intuitive and such inconsistency could causing a lot of issues. Now, the default behavior is to blur the input on both platforms 😎
+The previous behavior of `dismiss` was keeping the focus on the input on Android and blurring the input on iOS. This behavior was not very intuitive and such inconsistency could causing a lot of issues. Now, the default behavior is to blur the input on both platforms 😎
 
-Though a rhetorical question might be raised - I like the old behavior, when input still hold the focus 🤷‍♂️ We hear you! 👇
+Though a rhetorical question might be raised - **"I liked the old behavior, when input still hold the focus 🤷‍♂️. How to restore a previous behavior?"** We hear you! 👇
 
 ### `dismiss` now accepts a `keepFocus` parameter
 
@@ -76,11 +95,13 @@ This method acts similar to `Keyboard.metrics()` from `react-native` and returns
 
 ## Better `KeyboardStickyView` and `KeyboardToolbar` interoperability
 
+`KeyboardStickyView` and `KeyboardToolbar` also got some useful improvements 😊
+
 ### `KeyboardToolbar` now accepts `KeyboardStickyView` props
 
 The `KeyboardToolbar` is based on `KeyboardStickyView`. However before it wasn't exposing some of `KeyboardStickyView` properties.
 
-Now I fixed that problem and `KeyboardToolbar` now accepts the same properties that `KeyboardStickyView` accepts making a better interoperability between these two components.
+I fixed that problem and `KeyboardToolbar` now accepts the same properties that `KeyboardStickyView` has, thus making a better interoperability between these two components.
 
 ### `KeyboardStickyView` got new `enabled` prop
 
