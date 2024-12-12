@@ -12,11 +12,10 @@ public class KeyboardEventsIgnorer: NSObject {
   @objc public static let shared = KeyboardEventsIgnorer()
 
   var shouldIgnoreKeyboardEvents = false
-  @objc public var isInteractiveGesture = false
 
   public var shouldIgnore: Bool {
-    print("KeyboardEventsIgnorer \(shouldIgnoreKeyboardEvents) \(isInteractiveGesture)")
-    return shouldIgnoreKeyboardEvents || isInteractiveGesture
+    print("KeyboardEventsIgnorer \(shouldIgnoreKeyboardEvents)")
+    return shouldIgnoreKeyboardEvents
   }
 
   override init() {
