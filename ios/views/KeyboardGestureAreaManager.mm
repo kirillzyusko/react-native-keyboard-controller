@@ -102,7 +102,8 @@ RCT_EXPORT_VIEW_PROPERTY(offset, NSNumber *)
 {
   if (self.superview == nil) {
     // unmounted
-    [[KeyboardOffsetProvider shared] removeOffsetForTextInputNativeID:_textInputNativeID withTag:self.reactTag];
+    [[KeyboardOffsetProvider shared] removeOffsetForTextInputNativeID:_textInputNativeID
+                                                              withTag:self.reactTag];
   }
 }
 
@@ -121,14 +122,19 @@ RCT_EXPORT_VIEW_PROPERTY(offset, NSNumber *)
 - (void)setOffset:(NSNumber *)offset
 {
   // [[KeyboardOffsetProvider shared] removeOffsetForTextInputNativeID:_textInputNativeID];
-  [[KeyboardOffsetProvider shared] setOffsetForTextInputNativeID:_textInputNativeID offset:offset withTag: self.reactTag];
+  [[KeyboardOffsetProvider shared] setOffsetForTextInputNativeID:_textInputNativeID
+                                                          offset:offset
+                                                         withTag:self.reactTag];
   _offset = offset;
 }
 
 - (void)setTextInputNativeID:(NSString *)textInputNativeID
 {
-  [[KeyboardOffsetProvider shared] removeOffsetForTextInputNativeID:_textInputNativeID withTag: self.reactTag];
-  [[KeyboardOffsetProvider shared] setOffsetForTextInputNativeID:textInputNativeID offset:_offset withTag: self.reactTag];
+  [[KeyboardOffsetProvider shared] removeOffsetForTextInputNativeID:_textInputNativeID
+                                                            withTag:self.reactTag];
+  [[KeyboardOffsetProvider shared] setOffsetForTextInputNativeID:textInputNativeID
+                                                          offset:_offset
+                                                         withTag:self.reactTag];
   _textInputNativeID = textInputNativeID;
 }
 #endif
