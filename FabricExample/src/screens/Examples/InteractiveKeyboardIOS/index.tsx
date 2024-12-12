@@ -1,6 +1,9 @@
-import React, { useCallback, useRef } from "react";
-import { TextInput, View } from "react-native";
-import { useKeyboardHandler } from "react-native-keyboard-controller";
+import React, { useCallback, useRef, useState } from "react";
+import { TextInput } from "react-native";
+import {
+  KeyboardGestureArea,
+  useKeyboardHandler,
+} from "react-native-keyboard-controller";
 import Reanimated, {
   useAnimatedProps,
   useAnimatedScrollHandler,
@@ -12,6 +15,8 @@ import Message from "../../../components/Message";
 import { history } from "../../../components/Message/data";
 
 import styles from "./styles";
+
+import type { LayoutChangeEvent } from "react-native";
 
 const AnimatedTextInput = Reanimated.createAnimatedComponent(TextInput);
 
@@ -38,8 +43,8 @@ const useKeyboardAnimation = () => {
         return;
       }
 
-      progress.value = e.progress;
-      height.value = e.height;
+      // progress.value = e.progress;
+      // height.value = e.height;
 
       inset.value = e.height;
       // Math.max is needed to prevent overscroll when keyboard hides (and user scrolled to the top, for example)
@@ -54,10 +59,10 @@ const useKeyboardAnimation = () => {
     onMove: (e) => {
       "worklet";
 
-      if (shouldUseOnMoveHandler.value) {
-        progress.value = e.progress;
-        height.value = e.height;
-      }
+      // if (shouldUseOnMoveHandler.value) {
+      progress.value = e.progress;
+      height.value = e.height;
+      // }
     },
     onEnd: (e) => {
       "worklet";
@@ -86,6 +91,11 @@ const contentContainerStyle = {
 function InteractiveKeyboard() {
   const ref = useRef<Reanimated.ScrollView>(null);
   const { height, onScroll, inset, offset } = useKeyboardAnimation();
+  const [inputHeight, setInputHeight] = useState(TEXT_INPUT_HEIGHT);
+
+  const onInputLayoutChanged = useCallback((e: LayoutChangeEvent) => {
+    setInputHeight(e.nativeEvent.layout.height);
+  }, []);
 
   const scrollToBottom = useCallback(() => {
     ref.current?.scrollToEnd({ animated: false });
@@ -94,7 +104,7 @@ function InteractiveKeyboard() {
   const textInputStyle = useAnimatedStyle(
     () => ({
       position: "absolute",
-      height: TEXT_INPUT_HEIGHT,
+      minHeight: TEXT_INPUT_HEIGHT,
       width: "100%",
       backgroundColor: "#BCBCBC",
       transform: [{ translateY: -height.value }],
@@ -113,7 +123,11 @@ function InteractiveKeyboard() {
   }));
 
   return (
-    <View style={styles.container}>
+    <KeyboardGestureArea
+      offset={inputHeight}
+      style={styles.container}
+      textInputNativeID="chat-input"
+    >
       <Reanimated.ScrollView
         ref={ref}
         // simulation of `automaticallyAdjustKeyboardInsets` behavior on RN < 0.73
@@ -130,8 +144,14 @@ function InteractiveKeyboard() {
           <Message key={index} {...message} />
         ))}
       </Reanimated.ScrollView>
-      <AnimatedTextInput style={textInputStyle} testID="chat.input" />
-    </View>
+      <AnimatedTextInput
+        multiline
+        nativeID="chat-input"
+        style={textInputStyle}
+        testID="chat.input"
+        onLayout={onInputLayoutChanged}
+      />
+    </KeyboardGestureArea>
   );
 }
 

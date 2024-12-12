@@ -74,7 +74,6 @@ RCT_EXPORT_VIEW_PROPERTY(offset, NSNumber *)
 {
   [super load];
 
-  // TODO: initialize swizzling here? Or in constructor?
   [UIResponder swizzleResignFirstResponder];
 }
 
@@ -111,17 +110,57 @@ RCT_EXPORT_VIEW_PROPERTY(offset, NSNumber *)
 #ifdef RCT_NEW_ARCH_ENABLED
 - (void)updateProps:(Props::Shared const &)props oldProps:(Props::Shared const &)oldProps
 {
-  const auto &oldViewProps = *std::static_pointer_cast<const KeyboardGestureAreaProps>(_props);
+  // Safely cast new props
   const auto &newViewProps = *std::static_pointer_cast<const KeyboardGestureAreaProps>(props);
 
-  // TODO: implement logic with provider
+  // Safely handle old props - check if they exist before casting
+  const KeyboardGestureAreaProps *oldViewPropsPtr =
+      oldProps ? std::static_pointer_cast<const KeyboardGestureAreaProps>(oldProps).get() : nullptr;
+
+  // Convert new textInputNativeID, handling potential empty string
+  NSString *newTextInputNativeID = !newViewProps.textInputNativeID.empty()
+      ? [NSString stringWithUTF8String:newViewProps.textInputNativeID.c_str()]
+      : nil;
+
+  // Convert old textInputNativeID, only if old props exist
+  NSString *oldTextInputNativeID = (oldViewPropsPtr && !oldViewPropsPtr->textInputNativeID.empty())
+      ? [NSString stringWithUTF8String:oldViewPropsPtr->textInputNativeID.c_str()]
+      : nil;
+  NSNumber *tag = [NSNumber numberWithInteger:self.tag];
+  NSNumber *newOffset = @(newViewProps.offset);
+
+  // Check if textInputNativeID has changed
+  if (newTextInputNativeID != oldTextInputNativeID) {
+    // Remove old offset if it exists
+    if (oldTextInputNativeID) {
+      [[KeyboardOffsetProvider shared] removeOffsetForTextInputNativeID:oldTextInputNativeID
+                                                                withTag:tag];
+    }
+
+    // Set new offset for new textInputNativeID
+    if (newTextInputNativeID) {
+      [[KeyboardOffsetProvider shared] setOffsetForTextInputNativeID:newTextInputNativeID
+                                                              offset:newOffset
+                                                             withTag:tag];
+    }
+  }
+  // Check if offset has changed
+  else if (!oldViewPropsPtr || newViewProps.offset != oldViewPropsPtr->offset) {
+    // Update offset for existing textInputNativeID
+    if (newTextInputNativeID) {
+      [[KeyboardOffsetProvider shared] removeOffsetForTextInputNativeID:newTextInputNativeID
+                                                                withTag:tag];
+      [[KeyboardOffsetProvider shared] setOffsetForTextInputNativeID:newTextInputNativeID
+                                                              offset:newOffset
+                                                             withTag:tag];
+    }
+  }
 
   [super updateProps:props oldProps:oldProps];
 }
 #else
 - (void)setOffset:(NSNumber *)offset
 {
-  // [[KeyboardOffsetProvider shared] removeOffsetForTextInputNativeID:_textInputNativeID];
   [[KeyboardOffsetProvider shared] setOffsetForTextInputNativeID:_textInputNativeID
                                                           offset:offset
                                                          withTag:self.reactTag];
