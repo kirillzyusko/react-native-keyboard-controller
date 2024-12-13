@@ -38,10 +38,6 @@ export type KeyboardAwareScrollViewProps = {
   enabled?: boolean;
   /** Adjusting the bottom spacing of KeyboardAwareScrollView. Default is `0` */
   extraKeyboardSpace?: number;
-   /** Used if inverted Flatlist/Flashlist is being used */
-  inverted?: boolean;
-  /** Ajdusting the offset for the content when keyboard is shown on inverted Flatlist/Flashlist on screen with BottomTab navigation */
-  tabBarHeight?: number;
   /** Custom component for `ScrollView`. Default is `ScrollView` */
   ScrollViewComponent?: React.ComponentType<ScrollViewProps>;
 } & ScrollViewProps;
@@ -98,8 +94,6 @@ const KeyboardAwareScrollView = forwardRef<
       extraKeyboardSpace = 0,
       ScrollViewComponent = Reanimated.ScrollView,
       snapToOffsets,
-      inverted = false,
-      tabBarHeight = 0,
       ...rest
     },
     ref,
@@ -118,6 +112,9 @@ const KeyboardAwareScrollView = forwardRef<
     const layout = useSharedValue<FocusedInputLayoutChangedEvent | null>(null);
 
     const { height } = useWindowDimensions();
+
+    const restStyle = (rest?.style?.[0] || {})
+    const inverted = "transform" in restStyle ? restStyle.transform[0]?.scale === -1 : false
 
     const onRef = useCallback((assignedRef: Reanimated.ScrollView) => {
       if (typeof ref === "function") {
@@ -356,7 +353,7 @@ const KeyboardAwareScrollView = forwardRef<
 
     const view = useAnimatedStyle(
       () => {
-        const invertedOffset = inverted ? -tabBarHeight : 0;
+        const invertedOffset = inverted ? -extraKeyboardSpace : 0;
         return enabled
           ? {
               // animations become choppy when scrolling to the end of the `ScrollView` (when the last input is focused)
