@@ -113,7 +113,7 @@ const KeyboardAwareScrollView = forwardRef<
 
     const { height } = useWindowDimensions();
 
-    const restStyle = (rest?.style?.[0] || {})
+    const restStyle = (rest?.style && rest?.style?.[0] || {})
     const inverted = "transform" in restStyle ? restStyle.transform[0]?.scale === -1 : false
 
     const onRef = useCallback((assignedRef: Reanimated.ScrollView) => {
