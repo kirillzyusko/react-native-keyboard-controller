@@ -48,7 +48,6 @@ export default function KeyboardAvoidingViewExample() {
   return (
     <KeyboardAvoidingView
       behavior={"padding"}
-      contentContainerStyle={styles.container}
       keyboardVerticalOffset={100}
       style={styles.content}
     >
@@ -67,9 +66,6 @@ export default function KeyboardAvoidingViewExample() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   content: {
     flex: 1,
     maxHeight: 600,
