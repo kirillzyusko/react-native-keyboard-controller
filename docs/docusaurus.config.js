@@ -106,10 +106,6 @@ const config = {
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       image: "img/og-image.png",
-      metadata: [
-        { name: "og:image:width", content: "2400" },
-        { name: "og:image:height", content: "1426" },
-      ],
       navbar: {
         title: "Keyboard Controller",
         logo: {
@@ -225,6 +221,8 @@ const config = {
           content:
             "react-native, keyboard, animation, ios, android, interactive keyboard dismiss, avoid keyboard, keyboard avoiding view, keyboard aware scroll view, sticky keyboard view, keyboard toolbar",
         },
+        { name: "og:image:width", content: "2400" },
+        { name: "og:image:height", content: "1426" },
       ],
       algolia: {
         appId: "CX4YXK1FST",
