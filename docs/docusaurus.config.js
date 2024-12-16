@@ -19,7 +19,7 @@ const config = {
   baseUrl: baseUrl,
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
-  favicon: "img/favicon.ico",
+  favicon: "favicon.ico",
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
@@ -105,6 +105,11 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
+      image: "img/og-image.png",
+      metadata: [
+        { name: "og:image:width", content: "2400" },
+        { name: "og:image:height", content: "1426" },
+      ],
       navbar: {
         title: "Keyboard Controller",
         logo: {
