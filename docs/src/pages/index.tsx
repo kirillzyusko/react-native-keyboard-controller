@@ -60,6 +60,12 @@ const trustedBy = [
     name: "Obytes",
   },
   {
+    img: "https://avatars.githubusercontent.com/u/431672?s=200&v=4",
+    alt: "Minds app",
+    link: "https://github.com/Minds/mobile-native",
+    name: "Minds",
+  },
+  {
     img: "https://avatars.githubusercontent.com/u/12504344?s=200&v=4",
     alt: "Expo framework",
     link: "https://docs.expo.dev/guides/keyboard-handling/",
@@ -76,12 +82,6 @@ const trustedBy = [
     alt: "TonKeeper Wallet app",
     link: "https://github.com/tonkeeper/wallet",
     name: "TON Wallet",
-  },
-  {
-    img: "https://avatars.githubusercontent.com/u/431672?s=200&v=4",
-    alt: "Minds app",
-    link: "https://github.com/Minds/mobile-native",
-    name: "Minds",
   },
   {
     img: "https://avatars.githubusercontent.com/u/97704884?s=200&v=4",
@@ -105,8 +105,8 @@ const trustedBy = [
 
 function TrustedBy(): JSX.Element {
   return (
-    <div className={clsx(styles.heroBanner)}>
-      <h2>Trusted by</h2>
+    <section className={clsx(styles.trustedBySection)}>
+      <h2 class={clsx(styles.trustedByTitle)}>Trusted by</h2>
       <div className={clsx(styles.trustedByContainer)}>
         {trustedBy.map((item, index) => (
           <a key={index} href={item.link} target="_blank">
@@ -115,8 +115,8 @@ function TrustedBy(): JSX.Element {
           </a>
         ))}
       </div>
-      <p>Would like to show your project here? <a href="https://github.com/kirillzyusko/react-native-keyboard-controller/edit/main/docs/website/src/pages/index.tsx">Submit a PR</a></p>
-    </div>
+      <p class={clsx(styles.addYourApp)}>Would like to show your project here? <a href="https://github.com/kirillzyusko/react-native-keyboard-controller/edit/main/docs/website/src/pages/index.tsx">Submit a PR</a></p>
+    </section>
   );
 }
 
