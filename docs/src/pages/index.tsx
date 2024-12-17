@@ -110,12 +110,21 @@ function TrustedBy(): JSX.Element {
       <div className={clsx(styles.trustedByContainer)}>
         {trustedBy.map((item, index) => (
           <a key={index} href={item.link} target="_blank">
-            <img className={clsx(styles.trustedByImg)} src={item.img} alt={item.alt} />
+            <img
+              alt={item.alt}
+              className={clsx(styles.trustedByImg)}
+              src={item.img}
+            />
             <h4>{item.name}</h4>
           </a>
         ))}
       </div>
-      <p class={clsx(styles.addYourApp)}>Would like to show your project here? <a href="https://github.com/kirillzyusko/react-native-keyboard-controller/edit/main/docs/website/src/pages/index.tsx">Submit a PR</a></p>
+      <p class={clsx(styles.addYourApp)}>
+        Would like to show your project here?{" "}
+        <a href="https://github.com/kirillzyusko/react-native-keyboard-controller/edit/main/docs/src/pages/index.tsx">
+          Submit a PR
+        </a>
+      </p>
     </section>
   );
 }
