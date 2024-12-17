@@ -28,6 +28,98 @@ function HomepageHeader() {
   );
 }
 
+const trustedBy = [
+  {
+    img: "https://avatars.githubusercontent.com/u/476779?s=200&v=4",
+    alt: "Expensify Mobile App",
+    link: "https://github.com/Expensify/App",
+    name: "Expensify",
+  },
+  {
+    img: "https://avatars.githubusercontent.com/u/94650532?s=200&v=4",
+    alt: "BlueSky Mobile App",
+    link: "https://github.com/bluesky-social/social-app",
+    name: "BlueSky",
+  },
+  {
+    img: "https://avatars.githubusercontent.com/u/23416667?s=200&v=4",
+    alt: "Chatwoot mobile app",
+    link: "https://github.com/chatwoot/chatwoot-mobile-app",
+    name: "Chatwoot",
+  },
+  {
+    img: "https://avatars.githubusercontent.com/u/3902527?s=200&v=4",
+    alt: "InfiniteRed Ignite react native project boilerplate",
+    link: "https://github.com/infinitered/ignite",
+    name: "Ignite",
+  },
+  {
+    img: "https://avatars.githubusercontent.com/u/4201786?s=200&v=4",
+    alt: "Obytes react native project template",
+    link: "https://github.com/obytes/react-native-template-obytes",
+    name: "Obytes",
+  },
+  {
+    img: "https://avatars.githubusercontent.com/u/12504344?s=200&v=4",
+    alt: "Expo framework",
+    link: "https://docs.expo.dev/guides/keyboard-handling/",
+    name: "Expo",
+  },
+  {
+    img: "https://avatars.githubusercontent.com/u/79029086?s=200&v=4",
+    alt: "Showtime mobile app",
+    link: "https://github.com/showtime-xyz/showtime-frontend",
+    name: "Showtime",
+  },
+  {
+    img: "https://avatars.githubusercontent.com/u/88587596?s=200&v=4",
+    alt: "TonKeeper Wallet app",
+    link: "https://github.com/tonkeeper/wallet",
+    name: "TON Wallet",
+  },
+  {
+    img: "https://avatars.githubusercontent.com/u/431672?s=200&v=4",
+    alt: "Minds app",
+    link: "https://github.com/Minds/mobile-native",
+    name: "Minds",
+  },
+  {
+    img: "https://avatars.githubusercontent.com/u/97704884?s=200&v=4",
+    alt: "Converse Messenger",
+    link: "https://github.com/ephemeraHQ/converse-app",
+    name: "Converse",
+  },
+  {
+    img: "https://avatars.githubusercontent.com/u/6613230?s=200&v=4",
+    alt: "Edge App",
+    link: "https://github.com/EdgeApp/edge-react-gui",
+    name: "Edge",
+  },
+  {
+    img: "https://avatars.githubusercontent.com/u/7648832?s=200&v=4",
+    alt: "Kitsu App",
+    link: "https://github.com/hummingbird-me/kitsu-mobile",
+    name: "Kitsu",
+  },
+];
+
+function TrustedBy(): JSX.Element {
+  return (
+    <div className={clsx(styles.heroBanner)}>
+      <h2>Trusted by</h2>
+      <div className={clsx(styles.trustedByContainer)}>
+        {trustedBy.map((item, index) => (
+          <a key={index} href={item.link} target="_blank">
+            <img className={clsx(styles.trustedByImg)} src={item.img} alt={item.alt} />
+            <h4>{item.name}</h4>
+          </a>
+        ))}
+      </div>
+      <p>Would like to show your project here? <a href="https://github.com/kirillzyusko/react-native-keyboard-controller/edit/main/docs/website/src/pages/index.tsx">Submit a PR</a></p>
+    </div>
+  );
+}
+
 export default function Home(): JSX.Element {
   const { siteConfig } = useDocusaurusContext();
 
@@ -39,6 +131,7 @@ export default function Home(): JSX.Element {
       <HomepageHeader />
       <main>
         <HomepageFeatures />
+        <TrustedBy />
       </main>
     </Layout>
   );

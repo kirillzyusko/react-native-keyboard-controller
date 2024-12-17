@@ -21,3 +21,17 @@
   align-items: center;
   justify-content: center;
 }
+
+.trustedByImg{
+  margin: 0px 10px;
+  border-radius: 20px;
+  width: 100px;
+  height: 100px;
+}
+
+.trustedByContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+}
