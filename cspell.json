@@ -126,7 +126,10 @@
     "focusable",
     "iphonesimulator",
     "suspendable",
-    "libc"
+    "libc",
+    "chatwoot",
+    "obytes",
+    "kitsu"
   ],
   "ignorePaths": [
     "node_modules",
