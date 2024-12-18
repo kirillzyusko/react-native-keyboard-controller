@@ -42,16 +42,28 @@ const trustedBy = [
     name: "BlueSky",
   },
   {
-    img: "https://avatars.githubusercontent.com/u/23416667?s=200&v=4",
-    alt: "Chatwoot mobile app",
-    link: "https://github.com/chatwoot/chatwoot-mobile-app",
-    name: "Chatwoot",
+    img: "https://avatars.githubusercontent.com/u/12504344?s=200&v=4",
+    alt: "Expo framework",
+    link: "https://docs.expo.dev/guides/keyboard-handling/",
+    name: "Expo",
   },
   {
     img: "https://avatars.githubusercontent.com/u/3902527?s=200&v=4",
     alt: "InfiniteRed Ignite react native project boilerplate",
     link: "https://github.com/infinitered/ignite",
     name: "Ignite",
+  },
+  {
+    img: "https://avatars.githubusercontent.com/u/88587596?s=200&v=4",
+    alt: "TonKeeper Wallet app",
+    link: "https://github.com/tonkeeper/wallet",
+    name: "TON Wallet",
+  },
+  {
+    img: "https://avatars.githubusercontent.com/u/23416667?s=200&v=4",
+    alt: "Chatwoot mobile app",
+    link: "https://github.com/chatwoot/chatwoot-mobile-app",
+    name: "Chatwoot",
   },
   {
     img: "https://avatars.githubusercontent.com/u/4201786?s=200&v=4",
@@ -66,22 +78,10 @@ const trustedBy = [
     name: "Minds",
   },
   {
-    img: "https://avatars.githubusercontent.com/u/12504344?s=200&v=4",
-    alt: "Expo framework",
-    link: "https://docs.expo.dev/guides/keyboard-handling/",
-    name: "Expo",
-  },
-  {
     img: "https://avatars.githubusercontent.com/u/79029086?s=200&v=4",
     alt: "Showtime mobile app",
     link: "https://github.com/showtime-xyz/showtime-frontend",
     name: "Showtime",
-  },
-  {
-    img: "https://avatars.githubusercontent.com/u/88587596?s=200&v=4",
-    alt: "TonKeeper Wallet app",
-    link: "https://github.com/tonkeeper/wallet",
-    name: "TON Wallet",
   },
   {
     img: "https://avatars.githubusercontent.com/u/97704884?s=200&v=4",
