@@ -11,6 +11,10 @@ const sitemapPath = "./build/sitemap.xml";
 const stylesheetPath = "./__tests__/screenshot.css";
 const stylesheet = fs.readFileSync(stylesheetPath).toString();
 
+function waitForDocusaurusHydration() {
+  return document.documentElement.dataset.hasHydrated === "true";
+}
+
 function screenshotPathname(pathname: string) {
   test(`pathname ${pathname}`, async ({ page }) => {
     const url = siteUrl + pathname;
@@ -19,7 +23,7 @@ function screenshotPathname(pathname: string) {
     // Wait for hydration, requires Docusaurus v2.4.3+
     // Docusaurus adds a <html data-has-hydrated="true"> once hydrated
     // See https://github.com/facebook/docusaurus/pull/9256
-    // await page.waitForFunction(waitForDocusaurusHydration);
+    await page.waitForFunction(waitForDocusaurusHydration);
     await page.addStyleTag({ content: stylesheet });
     await argosScreenshot(page, pathnameToArgosName(pathname));
   });
