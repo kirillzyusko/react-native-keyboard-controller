@@ -41,7 +41,7 @@ const FeatureList: FeatureItem[] = [
     ),
   },
   {
-    title: "Reach metadata",
+    title: "Rich metadata",
     lottie: textInputs,
     description: (
       <>
