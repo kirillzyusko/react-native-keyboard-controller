@@ -129,7 +129,8 @@
     "libc",
     "chatwoot",
     "obytes",
-    "kitsu"
+    "kitsu",
+    "drakula"
   ],
   "ignorePaths": [
     "node_modules",
