@@ -101,6 +101,12 @@ const trustedBy = [
     link: "https://github.com/hummingbird-me/kitsu-mobile",
     name: "Kitsu",
   },
+  {
+    img: "https://play-lh.googleusercontent.com/KsXljWMtBXw131OcLT44ByxwznfdgM1a-2gZVYNBzPBKz9gqOCxEIhC83IpS35OIZQc=w200-h480-rw",
+    alt: "Drakula: Watch Videos App",
+    link: "https://play.google.com/store/apps/details?id=app.drakula",
+    name: "Drakula",
+  },
 ];
 
 function TrustedBy(): JSX.Element {
