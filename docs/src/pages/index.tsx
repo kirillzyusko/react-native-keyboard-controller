@@ -102,7 +102,7 @@ const trustedBy = [
     name: "Kitsu",
   },
   {
-    img: "https://play-lh.googleusercontent.com/KsXljWMtBXw131OcLT44ByxwznfdgM1a-2gZVYNBzPBKz9gqOCxEIhC83IpS35OIZQc=w240-h480-rw",
+    img: "https://play-lh.googleusercontent.com/KsXljWMtBXw131OcLT44ByxwznfdgM1a-2gZVYNBzPBKz9gqOCxEIhC83IpS35OIZQc=w200-h480-rw",
     alt: "Drakula: Watch Videos App",
     link: "https://play.google.com/store/apps/details?id=app.drakula",
     name: "Drakula",
