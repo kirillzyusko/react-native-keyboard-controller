@@ -92,6 +92,7 @@ function InteractiveKeyboard() {
   const ref = useRef<Reanimated.ScrollView>(null);
   const { height, onScroll, inset, offset } = useKeyboardAnimation();
   const [inputHeight, setInputHeight] = useState(TEXT_INPUT_HEIGHT);
+  const [text, setText] = useState("");
 
   const onInputLayoutChanged = useCallback((e: LayoutChangeEvent) => {
     setInputHeight(e.nativeEvent.layout.height);
@@ -149,6 +150,8 @@ function InteractiveKeyboard() {
         nativeID="chat-input"
         style={textInputStyle}
         testID="chat.input"
+        value={text}
+        onChangeText={setText}
         onLayout={onInputLayoutChanged}
       />
     </KeyboardGestureArea>
