@@ -1,5 +1,5 @@
 /* eslint react/jsx-sort-props: off */
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Animated, Platform, StyleSheet } from "react-native";
 import {
   controlEdgeToEdgeValues,
@@ -192,8 +192,8 @@ export const KeyboardProvider = ({
     [],
   );
 
-  // effects
-  useEffect(() => {
+  // layout effects
+  useLayoutEffect(() => {
     if (enabled) {
       applyMonkeyPatch();
     } else {
