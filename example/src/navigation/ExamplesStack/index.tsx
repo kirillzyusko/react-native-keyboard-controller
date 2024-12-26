@@ -8,6 +8,7 @@ import CloseScreen from "../../screens/Examples/Close";
 import EnabledDisabled from "../../screens/Examples/EnabledDisabled";
 import Events from "../../screens/Examples/Events";
 import FocusedInputHandlers from "../../screens/Examples/FocusedInputHandlers";
+import HoldScreen from "../../screens/Examples/Hold";
 import ImageGallery from "../../screens/Examples/ImageGallery";
 import InteractiveKeyboard from "../../screens/Examples/InteractiveKeyboard";
 import InteractiveKeyboardIOS from "../../screens/Examples/InteractiveKeyboardIOS";
@@ -46,6 +47,7 @@ export type ExamplesStackParamList = {
   [ScreenNames.BOTTOM_TAB_BAR]: undefined;
   [ScreenNames.OVER_KEYBOARD_VIEW]: undefined;
   [ScreenNames.IMAGE_GALLERY]: undefined;
+  [ScreenNames.HOLD]: undefined;
 };
 
 const Stack = createStackNavigator<ExamplesStackParamList>();
@@ -114,6 +116,9 @@ const options = {
   },
   [ScreenNames.IMAGE_GALLERY]: {
     title: "Image gallery",
+  },
+  [ScreenNames.HOLD]: {
+    title: "Hold",
   },
 };
 
@@ -223,6 +228,11 @@ const ExamplesStack = () => (
       component={ImageGallery}
       name={ScreenNames.IMAGE_GALLERY}
       options={options[ScreenNames.IMAGE_GALLERY]}
+    />
+    <Stack.Screen
+      component={HoldScreen}
+      name={ScreenNames.HOLD}
+      options={options[ScreenNames.HOLD]}
     />
   </Stack.Navigator>
 );

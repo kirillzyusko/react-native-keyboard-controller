@@ -129,4 +129,10 @@ export const examples: Example[] = [
     info: ScreenNames.IMAGE_GALLERY,
     icons: "🖼️",
   },
+  {
+    title: "Hold",
+    testID: "hold",
+    info: ScreenNames.HOLD,
+    icons: "✋",
+  },
 ];

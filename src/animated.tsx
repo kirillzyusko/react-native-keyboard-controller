@@ -1,6 +1,13 @@
 /* eslint react/jsx-sort-props: off */
-import React, { useLayoutEffect, useMemo, useRef, useState } from "react";
-import { Animated, Platform, StyleSheet } from "react-native";
+import React, {
+  forwardRef,
+  useImperativeHandle,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import { Animated, Platform, StyleSheet, TextInput } from "react-native";
 import {
   controlEdgeToEdgeValues,
   isEdgeToEdge,
@@ -11,6 +18,7 @@ import { KeyboardControllerView } from "./bindings";
 import { KeyboardContext } from "./context";
 import { focusedInputEventsMap, keyboardEventsMap } from "./event-mappings";
 import { useAnimatedValue, useEventHandlerRegistration } from "./internal";
+import { KeyboardController } from "./module";
 import { applyMonkeyPatch, revertMonkeyPatch } from "./monkey-patch";
 import {
   useAnimatedKeyboardHandler,
@@ -25,7 +33,7 @@ import type {
   KeyboardHandler,
   NativeEvent,
 } from "./types";
-import type { ViewStyle } from "react-native";
+import type { TextInputProps, ViewStyle } from "react-native";
 
 const IS_EDGE_TO_EDGE = isEdgeToEdge();
 
@@ -89,6 +97,7 @@ export const KeyboardProvider = ({
 }: KeyboardProviderProps) => {
   // ref
   const viewTagRef = useRef<React.Component<KeyboardControllerProps>>(null);
+  const retainerRef = useRef(null);
   // state
   const [enabled, setEnabled] = useState(initiallyEnabled);
   // animated values
@@ -116,6 +125,7 @@ export const KeyboardProvider = ({
       setKeyboardHandlers,
       setInputHandlers,
       setEnabled,
+      retain: () => retainerRef.current?.retain(),
     }),
     [enabled],
   );
@@ -234,6 +244,42 @@ export const KeyboardProvider = ({
         // then close it and open it again (for example 'Animated transition').
         style={style}
       />
+      <KeyboardRetainer ref={retainerRef} />
     </KeyboardContext.Provider>
   );
 };
+
+const KeyboardRetainer = forwardRef((_, ref) => {
+  const [inputProps, setInputProps] = useState<TextInputProps>({});
+  const inputRef = useRef<TextInput>(null);
+
+  useImperativeHandle(ref, () => ({
+    retain: async () => {
+      const state = KeyboardController.state();
+
+      setInputProps({
+        keyboardAppearance: state?.appearance,
+        keyboardType: state?.type,
+      });
+
+      inputRef.current?.focus();
+
+      return new Promise((resolve) => {
+        setTimeout(resolve, 16);
+      });
+    },
+  }));
+
+  return (
+    <TextInput
+      ref={inputRef}
+      style={{
+        height: 0,
+        width: 0,
+        left: -9999,
+        position: "absolute",
+      }}
+      {...inputProps}
+    />
+  );
+});
