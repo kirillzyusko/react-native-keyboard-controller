@@ -1,7 +1,10 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
-import { FocusedInputEvents } from "../../bindings";
+import {
+  FocusedInputEvents,
+  RCTKeyboardToolbarExcludeView,
+} from "../../bindings";
 import { KeyboardController } from "../../module";
 import useColorScheme from "../hooks/useColorScheme";
 import KeyboardStickyView from "../KeyboardStickyView";
@@ -221,6 +224,8 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
     </KeyboardStickyView>
   );
 };
+
+KeyboardToolbar.Exclude = RCTKeyboardToolbarExcludeView;
 
 const styles = StyleSheet.create({
   flex: {
