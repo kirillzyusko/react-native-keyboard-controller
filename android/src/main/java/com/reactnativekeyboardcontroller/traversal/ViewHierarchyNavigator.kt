@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import com.facebook.react.bridge.UiThreadUtil
 import com.reactnativekeyboardcontroller.extensions.focus
+import com.reactnativekeyboardcontroller.views.KeyboardToolbarExcludeReactViewGroup
 
 object ViewHierarchyNavigator {
   fun setFocusTo(
@@ -25,7 +26,7 @@ object ViewHierarchyNavigator {
     fun findEditTexts(view: View?) {
       if (isValidTextInput(view)) {
         editTexts.add(view as EditText)
-      } else if (view is ViewGroup) {
+      } else if (view is ViewGroup && view !is KeyboardToolbarExcludeReactViewGroup) {
         for (i in 0 until view.childCount) {
           findEditTexts(view.getChildAt(i))
         }
@@ -91,7 +92,7 @@ object ViewHierarchyNavigator {
 
     if (isValidTextInput(child)) {
       result = child as EditText
-    } else if (child is ViewGroup) {
+    } else if (child is ViewGroup && child !is KeyboardToolbarExcludeReactViewGroup) {
       // If the child is a ViewGroup, check its children recursively
       result = findEditTextInHierarchy(child, direction)
     }

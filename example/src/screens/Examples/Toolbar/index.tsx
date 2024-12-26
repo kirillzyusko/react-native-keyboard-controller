@@ -150,6 +150,16 @@ export default function ToolbarExample() {
           title="Flat"
           onFocus={onHideAutoFill}
         />
+        <KeyboardToolbar.Exclude>
+          <TextInput
+            contextMenuHidden
+            keyboardType="numeric"
+            placeholder="Excluded"
+            testID="TextInput#14"
+            title="Excluded"
+            onFocus={onHideAutoFill}
+          />
+        </KeyboardToolbar.Exclude>
       </KeyboardAwareScrollView>
       <KeyboardToolbar
         blur={blur}

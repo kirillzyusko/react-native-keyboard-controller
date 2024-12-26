@@ -113,6 +113,7 @@ export type KeyboardGestureAreaProps = {
 export type OverKeyboardViewProps = PropsWithChildren<{
   visible: boolean;
 }>;
+export type KeyboardToolbarExcludeViewProps = ViewProps;
 
 export type Direction = "next" | "prev" | "current";
 export type DismissOptions = {
