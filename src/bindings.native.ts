@@ -73,3 +73,5 @@ export const RCTKeyboardExtender: React.FC<KeyboardExtenderProps> =
     : ({ children }: KeyboardExtenderProps) => children;
 export const ClippingScrollView: React.FC<KeyboardBackgroundViewProps> =
   require("./specs/ClippingScrollViewDecoratorViewNativeComponent").default;
+export const RCTKeyboardToolbarExcludeView: React.FC<OverKeyboardViewProps> =
+  require("./specs/KeyboardToolbarExcludeViewNativeComponent").default;

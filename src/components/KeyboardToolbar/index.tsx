@@ -1,7 +1,10 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { StyleSheet, View } from "react-native";
 
-import { FocusedInputEvents } from "../../bindings";
+import {
+  FocusedInputEvents,
+  RCTKeyboardToolbarExcludeView,
+} from "../../bindings";
 import { useKeyboardState } from "../../hooks";
 import KeyboardStickyView from "../KeyboardStickyView";
 
@@ -227,6 +230,7 @@ KeyboardToolbar.Content = Content;
 KeyboardToolbar.Prev = Prev;
 KeyboardToolbar.Next = Next;
 KeyboardToolbar.Done = Done;
+KeyboardToolbar.Exclude = RCTKeyboardToolbarExcludeView;
 
 export { colors as DefaultKeyboardToolbarTheme, KeyboardToolbarProps };
 export default KeyboardToolbar;
