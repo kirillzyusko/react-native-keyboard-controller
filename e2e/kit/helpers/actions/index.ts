@@ -1,5 +1,4 @@
 import colors from "colors/safe";
-import { expect } from "detox";
 
 import { waitForElementById } from "../awaitable";
 import { getDevicePreference } from "../env/devicePreferences";
@@ -129,26 +128,30 @@ export const scrollDownUntilElementIsVisible = async (
     .scroll(100, "down", NaN, 0.5);
 };
 
+type Frame = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+};
+
 export const scrollUpUntilElementIsBarelyVisible = async (
   scrollViewId: string,
   elementId: string,
+  threshold = 10,
 ): Promise<void> => {
-  for (;;) {
-    await element(by.id(scrollViewId)).scroll(50, "up", 0.01, 0.5);
+  const preference = getDevicePreference();
+  const { frame } = (await element(by.id(elementId)).getAttributes()) as {
+    frame: Frame;
+  };
+  const distance =
+    preference.height -
+    preference.keyboard -
+    frame.y -
+    frame.height -
+    threshold;
 
-    try {
-      // verify that we can interact with element
-      if (device.getPlatform() === "ios") {
-        await expect(element(by.id(elementId))).toBeVisible();
-      } else {
-        // on Android visible is always true
-        await element(by.id(elementId)).tap({ x: 0, y: 25 });
-      }
-    } catch (e) {
-      await element(by.id(scrollViewId)).scroll(35, "down", 0.01, 0.5);
-      break;
-    }
-  }
+  await element(by.id(scrollViewId)).scroll(distance, "up", 0.01, 0.5);
 };
 
 export const closeKeyboard = async (textInputId: string) => {
