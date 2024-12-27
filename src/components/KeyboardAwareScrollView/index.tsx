@@ -1,5 +1,6 @@
 import React, { forwardRef, useCallback, useEffect, useMemo } from "react";
 import Reanimated, {
+  clamp,
   interpolate,
   runOnUI,
   scrollTo,
@@ -238,13 +239,17 @@ const KeyboardAwareScrollView = forwardRef<
           ...input.value,
           layout: {
             ...input.value.layout,
-            height: customHeight ?? input.value.layout.height, // TODO: math.min? When we have multiline input with limited amount of lines, then custom height can be very big?
+            // when we have multiline input with limited amount of lines, then custom height can be very big
+            // so we clamp it to max input height
+            height: clamp(customHeight, 0, input.value.layout.height),
           },
         };
         scrollPosition.value = position.value;
         maybeScroll(keyboardHeight.value, true);
         scrollPosition.value = prevScrollPosition;
         layout.value = prevLayout;
+
+        console.log({ customHeight });
       },
       [maybeScroll],
     );
@@ -271,9 +276,12 @@ const KeyboardAwareScrollView = forwardRef<
       (e: FocusedInputSelectionChangedEvent) => {
         "worklet";
 
+        console.log(e);
+
         if (e.selection.start.position !== e.selection.end.position) {
           console.debug("onSelectionChange - onChangeText");
-          scrollFromCurrentPosition(e.selection.end.y);
+
+          return scrollFromCurrentPosition(e.selection.end.y);
         }
 
         onChangeTextHandler(e.selection.end.y);
