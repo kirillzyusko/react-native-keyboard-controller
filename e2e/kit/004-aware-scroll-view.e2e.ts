@@ -89,7 +89,7 @@ describe("AwareScrollView test cases", () => {
   });
 
   it("should auto-scroll when user types a text", async () => {
-    await element(by.id("aware_scroll_view_container")).scroll(80, "up");
+    await element(by.id("aware_scroll_view_container")).scroll(40, "up");
     await typeText("TextInput#4", "1");
     await waitForExpect(async () => {
       await expectBitmapsToBeEqual(
