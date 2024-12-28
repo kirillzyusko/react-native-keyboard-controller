@@ -128,6 +128,8 @@ const KeyboardAwareScrollView = forwardRef<
     const scrollBeforeKeyboardMovement = useSharedValue(0);
     const { input } = useReanimatedFocusedInput();
     const layout = useSharedValue<FocusedInputLayoutChangedEvent | null>(null);
+    const lastSelection =
+      useSharedValue<FocusedInputSelectionChangedEvent | null>(null);
 
     const { height } = useWindowDimensions();
 
@@ -170,9 +172,13 @@ const KeyboardAwareScrollView = forwardRef<
         const inputHeight = layout.value?.layout.height || 0;
         const point = absoluteY + inputHeight;
 
+        console.log({ absoluteY, inputHeight, point, visibleRect });
+
         if (visibleRect - point <= bottomOffset) {
           const relativeScrollTo =
             keyboardHeight.value - (height - point) + bottomOffset;
+
+          console.log({ relativeScrollTo });
           const interpolatedScrollTo = interpolate(
             e,
             [initialKeyboardSize.value, keyboardHeight.value],
@@ -187,6 +193,11 @@ const KeyboardAwareScrollView = forwardRef<
           const targetScrollY =
             Math.max(interpolatedScrollTo, 0) + scrollPosition.value;
 
+          console.log({
+            targetScrollY,
+            scrollPosition: scrollPosition.value,
+            interpolatedScrollTo,
+          });
           scrollTo(scrollViewAnimatedRef, 0, targetScrollY, animated);
 
           return interpolatedScrollTo;
@@ -275,6 +286,15 @@ const KeyboardAwareScrollView = forwardRef<
     const onSelectionChange = useCallback(
       (e: FocusedInputSelectionChangedEvent) => {
         "worklet";
+
+        const lastTarget = lastSelection.value?.target;
+
+        lastSelection.value = e;
+
+        if (e.target !== lastTarget) {
+          // ignore this event, because "focus changed" event handled in `useSmoothKeyboardHandler`
+          return;
+        }
 
         console.log(e);
 
