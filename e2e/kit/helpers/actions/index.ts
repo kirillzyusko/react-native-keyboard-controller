@@ -140,6 +140,8 @@ export const scrollUpUntilElementIsBarelyVisible = async (
   elementId: string,
   threshold = 10,
 ): Promise<void> => {
+  // wait for all interactions to be completed to get precise layout metrics
+  await delay(500);
   const preference = getDevicePreference();
   const { frame } = (await element(by.id(elementId)).getAttributes()) as {
     frame: Frame;
