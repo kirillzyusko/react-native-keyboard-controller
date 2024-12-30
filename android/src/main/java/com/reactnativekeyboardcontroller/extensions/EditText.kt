@@ -4,6 +4,7 @@ import android.os.Build
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
+import android.view.Gravity
 import android.view.View
 import android.widget.EditText
 import com.facebook.react.views.scroll.ReactScrollView
@@ -151,15 +152,18 @@ class KeyboardControllerSelectionWatcher(
 ) {
   private var lastSelectionStart: Int = -1
   private var lastSelectionEnd: Int = -1
+  private var lastEditTextHeight: Int = -1
 
   private val frameScheduler =
     FrameScheduler {
       val start = editText.selectionStart
       val end = editText.selectionEnd
+      val editTextHeight = editText.height
 
-      if (lastSelectionStart != start || lastSelectionEnd != end) {
+      if (lastSelectionStart != start || lastSelectionEnd != end || lastEditTextHeight != editTextHeight) {
         lastSelectionStart = start
         lastSelectionEnd = end
+        lastEditTextHeight = editTextHeight
 
         val view = editText
         val layout = view.layout
@@ -178,24 +182,31 @@ class KeyboardControllerSelectionWatcher(
 
         val lineStart = layout.getLineForOffset(realStart)
         val baselineStart = layout.getLineBaseline(lineStart)
-        val ascentStart = layout.getLineAscent(lineStart)
 
-        cursorPositionStartX = layout.getPrimaryHorizontal(realStart)
-        cursorPositionStartY = (baselineStart + ascentStart).toFloat()
-
-        val lineEnd = layout.getLineForOffset(realEnd)
-
-        val right = layout.getPrimaryHorizontal(realEnd)
-        val bottom = layout.getLineBottom(lineEnd) + layout.getLineAscent(lineEnd)
+        val textHeight = layout.height
         val cursorWidth =
           if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             view.textCursorDrawable?.intrinsicWidth ?: 0
           } else {
             0
           }
+        val gravity = editText.gravity and Gravity.VERTICAL_GRAVITY_MASK
+        val verticalOffset =
+          when (gravity) {
+            Gravity.CENTER_VERTICAL -> (editTextHeight - textHeight) / 2
+            Gravity.BOTTOM -> editTextHeight - textHeight
+            else -> 0 // Default to Gravity.TOP or other cases
+          }
+
+        cursorPositionStartX = layout.getPrimaryHorizontal(realStart)
+        cursorPositionStartY = (baselineStart + verticalOffset).toFloat()
+
+        val lineEnd = layout.getLineForOffset(realEnd)
+        val right = layout.getPrimaryHorizontal(realEnd)
+        val bottom = layout.getLineBottom(lineEnd)
 
         cursorPositionEndX = right + cursorWidth
-        cursorPositionEndY = bottom.toFloat()
+        cursorPositionEndY = (bottom + verticalOffset).toFloat()
 
         action(
           start,
