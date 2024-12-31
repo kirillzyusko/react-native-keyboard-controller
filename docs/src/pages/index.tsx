@@ -54,6 +54,12 @@ const trustedBy = [
     name: "Ignite",
   },
   {
+    img: "https://avatars.githubusercontent.com/u/95456295?s=200&v=4",
+    alt: "RSSNext Follow app",
+    link: "https://github.com/RSSNext/Follow",
+    name: "Follow",
+  },
+  {
     img: "https://avatars.githubusercontent.com/u/88587596?s=200&v=4",
     alt: "TonKeeper Wallet app",
     link: "https://github.com/tonkeeper/wallet",
