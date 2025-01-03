@@ -31,4 +31,11 @@ export const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "black",
   },
+  input: {
+    width: "100%",
+    borderWidth: 2,
+    borderColor: "black",
+    borderRadius: 8,
+    paddingHorizontal: 12,
+  },
 });
