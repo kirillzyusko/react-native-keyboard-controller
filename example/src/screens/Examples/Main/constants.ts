@@ -34,6 +34,12 @@ export const examples: Example[] = [
     icons: "🤓",
   },
   {
+    title: "Aware scroll view with long text",
+    testID: "aware_scroll_view_entire_screen",
+    info: ScreenNames.AWARE_SCROLL_VIEW_ENTIRE_SCREEN,
+    icons: "🤓🏔️",
+  },
+  {
     title: "Aware scroll view sticky footer",
     testID: "aware_scroll_view_sticky_footer",
     info: ScreenNames.AWARE_SCROLL_VIEW_STICKY_FOOTER,

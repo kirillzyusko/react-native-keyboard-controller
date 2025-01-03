@@ -3,6 +3,7 @@ import React from "react";
 
 import { ScreenNames } from "../../constants/screenNames";
 import AwareScrollView from "../../screens/Examples/AwareScrollView";
+import AwareScrollViewEntireScreen from "../../screens/Examples/AwareScrollViewEntireScreen";
 import AwareScrollViewStickyFooter from "../../screens/Examples/AwareScrollViewStickyFooter";
 import CloseScreen from "../../screens/Examples/Close";
 import EnabledDisabled from "../../screens/Examples/EnabledDisabled";
@@ -30,6 +31,7 @@ export type ExamplesStackParamList = {
   [ScreenNames.REANIMATED_CHAT_FLAT_LIST]: undefined;
   [ScreenNames.EVENTS]: undefined;
   [ScreenNames.AWARE_SCROLL_VIEW]: undefined;
+  [ScreenNames.AWARE_SCROLL_VIEW_ENTIRE_SCREEN]: undefined;
   [ScreenNames.AWARE_SCROLL_VIEW_STICKY_FOOTER]: undefined;
   [ScreenNames.STATUS_BAR]: undefined;
   [ScreenNames.LOTTIE]: undefined;
@@ -65,6 +67,9 @@ const options = {
   },
   [ScreenNames.AWARE_SCROLL_VIEW]: {
     title: "Aware scroll view",
+  },
+  [ScreenNames.AWARE_SCROLL_VIEW_ENTIRE_SCREEN]: {
+    title: "Aware scroll view with long text",
   },
   [ScreenNames.AWARE_SCROLL_VIEW_STICKY_FOOTER]: {
     title: "Aware scroll view sticky footer",
@@ -143,6 +148,11 @@ const ExamplesStack = () => (
       component={AwareScrollView}
       name={ScreenNames.AWARE_SCROLL_VIEW}
       options={options[ScreenNames.AWARE_SCROLL_VIEW]}
+    />
+    <Stack.Screen
+      component={AwareScrollViewEntireScreen}
+      name={ScreenNames.AWARE_SCROLL_VIEW_ENTIRE_SCREEN}
+      options={options[ScreenNames.AWARE_SCROLL_VIEW_ENTIRE_SCREEN]}
     />
     <Stack.Screen
       component={AwareScrollViewStickyFooter}
