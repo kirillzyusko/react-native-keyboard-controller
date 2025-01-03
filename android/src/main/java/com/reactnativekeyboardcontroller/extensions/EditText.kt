@@ -161,17 +161,17 @@ class KeyboardControllerSelectionWatcher(
         val end = editText.selectionEnd
         val editTextHeight = editText.height
 
+        val view = editText
+        val layout = view.layout
+
+        if (layout === null) {
+          return true
+        }
+
         if (lastSelectionStart != start || lastSelectionEnd != end || lastEditTextHeight != editTextHeight) {
           lastSelectionStart = start
           lastSelectionEnd = end
           lastEditTextHeight = editTextHeight
-
-          val view = editText
-          val layout = view.layout
-
-          if (layout === null) {
-            return true
-          }
 
           val cursorPositionStartX: Float
           val cursorPositionStartY: Float
@@ -226,9 +226,6 @@ class KeyboardControllerSelectionWatcher(
 
   fun setup() {
     editText.viewTreeObserver.addOnPreDrawListener(preDrawListener)
-
-    // trigger initial event (on input switching)
-    preDrawListener.onPreDraw()
   }
 
   fun destroy() {
