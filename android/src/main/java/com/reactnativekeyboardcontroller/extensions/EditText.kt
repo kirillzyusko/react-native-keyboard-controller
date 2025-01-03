@@ -11,7 +11,6 @@ import android.widget.EditText
 import com.facebook.react.views.scroll.ReactScrollView
 import com.facebook.react.views.textinput.ReactEditText
 import com.reactnativekeyboardcontroller.log.Logger
-import com.reactnativekeyboardcontroller.ui.FrameScheduler
 import java.lang.reflect.Field
 import kotlin.math.max
 import kotlin.math.min
@@ -183,7 +182,7 @@ class KeyboardControllerSelectionWatcher(
           val realEnd = max(start, end)
 
           val lineStart = layout.getLineForOffset(realStart)
-          val baselineStart = layout.getLineBaseline(lineStart)
+          val baselineStart = layout.getLineTop(lineStart)
 
           val textHeight = layout.height
           val cursorWidth =
@@ -197,7 +196,8 @@ class KeyboardControllerSelectionWatcher(
             when (gravity) {
               Gravity.CENTER_VERTICAL -> (editTextHeight - textHeight) / 2 + editText.paddingTop
               Gravity.BOTTOM -> editTextHeight - textHeight
-              else -> editText.paddingTop // Default to Gravity.TOP or other cases
+              // Default to Gravity.TOP or other cases
+              else -> editText.paddingTop * 2
             }
 
           cursorPositionStartX = layout.getPrimaryHorizontal(realStart)
@@ -226,6 +226,9 @@ class KeyboardControllerSelectionWatcher(
 
   fun setup() {
     editText.viewTreeObserver.addOnPreDrawListener(preDrawListener)
+
+    // trigger initial event (on input switching)
+    preDrawListener.onPreDraw()
   }
 
   fun destroy() {
