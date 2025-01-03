@@ -4,12 +4,13 @@ import android.os.Build
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
+import android.view.Gravity
 import android.view.View
+import android.view.ViewTreeObserver.OnPreDrawListener
 import android.widget.EditText
 import com.facebook.react.views.scroll.ReactScrollView
 import com.facebook.react.views.textinput.ReactEditText
 import com.reactnativekeyboardcontroller.log.Logger
-import com.reactnativekeyboardcontroller.ui.FrameScheduler
 import java.lang.reflect.Field
 import kotlin.math.max
 import kotlin.math.min
@@ -151,69 +152,84 @@ class KeyboardControllerSelectionWatcher(
 ) {
   private var lastSelectionStart: Int = -1
   private var lastSelectionEnd: Int = -1
+  private var lastEditTextHeight: Int = -1
 
-  private val frameScheduler =
-    FrameScheduler {
-      val start = editText.selectionStart
-      val end = editText.selectionEnd
-
-      if (lastSelectionStart != start || lastSelectionEnd != end) {
-        lastSelectionStart = start
-        lastSelectionEnd = end
+  private val preDrawListener: OnPreDrawListener =
+    object : OnPreDrawListener {
+      override fun onPreDraw(): Boolean {
+        val start = editText.selectionStart
+        val end = editText.selectionEnd
+        val editTextHeight = editText.height
 
         val view = editText
         val layout = view.layout
 
         if (layout === null) {
-          return@FrameScheduler
+          return true
         }
 
-        val cursorPositionStartX: Float
-        val cursorPositionStartY: Float
-        val cursorPositionEndX: Float
-        val cursorPositionEndY: Float
+        if (lastSelectionStart != start || lastSelectionEnd != end || lastEditTextHeight != editTextHeight) {
+          lastSelectionStart = start
+          lastSelectionEnd = end
+          lastEditTextHeight = editTextHeight
 
-        val realStart = min(start, end)
-        val realEnd = max(start, end)
+          val cursorPositionStartX: Float
+          val cursorPositionStartY: Float
+          val cursorPositionEndX: Float
+          val cursorPositionEndY: Float
 
-        val lineStart = layout.getLineForOffset(realStart)
-        val baselineStart = layout.getLineBaseline(lineStart)
-        val ascentStart = layout.getLineAscent(lineStart)
+          val realStart = min(start, end)
+          val realEnd = max(start, end)
 
-        cursorPositionStartX = layout.getPrimaryHorizontal(realStart)
-        cursorPositionStartY = (baselineStart + ascentStart).toFloat()
+          val lineStart = layout.getLineForOffset(realStart)
+          val baselineStart = layout.getLineTop(lineStart)
 
-        val lineEnd = layout.getLineForOffset(realEnd)
+          val textHeight = layout.height
+          val cursorWidth =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+              view.textCursorDrawable?.intrinsicWidth ?: 0
+            } else {
+              0
+            }
+          val gravity = editText.gravity and Gravity.VERTICAL_GRAVITY_MASK
+          val verticalOffset =
+            when (gravity) {
+              Gravity.CENTER_VERTICAL -> (editTextHeight - textHeight) / 2 + editText.paddingTop
+              Gravity.BOTTOM -> editTextHeight - textHeight
+              // Default to Gravity.TOP or other cases
+              else -> editText.paddingTop * 2
+            }
 
-        val right = layout.getPrimaryHorizontal(realEnd)
-        val bottom = layout.getLineBottom(lineEnd) + layout.getLineAscent(lineEnd)
-        val cursorWidth =
-          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            view.textCursorDrawable?.intrinsicWidth ?: 0
-          } else {
-            0
-          }
+          cursorPositionStartX = layout.getPrimaryHorizontal(realStart)
+          cursorPositionStartY = (baselineStart + verticalOffset).toFloat()
 
-        cursorPositionEndX = right + cursorWidth
-        cursorPositionEndY = bottom.toFloat()
+          val lineEnd = layout.getLineForOffset(realEnd)
+          val right = layout.getPrimaryHorizontal(realEnd)
+          val bottom = layout.getLineBottom(lineEnd)
 
-        action(
-          start,
-          end,
-          cursorPositionStartX.dp,
-          cursorPositionStartY.dp,
-          cursorPositionEndX.dp,
-          cursorPositionEndY.dp,
-        )
+          cursorPositionEndX = right + cursorWidth
+          cursorPositionEndY = (bottom + verticalOffset).toFloat()
+
+          action(
+            start,
+            end,
+            cursorPositionStartX.dp,
+            cursorPositionStartY.dp,
+            cursorPositionEndX.dp,
+            cursorPositionEndY.dp,
+          )
+        }
+
+        return true
       }
     }
 
   fun setup() {
-    frameScheduler.start()
+    editText.viewTreeObserver.addOnPreDrawListener(preDrawListener)
   }
 
   fun destroy() {
-    frameScheduler.stop()
+    editText.viewTreeObserver.removeOnPreDrawListener(preDrawListener)
   }
 }
 
