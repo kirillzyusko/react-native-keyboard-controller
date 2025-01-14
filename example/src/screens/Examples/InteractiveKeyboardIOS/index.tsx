@@ -60,8 +60,8 @@ const useKeyboardAnimation = () => {
       "worklet";
 
       if (shouldUseOnMoveHandler.value) {
-      progress.value = e.progress;
-      height.value = e.height;
+        progress.value = e.progress;
+        height.value = e.height;
       }
     },
     onEnd: (e) => {
