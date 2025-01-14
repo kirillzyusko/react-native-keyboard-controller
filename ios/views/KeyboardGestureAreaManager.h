@@ -25,7 +25,7 @@
 - (instancetype)initWithBridge:(RCTBridge *)bridge;
 
 #endif
-// TODO: should be array? How to specify multiple different offsets for different inputs?
+
 @property (nonatomic, strong) NSNumber *offset;
 @property (nonatomic, strong) NSString *textInputNativeID;
 @end

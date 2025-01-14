@@ -33,16 +33,12 @@ extension UIResponder {
         return self.callOriginalResignFirstResponder(originalSelector)
       }
 
-      // Add your custom behavior here
-      print("Performing custom actions before the original resignFirstResponder \(Date.currentTimeStamp)")
-
       KeyboardAreaExtender.shared.hide()
 
       // Postpone execution of the original resignFirstResponder
       DispatchQueue.main.asyncAfter(deadline: .now() + UIUtils.nextFrame) {
         (self as? TextInput)?.inputAccessoryView = nil
         KeyboardAreaExtender.shared.remove()
-        // Call the original resignFirstResponder
         _ = self.callOriginalResignFirstResponder(originalSelector)
       }
 

@@ -110,43 +110,29 @@ RCT_EXPORT_VIEW_PROPERTY(offset, NSNumber *)
 #ifdef RCT_NEW_ARCH_ENABLED
 - (void)updateProps:(Props::Shared const &)props oldProps:(Props::Shared const &)oldProps
 {
-  // Safely cast new props
   const auto &newViewProps = *std::static_pointer_cast<const KeyboardGestureAreaProps>(props);
-
-  // Safely handle old props - check if they exist before casting
   const KeyboardGestureAreaProps *oldViewPropsPtr =
       oldProps ? std::static_pointer_cast<const KeyboardGestureAreaProps>(oldProps).get() : nullptr;
-
-  // Convert new textInputNativeID, handling potential empty string
   NSString *newTextInputNativeID = !newViewProps.textInputNativeID.empty()
       ? [NSString stringWithUTF8String:newViewProps.textInputNativeID.c_str()]
       : nil;
-
-  // Convert old textInputNativeID, only if old props exist
   NSString *oldTextInputNativeID = (oldViewPropsPtr && !oldViewPropsPtr->textInputNativeID.empty())
       ? [NSString stringWithUTF8String:oldViewPropsPtr->textInputNativeID.c_str()]
       : nil;
   NSNumber *tag = [NSNumber numberWithInteger:self.tag];
   NSNumber *newOffset = @(newViewProps.offset);
 
-  // Check if textInputNativeID has changed
   if (newTextInputNativeID != oldTextInputNativeID) {
-    // Remove old offset if it exists
     if (oldTextInputNativeID) {
       [[KeyboardOffsetProvider shared] removeOffsetForTextInputNativeID:oldTextInputNativeID
                                                                 withTag:tag];
     }
-
-    // Set new offset for new textInputNativeID
     if (newTextInputNativeID) {
       [[KeyboardOffsetProvider shared] setOffsetForTextInputNativeID:newTextInputNativeID
                                                               offset:newOffset
                                                              withTag:tag];
     }
-  }
-  // Check if offset has changed
-  else if (!oldViewPropsPtr || newViewProps.offset != oldViewPropsPtr->offset) {
-    // Update offset for existing textInputNativeID
+  } else if (!oldViewPropsPtr || newViewProps.offset != oldViewPropsPtr->offset) {
     if (newTextInputNativeID) {
       [[KeyboardOffsetProvider shared] removeOffsetForTextInputNativeID:newTextInputNativeID
                                                                 withTag:tag];

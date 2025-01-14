@@ -43,8 +43,8 @@ const useKeyboardAnimation = () => {
         return;
       }
 
-      // progress.value = e.progress;
-      // height.value = e.height;
+      progress.value = e.progress;
+      height.value = e.height;
 
       inset.value = e.height;
       // Math.max is needed to prevent overscroll when keyboard hides (and user scrolled to the top, for example)
@@ -59,10 +59,10 @@ const useKeyboardAnimation = () => {
     onMove: (e) => {
       "worklet";
 
-      // if (shouldUseOnMoveHandler.value) {
-      progress.value = e.progress;
-      height.value = e.height;
-      // }
+      if (shouldUseOnMoveHandler.value) {
+        progress.value = e.progress;
+        height.value = e.height;
+      }
     },
     onEnd: (e) => {
       "worklet";

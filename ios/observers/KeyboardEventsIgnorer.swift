@@ -14,7 +14,6 @@ public class KeyboardEventsIgnorer: NSObject {
   var shouldIgnoreKeyboardEvents = false
 
   public var shouldIgnore: Bool {
-    print("KeyboardEventsIgnorer \(shouldIgnoreKeyboardEvents)")
     return shouldIgnoreKeyboardEvents
   }
 
