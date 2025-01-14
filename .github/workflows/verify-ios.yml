@@ -56,7 +56,7 @@ jobs:
         run: yarn lint-clang
   unit-tests:
     name: 📖 Unit tests
-    runs-on: macOS-14
+    runs-on: macOS-15
     defaults:
       run:
         working-directory: ./ios/KeyboardControllerNative
