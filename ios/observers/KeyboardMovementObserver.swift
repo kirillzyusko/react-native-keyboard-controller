@@ -36,7 +36,12 @@ public class KeyboardMovementObserver: NSObject {
   private var hasKVObserver = false
   private var isMounted = false
   // state variables
-  private var keyboardHeight: CGFloat = 0.0
+  private var _keyboardHeight: CGFloat = 0.0
+  private var keyboardHeight: CGFloat {
+    get { _keyboardHeight - KeyboardAreaExtender.shared.offset }
+    set { _keyboardHeight = newValue }
+  }
+
   private var duration = 0
   private var tag: NSNumber = -1
   private var animation: KeyboardAnimation?
@@ -121,7 +126,7 @@ public class KeyboardMovementObserver: NSObject {
       }
       // if keyboard height is not equal to its bounds - we can ignore
       // values, since they'll be invalid and will cause UI jumps
-      if keyboardView?.bounds.size.height != keyboardHeight {
+      if floor(keyboardView?.bounds.size.height ?? 0) != floor(_keyboardHeight) {
         return
       }
 
@@ -131,11 +136,12 @@ public class KeyboardMovementObserver: NSObject {
       let keyboardFrameY = changeValue.cgPointValue.y
       let keyboardWindowH = keyboardView?.window?.bounds.size.height ?? 0
       let keyboardPosition = keyboardWindowH - keyboardFrameY
+
       let position = CGFloat.interpolate(
-        inputRange: [keyboardHeight / 2, -keyboardHeight / 2],
-        outputRange: [keyboardHeight, 0],
+        inputRange: [_keyboardHeight / 2, -_keyboardHeight / 2],
+        outputRange: [_keyboardHeight, 0],
         currentValue: keyboardPosition
-      )
+      ) - KeyboardAreaExtender.shared.offset
 
       if position == 0 {
         // it will be triggered before `keyboardWillDisappear` and
@@ -163,6 +169,8 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc func keyboardWillAppear(_ notification: Notification) {
+    guard !KeyboardEventsIgnorer.shared.shouldIgnore else { return }
+
     let (duration, frame) = notification.keyboardMetaData()
     if let keyboardFrame = frame {
       tag = UIResponder.current.reactViewTag
@@ -172,16 +180,16 @@ public class KeyboardMovementObserver: NSObject {
       didShowDeadline = Date.currentTimeStamp + Int64(duration)
 
       onRequestAnimation()
-      onEvent("onKeyboardMoveStart", Float(keyboardHeight) as NSNumber, 1, duration as NSNumber, tag)
-      onNotify("KeyboardController::keyboardWillShow", buildEventParams(keyboardHeight, duration, tag))
+      onEvent("onKeyboardMoveStart", Float(self.keyboardHeight) as NSNumber, 1, duration as NSNumber, tag)
+      onNotify("KeyboardController::keyboardWillShow", buildEventParams(self.keyboardHeight, duration, tag))
 
       setupKeyboardWatcher()
-      initializeAnimation(fromValue: prevKeyboardPosition, toValue: keyboardHeight)
+      initializeAnimation(fromValue: prevKeyboardPosition, toValue: self.keyboardHeight)
     }
   }
 
   @objc func keyboardWillDisappear(_ notification: Notification) {
-    let (duration, _) = notification.keyboardMetaData()
+    let (duration, keyboardFrame) = notification.keyboardMetaData()
     tag = UIResponder.current.reactViewTag
     self.duration = duration
 
@@ -202,9 +210,15 @@ public class KeyboardMovementObserver: NSObject {
       let keyboardHeight = keyboardFrame.cgRectValue.size.height
       tag = UIResponder.current.reactViewTag
       self.keyboardHeight = keyboardHeight
+
+      guard !KeyboardEventsIgnorer.shared.shouldIgnore else {
+        KeyboardEventsIgnorer.shared.shouldIgnoreKeyboardEvents = false
+        return
+      }
+
       // if the event is caught in between it's highly likely that it could be a "resize" event
       // so we just read actual keyboard frame value in this case
-      let height = timestamp >= didShowDeadline ? keyboardHeight : position
+      let height = timestamp >= didShowDeadline ? self.keyboardHeight : position - KeyboardAreaExtender.shared.offset
       // always limit progress to the maximum possible value
       let progress = min(height / self.keyboardHeight, 1.0)
 
@@ -219,7 +233,7 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc func keyboardDidDisappear(_ notification: Notification) {
-    let (duration, _) = notification.keyboardMetaData()
+    let (duration, keyboardFrame) = notification.keyboardMetaData()
     tag = UIResponder.current.reactViewTag
 
     onCancelAnimation()
@@ -267,7 +281,7 @@ public class KeyboardMovementObserver: NSObject {
     }
 
     let (visibleKeyboardHeight, keyboardFrameY) = keyboardView.frameTransitionInWindow
-    var keyboardPosition = visibleKeyboardHeight
+    var keyboardPosition = visibleKeyboardHeight - KeyboardAreaExtender.shared.offset
 
     if keyboardPosition == prevKeyboardPosition || keyboardFrameY == 0 {
       return

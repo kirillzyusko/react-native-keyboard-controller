@@ -11,9 +11,11 @@ import UIKit
 
 public protocol TextInput: UIView {
   // default common methods/properties
+  var inputAccessoryView: UIView? { get set }
   var inputView: UIView? { get set }
   var keyboardType: UIKeyboardType { get }
   var keyboardAppearance: UIKeyboardAppearance { get }
+  // custom methods/properties
   func focus()
 }
 

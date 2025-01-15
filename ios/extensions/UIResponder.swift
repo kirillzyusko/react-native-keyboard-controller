@@ -44,6 +44,16 @@ public extension Optional where Wrapped == UIResponder {
       return (self as? UIView)?.superview?.reactTag ?? -1
     #endif
   }
+
+  var nativeID: String? {
+    guard let superview = (self as? UIView)?.superview else { return nil }
+
+    #if KEYBOARD_CONTROLLER_NEW_ARCH_ENABLED
+      return (superview as NSObject).value(forKey: "nativeId") as? String
+    #else
+      return (superview as? UIView)?.nativeID
+    #endif
+  }
 }
 
 public extension Optional where Wrapped: UIResponder {
