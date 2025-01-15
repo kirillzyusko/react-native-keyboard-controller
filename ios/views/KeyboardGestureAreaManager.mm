@@ -75,6 +75,7 @@ RCT_EXPORT_VIEW_PROPERTY(offset, NSNumber *)
   [super load];
 
   [UIResponder swizzleResignFirstResponder];
+  [UIResponder swizzleBecomeFirstResponder];
 }
 
 // MARK: Constructor
