@@ -77,13 +77,13 @@ public class FocusedInputObserver: NSObject {
     NotificationCenter.default.addObserver(
       self,
       selector: #selector(keyboardWillShow),
-      name: UIResponder.keyboardWillShowNotification,
+      name: .didBecomeFirstResponder,
       object: nil
     )
     NotificationCenter.default.addObserver(
       self,
       selector: #selector(keyboardWillHide),
-      name: UIResponder.keyboardWillHideNotification,
+      name: .didResignFirstResponder,
       object: nil
     )
   }
