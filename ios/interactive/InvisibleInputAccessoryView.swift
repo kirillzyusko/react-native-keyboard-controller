@@ -41,7 +41,6 @@ public class InvisibleInputAccessoryView: UIView {
   public func hide() {
     guard isShown else { return }
     isShown = false
-    print("hide")
     updateHeight(to: 0.0)
     superview?.layoutIfNeeded()
   }
