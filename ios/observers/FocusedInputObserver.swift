@@ -107,7 +107,7 @@ public class FocusedInputObserver: NSObject {
   }
 
   @objc func keyboardWillShow(_: Notification) {
-    print("keyboardWillShow")
+    print("keyboardWillShow \(Date.currentTimeStamp)")
     guard let responder = UIResponder.current as? UIView else { return }
     removeObservers(newResponder: responder)
     currentResponder = responder
@@ -128,13 +128,17 @@ public class FocusedInputObserver: NSObject {
   }
 
   @objc func keyboardWillHide(_: Notification) {
-    print("keyboardWillHide \(UIResponder.current)")
+    print("keyboardWillHide \(UIResponder.current) \(Date.currentTimeStamp)")
     removeObservers(newResponder: nil)
     currentInput = nil
     currentResponder = nil
-    // when root view is in responder chain
-    if UIResponder.current != nil {
-      dispatchEventToJS(data: noFocusedInputEvent)
+
+    DispatchQueue.main.async {
+      if self.currentResponder == nil {
+            // Still no new focus — user truly left input
+            self.dispatchEventToJS(data: noFocusedInputEvent)
+        print("keyboardWillHide \(UIResponder.current) \(Date.currentTimeStamp)")
+        }
     }
   }
 
