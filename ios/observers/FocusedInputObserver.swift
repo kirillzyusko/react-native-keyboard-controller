@@ -77,13 +77,25 @@ public class FocusedInputObserver: NSObject {
     NotificationCenter.default.addObserver(
       self,
       selector: #selector(keyboardWillShow),
-      name: .didBecomeFirstResponder,
+      name: UITextView.textDidBeginEditingNotification,
       object: nil
     )
     NotificationCenter.default.addObserver(
       self,
       selector: #selector(keyboardWillHide),
-      name: .didResignFirstResponder,
+      name: UITextView.textDidEndEditingNotification,
+      object: nil
+    )
+    NotificationCenter.default.addObserver(
+      self,
+      selector: #selector(keyboardWillShow),
+      name: UITextField.textDidBeginEditingNotification,
+      object: nil
+    )
+    NotificationCenter.default.addObserver(
+      self,
+      selector: #selector(keyboardWillHide),
+      name: UITextField.textDidEndEditingNotification,
       object: nil
     )
   }
@@ -95,6 +107,7 @@ public class FocusedInputObserver: NSObject {
   }
 
   @objc func keyboardWillShow(_: Notification) {
+    print("keyboardWillShow")
     guard let responder = UIResponder.current as? UIView else { return }
     removeObservers(newResponder: responder)
     currentResponder = responder
@@ -115,10 +128,14 @@ public class FocusedInputObserver: NSObject {
   }
 
   @objc func keyboardWillHide(_: Notification) {
+    print("keyboardWillHide \(UIResponder.current)")
     removeObservers(newResponder: nil)
     currentInput = nil
     currentResponder = nil
-    dispatchEventToJS(data: noFocusedInputEvent)
+    // when root view is in responder chain
+    if UIResponder.current != nil {
+      dispatchEventToJS(data: noFocusedInputEvent)
+    }
   }
 
   @objc func syncUpLayout() {
