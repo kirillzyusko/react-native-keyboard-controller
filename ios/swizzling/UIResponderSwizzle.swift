@@ -9,7 +9,6 @@ import Foundation
 import UIKit
 
 private var originalResignFirstResponder: IMP?
-private var originalBecomeFirstResponder: IMP?
 
 @objc
 extension UIResponder {
@@ -56,44 +55,6 @@ extension UIResponder {
     typealias Function = @convention(c) (AnyObject, Selector) -> Bool
     let castOriginalResignFirstResponder = unsafeBitCast(originalResignFirstResponder, to: Function.self)
     let result = castOriginalResignFirstResponder(self, selector)
-
-    if result {
-      NotificationCenter.default.post(name: .didResignFirstResponder, object: self)
-    }
-
-    return result
-  }
-
-  public static func swizzleBecomeFirstResponder() {
-    let originalSelector = #selector(becomeFirstResponder)
-
-    guard let originalMethod = class_getInstanceMethod(UIResponder.self, originalSelector) else {
-      return
-    }
-
-    originalBecomeFirstResponder = method_getImplementation(originalMethod)
-
-    let swizzledImplementation: @convention(block) (UIResponder) -> Bool = { (self) in
-      // Call the original implementation
-      let didBecomeFirstResponder = self.callOriginalBecomeFirstResponder(originalSelector)
-
-      if didBecomeFirstResponder {
-        // Post a notification when the responder becomes first responder
-        NotificationCenter.default.post(name: .didBecomeFirstResponder, object: self)
-      }
-
-      return didBecomeFirstResponder
-    }
-
-    let implementation = imp_implementationWithBlock(swizzledImplementation)
-    method_setImplementation(originalMethod, implementation)
-  }
-
-  private func callOriginalBecomeFirstResponder(_ selector: Selector) -> Bool {
-    guard let originalBecomeFirstResponder = originalBecomeFirstResponder else { return false }
-    typealias Function = @convention(c) (AnyObject, Selector) -> Bool
-    let castOriginalBecomeFirstResponder = unsafeBitCast(originalBecomeFirstResponder, to: Function.self)
-    let result = castOriginalBecomeFirstResponder(self, selector)
     return result
   }
 }

@@ -18,6 +18,4 @@ extension Notification {
 
 extension Notification.Name {
   static let shouldIgnoreKeyboardEvents = Notification.Name("shouldIgnoreKeyboardEvents")
-  static let didBecomeFirstResponder = Notification.Name("didBecomeFirstResponder")
-  static let didResignFirstResponder = Notification.Name("didResignFirstResponder")
 }

@@ -131,13 +131,21 @@ public class FocusedInputObserver: NSObject {
     onFocus()
   }
 
+  /**
+   * We handle blur events in `keyboardWillHide` handler
+   * And this additional handler is needed only to have
+   * a consistent state when keyboard is not shown
+   */
   @objc func didReceiveBlur(_: Notification) {
     if self.currentResponder == nil {
-      // onBlur was already handled (in keyboardWillHide for example)
+      // blur was already handled by keyboard event
       return
     }
+    // blur gets triggered on endEditing, so we check if no upcoming
+    // didReceiveFocus events are coming to exclude `noFocusedInput`
+    // event when user switches between inputs
     DispatchQueue.main.async {
-      // user truly left input
+      // check that it wasn't a switch between inputs
       if self.currentResponder == nil {
         self.onBlur()
       }
@@ -168,7 +176,6 @@ public class FocusedInputObserver: NSObject {
     removeObservers(newResponder: nil)
     currentInput = nil
     currentResponder = nil
-
     dispatchEventToJS(data: noFocusedInputEvent)
   }
 
