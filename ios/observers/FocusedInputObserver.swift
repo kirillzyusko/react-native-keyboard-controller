@@ -173,6 +173,10 @@ public class FocusedInputObserver: NSObject {
   }
 
   func onBlur() {
+    // when we switch to next input, but `showSoftInput={false}`
+    if UIResponder.current as? TextInput != nil {
+      return
+    }
     removeObservers(newResponder: nil)
     currentInput = nil
     currentResponder = nil
