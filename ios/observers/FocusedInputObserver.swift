@@ -74,28 +74,40 @@ public class FocusedInputObserver: NSObject {
 
     isMounted = true
 
-    NotificationCenter.default.addObserver(
+    /*NotificationCenter.default.addObserver(
       self,
       selector: #selector(keyboardWillShow),
-      name: UITextView.textDidBeginEditingNotification,
+      name: UIResponder.keyboardWillShowNotification,
       object: nil
     )
     NotificationCenter.default.addObserver(
       self,
       selector: #selector(keyboardWillHide),
-      name: UITextView.textDidEndEditingNotification,
+      name: UIResponder.keyboardWillHideNotification,
       object: nil
-    )
+    )*/
     NotificationCenter.default.addObserver(
       self,
-      selector: #selector(keyboardWillShow),
+      selector: #selector(didReceiveFocus),
       name: UITextField.textDidBeginEditingNotification,
       object: nil
     )
     NotificationCenter.default.addObserver(
       self,
-      selector: #selector(keyboardWillHide),
+      selector: #selector(didReceiveFocus),
+      name: UITextView.textDidBeginEditingNotification,
+      object: nil
+    )
+    NotificationCenter.default.addObserver(
+      self,
+      selector: #selector(didReceiveBlur),
       name: UITextField.textDidEndEditingNotification,
+      object: nil
+    )
+    NotificationCenter.default.addObserver(
+      self,
+      selector: #selector(didReceiveBlur),
+      name: UITextView.textDidEndEditingNotification,
       object: nil
     )
   }
@@ -107,7 +119,32 @@ public class FocusedInputObserver: NSObject {
   }
 
   @objc func keyboardWillShow(_: Notification) {
-    print("keyboardWillShow \(Date.currentTimeStamp)")
+    onFocus()
+  }
+
+  @objc func keyboardWillHide(_: Notification) {
+    onBlur()
+  }
+
+  @objc func didReceiveFocus(_: Notification) {
+    if UIResponder.current == currentResponder {
+      // focus was already handled by keyboard event
+      return
+    }
+
+    onFocus()
+  }
+
+  @objc func didReceiveBlur(_: Notification) {
+    DispatchQueue.main.async {
+      // user truly left input
+      if self.currentResponder == nil {
+        self.onBlur()
+      }
+    }
+  }
+
+  func onFocus() {
     guard let responder = UIResponder.current as? UIView else { return }
     removeObservers(newResponder: responder)
     currentResponder = responder
@@ -127,19 +164,12 @@ public class FocusedInputObserver: NSObject {
     ])
   }
 
-  @objc func keyboardWillHide(_: Notification) {
-    print("keyboardWillHide \(UIResponder.current) \(Date.currentTimeStamp)")
+  func onBlur() {
     removeObservers(newResponder: nil)
     currentInput = nil
     currentResponder = nil
 
-    DispatchQueue.main.async {
-      if self.currentResponder == nil {
-            // Still no new focus — user truly left input
-            self.dispatchEventToJS(data: noFocusedInputEvent)
-        print("keyboardWillHide \(UIResponder.current) \(Date.currentTimeStamp)")
-        }
-    }
+    dispatchEventToJS(data: noFocusedInputEvent)
   }
 
   @objc func syncUpLayout() {
