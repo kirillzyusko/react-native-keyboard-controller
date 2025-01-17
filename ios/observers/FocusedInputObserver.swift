@@ -74,9 +74,9 @@ public class FocusedInputObserver: NSObject {
 
     isMounted = true
 
-    /*NotificationCenter.default.addObserver(
+    NotificationCenter.default.addObserver(
       self,
-      selector: #selector(keyboardWillShow),
+      selector: #selector(didReceiveFocus),
       name: UIResponder.keyboardWillShowNotification,
       object: nil
     )
@@ -85,7 +85,7 @@ public class FocusedInputObserver: NSObject {
       selector: #selector(keyboardWillHide),
       name: UIResponder.keyboardWillHideNotification,
       object: nil
-    )*/
+    )
     NotificationCenter.default.addObserver(
       self,
       selector: #selector(didReceiveFocus),
@@ -118,10 +118,6 @@ public class FocusedInputObserver: NSObject {
     NotificationCenter.default.removeObserver(self)
   }
 
-  @objc func keyboardWillShow(_: Notification) {
-    onFocus()
-  }
-
   @objc func keyboardWillHide(_: Notification) {
     onBlur()
   }
@@ -136,6 +132,10 @@ public class FocusedInputObserver: NSObject {
   }
 
   @objc func didReceiveBlur(_: Notification) {
+    if self.currentResponder == nil {
+      // onBlur was already handled (in keyboardWillHide for example)
+      return
+    }
     DispatchQueue.main.async {
       // user truly left input
       if self.currentResponder == nil {
