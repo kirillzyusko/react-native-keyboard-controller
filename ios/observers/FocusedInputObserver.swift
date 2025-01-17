@@ -137,7 +137,7 @@ public class FocusedInputObserver: NSObject {
    * a consistent state when keyboard is not shown
    */
   @objc func didReceiveBlur(_: Notification) {
-    if self.currentResponder == nil {
+    if currentResponder == nil {
       // blur was already handled by keyboard event
       return
     }
