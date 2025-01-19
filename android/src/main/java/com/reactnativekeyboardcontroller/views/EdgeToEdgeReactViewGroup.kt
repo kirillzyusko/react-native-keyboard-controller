@@ -29,9 +29,9 @@ class EdgeToEdgeReactViewGroup(
   private val reactContext: ThemedReactContext,
 ) : ReactViewGroup(reactContext) {
   // props
-  private var isStatusBarTranslucent = false
-  private var isNavigationBarTranslucent = false
-  private var active = false
+  private var isStatusBarTranslucent = EDGE_TO_EDGE_ENFORCED
+  private var isNavigationBarTranslucent = EDGE_TO_EDGE_ENFORCED
+  private var active = EDGE_TO_EDGE_ENFORCED
 
   // internal class members
   private var eventView: ReactViewGroup? = null
@@ -124,11 +124,13 @@ class EdgeToEdgeReactViewGroup(
   }
 
   private fun goToEdgeToEdge(edgeToEdge: Boolean) {
-    reactContext.currentActivity?.let {
-      WindowCompat.setDecorFitsSystemWindows(
-        it.window,
-        !edgeToEdge,
-      )
+    if (!EDGE_TO_EDGE_ENFORCED) {
+      reactContext.currentActivity?.let {
+        WindowCompat.setDecorFitsSystemWindows(
+          it.window,
+          !edgeToEdge,
+        )
+      }
     }
   }
 
@@ -201,20 +203,32 @@ class EdgeToEdgeReactViewGroup(
 
   // region Props setters
   fun setStatusBarTranslucent(isStatusBarTranslucent: Boolean) {
-    this.isStatusBarTranslucent = isStatusBarTranslucent
+    if (!EDGE_TO_EDGE_ENFORCED) {
+      this.isStatusBarTranslucent = isStatusBarTranslucent
+    }
   }
 
   fun setNavigationBarTranslucent(isNavigationBarTranslucent: Boolean) {
-    this.isNavigationBarTranslucent = isNavigationBarTranslucent
+    if (!EDGE_TO_EDGE_ENFORCED) {
+      this.isNavigationBarTranslucent = isNavigationBarTranslucent
+    }
   }
 
   fun setActive(active: Boolean) {
-    this.active = active
+    if (!EDGE_TO_EDGE_ENFORCED) {
+      this.active = active
+    }
 
     if (active) {
-      this.enable()
+      this.goToEdgeToEdge(true)
+      this.setupWindowInsets()
+      this.setupKeyboardCallbacks()
+      modalAttachedWatcher.enable()
     } else {
-      this.disable()
+      this.goToEdgeToEdge(false)
+      this.setupWindowInsets()
+      this.removeKeyboardCallbacks()
+      modalAttachedWatcher.disable()
     }
   }
   // endregion
@@ -230,5 +244,12 @@ class EdgeToEdgeReactViewGroup(
 
   companion object {
     val VIEW_TAG = EdgeToEdgeReactViewGroup::class.simpleName
+
+    val EDGE_TO_EDGE_ENFORCED: Boolean = try {
+      Class.forName("com.zoontek.rnedgetoedge.EdgeToEdgePackage")
+      true
+    } catch (exception: ClassNotFoundException) {
+      false
+    }
   }
 }
