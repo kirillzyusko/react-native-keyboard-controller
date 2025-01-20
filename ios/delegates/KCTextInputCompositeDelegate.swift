@@ -51,6 +51,9 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
   weak var textViewDelegate: UITextViewDelegate?
   weak var textFieldDelegate: UITextFieldDelegate?
 
+  // Keep track of which textField we’re observing (iOS < 13 only)
+  private weak var observedTextFieldForSelection: UITextField?
+
   public init(
     onSelectionChange: @escaping (_ event: NSDictionary) -> Void,
     onTextChange: @escaping (_ text: String?) -> Void
@@ -62,13 +65,35 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
   // MARK: setters/getters
 
   public func setTextViewDelegate(delegate: UITextViewDelegate?) {
+    // remove KVO from any old textField
+    if let oldTextField = observedTextFieldForSelection {
+      removeSelectionRangeObserver(from: oldTextField)
+    }
+
     textViewDelegate = delegate
     textFieldDelegate = nil
+    observedTextFieldForSelection = nil
   }
 
-  public func setTextFieldDelegate(delegate: UITextFieldDelegate?) {
+  public func setTextFieldDelegate(delegate: UITextFieldDelegate?, textField: UITextField?) {
+    // remove KVO from any old textField
+    if let oldTextField = observedTextFieldForSelection {
+      removeSelectionRangeObserver(from: oldTextField)
+    }
+
     textFieldDelegate = delegate
     textViewDelegate = nil
+
+    // If iOS < 13, add KVO to the actual textField object
+    if #available(iOS 13.0, *) {
+      // rely on textFieldDidChangeSelection
+      observedTextFieldForSelection = nil
+    } else {
+      if let realTextField = textField {
+        addSelectionRangeObserver(to: realTextField)
+        observedTextFieldForSelection = realTextField
+      }
+    }
   }
 
   // Getter for the active delegate
@@ -116,7 +141,54 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
       self.onTextChange(textField.text)
     }
 
+    if #unavailable(iOS 13.0) {
+      DispatchQueue.main.asyncAfter(deadline: .now() + UIUtils.nextFrame) {
+        updateSelectionPosition(textInput: textField, sendEvent: self.onSelectionChange)
+      }
+    }
+
     return textFieldDelegate?.textField?(textField, shouldChangeCharactersIn: range, replacementString: string) ?? true
+  }
+
+  func textFieldDidEndEditing(_ textField: UITextField) {
+    textFieldDelegate?.textFieldDidEndEditing?(textField)
+
+    if #unavailable(iOS 13.0) {
+      removeSelectionRangeObserver(from: textField)
+      if observedTextFieldForSelection === textField {
+        observedTextFieldForSelection = nil
+      }
+    }
+  }
+
+  // MARK: KVO for iOS < 13
+
+  private func addSelectionRangeObserver(to textField: UITextField) {
+    textField.addObserver(
+      self,
+      forKeyPath: "selectedTextRange",
+      options: [.new],
+      context: nil
+    )
+  }
+
+  private func removeSelectionRangeObserver(from textField: UITextField) {
+    textField.removeObserver(self, forKeyPath: "selectedTextRange")
+  }
+
+  // swiftlint:disable:next block_based_kvo
+  override func observeValue(
+    forKeyPath keyPath: String?,
+    of object: Any?,
+    change: [NSKeyValueChangeKey: Any]?,
+    context: UnsafeMutableRawPointer?
+  ) {
+    guard keyPath == "selectedTextRange", let textField = object as? UITextField else {
+      super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
+      return
+    }
+    // selection changed => forward the event
+    updateSelectionPosition(textInput: textField, sendEvent: onSelectionChange)
   }
 
   // MARK: call forwarding
