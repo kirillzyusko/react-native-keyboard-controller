@@ -51,7 +51,7 @@ public extension Optional where Wrapped == UIResponder {
     #if KEYBOARD_CONTROLLER_NEW_ARCH_ENABLED
       return (superview as NSObject).value(forKey: "nativeId") as? String
     #else
-      return (superview as? UIView)?.nativeID
+      return superview.nativeID
     #endif
   }
 }
