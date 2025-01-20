@@ -188,7 +188,7 @@ public class FocusedInputObserver: NSObject {
   private func substituteDelegate(_ input: UIResponder?) {
     if let textField = input as? UITextField {
       if !(textField.delegate is KCTextInputCompositeDelegate) {
-          delegate.setTextFieldDelegate(delegate: textField.delegate, textField: textField)
+        delegate.setTextFieldDelegate(delegate: textField.delegate, textField: textField)
         textField.delegate = delegate
       }
     } else if let textView = input as? UITextView {
