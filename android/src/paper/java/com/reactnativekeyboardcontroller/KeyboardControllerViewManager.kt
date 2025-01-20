@@ -41,6 +41,14 @@ class KeyboardControllerViewManager(
     manager.setNavigationBarTranslucent(view, isNavigationBarTranslucent)
   }
 
+  @ReactProp(name = "preserveEdgeToEdge")
+  fun setPreserveEdgeToEdge(
+    view: EdgeToEdgeReactViewGroup,
+    isPreservingEdgeToEdge: Boolean,
+  ) {
+    manager.setPreserveEdgeToEdge(view, isPreservingEdgeToEdge)
+  }
+
   override fun getExportedCustomDirectEventTypeConstants(): MutableMap<String, Any> =
     manager.getExportedCustomDirectEventTypeConstants()
 }

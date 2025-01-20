@@ -53,6 +53,7 @@ export interface NativeProps extends ViewProps {
   enabled?: boolean;
   statusBarTranslucent?: boolean;
   navigationBarTranslucent?: boolean;
+  preserveEdgeToEdge?: boolean;
   // callbacks
   /// keyboard
   onKeyboardMoveStart?: DirectEventHandler<KeyboardMoveEvent>;

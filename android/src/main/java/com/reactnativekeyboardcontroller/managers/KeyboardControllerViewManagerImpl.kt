@@ -37,6 +37,13 @@ class KeyboardControllerViewManagerImpl(
     view.setNavigationBarTranslucent(isNavigationBarTranslucent)
   }
 
+  fun setPreserveEdgeToEdge(
+    view: EdgeToEdgeReactViewGroup,
+    isPreservingEdgeToEdge: Boolean,
+  ) {
+    view.setPreserveEdgeToEdge(isPreservingEdgeToEdge)
+  }
+
   fun getExportedCustomDirectEventTypeConstants(): MutableMap<String, Any> {
     val map: MutableMap<String, Any> =
       MapBuilder.of(

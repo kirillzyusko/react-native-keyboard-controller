@@ -36,6 +36,12 @@ class KeyboardControllerViewManager(
     value: Boolean,
   ) = manager.setNavigationBarTranslucent(view as EdgeToEdgeReactViewGroup, value)
 
+  @ReactProp(name = "preserveEdgeToEdge")
+  override fun setPreserveEdgeToEdge(
+    view: ReactViewGroup,
+    value: Boolean,
+  ) = manager.setPreserveEdgeToEdge(view as EdgeToEdgeReactViewGroup, value)
+
   @ReactProp(name = "enabled")
   override fun setEnabled(
     view: ReactViewGroup,
