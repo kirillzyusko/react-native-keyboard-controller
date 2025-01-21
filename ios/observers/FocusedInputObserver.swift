@@ -37,7 +37,7 @@ public class FocusedInputObserver: NSObject {
   // input tracking
   private var currentInput: UIView?
   private var currentResponder: UIView?
-  private var hasObservers = false
+  private var observation: NSKeyValueObservation?
   private var lastEventDispatched: [AnyHashable: Any] = noFocusedInputEvent
 
   @objc public init(
@@ -162,25 +162,27 @@ public class FocusedInputObserver: NSObject {
   }
 
   private func setupObservers() {
-    if hasObservers {
+    if observation != nil {
       return
     }
 
     if currentInput != nil {
-      hasObservers = true
-      currentInput?.addObserver(self, forKeyPath: "center", options: .new, context: nil)
+      observation = currentInput?.observe(\.center, options: .new) { [weak self] view, change in
+        guard let self = self else { return }
+        self.onLayoutChange(view: view, change: change)
+      }
 
       substituteDelegate(currentResponder)
     }
   }
 
   private func removeObservers(newResponder: UIResponder?) {
-    if newResponder == currentResponder || !hasObservers {
+    if newResponder == currentResponder || observation == nil {
       return
     }
 
-    hasObservers = false
-    currentInput?.removeObserver(self, forKeyPath: "center", context: nil)
+    observation?.invalidate()
+    observation = nil
 
     substituteDelegateBack(currentResponder)
   }
@@ -211,19 +213,11 @@ public class FocusedInputObserver: NSObject {
     }
   }
 
-  // swiftlint:disable:next block_based_kvo
-  @objc override public func observeValue(
-    forKeyPath keyPath: String?,
-    of object: Any?,
-    change _: [NSKeyValueChangeKey: Any]?,
-    context _: UnsafeMutableRawPointer?
-  ) {
-    if keyPath == "center", object as? NSObject == currentInput {
-      // we need to read layout in next frame, otherwise we'll get old
-      // layout values
-      DispatchQueue.main.async {
-        self.syncUpLayout()
-      }
+  private func onLayoutChange(view _: UIView, change _: NSKeyValueObservedChange<CGPoint>) {
+    // we need to read layout in next frame, otherwise we'll get old
+    // layout values
+    DispatchQueue.main.async {
+      self.syncUpLayout()
     }
   }
 
