@@ -69,6 +69,14 @@ type KeyboardProviderProps = {
    */
   navigationBarTranslucent?: boolean;
   /**
+   * A boolean property indicating whether to keep edge-to-edge mode always enabled (even when you disable the module).
+   * Defaults to `false`.
+   *
+   * @see https://github.com/kirillzyusko/react-native-keyboard-controller/issues/592
+   * @platform android
+   */
+  preserveEdgeToEdge?: boolean;
+  /**
    * A boolean prop indicating whether the module is enabled. It indicate only initial state,
    * i. e. if you try to change this prop after component mount it will not have any effect.
    * To change the property in runtime use `useKeyboardController` hook and `setEnabled` method.
@@ -85,6 +93,7 @@ export const KeyboardProvider = ({
   children,
   statusBarTranslucent,
   navigationBarTranslucent,
+  preserveEdgeToEdge,
   enabled: initiallyEnabled = true,
 }: KeyboardProviderProps) => {
   // ref
@@ -202,7 +211,11 @@ export const KeyboardProvider = ({
   }, [enabled]);
 
   if (__DEV__) {
-    controlEdgeToEdgeValues({ statusBarTranslucent, navigationBarTranslucent });
+    controlEdgeToEdgeValues({
+      statusBarTranslucent,
+      navigationBarTranslucent,
+      preserveEdgeToEdge,
+    });
   }
 
   return (
@@ -212,6 +225,7 @@ export const KeyboardProvider = ({
         enabled={enabled}
         navigationBarTranslucent={IS_EDGE_TO_EDGE || navigationBarTranslucent}
         statusBarTranslucent={IS_EDGE_TO_EDGE || statusBarTranslucent}
+        preserveEdgeToEdge={IS_EDGE_TO_EDGE || preserveEdgeToEdge}
         style={styles.container}
         // on*Reanimated prop must precede animated handlers to work correctly
         onKeyboardMoveReanimated={keyboardHandler}

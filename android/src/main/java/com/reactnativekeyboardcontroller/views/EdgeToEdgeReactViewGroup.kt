@@ -31,6 +31,7 @@ class EdgeToEdgeReactViewGroup(
   // props
   private var isStatusBarTranslucent = false
   private var isNavigationBarTranslucent = false
+  private var isPreservingEdgeToEdge = false
   private var active = false
 
   // internal class members
@@ -188,7 +189,10 @@ class EdgeToEdgeReactViewGroup(
   }
 
   private fun disable() {
-    this.goToEdgeToEdge(false)
+    if (!isPreservingEdgeToEdge) {
+      this.goToEdgeToEdge(false)
+    }
+
     this.setupWindowInsets()
     this.removeKeyboardCallbacks()
     modalAttachedWatcher.disable()
@@ -206,6 +210,10 @@ class EdgeToEdgeReactViewGroup(
 
   fun setNavigationBarTranslucent(isNavigationBarTranslucent: Boolean) {
     this.isNavigationBarTranslucent = isNavigationBarTranslucent
+  }
+
+  fun setPreserveEdgeToEdge(isPreservingEdgeToEdge: Boolean) {
+    this.isPreservingEdgeToEdge = isPreservingEdgeToEdge
   }
 
   fun setActive(active: Boolean) {
