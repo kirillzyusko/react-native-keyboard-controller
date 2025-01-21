@@ -189,7 +189,7 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc func keyboardWillDisappear(_ notification: Notification) {
-    let (duration, keyboardFrame) = notification.keyboardMetaData()
+    let (duration, _) = notification.keyboardMetaData()
     tag = UIResponder.current.reactViewTag
     self.duration = duration
 
@@ -233,7 +233,7 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc func keyboardDidDisappear(_ notification: Notification) {
-    let (duration, keyboardFrame) = notification.keyboardMetaData()
+    let (duration, _) = notification.keyboardMetaData()
     tag = UIResponder.current.reactViewTag
 
     onCancelAnimation()
