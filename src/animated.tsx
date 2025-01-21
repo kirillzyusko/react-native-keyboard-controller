@@ -69,7 +69,7 @@ type KeyboardProviderProps = {
    */
   navigationBarTranslucent?: boolean;
   /**
-   * Set the value to `true`, if you use edge-to-edge display on Android.
+   * A boolean property indicating whether to keep edge-to-edge mode always enabled (even when you disable the module).
    * Defaults to `false`.
    *
    * @see https://github.com/kirillzyusko/react-native-keyboard-controller/issues/592
