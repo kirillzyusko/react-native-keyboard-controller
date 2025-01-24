@@ -82,7 +82,7 @@ fun EditText.addOnTextChangedListener(action: (String) -> Unit): TextWatcher {
   } catch (e: IllegalArgumentException) {
     Logger.w(
       javaClass.simpleName,
-      "Can not attach listener to be the first in the list: ${e.message}. Attaching to the end..."
+      "Can not attach listener to be the first in the list: ${e.message}. Attaching to the end...",
     )
     // it's plain EditText - it doesn't have the same problem as ReactEditText
     this.addTextChangedListener(listener)
