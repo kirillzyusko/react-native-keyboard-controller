@@ -26,33 +26,30 @@ public extension UIResponder {
 
 public extension Optional where Wrapped == UIResponder {
   var reactViewTag: NSNumber {
-    guard let view = self as? UIView else {
+    guard let this = self as? UIView else {
       return -1
     }
 
-    let tagExtractor: (UIView) -> NSNumber? = { v in
+    let tagExtractor: (UIView) -> NSNumber? = { view in
       #if KEYBOARD_CONTROLLER_NEW_ARCH_ENABLED
-        return (v.tag != 0) ? NSNumber(value: v.tag) : nil
+        return (view.tag != 0) ? NSNumber(value: view.tag) : nil
       #else
-        return v.reactTag
+        return view.reactTag
       #endif
     }
 
-    return climbSuperviewChain(startingFrom: view, using: tagExtractor) ?? -1
+    return climbSuperviewChain(startingFrom: this, using: tagExtractor) ?? -1
   }
 
-  private func climbSuperviewChain(startingFrom start: UIView,
-                                   using tagExtractor: (UIView) -> NSNumber?)
-    -> NSNumber?
-  {
+  private func climbSuperviewChain(startingFrom start: UIView, using tagExtractor: (UIView) -> NSNumber?) -> NSNumber? {
     var currentView: UIView? = start
 
-    while let v = currentView {
-      if let extractedTag = tagExtractor(v) {
+    while let view = currentView {
+      if let extractedTag = tagExtractor(view) {
         return extractedTag
       }
 
-      currentView = v.superview
+      currentView = view.superview
     }
 
     return nil
