@@ -20,7 +20,19 @@ public extension UIResponder {
   }
 
   internal func findFirstResponder(sender _: AnyObject) {
-    UIResponder._currentFirstResponder = self
+    let type = String(describing: type(of: self))
+    // handle `contextMenuHidden` prop - in this case the parent is considered as a first responder
+    // (but actually its children is an actual input), so we apply correction here and point out
+    // to the actual first responder (first children)
+    let isChildrenActuallyFirstResponder =
+      type == "RCTMultilineTextInputView" ||
+      type == "RCTSinglelineTextInputView" ||
+      type == "RCTTextInputComponentView"
+    if isChildrenActuallyFirstResponder {
+      UIResponder._currentFirstResponder = (self as? UIView)?.subviews[0]
+    } else {
+      UIResponder._currentFirstResponder = self
+    }
   }
 }
 
@@ -38,7 +50,7 @@ public extension Optional where Wrapped == UIResponder {
       #endif
     }
 
-    return climbSuperviewChain(startingFrom: this, using: tagExtractor) ?? -1
+    return climbSuperviewChain(startingFrom: this.superview, using: tagExtractor) ?? -1
   }
 
   var nativeID: String? {
@@ -55,12 +67,6 @@ public extension Optional where Wrapped == UIResponder {
     var currentView: UIView? = start
 
     while let view = currentView {
-      let type = String(describing: type(of: view))
-
-      if type == "RCTRootView" {
-        return nil
-      }
-
       if let extractedTag = tagExtractor(view) {
         return extractedTag
       }
