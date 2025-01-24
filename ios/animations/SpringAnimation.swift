@@ -16,6 +16,12 @@ public final class SpringAnimation: KeyboardAnimation {
   private let omega0: Double // Undamped angular frequency of the oscillator
   private let omega1: Double // Exponential decay
   private let v0: Double // Initial velocity
+  // pre-computed values
+  private let x0: Double
+  private let A_under: Double
+  private let B_under: Double
+  private let A_crit: Double
+  private let B_crit: Double
 
   // constructor variables
   private let stiffness: Double
@@ -33,6 +39,19 @@ public final class SpringAnimation: KeyboardAnimation {
     omega0 = sqrt(stiffness / mass) // Undamped angular frequency of the oscillator
     omega1 = omega0 * sqrt(1.0 - zeta * zeta) // Exponential decay
     v0 = -initialVelocity
+    x0 = toValue - fromValue
+    
+    if zeta < 1 {
+      A_crit = 0
+      B_crit = 0
+            A_under = (v0 + zeta * omega0 * x0) / omega1
+            B_under = x0
+        } else {
+            A_crit = x0
+            B_crit = (v0 + omega0 * x0)
+          A_under = 0
+          B_under = 0
+        }
 
     super.init(fromValue: fromValue, toValue: toValue, animation: animation)
   }
@@ -40,17 +59,17 @@ public final class SpringAnimation: KeyboardAnimation {
   // public functions
   override func valueAt(time: Double) -> Double {
     let t = time * Double(speed)
-    let x0 = toValue - fromValue
 
     var y: Double
     if zeta < 1 {
-      // Under damped
-      let envelope = exp(-zeta * omega0 * t)
-      y = toValue - envelope * (((v0 + zeta * omega0 * x0) / omega1) * sin(omega1 * t) + x0 * cos(omega1 * t))
+        let envelope = exp(-zeta * omega0 * t)
+        let angle = omega1 * t
+        let sinAngle = sin(angle)
+        let cosAngle = cos(angle)
+        y = toValue - envelope * (A_under * sinAngle + B_under * cosAngle)
     } else {
-      // Critically damped
-      let envelope = exp(-omega0 * t)
-      y = toValue - envelope * (x0 + (v0 + omega0 * x0) * t)
+        let envelope = exp(-omega0 * t)
+        y = toValue - envelope * (A_crit + B_crit * t)
     }
 
     return y
