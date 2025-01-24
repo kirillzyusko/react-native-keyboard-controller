@@ -55,6 +55,12 @@ public extension Optional where Wrapped == UIResponder {
     var currentView: UIView? = start
 
     while let view = currentView {
+      let type = String(describing: type(of: view))
+
+      if type == "RCTRootView" {
+        return nil
+      }
+
       if let extractedTag = tagExtractor(view) {
         return extractedTag
       }
