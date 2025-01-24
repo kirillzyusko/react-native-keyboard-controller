@@ -83,7 +83,6 @@ public extension Optional where Wrapped: UIResponder {
          scrollView.frame.width >= scrollView.contentSize.width,
          scrollView.isScrollEnabled
       {
-        print("\(scrollView.frame.width) \(scrollView.frame.size.width) \(scrollView.contentSize.width)")
         return scrollView.reactViewTag
       }
 
