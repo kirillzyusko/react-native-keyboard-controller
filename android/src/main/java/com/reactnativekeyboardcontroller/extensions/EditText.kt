@@ -199,12 +199,15 @@ class KeyboardControllerSelectionWatcher(
               0
             }
           val gravity = editText.gravity and Gravity.VERTICAL_GRAVITY_MASK
+          val paddingVertical = editText.paddingTop + editText.paddingBottom
+          val lineHeightHalfHearted = editText.lineHeight / 2
           val verticalOffset =
             when (gravity) {
-              Gravity.CENTER_VERTICAL -> (editTextHeight - textHeight) / 2 + editText.paddingTop
-              Gravity.BOTTOM -> editTextHeight - textHeight
+              Gravity.CENTER_VERTICAL ->
+                (editTextHeight - paddingVertical - textHeight) / 2 + editText.paddingTop + lineHeightHalfHearted
+              Gravity.BOTTOM -> editTextHeight - textHeight - editText.paddingBottom + lineHeightHalfHearted
               // Default to Gravity.TOP or other cases
-              else -> editText.paddingTop * 2
+              else -> editText.paddingTop + lineHeightHalfHearted
             }
 
           cursorPositionStartX = layout.getPrimaryHorizontal(realStart)
