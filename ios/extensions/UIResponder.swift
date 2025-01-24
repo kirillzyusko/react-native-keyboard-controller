@@ -63,7 +63,10 @@ public extension Optional where Wrapped == UIResponder {
     #endif
   }
 
-  private func climbSuperviewChain(startingFrom start: UIView?, using tagExtractor: (UIView) -> NSNumber?) -> NSNumber? {
+  private func climbSuperviewChain(
+    startingFrom start: UIView?,
+    using tagExtractor: (UIView) -> NSNumber?
+  ) -> NSNumber? {
     var currentView: UIView? = start
 
     while let view = currentView {
