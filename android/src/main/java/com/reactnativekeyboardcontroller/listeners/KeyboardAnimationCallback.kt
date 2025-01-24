@@ -2,6 +2,7 @@ package com.reactnativekeyboardcontroller.listeners
 
 import android.view.View
 import android.view.ViewTreeObserver.OnGlobalFocusChangeListener
+import android.widget.EditText
 import androidx.core.graphics.Insets
 import androidx.core.view.OnApplyWindowInsetsListener
 import androidx.core.view.ViewCompat
@@ -11,7 +12,6 @@ import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.UIManagerHelper
-import com.facebook.react.views.textinput.ReactEditText
 import com.facebook.react.views.view.ReactViewGroup
 import com.reactnativekeyboardcontroller.constants.Keyboard
 import com.reactnativekeyboardcontroller.events.KeyboardTransitionEvent
@@ -67,7 +67,7 @@ class KeyboardAnimationCallback(
   // listeners
   private val focusListener =
     OnGlobalFocusChangeListener { oldFocus, newFocus ->
-      if (newFocus is ReactEditText) {
+      if (newFocus is EditText) {
         viewTagFocused = newFocus.id
 
         // keyboard is visible and focus has been changed

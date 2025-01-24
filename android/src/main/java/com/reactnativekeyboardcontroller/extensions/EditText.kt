@@ -147,7 +147,7 @@ val EditText?.keyboardType: String
   }
 
 class KeyboardControllerSelectionWatcher(
-  private val editText: ReactEditText,
+  private val editText: EditText,
   private val action: (start: Int, end: Int, startX: Double, startY: Double, endX: Double, endY: Double) -> Unit,
 ) {
   private var lastSelectionStart: Int = -1
@@ -233,7 +233,7 @@ class KeyboardControllerSelectionWatcher(
   }
 }
 
-fun ReactEditText.addOnSelectionChangedListener(
+fun EditText.addOnSelectionChangedListener(
   action: (start: Int, end: Int, startX: Double, startY: Double, endX: Double, endY: Double) -> Unit,
 ): () -> Unit {
   val listener = KeyboardControllerSelectionWatcher(this, action)
