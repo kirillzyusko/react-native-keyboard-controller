@@ -41,6 +41,16 @@ public extension Optional where Wrapped == UIResponder {
     return climbSuperviewChain(startingFrom: this, using: tagExtractor) ?? -1
   }
 
+  var nativeID: String? {
+    guard let superview = (self as? UIView)?.superview else { return nil }
+
+    #if KEYBOARD_CONTROLLER_NEW_ARCH_ENABLED
+      return (superview as NSObject).value(forKey: "nativeId") as? String
+    #else
+      return superview.nativeID
+    #endif
+  }
+
   private func climbSuperviewChain(startingFrom start: UIView, using tagExtractor: (UIView) -> NSNumber?) -> NSNumber? {
     var currentView: UIView? = start
 
