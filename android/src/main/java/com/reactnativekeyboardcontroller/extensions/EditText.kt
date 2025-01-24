@@ -79,6 +79,13 @@ fun EditText.addOnTextChangedListener(action: (String) -> Unit): TextWatcher {
     Logger.w(javaClass.simpleName, "Can not attach listener because casting failed: ${e.message}")
   } catch (e: NoSuchFieldException) {
     Logger.w(javaClass.simpleName, "Can not attach listener because field `mListeners` not found: ${e.message}")
+  } catch (e: IllegalArgumentException) {
+    Logger.w(
+      javaClass.simpleName,
+      "Can not attach listener to be the first in the list: ${e.message}. Attaching to the end..."
+    )
+    // it's plain EditText - it doesn't have the same problem as ReactEditText
+    this.addTextChangedListener(listener)
   }
 
   return listener
