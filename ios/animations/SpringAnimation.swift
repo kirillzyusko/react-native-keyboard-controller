@@ -40,18 +40,18 @@ public final class SpringAnimation: KeyboardAnimation {
     omega1 = omega0 * sqrt(1.0 - zeta * zeta) // Exponential decay
     v0 = -initialVelocity
     x0 = toValue - fromValue
-    
+
     if zeta < 1 {
       A_crit = 0
       B_crit = 0
-            A_under = (v0 + zeta * omega0 * x0) / omega1
-            B_under = x0
-        } else {
-            A_crit = x0
-            B_crit = (v0 + omega0 * x0)
-          A_under = 0
-          B_under = 0
-        }
+      A_under = (v0 + zeta * omega0 * x0) / omega1
+      B_under = x0
+    } else {
+      A_crit = x0
+      B_crit = (v0 + omega0 * x0)
+      A_under = 0
+      B_under = 0
+    }
 
     super.init(fromValue: fromValue, toValue: toValue, animation: animation)
   }
@@ -62,14 +62,14 @@ public final class SpringAnimation: KeyboardAnimation {
 
     var y: Double
     if zeta < 1 {
-        let envelope = exp(-zeta * omega0 * t)
-        let angle = omega1 * t
-        let sinAngle = sin(angle)
-        let cosAngle = cos(angle)
-        y = toValue - envelope * (A_under * sinAngle + B_under * cosAngle)
+      let envelope = exp(-zeta * omega0 * t)
+      let angle = omega1 * t
+      let sinAngle = sin(angle)
+      let cosAngle = cos(angle)
+      y = toValue - envelope * (A_under * sinAngle + B_under * cosAngle)
     } else {
-        let envelope = exp(-omega0 * t)
-        y = toValue - envelope * (A_crit + B_crit * t)
+      let envelope = exp(-omega0 * t)
+      y = toValue - envelope * (A_crit + B_crit * t)
     }
 
     return y
