@@ -18,6 +18,7 @@ public final class SpringAnimation: KeyboardAnimation {
   private let v0: Double // Initial velocity
   // pre-computed values
   private let x0: Double
+  private let isUnderDamped: Bool
   private let aUnder: Double
   private let bUnder: Double
   private let aCritical: Double
@@ -40,8 +41,9 @@ public final class SpringAnimation: KeyboardAnimation {
     omega1 = omega0 * sqrt(1.0 - zeta * zeta) // Exponential decay
     v0 = -initialVelocity
     x0 = toValue - fromValue
+    isUnderDamped = zeta < 1
 
-    if zeta < 1 {
+    if isUnderDamped {
       // Under damped
       aCritical = 0
       bCritical = 0
@@ -63,7 +65,7 @@ public final class SpringAnimation: KeyboardAnimation {
     let t = time * Double(speed)
 
     var y: Double
-    if zeta < 1 {
+    if isUnderDamped {
       // Under damped
       let envelope = exp(-zeta * omega0 * t)
       let angle = omega1 * t
