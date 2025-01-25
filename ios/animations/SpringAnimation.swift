@@ -69,9 +69,7 @@ public final class SpringAnimation: KeyboardAnimation {
       // Under damped
       let envelope = exp(-zeta * omega0 * t)
       let angle = omega1 * t
-      let sinAngle = sin(angle)
-      let cosAngle = cos(angle)
-      y = toValue - envelope * (aUnder * sinAngle + bUnder * cosAngle)
+      y = toValue - envelope * (aUnder * sin(angle) + bUnder * cos(angle))
     } else {
       // Critically damped
       let envelope = exp(-omega0 * t)
