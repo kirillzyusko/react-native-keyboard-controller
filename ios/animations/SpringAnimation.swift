@@ -62,7 +62,7 @@ public final class SpringAnimation: KeyboardAnimation {
 
   // public functions
   override func valueAt(time: Double) -> Double {
-    let t = time * Double(speed)
+    let t = time * speed
 
     var y: Double
     if isUnderDamped {
