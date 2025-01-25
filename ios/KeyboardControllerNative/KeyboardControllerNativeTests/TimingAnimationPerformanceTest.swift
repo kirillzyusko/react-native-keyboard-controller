@@ -42,6 +42,14 @@ final class TimingAnimationPerformanceTest: XCTestCase {
     XCTAssertEqual(animation.valueAt(time: 0.124781), 284.31306189738245)
     XCTAssertEqual(animation.valueAt(time: 0.143954), 290.97699741147824)
   }
+  
+  func testTimingAnimationTimingAt() throws {
+    XCTAssertEqual(animation.timingAt(value: 123.56118966540286), 0.01)
+    XCTAssertEqual(animation.timingAt(value: 163.8067164607386), 0.05)
+    XCTAssertEqual(animation.timingAt(value: 122.0), 0.0)
+    XCTAssertEqual(animation.timingAt(value: 284.31306189738245), 0.124781)
+    XCTAssertEqual(animation.timingAt(value: 290.97699741147824), 0.143954)
+  }
 
   func testValueAtPerformance() throws {
     measure(metrics: [XCTCPUMetric(), XCTClockMetric()], options: options) {

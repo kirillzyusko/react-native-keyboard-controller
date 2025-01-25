@@ -35,14 +35,14 @@ public final class TimingAnimation: KeyboardAnimation {
 
   // public functions
   override func valueAt(time: Double) -> Double {
-    let x = time * speed
-    let frames = (animation?.duration ?? 0.0) * Double(speed)
-    let fraction = min(x / frames, 1)
-    let t = findTForX(xTarget: fraction)
+    let duration = animation?.duration ?? 0.0
+    guard duration > 0 else { return toValue }
 
+    let fraction = min((time * speed) / duration, 1.0)
+    let t = findTForX(xTarget: fraction)
     let progress = bezierY(t: t)
 
-    return fromValue + (toValue - fromValue) * CGFloat(progress)
+    return fromValue + (toValue - fromValue) * progress
   }
 
   // private functions
@@ -83,6 +83,36 @@ public final class TimingAnimation: KeyboardAnimation {
       t = max(min(t, 1), 0) // Ensure t stays within bounds
     }
     return t // Return the approximation of t
+  }
+  
+  private func findTForY(yTarget: CGFloat, epsilon: CGFloat = 0.0001, maxIterations: Int = 100) -> CGFloat {
+      var t: CGFloat = 0.5
+      for _ in 0..<maxIterations {
+          let currentY = bezierY(t: t)
+          let derivativeY = bezierDerivative(t: t) { $0.y }
+          let yError = currentY - yTarget
+          if abs(yError) < epsilon {
+              break
+          }
+          t -= yError / derivativeY
+          t = max(0, min(t, 1))
+      }
+      return t
+  }
+  
+  override func timingAt(value: Double) -> Double {
+    guard (toValue - fromValue) != 0 else { return 0 }
+
+    let targetY = (value - fromValue) / (toValue - fromValue)
+    let clampedY = max(min(targetY, 1.0), 0.0)
+
+    let t = findTForY(yTarget: clampedY)
+    let x = bezierX(t: t)
+
+    let duration = animation?.duration ?? 0.0
+    let time = x * duration / speed
+
+    return time
   }
 
   private func bezierDerivative(t: CGFloat, valueForPoint: (CGPoint) -> CGFloat) -> CGFloat {
