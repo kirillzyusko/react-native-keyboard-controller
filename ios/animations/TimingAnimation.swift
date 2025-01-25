@@ -39,7 +39,7 @@ public final class TimingAnimation: KeyboardAnimation {
     let duration = animation?.duration ?? 0.0
     guard duration > 0 else { return toValue }
 
-    let fraction = min((time * speed) / duration, 1.0)
+    let fraction = min(time / duration, 1.0)
     let t = findTForX(xTarget: fraction)
     let progress = bezierY(t: t)
 
