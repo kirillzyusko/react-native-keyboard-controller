@@ -18,10 +18,10 @@ public final class SpringAnimation: KeyboardAnimation {
   private let v0: Double // Initial velocity
   // pre-computed values
   private let x0: Double
-  private let A_under: Double
-  private let B_under: Double
-  private let A_crit: Double
-  private let B_crit: Double
+  private let aUnder: Double
+  private let bUnder: Double
+  private let aCritical: Double
+  private let bCritical: Double
 
   // constructor variables
   private let stiffness: Double
@@ -42,15 +42,17 @@ public final class SpringAnimation: KeyboardAnimation {
     x0 = toValue - fromValue
 
     if zeta < 1 {
-      A_crit = 0
-      B_crit = 0
-      A_under = (v0 + zeta * omega0 * x0) / omega1
-      B_under = x0
+      // Under damped
+      aCritical = 0
+      bCritical = 0
+      aUnder = (v0 + zeta * omega0 * x0) / omega1
+      bUnder = x0
     } else {
-      A_crit = x0
-      B_crit = (v0 + omega0 * x0)
-      A_under = 0
-      B_under = 0
+      // Critically damped
+      aCritical = x0
+      bCritical = (v0 + omega0 * x0)
+      aUnder = 0
+      bUnder = 0
     }
 
     super.init(fromValue: fromValue, toValue: toValue, animation: animation)
@@ -62,14 +64,16 @@ public final class SpringAnimation: KeyboardAnimation {
 
     var y: Double
     if zeta < 1 {
+      // Under damped
       let envelope = exp(-zeta * omega0 * t)
       let angle = omega1 * t
       let sinAngle = sin(angle)
       let cosAngle = cos(angle)
-      y = toValue - envelope * (A_under * sinAngle + B_under * cosAngle)
+      y = toValue - envelope * (aUnder * sinAngle + bUnder * cosAngle)
     } else {
+      // Critically damped
       let envelope = exp(-omega0 * t)
-      y = toValue - envelope * (A_crit + B_crit * t)
+      y = toValue - envelope * (aCritical + bCritical * t)
     }
 
     return y
