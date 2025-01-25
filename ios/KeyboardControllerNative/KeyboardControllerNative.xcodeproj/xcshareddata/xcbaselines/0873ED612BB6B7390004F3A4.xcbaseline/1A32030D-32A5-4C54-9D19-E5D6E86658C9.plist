@@ -11,7 +11,7 @@
 				<key>com.apple.dt.XCTMetric_CPU.cycles</key>
 				<dict>
 					<key>baselineAverage</key>
-					<real>692279.864500</real>
+					<real>69227.864500</real>
 					<key>baselineIntegrationDisplayName</key>
 					<string>Local Baseline</string>
 				</dict>
