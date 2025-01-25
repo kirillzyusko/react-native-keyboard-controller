@@ -84,22 +84,22 @@ public final class TimingAnimation: KeyboardAnimation {
     }
     return t // Return the approximation of t
   }
-  
+
   private func findTForY(yTarget: CGFloat, epsilon: CGFloat = 0.0001, maxIterations: Int = 100) -> CGFloat {
-      var t: CGFloat = 0.5
-      for _ in 0..<maxIterations {
-          let currentY = bezierY(t: t)
-          let derivativeY = bezierDerivative(t: t) { $0.y }
-          let yError = currentY - yTarget
-          if abs(yError) < epsilon {
-              break
-          }
-          t -= yError / derivativeY
-          t = max(0, min(t, 1))
+    var t: CGFloat = 0.5
+    for _ in 0 ..< maxIterations {
+      let currentY = bezierY(t: t)
+      let derivativeY = bezierDerivative(t: t) { $0.y }
+      let yError = currentY - yTarget
+      if abs(yError) < epsilon {
+        break
       }
-      return t
+      t -= yError / derivativeY
+      t = max(0, min(t, 1))
+    }
+    return t
   }
-  
+
   override func timingAt(value: Double) -> Double {
     guard (toValue - fromValue) != 0 else { return 0 }
 
