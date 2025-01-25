@@ -35,7 +35,7 @@ public final class TimingAnimation: KeyboardAnimation {
 
   // public functions
   override func valueAt(time: Double) -> Double {
-    let x = time * Double(speed)
+    let x = time * speed
     let frames = (animation?.duration ?? 0.0) * Double(speed)
     let fraction = min(x / frames, 1)
     let t = findTForX(xTarget: fraction)
