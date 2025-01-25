@@ -76,28 +76,28 @@
 				<key>com.apple.dt.XCTMetric_CPU.cycles</key>
 				<dict>
 					<key>baselineAverage</key>
-					<real>7640000.000000</real>
+					<real>709000.000000</real>
 					<key>baselineIntegrationDisplayName</key>
 					<string>Local Baseline</string>
 				</dict>
 				<key>com.apple.dt.XCTMetric_CPU.instructions_retired</key>
 				<dict>
 					<key>baselineAverage</key>
-					<real>37300000.000000</real>
+					<real>3340000.000000</real>
 					<key>baselineIntegrationDisplayName</key>
 					<string>Local Baseline</string>
 				</dict>
 				<key>com.apple.dt.XCTMetric_CPU.time</key>
 				<dict>
 					<key>baselineAverage</key>
-					<real>2.563817</real>
+					<real>0.261000</real>
 					<key>baselineIntegrationDisplayName</key>
 					<string>Local Baseline</string>
 				</dict>
 				<key>com.apple.dt.XCTMetric_Clock.time.monotonic</key>
 				<dict>
 					<key>baselineAverage</key>
-					<real>2.564888</real>
+					<real>0.259000</real>
 					<key>baselineIntegrationDisplayName</key>
 					<string>Local Baseline</string>
 				</dict>
