@@ -22,7 +22,7 @@
 <p>The cherry on the cake of this release is making <code>KeyboardGestureArea</code> available on iOS 🍒</p>
 <p>Previously, react-native developers relied on <code>InputAccessoryView</code> to extend the keyboard area, but it had several limitations:</p>
 <ul>
-<li>Multiline <code>TextInput</code> <a href="https://github.com/facebook/react-native/issues/18997" target="_blank" rel="noopener noreferrer">fields couldn't</a>;</li>
+<li>Multiline <code>TextInput</code> fields couldn't <a href="https://github.com/facebook/react-native/issues/18997" target="_blank" rel="noopener noreferrer">expand dynamically</a>;</li>
 <li>Conditional positioning and padding weren't <a href="https://github.com/facebook/react-native/issues/20157" target="_blank" rel="noopener noreferrer">fully customizable</a>;</li>
 <li>Weird animations when screen gets <a href="https://stackoverflow.com/a/29110384/9272042" target="_blank" rel="noopener noreferrer">mounted</a>.</li>
 </ul>
@@ -39,7 +39,7 @@
 <p>Previously, some third-party SDKs, like <strong>Stripe</strong>, used custom <code>EditText</code> subclasses that caused issues when casting to <code>ReactEditText</code>, preventing the library from recognizing focused inputs.</p>
 <p>I’ve reworked the code to interact directly with <code>EditText</code> whenever possible, ensuring full compatibility with <strong>Stripe</strong> and other third-party SDKs.</p>
 <h3 class="anchor anchorWithStickyNavbar_LWe7" id="no-crashes-on-ios">No crashes on iOS<a class="hash-link" aria-label="Direct link to No crashes on iOS" title="Direct link to No crashes on iOS" href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/interactive-keyboard-ios-with-offset#no-crashes-on-ios">​</a></h3>
-<p>While rare, some users experienced crashes due to incorrect Key-Value Observing (KVO) removal when attempting to remove KVO from a view that didn’t have it.</p>
+<p>While rare, some users experienced crashes due to incorrect Key-Value Observing (KVO) removal when attempting to remove KVO from a view that doesn’t have it.</p>
 <p>This release introduces a block-based KVO handling approach, eliminating those crashes.</p>
 <h3 class="anchor anchorWithStickyNavbar_LWe7" id="more-robust-focus-detection-even-when-the-keyboard-is-hidden">More Robust Focus Detection (Even When the Keyboard Is Hidden)<a class="hash-link" aria-label="Direct link to More Robust Focus Detection (Even When the Keyboard Is Hidden)" title="Direct link to More Robust Focus Detection (Even When the Keyboard Is Hidden)" href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/interactive-keyboard-ios-with-offset#more-robust-focus-detection-even-when-the-keyboard-is-hidden">​</a></h3>
 <p>Previously, the library relied on the <code>keyboardWillShow</code> event as an indicator that an input field was focused. However, this event doesn’t always trigger—such as when using a physical keyboard or setting <code>showSoftInputOnFocus={false}</code>.</p>
@@ -48,7 +48,7 @@
 <p>Thanks to <a href="https://github.com/zoontek" target="_blank" rel="noopener noreferrer">Mathieu Acthernoene</a>, <code>preserveEdgeToEdge</code> has been introduced! This property lets you control whether <code>edge-to-edge</code> mode is disabled when calling <code>setEnabled(false)</code>, or if you want to keep it enabled.</p>
 <p>With <code>edge-to-edge</code> mode becoming the standard, this option helps prevent conflicts with other libraries.</p>
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="improved-animation-performance">Improved animation performance<a class="hash-link" aria-label="Direct link to Improved animation performance" title="Direct link to Improved animation performance" href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/interactive-keyboard-ios-with-offset#improved-animation-performance">​</a></h2>
-<p>While most users won’t notice a difference (since previous animations were already computed in under <code>1ms</code>), I’ve made further optimizations to improve performance.</p>
+<p>While most users won’t notice a difference (since before animations were already computed in under <code>1ms</code>), I’ve made further optimizations to improve performance.</p>
 <p>Even small performance gains are valuable, as they free up CPU resources for other intensive tasks — such as <code>ShadowTree</code> traversal in <code>react-native-reanimated</code>.</p>
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="whats-next">What's next?<a class="hash-link" aria-label="Direct link to What's next?" title="Direct link to What's next?" href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/interactive-keyboard-ios-with-offset#whats-next">​</a></h2>
 <p>As always, my immediate priority is addressing open issues. Additionally, I have plans for upcoming updates:</p>
