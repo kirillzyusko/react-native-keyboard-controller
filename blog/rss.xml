@@ -4,10 +4,66 @@
         <title>Keyboard Controller Blog</title>
         <link>https://kirillzyusko.github.io/react-native-keyboard-controller/blog</link>
         <description>Keyboard Controller Blog</description>
-        <lastBuildDate>Thu, 12 Dec 2024 00:00:00 GMT</lastBuildDate>
+        <lastBuildDate>Mon, 27 Jan 2025 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <language>en</language>
+        <item>
+            <title><![CDATA[Interactive keyboard on iOS with offset 🔥]]></title>
+            <link>https://kirillzyusko.github.io/react-native-keyboard-controller/blog/interactive-keyboard-ios-with-offset</link>
+            <guid>https://kirillzyusko.github.io/react-native-keyboard-controller/blog/interactive-keyboard-ios-with-offset</guid>
+            <pubDate>Mon, 27 Jan 2025 00:00:00 GMT</pubDate>
+            <description><![CDATA[Say hello to the first release of the year for react-native-keyboard-controller version 1.16.0! 🎉]]></description>
+            <content:encoded><![CDATA[<p>Say hello to the first release of the year for <code>react-native-keyboard-controller</code> version <code>1.16.0</code>! 🎉</p>
+<p>This update is packed with new features, critical bug fixes, crash resolutions, and performance optimizations. Let’s dive in and explore what’s new! 👇</p>
+<!-- -->
+<div class="center video"><video autoplay="" loop="" muted="" playsinline="" height="100%" src="/react-native-keyboard-controller/video/ios-offset-demo.mp4" width="30%"></video></div>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="keyboardgesturearea-with-offset-on-ios-"><code>KeyboardGestureArea</code> with <code>offset</code> on iOS 🔥<a class="hash-link" aria-label="Direct link to keyboardgesturearea-with-offset-on-ios-" title="Direct link to keyboardgesturearea-with-offset-on-ios-" href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/interactive-keyboard-ios-with-offset#keyboardgesturearea-with-offset-on-ios-">​</a></h2>
+<p>The cherry on the cake of this release is making <code>KeyboardGestureArea</code> available on iOS 🍒</p>
+<p>Previously, react-native developers relied on <code>InputAccessoryView</code> to extend the keyboard area, but it had several limitations:</p>
+<ul>
+<li>Multiline <code>TextInput</code> <a href="https://github.com/facebook/react-native/issues/18997" target="_blank" rel="noopener noreferrer">fields couldn't</a>;</li>
+<li>Conditional positioning and padding weren't <a href="https://github.com/facebook/react-native/issues/20157" target="_blank" rel="noopener noreferrer">fully customizable</a>;</li>
+<li>Weird animations when screen gets <a href="https://stackoverflow.com/a/29110384/9272042" target="_blank" rel="noopener noreferrer">mounted</a>.</li>
+</ul>
+<p>These issues made <code>InputAccessoryView</code> challenging to use in real-world apps. 😭</p>
+<p>Starting with this release, <code>KeyboardGestureArea</code> is now available on iOS! Currently, it supports the <code>offset</code> property, but I plan to add more features soon. 😎</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="usefocusedinput-improvements"><code>useFocusedInput</code> improvements<a class="hash-link" aria-label="Direct link to usefocusedinput-improvements" title="Direct link to usefocusedinput-improvements" href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/interactive-keyboard-ios-with-offset#usefocusedinput-improvements">​</a></h2>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="more-accurate-selection-events">More Accurate Selection Events<a class="hash-link" aria-label="Direct link to More Accurate Selection Events" title="Direct link to More Accurate Selection Events" href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/interactive-keyboard-ios-with-offset#more-accurate-selection-events">​</a></h3>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="improved-precision">Improved precision<a class="hash-link" aria-label="Direct link to Improved precision" title="Direct link to Improved precision" href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/interactive-keyboard-ios-with-offset#improved-precision">​</a></h4>
+<p>Previously, <code>onSelectionChange</code>events could produce imprecise coordinates, especially when using different <code>paddingTop</code>/<code>paddingBottom</code> values or the <code>textAlignVertical</code> property.</p>
+<p>This update fixes those inaccuracies, ensuring more precise coordinates and eliminating the need for workarounds to align positioning between Android and iOS.</p>
+<h4 class="anchor anchorWithStickyNavbar_LWe7" id="fully-compatible-with-ios--13">Fully compatible with iOS &lt; 13<a class="hash-link" aria-label="Direct link to Fully compatible with iOS < 13" title="Direct link to Fully compatible with iOS < 13" href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/interactive-keyboard-ios-with-offset#fully-compatible-with-ios--13">​</a></h4>
+<p><code>onSelectionChange</code> didn’t work for single-line <code>TextInput</code>s on iOS versions below 13. This issue has now been resolved, ensuring compatibility across all iOS versions.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="works-seamlessly-with-stripe-inputs-on-android">Works Seamlessly with Stripe Inputs on Android<a class="hash-link" aria-label="Direct link to Works Seamlessly with Stripe Inputs on Android" title="Direct link to Works Seamlessly with Stripe Inputs on Android" href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/interactive-keyboard-ios-with-offset#works-seamlessly-with-stripe-inputs-on-android">​</a></h3>
+<p>Previously, some third-party SDKs, like <strong>Stripe</strong>, used custom <code>EditText</code> subclasses that caused issues when casting to <code>ReactEditText</code>, preventing the library from recognizing focused inputs.</p>
+<p>I’ve reworked the code to interact directly with <code>EditText</code> whenever possible, ensuring full compatibility with <strong>Stripe</strong> and other third-party SDKs.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="no-crashes-on-ios">No crashes on iOS<a class="hash-link" aria-label="Direct link to No crashes on iOS" title="Direct link to No crashes on iOS" href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/interactive-keyboard-ios-with-offset#no-crashes-on-ios">​</a></h3>
+<p>While rare, some users experienced crashes due to incorrect Key-Value Observing (KVO) removal when attempting to remove KVO from a view that didn’t have it.</p>
+<p>This release introduces a block-based KVO handling approach, eliminating those crashes.</p>
+<h3 class="anchor anchorWithStickyNavbar_LWe7" id="more-robust-focus-detection-even-when-the-keyboard-is-hidden">More Robust Focus Detection (Even When the Keyboard Is Hidden)<a class="hash-link" aria-label="Direct link to More Robust Focus Detection (Even When the Keyboard Is Hidden)" title="Direct link to More Robust Focus Detection (Even When the Keyboard Is Hidden)" href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/interactive-keyboard-ios-with-offset#more-robust-focus-detection-even-when-the-keyboard-is-hidden">​</a></h3>
+<p>Previously, the library relied on the <code>keyboardWillShow</code> event as an indicator that an input field was focused. However, this event doesn’t always trigger—such as when using a physical keyboard or setting <code>showSoftInputOnFocus={false}</code>.</p>
+<p>Now, focus detection has been improved to work reliably even without keyboard events.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="new-preserveedgetoedge-prop-for-keyboardprovider">New <code>preserveEdgeToEdge</code> prop for <code>KeyboardProvider</code><a class="hash-link" aria-label="Direct link to new-preserveedgetoedge-prop-for-keyboardprovider" title="Direct link to new-preserveedgetoedge-prop-for-keyboardprovider" href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/interactive-keyboard-ios-with-offset#new-preserveedgetoedge-prop-for-keyboardprovider">​</a></h2>
+<p>Thanks to <a href="https://github.com/zoontek" target="_blank" rel="noopener noreferrer">Mathieu Acthernoene</a>, <code>preserveEdgeToEdge</code> has been introduced! This property lets you control whether <code>edge-to-edge</code> mode is disabled when calling <code>setEnabled(false)</code>, or if you want to keep it enabled.</p>
+<p>With <code>edge-to-edge</code> mode becoming the standard, this option helps prevent conflicts with other libraries.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="improved-animation-performance">Improved animation performance<a class="hash-link" aria-label="Direct link to Improved animation performance" title="Direct link to Improved animation performance" href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/interactive-keyboard-ios-with-offset#improved-animation-performance">​</a></h2>
+<p>While most users won’t notice a difference (since previous animations were already computed in under <code>1ms</code>), I’ve made further optimizations to improve performance.</p>
+<p>Even small performance gains are valuable, as they free up CPU resources for other intensive tasks — such as <code>ShadowTree</code> traversal in <code>react-native-reanimated</code>.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="whats-next">What's next?<a class="hash-link" aria-label="Direct link to What's next?" title="Direct link to What's next?" href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/interactive-keyboard-ios-with-offset#whats-next">​</a></h2>
+<p>As always, my immediate priority is addressing open issues. Additionally, I have plans for upcoming updates:</p>
+<ul>
+<li>Adding support for <code>react-native@0.77</code>;</li>
+<li>A major rewrite of <code>KeyboardAwareScrollView</code> to consider cursor positioning (this release lays the groundwork by improving event precision to minimize breaking changes in the future).</li>
+</ul>
+<p>Stay tuned and follow me on <a href="https://twitter.com/ziusko" target="_blank" rel="noopener noreferrer">Twitter</a> and <a href="https://github.com/kirillzyusko" target="_blank" rel="noopener noreferrer">GitHub</a> for updates. Thank you for your support! 😊</p>]]></content:encoded>
+            <category>react-native</category>
+            <category>keyboard</category>
+            <category>interactive</category>
+            <category>ios</category>
+            <category>offset</category>
+            <category>selection</category>
+        </item>
         <item>
             <title><![CDATA[Mastering keyboard management 🥷🏼]]></title>
             <link>https://kirillzyusko.github.io/react-native-keyboard-controller/blog/mastering-keyboard-management</link>
@@ -257,7 +313,7 @@
 <p>I've heard your feedback, and in response, I'm now exporting <code>KeyboardAwareScrollView</code> from the library core. This widely-used component provides an enhanced <code>ScrollView</code> experience, ensuring smoother navigation and improved user interactions. Now, you can effortlessly integrate it into your projects and leverage its capabilities for a more polished UI 😎</p>
 <h3 class="anchor anchorWithStickyNavbar_LWe7" id="keyboardcontrollerdismiss-method"><code>KeyboardController.dismiss()</code> method<a class="hash-link" aria-label="Direct link to keyboardcontrollerdismiss-method" title="Direct link to keyboardcontrollerdismiss-method" href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/release-1-10#keyboardcontrollerdismiss-method">​</a></h3>
 <p>Simplify your workflow with the addition of the <code>KeyboardController.dismiss()</code> method. This method streamlines the dismissal of the keyboard, making it a breeze to manage user input interactions. Enhance the user experience by effortlessly controlling when and how the keyboard should disappear.</p>
-<h2 class="anchor anchorWithStickyNavbar_LWe7" id="reflecting-on-a-productive-year-2023-">Reflecting on a Productive Year: 2023 🎁🎅<a class="hash-link" aria-label="Direct link to Reflecting on a Productive Year: 2023 🎁🎅" title="Direct link to Reflecting on a Productive Year: 2023 🎁🎅" href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/release-1-10#reflecting-on-a-productive-year-2023-">​</a></h2>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="reflecting-on-a-productive-year-2023-">Reflecting on a Productive Year: 2023 🎁🎅<a class="hash-link" aria-label="Direct link to Reflecting on a Productive Year: 2023 ���🎁🎅" title="Direct link to Reflecting on a Productive Year: 2023 🎁🎅" href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/release-1-10#reflecting-on-a-productive-year-2023-">​</a></h2>
 <p>As we bid farewell to 2023, it's a moment to reflect on the incredible strides we've made together. This year has been marked by innovation, user-centric enhancements, and the continuous evolution of our toolkit. Here's a summary of the key milestones:</p>
 <h3 class="anchor anchorWithStickyNavbar_LWe7" id="interactive-keyboard-implementation">Interactive Keyboard Implementation<a class="hash-link" aria-label="Direct link to Interactive Keyboard Implementation" title="Direct link to Interactive Keyboard Implementation" href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/release-1-10#interactive-keyboard-implementation">​</a></h3>
 <p>I took a giant leap forward by implementing an interactive keyboard. This feature enhances user engagement and provides a dynamic interface for a more immersive experience. Now, user interactions with the keyboard are not just functional but also interactive and enjoyable 😊</p>
