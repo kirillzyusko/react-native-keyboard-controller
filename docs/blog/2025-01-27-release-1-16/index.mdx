@@ -29,7 +29,7 @@ The cherry on the cake of this release is making `KeyboardGestureArea` available
 
 Previously, react-native developers relied on `InputAccessoryView` to extend the keyboard area, but it had several limitations:
 
-- Multiline `TextInput` [fields couldn't](https://github.com/facebook/react-native/issues/18997);
+- Multiline `TextInput` fields couldn't [expand dynamically](https://github.com/facebook/react-native/issues/18997);
 - Conditional positioning and padding weren't [fully customizable](https://github.com/facebook/react-native/issues/20157);
 - Weird animations when screen gets [mounted](https://stackoverflow.com/a/29110384/9272042).
 
@@ -59,7 +59,7 @@ I’ve reworked the code to interact directly with `EditText` whenever possible,
 
 ### No crashes on iOS
 
-While rare, some users experienced crashes due to incorrect Key-Value Observing (KVO) removal when attempting to remove KVO from a view that didn’t have it.
+While rare, some users experienced crashes due to incorrect Key-Value Observing (KVO) removal when attempting to remove KVO from a view that doesn’t have it.
 
 This release introduces a block-based KVO handling approach, eliminating those crashes.
 
@@ -77,7 +77,7 @@ With `edge-to-edge` mode becoming the standard, this option helps prevent confli
 
 ## Improved animation performance
 
-While most users won’t notice a difference (since previous animations were already computed in under `1ms`), I’ve made further optimizations to improve performance.
+While most users won’t notice a difference (since before animations were already computed in under `1ms`), I’ve made further optimizations to improve performance.
 
 Even small performance gains are valuable, as they free up CPU resources for other intensive tasks — such as `ShadowTree` traversal in `react-native-reanimated`.
 
