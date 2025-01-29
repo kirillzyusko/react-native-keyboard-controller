@@ -103,6 +103,7 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   private func removeKVObserver() {
+    interactiveKeyboardObserver?.invalidate()
     interactiveKeyboardObserver = nil
   }
 
