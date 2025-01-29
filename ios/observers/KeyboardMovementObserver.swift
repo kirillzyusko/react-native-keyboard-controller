@@ -33,7 +33,7 @@ public class KeyboardMovementObserver: NSObject {
   private var _windowsCount: Int = 0
   private var prevKeyboardPosition = 0.0
   private var displayLink: CADisplayLink?
-  private var hasKVObserver = false
+  private var interactiveKeyboardObserver: NSKeyValueObservation?
   private var isMounted = false
   // state variables
   private var _keyboardHeight: CGFloat = 0.0
@@ -93,73 +93,56 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   private func setupKVObserver() {
-    if hasKVObserver {
-      return
-    }
+    guard interactiveKeyboardObserver == nil, let view = keyboardView else { return }
 
-    if keyboardView != nil {
-      hasKVObserver = true
-      keyboardView?.addObserver(self, forKeyPath: "center", options: .new, context: nil)
+    interactiveKeyboardObserver = view.observe(\.center, options: .new) { [weak self] _, change in
+      guard let self = self, let changeValue = change.newValue else { return }
+
+      self.keyboardDidMoveInteractively(changeValue: changeValue)
     }
   }
 
   private func removeKVObserver() {
-    if !hasKVObserver {
+    interactiveKeyboardObserver = nil
+  }
+
+  private func keyboardDidMoveInteractively(changeValue: CGPoint) {
+    // if we are currently animating keyboard -> we need to ignore values from KVO
+    if displayLink != nil {
+      return
+    }
+    // if keyboard height is not equal to its bounds - we can ignore
+    // values, since they'll be invalid and will cause UI jumps
+    if floor(keyboardView?.bounds.size.height ?? 0) != floor(_keyboardHeight) {
       return
     }
 
-    hasKVObserver = false
-    _keyboardView?.removeObserver(self, forKeyPath: "center", context: nil)
-  }
+    let keyboardFrameY = changeValue.y
+    let keyboardWindowH = keyboardView?.window?.bounds.size.height ?? 0
+    let keyboardPosition = keyboardWindowH - keyboardFrameY
 
-  // swiftlint:disable:next block_based_kvo
-  @objc override public func observeValue(
-    forKeyPath keyPath: String?,
-    of object: Any?,
-    change: [NSKeyValueChangeKey: Any]?,
-    context _: UnsafeMutableRawPointer?
-  ) {
-    if keyPath == "center", object as? NSObject == _keyboardView {
-      // if we are currently animating keyboard -> we need to ignore values from KVO
-      if displayLink != nil {
-        return
-      }
-      // if keyboard height is not equal to its bounds - we can ignore
-      // values, since they'll be invalid and will cause UI jumps
-      if floor(keyboardView?.bounds.size.height ?? 0) != floor(_keyboardHeight) {
-        return
-      }
+    let position = CGFloat.interpolate(
+      inputRange: [_keyboardHeight / 2, -_keyboardHeight / 2],
+      outputRange: [_keyboardHeight, 0],
+      currentValue: keyboardPosition
+    ) - KeyboardAreaExtender.shared.offset
 
-      guard let changeValue = change?[.newKey] as? NSValue else {
-        return
-      }
-      let keyboardFrameY = changeValue.cgPointValue.y
-      let keyboardWindowH = keyboardView?.window?.bounds.size.height ?? 0
-      let keyboardPosition = keyboardWindowH - keyboardFrameY
-
-      let position = CGFloat.interpolate(
-        inputRange: [_keyboardHeight / 2, -_keyboardHeight / 2],
-        outputRange: [_keyboardHeight, 0],
-        currentValue: keyboardPosition
-      ) - KeyboardAreaExtender.shared.offset
-
-      if position == 0 {
-        // it will be triggered before `keyboardWillDisappear` and
-        // we don't need to trigger `onInteractive` handler for that
-        // since it will be handled in `keyboardWillDisappear` function
-        return
-      }
-
-      prevKeyboardPosition = position
-
-      onEvent(
-        "onKeyboardMoveInteractive",
-        position as NSNumber,
-        position / CGFloat(keyboardHeight) as NSNumber,
-        -1,
-        tag
-      )
+    if position == 0 {
+      // it will be triggered before `keyboardWillDisappear` and
+      // we don't need to trigger `onInteractive` handler for that
+      // since it will be handled in `keyboardWillDisappear` function
+      return
     }
+
+    prevKeyboardPosition = position
+
+    onEvent(
+      "onKeyboardMoveInteractive",
+      position as NSNumber,
+      position / CGFloat(keyboardHeight) as NSNumber,
+      -1,
+      tag
+    )
   }
 
   @objc public func unmount() {
