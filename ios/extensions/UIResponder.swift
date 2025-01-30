@@ -9,31 +9,64 @@
 import Foundation
 import UIKit
 
+extension UIView {
+  @objc func findFirstResponder() -> UIResponder? {
+    if isFirstResponder {
+      return self
+    }
+    for subview in subviews {
+      if let responder = subview.findFirstResponder() {
+        return responder
+      }
+    }
+    return nil
+  }
+}
+
+extension UIWindow {
+  @objc override func findFirstResponder() -> UIResponder? {
+    return rootViewController?.view.findFirstResponder() ?? super.findFirstResponder()
+  }
+}
+
+// If needed, handle navigation or tab controllers by extending UIViewController
+extension UIViewController {
+  @objc func findFirstResponder() -> UIResponder? {
+    if view.isFirstResponder {
+      return view
+    }
+    return view.findFirstResponder() ?? presentedViewController?.findFirstResponder()
+  }
+}
+
 @objc
 public extension UIResponder {
   private weak static var _currentFirstResponder: UIResponder?
 
   static var current: UIResponder? {
-    UIResponder._currentFirstResponder = nil
-    UIApplication.shared.sendAction(#selector(findFirstResponder(sender:)), to: nil, from: nil, for: nil)
-    return UIResponder._currentFirstResponder
+    for window in UIApplication.shared.windows {
+      if let responder = window.findFirstResponder() {
+        return responder
+      }
+    }
+    return nil
   }
 
-  internal func findFirstResponder(sender _: AnyObject) {
-    let type = String(describing: type(of: self))
-    // handle `contextMenuHidden` prop - in this case the parent is considered as a first responder
-    // (but actually its children is an actual input), so we apply correction here and point out
-    // to the actual first responder (first children)
-    let isChildrenActuallyFirstResponder =
-      type == "RCTMultilineTextInputView" ||
-      type == "RCTSinglelineTextInputView" ||
-      type == "RCTTextInputComponentView"
-    if isChildrenActuallyFirstResponder {
-      UIResponder._currentFirstResponder = (self as? UIView)?.subviews[0]
-    } else {
-      UIResponder._currentFirstResponder = self
-    }
-  }
+  /* internal func findFirstResponder(sender _: AnyObject) {
+     let type = String(describing: type(of: self))
+     // handle `contextMenuHidden` prop - in this case the parent is considered as a first responder
+     // (but actually its children is an actual input), so we apply correction here and point out
+     // to the actual first responder (first children)
+     let isChildrenActuallyFirstResponder =
+       type == "RCTMultilineTextInputView" ||
+       type == "RCTSinglelineTextInputView" ||
+       type == "RCTTextInputComponentView"
+     if isChildrenActuallyFirstResponder {
+       UIResponder._currentFirstResponder = (self as? UIView)?.subviews[0]
+     } else {
+       UIResponder._currentFirstResponder = self
+     }
+   } */
 }
 
 public extension Optional where Wrapped == UIResponder {
