@@ -11,28 +11,28 @@
 				<key>com.apple.dt.XCTMetric_CPU.cycles</key>
 				<dict>
 					<key>baselineAverage</key>
-					<real>692279.864500</real>
+					<real>509000.000000</real>
 					<key>baselineIntegrationDisplayName</key>
 					<string>Local Baseline</string>
 				</dict>
 				<key>com.apple.dt.XCTMetric_CPU.instructions_retired</key>
 				<dict>
 					<key>baselineAverage</key>
-					<real>2497477.878400</real>
+					<real>1720000.000000</real>
 					<key>baselineIntegrationDisplayName</key>
 					<string>Local Baseline</string>
 				</dict>
 				<key>com.apple.dt.XCTMetric_CPU.time</key>
 				<dict>
 					<key>baselineAverage</key>
-					<real>0.223160</real>
+					<real>0.187000</real>
 					<key>baselineIntegrationDisplayName</key>
 					<string>Local Baseline</string>
 				</dict>
 				<key>com.apple.dt.XCTMetric_Clock.time.monotonic</key>
 				<dict>
 					<key>baselineAverage</key>
-					<real>0.251555</real>
+					<real>0.187000</real>
 					<key>baselineIntegrationDisplayName</key>
 					<string>Local Baseline</string>
 				</dict>
@@ -42,28 +42,28 @@
 				<key>com.apple.dt.XCTMetric_CPU.cycles</key>
 				<dict>
 					<key>baselineAverage</key>
-					<real>11784.023400</real>
+					<real>9480.000000</real>
 					<key>baselineIntegrationDisplayName</key>
 					<string>Local Baseline</string>
 				</dict>
 				<key>com.apple.dt.XCTMetric_CPU.instructions_retired</key>
 				<dict>
 					<key>baselineAverage</key>
-					<real>52409.916600</real>
+					<real>46000.000000</real>
 					<key>baselineIntegrationDisplayName</key>
 					<string>Local Baseline</string>
 				</dict>
 				<key>com.apple.dt.XCTMetric_CPU.time</key>
 				<dict>
 					<key>baselineAverage</key>
-					<real>0.003792</real>
+					<real>0.003490</real>
 					<key>baselineIntegrationDisplayName</key>
 					<string>Local Baseline</string>
 				</dict>
 				<key>com.apple.dt.XCTMetric_Clock.time.monotonic</key>
 				<dict>
 					<key>baselineAverage</key>
-					<real>0.003172</real>
+					<real>0.003050</real>
 					<key>baselineIntegrationDisplayName</key>
 					<string>Local Baseline</string>
 				</dict>
@@ -76,28 +76,28 @@
 				<key>com.apple.dt.XCTMetric_CPU.cycles</key>
 				<dict>
 					<key>baselineAverage</key>
-					<real>8198357.543500</real>
+					<real>727000.000000</real>
 					<key>baselineIntegrationDisplayName</key>
 					<string>Local Baseline</string>
 				</dict>
 				<key>com.apple.dt.XCTMetric_CPU.instructions_retired</key>
 				<dict>
 					<key>baselineAverage</key>
-					<real>39224511.178500</real>
+					<real>3370000.000000</real>
 					<key>baselineIntegrationDisplayName</key>
 					<string>Local Baseline</string>
 				</dict>
 				<key>com.apple.dt.XCTMetric_CPU.time</key>
 				<dict>
 					<key>baselineAverage</key>
-					<real>2.563817</real>
+					<real>0.267000</real>
 					<key>baselineIntegrationDisplayName</key>
 					<string>Local Baseline</string>
 				</dict>
 				<key>com.apple.dt.XCTMetric_Clock.time.monotonic</key>
 				<dict>
 					<key>baselineAverage</key>
-					<real>2.564888</real>
+					<real>0.267000</real>
 					<key>baselineIntegrationDisplayName</key>
 					<string>Local Baseline</string>
 				</dict>
@@ -107,28 +107,28 @@
 				<key>com.apple.dt.XCTMetric_CPU.cycles</key>
 				<dict>
 					<key>baselineAverage</key>
-					<real>316000.000000</real>
+					<real>303000.000000</real>
 					<key>baselineIntegrationDisplayName</key>
 					<string>Local Baseline</string>
 				</dict>
 				<key>com.apple.dt.XCTMetric_CPU.instructions_retired</key>
 				<dict>
 					<key>baselineAverage</key>
-					<real>1460000.000000</real>
+					<real>1400000.000000</real>
 					<key>baselineIntegrationDisplayName</key>
 					<string>Local Baseline</string>
 				</dict>
 				<key>com.apple.dt.XCTMetric_CPU.time</key>
 				<dict>
 					<key>baselineAverage</key>
-					<real>0.097500</real>
+					<real>0.112000</real>
 					<key>baselineIntegrationDisplayName</key>
 					<string>Local Baseline</string>
 				</dict>
 				<key>com.apple.dt.XCTMetric_Clock.time.monotonic</key>
 				<dict>
 					<key>baselineAverage</key>
-					<real>0.108737</real>
+					<real>0.111000</real>
 					<key>baselineIntegrationDisplayName</key>
 					<string>Local Baseline</string>
 				</dict>

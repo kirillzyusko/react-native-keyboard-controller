@@ -23,14 +23,14 @@ public class KeyboardAnimation: KeyboardAnimationProtocol {
   // constructor variables
   let fromValue: Double
   let toValue: Double
-  let speed: Float
+  let speed: Double
   let timestamp: CFTimeInterval
 
   init(fromValue: Double, toValue: Double, animation: CAMediaTiming) {
     self.fromValue = fromValue
     self.toValue = toValue
     self.animation = animation
-    speed = animation.speed
+    speed = Double(animation.speed)
     timestamp = CACurrentMediaTime()
   }
 
@@ -63,7 +63,7 @@ public class KeyboardAnimation: KeyboardAnimationProtocol {
 
     while (upperBound - lowerBound) > tolerance {
       tGuess = (lowerBound + upperBound) / 2
-      let currentValue = valueAt(time: tGuess / Double(speed))
+      let currentValue = valueAt(time: tGuess / speed)
 
       // Adjust the condition to account for the direction of animation
       if (currentValue < value && isIncreasing) || (currentValue > value && !isIncreasing) {
@@ -73,6 +73,6 @@ public class KeyboardAnimation: KeyboardAnimationProtocol {
       }
     }
 
-    return tGuess / Double(speed)
+    return tGuess / speed
   }
 }

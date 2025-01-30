@@ -4,10 +4,10 @@ import android.text.TextWatcher
 import android.view.View
 import android.view.View.OnLayoutChangeListener
 import android.view.ViewTreeObserver.OnGlobalFocusChangeListener
+import android.widget.EditText
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.UIManagerHelper
-import com.facebook.react.views.textinput.ReactEditText
 import com.facebook.react.views.view.ReactViewGroup
 import com.reactnativekeyboardcontroller.events.FocusedInputLayoutChangedEvent
 import com.reactnativekeyboardcontroller.events.FocusedInputLayoutChangedEventData
@@ -46,7 +46,7 @@ class FocusedInputObserver(
   private val surfaceId = UIManagerHelper.getSurfaceId(view)
 
   // state variables
-  private var lastFocusedInput: ReactEditText? = null
+  private var lastFocusedInput: EditText? = null
   private var lastEventDispatched: FocusedInputLayoutChangedEventData = noFocusedInputEvent
   private var textWatcher: TextWatcher? = null
   private var selectionSubscription: (() -> Unit)? = null
@@ -105,7 +105,7 @@ class FocusedInputObserver(
         selectionSubscription?.invoke()
         lastFocusedInput = null
       }
-      if (newFocus is ReactEditText) {
+      if (newFocus is EditText) {
         lastFocusedInput = newFocus
         newFocus.addOnLayoutChangeListener(layoutListener)
         this.syncUpLayout()

@@ -1,0 +1,131 @@
+---
+keywords:
+  [
+    react-native-keyboard-controller,
+    KeyboardAvoidingView,
+    keyboard avoiding view,
+    avoid keyboard,
+    android,
+  ]
+---
+
+# KeyboardAvoidingView
+
+This component will automatically adjust its height, position, or bottom padding based on the keyboard height to remain visible while the virtual keyboard is displayed.
+
+## Why another `KeyboardAvoidingView` is needed?
+
+This new `KeyboardAvoidingView` maintains the familiar React Native [API](https://reactnative.dev/docs/keyboardavoidingview) but ensures consistent behavior and animations on both `iOS` and `Android` platforms. Unlike the existing solution, which primarily caters to `iOS`, this component eliminates platform discrepancies, providing a unified user experience. By reproducing the same animations and behaviors on both platforms, it simplifies cross-platform development, meets user expectations for consistency, and enhances code maintainability. Ultimately, it addresses the need for a reliable and uniform keyboard interaction solution across different devices.
+
+Below is a visual difference between the implementations (the animation is _**4x**_ times slower for better visual perception).
+
+import KeyboardAvoidingViewComparison from "@site/src/components/KeyboardAvoidingViewComparison";
+
+<KeyboardAvoidingViewComparison />
+
+:::info Found a bug? Help the project and report it!
+
+If you found any bugs or inconsistent behavior comparing to `react-native` implementation - don't hesitate to open an [issue](https://github.com/kirillzyusko/react-native-keyboard-controller/issues/new?assignees=kirillzyusko&labels=bug&template=bug_report.md&title=). It will help the project 🙏
+
+Also if there is any well-known problems in original `react-native` implementation which can not be fixed for a long time and they are present in this implementation as well - also feel free to submit an [issue](https://github.com/kirillzyusko/react-native-keyboard-controller/issues/new?assignees=kirillzyusko&labels=bug&template=bug_report.md&title=). Let's make this world better together 😎
+
+:::
+
+## Example
+
+```tsx
+import React from "react";
+import {
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+  StyleSheet,
+} from "react-native";
+import { KeyboardAvoidingView } from "react-native-keyboard-controller";
+
+export default function KeyboardAvoidingViewExample() {
+  return (
+    <KeyboardAvoidingView
+      behavior={"padding"}
+      keyboardVerticalOffset={100}
+      style={styles.content}
+    >
+      <View style={styles.inner}>
+        <Text style={styles.heading}>Header</Text>
+        <View>
+          <TextInput placeholder="Username" style={styles.textInput} />
+          <TextInput placeholder="Password" style={styles.textInput} />
+        </View>
+        <TouchableOpacity style={styles.button}>
+          <Text style={styles.text}>Submit</Text>
+        </TouchableOpacity>
+      </View>
+    </KeyboardAvoidingView>
+  );
+}
+
+const styles = StyleSheet.create({
+  content: {
+    flex: 1,
+    maxHeight: 600,
+  },
+  heading: {
+    fontSize: 36,
+    marginBottom: 48,
+    fontWeight: "600",
+  },
+  inner: {
+    padding: 24,
+    flex: 1,
+    justifyContent: "space-between",
+  },
+  textInput: {
+    height: 45,
+    borderColor: "#000000",
+    borderWidth: 1,
+    borderRadius: 10,
+    marginBottom: 36,
+    paddingLeft: 10,
+  },
+  button: {
+    marginTop: 12,
+    height: 45,
+    borderRadius: 10,
+    backgroundColor: "rgb(40, 64, 147)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  text: {
+    fontWeight: "500",
+    fontSize: 16,
+    color: "white",
+  },
+});
+```
+
+## Props
+
+### [`View Props`](https://reactnative.dev/docs/view#props)
+
+Inherits [View Props](https://reactnative.dev/docs/view#props).
+
+### `behavior`
+
+Specify how to react to the presence of the keyboard. Could be one value of:
+
+- `position`
+- `padding`
+- `height`
+
+### `contentContainerStyle`
+
+The style of the content container (View) when behavior is `position`.
+
+### `enabled`
+
+A boolean prop indicating whether `KeyboardAvoidingView` is enabled or disabled. Default is `true`.
+
+### `keyboardVerticalOffset`
+
+This is the distance between the top of the user screen and the react native view, may be non-zero in some use cases. Default is `0`.
