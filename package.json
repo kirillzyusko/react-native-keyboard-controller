@@ -17,6 +17,7 @@
     "jest",
     "!lib/typescript/example",
     "!android/build",
+    "!android/src/test",
     "!android/.gradle",
     "!android/gradle",
     "!android/gradlew",
