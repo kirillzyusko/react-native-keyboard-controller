@@ -45,14 +45,8 @@ class KeyboardControllerViewManagerImpl(
     view.setPreserveEdgeToEdge(isPreservingEdgeToEdge)
   }
 
-  fun updateProperties(
-    view: EdgeToEdgeReactViewGroup,
-    props: ReactStylesDiffMap?,
-  ) {
-    // enable / disable on `enabled` prop change
-    if (props != null && props.hasKey("enabled")) {
-      view.updateViewStatus()
-    }
+  fun updateView(view: EdgeToEdgeReactViewGroup) {
+    view.updateView()
   }
 
   fun getExportedCustomDirectEventTypeConstants(): MutableMap<String, Any> {

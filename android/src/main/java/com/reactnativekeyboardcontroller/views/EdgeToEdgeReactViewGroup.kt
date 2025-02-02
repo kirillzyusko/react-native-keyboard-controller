@@ -37,6 +37,7 @@ class EdgeToEdgeReactViewGroup(
   // internal class members
   private var eventView: ReactViewGroup? = null
   private var wasMounted = false
+  private var wasUpdated = false
   private var callback: KeyboardAnimationCallback? = null
   private val config: KeyboardAnimationCallbackConfig
     get() =
@@ -217,15 +218,20 @@ class EdgeToEdgeReactViewGroup(
   }
 
   fun setActive(active: Boolean) {
+    wasUpdated = true
     this.active = active
   }
   // endregion
 
-  fun updateViewStatus() {
-    if (active) {
-      this.enable()
-    } else {
-      this.disable()
+  fun updateView() {
+    if (wasUpdated) {
+      wasUpdated = false
+
+      if (active) {
+        this.enable()
+      } else {
+        this.disable()
+      }
     }
   }
 
