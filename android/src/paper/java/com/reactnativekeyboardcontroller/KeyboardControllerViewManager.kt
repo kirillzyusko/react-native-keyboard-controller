@@ -1,8 +1,10 @@
 package com.reactnativekeyboardcontroller
 
 import com.facebook.react.bridge.ReactApplicationContext
+import com.facebook.react.uimanager.ReactStylesDiffMap
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.annotations.ReactProp
+import com.facebook.react.views.view.ReactViewGroup
 import com.facebook.react.views.view.ReactViewManager
 import com.reactnativekeyboardcontroller.managers.KeyboardControllerViewManagerImpl
 import com.reactnativekeyboardcontroller.views.EdgeToEdgeReactViewGroup
@@ -16,6 +18,14 @@ class KeyboardControllerViewManager(
 
   override fun createViewInstance(reactContext: ThemedReactContext): EdgeToEdgeReactViewGroup =
     manager.createViewInstance(reactContext)
+
+  override fun updateProperties(
+    viewToUpdate: ReactViewGroup,
+    props: ReactStylesDiffMap?,
+  ) {
+    manager.updateProperties(viewToUpdate as EdgeToEdgeReactViewGroup, props)
+    super.updateProperties(viewToUpdate, props)
+  }
 
   @ReactProp(name = "enabled")
   fun setEnabled(

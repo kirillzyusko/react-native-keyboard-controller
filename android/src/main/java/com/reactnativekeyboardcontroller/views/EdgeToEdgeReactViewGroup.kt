@@ -218,14 +218,16 @@ class EdgeToEdgeReactViewGroup(
 
   fun setActive(active: Boolean) {
     this.active = active
+  }
+  // endregion
 
+  fun updateViewStatus() {
     if (active) {
       this.enable()
     } else {
       this.disable()
     }
   }
-  // endregion
 
   // region external methods
   fun forceStatusBarTranslucent(isStatusBarTranslucent: Boolean) {

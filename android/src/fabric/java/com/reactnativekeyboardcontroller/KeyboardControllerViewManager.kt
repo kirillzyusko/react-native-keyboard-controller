@@ -1,6 +1,7 @@
 package com.reactnativekeyboardcontroller
 
 import com.facebook.react.bridge.ReactApplicationContext
+import com.facebook.react.uimanager.ReactStylesDiffMap
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.ViewManagerDelegate
 import com.facebook.react.uimanager.annotations.ReactProp
@@ -23,6 +24,14 @@ class KeyboardControllerViewManager(
   override fun getName(): String = KeyboardControllerViewManagerImpl.NAME
 
   override fun createViewInstance(context: ThemedReactContext): ReactViewGroup = manager.createViewInstance(context)
+
+  override fun updateProperties(
+    viewToUpdate: ReactViewGroup,
+    props: ReactStylesDiffMap?,
+  ) {
+    manager.updateProperties(viewToUpdate as EdgeToEdgeReactViewGroup, props)
+    super.updateProperties(viewToUpdate, props)
+  }
 
   @ReactProp(name = "statusBarTranslucent")
   override fun setStatusBarTranslucent(

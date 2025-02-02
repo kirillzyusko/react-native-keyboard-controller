@@ -2,6 +2,7 @@ package com.reactnativekeyboardcontroller.managers
 
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.common.MapBuilder
+import com.facebook.react.uimanager.ReactStylesDiffMap
 import com.facebook.react.uimanager.ThemedReactContext
 import com.reactnativekeyboardcontroller.events.FocusedInputLayoutChangedEvent
 import com.reactnativekeyboardcontroller.events.FocusedInputSelectionChangedEvent
@@ -42,6 +43,16 @@ class KeyboardControllerViewManagerImpl(
     isPreservingEdgeToEdge: Boolean,
   ) {
     view.setPreserveEdgeToEdge(isPreservingEdgeToEdge)
+  }
+
+  fun updateProperties(
+    view: EdgeToEdgeReactViewGroup,
+    props: ReactStylesDiffMap?,
+  ) {
+    // enable / disable on `enabled` prop change
+    if (props != null && props.hasKey("enabled")) {
+      view.updateViewStatus()
+    }
   }
 
   fun getExportedCustomDirectEventTypeConstants(): MutableMap<String, Any> {
