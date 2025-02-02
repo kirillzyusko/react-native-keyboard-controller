@@ -20,7 +20,7 @@ class KeyboardControllerViewManager(
 
   override fun onAfterUpdateTransaction(view: ReactViewGroup) {
     super.onAfterUpdateTransaction(view)
-    manager.updateView(view as EdgeToEdgeReactViewGroup)
+    manager.toggleEdgeToEdge(view as EdgeToEdgeReactViewGroup)
   }
 
   @ReactProp(name = "enabled")

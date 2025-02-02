@@ -37,7 +37,6 @@ class EdgeToEdgeReactViewGroup(
   // internal class members
   private var eventView: ReactViewGroup? = null
   private var wasMounted = false
-  private var wasUpdated = false
   private var callback: KeyboardAnimationCallback? = null
   private val config: KeyboardAnimationCallbackConfig
     get() =
@@ -125,7 +124,9 @@ class EdgeToEdgeReactViewGroup(
     }
   }
 
-  private fun goToEdgeToEdge(edgeToEdge: Boolean) {
+  fun toggleEdgeToEdge() {
+    val edgeToEdge = active || isPreservingEdgeToEdge
+
     reactContext.currentActivity?.let {
       WindowCompat.setDecorFitsSystemWindows(
         it.window,
@@ -183,17 +184,12 @@ class EdgeToEdgeReactViewGroup(
 
   // region State managers
   private fun enable() {
-    this.goToEdgeToEdge(true)
     this.setupWindowInsets()
     this.setupKeyboardCallbacks()
     modalAttachedWatcher.enable()
   }
 
   private fun disable() {
-    if (!isPreservingEdgeToEdge) {
-      this.goToEdgeToEdge(false)
-    }
-
     this.setupWindowInsets()
     this.removeKeyboardCallbacks()
     modalAttachedWatcher.disable()
@@ -214,27 +210,19 @@ class EdgeToEdgeReactViewGroup(
   }
 
   fun setPreserveEdgeToEdge(isPreservingEdgeToEdge: Boolean) {
-    wasUpdated = true
     this.isPreservingEdgeToEdge = isPreservingEdgeToEdge
   }
 
   fun setActive(active: Boolean) {
-    wasUpdated = true
     this.active = active
-  }
-  // endregion
 
-  fun updateView() {
-    if (wasUpdated) {
-      wasUpdated = false
-
-      if (active) {
-        this.enable()
-      } else {
-        this.disable()
-      }
+    if (active) {
+      this.enable()
+    } else {
+      this.disable()
     }
   }
+  // endregion
 
   // region external methods
   fun forceStatusBarTranslucent(isStatusBarTranslucent: Boolean) {
