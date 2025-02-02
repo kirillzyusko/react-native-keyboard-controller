@@ -214,6 +214,7 @@ class EdgeToEdgeReactViewGroup(
   }
 
   fun setPreserveEdgeToEdge(isPreservingEdgeToEdge: Boolean) {
+    wasUpdated = true
     this.isPreservingEdgeToEdge = isPreservingEdgeToEdge
   }
 
