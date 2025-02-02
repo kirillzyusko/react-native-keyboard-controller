@@ -23,8 +23,8 @@ class KeyboardControllerViewManager(
     viewToUpdate: ReactViewGroup,
     props: ReactStylesDiffMap?,
   ) {
-    manager.updateProperties(viewToUpdate as EdgeToEdgeReactViewGroup, props)
     super.updateProperties(viewToUpdate, props)
+    manager.updateProperties(viewToUpdate as EdgeToEdgeReactViewGroup, props)
   }
 
   @ReactProp(name = "enabled")
