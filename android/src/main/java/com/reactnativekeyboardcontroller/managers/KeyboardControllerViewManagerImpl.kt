@@ -2,7 +2,6 @@ package com.reactnativekeyboardcontroller.managers
 
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.common.MapBuilder
-import com.facebook.react.uimanager.ReactStylesDiffMap
 import com.facebook.react.uimanager.ThemedReactContext
 import com.reactnativekeyboardcontroller.events.FocusedInputLayoutChangedEvent
 import com.reactnativekeyboardcontroller.events.FocusedInputSelectionChangedEvent
