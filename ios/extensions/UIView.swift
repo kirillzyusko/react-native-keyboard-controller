@@ -34,6 +34,18 @@ public extension UIView {
       return false
     }
   }
+
+  func findFirstResponder() -> UIView? {
+    if isFirstResponder {
+      return self
+    }
+    for subview in subviews {
+      if let responder = subview.findFirstResponder() {
+        return responder
+      }
+    }
+    return nil
+  }
 }
 
 public extension Optional where Wrapped == UIView {
