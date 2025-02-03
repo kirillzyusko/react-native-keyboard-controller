@@ -24,6 +24,11 @@ class KeyboardControllerViewManager(
 
   override fun createViewInstance(context: ThemedReactContext): ReactViewGroup = manager.createViewInstance(context)
 
+  override fun onAfterUpdateTransaction(view: ReactViewGroup) {
+    super.onAfterUpdateTransaction(view)
+    manager.setEdgeToEdge(view as EdgeToEdgeReactViewGroup)
+  }
+
   @ReactProp(name = "statusBarTranslucent")
   override fun setStatusBarTranslucent(
     view: ReactViewGroup,
