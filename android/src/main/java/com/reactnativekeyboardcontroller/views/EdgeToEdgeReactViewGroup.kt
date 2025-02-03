@@ -33,6 +33,7 @@ class EdgeToEdgeReactViewGroup(
   private var isNavigationBarTranslucent = false
   private var isPreservingEdgeToEdge = false
   private var active = false
+  private var isEdgeToEdge = false
 
   // internal class members
   private var eventView: ReactViewGroup? = null
@@ -124,14 +125,18 @@ class EdgeToEdgeReactViewGroup(
     }
   }
 
-  fun toggleEdgeToEdge() {
-    val edgeToEdge = active || isPreservingEdgeToEdge
+  fun setEdgeToEdge() {
+    val nextValue = active || isPreservingEdgeToEdge
 
-    reactContext.currentActivity?.let {
-      WindowCompat.setDecorFitsSystemWindows(
-        it.window,
-        !edgeToEdge,
-      )
+    if (isEdgeToEdge != nextValue) {
+      isEdgeToEdge = nextValue
+
+      reactContext.currentActivity?.let {
+        WindowCompat.setDecorFitsSystemWindows(
+          it.window,
+          !isEdgeToEdge,
+        )
+      }
     }
   }
 

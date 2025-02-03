@@ -44,8 +44,8 @@ class KeyboardControllerViewManagerImpl(
     view.setPreserveEdgeToEdge(isPreservingEdgeToEdge)
   }
 
-  fun toggleEdgeToEdge(view: EdgeToEdgeReactViewGroup) {
-    view.toggleEdgeToEdge()
+  fun setEdgeToEdge(view: EdgeToEdgeReactViewGroup) {
+    view.setEdgeToEdge()
   }
 
   fun getExportedCustomDirectEventTypeConstants(): MutableMap<String, Any> {
