@@ -119,7 +119,9 @@ public class FocusedInputObserver: NSObject {
   }
 
   @objc func keyboardWillHide(_: Notification) {
-    onBlur()
+    //DispatchQueue.main.async {
+      // self.onBlur()
+    //}
   }
 
   @objc func didReceiveFocus(_: Notification) {
@@ -146,7 +148,7 @@ public class FocusedInputObserver: NSObject {
     // event when user switches between inputs
     DispatchQueue.main.async {
       // check that it wasn't a switch between inputs
-      if self.currentResponder == nil {
+      if !(UIResponder.current is TextInput) {
         self.onBlur()
       }
     }
@@ -173,10 +175,9 @@ public class FocusedInputObserver: NSObject {
   }
 
   func onBlur() {
+    print(currentResponder?.isFirstResponder)
     // when we switch to next input, but `showSoftInput={false}`
-    if UIResponder.current is TextInput {
-      return
-    }
+
     removeObservers(newResponder: nil)
     currentInput = nil
     currentResponder = nil
