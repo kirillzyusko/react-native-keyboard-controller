@@ -122,10 +122,6 @@ public class FocusedInputObserver: NSObject {
   }
 
   @objc func didReceiveBlur(_: Notification) {
-    if currentResponder == nil {
-      // blur was already handled by keyboard event
-      return
-    }
     // blur gets triggered on endEditing, so we check if no upcoming
     // didReceiveFocus events are coming to exclude `noFocusedInput`
     // event when user switches between inputs
