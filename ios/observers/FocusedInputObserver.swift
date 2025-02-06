@@ -82,12 +82,6 @@ public class FocusedInputObserver: NSObject {
     )
     NotificationCenter.default.addObserver(
       self,
-      selector: #selector(keyboardWillHide),
-      name: UIResponder.keyboardWillHideNotification,
-      object: nil
-    )
-    NotificationCenter.default.addObserver(
-      self,
       selector: #selector(didReceiveFocus),
       name: UITextField.textDidBeginEditingNotification,
       object: nil
@@ -118,12 +112,6 @@ public class FocusedInputObserver: NSObject {
     NotificationCenter.default.removeObserver(self)
   }
 
-  @objc func keyboardWillHide(_: Notification) {
-    //DispatchQueue.main.async {
-      // self.onBlur()
-    //}
-  }
-
   @objc func didReceiveFocus(_: Notification) {
     if UIResponder.current == currentResponder {
       // focus was already handled by keyboard event
@@ -133,11 +121,6 @@ public class FocusedInputObserver: NSObject {
     onFocus()
   }
 
-  /**
-   * We handle blur events in `keyboardWillHide` handler
-   * And this additional handler is needed only to have
-   * a consistent state when keyboard is not shown
-   */
   @objc func didReceiveBlur(_: Notification) {
     if currentResponder == nil {
       // blur was already handled by keyboard event
@@ -175,9 +158,6 @@ public class FocusedInputObserver: NSObject {
   }
 
   func onBlur() {
-    print(currentResponder?.isFirstResponder)
-    // when we switch to next input, but `showSoftInput={false}`
-
     removeObservers(newResponder: nil)
     currentInput = nil
     currentResponder = nil
