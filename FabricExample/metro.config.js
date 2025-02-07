@@ -14,7 +14,7 @@ const modules = Object.keys(pack.peerDependencies);
  * Metro configuration
  * https://reactnative.dev/docs/metro
  *
- * @type {import('metro-config').MetroConfig}
+ * @type {import('@react-native/metro-config').MetroConfig}
  */
 const config = {
   projectRoot: __dirname,
