@@ -132,7 +132,8 @@
     "kitsu",
     "drakula",
     "mathieu",
-    "acthernoene"
+    "acthernoene",
+    "xcodeproj"
   ],
   "ignorePaths": [
     "node_modules",
