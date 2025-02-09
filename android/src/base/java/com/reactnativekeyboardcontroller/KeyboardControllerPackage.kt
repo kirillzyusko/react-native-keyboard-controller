@@ -35,19 +35,19 @@ class KeyboardControllerPackage : BaseReactPackage() {
         ReactModuleInfo(
           KeyboardControllerModuleImpl.NAME,
           KeyboardControllerModuleImpl.NAME,
-          canOverrideExistingModule = false,
-          needsEagerInit = false,
-          isCxxModule = false,
-          isTurboModule = isTurboModule,
+          false, // canOverrideExistingModule
+          false, // needsEagerInit
+          false, // isCxxModule
+          isTurboModule, // isTurboModule
         )
       moduleInfos[StatusBarManagerCompatModuleImpl.NAME] =
         ReactModuleInfo(
           StatusBarManagerCompatModuleImpl.NAME,
           StatusBarManagerCompatModuleImpl.NAME,
-          canOverrideExistingModule = false,
-          needsEagerInit = false,
-          isCxxModule = false,
-          isTurboModule = isTurboModule,
+          false, // canOverrideExistingModule
+          false, // needsEagerInit
+          false, // isCxxModule
+          isTurboModule, // isTurboModule
         )
       moduleInfos
     }
