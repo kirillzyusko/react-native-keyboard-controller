@@ -40,3 +40,7 @@ project.ext.resolveReactNativeDirectory = { ->
 project.ext.shouldConsumeReactNativeFromMavenCentral = { ->
   return REACT_NATIVE_MINOR_VERSION >= 71
 }
+
+project.ext.shouldUseBaseReactPackage = { ->
+  return REACT_NATIVE_MINOR_VERSION >= 74
+}
