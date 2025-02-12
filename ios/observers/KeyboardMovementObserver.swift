@@ -23,6 +23,7 @@ public class KeyboardMovementObserver: NSObject {
     let windowsCount = UIApplication.shared.windows.count
 
     if _keyboardView == nil || windowsCount != _windowsCount {
+      removeKVObserver()
       _keyboardView = KeyboardView.find()
       _windowsCount = windowsCount
     }
