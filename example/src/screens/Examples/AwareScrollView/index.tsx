@@ -1,4 +1,5 @@
 import BottomSheet from "@gorhom/bottom-sheet";
+import { CardField } from "@stripe/stripe-react-native";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Button, Platform, Switch, Text, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
@@ -98,6 +99,7 @@ export default function AwareScrollView({ navigation }: Props) {
             onChangeText={setText}
           />
         ))}
+        <CardField style={{ width: "100%", height: 50, borderWidth: 1 }} />
         <TextInput
           defaultValue={BIG_TEXT}
           placeholder="TextInput#10"

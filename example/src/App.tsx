@@ -1,6 +1,7 @@
 import "react-native-gesture-handler";
 
 import { NavigationContainer } from "@react-navigation/native";
+import { initStripe } from "@stripe/stripe-react-native";
 import * as React from "react";
 import { ActivityIndicator, StatusBar, StyleSheet } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -35,6 +36,8 @@ const linking = {
   },
 };
 const spinner = <ActivityIndicator color="blue" size="large" />;
+
+initStripe({ publishableKey: "foo" });
 
 export default function App() {
   return (
