@@ -163,7 +163,7 @@ class OverKeyboardRootViewGroup(
 
   // region RootView methods
   override fun onChildStartedNativeGesture(
-    childView: View,
+    childView: View?,
     ev: MotionEvent,
   ) {
     eventDispatcher?.let { eventDispatcher ->
