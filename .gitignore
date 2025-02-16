@@ -42,6 +42,7 @@ local.properties
 android.iml
 *.keystore
 !debug.keystore
+.kotlin/
 
 # Cocoapods
 #
