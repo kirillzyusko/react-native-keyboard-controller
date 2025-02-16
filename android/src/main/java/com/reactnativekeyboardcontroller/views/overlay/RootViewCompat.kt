@@ -12,7 +12,7 @@ interface RootViewCompat : RootView {
     "This method shouldn't be used anymore.",
     ReplaceWith("onChildStartedNativeGesture(View childView, MotionEvent ev)"),
   )
-  override fun onChildStartedNativeGesture(ev: MotionEvent?) {
+  override fun onChildStartedNativeGesture(ev: MotionEvent) {
     onChildStartedNativeGesture(null, ev)
   }
 }
