@@ -30,8 +30,8 @@ class ModalAttachedWatcher(
   private val uiManager = UIManagerHelper.getUIManager(reactContext.reactApplicationContext, archType)
   private val eventDispatcher = UIManagerHelper.getEventDispatcher(reactContext.reactApplicationContext, archType)
 
-  override fun onEventDispatch(event: Event<out Event<*>>?) {
-    if (event?.eventName != MODAL_SHOW_EVENT) {
+  override fun onEventDispatch(event: Event<*>) {
+    if (event.eventName != MODAL_SHOW_EVENT) {
       return
     }
 
