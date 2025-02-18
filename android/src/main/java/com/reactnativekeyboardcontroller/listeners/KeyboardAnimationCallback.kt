@@ -293,38 +293,39 @@ class KeyboardAnimationCallback(
     isTransitioning = false
     duration = animation.durationMillis.toInt()
 
-    val runnable = Runnable {
-      val keyboardHeight = getCurrentKeyboardHeight()
+    val runnable =
+      Runnable {
+        val keyboardHeight = getCurrentKeyboardHeight()
 
-      isKeyboardVisible = isKeyboardVisible()
-      prevKeyboardHeight = keyboardHeight
+        isKeyboardVisible = isKeyboardVisible()
+        prevKeyboardHeight = keyboardHeight
 
-      if (animation in animationsToSkip) {
-        duration = 0
-        animationsToSkip.remove(animation)
-        return@Runnable
-      }
+        if (animation in animationsToSkip) {
+          duration = 0
+          animationsToSkip.remove(animation)
+          return@Runnable
+        }
 
-      context.emitEvent(
-        "KeyboardController::" + if (!isKeyboardVisible) "keyboardDidHide" else "keyboardDidShow",
-        getEventParams(keyboardHeight),
-      )
-      context.dispatchEvent(
-        eventPropagationView.id,
-        KeyboardTransitionEvent(
-          surfaceId,
+        context.emitEvent(
+          "KeyboardController::" + if (!isKeyboardVisible) "keyboardDidHide" else "keyboardDidShow",
+          getEventParams(keyboardHeight),
+        )
+        context.dispatchEvent(
           eventPropagationView.id,
-          KeyboardTransitionEvent.End,
-          keyboardHeight,
-          if (!isKeyboardVisible) 0.0 else 1.0,
-          duration,
-          viewTagFocused,
-        ),
-      )
+          KeyboardTransitionEvent(
+            surfaceId,
+            eventPropagationView.id,
+            KeyboardTransitionEvent.End,
+            keyboardHeight,
+            if (!isKeyboardVisible) 0.0 else 1.0,
+            duration,
+            viewTagFocused,
+          ),
+        )
 
-      // reset to initial state
-      duration = 0
-    }
+        // reset to initial state
+        duration = 0
+      }
 
     if (duration == -1) {
       // if duration is -1 then we are receiving onEnd callback after interactive animation
