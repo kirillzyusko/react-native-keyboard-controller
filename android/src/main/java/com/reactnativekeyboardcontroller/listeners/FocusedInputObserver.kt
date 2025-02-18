@@ -101,7 +101,12 @@ class FocusedInputObserver(
       // unfocused or focus was changed
       if (newFocus == null || oldFocus != null) {
         lastFocusedInput?.removeOnLayoutChangeListener(layoutListener)
-        lastFocusedInput?.removeTextChangedListener(textWatcher)
+        lastFocusedInput?.let { input ->
+          val watcher = textWatcher // Capture the current textWatcher reference
+          input.post {
+            input.removeTextChangedListener(watcher)
+          }
+        }
         selectionSubscription?.invoke()
         lastFocusedInput = null
       }
