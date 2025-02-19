@@ -62,6 +62,8 @@ class KeyboardAnimationCallback(
   private var duration = 0
   private var viewTagFocused = -1
   private var animationsToSkip = hashSetOf<WindowInsetsAnimationCompat>()
+  private val isKeyboardInteractive: Boolean
+    get() = duration == -1
   override var isSuspended: Boolean = false
 
   // listeners
@@ -327,10 +329,9 @@ class KeyboardAnimationCallback(
         duration = 0
       }
 
-    if (duration == -1) {
-      // if duration is -1 then we are receiving onEnd callback after interactive animation
-      // and in this case we can not read keyboard frame straight away (because we'll read `0` always)
-      // so we are posting runnable to the main thread
+    if (isKeyboardInteractive) {
+      // in case of interactive keyboard we can not read keyboard frame straight away
+      // (because we'll always read `0`), so we are posting runnable to the main thread
       view.post(runnable)
     } else {
       runnable.run()
