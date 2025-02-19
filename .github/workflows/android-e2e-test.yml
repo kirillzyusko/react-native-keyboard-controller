@@ -73,6 +73,8 @@ jobs:
           key: ${{ runner.os }}-e2e-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-e2e-gradle-
+      - name: Set app active arch
+        run: sed -i.bak 's/reactNativeArchitectures=.*/reactNativeArchitectures=x86_64/' example/gradle.properties      
       - name: Build app
         working-directory: e2e
         run: yarn build-example:android
