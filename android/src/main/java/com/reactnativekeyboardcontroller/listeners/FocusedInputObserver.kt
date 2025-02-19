@@ -101,7 +101,14 @@ class FocusedInputObserver(
       // unfocused or focus was changed
       if (newFocus == null || oldFocus != null) {
         lastFocusedInput?.removeOnLayoutChangeListener(layoutListener)
-        lastFocusedInput?.removeTextChangedListener(textWatcher)
+        lastFocusedInput?.let { input ->
+          val watcher = textWatcher
+          // remove it asynchronously to avoid crash in stripe input
+          // see https://github.com/stripe/stripe-android/issues/10178
+          input.post {
+            input.removeTextChangedListener(watcher)
+          }
+        }
         selectionSubscription?.invoke()
         lastFocusedInput = null
       }
