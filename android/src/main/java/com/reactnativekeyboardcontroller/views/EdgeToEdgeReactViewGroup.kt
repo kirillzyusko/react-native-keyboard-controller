@@ -39,17 +39,16 @@ class EdgeToEdgeReactViewGroup(
   private var eventView: ReactViewGroup? = null
   private var wasMounted = false
   private var callback: KeyboardAnimationCallback? = null
-  private val config: KeyboardAnimationCallbackConfig
-    get() =
-      KeyboardAnimationCallbackConfig(
-        persistentInsetTypes = WindowInsetsCompat.Type.systemBars(),
-        deferredInsetTypes = WindowInsetsCompat.Type.ime(),
-        dispatchMode = WindowInsetsAnimationCompat.Callback.DISPATCH_MODE_CONTINUE_ON_SUBTREE,
-        isNavigationBarTranslucent = { isNavigationBarTranslucent }
-      )
+  private val config =
+    KeyboardAnimationCallbackConfig(
+      persistentInsetTypes = WindowInsetsCompat.Type.systemBars(),
+      deferredInsetTypes = WindowInsetsCompat.Type.ime(),
+      dispatchMode = WindowInsetsAnimationCompat.Callback.DISPATCH_MODE_CONTINUE_ON_SUBTREE,
+      hasTranslucentNavigationBar = isNavigationBarTranslucent,
+    )
 
   // managers/watchers
-  private val modalAttachedWatcher = ModalAttachedWatcher(this, reactContext, ::config, ::getKeyboardCallback)
+  private val modalAttachedWatcher = ModalAttachedWatcher(this, reactContext, config, ::getKeyboardCallback)
 
   init {
     reactContext.setupWindowDimensionsListener()
@@ -212,6 +211,7 @@ class EdgeToEdgeReactViewGroup(
 
   fun setNavigationBarTranslucent(isNavigationBarTranslucent: Boolean) {
     this.isNavigationBarTranslucent = isNavigationBarTranslucent
+    this.config.hasTranslucentNavigationBar = isNavigationBarTranslucent
   }
 
   fun setPreserveEdgeToEdge(isPreservingEdgeToEdge: Boolean) {

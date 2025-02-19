@@ -23,7 +23,7 @@ private val areEventsComingFromOwnWindow = !Keyboard.IS_ANIMATION_EMULATED
 class ModalAttachedWatcher(
   private val view: ReactViewGroup,
   private val reactContext: ThemedReactContext,
-  private val config: () -> KeyboardAnimationCallbackConfig,
+  private val config: KeyboardAnimationCallbackConfig,
   private var callback: () -> KeyboardAnimationCallback?,
 ) : EventDispatcherListener {
   private val archType = if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) UIManagerType.FABRIC else UIManagerType.DEFAULT
@@ -61,7 +61,7 @@ class ModalAttachedWatcher(
           view = rootView,
           eventPropagationView = view,
           context = reactContext,
-          config = config(),
+          config = config,
         )
 
       rootView.addView(eventView)
