@@ -33,8 +33,11 @@ data class KeyboardAnimationCallbackConfig(
   val persistentInsetTypes: Int,
   val deferredInsetTypes: Int,
   val dispatchMode: Int = WindowInsetsAnimationCompat.Callback.DISPATCH_MODE_STOP,
-  val hasTranslucentNavigationBar: Boolean = false,
-)
+  private val isNavigationBarTranslucent: () -> Boolean
+) {
+  val hasTranslucentNavigationBar: Boolean
+    get() = isNavigationBarTranslucent()
+}
 
 interface Suspendable {
   var isSuspended: Boolean

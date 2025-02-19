@@ -45,7 +45,7 @@ class EdgeToEdgeReactViewGroup(
         persistentInsetTypes = WindowInsetsCompat.Type.systemBars(),
         deferredInsetTypes = WindowInsetsCompat.Type.ime(),
         dispatchMode = WindowInsetsAnimationCompat.Callback.DISPATCH_MODE_CONTINUE_ON_SUBTREE,
-        hasTranslucentNavigationBar = isNavigationBarTranslucent,
+        isNavigationBarTranslucent = { isNavigationBarTranslucent }
       )
 
   // managers/watchers
