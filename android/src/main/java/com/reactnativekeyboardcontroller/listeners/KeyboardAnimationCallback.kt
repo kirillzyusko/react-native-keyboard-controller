@@ -62,6 +62,8 @@ class KeyboardAnimationCallback(
   private var duration = 0
   private var viewTagFocused = -1
   private var animationsToSkip = hashSetOf<WindowInsetsAnimationCompat>()
+  private val isKeyboardInteractive: Boolean
+    get() = duration == -1
   override var isSuspended: Boolean = false
 
   // listeners
@@ -293,46 +295,47 @@ class KeyboardAnimationCallback(
     isTransitioning = false
     duration = animation.durationMillis.toInt()
 
-    var keyboardHeight = this.persistentKeyboardHeight
-    // if keyboard becomes shown after interactive animation completion
-    // getCurrentKeyboardHeight() will be `0` and isKeyboardVisible will be `false`
-    // it's not correct behavior, so we are handling it here
-    val isKeyboardShown = InteractiveKeyboardProvider.shown
-    if (!isKeyboardShown) {
-      keyboardHeight = getCurrentKeyboardHeight()
+    val runnable =
+      Runnable {
+        val keyboardHeight = getCurrentKeyboardHeight()
+
+        isKeyboardVisible = isKeyboardVisible()
+        prevKeyboardHeight = keyboardHeight
+
+        if (animation in animationsToSkip) {
+          duration = 0
+          animationsToSkip.remove(animation)
+          return@Runnable
+        }
+
+        context.emitEvent(
+          "KeyboardController::" + if (!isKeyboardVisible) "keyboardDidHide" else "keyboardDidShow",
+          getEventParams(keyboardHeight),
+        )
+        context.dispatchEvent(
+          eventPropagationView.id,
+          KeyboardTransitionEvent(
+            surfaceId,
+            eventPropagationView.id,
+            KeyboardTransitionEvent.End,
+            keyboardHeight,
+            if (!isKeyboardVisible) 0.0 else 1.0,
+            duration,
+            viewTagFocused,
+          ),
+        )
+
+        // reset to initial state
+        duration = 0
+      }
+
+    if (isKeyboardInteractive) {
+      // in case of interactive keyboard we can not read keyboard frame straight away
+      // (because we'll always read `0`), so we are posting runnable to the main thread
+      view.post(runnable)
     } else {
-      // if keyboard is shown after interactions and the animation has finished
-      // then we need to reset the state
-      InteractiveKeyboardProvider.shown = false
+      runnable.run()
     }
-    isKeyboardVisible = isKeyboardVisible || isKeyboardShown
-    prevKeyboardHeight = keyboardHeight
-
-    if (animation in animationsToSkip) {
-      duration = 0
-      animationsToSkip.remove(animation)
-      return
-    }
-
-    context.emitEvent(
-      "KeyboardController::" + if (!isKeyboardVisible) "keyboardDidHide" else "keyboardDidShow",
-      getEventParams(keyboardHeight),
-    )
-    context.dispatchEvent(
-      eventPropagationView.id,
-      KeyboardTransitionEvent(
-        surfaceId,
-        eventPropagationView.id,
-        KeyboardTransitionEvent.End,
-        keyboardHeight,
-        if (!isKeyboardVisible) 0.0 else 1.0,
-        duration,
-        viewTagFocused,
-      ),
-    )
-
-    // reset to initial state
-    duration = 0
   }
 
   fun syncKeyboardPosition(

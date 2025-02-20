@@ -233,22 +233,18 @@ internal class KeyboardAnimationController {
     when (current) {
       // The current inset matches either the shown/hidden inset, finish() immediately
       shown -> {
-        InteractiveKeyboardProvider.shown = true
         controller.finish(true)
       }
       hidden -> {
-        InteractiveKeyboardProvider.shown = false
         controller.finish(false)
       }
       else -> {
         // Otherwise, we'll look at the current position...
         if (controller.currentFraction >= SCROLL_THRESHOLD) {
           // If the IME is past the 'threshold' we snap to the toggled state
-          InteractiveKeyboardProvider.shown = !isImeShownAtStart
           controller.finish(!isImeShownAtStart)
         } else {
           // ...otherwise, we snap back to the original visibility
-          InteractiveKeyboardProvider.shown = isImeShownAtStart
           controller.finish(isImeShownAtStart)
         }
       }
@@ -287,11 +283,9 @@ internal class KeyboardAnimationController {
         )
       // The current inset matches either the shown/hidden inset, finish() immediately
       current == shown -> {
-        InteractiveKeyboardProvider.shown = true
         controller.finish(true)
       }
       current == hidden -> {
-        InteractiveKeyboardProvider.shown = false
         controller.finish(false)
       }
       else -> {
