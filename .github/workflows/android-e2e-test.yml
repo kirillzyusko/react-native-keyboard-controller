@@ -30,13 +30,6 @@ jobs:
       cancel-in-progress: true
     steps:
       - uses: actions/checkout@v4
-      - name: Free Disk Space (Ubuntu)
-        uses: jlumbroso/free-disk-space@main
-        with:
-          # force to remove default tools
-          tool-cache: true
-          # preserve Android
-          android: false
       - uses: actions/setup-node@v4
         with:
           node-version: 18.x
