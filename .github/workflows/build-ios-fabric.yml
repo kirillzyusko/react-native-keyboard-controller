@@ -11,6 +11,7 @@ on:
       - "FabricExample/ios/**"
       - "yarn.lock"
       - "FabricExample/yarn.lock"
+      - "FabricExample/patches/**"
       - "src/specs/**"
   pull_request:
     branches:
@@ -22,6 +23,7 @@ on:
       - "FabricExample/ios/**"
       - "yarn.lock"
       - "FabricExample/yarn.lock"
+      - "FabricExample/patches/**"
       - "src/specs/**"
 
 jobs:

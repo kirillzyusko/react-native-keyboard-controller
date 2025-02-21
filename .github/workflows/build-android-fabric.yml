@@ -10,6 +10,7 @@ on:
       - "FabricExample/android/**"
       - "yarn.lock"
       - "FabricExample/yarn.lock"
+      - "FabricExample/patches/**"
       - "src/specs/**"
   pull_request:
     paths:
@@ -18,6 +19,7 @@ on:
       - "FabricExample/android/**"
       - "yarn.lock"
       - "FabricExample/yarn.lock"
+      - "FabricExample/patches/**"
       - "src/specs/**"
 
 jobs:
