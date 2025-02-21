@@ -18,7 +18,7 @@ class KeyboardControllerViewManager(
   private val manager = KeyboardControllerViewManagerImpl(mReactContext)
   private val mDelegate = KeyboardControllerViewManagerDelegate(this)
 
-  override fun getDelegate(): ViewManagerDelegate<ReactViewGroup?> = mDelegate
+  override fun getDelegate(): ViewManagerDelegate<ReactViewGroup> = mDelegate
 
   override fun getName(): String = KeyboardControllerViewManagerImpl.NAME
 
