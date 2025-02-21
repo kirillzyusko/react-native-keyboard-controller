@@ -24,7 +24,7 @@ on:
 jobs:
   build:
     name: 🏗️ Build E2E ipa
-    runs-on: macos-14
+    runs-on: macos-15
     timeout-minutes: 60
     env:
       WORKING_DIRECTORY: example
@@ -95,7 +95,7 @@ jobs:
   e2e-test:
     name: ⚙️ Automated test cases (iOS-${{ matrix.devices.ios }})
     runs-on: macos-${{ matrix.devices.macos }}
-    timeout-minutes: 90
+    timeout-minutes: 150
     env:
       WORKING_DIRECTORY: example
     concurrency:
@@ -103,11 +103,12 @@ jobs:
       cancel-in-progress: true
     strategy:
       matrix:
-        devices: [
+        devices:
+          [
             { ios: 15, xcode: "15.4", macos: 14, runtime: "15.5" },
             { ios: 16, xcode: "15.4", macos: 14, runtime: "16.4" },
             { ios: 17, xcode: "15.4", macos: 14 },
-            # { ios: 18, xcode: "16.0", macos: 15 },
+            { ios: 18, xcode: "16.1", macos: 15 },
           ]
     needs: build
     steps:
