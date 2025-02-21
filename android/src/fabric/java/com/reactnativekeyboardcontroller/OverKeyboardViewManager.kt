@@ -19,7 +19,7 @@ class OverKeyboardViewManager(
   private val manager = OverKeyboardViewManagerImpl(mReactContext)
   private val mDelegate = OverKeyboardViewManagerDelegate(this)
 
-  override fun getDelegate(): ViewManagerDelegate<OverKeyboardHostView?> = mDelegate
+  override fun getDelegate(): ViewManagerDelegate<OverKeyboardHostView> = mDelegate
 
   override fun getName(): String = OverKeyboardViewManagerImpl.NAME
 

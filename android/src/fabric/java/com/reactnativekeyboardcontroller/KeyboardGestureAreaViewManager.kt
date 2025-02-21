@@ -18,7 +18,7 @@ class KeyboardGestureAreaViewManager(
   private val manager = KeyboardGestureAreaViewManagerImpl(mReactContext)
   private val mDelegate = KeyboardGestureAreaManagerDelegate(this)
 
-  override fun getDelegate(): ViewManagerDelegate<ReactViewGroup?> = mDelegate
+  override fun getDelegate(): ViewManagerDelegate<ReactViewGroup> = mDelegate
 
   override fun getName(): String = KeyboardGestureAreaViewManagerImpl.NAME
 
