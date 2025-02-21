@@ -5,30 +5,35 @@
 //  Created by Kiryl Ziusko on 24/04/2024.
 //
 
+import CoreText
 import Foundation
 
 func textSelection(in textInput: UITextInput) -> NSDictionary? {
-  if let selectedRange = textInput.selectedTextRange {
-    let caretRectStart = textInput.caretRect(for: selectedRange.start)
-    let caretRectEnd = textInput.caretRect(for: selectedRange.end)
+  guard let selectedRange = textInput.selectedTextRange,
+        let input = textInput as? TextInput,
+        let font = input.font
+  else { return nil }
 
-    return [
-      "selection": [
-        "start": [
-          "x": caretRectStart.origin.x,
-          "y": caretRectStart.origin.y,
-          "position": textInput.offset(from: textInput.beginningOfDocument, to: selectedRange.start),
-        ],
-        "end": [
-          "x": caretRectEnd.origin.x + caretRectEnd.size.width,
-          "y": caretRectEnd.origin.y + caretRectEnd.size.height,
-          "position": textInput.offset(from: textInput.beginningOfDocument, to: selectedRange.end),
-        ],
+  let caretRectStart = textInput.caretRect(for: selectedRange.start)
+  let caretRectEnd = textInput.caretRect(for: selectedRange.end)
+
+  let ctFont = CTFontCreateWithName(font.fontName as CFString, font.pointSize, nil)
+  let ascent = CTFontGetAscent(ctFont)
+
+  return [
+    "selection": [
+      "start": [
+        "x": caretRectStart.origin.x,
+        "y": caretRectStart.origin.y,
+        "position": textInput.offset(from: textInput.beginningOfDocument, to: selectedRange.start),
       ],
-    ]
-  }
-
-  return nil
+      "end": [
+        "x": caretRectEnd.origin.x + caretRectEnd.size.width,
+        "y": caretRectEnd.origin.y + caretRectEnd.size.height + ascent,
+        "position": textInput.offset(from: textInput.beginningOfDocument, to: selectedRange.end),
+      ],
+    ],
+  ]
 }
 
 func updateSelectionPosition(textInput: UITextInput, sendEvent: (_ event: NSDictionary) -> Void) {
