@@ -18,6 +18,7 @@
     "@react-navigation/native": "^6.1.18",
     "@react-navigation/native-stack": "^6.11.0",
     "@react-navigation/stack": "^6.4.1",
+    "@stripe/stripe-react-native": "^0.41.0",
     "lottie-react-native": "^7.2.2",
     "react": "18.3.1",
     "react-native": "0.77.0",
