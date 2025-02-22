@@ -106,7 +106,7 @@
     "pod-install": "^0.1.0",
     "prettier": "^2.8.8",
     "react": "19.0.0",
-    "react-native": "0.78.0-rc.5",
+    "react-native": "0.78.0",
     "react-native-builder-bob": "^0.18.0",
     "react-native-reanimated": "3.16.7",
     "react-test-renderer": "19.0.0",
