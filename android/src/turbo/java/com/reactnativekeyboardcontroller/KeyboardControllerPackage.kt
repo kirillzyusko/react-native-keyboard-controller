@@ -1,6 +1,5 @@
 package com.reactnativekeyboardcontroller
 
-import androidx.annotation.Nullable
 import com.facebook.react.TurboReactPackage
 import com.facebook.react.bridge.NativeModule
 import com.facebook.react.bridge.ReactApplicationContext
@@ -11,7 +10,6 @@ import com.reactnativekeyboardcontroller.modules.KeyboardControllerModuleImpl
 import com.reactnativekeyboardcontroller.modules.StatusBarManagerCompatModuleImpl
 
 class KeyboardControllerPackage : TurboReactPackage() {
-  @Nullable
   override fun getModule(
     name: String,
     reactContext: ReactApplicationContext,
