@@ -85,7 +85,7 @@ const KeyboardAvoidingView = forwardRef<
     const initialFrame = useSharedValue<LayoutRectangle | null>(null);
     const frame = useDerivedValue(() => initialFrame.value || defaultLayout);
 
-    const {translate, padding} = useTranslateAnimation();
+    const { translate, padding } = useTranslateAnimation();
     const keyboard = useKeyboardAnimation();
     const { height: screenHeight } = useWindowDimensions();
 

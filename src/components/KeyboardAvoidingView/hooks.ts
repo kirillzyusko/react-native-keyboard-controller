@@ -71,10 +71,10 @@ export const useTranslateAnimation = () => {
         "worklet";
 
         if (e.height === 0) {
+          // eslint-disable-next-line react-compiler/react-compiler
           padding.value = 0;
         }
         if (OS === "ios") {
-          // eslint-disable-next-line react-compiler/react-compiler
           translate.value = e.progress;
         }
       },
