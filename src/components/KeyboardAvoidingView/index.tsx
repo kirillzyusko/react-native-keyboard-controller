@@ -8,12 +8,9 @@ import Reanimated, {
   useSharedValue,
 } from "react-native-reanimated";
 
-import {
-  useReanimatedKeyboardAnimation,
-  useWindowDimensions,
-} from "../../hooks";
+import { useWindowDimensions } from "../../hooks";
 
-import { useKeyboardAnimation } from "./hooks";
+import { useKeyboardAnimation, useTranslateAnimation } from "./hooks";
 
 import type { LayoutRectangle, ViewProps } from "react-native";
 
@@ -88,7 +85,7 @@ const KeyboardAvoidingView = forwardRef<
     const initialFrame = useSharedValue<LayoutRectangle | null>(null);
     const frame = useDerivedValue(() => initialFrame.value || defaultLayout);
 
-    const animation = useReanimatedKeyboardAnimation();
+    const {translate, padding} = useTranslateAnimation();
     const keyboard = useKeyboardAnimation();
     const { height: screenHeight } = useWindowDimensions();
 
@@ -123,8 +120,13 @@ const KeyboardAvoidingView = forwardRef<
         [0, 1],
         [0, relativeKeyboardHeight()],
       );
-      const translate = interpolate(
-        animation.progress.value,
+      const translateY = interpolate(
+        translate.value,
+        [0, 1],
+        [0, relativeKeyboardHeight()],
+      );
+      const paddingBottom = interpolate(
+        padding.value,
         [0, 1],
         [0, relativeKeyboardHeight()],
       );
@@ -148,13 +150,9 @@ const KeyboardAvoidingView = forwardRef<
           return { paddingBottom: bottomHeight };
 
         case "translate-with-padding":
-          const isKeyboardFullyVisible =
-            keyboard.height.value !== keyboard.heightWhenOpened.value;
-          const shouldApplyTranslate = isKeyboardFullyVisible;
-
           return {
-            paddingBottom: !shouldApplyTranslate ? bottomHeight : 0,
-            transform: [{ translateY: shouldApplyTranslate ? -translate : 0 }],
+            paddingTop: paddingBottom,
+            transform: [{ translateY: -translateY }],
           };
 
         default:

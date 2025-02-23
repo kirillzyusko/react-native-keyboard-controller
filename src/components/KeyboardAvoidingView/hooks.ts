@@ -1,8 +1,11 @@
 import { useState } from "react";
+import { Platform } from "react-native";
 import { useSharedValue } from "react-native-reanimated";
 
 import { useKeyboardContext } from "../../context";
 import { useKeyboardHandler } from "../../hooks";
+
+const OS = Platform.OS;
 
 export const useKeyboardAnimation = () => {
   const { reanimated } = useKeyboardContext();
@@ -52,4 +55,48 @@ export const useKeyboardAnimation = () => {
   );
 
   return { height, progress, heightWhenOpened, isClosed };
+};
+export const useTranslateAnimation = () => {
+  const { reanimated } = useKeyboardContext();
+
+  // calculate it only once on mount, to avoid `SharedValue` reads during a render
+  const [initialProgress] = useState(() => reanimated.progress.value);
+
+  const padding = useSharedValue(initialProgress);
+  const translate = useSharedValue(0);
+
+  useKeyboardHandler(
+    {
+      onStart: (e) => {
+        "worklet";
+
+        if (e.height === 0) {
+          padding.value = 0;
+        }
+        if (OS === "ios") {
+          // eslint-disable-next-line react-compiler/react-compiler
+          translate.value = e.progress;
+        }
+      },
+      onMove: (e) => {
+        "worklet";
+
+        if (OS === "android") {
+          translate.value = e.progress;
+        }
+      },
+      onEnd: (e) => {
+        "worklet";
+
+        padding.value = e.progress;
+
+        if (OS === "android") {
+          translate.value = e.progress;
+        }
+      },
+    },
+    [],
+  );
+
+  return { translate, padding };
 };
