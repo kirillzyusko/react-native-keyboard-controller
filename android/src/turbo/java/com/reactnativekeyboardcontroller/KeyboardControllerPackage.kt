@@ -11,7 +11,6 @@ import com.reactnativekeyboardcontroller.modules.KeyboardControllerModuleImpl
 import com.reactnativekeyboardcontroller.modules.StatusBarManagerCompatModuleImpl
 
 class KeyboardControllerPackage : TurboReactPackage() {
-  @Nullable
   override fun getModule(
     name: String,
     reactContext: ReactApplicationContext,
