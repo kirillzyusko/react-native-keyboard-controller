@@ -123,7 +123,9 @@ const KeyboardAvoidingView = forwardRef<
     );
 
     const animatedStyle = useAnimatedStyle(() => {
-      const bottom = interpolateToRelativeKeyboardHeight(keyboard.progress.value);
+      const bottom = interpolateToRelativeKeyboardHeight(
+        keyboard.progress.value,
+      );
       const translateY = interpolateToRelativeKeyboardHeight(translate.value);
       const paddingBottom = interpolateToRelativeKeyboardHeight(padding.value);
       const bottomHeight = enabled ? bottom : 0;
