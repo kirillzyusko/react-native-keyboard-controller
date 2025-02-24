@@ -10,7 +10,7 @@ import Reanimated, {
 
 import { useWindowDimensions } from "../../hooks";
 
-import { useKeyboardAnimation } from "./hooks";
+import { useKeyboardAnimation, useTranslateAnimation } from "./hooks";
 
 import type { LayoutRectangle, ViewProps } from "react-native";
 
@@ -45,7 +45,7 @@ export type KeyboardAvoidingViewProps = KeyboardAvoidingViewBaseProps &
         /**
          * Specify how to react to the presence of the keyboard.
          */
-        behavior?: "height" | "padding";
+        behavior?: "height" | "padding" | "translate-with-padding";
 
         /**
          * `contentContainerStyle` is not allowed for these behaviors.
@@ -85,6 +85,7 @@ const KeyboardAvoidingView = forwardRef<
     const initialFrame = useSharedValue<LayoutRectangle | null>(null);
     const frame = useDerivedValue(() => initialFrame.value || defaultLayout);
 
+    const { translate, padding } = useTranslateAnimation();
     const keyboard = useKeyboardAnimation();
     const { height: screenHeight } = useWindowDimensions();
 
@@ -96,6 +97,14 @@ const KeyboardAvoidingView = forwardRef<
 
       return Math.max(frame.value.y + frame.value.height - keyboardY, 0);
     }, [screenHeight, keyboardVerticalOffset]);
+    const interpolateToRelativeKeyboardHeight = useCallback(
+      (value: number) => {
+        "worklet";
+
+        return interpolate(value, [0, 1], [0, relativeKeyboardHeight()]);
+      },
+      [relativeKeyboardHeight],
+    );
 
     const onLayoutWorklet = useCallback((layout: LayoutRectangle) => {
       "worklet";
@@ -114,11 +123,11 @@ const KeyboardAvoidingView = forwardRef<
     );
 
     const animatedStyle = useAnimatedStyle(() => {
-      const bottom = interpolate(
+      const bottom = interpolateToRelativeKeyboardHeight(
         keyboard.progress.value,
-        [0, 1],
-        [0, relativeKeyboardHeight()],
       );
+      const translateY = interpolateToRelativeKeyboardHeight(translate.value);
+      const paddingBottom = interpolateToRelativeKeyboardHeight(padding.value);
       const bottomHeight = enabled ? bottom : 0;
 
       switch (behavior) {
@@ -138,10 +147,16 @@ const KeyboardAvoidingView = forwardRef<
         case "padding":
           return { paddingBottom: bottomHeight };
 
+        case "translate-with-padding":
+          return {
+            paddingTop: paddingBottom,
+            transform: [{ translateY: -translateY }],
+          };
+
         default:
           return {};
       }
-    }, [behavior, enabled, relativeKeyboardHeight]);
+    }, [behavior, enabled, interpolateToRelativeKeyboardHeight]);
     const isPositionBehavior = behavior === "position";
     const containerStyle = isPositionBehavior ? contentContainerStyle : style;
     const combinedStyles = useMemo(
