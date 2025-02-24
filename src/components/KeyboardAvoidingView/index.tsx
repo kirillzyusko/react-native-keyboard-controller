@@ -97,6 +97,14 @@ const KeyboardAvoidingView = forwardRef<
 
       return Math.max(frame.value.y + frame.value.height - keyboardY, 0);
     }, [screenHeight, keyboardVerticalOffset]);
+    const interpolateToRelativeKeyboardHeight = useCallback(
+      (value: number) => {
+        "worklet";
+
+        return interpolate(value, [0, 1], [0, relativeKeyboardHeight()]);
+      },
+      [relativeKeyboardHeight],
+    );
 
     const onLayoutWorklet = useCallback((layout: LayoutRectangle) => {
       "worklet";
@@ -115,21 +123,9 @@ const KeyboardAvoidingView = forwardRef<
     );
 
     const animatedStyle = useAnimatedStyle(() => {
-      const bottom = interpolate(
-        keyboard.progress.value,
-        [0, 1],
-        [0, relativeKeyboardHeight()],
-      );
-      const translateY = interpolate(
-        translate.value,
-        [0, 1],
-        [0, relativeKeyboardHeight()],
-      );
-      const paddingBottom = interpolate(
-        padding.value,
-        [0, 1],
-        [0, relativeKeyboardHeight()],
-      );
+      const bottom = interpolateToRelativeKeyboardHeight(keyboard.progress.value);
+      const translateY = interpolateToRelativeKeyboardHeight(translate.value);
+      const paddingBottom = interpolateToRelativeKeyboardHeight(padding.value);
       const bottomHeight = enabled ? bottom : 0;
 
       switch (behavior) {
@@ -158,7 +154,7 @@ const KeyboardAvoidingView = forwardRef<
         default:
           return {};
       }
-    }, [behavior, enabled, relativeKeyboardHeight]);
+    }, [behavior, enabled, interpolateToRelativeKeyboardHeight]);
     const isPositionBehavior = behavior === "position";
     const containerStyle = isPositionBehavior ? contentContainerStyle : style;
     const combinedStyles = useMemo(
