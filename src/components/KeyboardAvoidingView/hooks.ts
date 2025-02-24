@@ -85,6 +85,13 @@ export const useTranslateAnimation = () => {
           translate.value = e.progress;
         }
       },
+      onInteractive: (e) => {
+        "worklet";
+
+        padding.value = 0;
+
+        translate.value = e.progress;
+      },
       onEnd: (e) => {
         "worklet";
 
