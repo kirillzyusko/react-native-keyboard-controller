@@ -1,9 +1,9 @@
 import React, { useMemo } from "react";
 import { Platform, StyleSheet, View } from "react-native";
 
+import { IS_FABRIC } from "../../architecture";
 import { RCTOverKeyboardView } from "../../bindings";
 import { useWindowDimensions } from "../../hooks";
-import { IS_FABRIC } from "../../architecture";
 
 import type { OverKeyboardViewProps } from "../../types";
 import type { PropsWithChildren } from "react";
