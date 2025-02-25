@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 import { Platform, StyleSheet, View } from "react-native";
 
+import { IS_FABRIC } from "../../architecture";
 import { RCTOverKeyboardView } from "../../bindings";
 import { useWindowDimensions } from "../../hooks";
 
@@ -18,8 +19,7 @@ const OverKeyboardView = ({
       styles.absolute,
       // On iOS - stretch view to full window dimensions to make yoga work
       // On Android Fabric we temporarily use the same approach
-      // @ts-expect-error `_IS_FABRIC` is injected by REA
-      Platform.OS === "ios" || global._IS_FABRIC ? inner : undefined,
+      Platform.OS === "ios" || IS_FABRIC ? inner : undefined,
     ],
     [inner],
   );
