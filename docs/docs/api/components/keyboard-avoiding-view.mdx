@@ -114,10 +114,29 @@ Inherits [View Props](https://reactnative.dev/docs/view#props).
 
 Specify how to react to the presence of the keyboard. Could be one value of:
 
-- `position`
-- `padding`
-- `height`
 - `translate-with-padding`
+
+:::info
+Combines **translation** (moves the view up) with **paddingTop** that gets applied only once per animation. As a result this mode delivers **the best** possible performance. An ideal fit for building _chat-like_ apps.
+:::
+
+- `padding`
+
+:::info
+The most commonly used mode. It moves the view up by the height of the keyboard and applies `paddingBottom` to the content container. Use `padding` mode when you have a `ScrollView` or `flex-based` layouts that should remain visible.
+:::
+
+- `position`
+
+:::info
+Use it when the view needs to shift up instead of resizing. For example when you have a fixed button at the bottom (also be sure that you checked out [KeyboardStickyView](./keyboard-sticky-view) component).
+:::
+
+- `height`
+
+:::note
+Use this when you want to shrink the entire view rather than moving specific elements. Use cautiously, only if `padding`/`position` don’t work.
+:::
 
 ### `contentContainerStyle`
 
