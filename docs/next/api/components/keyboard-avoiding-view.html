@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://www.googletagmanager.com">
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-4JH9YK1X2Q"></script>
 <script>function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("js",new Date),gtag("config","G-4JH9YK1X2Q",{anonymize_ip:!0})</script><link rel="stylesheet" href="/react-native-keyboard-controller/assets/css/styles.27367c9c.css">
-<script src="/react-native-keyboard-controller/assets/js/runtime~main.084d8b91.js" defer="defer"></script>
+<script src="/react-native-keyboard-controller/assets/js/runtime~main.bd0740bf.js" defer="defer"></script>
 <script src="/react-native-keyboard-controller/assets/js/main.a05eaeb8.js" defer="defer"></script>
 </head>
 <body class="navigation-with-keyboard">
@@ -30,10 +30,18 @@
 <h3 class="anchor anchorWithStickyNavbar_LWe7" id="behavior"><code>behavior</code><a class="hash-link" aria-label="Direct link to behavior" title="Direct link to behavior" href="/react-native-keyboard-controller/docs/next/api/components/keyboard-avoiding-view#behavior">​</a></h3>
 <p>Specify how to react to the presence of the keyboard. Could be one value of:</p>
 <ul>
-<li><code>position</code></li>
-<li><code>padding</code></li>
-<li><code>height</code></li>
-<li><code>translate-with-padding</code></li>
+<li>
+<p><code>translate-with-padding</code> - Combines <strong>translation</strong> (moves the view up) with <strong>paddingTop</strong> that gets applied only once per animation. As a result this mode delivers <strong>the best</strong> possible performance. An ideal fit for building <strong>chat-like</strong> apps.</p>
+</li>
+<li>
+<p><code>padding</code> - the most commonly used mode. It moves the view up by the height of the keyboard and applies <code>paddingBottom</code> to the content container. Use <code>padding</code> mode when you have a <code>ScrollView</code> or <code>flex-based</code> layouts that should remain visible.</p>
+</li>
+<li>
+<p><code>height</code> - use this when you want to shrink the entire view rather than moving specific elements.</p>
+</li>
+<li>
+<p><code>position</code> - use it when the view needs to shift up instead of resizing. For example when you have a fixed button at the bottom (also be sure that you checked out <a href="/react-native-keyboard-controller/docs/next/api/components/keyboard-sticky-view">KeyboardStickyView</a> component).</p>
+</li>
 </ul>
 <h3 class="anchor anchorWithStickyNavbar_LWe7" id="contentcontainerstyle"><code>contentContainerStyle</code><a class="hash-link" aria-label="Direct link to contentcontainerstyle" title="Direct link to contentcontainerstyle" href="/react-native-keyboard-controller/docs/next/api/components/keyboard-avoiding-view#contentcontainerstyle">​</a></h3>
 <p>The style of the content container (View) when behavior is <code>position</code>.</p>
