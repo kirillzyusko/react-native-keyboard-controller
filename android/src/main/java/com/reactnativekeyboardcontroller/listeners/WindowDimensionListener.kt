@@ -41,7 +41,7 @@ class WindowDimensionListener(
     val newDimensions =
       Dimensions(
         content.width.toFloat().dp,
-        content.height.toFloat().dp + content.marginTop.toFloat().dp,
+        content.height.toFloat().dp,
       )
 
     if (newDimensions != lastDispatchedDimensions) {
