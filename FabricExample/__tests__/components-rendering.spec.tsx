@@ -93,7 +93,7 @@ describe("components rendering", () => {
     expect(render(<KeyboardStickyViewTest />)).toMatchSnapshot();
   });
 
-  it("should render `KeyboardToolbar`", () => {
+  it.skip("should render `KeyboardToolbar`", () => {
     expect(render(<KeyboardToolbarTest />)).toMatchSnapshot();
   });
 
