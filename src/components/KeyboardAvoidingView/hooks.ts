@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useLayoutEffect } from "react";
 import { Platform } from "react-native";
 import { useSharedValue } from "react-native-reanimated";
 
@@ -10,14 +10,21 @@ const OS = Platform.OS;
 export const useKeyboardAnimation = () => {
   const { reanimated } = useKeyboardContext();
 
-  // calculate it only once on mount, to avoid `SharedValue` reads during a render
-  const [initialHeight] = useState(() => -reanimated.height.value);
-  const [initialProgress] = useState(() => reanimated.progress.value);
+  const heightWhenOpened = useSharedValue(0);
+  const height = useSharedValue(0);
+  const progress = useSharedValue(0);
+  const isClosed = useSharedValue(true);
 
-  const heightWhenOpened = useSharedValue(initialHeight);
-  const height = useSharedValue(initialHeight);
-  const progress = useSharedValue(initialProgress);
-  const isClosed = useSharedValue(initialProgress === 0);
+  useLayoutEffect(() => {
+    const initialHeight = -reanimated.height.value;
+    const initialProgress = reanimated.progress.value;
+
+    // eslint-disable-next-line react-compiler/react-compiler
+    heightWhenOpened.value = initialHeight;
+    height.value = initialHeight;
+    progress.value = initialProgress;
+    isClosed.value = initialProgress === 0;
+  }, []);
 
   useKeyboardHandler(
     {
@@ -25,7 +32,6 @@ export const useKeyboardAnimation = () => {
         "worklet";
 
         if (e.height > 0) {
-          // eslint-disable-next-line react-compiler/react-compiler
           isClosed.value = false;
           heightWhenOpened.value = e.height;
         }
@@ -59,11 +65,13 @@ export const useKeyboardAnimation = () => {
 export const useTranslateAnimation = () => {
   const { reanimated } = useKeyboardContext();
 
-  // calculate it only once on mount, to avoid `SharedValue` reads during a render
-  const [initialProgress] = useState(() => reanimated.progress.value);
-
-  const padding = useSharedValue(initialProgress);
+  const padding = useSharedValue(0);
   const translate = useSharedValue(0);
+
+  useLayoutEffect(() => {
+    // eslint-disable-next-line react-compiler/react-compiler
+    padding.value = reanimated.progress.value;
+  }, []);
 
   useKeyboardHandler(
     {
@@ -71,7 +79,6 @@ export const useTranslateAnimation = () => {
         "worklet";
 
         if (e.height === 0) {
-          // eslint-disable-next-line react-compiler/react-compiler
           padding.value = 0;
         }
         if (OS === "ios") {
