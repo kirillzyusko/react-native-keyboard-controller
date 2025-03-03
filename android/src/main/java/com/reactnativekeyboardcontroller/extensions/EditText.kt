@@ -180,11 +180,6 @@ class KeyboardControllerSelectionWatcher(
           lastSelectionEnd = end
           lastEditTextHeight = editTextHeight
 
-          val cursorPositionStartX: Float
-          val cursorPositionStartY: Float
-          val cursorPositionEndX: Float
-          val cursorPositionEndY: Float
-
           val realStart = min(start, end)
           val realEnd = max(start, end)
 
@@ -201,24 +196,29 @@ class KeyboardControllerSelectionWatcher(
           val gravity = editText.gravity and Gravity.VERTICAL_GRAVITY_MASK
           val paddingVertical = editText.paddingTop + editText.paddingBottom
           val lineHeightHalfHearted = editText.lineHeight / 2
+          val availableVertical = editTextHeight - paddingVertical
           val verticalOffset =
-            when (gravity) {
-              Gravity.CENTER_VERTICAL ->
-                (editTextHeight - paddingVertical - textHeight) / 2 + editText.paddingTop + lineHeightHalfHearted
-              Gravity.BOTTOM -> editTextHeight - textHeight - editText.paddingBottom + lineHeightHalfHearted
-              // Default to Gravity.TOP or other cases
-              else -> editText.paddingTop + lineHeightHalfHearted
+            if (textHeight <= availableVertical) {
+              when (gravity) {
+                Gravity.CENTER_VERTICAL ->
+                  (availableVertical - textHeight) / 2 + editText.paddingTop + lineHeightHalfHearted
+                Gravity.BOTTOM ->
+                  editText.paddingTop + (availableVertical - textHeight) + lineHeightHalfHearted
+                else -> editText.paddingTop + lineHeightHalfHearted
+              }
+            } else {
+              editText.paddingTop + lineHeightHalfHearted
             }
 
-          cursorPositionStartX = layout.getPrimaryHorizontal(realStart)
-          cursorPositionStartY = (baselineStart + verticalOffset).toFloat()
+          val cursorPositionStartX = layout.getPrimaryHorizontal(realStart)
+          val cursorPositionStartY = (baselineStart + verticalOffset - view.scrollY).toFloat()
 
           val lineEnd = layout.getLineForOffset(realEnd)
           val right = layout.getPrimaryHorizontal(realEnd)
           val bottom = layout.getLineBottom(lineEnd)
 
-          cursorPositionEndX = right + cursorWidth
-          cursorPositionEndY = (bottom + verticalOffset).toFloat()
+          val cursorPositionEndX = right + cursorWidth
+          val cursorPositionEndY = (bottom + verticalOffset - view.scrollY).toFloat()
 
           action(
             start,
