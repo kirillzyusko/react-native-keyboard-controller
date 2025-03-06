@@ -19,9 +19,9 @@ KeyboardEvents.addListener("keyboardDidShow", (e) => {
   lastEvent = e;
 });
 
-const dismiss = async (
-  { keepFocus }: DismissOptions = { keepFocus: false },
-): Promise<void> => {
+const dismiss = async (options?: DismissOptions): Promise<void> => {
+  const keepFocus = options?.keepFocus ?? false;
+
   return new Promise((resolve) => {
     if (isClosed) {
       resolve();
