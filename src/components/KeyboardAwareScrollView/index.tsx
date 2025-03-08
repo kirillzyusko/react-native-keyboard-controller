@@ -3,9 +3,9 @@ import { findNodeHandle } from "react-native";
 import Reanimated, {
   interpolate,
   scrollTo,
+  useAnimatedProps,
   useAnimatedReaction,
   useAnimatedRef,
-  useAnimatedStyle,
   useScrollViewOffset,
   useSharedValue,
 } from "react-native-reanimated";
@@ -359,17 +359,19 @@ const KeyboardAwareScrollView = forwardRef<
       [],
     );
 
-    const view = useAnimatedStyle(
+    const view = useAnimatedProps(
       () =>
         enabled
           ? {
-              // animations become choppy when scrolling to the end of the `ScrollView` (when the last input is focused)
-              // this happens because the layout recalculates on every frame. To avoid this we slightly increase padding
-              // by `+1`. In this way we assure, that `scrollTo` will never scroll to the end, because it uses interpolation
-              // from 0 to `keyboardHeight`, and here our padding is `keyboardHeight + 1`. It allows us not to re-run layout
-              // re-calculation on every animation frame and it helps to achieve smooth animation.
-              // see: https://github.com/kirillzyusko/react-native-keyboard-controller/pull/342
-              paddingBottom: currentKeyboardFrameHeight.value + 1,
+              contentInset: {
+                // animations become choppy when scrolling to the end of the `ScrollView` (when the last input is focused)
+                // this happens because the layout recalculates on every frame. To avoid this we slightly increase padding
+                // by `+1`. In this way we assure, that `scrollTo` will never scroll to the end, because it uses interpolation
+                // from 0 to `keyboardHeight`, and here our padding is `keyboardHeight + 1`. It allows us not to re-run layout
+                // re-calculation on every animation frame and it helps to achieve smooth animation.
+                // see: https://github.com/kirillzyusko/react-native-keyboard-controller/pull/342
+                bottom: currentKeyboardFrameHeight.value + 1,
+              },
             }
           : {},
       [enabled],
@@ -379,11 +381,11 @@ const KeyboardAwareScrollView = forwardRef<
       <ScrollViewComponent
         ref={onRef}
         {...rest}
+        animatedProps={view}
         scrollEventThrottle={16}
         onLayout={onScrollViewLayout}
       >
         {children}
-        <Reanimated.View style={view} />
       </ScrollViewComponent>
     );
   },
