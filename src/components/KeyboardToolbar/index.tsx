@@ -109,9 +109,11 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
       styles.toolbar,
       {
         backgroundColor: `${theme[colorScheme].background}${opacity}`,
+        paddingLeft: showArrows ? 8 : 0,
+        paddingRight: 8,
       },
     ],
-    [colorScheme, opacity, theme],
+    [colorScheme, opacity, theme, showArrows],
   );
   const offset = useMemo(
     () => ({ closed: closed + KEYBOARD_TOOLBAR_HEIGHT, opened }),
@@ -222,7 +224,6 @@ const styles = StyleSheet.create({
     width: "100%",
     flexDirection: "row",
     height: KEYBOARD_TOOLBAR_HEIGHT,
-    paddingHorizontal: 8,
   },
   doneButton: {
     fontWeight: "600",
