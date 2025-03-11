@@ -72,7 +72,7 @@ const DEFAULT_OPACITY: HEX = "FF";
 const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
   content,
   theme = colors,
-  doneText,
+  doneText = "Done",
   button,
   icon,
   showArrows = true,
@@ -191,19 +191,21 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
         <View style={styles.flex} testID={TEST_ID_KEYBOARD_TOOLBAR_CONTENT}>
           {content}
         </View>
-        <ButtonContainer
-          accessibilityHint="Closes the keyboard"
-          accessibilityLabel="Done"
-          rippleRadius={28}
-          style={styles.doneButtonContainer}
-          testID={TEST_ID_KEYBOARD_TOOLBAR_DONE}
-          theme={theme}
-          onPress={onPressDone}
-        >
-          <Text maxFontSizeMultiplier={1.3} style={doneStyle}>
-            {doneText || "Done"}
-          </Text>
-        </ButtonContainer>
+        {doneText && (
+          <ButtonContainer
+            accessibilityHint="Closes the keyboard"
+            accessibilityLabel="Done"
+            rippleRadius={28}
+            style={styles.doneButtonContainer}
+            testID={TEST_ID_KEYBOARD_TOOLBAR_DONE}
+            theme={theme}
+            onPress={onPressDone}
+          >
+            <Text maxFontSizeMultiplier={1.3} style={doneStyle}>
+              {doneText}
+            </Text>
+          </ButtonContainer>
+        )}
       </View>
     </KeyboardStickyView>
   );
