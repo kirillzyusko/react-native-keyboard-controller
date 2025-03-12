@@ -46,7 +46,6 @@ const arrowLine: ViewStyle = {
   borderRadius: 1,
 };
 const arrowUpContainer: ViewStyle = {
-  marginHorizontal: 5,
   width: 30,
   height: 30,
   justifyContent: "center",
