@@ -229,8 +229,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: DEFAULT_BUTTON_PADDING,
   },
   doneButton: {
-    alignItems: "center",
-    justifyContent: "center",
     fontWeight: "600",
     fontSize: 15,
     paddingHorizontal: DEFAULT_BUTTON_PADDING,
