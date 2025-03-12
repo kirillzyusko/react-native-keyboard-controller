@@ -45,17 +45,23 @@ const arrowLine: ViewStyle = {
   height: 2,
   borderRadius: 1,
 };
-const arrowUpContainer: ViewStyle = {
+
+const arrowContainer: ViewStyle = {
   width: 30,
   height: 30,
   justifyContent: "center",
   alignItems: "center",
 };
+
 const styles = StyleSheet.create({
-  arrowUpContainer: arrowUpContainer,
+  arrowUpContainer: {
+    ...arrowContainer,
+    marginRight: 2.5,
+  },
   arrowDownContainer: {
-    ...arrowUpContainer,
+    ...arrowContainer,
     transform: [{ rotate: "180deg" }],
+    marginLeft: 2.5,
   },
   arrow: {
     width: 20,

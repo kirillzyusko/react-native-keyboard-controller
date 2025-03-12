@@ -225,7 +225,6 @@ const styles = StyleSheet.create({
   },
   arrowsButton: {
     flexDirection: "row",
-    gap: 5,
     paddingHorizontal: DEFAULT_BUTTON_PADDING,
   },
   doneButton: {
