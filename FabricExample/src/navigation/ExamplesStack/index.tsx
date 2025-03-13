@@ -132,7 +132,7 @@ const ExamplesStack = () => (
     <Stack.Screen
       component={ReanimatedChatFlatList}
       name={ScreenNames.REANIMATED_CHAT_FLAT_LIST}
-      options={options[ScreenNames.REANIMATED_CHAT]}
+      options={options[ScreenNames.REANIMATED_CHAT_FLAT_LIST]}
     />
     <Stack.Screen
       component={Events}
