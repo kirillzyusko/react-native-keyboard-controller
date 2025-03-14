@@ -22,9 +22,7 @@ describe("`KeyboardController.dismiss()` specification", () => {
 
   it("should dismiss keyboard loosing focus", async () => {
     await waitAndTap("close_keyboard_button");
-    await waitForExpect(() =>
-      expect(element(by.id("input"))).not.toBeFocused(),
-    );
+    await expect(element(by.id("input"))).not.toBeFocused();
   });
 
   it("should show keyboard again when input tapped", async () => {
