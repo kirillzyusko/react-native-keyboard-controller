@@ -6,7 +6,7 @@ import type {
   KeyboardEventData,
 } from "./types";
 
-let isClosed = false;
+let isClosed = true;
 let lastEvent: KeyboardEventData | null = null;
 
 KeyboardEvents.addListener("keyboardDidHide", (e) => {
