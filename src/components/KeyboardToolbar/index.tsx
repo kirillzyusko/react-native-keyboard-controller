@@ -64,6 +64,7 @@ const TEST_ID_KEYBOARD_TOOLBAR_DONE = `${TEST_ID_KEYBOARD_TOOLBAR}.done`;
 
 const KEYBOARD_TOOLBAR_HEIGHT = 42;
 const DEFAULT_OPACITY: HEX = "FF";
+const DEFAULT_BUTTON_PADDING = 8;
 
 /**
  * `KeyboardToolbar` is a component that is shown above the keyboard with `Prev`/`Next` and
@@ -156,7 +157,7 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
       <View {...rest} style={toolbarStyle} testID={TEST_ID_KEYBOARD_TOOLBAR}>
         {blur}
         {showArrows && (
-          <>
+          <View style={styles.arrowsButton}>
             <ButtonContainer
               accessibilityHint="Moves focus to the previous field"
               accessibilityLabel="Previous"
@@ -185,7 +186,7 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
                 type="next"
               />
             </ButtonContainer>
-          </>
+          </View>
         )}
 
         <View style={styles.flex} testID={TEST_ID_KEYBOARD_TOOLBAR_CONTENT}>
@@ -196,7 +197,6 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
             accessibilityHint="Closes the keyboard"
             accessibilityLabel="Done"
             rippleRadius={28}
-            style={styles.doneButtonContainer}
             testID={TEST_ID_KEYBOARD_TOOLBAR_DONE}
             theme={theme}
             onPress={onPressDone}
@@ -222,14 +222,15 @@ const styles = StyleSheet.create({
     width: "100%",
     flexDirection: "row",
     height: KEYBOARD_TOOLBAR_HEIGHT,
-    paddingHorizontal: 8,
+  },
+  arrowsButton: {
+    flexDirection: "row",
+    paddingHorizontal: DEFAULT_BUTTON_PADDING,
   },
   doneButton: {
     fontWeight: "600",
     fontSize: 15,
-  },
-  doneButtonContainer: {
-    marginRight: 8,
+    paddingHorizontal: DEFAULT_BUTTON_PADDING,
   },
 });
 
