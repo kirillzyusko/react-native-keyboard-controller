@@ -2,6 +2,8 @@ package com.reactnativekeyboardcontroller
 
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.uimanager.LayoutShadowNode
+import com.facebook.react.uimanager.ReactStylesDiffMap
+import com.facebook.react.uimanager.StateWrapper
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.ViewGroupManager
 import com.facebook.react.uimanager.ViewManagerDelegate
@@ -29,6 +31,15 @@ class OverKeyboardViewManager(
   override fun createShadowNodeInstance(): LayoutShadowNode = OverKeyboardHostShadowNode()
 
   override fun getShadowNodeClass(): Class<out LayoutShadowNode> = OverKeyboardHostShadowNode::class.java
+
+  override fun updateState(
+    view: OverKeyboardHostView,
+    props: ReactStylesDiffMap,
+    stateWrapper: StateWrapper
+  ): Any? {
+    view.stateWrapper = stateWrapper
+    return null
+  }
 
   @ReactProp(name = "visible")
   override fun setVisible(

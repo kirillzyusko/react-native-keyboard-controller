@@ -7,10 +7,12 @@ on:
     paths:
       - ".github/workflows/verify-cpp.yml"
       - "android/src/main/**"
+      - "common/cpp/**"
   pull_request:
     paths:
       - ".github/workflows/verify-cpp.yml"
       - "android/src/main/**"
+      - "common/cpp/**"
 
 jobs:
   lint:

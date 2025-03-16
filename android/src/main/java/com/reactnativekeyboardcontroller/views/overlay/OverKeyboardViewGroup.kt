@@ -7,12 +7,16 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
 import com.facebook.react.bridge.UiThreadUtil
+import com.facebook.react.bridge.WritableMap
+import com.facebook.react.bridge.WritableNativeMap
 import com.facebook.react.config.ReactFeatureFlags
 import com.facebook.react.uimanager.JSTouchDispatcher
+import com.facebook.react.uimanager.StateWrapper
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.UIManagerHelper
 import com.facebook.react.uimanager.events.EventDispatcher
 import com.facebook.react.views.view.ReactViewGroup
+import com.reactnativekeyboardcontroller.extensions.dp
 
 @SuppressLint("ViewConstructor")
 class OverKeyboardHostView(
@@ -21,6 +25,12 @@ class OverKeyboardHostView(
   private val dispatcher = UIManagerHelper.getEventDispatcherForReactTag(reactContext, this.id)
   private var windowManager: WindowManager = reactContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
   private var hostView: OverKeyboardRootViewGroup = OverKeyboardRootViewGroup(reactContext)
+
+  internal var stateWrapper: StateWrapper?
+    get() = hostView.stateWrapper
+    set(stateWrapper) {
+      hostView.stateWrapper = stateWrapper
+    }
 
   init {
     hostView.eventDispatcher = dispatcher
@@ -100,6 +110,7 @@ class OverKeyboardRootViewGroup(
   private val jsTouchDispatcher: JSTouchDispatcher = JSTouchDispatcher(this)
   private var jsPointerDispatcher: JSPointerDispatcherCompat? = null
   internal var eventDispatcher: EventDispatcher? = null
+  internal var stateWrapper: StateWrapper? = null
   internal var isAttached = false
 
   init {
@@ -117,6 +128,17 @@ class OverKeyboardRootViewGroup(
   override fun onDetachedFromWindow() {
     super.onDetachedFromWindow()
     isAttached = false
+  }
+
+  override fun onSizeChanged(w: Int, h: Int, oldWidth: Int, oldHeight: Int) {
+    super.onSizeChanged(w, h, oldWidth, oldHeight)
+
+    stateWrapper?.let { sw ->
+      val newStateData: WritableMap = WritableNativeMap()
+      newStateData.putDouble("screenWidth", w.toFloat().dp)
+      newStateData.putDouble("screenHeight", h.toFloat().dp)
+      sw.updateState(newStateData)
+    }
   }
   // endregion
 
