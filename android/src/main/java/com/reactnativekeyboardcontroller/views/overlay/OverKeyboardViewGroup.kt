@@ -130,7 +130,12 @@ class OverKeyboardRootViewGroup(
     isAttached = false
   }
 
-  override fun onSizeChanged(w: Int, h: Int, oldWidth: Int, oldHeight: Int) {
+  override fun onSizeChanged(
+    w: Int,
+    h: Int,
+    oldWidth: Int,
+    oldHeight: Int,
+  ) {
     super.onSizeChanged(w, h, oldWidth, oldHeight)
 
     stateWrapper?.let { sw ->

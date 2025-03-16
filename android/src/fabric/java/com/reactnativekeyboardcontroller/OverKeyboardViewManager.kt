@@ -35,7 +35,7 @@ class OverKeyboardViewManager(
   override fun updateState(
     view: OverKeyboardHostView,
     props: ReactStylesDiffMap,
-    stateWrapper: StateWrapper
+    stateWrapper: StateWrapper,
   ): Any? {
     view.stateWrapper = stateWrapper
     return null
