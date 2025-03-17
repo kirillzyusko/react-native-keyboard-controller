@@ -3,7 +3,7 @@ module.exports = {
     platforms: {
       android: {
         componentDescriptors: ["OverKeyboardViewComponentDescriptor"],
-        cmakeListsPath: "./CMakeLists.txt",
+        cmakeListsPath: "../android/src/main/jni/CMakeLists.txt",
       },
     },
   },
