@@ -224,6 +224,7 @@ const styles = StyleSheet.create({
     height: KEYBOARD_TOOLBAR_HEIGHT,
   },
   arrows: {
+    flexDirection: "row",
     paddingLeft: 8,
   },
   doneButton: {
