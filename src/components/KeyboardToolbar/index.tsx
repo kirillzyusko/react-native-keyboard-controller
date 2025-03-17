@@ -156,7 +156,7 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
       <View {...rest} style={toolbarStyle} testID={TEST_ID_KEYBOARD_TOOLBAR}>
         {blur}
         {showArrows && (
-          <>
+          <View style={styles.arrows}>
             <ButtonContainer
               accessibilityHint="Moves focus to the previous field"
               accessibilityLabel="Previous"
@@ -185,7 +185,7 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
                 type="next"
               />
             </ButtonContainer>
-          </>
+          </View>
         )}
 
         <View style={styles.flex} testID={TEST_ID_KEYBOARD_TOOLBAR_CONTENT}>
@@ -222,14 +222,16 @@ const styles = StyleSheet.create({
     width: "100%",
     flexDirection: "row",
     height: KEYBOARD_TOOLBAR_HEIGHT,
-    paddingHorizontal: 8,
+  },
+  arrows: {
+    paddingLeft: 8,
   },
   doneButton: {
     fontWeight: "600",
     fontSize: 15,
   },
   doneButtonContainer: {
-    marginRight: 8,
+    marginRight: 16,
   },
 });
 
