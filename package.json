@@ -12,6 +12,7 @@
     "lib",
     "android",
     "ios",
+    "common",
     "cpp",
     "react-native-keyboard-controller.podspec",
     "jest",
