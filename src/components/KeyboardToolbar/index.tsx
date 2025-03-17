@@ -233,6 +233,7 @@ const styles = StyleSheet.create({
   },
   doneButtonContainer: {
     marginRight: 16,
+    marginLeft: 8,
   },
 });
 
