@@ -158,7 +158,7 @@ jobs:
         run: |
           wget https://github.com/biscuitehh/yeetd/releases/download/1.0/yeetd-normal.pkg
           sudo installer -pkg yeetd-normal.pkg -target /
-          defaults write dev.biscuit.yeetd killapsd ${{ inputs.kill-apsd }}
+          defaults write dev.biscuit.yeetd killapsd true
           yeetd &
       - name: Test app
         working-directory: e2e
