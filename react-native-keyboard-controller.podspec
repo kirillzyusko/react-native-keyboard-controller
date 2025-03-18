@@ -58,10 +58,11 @@ Pod::Spec.new do |s|
       s.dependency "ReactCommon/turbomodule/core"
     end
   end
-
-  s.subspec "common" do |ss|
-    ss.source_files         = ["common/**/*.{cpp,h}"]
-    ss.header_dir           = "reactnativekeyboardcontroller"
-    ss.pod_target_xcconfig  = { "HEADER_SEARCH_PATHS" => "\"$(PODS_TARGET_SRCROOT)/common\"" }
+  if new_arch_enabled
+    s.subspec "common" do |ss|
+      ss.source_files         = ["common/cpp/**/*.{cpp,h}"]
+      ss.header_dir           = "reactnativekeyboardcontroller"
+      ss.pod_target_xcconfig  = { "HEADER_SEARCH_PATHS" => "\"$(PODS_TARGET_SRCROOT)/common/cpp\"" }
+    end
   end
 end
