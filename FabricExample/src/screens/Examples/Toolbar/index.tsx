@@ -6,6 +6,7 @@ import {
   KeyboardAwareScrollView,
   KeyboardToolbar,
 } from "react-native-keyboard-controller";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import TextInput from "../../../components/TextInput";
 
@@ -33,6 +34,7 @@ export default function ToolbarExample() {
   const onHideAutoFill = useCallback(() => {
     setShowAutoFill(false);
   }, []);
+  const insets = useSafeAreaInsets();
 
   return (
     <>
@@ -158,6 +160,7 @@ export default function ToolbarExample() {
             <AutoFillContacts onContactSelected={onContactSelected} />
           ) : null
         }
+        insets={insets}
         opacity={Platform.OS === "ios" ? "4F" : "DD"}
         onDoneCallback={haptic}
         onNextCallback={haptic}
