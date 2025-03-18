@@ -197,12 +197,16 @@ export default function ToolbarExample({ navigation }: Props) {
     <>
       <Form />
       <Modal
+        navigationBarTranslucent
+        statusBarTranslucent
         animationType="slide"
         presentationStyle="formSheet"
         visible={isVisible}
         onRequestClose={() => setVisible(false)}
       >
-        <Form />
+        <View style={styles.modal}>
+          <Form />
+        </View>
       </Modal>
     </>
   );
@@ -230,6 +234,9 @@ const styles = StyleSheet.create({
   },
   header: {
     marginRight: 12,
+  },
+  modal: {
+    marginTop: 32,
   },
 });
 
