@@ -197,8 +197,6 @@ export default function ToolbarExample({ navigation }: Props) {
     <>
       <Form />
       <Modal
-        navigationBarTranslucent
-        statusBarTranslucent
         animationType="slide"
         presentationStyle="formSheet"
         visible={isVisible}
