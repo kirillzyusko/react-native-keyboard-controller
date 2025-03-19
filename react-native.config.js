@@ -2,7 +2,11 @@ module.exports = {
   dependency: {
     platforms: {
       android: {
-        componentDescriptors: ["OverKeyboardViewComponentDescriptor"],
+        componentDescriptors: [
+          "KeyboardControllerViewComponentDescriptor",
+          "KeyboardGestureAreaComponentDescriptor",
+          "OverKeyboardViewComponentDescriptor",
+        ],
         cmakeListsPath: "../android/src/main/jni/CMakeLists.txt",
       },
     },
