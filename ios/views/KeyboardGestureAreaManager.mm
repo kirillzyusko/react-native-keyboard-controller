@@ -14,7 +14,7 @@
 #endif
 
 #ifdef RCT_NEW_ARCH_ENABLED
-#import <react/renderer/components/reactnativekeyboardcontroller/ComponentDescriptors.h>
+#import <reactnativekeyboardcontroller/ComponentDescriptors.h>
 #import <react/renderer/components/reactnativekeyboardcontroller/EventEmitters.h>
 #import <react/renderer/components/reactnativekeyboardcontroller/Props.h>
 #import <react/renderer/components/reactnativekeyboardcontroller/RCTComponentViewHelpers.h>

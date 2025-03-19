@@ -13,7 +13,7 @@
 #include "ShadowNodes.h"
 
 #include <react/debug/react_native_assert.h>
-#include <react/renderer/components/reactnativekeyboardcontroller//Props.h>
+#include <react/renderer/components/reactnativekeyboardcontroller/Props.h>
 #include <react/renderer/core/ConcreteComponentDescriptor.h>
 
 namespace facebook {
