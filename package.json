@@ -15,6 +15,7 @@
     "common",
     "cpp",
     "react-native-keyboard-controller.podspec",
+    "react-native.config.js",
     "jest",
     "!lib/typescript/example",
     "!android/build",
