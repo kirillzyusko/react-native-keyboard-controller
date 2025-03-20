@@ -18,6 +18,7 @@
     "react-native.config.js",
     "jest",
     "!lib/typescript/example",
+    "!android/detekt.yml",
     "!android/build",
     "!android/src/test",
     "!android/.gradle",
