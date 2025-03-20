@@ -1,21 +1,41 @@
 #pragma once
 
+#include <react/renderer/core/graphicsConversions.h>
+#include <react/renderer/graphics/Float.h>
+
 #ifdef ANDROID
 #include <folly/dynamic.h>
 #endif
 
 namespace facebook::react {
 
-class OverKeyboardViewState {
-public:
-  OverKeyboardViewState() = default;
+/*
+ * State for <OverKeyboardViewState> component.
+ */
+class OverKeyboardViewState final {
+ public:
+  using Shared = std::shared_ptr<const OverKeyboardViewState>;
+
+
+  OverKeyboardViewState(){};
+  OverKeyboardViewState(Size screenSize_) : screenSize(screenSize_){};
 
 #ifdef ANDROID
-  OverKeyboardViewState(OverKeyboardViewState const &previousState, folly::dynamic data){};
-  folly::dynamic getDynamic() const {
-    return {};
-  };
+  OverKeyboardViewState(
+      const OverKeyboardViewState& previousState,
+      folly::dynamic data)
+      : screenSize(Size{
+            (Float)data["screenWidth"].getDouble(),
+            (Float)data["screenHeight"].getDouble()}){};
 #endif
+
+  const Size screenSize{};
+
+#ifdef ANDROID
+  folly::dynamic getDynamic() const;
+#endif
+
+#pragma mark - Getters
 };
 
 } // namespace facebook::react

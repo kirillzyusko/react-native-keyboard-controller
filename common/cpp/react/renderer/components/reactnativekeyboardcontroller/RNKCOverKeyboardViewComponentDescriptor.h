@@ -14,7 +14,17 @@ class OverKeyboardViewComponentDescriptor final
  public:
   using ConcreteComponentDescriptor::ConcreteComponentDescriptor;
   void adopt(ShadowNode &shadowNode) const override {
-    react_native_assert(dynamic_cast<OverKeyboardViewShadowNode *>(&shadowNode));
+    auto& layoutableShadowNode =
+        static_cast<YogaLayoutableShadowNode&>(shadowNode);
+    auto& stateData =
+        static_cast<const OverKeyboardViewShadowNode::ConcreteState&>(
+            *shadowNode.getState())
+            .getData();
+
+    layoutableShadowNode.setSize(
+        Size{stateData.screenSize.width, stateData.screenSize.height});
+    layoutableShadowNode.setPositionType(YGPositionTypeAbsolute);
+
     ConcreteComponentDescriptor::adopt(shadowNode);
   }
 };
