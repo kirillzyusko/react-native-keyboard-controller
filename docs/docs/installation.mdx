@@ -38,6 +38,17 @@ npm install react-native-keyboard-controller --save
 ```
 
 </TabItem>
+<TabItem value="expo" label="EXPO">
+
+```shell
+npx expo install react-native-keyboard-controller
+```
+
+:::note Only Expo Dev client compatible
+This library has native code, so it **does not work** with _Expo Go_ but it's fully compatible with [custom dev client](https://docs.expo.dev/development/getting-started/).
+:::
+
+</TabItem>
 </Tabs>
 
 :::warning Mandatory `react-native-reanimated` dependency
@@ -51,13 +62,9 @@ This package supports [autolinking](https://github.com/react-native-community/cl
 
 :::tip Pods update
 
-Don't forget to re-install `pods` after adding the package and don't forget to re-assemble `android` and `ios` applications, since this library contains native code.
+After adding the package don't forget to **re-install** `pods` and **re-assemble** `android` and `ios` applications, since this library contains native code.
 
 :::
-
-### Expo
-
-This library has native code, so it does not work with _Expo Go_ but you can easily install it using a [custom dev client](https://docs.expo.dev/development/getting-started/).
 
 ## Adding provider
 
