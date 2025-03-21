@@ -113,6 +113,12 @@ const trustedBy = [
     link: "https://play.google.com/store/apps/details?id=app.drakula",
     name: "Drakula",
   },
+  {
+    img: "https://avatars.githubusercontent.com/u/47886602?s=200&v=4",
+    alt: "Swan: the easiest way to add a banking SDK to your app",
+    link: "https://github.com/swan-io/swan-partner-mobile",
+    name: "Swan",
+  },
 ];
 
 function TrustedBy(): JSX.Element {
