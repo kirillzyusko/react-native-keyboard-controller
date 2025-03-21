@@ -15,6 +15,6 @@ export interface NativeProps extends ViewProps {
   textInputNativeID?: string;
 }
 
-export default codegenNativeComponent<NativeProps>(
-  "KeyboardGestureArea",
-) as HostComponent<NativeProps>;
+export default codegenNativeComponent<NativeProps>("KeyboardGestureArea", {
+  interfaceOnly: true,
+}) as HostComponent<NativeProps>;
