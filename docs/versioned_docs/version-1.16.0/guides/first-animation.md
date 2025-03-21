@@ -38,11 +38,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "flex-end",
   },
-  box: {
-    width: 60,
-    height: 60,
-    marginVertical: 20,
-  },
   row: {
     flexDirection: "row",
   },
