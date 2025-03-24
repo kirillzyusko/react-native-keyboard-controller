@@ -231,6 +231,7 @@ const styles = StyleSheet.create({
     right: 0,
   },
   header: {
+    color: "black",
     marginRight: 12,
   },
   modal: {

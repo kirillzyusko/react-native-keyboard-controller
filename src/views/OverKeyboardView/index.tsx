@@ -28,7 +28,8 @@ const OverKeyboardView = ({
     <RCTOverKeyboardView visible={visible}>
       {/* `OverKeyboardView` should always have a single child */}
       <View collapsable={false} style={style}>
-        {children}
+        {/* Match RN behavior and trigger mount/unmount when visibility changes */}
+        {visible && children}
       </View>
     </RCTOverKeyboardView>
   );
@@ -39,7 +40,10 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   stretch: {
-    flex: 1,
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
   },
 });
 
