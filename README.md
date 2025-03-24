@@ -26,7 +26,7 @@ Check out the [installation](https://kirillzyusko.github.io/react-native-keyboar
 
 ## Documentation
 
-Check out our dedicated documentation page for info about this library, API reference and more: [https://kirillzyusko.github.io/react-native-keyboard-controller/](https://kirillzyusko.github.io/react-native-keyboard-controller/)
+Check out the dedicated documentation page for information about this library, API reference and more: [https://kirillzyusko.github.io/react-native-keyboard-controller/](https://kirillzyusko.github.io/react-native-keyboard-controller/)
 
 ## Contributing
 
