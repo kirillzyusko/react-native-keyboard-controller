@@ -18,6 +18,8 @@ const OverKeyboardView = ({
       styles.absolute,
       // On iOS - stretch view to full window dimensions to make yoga work
       Platform.OS === "ios" ? inner : undefined,
+      // On Android - we are laid out by ShadowNode, so just stretch to full container
+      Platform.OS === "android" ? styles.stretch : undefined,
     ],
     [inner],
   );
@@ -35,6 +37,9 @@ const OverKeyboardView = ({
 const styles = StyleSheet.create({
   absolute: {
     position: "absolute",
+  },
+  stretch: {
+    flex: 1,
   },
 });
 

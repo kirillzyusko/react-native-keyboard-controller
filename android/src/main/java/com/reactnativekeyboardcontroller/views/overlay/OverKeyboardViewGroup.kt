@@ -17,6 +17,7 @@ import com.facebook.react.uimanager.UIManagerHelper
 import com.facebook.react.uimanager.events.EventDispatcher
 import com.facebook.react.views.view.ReactViewGroup
 import com.reactnativekeyboardcontroller.extensions.dp
+import com.reactnativekeyboardcontroller.extensions.getDisplaySize
 
 @SuppressLint("ViewConstructor")
 class OverKeyboardHostView(
@@ -26,11 +27,7 @@ class OverKeyboardHostView(
   private var windowManager: WindowManager = reactContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
   private var hostView: OverKeyboardRootViewGroup = OverKeyboardRootViewGroup(reactContext)
 
-  internal var stateWrapper: StateWrapper?
-    get() = hostView.stateWrapper
-    set(stateWrapper) {
-      hostView.stateWrapper = stateWrapper
-    }
+  internal var stateWrapper: StateWrapper? = null
 
   init {
     hostView.eventDispatcher = dispatcher
@@ -92,13 +89,23 @@ class OverKeyboardHostView(
         PixelFormat.TRANSLUCENT,
       )
 
+    stretchTo(fullScreen = true)
     windowManager.addView(hostView, layoutParams)
   }
 
   fun hide() {
     if (hostView.isAttached) {
       windowManager.removeView(hostView)
+      stretchTo(fullScreen = false)
     }
+  }
+
+  private fun stretchTo(fullScreen: Boolean) {
+    val displaySize = reactContext.getDisplaySize()
+    val newStateData: WritableMap = WritableNativeMap()
+    newStateData.putDouble("screenWidth", if (fullScreen) displaySize.x.toFloat().dp else 0.0)
+    newStateData.putDouble("screenHeight", if (fullScreen) displaySize.y.toFloat().dp else 0.0)
+    stateWrapper?.updateState(newStateData)
   }
 }
 
@@ -110,7 +117,6 @@ class OverKeyboardRootViewGroup(
   private val jsTouchDispatcher: JSTouchDispatcher = JSTouchDispatcher(this)
   private var jsPointerDispatcher: JSPointerDispatcherCompat? = null
   internal var eventDispatcher: EventDispatcher? = null
-  internal var stateWrapper: StateWrapper? = null
   internal var isAttached = false
 
   init {
@@ -128,22 +134,6 @@ class OverKeyboardRootViewGroup(
   override fun onDetachedFromWindow() {
     super.onDetachedFromWindow()
     isAttached = false
-  }
-
-  override fun onSizeChanged(
-    w: Int,
-    h: Int,
-    oldWidth: Int,
-    oldHeight: Int,
-  ) {
-    super.onSizeChanged(w, h, oldWidth, oldHeight)
-
-    stateWrapper?.let { sw ->
-      val newStateData: WritableMap = WritableNativeMap()
-      newStateData.putDouble("screenWidth", w.toFloat().dp)
-      newStateData.putDouble("screenHeight", h.toFloat().dp)
-      sw.updateState(newStateData)
-    }
   }
   // endregion
 
