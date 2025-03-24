@@ -22,17 +22,11 @@ Keyboard manager which works in identical way on both iOS and Android.
 
 ## Installation
 
-Install `react-native-keyboard-controller` package from npm:
-
-```shell
-yarn add react-native-keyboard-controller
-# or
-npm install react-native-keyboard-controller --save
-```
+Check out the [installation](https://kirillzyusko.github.io/react-native-keyboard-controller/docs/installation) section of docs for the detailed installation instructions.
 
 ## Documentation
 
-Check out our dedicated documentation page for info about this library, API reference and more: [https://kirillzyusko.github.io/react-native-keyboard-controller/](https://kirillzyusko.github.io/react-native-keyboard-controller/)
+Check out the dedicated documentation page for information about this library, API reference and more: [https://kirillzyusko.github.io/react-native-keyboard-controller/](https://kirillzyusko.github.io/react-native-keyboard-controller/)
 
 ## Contributing
 
