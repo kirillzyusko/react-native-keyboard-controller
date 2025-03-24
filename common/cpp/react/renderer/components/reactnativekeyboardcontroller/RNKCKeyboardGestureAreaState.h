@@ -7,14 +7,14 @@
 namespace facebook::react {
 
 class KeyboardGestureAreaState {
-public:
+ public:
   KeyboardGestureAreaState() = default;
 
 #ifdef ANDROID
-  KeyboardGestureAreaState(KeyboardGestureAreaState const &previousState, folly::dynamic data){};
+  KeyboardGestureAreaState(KeyboardGestureAreaState const &previousState, folly::dynamic data) {}
   folly::dynamic getDynamic() const {
     return {};
-  };
+  }
 #endif
 };
 

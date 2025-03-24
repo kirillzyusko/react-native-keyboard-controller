@@ -6,9 +6,7 @@
 #include <react/renderer/components/reactnativekeyboardcontroller/Props.h>
 #include <react/renderer/core/ConcreteComponentDescriptor.h>
 
-namespace facebook {
-namespace react {
-
+namespace facebook::react {
 class KeyboardGestureAreaComponentDescriptor final
     : public ConcreteComponentDescriptor<KeyboardGestureAreaShadowNode> {
  public:
@@ -19,5 +17,4 @@ class KeyboardGestureAreaComponentDescriptor final
   }
 };
 
-} // namespace react
-} // namespace facebook
+} // namespace facebook::react

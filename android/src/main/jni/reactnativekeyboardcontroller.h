@@ -14,10 +14,10 @@
 #include <react/renderer/components/reactnativekeyboardcontroller/RNKCKeyboardGestureAreaComponentDescriptor.h>
 #include <react/renderer/components/reactnativekeyboardcontroller/RNKCOverKeyboardViewComponentDescriptor.h>
 
-namespace facebook::react
-{
+#include <memory>
+#include <string>
 
-  JSI_EXPORT
-  std::shared_ptr<TurboModule> reactnativekeyboardcontroller_ModuleProvider(const std::string &moduleName, const JavaTurboModule::InitParams &params);
-
+namespace facebook::react {
+JSI_EXPORT
+std::shared_ptr<TurboModule> reactnativekeyboardcontroller_ModuleProvider(const std::string &moduleName, const JavaTurboModule::InitParams &params);
 } // namespace facebook::react

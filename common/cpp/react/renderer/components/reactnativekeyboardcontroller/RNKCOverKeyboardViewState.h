@@ -7,6 +7,8 @@
 #include <folly/dynamic.h>
 #endif
 
+#include <memory>
+
 namespace facebook::react {
 
 /*
@@ -17,8 +19,8 @@ class OverKeyboardViewState final {
   using Shared = std::shared_ptr<const OverKeyboardViewState>;
 
 
-  OverKeyboardViewState(){};
-  OverKeyboardViewState(Size screenSize_) : screenSize(screenSize_){};
+  OverKeyboardViewState() {}
+  OverKeyboardViewState(Size screenSize_) : screenSize(screenSize_) {}
 
 #ifdef ANDROID
   OverKeyboardViewState(
@@ -26,7 +28,7 @@ class OverKeyboardViewState final {
       folly::dynamic data)
       : screenSize(Size{
             (Float)data["screenWidth"].getDouble(),
-            (Float)data["screenHeight"].getDouble()}){};
+            (Float)data["screenHeight"].getDouble()}) {}
 #endif
 
   const Size screenSize{};
