@@ -74,11 +74,15 @@ const TEST_ID_KEYBOARD_TOOLBAR_DONE = `${TEST_ID_KEYBOARD_TOOLBAR}.done`;
 const KEYBOARD_TOOLBAR_HEIGHT = 42;
 const DEFAULT_OPACITY: HEX = "FF";
 
+type KeyboardToolbarComponent = {
+  Exclude: typeof RCTKeyboardToolbarExcludeView;
+} & React.FC<KeyboardToolbarProps>;
+
 /**
  * `KeyboardToolbar` is a component that is shown above the keyboard with `Prev`/`Next` and
  * `Done` buttons.
  */
-const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
+const KeyboardToolbar: KeyboardToolbarComponent = ({
   content,
   theme = colors,
   doneText = "Done",
