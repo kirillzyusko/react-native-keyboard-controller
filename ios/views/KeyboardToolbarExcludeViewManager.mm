@@ -47,7 +47,8 @@ RCT_EXPORT_MODULE(KeyboardToolbarExcludeViewManager)
 @end
 #endif
 
-@implementation KeyboardToolbarExcludeView {}
+@implementation KeyboardToolbarExcludeView {
+}
 
 #ifdef RCT_NEW_ARCH_ENABLED
 + (ComponentDescriptorProvider)componentDescriptorProvider
@@ -76,7 +77,6 @@ RCT_EXPORT_MODULE(KeyboardToolbarExcludeViewManager)
   return self;
 }
 #endif
-
 
 #ifdef RCT_NEW_ARCH_ENABLED
 Class<RCTComponentViewProtocol> KeyboardToolbarExcludeViewCls(void)
