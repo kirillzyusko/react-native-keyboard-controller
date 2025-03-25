@@ -7,6 +7,6 @@ export interface NativeProps extends ViewProps {
   visible?: boolean;
 }
 
-export default codegenNativeComponent<NativeProps>(
-  "OverKeyboardView",
-) as HostComponent<NativeProps>;
+export default codegenNativeComponent<NativeProps>("OverKeyboardView", {
+  interfaceOnly: true,
+}) as HostComponent<NativeProps>;

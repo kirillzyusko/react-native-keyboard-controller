@@ -66,6 +66,6 @@ export interface NativeProps extends ViewProps {
   onFocusedInputSelectionChanged?: DirectEventHandler<FocusedInputSelectionChangedEvent>;
 }
 
-export default codegenNativeComponent<NativeProps>(
-  "KeyboardControllerView",
-) as HostComponent<NativeProps>;
+export default codegenNativeComponent<NativeProps>("KeyboardControllerView", {
+  interfaceOnly: true,
+}) as HostComponent<NativeProps>;

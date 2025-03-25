@@ -7,12 +7,17 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
 import com.facebook.react.bridge.UiThreadUtil
+import com.facebook.react.bridge.WritableMap
+import com.facebook.react.bridge.WritableNativeMap
 import com.facebook.react.config.ReactFeatureFlags
 import com.facebook.react.uimanager.JSTouchDispatcher
+import com.facebook.react.uimanager.StateWrapper
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.UIManagerHelper
 import com.facebook.react.uimanager.events.EventDispatcher
 import com.facebook.react.views.view.ReactViewGroup
+import com.reactnativekeyboardcontroller.extensions.dp
+import com.reactnativekeyboardcontroller.extensions.getDisplaySize
 
 @SuppressLint("ViewConstructor")
 class OverKeyboardHostView(
@@ -21,6 +26,8 @@ class OverKeyboardHostView(
   private val dispatcher = UIManagerHelper.getEventDispatcherForReactTag(reactContext, this.id)
   private var windowManager: WindowManager = reactContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
   private var hostView: OverKeyboardRootViewGroup = OverKeyboardRootViewGroup(reactContext)
+
+  internal var stateWrapper: StateWrapper? = null
 
   init {
     hostView.eventDispatcher = dispatcher
@@ -82,13 +89,23 @@ class OverKeyboardHostView(
         PixelFormat.TRANSLUCENT,
       )
 
+    stretchTo(fullScreen = true)
     windowManager.addView(hostView, layoutParams)
   }
 
   fun hide() {
     if (hostView.isAttached) {
       windowManager.removeView(hostView)
+      stretchTo(fullScreen = false)
     }
+  }
+
+  private fun stretchTo(fullScreen: Boolean) {
+    val displaySize = reactContext.getDisplaySize()
+    val newStateData: WritableMap = WritableNativeMap()
+    newStateData.putDouble("screenWidth", if (fullScreen) displaySize.x.toFloat().dp else 0.0)
+    newStateData.putDouble("screenHeight", if (fullScreen) displaySize.y.toFloat().dp else 0.0)
+    stateWrapper?.updateState(newStateData)
   }
 }
 

@@ -1,7 +1,6 @@
 import React, { useMemo } from "react";
 import { Platform, StyleSheet, View } from "react-native";
 
-import { IS_FABRIC } from "../../architecture";
 import { RCTOverKeyboardView } from "../../bindings";
 import { useWindowDimensions } from "../../hooks";
 
@@ -18,8 +17,9 @@ const OverKeyboardView = ({
     () => [
       styles.absolute,
       // On iOS - stretch view to full window dimensions to make yoga work
-      // On Android Fabric we temporarily use the same approach
-      Platform.OS === "ios" || IS_FABRIC ? inner : undefined,
+      Platform.OS === "ios" ? inner : undefined,
+      // On Android - we are laid out by ShadowNode, so just stretch to full container
+      Platform.OS === "android" ? styles.stretch : undefined,
     ],
     [inner],
   );
@@ -28,7 +28,8 @@ const OverKeyboardView = ({
     <RCTOverKeyboardView visible={visible}>
       {/* `OverKeyboardView` should always have a single child */}
       <View collapsable={false} style={style}>
-        {children}
+        {/* Match RN behavior and trigger mount/unmount when visibility changes */}
+        {visible && children}
       </View>
     </RCTOverKeyboardView>
   );
@@ -37,6 +38,12 @@ const OverKeyboardView = ({
 const styles = StyleSheet.create({
   absolute: {
     position: "absolute",
+  },
+  stretch: {
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
   },
 });
 

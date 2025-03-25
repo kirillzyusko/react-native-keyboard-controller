@@ -20,10 +20,10 @@
 #import <react_native_keyboard_controller/react_native_keyboard_controller-Swift.h>
 #endif
 
-#import <react/renderer/components/reactnativekeyboardcontroller/ComponentDescriptors.h>
 #import <react/renderer/components/reactnativekeyboardcontroller/EventEmitters.h>
 #import <react/renderer/components/reactnativekeyboardcontroller/Props.h>
 #import <react/renderer/components/reactnativekeyboardcontroller/RCTComponentViewHelpers.h>
+#import <reactnativekeyboardcontroller/RNKCKeyboardControllerViewComponentDescriptor.h>
 
 #import "KeyboardControllerModule-Header.h"
 #import "RCTFabricComponentsPlugins.h"
