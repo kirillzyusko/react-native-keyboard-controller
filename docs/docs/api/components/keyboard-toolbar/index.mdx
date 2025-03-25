@@ -301,6 +301,20 @@ Don't forget that you need to specify colors for **both** `dark` and `light` the
 
 This component is used to exclude some views from the traversal. It is useful when you want to skip specific view from being focused by toolbar arrow buttons.
 
+```tsx
+<BottomSheet>
+  <KeyboardToolbar.Exclude>
+    <TextInput
+      contextMenuHidden
+      keyboardType="numeric"
+      placeholder="Excluded"
+      testID="TextInput#14"
+      title="Excluded"
+    />
+  </KeyboardToolbar.Exclude>
+</BottomSheet>
+```
+
 ## Example
 
 ```tsx
