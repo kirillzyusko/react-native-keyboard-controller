@@ -25,6 +25,7 @@ function ReanimatedChatFlatList() {
       behavior="translate-with-padding"
       keyboardVerticalOffset={headerHeight}
       style={styles.container}
+      testID="flat-list.container"
     >
       <FlatList
         inverted
@@ -32,8 +33,9 @@ function ReanimatedChatFlatList() {
         data={reversedMessages}
         initialNumToRender={15}
         renderItem={RenderItem}
+        testID="flat-list.chat"
       />
-      <TextInput style={styles.textInput} />
+      <TextInput style={styles.textInput} testID="flat-list.input" />
     </KeyboardAvoidingView>
   );
 }

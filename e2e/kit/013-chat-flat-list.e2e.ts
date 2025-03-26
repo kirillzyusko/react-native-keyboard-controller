@@ -20,7 +20,7 @@ describe("Chat FlatList specification", () => {
   });
 
   it("should scroll to top and show all messages", async () => {
-    await element(by.id("flat-list.chat")).swipe("down", "fast", 1, 0.5, 0.4);
+    await element(by.id("flat-list.chat")).swipe("down", "fast", 1, 0.5, 0.3);
     await waitForExpect(async () => {
       await expectBitmapsToBeEqual("ChatFlatListTopMessages");
     });
