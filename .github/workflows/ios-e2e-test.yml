@@ -126,6 +126,25 @@ jobs:
         run: ulimit -n 65535
       - name: Check Disk Space
         run: df -h
+      - name: Clean disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /opt/ghc
+          sudo rm -rf "/usr/local/share/boost"
+          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+      - name: Check Disk Space
+        run: df -h
+      # We only use Xcode 15.4
+      - name: Remove unused XCodes
+        run: |
+          df -h
+          sudo rm -rf /Applications/Xcode_15.0.1.app
+          sudo rm -rf /Applications/Xcode_15.1.app
+          sudo rm -rf /Applications/Xcode_15.2.app
+          sudo rm -rf /Applications/Xcode_15.3.app
+          sudo rm -rf /Applications/Xcode_16.1.app
+          sudo rm -rf /Applications/Xcode_16.2.app
+          df -h
       - name: Get Xcode version
         run: xcodebuild -version
       # needed for additional runtime installation
