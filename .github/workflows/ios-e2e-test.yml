@@ -124,6 +124,8 @@ jobs:
         run: sudo mdutil -a -i off
       - name: Increase File Limits
         run: ulimit -n 65535
+      - name: Check Disk Space
+        run: df -h
       - name: Get Xcode version
         run: xcodebuild -version
       # needed for additional runtime installation
