@@ -24,6 +24,13 @@ module.exports = {
       build:
         "xcodebuild CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ -workspace ../example/ios/KeyboardControllerExample.xcworkspace -scheme KeyboardControllerExample -configuration Release -sdk iphonesimulator -derivedDataPath ../example/ios/build",
     },
+    "example-fabric.ios.release": {
+      type: "ios.app",
+      binaryPath:
+        "../FabricExample/ios/build/Build/Products/Release-iphonesimulator/KeyboardControllerFabricExample.app",
+      build:
+        "xcodebuild CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ -workspace ../FabricExample/ios/KeyboardControllerFabricExample.xcworkspace -scheme KeyboardControllerFabricExample -configuration Release -sdk iphonesimulator -derivedDataPath ../FabricExample/ios/build",
+    },
     "example.android.debug": {
       type: "android.apk",
       binaryPath:
@@ -113,6 +120,10 @@ module.exports = {
     "example.ios.sim-17.release": {
       device: "simulator17",
       app: "example.ios.release",
+    },
+    "example-fabric.ios.sim-17.release": {
+      device: "simulator17",
+      app: "example-fabric.ios.release",
     },
     "example.ios.sim-18.debug": {
       device: "simulator18",
