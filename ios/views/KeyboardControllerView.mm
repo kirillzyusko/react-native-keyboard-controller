@@ -23,7 +23,7 @@
 #import <react/renderer/components/reactnativekeyboardcontroller/EventEmitters.h>
 #import <react/renderer/components/reactnativekeyboardcontroller/Props.h>
 #import <react/renderer/components/reactnativekeyboardcontroller/RCTComponentViewHelpers.h>
-#import <reactnativekeyboardcontroller/RNKCKeyboardControllerViewComponentDescriptor.h>
+#import <react/renderer/components/reactnativekeyboardcontroller/RNKCKeyboardControllerViewComponentDescriptor.h>
 
 #import "KeyboardControllerModule-Header.h"
 #import "RCTFabricComponentsPlugins.h"
