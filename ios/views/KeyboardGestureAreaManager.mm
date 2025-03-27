@@ -17,7 +17,7 @@
 #import <react/renderer/components/reactnativekeyboardcontroller/EventEmitters.h>
 #import <react/renderer/components/reactnativekeyboardcontroller/Props.h>
 #import <react/renderer/components/reactnativekeyboardcontroller/RCTComponentViewHelpers.h>
-#import <reactnativekeyboardcontroller/RNKCKeyboardGestureAreaComponentDescriptor.h>
+#import <react/renderer/components/reactnativekeyboardcontroller/RNKCKeyboardGestureAreaComponentDescriptor.h>
 
 #import "RCTFabricComponentsPlugins.h"
 #endif
