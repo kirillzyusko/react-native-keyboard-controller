@@ -7,4 +7,7 @@ export interface NativeProps extends ViewProps {}
 
 export default codegenNativeComponent<NativeProps>(
   "KeyboardToolbarExcludeView",
+  {
+    interfaceOnly: true,
+  },
 ) as HostComponent<NativeProps>;

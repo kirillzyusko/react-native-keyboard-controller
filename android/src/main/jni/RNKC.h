@@ -15,6 +15,7 @@
 #include <react/renderer/components/RNKC/RNKCOverKeyboardViewComponentDescriptor.h>
 #include <react/renderer/components/RNKC/RNKCKeyboardBackgroundViewComponentDescriptor.h>
 #include <react/renderer/components/RNKC/RNKCClippingScrollViewDecoratorViewComponentDescriptor.h>
+#include <react/renderer/components/RNKC/RNKCKeyboardToolbarExcludeViewComponentDescriptor.h>
 
 #include <memory>
 #include <string>

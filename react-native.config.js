@@ -8,6 +8,7 @@ module.exports = {
           "OverKeyboardViewComponentDescriptor",
           "KeyboardBackgroundViewComponentDescriptor",
           "ClippingScrollViewDecoratorViewComponentDescriptor",
+          "KeyboardToolbarExcludeViewComponentDescriptor",
         ],
         cmakeListsPath: "../android/src/main/jni/CMakeLists.txt",
       },
