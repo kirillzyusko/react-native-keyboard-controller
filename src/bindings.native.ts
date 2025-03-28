@@ -60,3 +60,5 @@ export const KeyboardGestureArea: React.FC<KeyboardGestureAreaProps> =
     : ({ children }: KeyboardGestureAreaProps) => children;
 export const RCTOverKeyboardView: React.FC<OverKeyboardViewProps> =
   require("./specs/OverKeyboardViewNativeComponent").default;
+export const RCTKeyboardToolbarExcludeView: React.FC<OverKeyboardViewProps> =
+  require("./specs/KeyboardToolbarExcludeViewNativeComponent").default;
