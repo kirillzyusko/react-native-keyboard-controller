@@ -90,6 +90,11 @@
   border-left-color: #ffff0080;
 }
 
+.svg {
+  height: 100%;
+  width: 50%;
+}
+
 .description-block {
   padding-right: 20px;
 }
