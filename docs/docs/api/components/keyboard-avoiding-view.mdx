@@ -175,12 +175,12 @@ If you are using translucent `StatusBar` on Android, then `StatusBar` padding ge
 If you are not using translucent `StatusBar`, then you need to include `StatusBar` height yourself:
 
 ```tsx
-const headerHeight = useHeaderHeight() + StatusBar.currentHeight;
+const headerHeight = useHeaderHeight() + (StatusBar.currentHeight ?? 0);
 ```
 
 <blockquote>
-  `StatusBar.currentHeight` is always `0` on iOS, so you don't need to write
-  platform-specific code here using `Platform.OS` or `Platform.select`.
+  `StatusBar.currentHeight` is Android-only prop so you can use `?? 0` and don't
+  write platform-specific code using `Platform.OS` or `Platform.select`.
 </blockquote>
 
 :::
