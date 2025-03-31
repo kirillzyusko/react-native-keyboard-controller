@@ -132,8 +132,57 @@ A boolean prop indicating whether `KeyboardAvoidingView` is enabled or disabled.
 
 ### `keyboardVerticalOffset`
 
-This is the distance between the top of the user screen and the react native view, may be non-zero in some use cases. Default is `0`.
+This is the distance between the top of the user screen and the react native view This is particularly useful when there are fixed headers, navigation bars, or other UI elements at the top of the screen. Default is `0`.
 
 import KeyboardVerticalOffset from "@site/src/components/KeyboardVerticalOffset";
 
+<details>
+  <summary>When to use `keyboardVerticalOffset`?</summary>
+
+You should use `keyboardVerticalOffset` in the following scenarios:
+
+- **Navigation Bars / Headers** - If your screen is inside a `Stack.Navigator` from `react-navigation`, the header height should be compensated using `keyboardVerticalOffset`:
+
+```tsx
+import { useHeaderHeight } from "@react-navigation/elements";
+import { KeyboardAvoidingView } from "react-native-keyboard-controller";
+
+const MyScreen = () => {
+  const headerHeight = useHeaderHeight();
+
+  return (
+    <KeyboardAvoidingView
+      behavior="padding"
+      keyboardVerticalOffset={headerHeight}
+    >
+      <TextInput placeholder="Type here..." />
+    </KeyboardAvoidingView>
+  );
+};
+```
+
+- **Custom Toolbars or Fixed Elements at the Top** - If your app has a fixed toolbar, status bar, or other UI elements at the top, you should offset accordingly.
+
+- **Modal Screens with Different Layouts** - When using `KeyboardAvoidingView` inside a `Modal`, you may need to manually define the vertical offset to account for the modal’s positioning.
+
+Below shown a visual representation of `keyboardVerticalOffset`:
+
 <KeyboardVerticalOffset />
+
+:::warning Translucent `StatusBar`
+If you are using translucent `StatusBar` on Android, then `StatusBar` padding gets handled by `react-navigation` automatically and it will include safe-area padding in `useHeaderHeight` (i. e. `StatusBar` height will be included in the returned value and it will match iOS behavior).
+
+If you are not using translucent `StatusBar`, then you need to include `StatusBar` height yourself:
+
+```tsx
+const headerHeight = useHeaderHeight() + StatusBar.currentHeight;
+```
+
+<blockquote>
+  `StatusBar.currentHeight` is always `0` on iOS, so you don't need to write
+  platform-specific code here using `Platform.OS` or `Platform.select`.
+</blockquote>
+
+:::
+
+</details>

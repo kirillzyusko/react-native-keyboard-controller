@@ -10,9 +10,10 @@ export default function KeyboardVerticalOffsetIcon() {
   return (
     <div className="center">
       {colorMode === "dark" ? (
-      <KeyboardVerticalOffsetDark className="svg" />
+        <KeyboardVerticalOffsetDark className="svg" />
       ) : (
-      <KeyboardVerticalOffsetLight className="svg" />)}
+        <KeyboardVerticalOffsetLight className="svg" />
+      )}
     </div>
   );
 }
