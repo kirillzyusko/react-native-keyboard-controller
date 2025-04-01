@@ -132,7 +132,7 @@ A boolean prop indicating whether `KeyboardAvoidingView` is enabled or disabled.
 
 ### `keyboardVerticalOffset`
 
-This is the distance between the top of the user screen and the react native view This is particularly useful when there are fixed headers, navigation bars, or other UI elements at the top of the screen. Default is `0`.
+This is the distance between the top of the user screen and the react native view. This is particularly useful when there are fixed headers, navigation bars, or other UI elements at the top of the screen. Default is `0`.
 
 import KeyboardVerticalOffset from "@site/src/components/KeyboardVerticalOffset";
 
@@ -169,19 +169,17 @@ Below shown a visual representation of `keyboardVerticalOffset`:
 
 <KeyboardVerticalOffset />
 
-:::warning Translucent `StatusBar`
-If you are using translucent `StatusBar` on Android, then `StatusBar` padding gets handled by `react-navigation` automatically and it will include safe-area padding in `useHeaderHeight` (i. e. `StatusBar` height will be included in the returned value and it will match iOS behavior).
+:::warning Handling `StatusBar` height on Android with `useHeaderHeight`
+On `Android`, how you handle the `StatusBar` height depends on whether the `StatusBar` is **translucent** or **not**:
 
-If you are not using translucent `StatusBar`, then you need to include `StatusBar` height yourself:
+- **If the `StatusBar` is translucent**, `react-navigation` **automatically includes the `StatusBar` height** in `useHeaderHeight()`, along with safe-area padding. This behavior aligns with iOS, so you don’t need to manually add the `StatusBar` height.
+- **If the StatusBar is not translucent**, `useHeaderHeight()` does **not** include the `StatusBar` height. In this case, you need to add it manually:
 
 ```tsx
 const headerHeight = useHeaderHeight() + (StatusBar.currentHeight ?? 0);
 ```
 
-<blockquote>
-  `StatusBar.currentHeight` is Android-only prop so you can use `?? 0` and don't
-  write platform-specific code using `Platform.OS` or `Platform.select`.
-</blockquote>
+Since `StatusBar.currentHeight` is an **Android-only** property, using `?? 0` ensures it doesn’t cause issues on iOS. This approach avoids the need for `Platform.OS` or `Platform.select` checks.
 
 :::
 
