@@ -8,11 +8,14 @@ sidebar_position: 4
 `useKeyboardState` is a hook which gives an access to current keyboard state.
 
 :::warning
-Use this hook only when you need to change props of views that you return from render. If you need to read keyboard state in callbacks/event handlers then consider to use [KeyboardController.state()](../../keyboard-controller.md#state) method to get values on demand and avoid unnecessary re-renders.
+Use this hook only when you need to control `props` of views returned in JSX-markup. If you need to access the keyboard `state` in callbacks or event handlers then consider to use [KeyboardController.state()](../../keyboard-controller.md#state) method instead. This allows you to retrieve values as needed without triggering unnecessary re-renders.
 
-<div class="code-grid">
-<div class="code-block">
+<div className="code-grid">
+<div className="code-block">
+
 ```tsx title="✅ Recommended 👍"
+// use KeyboardController.state()
+
 <Button
   onPress={() => {
     const state = KeyboardController.state();
@@ -24,10 +27,13 @@ Use this hook only when you need to change props of views that you return from r
   Go to Next Page
 </Button>
 ```
+
 </div>
-<div class="code-block">
+<div className="code-block">
+
 ```tsx title="❌ Not recommended 🙅‍♂️"
-const {isVisible} = useKeyboardState();
+const { isVisible } = useKeyboardState();
+
 <Button
   onPress={() => {
     // don't consume state from hook
@@ -37,8 +43,9 @@ const {isVisible} = useKeyboardState();
   }}
 >
   Go to next Page
-</Button>
+</Button>;
 ```
+
 </div>
 </div>
 
@@ -51,12 +58,18 @@ const {isVisible} = useKeyboardState();
 ## Example
 
 ```tsx
+import { View, Text, StyleSheet } from "react-native";
 import { useKeyboardState } from "react-native-keyboard-controller";
 
-const { isVisible } = useKeyboardState();
+const ShowcaseComponent = () => {
+  const { isVisible } = useKeyboardState();
 
-<View style={isVisible ? styles.highlighted : null}>
-</View>
+  return (
+    <View style={isVisible ? styles.highlighted : null}>
+      <Text>Address form</Text>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   highlighted: {
