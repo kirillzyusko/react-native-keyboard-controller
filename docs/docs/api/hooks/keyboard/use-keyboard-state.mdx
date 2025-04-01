@@ -19,7 +19,7 @@ Use this hook only when you need to control `props` of views returned in JSX-mar
 <Button
   onPress={() => {
     const state = KeyboardController.state();
-    if (state?.isVisible) {
+    if (state.isVisible) {
       // ...
     }
   }}

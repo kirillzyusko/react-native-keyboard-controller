@@ -93,7 +93,7 @@ if (KeyboardController.isVisible()) {
 ### `state`
 
 ```ts
-static state(): KeyboardState | null;
+static state(): KeyboardState;
 ```
 
 This method returns the last keyboard state. It returns `null` if keyboard was not shown in the app yet.

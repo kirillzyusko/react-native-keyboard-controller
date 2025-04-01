@@ -5,13 +5,16 @@ import { KeyboardController } from "../../module";
 
 const EVENTS = ["keyboardDidShow", "keyboardDidHide"] as const;
 
-// TODO: expose isVisible, isTransitioning (isHiding/isShowing) props?
 export const useKeyboardState = () => {
   const [state, setState] = useState(() => KeyboardController.state());
 
   useEffect(() => {
     const subscriptions = EVENTS.map((event) =>
-      KeyboardEvents.addListener(event, setState),
+      KeyboardEvents.addListener(event, () =>
+        // state will be updated by global listener first,
+        // so we simply read it and don't derive data from the event
+        setState(KeyboardController.state()),
+      ),
     );
 
     // we might have missed an update between reading a value in render and

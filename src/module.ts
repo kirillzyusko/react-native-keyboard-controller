@@ -8,15 +8,17 @@ import type {
 } from "./types";
 
 let isClosed = true;
-let lastEvent: KeyboardState | null = null;
+let lastState: KeyboardState = {
+  isVisible: false,
+  height: 0,
+  duration: 0,
+  timestamp: new Date().getTime(),
+  target: -1,
+  type: "default",
+  appearance: "default",
+};
 
-const getKeyboardStateFromEvent = (
-  event: KeyboardEventData | null,
-): KeyboardState | null => {
-  if (event === null) {
-    return null;
-  }
-
+const getKeyboardStateFromEvent = (event: KeyboardEventData): KeyboardState => {
   return {
     isVisible: event.height > 0,
     ...event,
@@ -25,12 +27,12 @@ const getKeyboardStateFromEvent = (
 
 KeyboardEvents.addListener("keyboardDidHide", (e) => {
   isClosed = true;
-  lastEvent = getKeyboardStateFromEvent(e);
+  lastState = getKeyboardStateFromEvent(e);
 });
 
 KeyboardEvents.addListener("keyboardDidShow", (e) => {
   isClosed = false;
-  lastEvent = getKeyboardStateFromEvent(e);
+  lastState = getKeyboardStateFromEvent(e);
 });
 
 const dismiss = async (options?: DismissOptions): Promise<void> => {
@@ -52,7 +54,7 @@ const dismiss = async (options?: DismissOptions): Promise<void> => {
   });
 };
 const isVisible = () => !isClosed;
-const state = () => lastEvent;
+const state = () => lastState;
 
 export const KeyboardController: KeyboardControllerModule = {
   setDefaultMode: KeyboardControllerNative.setDefaultMode,
