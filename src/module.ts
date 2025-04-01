@@ -4,19 +4,33 @@ import type {
   DismissOptions,
   KeyboardControllerModule,
   KeyboardEventData,
+  KeyboardState,
 } from "./types";
 
 let isClosed = true;
-let lastEvent: KeyboardEventData | null = null;
+let lastEvent: KeyboardState | null = null;
+
+const getKeyboardStateFromEvent = (
+  event: KeyboardEventData | null,
+): KeyboardState | null => {
+  if (event === null) {
+    return null;
+  }
+
+  return {
+    isVisible: event.height > 0,
+    ...event,
+  };
+};
 
 KeyboardEvents.addListener("keyboardDidHide", (e) => {
   isClosed = true;
-  lastEvent = e;
+  lastEvent = getKeyboardStateFromEvent(e);
 });
 
 KeyboardEvents.addListener("keyboardDidShow", (e) => {
   isClosed = false;
-  lastEvent = e;
+  lastEvent = getKeyboardStateFromEvent(e);
 });
 
 const dismiss = async (options?: DismissOptions): Promise<void> => {
