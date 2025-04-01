@@ -93,10 +93,24 @@ if (KeyboardController.isVisible()) {
 ### `state`
 
 ```ts
-static state(): KeyboardEventData | null;
+static state(): KeyboardState;
 ```
 
 This method returns the last keyboard state. It returns `null` if keyboard was not shown in the app yet.
+
+The `KeyboardState` is represented by following structure:
+
+```ts
+type KeyboardState = {
+  isVisible: boolean;
+  height: number;
+  duration: number; // duration of the animation
+  timestamp: number; // timestamp of the event from native thread
+  target: number; // tag of the focused `TextInput`
+  type: string; // `keyboardType` property from focused `TextInput`
+  appearance: string; // `keyboardAppearance` property from focused `TextInput`
+};
+```
 
 ### `setFocusTo`
 

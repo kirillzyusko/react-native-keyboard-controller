@@ -6,6 +6,7 @@ keywords:
     react-native-reanimated,
     react hook,
   ]
+sidebar_position: 2
 ---
 
 # useReanimatedKeyboardAnimation

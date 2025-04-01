@@ -1,0 +1,81 @@
+---
+keywords: [react-native-keyboard-controller, useKeyboardState, react hook]
+sidebar_position: 4
+---
+
+# useKeyboardState
+
+`useKeyboardState` is a hook which gives an access to current keyboard state.
+
+:::warning
+Use this hook only when you need to control `props` of views returned in JSX-markup. If you need to access the keyboard `state` in callbacks or event handlers then consider to use [KeyboardController.state()](../../keyboard-controller.md#state) method instead. This allows you to retrieve values as needed without triggering unnecessary re-renders.
+
+<div className="code-grid">
+<div className="code-block">
+
+```tsx title="✅ Recommended 👍"
+// use KeyboardController.state()
+
+<Button
+  onPress={() => {
+    const state = KeyboardController.state();
+    if (state.isVisible) {
+      // ...
+    }
+  }}
+>
+  Go to Next Page
+</Button>
+```
+
+</div>
+<div className="code-block">
+
+```tsx title="❌ Not recommended 🙅‍♂️"
+const { isVisible } = useKeyboardState();
+
+<Button
+  onPress={() => {
+    // don't consume state from hook
+    if (isVisible) {
+      // ...
+    }
+  }}
+>
+  Go to next Page
+</Button>;
+```
+
+</div>
+</div>
+
+:::
+
+## Data structure
+
+`useKeyboardState` returns a [`KeyboardState`](../../keyboard-controller.md#state) object.
+
+## Example
+
+```tsx
+import { View, Text, StyleSheet } from "react-native";
+import { useKeyboardState } from "react-native-keyboard-controller";
+
+const ShowcaseComponent = () => {
+  const { isVisible } = useKeyboardState();
+
+  return (
+    <View style={isVisible ? styles.highlighted : null}>
+      <Text>Address form</Text>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  highlighted: {
+    borderColor: "#0070D8",
+  },
+});
+```
+
+Also have a look on [example](https://github.com/kirillzyusko/react-native-keyboard-controller/tree/main/example) app for more comprehensive usage.

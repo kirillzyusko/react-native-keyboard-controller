@@ -129,4 +129,10 @@ export const examples: Example[] = [
     info: ScreenNames.IMAGE_GALLERY,
     icons: "🖼️",
   },
+  {
+    title: "useKeyboardState",
+    testID: "use_keyboard_State",
+    info: ScreenNames.USE_KEYBOARD_STATE,
+    icons: "📝",
+  },
 ];

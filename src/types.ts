@@ -159,6 +159,9 @@ export type KeyboardEventData = {
   type: NonNullable<TextInputProps["keyboardType"]>;
   appearance: NonNullable<TextInputProps["keyboardAppearance"]>;
 };
+export type KeyboardState = {
+  isVisible: boolean;
+} & KeyboardEventData;
 export type KeyboardEventsModule = {
   addListener: (
     name: KeyboardControllerEvents,

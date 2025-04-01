@@ -13,6 +13,7 @@ import InteractiveKeyboard from "../../screens/Examples/InteractiveKeyboard";
 import InteractiveKeyboardIOS from "../../screens/Examples/InteractiveKeyboardIOS";
 import KeyboardAnimation from "../../screens/Examples/KeyboardAnimation";
 import KeyboardAvoidingViewExample from "../../screens/Examples/KeyboardAvoidingView";
+import UseKeyboardState from "../../screens/Examples/KeyboardStateHook";
 import LottieAnimation from "../../screens/Examples/Lottie";
 import ModalExample from "../../screens/Examples/Modal";
 import NonUIProps from "../../screens/Examples/NonUIProps";
@@ -46,6 +47,7 @@ export type ExamplesStackParamList = {
   [ScreenNames.BOTTOM_TAB_BAR]: undefined;
   [ScreenNames.OVER_KEYBOARD_VIEW]: undefined;
   [ScreenNames.IMAGE_GALLERY]: undefined;
+  [ScreenNames.USE_KEYBOARD_STATE]: undefined;
 };
 
 const Stack = createStackNavigator<ExamplesStackParamList>();
@@ -114,6 +116,9 @@ const options = {
   },
   [ScreenNames.IMAGE_GALLERY]: {
     title: "Image gallery",
+  },
+  [ScreenNames.USE_KEYBOARD_STATE]: {
+    title: "useKeyboardState",
   },
 };
 
@@ -223,6 +228,11 @@ const ExamplesStack = () => (
       component={ImageGallery}
       name={ScreenNames.IMAGE_GALLERY}
       options={options[ScreenNames.IMAGE_GALLERY]}
+    />
+    <Stack.Screen
+      component={UseKeyboardState}
+      name={ScreenNames.USE_KEYBOARD_STATE}
+      options={options[ScreenNames.USE_KEYBOARD_STATE]}
     />
   </Stack.Navigator>
 );
