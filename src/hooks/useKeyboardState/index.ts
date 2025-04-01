@@ -3,20 +3,15 @@ import { useEffect, useState } from "react";
 import { KeyboardEvents } from "../../bindings";
 import { KeyboardController } from "../../module";
 
+const EVENTS = ["keyboardDidShow", "keyboardDidHide"] as const;
+
 // TODO: expose isVisible, isTransitioning (isHiding/isShowing) props?
 export const useKeyboardState = () => {
-  const [state, setState] = useState(KeyboardController.state());
+  const [state, setState] = useState(() => KeyboardController.state());
 
   useEffect(() => {
-    const didShowSubscription = KeyboardEvents.addListener(
-      "keyboardDidShow",
-      (e) => {
-        setState(e);
-      },
-    );
-    const didHideSubscription = KeyboardEvents.addListener(
-      "keyboardDidHide",
-      (e) => setState(e),
+    const subscriptions = EVENTS.map((event) =>
+      KeyboardEvents.addListener(event, setState),
     );
 
     // we might have missed an update between reading a value in render and
@@ -25,8 +20,7 @@ export const useKeyboardState = () => {
     setState(KeyboardController.state());
 
     return () => {
-      didShowSubscription.remove();
-      didHideSubscription.remove();
+      subscriptions.forEach((subscription) => subscription.remove());
     };
   }, []);
 
