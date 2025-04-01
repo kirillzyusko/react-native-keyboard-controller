@@ -54,6 +54,12 @@ const trustedBy = [
     name: "Ignite",
   },
   {
+    img: "https://avatars.githubusercontent.com/u/48327834?s=200&v=4",
+    alt: "Rainbow Mobile App",
+    link: "https://github.com/rainbow-me/rainbow",
+    name: "Rainbow",
+  },
+  {
     img: "https://avatars.githubusercontent.com/u/95456295?s=200&v=4",
     alt: "RSSNext Follow app",
     link: "https://github.com/RSSNext/Follow",
