@@ -2,15 +2,15 @@
 /* eslint-disable max-lines */
 
 import React, { forwardRef, useCallback, useMemo } from "react";
-import { findNodeHandle } from "react-native";
+import { Platform, findNodeHandle } from "react-native";
 import Reanimated, {
   cancelAnimation,
   interpolate,
   scrollTo,
   useAnimatedReaction,
   useAnimatedRef,
+  useAnimatedScrollHandler,
   useAnimatedStyle,
-  useScrollViewOffset,
   useSharedValue,
   withSpring,
   withTiming,
@@ -116,44 +116,119 @@ const KeyboardAwareScrollView = forwardRef<
   ) => {
     const scrollViewAnimatedRef = useAnimatedRef<Reanimated.ScrollView>();
     const scrollViewTarget = useSharedValue<number | null>(null);
-    const scrollPosition = useSharedValue(0);
-    const position = useScrollViewOffset(scrollViewAnimatedRef);
     const currentKeyboardFrameHeight = useSharedValue(0);
-    const keyboardHeight = useSharedValue(0);
+    const keyboardHeight = useSharedValue(500);
     const keyboardWillAppear = useSharedValue(false);
     const tag = useSharedValue(-1);
-    const initialKeyboardSize = useSharedValue(0);
     const scrollBeforeKeyboardMovement = useSharedValue(0);
     const { input } = useReanimatedFocusedInput();
     const layout = useSharedValue<FocusedInputLayoutChangedEvent | null>(null);
     const scrollY = useSharedValue(0);
     const cursorOffset = useSharedValue(0);
-    const initialInputY = useSharedValue(0);
     const scrollViewLayout = useSharedValue({ height: 0, y: 0 });
     const scrollGoal = useSharedValue(0);
-
+    const scrollOffsetY = useSharedValue(0);
+    const isKeyboardVisible = useSharedValue(false);
     const { height } = useWindowDimensions();
+
+    const isScrolling = useSharedValue(false);
+    const scrollHandler = useAnimatedScrollHandler((event) => {
+      // ignore eslint because https://github.com/facebook/react/issues/29640
+      // eslint-disable-next-line react-compiler/react-compiler
+      scrollOffsetY.value = event.contentOffset.y;
+    });
 
     const scrollToPos = (y: number, animated: boolean, spring?: boolean) => {
       "worklet";
 
       const goal = scrollDistanceWithRespectToSnapPoints(y, snapToOffsets);
 
-      if (scrollGoal.value === goal) {
+      if (!isKeyboardVisible.value) {
+        console.log(
+          "Keyboard is not visible.",
+          "Goal:",
+          goal,
+          "Current:",
+          scrollOffsetY.value,
+        );
+
         return;
       }
-      // ignore eslint because https://github.com/facebook/react/issues/29640
-      // eslint-disable-next-line react-compiler/react-compiler
-      scrollY.value = scrollPosition.value;
+      if (scrollGoal.value === goal) {
+        console.log(
+          "goal is the same as current.",
+          "Goal:",
+          goal,
+          "Current:",
+          scrollOffsetY.value,
+        );
+
+        if (isScrolling.value) {
+          console.log(
+            "Scrolling is in progress.",
+            "Goal:",
+            goal,
+            "Current:",
+            scrollOffsetY.value,
+          );
+
+          return;
+        }
+      }
+      if (goal === scrollOffsetY.value) {
+        console.log(
+          "Already at target position.",
+          "Goal:",
+          goal,
+          "Current:",
+          scrollOffsetY.value,
+        );
+
+        return;
+      }
+
+      scrollY.value = scrollOffsetY.value;
+
       cancelAnimation(scrollY);
+
       scrollGoal.value = goal;
 
       if (!animated) {
         scrollGoal.value = goal;
       }
+      isScrolling.value = true;
+      console.log(
+        "Starting scroll:",
+        "Goal:",
+        goal,
+        "Current:",
+        scrollOffsetY.value,
+        "Distance:",
+        Math.abs(scrollOffsetY.value - goal),
+      );
       scrollY.value = spring
-        ? withSpring(goal, { damping: 100, stiffness: 100 })
-        : withTiming(goal);
+        ? withSpring(goal, { damping: 100, stiffness: 100 }, (finished) => {
+            console.log(
+              "Goal:",
+              goal,
+              "Current:",
+              scrollOffsetY.value,
+              "Finished:",
+              finished,
+            );
+            isScrolling.value = false;
+          })
+        : withTiming(goal, undefined, (finished) => {
+            console.log(
+              "Goal:",
+              goal,
+              "Current:",
+              scrollOffsetY.value,
+              "Finished:",
+              finished,
+            );
+            isScrolling.value = false;
+          });
     };
     const onRef = useCallback((assignedRef: Reanimated.ScrollView) => {
       if (typeof ref === "function") {
@@ -192,9 +267,10 @@ const KeyboardAwareScrollView = forwardRef<
         if (closeKeyboard) {
           const targetScrollY = scrollBeforeKeyboardMovement.value;
 
+          console.log("Handle Close");
           scrollToPos(targetScrollY, animated, true);
 
-          return targetScrollY - scrollPosition.value;
+          return targetScrollY - scrollOffsetY.value;
         }
 
         const visibleRect =
@@ -212,27 +288,38 @@ const KeyboardAwareScrollView = forwardRef<
           if (keyboardWillAppear.value || tag.value !== -1) {
             const targetScroll = Math.max(
               0,
-              scrollPosition.value + (targetPosition - visibleRect),
+              scrollOffsetY.value + (targetPosition - visibleRect),
             );
 
-            scrollToPos(targetScroll, animated, keyboardWillAppear.value);
+            console.log(
+              "Handle open or focus change.",
+              "isKeyboardVisible:",
+              isKeyboardVisible.value,
+            );
 
-            return targetScroll - scrollPosition.value;
+            scrollToPos(
+              targetScroll,
+              animated,
+              keyboardWillAppear.value && Platform.OS === "ios",
+            );
+
+            return targetScroll - scrollOffsetY.value;
           }
 
           // Scroll when cursor position is outside visible area
           if (targetPosition > visibleRect || targetPosition < 0) {
             const targetScroll = Math.max(
               0,
-              scrollPosition.value +
+              scrollOffsetY.value +
                 (targetPosition > visibleRect
                   ? targetPosition - visibleRect
                   : targetPosition),
             );
 
+            console.log("Handle cursor position");
             scrollToPos(targetScroll, animated);
 
-            return targetScroll - scrollPosition.value;
+            return targetScroll - scrollOffsetY.value;
           }
 
           return 0;
@@ -242,11 +329,12 @@ const KeyboardAwareScrollView = forwardRef<
         if (visibleRect - point <= bottomOffset) {
           const relativeScrollTo =
             keyboardHeight.value - (height - point) + bottomOffset;
-          const targetScrollY = relativeScrollTo + scrollPosition.value;
+          const targetScrollY = relativeScrollTo + scrollOffsetY.value;
 
+          console.log("Handle partial visibility");
           scrollToPos(targetScrollY, animated);
 
-          return targetScrollY - scrollPosition.value;
+          return targetScrollY - scrollOffsetY.value;
         }
 
         return 0;
@@ -275,6 +363,8 @@ const KeyboardAwareScrollView = forwardRef<
 
         // Skip if there's no input layout available
         if (!input.value?.layout) {
+          console.log("No input layout available");
+
           return;
         }
 
@@ -287,7 +377,8 @@ const KeyboardAwareScrollView = forwardRef<
             height: customHeight ?? input.value.layout.height,
           },
         };
-        scrollPosition.value = position.value;
+        console.log("Handle scroll from current position");
+
         maybeScroll(true);
         layout.value = prevLayout;
       },
@@ -314,6 +405,7 @@ const KeyboardAwareScrollView = forwardRef<
         inputHeight > visibleRect - bottomOffset ||
         visibleRect - point <= bottomOffset
       ) {
+        console.log("Handle text change");
         scrollFromCurrentPosition();
       }
     }, [bottomOffset]);
@@ -330,6 +422,7 @@ const KeyboardAwareScrollView = forwardRef<
 
         // Scroll if input is taller than visible area
         if (inputHeight > visibleRect - bottomOffset) {
+          console.log("Handle selection change");
           scrollFromCurrentPosition();
         }
       },
@@ -354,6 +447,7 @@ const KeyboardAwareScrollView = forwardRef<
         onStart: (e) => {
           "worklet";
 
+          isKeyboardVisible.value = e.height > 0;
           syncKeyboardFrame(e);
           const keyboardWillChangeSize =
             keyboardHeight.value !== e.height && e.height > 0;
@@ -368,26 +462,20 @@ const KeyboardAwareScrollView = forwardRef<
 
           // Reset keyboard size and restore scroll position when keyboard hides
           if (keyboardWillHide) {
-            initialKeyboardSize.value = 0;
-
             if (!disableScrollOnKeyboardHide) {
-              scrollPosition.value = scrollBeforeKeyboardMovement.value;
-              position.value += maybeScroll(true, true);
+              scrollY.value = scrollBeforeKeyboardMovement.value;
+              console.log("Handle keyboard hide");
+              maybeScroll(true, true && Platform.OS === "ios");
             }
           }
 
           // Store scroll position when keyboard appears
           if (keyboardWillAppear.value) {
-            scrollBeforeKeyboardMovement.value = position.value;
+            scrollBeforeKeyboardMovement.value = scrollOffsetY.value;
           }
 
           // Update scroll position when keyboard size changes or focus changes
-          if (
-            keyboardWillAppear.value ||
-            keyboardWillChangeSize ||
-            focusWasChanged
-          ) {
-            scrollPosition.value = position.value;
+          if (keyboardWillChangeSize) {
             keyboardHeight.value = e.height;
           }
 
@@ -395,26 +483,24 @@ const KeyboardAwareScrollView = forwardRef<
           if (keyboardWillAppear.value) {
             currentKeyboardFrameHeight.value = e.height + extraKeyboardSpace;
 
-            requestAnimationFrame(() => {
-              if (focusWasChanged) {
-                tag.value = e.target;
-                layout.value = input.value;
-                initialInputY.value = layout.value?.layout.absoluteY || 0;
+            if (focusWasChanged) {
+              tag.value = e.target;
+              layout.value = input.value;
 
-                if (e.height > 0) {
-                  position.value += maybeScroll(true);
-                }
+              if (isKeyboardVisible.value) {
+                console.log("Handle initial keyboard appearance");
+                maybeScroll(true);
               }
-            });
+            }
           } else {
             // Handle focus changes without keyboard appearance
             if (focusWasChanged) {
               tag.value = e.target;
               layout.value = input.value;
-              initialInputY.value = layout.value?.layout.absoluteY || 0;
 
-              if (e.height > 0) {
-                position.value += maybeScroll(true);
+              if (isKeyboardVisible.value) {
+                console.log("Handle focus change");
+                maybeScroll(true);
               }
             }
           }
@@ -428,7 +514,6 @@ const KeyboardAwareScrollView = forwardRef<
         onEnd: (e) => {
           "worklet";
           keyboardHeight.value = e.height;
-          scrollPosition.value = position.value;
 
           syncKeyboardFrame(e);
         },
@@ -457,7 +542,8 @@ const KeyboardAwareScrollView = forwardRef<
           const cursorPosition = absoluteY + cursorOffset.value;
 
           if (cursorPosition > visibleBottom - bottomOffset) {
-            scrollPosition.value += maybeScroll(true);
+            console.log("Handle input height change");
+            maybeScroll(true);
           }
 
           layout.value = prevLayout;
@@ -486,6 +572,7 @@ const KeyboardAwareScrollView = forwardRef<
         {...rest}
         scrollEventThrottle={16}
         onLayout={onScrollViewLayout}
+        onScroll={scrollHandler}
       >
         {children}
         <Reanimated.View style={view} />
