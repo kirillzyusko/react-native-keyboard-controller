@@ -36,6 +36,7 @@ export const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: "black",
     borderRadius: 8,
+    maxHeight: undefined,
     paddingHorizontal: 12,
   },
 });

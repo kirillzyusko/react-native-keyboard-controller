@@ -8,7 +8,7 @@ type CustomTextInputProps = {
 } & TextInputProps;
 
 const TextInput = (props: CustomTextInputProps) => {
-  const { title, ...rest } = props;
+  const { title, style, ...rest } = props;
 
   return (
     <>
@@ -17,7 +17,11 @@ const TextInput = (props: CustomTextInputProps) => {
         multiline
         numberOfLines={2}
         placeholderTextColor="#6c6c6c"
-        style={[styles.container, rest.editable === false && styles.disabled]}
+        style={[
+          styles.container,
+          style,
+          rest.editable === false && styles.disabled,
+        ]}
         testID={rest.placeholder}
         {...rest}
         placeholder={`${rest.placeholder} (${
