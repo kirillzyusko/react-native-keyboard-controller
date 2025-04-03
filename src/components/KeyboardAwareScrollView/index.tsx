@@ -23,7 +23,7 @@ import {
 } from "../../hooks";
 
 import { useSmoothKeyboardHandler } from "./useSmoothKeyboardHandler";
-import { debounce, scrollDistanceWithRespectToSnapPoints } from "./utils";
+import { debounce, log, scrollDistanceWithRespectToSnapPoints } from "./utils";
 
 import type {
   LayoutChangeEvent,
@@ -144,7 +144,7 @@ const KeyboardAwareScrollView = forwardRef<
       const goal = scrollDistanceWithRespectToSnapPoints(y, snapToOffsets);
 
       if (!isKeyboardVisible.value) {
-        console.log(
+        log(
           "Keyboard is not visible.",
           "Goal:",
           goal,
@@ -155,7 +155,7 @@ const KeyboardAwareScrollView = forwardRef<
         return;
       }
       if (scrollGoal.value === goal) {
-        console.log(
+        log(
           "goal is the same as current.",
           "Goal:",
           goal,
@@ -164,7 +164,7 @@ const KeyboardAwareScrollView = forwardRef<
         );
 
         if (isScrolling.value) {
-          console.log(
+          log(
             "Scrolling is in progress.",
             "Goal:",
             goal,
@@ -176,7 +176,7 @@ const KeyboardAwareScrollView = forwardRef<
         }
       }
       if (goal === scrollOffsetY.value) {
-        console.log(
+        log(
           "Already at target position.",
           "Goal:",
           goal,
@@ -197,7 +197,7 @@ const KeyboardAwareScrollView = forwardRef<
         scrollGoal.value = goal;
       }
       isScrolling.value = true;
-      console.log(
+      log(
         "Starting scroll:",
         "Goal:",
         goal,
@@ -208,7 +208,7 @@ const KeyboardAwareScrollView = forwardRef<
       );
       scrollY.value = spring
         ? withSpring(goal, { damping: 100, stiffness: 100 }, (finished) => {
-            console.log(
+            log(
               "Goal:",
               goal,
               "Current:",
@@ -219,7 +219,7 @@ const KeyboardAwareScrollView = forwardRef<
             isScrolling.value = false;
           })
         : withTiming(goal, undefined, (finished) => {
-            console.log(
+            log(
               "Goal:",
               goal,
               "Current:",
@@ -267,7 +267,7 @@ const KeyboardAwareScrollView = forwardRef<
         if (closeKeyboard) {
           const targetScrollY = scrollBeforeKeyboardMovement.value;
 
-          console.log("Handle Close");
+          log("Handle Close");
           scrollToPos(targetScrollY, animated, true);
 
           return targetScrollY - scrollOffsetY.value;
@@ -291,7 +291,7 @@ const KeyboardAwareScrollView = forwardRef<
               scrollOffsetY.value + (targetPosition - visibleRect),
             );
 
-            console.log(
+            log(
               "Handle open or focus change.",
               "isKeyboardVisible:",
               isKeyboardVisible.value,
@@ -316,7 +316,7 @@ const KeyboardAwareScrollView = forwardRef<
                   : targetPosition),
             );
 
-            console.log("Handle cursor position");
+            log("Handle cursor position");
             scrollToPos(targetScroll, animated);
 
             return targetScroll - scrollOffsetY.value;
@@ -331,7 +331,7 @@ const KeyboardAwareScrollView = forwardRef<
             keyboardHeight.value - (height - point) + bottomOffset;
           const targetScrollY = relativeScrollTo + scrollOffsetY.value;
 
-          console.log("Handle partial visibility");
+          log("Handle partial visibility");
           scrollToPos(targetScrollY, animated);
 
           return targetScrollY - scrollOffsetY.value;
@@ -363,7 +363,7 @@ const KeyboardAwareScrollView = forwardRef<
 
         // Skip if there's no input layout available
         if (!input.value?.layout) {
-          console.log("No input layout available");
+          log("No input layout available");
 
           return;
         }
@@ -377,7 +377,7 @@ const KeyboardAwareScrollView = forwardRef<
             height: customHeight ?? input.value.layout.height,
           },
         };
-        console.log("Handle scroll from current position");
+        log("Handle scroll from current position");
 
         maybeScroll(true);
         layout.value = prevLayout;
@@ -405,7 +405,7 @@ const KeyboardAwareScrollView = forwardRef<
         inputHeight > visibleRect - bottomOffset ||
         visibleRect - point <= bottomOffset
       ) {
-        console.log("Handle text change");
+        log("Handle text change");
         scrollFromCurrentPosition();
       }
     }, [bottomOffset]);
@@ -422,7 +422,7 @@ const KeyboardAwareScrollView = forwardRef<
 
         // Scroll if input is taller than visible area
         if (inputHeight > visibleRect - bottomOffset) {
-          console.log("Handle selection change");
+          log("Handle selection change");
           scrollFromCurrentPosition();
         }
       },
@@ -464,7 +464,7 @@ const KeyboardAwareScrollView = forwardRef<
           if (keyboardWillHide) {
             if (!disableScrollOnKeyboardHide) {
               scrollY.value = scrollBeforeKeyboardMovement.value;
-              console.log("Handle keyboard hide");
+              log("Handle keyboard hide");
               maybeScroll(true, true && Platform.OS === "ios");
             }
           }
@@ -488,7 +488,7 @@ const KeyboardAwareScrollView = forwardRef<
               layout.value = input.value;
 
               if (isKeyboardVisible.value) {
-                console.log("Handle initial keyboard appearance");
+                log("Handle initial keyboard appearance");
                 maybeScroll(true);
               }
             }
@@ -499,7 +499,7 @@ const KeyboardAwareScrollView = forwardRef<
               layout.value = input.value;
 
               if (isKeyboardVisible.value) {
-                console.log("Handle focus change");
+                log("Handle focus change");
                 maybeScroll(true);
               }
             }
@@ -542,7 +542,7 @@ const KeyboardAwareScrollView = forwardRef<
           const cursorPosition = absoluteY + cursorOffset.value;
 
           if (cursorPosition > visibleBottom - bottomOffset) {
-            console.log("Handle input height change");
+            log("Handle input height change");
             maybeScroll(true);
           }
 
