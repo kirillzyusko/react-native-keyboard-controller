@@ -1,7 +1,7 @@
 import React, { forwardRef, useMemo } from "react";
 import { Animated } from "react-native";
 
-import { useKeyboardAnimation } from "react-native-keyboard-controller";
+import { useKeyboardAnimation } from "../../hooks";
 
 import type { View, ViewProps } from "react-native";
 
