@@ -1,7 +1,10 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
-import { FocusedInputEvents } from "../../bindings";
+import {
+  FocusedInputEvents,
+  RCTKeyboardToolbarExcludeView,
+} from "../../bindings";
 import { KeyboardController } from "../../module";
 import useColorScheme from "../hooks/useColorScheme";
 import KeyboardStickyView from "../KeyboardStickyView";
@@ -71,11 +74,15 @@ const TEST_ID_KEYBOARD_TOOLBAR_DONE = `${TEST_ID_KEYBOARD_TOOLBAR}.done`;
 const KEYBOARD_TOOLBAR_HEIGHT = 42;
 const DEFAULT_OPACITY: HEX = "FF";
 
+type KeyboardToolbarComponent = {
+  Exclude: typeof RCTKeyboardToolbarExcludeView;
+} & React.FC<KeyboardToolbarProps>;
+
 /**
  * `KeyboardToolbar` is a component that is shown above the keyboard with `Prev`/`Next` and
  * `Done` buttons.
  */
-const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
+const KeyboardToolbar: KeyboardToolbarComponent = ({
   content,
   theme = colors,
   doneText = "Done",
@@ -221,6 +228,8 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
     </KeyboardStickyView>
   );
 };
+
+KeyboardToolbar.Exclude = RCTKeyboardToolbarExcludeView;
 
 const styles = StyleSheet.create({
   flex: {
