@@ -235,7 +235,7 @@ public class FocusedInputObserver: NSObject {
     } else if let textView = input as? UITextView {
       if !(textView.delegate is KCTextInputCompositeDelegate) {
         delegate.setTextViewDelegate(delegate: textView.delegate)
-        (textView as? RCTUITextView)?.setForceDelegate(delegate)
+        textView.setForceDelegate(delegate)
       }
     }
     // dispatch onSelectionChange on focus
@@ -248,7 +248,7 @@ public class FocusedInputObserver: NSObject {
     if let textField = input as? UITextField, let oldDelegate = delegate.activeDelegate as? UITextFieldDelegate {
       textField.delegate = oldDelegate
     } else if let textView = input as? UITextView, let oldDelegate = delegate.activeDelegate as? UITextViewDelegate {
-      (textView as? RCTUITextView)?.setForceDelegate(oldDelegate)
+      textView.setForceDelegate(oldDelegate)
     }
   }
 

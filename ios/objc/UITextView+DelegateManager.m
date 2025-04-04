@@ -1,14 +1,14 @@
 //
-//  RCTUITextView+DelegateManager.m
+//  UITextView+DelegateManager.m
 //  react-native-keyboard-controller
 //
 //  Created by Kiryl Ziusko on 24/04/2024.
 //
 
 #import <objc/runtime.h>
-#import "RCTUITextView+DelegateManager.h"
+#import "UITextView+DelegateManager.h"
 
-@implementation RCTUITextView (DelegateManager)
+@implementation UITextView (DelegateManager)
 
 /**
  * We are aware that delegate is set by RN on mount and we can not re-define it
