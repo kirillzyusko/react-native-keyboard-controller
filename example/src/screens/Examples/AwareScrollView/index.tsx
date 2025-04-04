@@ -13,10 +13,6 @@ import type { StackScreenProps } from "@react-navigation/stack";
 type Props = StackScreenProps<ExamplesStackParamList>;
 const snapToOffsets = [125, 225, 325, 425, 525, 625];
 
-const BIG_TEXT_TWO = `Where does it come from?
-Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the certain source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of The Extremes of Good and Evil by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit..", comes from a line in section 1.10.32.
-`;
-
 const BIG_TEXT = `Where does it come from?
 Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the certain source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of The Extremes of Good and Evil by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit..", comes from a line in section 1.10.32.
 
@@ -93,9 +89,10 @@ export default function AwareScrollView({ navigation }: Props) {
           </>
         )}
 
-        {new Array(5).fill(0).map((_, i) => (
+        {new Array(10).fill(0).map((_, i) => (
           <TextInput
             key={i}
+            contextMenuHidden={i === 4 && Platform.OS === "ios"}
             keyboardType={i % 2 === 0 ? "numeric" : "default"}
             placeholder={`TextInput#${i}`}
             onChangeText={setText}
@@ -103,21 +100,6 @@ export default function AwareScrollView({ navigation }: Props) {
         ))}
         <TextInput
           defaultValue={BIG_TEXT}
-          placeholder="TextInput#4"
-          style={styles.input}
-          onChangeText={setText}
-        />
-        {new Array(5).fill(0).map((_, i) => (
-          <TextInput
-            key={i + 5}
-            contextMenuHidden={i === 4 && Platform.OS === "ios"}
-            keyboardType={i % 2 === 0 ? "numeric" : "default"}
-            placeholder={`TextInput#${i + 5}`}
-            onChangeText={setText}
-          />
-        ))}
-        <TextInput
-          defaultValue={BIG_TEXT_TWO}
           placeholder="TextInput#10"
           style={styles.input}
           onChangeText={setText}
