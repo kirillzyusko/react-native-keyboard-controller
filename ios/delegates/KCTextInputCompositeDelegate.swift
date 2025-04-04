@@ -50,6 +50,8 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
   // delegates
   weak var textViewDelegate: UITextViewDelegate?
   weak var textFieldDelegate: UITextFieldDelegate?
+  // state
+  private var isCheckingRespondsTo = false
 
   // Keep track of which textField we’re observing (iOS < 13 only)
   private weak var observedTextFieldForSelection: UITextField?
@@ -194,6 +196,10 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
   // MARK: call forwarding
 
   override func responds(to aSelector: Selector!) -> Bool {
+    guard !isCheckingRespondsTo else { return false }
+    isCheckingRespondsTo = true
+    defer { isCheckingRespondsTo = false }
+
     if super.responds(to: aSelector) {
       return true
     }
