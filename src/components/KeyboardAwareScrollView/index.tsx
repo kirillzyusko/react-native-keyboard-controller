@@ -126,6 +126,7 @@ const KeyboardAwareScrollView = forwardRef<
     const scrollY = useSharedValue(0);
     const cursorOffset = useSharedValue(0);
     const scrollViewLayout = useSharedValue({ height: 0, y: 0 });
+    const scrollableHeight = useSharedValue(0); // Add this line
     const scrollGoal = useSharedValue(0);
     const scrollOffsetY = useSharedValue(0);
     const isKeyboardVisible = useSharedValue(false);
@@ -197,7 +198,6 @@ const KeyboardAwareScrollView = forwardRef<
       }
       isScrolling.value = true;
       log(
-        "Starting scroll:",
         "Goal:",
         goal,
         "Current:",
@@ -212,12 +212,28 @@ const KeyboardAwareScrollView = forwardRef<
         keyboardWillAppear.value,
         "is keyboard visible:",
         isKeyboardVisible.value,
-
+        "scrollableHeight:",
+        scrollableHeight.value - scrollViewLayout.value.height,
         "keyboardHeight:",
         keyboardHeight.value,
         "keyboardFrameHeight:",
         currentKeyboardFrameHeight.value,
       );
+
+      // Edge Case - Android Only
+      if (
+        Math.round(Math.abs(scrollOffsetY.value - goal)) ===
+          keyboardHeight.value &&
+        Math.round(scrollableHeight.value - scrollViewLayout.value.height) ===
+          Math.round(scrollOffsetY.value) &&
+        Platform.OS === "android"
+      ) {
+        log("Keyboard is at the bottom of the scroll view.");
+        // on Android, when at the bottom of the scroll view, it can not scroll
+        // to the goal position when keyboard is opening.
+        // This is a workaround to scroll to the goal position
+        scrollY.value = goal - keyboardHeight.value;
+      }
       scrollY.value = spring
         ? withSpring(goal, { damping: 100, stiffness: 100 }, (finished) => {
             log(
@@ -225,6 +241,10 @@ const KeyboardAwareScrollView = forwardRef<
               goal,
               "Current:",
               scrollOffsetY.value,
+              "EndingPosition:",
+              scrollY.value,
+              "Distance From Goal:",
+              Math.abs(scrollOffsetY.value - goal),
               "Finished:",
               finished,
             );
@@ -236,6 +256,10 @@ const KeyboardAwareScrollView = forwardRef<
               goal,
               "Current:",
               scrollOffsetY.value,
+              "EndingPosition:",
+              scrollY.value,
+              "Distance From Goal:",
+              Math.abs(scrollOffsetY.value - goal),
               "Finished:",
               finished,
             );
@@ -263,6 +287,13 @@ const KeyboardAwareScrollView = forwardRef<
       [onLayout],
     );
 
+    const onContentSizeChange = useCallback(
+      (_: number, newScrollableHeight: number) => {
+        scrollableHeight.value = newScrollableHeight;
+      },
+      [],
+    );
+
     const maybeScroll = useCallback(
       (animated: boolean = false, closeKeyboard?: boolean) => {
         "worklet";
@@ -272,6 +303,10 @@ const KeyboardAwareScrollView = forwardRef<
           !enabled ||
           layout.value?.parentScrollViewTarget !== scrollViewTarget.value
         ) {
+          log(
+            "Scrolling is disabled or input does not belong to this scroll view.",
+          );
+
           return 0;
         }
 
@@ -359,8 +394,9 @@ const KeyboardAwareScrollView = forwardRef<
         "worklet";
 
         if (Platform.OS === "android") {
-          currentKeyboardFrameHeight.value =
-            e.height > 0 ? keyboardHeight.value + extraKeyboardSpace : 0;
+          currentKeyboardFrameHeight.value = isKeyboardVisible.value
+            ? keyboardHeight.value + extraKeyboardSpace
+            : 0;
 
           return;
         }
@@ -467,8 +503,7 @@ const KeyboardAwareScrollView = forwardRef<
       {
         onStart: (e) => {
           "worklet";
-
-          isKeyboardVisible.value = e.height > 0;
+          log("[useSmoothKeyboardHandler] onStart", e);
 
           const keyboardWillChangeSize =
             keyboardHeight.value !== e.height && e.height > 0;
@@ -484,19 +519,26 @@ const KeyboardAwareScrollView = forwardRef<
             keyboardHeight.value = e.height;
           }
 
-          keyboardWillAppear.value = e.height > 0;
-
+          keyboardWillAppear.value = e.height > 0 && !isKeyboardVisible.value;
+          isKeyboardVisible.value = e.height > 0;
           const keyboardWillHide = e.height === 0;
+
+          if (Platform.OS === "android") {
+            currentKeyboardFrameHeight.value = isKeyboardVisible.value
+              ? keyboardHeight.value + extraKeyboardSpace
+              : 0;
+          }
 
           const focusWasChanged =
             (tag.value !== e.target && e.target !== -1) ||
-            keyboardWillChangeSize;
+            keyboardWillChangeSize ||
+            keyboardWillAppear.value;
 
           // Reset keyboard size and restore scroll position when keyboard hides
           if (keyboardWillHide) {
             if (!disableScrollOnKeyboardHide) {
-              scrollY.value = scrollBeforeKeyboardMovement.value;
               log("Handle keyboard hide");
+
               maybeScroll(true, true);
 
               return;
@@ -519,16 +561,17 @@ const KeyboardAwareScrollView = forwardRef<
         },
         onMove: (e) => {
           "worklet";
+          // log("[useSmoothKeyboardHandler] onMove", e);
           syncKeyboardFrame(e);
         },
 
         onEnd: (e) => {
           "worklet";
+          log("[useSmoothKeyboardHandler] onEnd", e);
 
           if (e.height > 0) {
             keyboardHeight.value = e.height;
           }
-          scrollY.value = scrollOffsetY.value;
           keyboardWillAppear.value = false;
           syncKeyboardFrame(e);
         },
@@ -593,6 +636,7 @@ const KeyboardAwareScrollView = forwardRef<
         ref={onRef}
         {...rest}
         scrollEventThrottle={16}
+        onContentSizeChange={onContentSizeChange}
         onLayout={onScrollViewLayout}
         onScroll={scrollHandler}
       >
