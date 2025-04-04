@@ -140,6 +140,10 @@ const KeyboardAwareScrollView = forwardRef<
         // eslint-disable-next-line react-compiler/react-compiler
         scrollOffsetY.value = event.contentOffset.y;
       },
+      onBeginDrag: () => {
+        log("onBeginDrag - cancel any animations");
+        cancelAnimation(scrollY);
+      },
       onMomentumEnd: () => {
         log("onMomentumEnd");
         scrollY.value = scrollOffsetY.value;
