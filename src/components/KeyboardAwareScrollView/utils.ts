@@ -40,3 +40,14 @@ export const scrollDistanceWithRespectToSnapPoints = (
 
   return snapPoint ?? defaultScrollValue;
 };
+
+const __DEV__ = process.env.NODE_ENV === "development";
+const ENABLE_LOGGING = false;
+
+export const log = (...args: unknown[]) => {
+  "worklet";
+
+  if (__DEV__ && ENABLE_LOGGING) {
+    console.log("[KeyboardAwareScrollView]", ...args);
+  }
+};
