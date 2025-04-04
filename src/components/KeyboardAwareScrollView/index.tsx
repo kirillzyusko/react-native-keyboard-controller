@@ -132,10 +132,17 @@ const KeyboardAwareScrollView = forwardRef<
     const { height } = useWindowDimensions();
 
     const isScrolling = useSharedValue(false);
-    const scrollHandler = useAnimatedScrollHandler((event) => {
-      // ignore eslint because https://github.com/facebook/react/issues/29640
-      // eslint-disable-next-line react-compiler/react-compiler
-      scrollOffsetY.value = event.contentOffset.y;
+    const scrollHandler = useAnimatedScrollHandler({
+      onScroll: (event) => {
+        log("onSCroll");
+        // ignore eslint because https://github.com/facebook/react/issues/29640
+        // eslint-disable-next-line react-compiler/react-compiler
+        scrollOffsetY.value = event.contentOffset.y;
+      },
+      onMomentumEnd: () => {
+        log("onMomentumEnd");
+        scrollY.value = scrollOffsetY.value;
+      },
     });
 
     const scrollToPos = (y: number, animated: boolean, spring?: boolean) => {
@@ -143,24 +150,15 @@ const KeyboardAwareScrollView = forwardRef<
 
       const goal = scrollDistanceWithRespectToSnapPoints(y, snapToOffsets);
 
-      if (!isKeyboardVisible.value) {
-        log(
-          "Keyboard is not visible.",
-          "Goal:",
-          goal,
-          "Current:",
-          scrollOffsetY.value,
-        );
-
-        return;
-      }
       if (scrollGoal.value === goal) {
         log(
-          "goal is the same as current.",
+          "goal is within buffer zone of previous.",
           "Goal:",
           goal,
           "Current:",
           scrollOffsetY.value,
+          "StartingPosition:",
+          scrollY.value,
         );
 
         if (isScrolling.value) {
@@ -170,6 +168,8 @@ const KeyboardAwareScrollView = forwardRef<
             goal,
             "Current:",
             scrollOffsetY.value,
+            "StartingPosition:",
+            scrollY.value,
           );
 
           return;
@@ -182,13 +182,12 @@ const KeyboardAwareScrollView = forwardRef<
           goal,
           "Current:",
           scrollOffsetY.value,
+          "StartingPosition:",
+          scrollY.value,
         );
 
         return;
       }
-
-      scrollY.value = scrollOffsetY.value;
-
       cancelAnimation(scrollY);
 
       scrollGoal.value = goal;
@@ -203,8 +202,21 @@ const KeyboardAwareScrollView = forwardRef<
         goal,
         "Current:",
         scrollOffsetY.value,
-        "Distance:",
+        "StartingPosition:",
+        scrollY.value,
+        "Distance From Goal:",
         Math.abs(scrollOffsetY.value - goal),
+        "Distance From Start:",
+        Math.abs(scrollOffsetY.value - scrollY.value),
+        "Is keyboard opening:",
+        keyboardWillAppear.value,
+        "is keyboard visible:",
+        isKeyboardVisible.value,
+
+        "keyboardHeight:",
+        keyboardHeight.value,
+        "keyboardFrameHeight:",
+        currentKeyboardFrameHeight.value,
       );
       scrollY.value = spring
         ? withSpring(goal, { damping: 100, stiffness: 100 }, (finished) => {
@@ -267,7 +279,7 @@ const KeyboardAwareScrollView = forwardRef<
         if (closeKeyboard) {
           const targetScrollY = scrollBeforeKeyboardMovement.value;
 
-          log("Handle Close");
+          log("Handle Keyboard Close");
           scrollToPos(targetScrollY, animated, true);
 
           return targetScrollY - scrollOffsetY.value;
@@ -346,6 +358,13 @@ const KeyboardAwareScrollView = forwardRef<
       (e: NativeEvent) => {
         "worklet";
 
+        if (Platform.OS === "android") {
+          currentKeyboardFrameHeight.value =
+            e.height > 0 ? keyboardHeight.value + extraKeyboardSpace : 0;
+
+          return;
+        }
+
         const keyboardFrame = interpolate(
           e.height,
           [0, keyboardHeight.value],
@@ -390,6 +409,8 @@ const KeyboardAwareScrollView = forwardRef<
 
       // Skip if layout height changed to avoid duplicate handling
       if (layout.value?.layout.height !== input.value?.layout.height) {
+        log("Layout height changed, skipping scroll on change text");
+
         return;
       }
 
@@ -448,11 +469,22 @@ const KeyboardAwareScrollView = forwardRef<
           "worklet";
 
           isKeyboardVisible.value = e.height > 0;
-          syncKeyboardFrame(e);
+
           const keyboardWillChangeSize =
             keyboardHeight.value !== e.height && e.height > 0;
 
-          keyboardWillAppear.value = e.height > 0 && keyboardHeight.value === 0;
+          if (keyboardWillChangeSize) {
+            log(
+              "keyboard changed size",
+              "from",
+              keyboardHeight.value,
+              "to",
+              e.height,
+            );
+            keyboardHeight.value = e.height;
+          }
+
+          keyboardWillAppear.value = e.height > 0;
 
           const keyboardWillHide = e.height === 0;
 
@@ -465,7 +497,9 @@ const KeyboardAwareScrollView = forwardRef<
             if (!disableScrollOnKeyboardHide) {
               scrollY.value = scrollBeforeKeyboardMovement.value;
               log("Handle keyboard hide");
-              maybeScroll(true, true && Platform.OS === "ios");
+              maybeScroll(true, true);
+
+              return;
             }
           }
 
@@ -474,47 +508,28 @@ const KeyboardAwareScrollView = forwardRef<
             scrollBeforeKeyboardMovement.value = scrollOffsetY.value;
           }
 
-          // Update scroll position when keyboard size changes or focus changes
-          if (keyboardWillChangeSize) {
-            keyboardHeight.value = e.height;
-          }
+          // Handle focus changes without keyboard appearance
+          if (focusWasChanged) {
+            tag.value = e.target;
+            layout.value = input.value;
 
-          // Handle initial keyboard appearance
-          if (keyboardWillAppear.value) {
-            currentKeyboardFrameHeight.value = e.height + extraKeyboardSpace;
-
-            if (focusWasChanged) {
-              tag.value = e.target;
-              layout.value = input.value;
-
-              if (isKeyboardVisible.value) {
-                log("Handle initial keyboard appearance");
-                maybeScroll(true);
-              }
-            }
-          } else {
-            // Handle focus changes without keyboard appearance
-            if (focusWasChanged) {
-              tag.value = e.target;
-              layout.value = input.value;
-
-              if (isKeyboardVisible.value) {
-                log("Handle focus change");
-                maybeScroll(true);
-              }
-            }
+            log("Handle focus change");
+            maybeScroll(true);
           }
         },
         onMove: (e) => {
           "worklet";
           syncKeyboardFrame(e);
-          keyboardWillAppear.value = false;
         },
 
         onEnd: (e) => {
           "worklet";
-          keyboardHeight.value = e.height;
 
+          if (e.height > 0) {
+            keyboardHeight.value = e.height;
+          }
+          scrollY.value = scrollOffsetY.value;
+          keyboardWillAppear.value = false;
           syncKeyboardFrame(e);
         },
       },
@@ -542,7 +557,14 @@ const KeyboardAwareScrollView = forwardRef<
           const cursorPosition = absoluteY + cursorOffset.value;
 
           if (cursorPosition > visibleBottom - bottomOffset) {
-            log("Handle input height change");
+            log(
+              "Handle input height change",
+              cursorPosition,
+              ">",
+              visibleBottom,
+              "-",
+              bottomOffset,
+            );
             maybeScroll(true);
           }
 
