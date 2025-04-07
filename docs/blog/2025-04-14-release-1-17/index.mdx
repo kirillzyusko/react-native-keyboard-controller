@@ -1,0 +1,48 @@
+---
+slug: use-keyboard-state
+title: Meet new 1.17 release with useKeyboardState hook 👋
+authors: [kirill]
+tags: [react-native, keyboard, useKeyboardState]
+keywords: [react-native-keyboard-controller, useKeyboardState]
+---
+
+Say hello to new `1.17.0` release of `react-native-keyboard-controller` 👋
+
+This update is packed with new hook, custom C++ shadow nodes and of course bug-fixing 😎.
+
+Let’s dive in and explore what’s new! 👇
+
+<div className="playwright center">
+  <img
+    className="svg"
+    src={require("./use-keyboard-state.png").default}
+    alt="Example banner"
+  />
+</div>
+
+<!-- truncate -->
+
+## New `useKeyboardState` hook 🔥
+
+Since the very first version of this library this package could expose keyboard events via `KeyboardEvents` module. However many people had to create their own wrapper around that module to map the value to `ref` or `state` variable. In the `1.15.0` release a new API `KeyboardController.state()` was added that allowed to read the keyboard state without creating a listener in callback function. However if developers wanted to change state based on keyboard presence (for example to render something conditionally) they had to utilize `KeyboardEvents` directly and write boilerplate code.
+
+Starting from this release it's not needed anymore and you can use `useKeyboardState` hook to get the keyboard state in a declarative way.
+
+Along with adding the new hook I made some adjustments to `KeyboardController.state()` to use it in a more convenient way. Starting from now that method always returns a defined value and it's not necessary to write optional chaining to get the actual keyboard state!
+
+## Custom C++ Shadow Nodes
+
+When new `OverKeyboardView` was added we had an issue on Android/Fabric - the view couldn't be stretched to full screen size. This is because all layout now is calculated in C++ and if you want to change the size of your component you have to push that state in C++. The new approach with dealing with shadow nodes require changes in linking and overall it's a pretty big piece of work, so back in times I decided to publish `OverKeyboardView` as is (in general that component had also many changes so gradual release was a good strategy). Now when new architecture became a default in RN I had to address that issue, so starting from this release I include custom (not auto-generated) shadow-nodes.
+
+If you encounter any build issues make sure to make a [clean](https://github.com/kirillzyusko/react-native-keyboard-controller/issues/786#issuecomment-2741464142) build and try again. If you continue to encounter build issues after upgrading to the latest version, please open an [issue](https://github.com/kirillzyusko/react-native-keyboard-controller/issues/new?template=bug_report.md) and I'll try to help you.
+
+## What's next?
+
+As always, my immediate priority is addressing open issues. Additionally, I have plans for upcoming updates:
+
+- Adding support for `react-native@0.79`;
+- Most likely a new component `KeyboardExtender` will be added that will be embedded directly into the keyboard;
+- Adding `KeyboardToolbar.Group` component for splitting up many inputs into separate groups and have a separate state and navigation between those groups.
+- A major rewrite of `KeyboardAwareScrollView` to use cursor positioning instead of layout.
+
+Stay tuned and follow me on [Twitter](https://twitter.com/ziusko) and [GitHub](https://github.com/kirillzyusko) for updates. Thank you for your support! 😊
