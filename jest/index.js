@@ -29,14 +29,17 @@ const focusedInput = {
     set: jest.fn(),
   },
 };
-const state = {
-  isVisible: false,
+const lastKeyboardEvent = {
   height: 0,
   duration: 0,
   timestamp: 0,
   target: 0,
   type: "default",
   appearance: "default",
+};
+const state = {
+  ...lastKeyboardEvent,
+  isVisible: false,
 };
 
 const mock = {
@@ -65,7 +68,7 @@ const mock = {
     dismiss: jest.fn().mockReturnValue(Promise.resolve()),
     setFocusTo: jest.fn(),
     isVisible: jest.fn().mockReturnValue(false),
-    state: jest.fn().mockReturnValue(state),
+    state: jest.fn().mockReturnValue(lastKeyboardEvent),
   },
   AndroidSoftInputModes: {
     SOFT_INPUT_ADJUST_NOTHING: 48,
