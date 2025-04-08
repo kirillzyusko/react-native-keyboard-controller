@@ -8,41 +8,53 @@ keywords: [react-native-keyboard-controller, useKeyboardState]
 
 Say hello to new `1.17.0` release of `react-native-keyboard-controller` 👋
 
-This update is packed with new hook, custom C++ shadow nodes and of course bug-fixing 😎.
+This update brings a powerful new hook, custom C++ shadow nodes, and of course, plenty of bug fixes 😎
 
-Let’s dive in and explore what’s new! 👇
+Let’s take a closer look at what’s new 👇
 
 <div className="playwright center">
   <img
     className="svg"
     src={require("./use-keyboard-state.png").default}
-    alt="Example banner"
+    alt="Phone with visible keyboard and arrow to useKeyboardState"
   />
 </div>
 
 <!-- truncate -->
 
-## New `useKeyboardState` hook 🔥
+## 🔥 New `useKeyboardState` hook
 
-Since the very first version of this library this package could expose keyboard events via `KeyboardEvents` module. However many people had to create their own wrapper around that module to map the value to `ref` or `state` variable. In the `1.15.0` release a new API `KeyboardController.state()` was added that allowed to read the keyboard state without creating a listener in callback function. However if developers wanted to change state based on keyboard presence (for example to render something conditionally) they had to utilize `KeyboardEvents` directly and write boilerplate code.
+Since the very first version, this library has provided keyboard events via the `KeyboardEvents` module. But many developers ended up writing their own wrappers to sync those events with `ref` or `state` variables.
 
-Starting from this release it's not needed anymore and you can use `useKeyboardState` hook to get the keyboard state in a declarative way.
+In version `1.15.0`, the `KeyboardController.state()` API was introduced to read the keyboard state without needing a listener. However, if you wanted to react to keyboard changes (like conditionally rendering a component) you still had to use `KeyboardEvents` and deal with boilerplate code.
 
-Along with adding the new hook I made some adjustments to `KeyboardController.state()` to use it in a more convenient way. Starting from now that method always returns a defined value and it's not necessary to write optional chaining to get the actual keyboard state!
+**That’s no longer the case!** With this release, you can use the new `useKeyboardState` hook to track the keyboard in a clean, declarative way. 🎉
 
-## Custom C++ Shadow Nodes
+Also, `KeyboardController.state()` has been improved — it now always returns a defined value, so you no longer need optional chaining to safely access the keyboard state.
 
-When new `OverKeyboardView` was added we had an issue on Android/Fabric - the view couldn't be stretched to full screen size. This is because all layout now is calculated in C++ and if you want to change the size of your component you have to push that state in C++. The new approach with dealing with shadow nodes require changes in linking and overall it's a pretty big piece of work, so back in times I decided to publish `OverKeyboardView` as is (in general that component had also many changes so gradual release was a good strategy). Now when new architecture became a default in RN I had to address that issue, so starting from this release I include custom (not auto-generated) shadow-nodes.
+## 🧱 Custom C++ Shadow Nodes
 
-If you encounter any build issues make sure to make a [clean](https://github.com/kirillzyusko/react-native-keyboard-controller/issues/786#issuecomment-2741464142) build and try again. If you continue to encounter build issues after upgrading to the latest version, please open an [issue](https://github.com/kirillzyusko/react-native-keyboard-controller/issues/new?template=bug_report.md) and I'll try to help you.
+When `OverKeyboardView` was introduced, there was an issue on Android/Fabric: the view couldn’t stretch to full screen. That’s because layout is now calculated in C++, and resizing your component requires updating state in C++ as well.
 
-## What's next?
+At the time, I released `OverKeyboardView` with this limitation since there were a lot of other moving pieces — and gradual rollout was the right choice. But now that the new architecture is the default in React Native, it’s time to address the problem.
 
-As always, my immediate priority is addressing open issues. Additionally, I have plans for upcoming updates:
+Starting with this release, custom (non-auto-generated) C++ shadow nodes are included. This makes `OverKeyboardView` work as expected under the Fabric renderer.
 
-- Adding support for `react-native@0.79`;
-- Most likely a new component `KeyboardExtender` will be added that will be embedded directly into the keyboard;
-- Adding `KeyboardToolbar.Group` component for splitting up many inputs into separate groups and have a separate state and navigation between those groups.
-- A major rewrite of `KeyboardAwareScrollView` to use cursor positioning instead of layout.
+> ⚠️ **If you hit any build issues, make a [clean](https://github.com/kirillzyusko/react-native-keyboard-controller/issues/786#issuecomment-2741464142) build and try again. Still having problems? Open an [issue](https://github.com/kirillzyusko/react-native-keyboard-controller/issues/new?template=bug_report.md) and I’ll help you out.**
+
+## ✨ Summary
+
+This is a relatively small release focused on tightening up the internals and laying the groundwork for future updates.
+
+While it doesn’t introduce any game-changing features, it plays an important role in ensuring that custom C++ shadow nodes can be successfully integrated across projects using the new React Native architecture. Think of it as a bridge release — stabilizing key parts of the system to unlock bigger things coming soon 🙌
+
+## 🚀 What's next?
+
+As always, my top priority is resolving open issues. Beyond that, here’s what’s coming up:
+
+- Support for `react-native@0.79`;
+- A new `KeyboardExtender` component that gets embedded directly into the keyboard;
+- KeyboardToolbar.Group` component to split multiple inputs into groups, each with its own navigation and state;
+- A complete rewrite of `KeyboardAwareScrollView` that will use cursor position instead of layout-based detection.
 
 Stay tuned and follow me on [Twitter](https://twitter.com/ziusko) and [GitHub](https://github.com/kirillzyusko) for updates. Thank you for your support! 😊
