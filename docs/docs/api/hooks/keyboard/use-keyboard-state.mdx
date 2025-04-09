@@ -5,21 +5,21 @@ sidebar_position: 4
 
 # useKeyboardState
 
-`useKeyboardState` is a hook which gives an access to current keyboard state.
+`useKeyboardState` is a hook which gives an access to current keyboard state. This hook combines data from `KeyboardController.state()` and `KeyboardController.isVisible()` methods and makes it reactive (i. e. triggers a re-render when keyboard state/visibility has changed).
 
 :::warning
-Use this hook only when you need to control `props` of views returned in JSX-markup. If you need to access the keyboard `state` in callbacks or event handlers then consider to use [KeyboardController.state()](../../keyboard-controller.md#state) method instead. This allows you to retrieve values as needed without triggering unnecessary re-renders.
+Use this hook only when you need to control `props` of views returned in JSX-markup. If you need to access the keyboard `state` in callbacks or event handlers then consider to use [KeyboardController.state()](../../keyboard-controller.md#state) or [KeyboardController.isVisible()](../../keyboard-controller.md#isvisible) methods instead. This allows you to retrieve values as needed without triggering unnecessary re-renders.
 
 <div className="code-grid">
 <div className="code-block">
 
 ```tsx title="✅ Recommended 👍"
-// use KeyboardController.state()
+// use KeyboardController.isVisible()
 
 <Button
   onPress={() => {
-    const state = KeyboardController.state();
-    if (state.isVisible) {
+    // read value on demand
+    if (KeyboardController.isVisible()) {
       // ...
     }
   }}
@@ -51,9 +51,25 @@ const { isVisible } = useKeyboardState();
 
 :::
 
+:::tip
+Also make sure that if you need to change style based on keyboard presence then you are using corresponding [animated](./use-keyboard-animation) hooks to offload animation to a native thread and free up resources for JS thread.
+:::
+
 ## Data structure
 
-`useKeyboardState` returns a [`KeyboardState`](../../keyboard-controller.md#state) object.
+The `KeyboardState` is represented by following structure:
+
+```ts
+type KeyboardState = {
+  isVisible: boolean;
+  height: number;
+  duration: number; // duration of the animation
+  timestamp: number; // timestamp of the event from native thread
+  target: number; // tag of the focused `TextInput`
+  type: string; // `keyboardType` property from focused `TextInput`
+  appearance: string; // `keyboardAppearance` property from focused `TextInput`
+};
+```
 
 ## Example
 

@@ -93,16 +93,15 @@ if (KeyboardController.isVisible()) {
 ### `state`
 
 ```ts
-static state(): KeyboardState;
+static state(): KeyboardEventData;
 ```
 
 This method returns the last keyboard state. It returns `null` if keyboard was not shown in the app yet.
 
-The `KeyboardState` is represented by following structure:
+The `KeyboardEventData` is represented by following structure:
 
 ```ts
-type KeyboardState = {
-  isVisible: boolean;
+type KeyboardEventData = {
   height: number;
   duration: number; // duration of the animation
   timestamp: number; // timestamp of the event from native thread
