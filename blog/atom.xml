@@ -2,11 +2,53 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://kirillzyusko.github.io/react-native-keyboard-controller/blog</id>
     <title>Keyboard Controller Blog</title>
-    <updated>2025-01-27T00:00:00.000Z</updated>
+    <updated>2025-04-09T00:00:00.000Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog"/>
     <subtitle>Keyboard Controller Blog</subtitle>
     <icon>https://kirillzyusko.github.io/react-native-keyboard-controller/favicon.ico</icon>
+    <entry>
+        <title type="html"><![CDATA[Meet new 1.17 release with useKeyboardState hook 👋]]></title>
+        <id>https://kirillzyusko.github.io/react-native-keyboard-controller/blog/use-keyboard-state</id>
+        <link href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/use-keyboard-state"/>
+        <updated>2025-04-09T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[Say hello to new 1.17.0 release of react-native-keyboard-controller 👋]]></summary>
+        <content type="html"><![CDATA[<p>Say hello to new <code>1.17.0</code> release of <code>react-native-keyboard-controller</code> 👋</p>
+<p>This update brings a powerful new hook, custom C++ shadow nodes, and of course, plenty of bug fixes 😎</p>
+<p>Let’s take a closer look at what’s new 👇</p>
+<div class="playwright center"><img class="svg" src="https://kirillzyusko.github.io/react-native-keyboard-controller/assets/images/use-keyboard-state-147782c03c92b23356da2e7a8f5b051d.png" alt="Phone with visible keyboard and arrow to useKeyboardState"></div>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="-new-usekeyboardstate-hook">🔥 New <code>useKeyboardState</code> hook<a class="hash-link" aria-label="Direct link to -new-usekeyboardstate-hook" title="Direct link to -new-usekeyboardstate-hook" href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/use-keyboard-state#-new-usekeyboardstate-hook">​</a></h2>
+<p>Since the very first version, this library has provided keyboard events via the <code>KeyboardEvents</code> module. But many developers ended up writing their own wrappers to sync those events with <code>ref</code> or <code>state</code> variables.</p>
+<p>In version <code>1.15.0</code>, the <code>KeyboardController.state()</code> API was introduced to read the keyboard state without needing a listener. However, if you wanted to react to keyboard changes (like conditionally rendering a component) you still had to use <code>KeyboardEvents</code> and deal with boilerplate code.</p>
+<p><strong>That’s no longer the case!</strong> With this release, you can use the new <code>useKeyboardState</code> hook to track the keyboard in a clean, declarative way. 🎉</p>
+<p>Also, <code>KeyboardController.state()</code> has been improved — it now always returns a defined value, so you no longer need optional chaining to safely access the keyboard state.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="-custom-c-shadow-nodes">🧱 Custom C++ Shadow Nodes<a class="hash-link" aria-label="Direct link to 🧱 Custom C++ Shadow Nodes" title="Direct link to 🧱 Custom C++ Shadow Nodes" href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/use-keyboard-state#-custom-c-shadow-nodes">​</a></h2>
+<p>When <code>OverKeyboardView</code> was introduced, there was an issue on Android/Fabric: the view couldn’t stretch to full screen. That’s because layout is now calculated in C++, and resizing your component requires updating state in C++ as well.</p>
+<p>At the time, I released <code>OverKeyboardView</code> with this limitation since there were a lot of other moving pieces — and gradual rollout was the right choice. But now that the new architecture is the default in React Native, it’s time to address the problem.</p>
+<p>Starting with this release, custom (non-auto-generated) C++ shadow nodes are included. This makes <code>OverKeyboardView</code> work as expected under the Fabric renderer.</p>
+<blockquote>
+<p>⚠️ <strong>If you hit any build issues, make a <a href="https://github.com/kirillzyusko/react-native-keyboard-controller/issues/786#issuecomment-2741464142" target="_blank" rel="noopener noreferrer">clean</a> build and try again. Still having problems? Open an <a href="https://github.com/kirillzyusko/react-native-keyboard-controller/issues/new?template=bug_report.md" target="_blank" rel="noopener noreferrer">issue</a> and I’ll help you out.</strong></p>
+</blockquote>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="-summary">✨ Summary<a class="hash-link" aria-label="Direct link to ✨ Summary" title="Direct link to ✨ Summary" href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/use-keyboard-state#-summary">​</a></h2>
+<p>This is a relatively small release focused on tightening up the internals and laying the groundwork for future updates.</p>
+<p>While it doesn’t introduce any game-changing features, it plays an important role in ensuring that custom C++ shadow nodes can be successfully integrated across projects using the new React Native architecture. Think of it as a bridge release — stabilizing key parts of the system to unlock bigger things coming soon 🙌</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="-whats-next">🚀 What's next?<a class="hash-link" aria-label="Direct link to 🚀 What's next?" title="Direct link to 🚀 What's next?" href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/use-keyboard-state#-whats-next">​</a></h2>
+<p>As always, my top priority is resolving open issues. Beyond that, here’s what’s coming up:</p>
+<ul>
+<li>Support for <code>react-native@0.79</code>;</li>
+<li>A new <code>KeyboardExtender</code> component that gets embedded directly into the keyboard;</li>
+<li>KeyboardToolbar.Group` component to split multiple inputs into groups, each with its own navigation and state;</li>
+<li>A complete rewrite of <code>KeyboardAwareScrollView</code> that will use cursor position instead of layout-based detection.</li>
+</ul>
+<p>Stay tuned and follow me on <a href="https://twitter.com/ziusko" target="_blank" rel="noopener noreferrer">Twitter</a> and <a href="https://github.com/kirillzyusko" target="_blank" rel="noopener noreferrer">GitHub</a> for updates. Thank you for your support! 😊</p>]]></content>
+        <author>
+            <name>Kirill Zyusko</name>
+            <uri>https://github.com/kirillzyusko</uri>
+        </author>
+        <category label="react-native" term="react-native"/>
+        <category label="keyboard" term="keyboard"/>
+        <category label="useKeyboardState" term="useKeyboardState"/>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Interactive keyboard on iOS with offset 🔥]]></title>
         <id>https://kirillzyusko.github.io/react-native-keyboard-controller/blog/interactive-keyboard-ios-with-offset</id>
@@ -336,7 +378,7 @@
 <p>I've heard your feedback, and in response, I'm now exporting <code>KeyboardAwareScrollView</code> from the library core. This widely-used component provides an enhanced <code>ScrollView</code> experience, ensuring smoother navigation and improved user interactions. Now, you can effortlessly integrate it into your projects and leverage its capabilities for a more polished UI 😎</p>
 <h3 class="anchor anchorWithStickyNavbar_LWe7" id="keyboardcontrollerdismiss-method"><code>KeyboardController.dismiss()</code> method<a class="hash-link" aria-label="Direct link to keyboardcontrollerdismiss-method" title="Direct link to keyboardcontrollerdismiss-method" href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/release-1-10#keyboardcontrollerdismiss-method">​</a></h3>
 <p>Simplify your workflow with the addition of the <code>KeyboardController.dismiss()</code> method. This method streamlines the dismissal of the keyboard, making it a breeze to manage user input interactions. Enhance the user experience by effortlessly controlling when and how the keyboard should disappear.</p>
-<h2 class="anchor anchorWithStickyNavbar_LWe7" id="reflecting-on-a-productive-year-2023-">Reflecting on a Productive Year: 2023 🎁🎅<a class="hash-link" aria-label="Direct link to Reflecting on a Productive Year: 2023 ���🎁🎅" title="Direct link to Reflecting on a Productive Year: 2023 🎁🎅" href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/release-1-10#reflecting-on-a-productive-year-2023-">​</a></h2>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="reflecting-on-a-productive-year-2023-">Reflecting on a Productive Year: 2023 🎁🎅<a class="hash-link" aria-label="Direct link to Reflecting on a Productive Year: 2023 🎁🎅" title="Direct link to Reflecting on a Productive Year: 2023 🎁🎅" href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/release-1-10#reflecting-on-a-productive-year-2023-">​</a></h2>
 <p>As we bid farewell to 2023, it's a moment to reflect on the incredible strides we've made together. This year has been marked by innovation, user-centric enhancements, and the continuous evolution of our toolkit. Here's a summary of the key milestones:</p>
 <h3 class="anchor anchorWithStickyNavbar_LWe7" id="interactive-keyboard-implementation">Interactive Keyboard Implementation<a class="hash-link" aria-label="Direct link to Interactive Keyboard Implementation" title="Direct link to Interactive Keyboard Implementation" href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/release-1-10#interactive-keyboard-implementation">​</a></h3>
 <p>I took a giant leap forward by implementing an interactive keyboard. This feature enhances user engagement and provides a dynamic interface for a more immersive experience. Now, user interactions with the keyboard are not just functional but also interactive and enjoyable 😊</p>
