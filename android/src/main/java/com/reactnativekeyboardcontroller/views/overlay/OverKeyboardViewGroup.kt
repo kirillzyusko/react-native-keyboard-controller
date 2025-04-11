@@ -138,13 +138,13 @@ class OverKeyboardRootViewGroup(
   }
 
   override fun onSizeChanged(
-    w: Int,
-    h: Int,
-    oldw: Int,
-    oldh: Int,
+    width: Int,
+    height: Int,
+    oldWidth: Int,
+    oldHeight: Int,
   ) {
-    super.onSizeChanged(w, h, oldw, oldh)
-    stretchTo(width = w, height = h)
+    super.onSizeChanged(width, height, oldWidth, oldHeight)
+    stretchTo(width, height)
   }
 
   // endregion
