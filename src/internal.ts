@@ -1,7 +1,8 @@
 import { useRef } from "react";
-import { Animated, findNodeHandle } from "react-native";
+import { Animated } from "react-native";
 
 import { registerEventHandler, unregisterEventHandler } from "./event-handler";
+import { findNodeHandle } from "./utils/findNodeHandle";
 
 type EventHandler = (event: never) => void;
 type ComponentOrHandle = Parameters<typeof findNodeHandle>[0];

@@ -1,5 +1,4 @@
 import React, { forwardRef, useCallback, useMemo } from "react";
-import { findNodeHandle } from "react-native";
 import Reanimated, {
   interpolate,
   scrollTo,
@@ -15,6 +14,7 @@ import {
   useReanimatedFocusedInput,
   useWindowDimensions,
 } from "../../hooks";
+import { findNodeHandle } from "../../utils/findNodeHandle";
 
 import { useSmoothKeyboardHandler } from "./useSmoothKeyboardHandler";
 import { debounce, scrollDistanceWithRespectToSnapPoints } from "./utils";
