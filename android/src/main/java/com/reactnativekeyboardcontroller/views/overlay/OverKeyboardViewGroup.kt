@@ -146,7 +146,9 @@ class OverKeyboardRootViewGroup(
       try {
         jsTouchDispatcher.handleTouchEvent(event, eventDispatcher)
         jsPointerDispatcher?.handleMotionEventCompat(event, eventDispatcher, true)
-      } catch (@Suppress("detekt:TooGenericExceptionCaught") e: RuntimeException) {
+      } catch (
+        @Suppress("detekt:TooGenericExceptionCaught") e: RuntimeException,
+      ) {
         Logger.w(TAG, "Can not handle touch event", e)
       }
     }
@@ -159,7 +161,9 @@ class OverKeyboardRootViewGroup(
       try {
         jsTouchDispatcher.handleTouchEvent(event, eventDispatcher)
         jsPointerDispatcher?.handleMotionEventCompat(event, eventDispatcher, false)
-      } catch (@Suppress("detekt:TooGenericExceptionCaught") e: RuntimeException) {
+      } catch (
+        @Suppress("detekt:TooGenericExceptionCaught") e: RuntimeException,
+      ) {
         Logger.w(TAG, "Can not handle touch event", e)
       }
     }
