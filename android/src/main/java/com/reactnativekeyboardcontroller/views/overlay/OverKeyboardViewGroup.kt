@@ -18,6 +18,9 @@ import com.facebook.react.uimanager.events.EventDispatcher
 import com.facebook.react.views.view.ReactViewGroup
 import com.reactnativekeyboardcontroller.extensions.dp
 import com.reactnativekeyboardcontroller.extensions.getDisplaySize
+import com.reactnativekeyboardcontroller.log.Logger
+
+private val TAG = OverKeyboardHostView::class.qualifiedName
 
 @SuppressLint("ViewConstructor")
 class OverKeyboardHostView(
@@ -140,8 +143,14 @@ class OverKeyboardRootViewGroup(
   // region Touch events handling
   override fun onInterceptTouchEvent(event: MotionEvent): Boolean {
     eventDispatcher?.let { eventDispatcher ->
-      jsTouchDispatcher.handleTouchEvent(event, eventDispatcher)
-      jsPointerDispatcher?.handleMotionEventCompat(event, eventDispatcher, true)
+      try {
+        jsTouchDispatcher.handleTouchEvent(event, eventDispatcher)
+        jsPointerDispatcher?.handleMotionEventCompat(event, eventDispatcher, true)
+      } catch (
+        @Suppress("detekt:TooGenericExceptionCaught") e: RuntimeException,
+      ) {
+        Logger.w(TAG, "Can not handle touch event", e)
+      }
     }
     return super.onInterceptTouchEvent(event)
   }
@@ -149,8 +158,14 @@ class OverKeyboardRootViewGroup(
   @SuppressLint("ClickableViewAccessibility")
   override fun onTouchEvent(event: MotionEvent): Boolean {
     eventDispatcher?.let { eventDispatcher ->
-      jsTouchDispatcher.handleTouchEvent(event, eventDispatcher)
-      jsPointerDispatcher?.handleMotionEventCompat(event, eventDispatcher, false)
+      try {
+        jsTouchDispatcher.handleTouchEvent(event, eventDispatcher)
+        jsPointerDispatcher?.handleMotionEventCompat(event, eventDispatcher, false)
+      } catch (
+        @Suppress("detekt:TooGenericExceptionCaught") e: RuntimeException,
+      ) {
+        Logger.w(TAG, "Can not handle touch event", e)
+      }
     }
     super.onTouchEvent(event)
     // In case when there is no children interested in handling touch event, we return true from
