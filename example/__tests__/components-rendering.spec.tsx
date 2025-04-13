@@ -96,7 +96,7 @@ describe("components rendering", () => {
   });
 
   it("should render `KeyboardToolbar`", () => {
-    expect(render(<KeyboardToolbarTest />).toJSON()).toMatchSnapshot();
+    expect(render(<KeyboardToolbarTest />)).toMatchSnapshot();
   });
 
   it("should render `OverKeyboardView`", () => {
