@@ -60,8 +60,10 @@ function KeyboardStickyViewTest() {
   );
 }
 
+const content = <EmptyView />;
+
 function KeyboardToolbarTest() {
-  return <KeyboardToolbar content={<EmptyView />} />;
+  return <KeyboardToolbar content={content} />;
 }
 
 function OverKeyboardViewTest() {
@@ -93,8 +95,8 @@ describe("components rendering", () => {
     expect(render(<KeyboardStickyViewTest />)).toMatchSnapshot();
   });
 
-  it.skip("should render `KeyboardToolbar`", () => {
-    expect(render(<KeyboardToolbarTest />)).toMatchSnapshot();
+  it("should render `KeyboardToolbar`", () => {
+    expect(render(<KeyboardToolbarTest />).toJSON()).toMatchSnapshot();
   });
 
   it("should render `OverKeyboardView`", () => {
