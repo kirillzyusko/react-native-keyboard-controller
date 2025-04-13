@@ -182,7 +182,8 @@
         "KeyboardControllerView": "KeyboardControllerView",
         "KeyboardGestureArea": "KeyboardGestureArea",
         "OverKeyboardView": "OverKeyboardView",
-        "KeyboardBackgroundView": "KeyboardBackgroundView"
+        "KeyboardBackgroundView": "KeyboardBackgroundView",
+        "KeyboardExtender": "KeyboardExtender"
       }
     }
   }
