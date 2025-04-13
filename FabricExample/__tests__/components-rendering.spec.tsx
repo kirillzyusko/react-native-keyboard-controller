@@ -5,6 +5,7 @@ import {
   KeyboardAvoidingView,
   KeyboardAwareScrollView,
   KeyboardControllerView,
+  KeyboardExtender,
   KeyboardProvider,
   KeyboardStickyView,
   KeyboardToolbar,
@@ -74,6 +75,10 @@ function OverKeyboardViewTest() {
   );
 }
 
+function KeyboardExtenderTest() {
+  return <KeyboardExtender enabled={true}>{<EmptyView />}</KeyboardExtender>;
+}
+
 describe("components rendering", () => {
   it("should render `KeyboardControllerView`", () => {
     expect(render(<KeyboardControllerViewTest />)).toMatchSnapshot();
@@ -101,5 +106,9 @@ describe("components rendering", () => {
 
   it("should render `OverKeyboardView`", () => {
     expect(render(<OverKeyboardViewTest />)).toMatchSnapshot();
+  });
+
+  it("should render `KeyboardExtenderTest`", () => {
+    expect(render(<KeyboardExtenderTest />)).toMatchSnapshot();
   });
 });
