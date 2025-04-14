@@ -61,6 +61,7 @@ RCT_EXPORT_VIEW_PROPERTY(enabled, BOOL)
 
 @implementation KeyboardExtender {
   UIView *_contentView;
+  UIInputView *_sharedInputAccessoryView;
 #ifdef RCT_NEW_ARCH_ENABLED
   RCTSurfaceTouchHandler *_touchHandler;
 #else
@@ -140,27 +141,27 @@ RCT_EXPORT_VIEW_PROPERTY(enabled, BOOL)
 
 - (void)attachInputAccessoryViewTo:(UIView<UITextInput> *)input
 {
-  // retrieve internal `View`
-  CGRect internalFrame = _contentView.subviews[0].frame;
+  // Initialize the shared input accessory view once
+  if (!_sharedInputAccessoryView) {
+    CGRect internalFrame = _contentView.subviews[0].frame;
+    _sharedInputAccessoryView = [[UIInputView alloc]
+         initWithFrame:CGRectMake(
+                           0, 0, UIScreen.mainScreen.bounds.size.width, internalFrame.size.height)
+        inputViewStyle:UIInputViewStyleKeyboard];
+    _sharedInputAccessoryView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 
-  UIInputView *inputView = [[UIInputView alloc]
-       initWithFrame:CGRectMake(
-                         0, 0, UIScreen.mainScreen.bounds.size.width, internalFrame.size.height)
-      inputViewStyle:UIInputViewStyleKeyboard];
-  inputView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-
-  // Attach the contentView to the inputView
-  _contentView.frame = inputView.bounds;
-  _contentView.autoresizingMask =
-      UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-
-  [inputView addSubview:_contentView];
+    // Attach the contentView to the shared input accessory view
+    _contentView.frame = _sharedInputAccessoryView.bounds;
+    _contentView.autoresizingMask =
+        UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    [_sharedInputAccessoryView addSubview:_contentView];
+  }
 
   // Assign the inputAccessoryView
   if ([input isKindOfClass:[UITextField class]]) {
-    ((UITextField *)input).inputAccessoryView = inputView;
+    ((UITextField *)input).inputAccessoryView = _sharedInputAccessoryView;
   } else if ([input isKindOfClass:[UITextView class]]) {
-    ((UITextView *)input).inputAccessoryView = inputView;
+    ((UITextView *)input).inputAccessoryView = _sharedInputAccessoryView;
   }
 
   // Refresh input view to apply changes
