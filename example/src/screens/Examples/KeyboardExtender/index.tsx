@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+  Alert,
   Button,
   StyleSheet,
   Text,
@@ -12,9 +13,9 @@ import {
   OverKeyboardView,
 } from "react-native-keyboard-controller";
 
-// TODO: is not stretched to full width
+// TODO: is not stretched to full width <- fixed with additional View inside KeyboardExtender
+// TODO: don't hardcode height as 44 in native code <- rely on internal view height
 // TODO: remove _touchHandler when view gets detached from keyboard?
-// TODO: don't hardcode height as 44 in native code
 // TODO: test how GestureHandler works there
 
 export default function KeyboardExtendExample() {
@@ -32,13 +33,13 @@ export default function KeyboardExtendExample() {
 
       <KeyboardExtender enabled={showExtend}>
         <View style={styles.keyboardExtend}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => Alert.alert("10$")}>
             <Text style={styles.priceText}>10$</Text>
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => Alert.alert("20$")}>
             <Text style={styles.priceText}>20$</Text>
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => Alert.alert("50$")}>
             <Text style={styles.priceText}>50$</Text>
           </TouchableOpacity>
         </View>
@@ -61,16 +62,16 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   keyboardExtend: {
+    width: "100%",
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
-    borderTopWidth: 1,
-    padding: 15,
   },
   priceText: {
+    color: "white",
     fontSize: 18,
     fontWeight: "bold",
-    padding: 10,
+    padding: 20,
   },
   overKeyboardView: {
     width: "100%",

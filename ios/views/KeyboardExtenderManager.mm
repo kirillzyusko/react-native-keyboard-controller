@@ -110,25 +110,28 @@ RCT_EXPORT_VIEW_PROPERTY(enabled, BOOL)
 }
 
 // MARK: Listeners
-- (void)setupObservers {
+- (void)setupObservers
+{
   [[NSNotificationCenter defaultCenter] addObserver:self
                                            selector:@selector(handleTextInputDidBeginEditing:)
                                                name:UITextFieldTextDidBeginEditingNotification
                                              object:nil];
-  
+
   [[NSNotificationCenter defaultCenter] addObserver:self
                                            selector:@selector(handleTextInputDidBeginEditing:)
                                                name:UITextViewTextDidBeginEditingNotification
                                              object:nil];
 }
 
-- (void)handleTextInputDidBeginEditing:(NSNotification *)notification {
+- (void)handleTextInputDidBeginEditing:(NSNotification *)notification
+{
   if (self.enabled) {
     [self attachToTextInput:(UIView *)notification.object];
   }
 }
 
-- (void)attachToTextInput:(UIView *)textInput {
+- (void)attachToTextInput:(UIView *)textInput
+{
   if ([textInput isKindOfClass:[UITextField class]]) {
     [self attachInputAccessoryViewTo:(UITextField *)textInput];
   } else if ([textInput isKindOfClass:[UITextView class]]) {
@@ -136,14 +139,21 @@ RCT_EXPORT_VIEW_PROPERTY(enabled, BOOL)
   }
 }
 
-- (void)attachInputAccessoryViewTo:(UIView<UITextInput> *)input {
-  UIInputView *inputView = [[UIInputView alloc] initWithFrame:CGRectMake(0, 0, UIScreen.mainScreen.bounds.size.width, 44)
-                                                 inputViewStyle:UIInputViewStyleKeyboard];
+- (void)attachInputAccessoryViewTo:(UIView<UITextInput> *)input
+{
+  // retrieve internal `View`
+  CGRect internalFrame = _contentView.subviews[0].frame;
+
+  UIInputView *inputView = [[UIInputView alloc]
+       initWithFrame:CGRectMake(
+                         0, 0, UIScreen.mainScreen.bounds.size.width, internalFrame.size.height)
+      inputViewStyle:UIInputViewStyleKeyboard];
   inputView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 
   // Attach the contentView to the inputView
   _contentView.frame = inputView.bounds;
-  _contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+  _contentView.autoresizingMask =
+      UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 
   [inputView addSubview:_contentView];
 
@@ -153,7 +163,7 @@ RCT_EXPORT_VIEW_PROPERTY(enabled, BOOL)
   } else if ([input isKindOfClass:[UITextView class]]) {
     ((UITextView *)input).inputAccessoryView = inputView;
   }
-  
+
   [_touchHandler attachToView:_contentView];
 
   // Refresh input view to apply changes
