@@ -89,8 +89,6 @@ RCT_EXPORT_VIEW_PROPERTY(enabled, BOOL)
     _touchHandler = [RCTSurfaceTouchHandler new];
     _contentView = [[UIView alloc] initWithFrame:CGRectZero];
   }
-  return self;
-}
 #else
 - (instancetype)initWithBridge:(RCTBridge *)bridge
 {
@@ -99,10 +97,11 @@ RCT_EXPORT_VIEW_PROPERTY(enabled, BOOL)
     _touchHandler = [[RCTTouchHandler alloc] initWithBridge:bridge];
     _contentView = [[UIView alloc] initWithFrame:CGRectZero];
   }
+#endif
+  [_touchHandler attachToView:_contentView];
   [self setupObservers];
   return self;
 }
-#endif
 
 - (void)dealloc
 {
@@ -163,8 +162,6 @@ RCT_EXPORT_VIEW_PROPERTY(enabled, BOOL)
   } else if ([input isKindOfClass:[UITextView class]]) {
     ((UITextView *)input).inputAccessoryView = inputView;
   }
-
-  [_touchHandler attachToView:_contentView];
 
   // Refresh input view to apply changes
   [input reloadInputViews];
