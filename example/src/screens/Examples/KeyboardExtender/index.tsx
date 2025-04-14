@@ -11,7 +11,13 @@ import {
 import {
   KeyboardExtender,
   OverKeyboardView,
+  useKeyboardState,
 } from "react-native-keyboard-controller";
+import Reanimated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 
 // TODO: is not stretched to full width <- fixed with additional View inside KeyboardExtender
 // TODO: don't hardcode height as 44 in native code <- rely on internal view height
@@ -19,10 +25,35 @@ import {
 // TODO: test how GestureHandler works there
 
 export default function KeyboardExtendExample() {
-  const [showExtend, setShowExtend] = useState(false);
+  const [showExtend, setShowExtend] = useState(true);
+  const [isOKVMode, setOKVMode] = useState(false);
+  const opacity = useSharedValue(1);
+  // TODO: replace with animated value
+  const {height} = useKeyboardState();
+
+  const animatedStyle = useAnimatedStyle(
+    () => ({
+      opacity: opacity.value,
+    }),
+    [],
+  );
 
   return (
     <View style={styles.container}>
+      <Button
+        title={isOKVMode ? "OKV" : "Default"}
+        onPress={() => setOKVMode(!isOKVMode)}
+      />
+      <Button
+        title="Change opacity"
+        onPress={() => {
+          opacity.set(
+            withTiming(opacity.value === 0 ? 1 : 0, {
+              duration: 1000,
+            }),
+          );
+        }}
+      />
       <Button
         title={showExtend ? "Detach" : "Attach"}
         onPress={() => setShowExtend(!showExtend)}
@@ -32,7 +63,7 @@ export default function KeyboardExtendExample() {
       <TextInput placeholder="Another input field..." style={styles.input} />
 
       <KeyboardExtender enabled={showExtend}>
-        <View style={styles.keyboardExtend}>
+        <Reanimated.View style={[styles.keyboardExtend, animatedStyle]}>
           <TouchableOpacity onPress={() => Alert.alert("10$")}>
             <Text style={styles.priceText}>10$</Text>
           </TouchableOpacity>
@@ -42,8 +73,14 @@ export default function KeyboardExtendExample() {
           <TouchableOpacity onPress={() => Alert.alert("50$")}>
             <Text style={styles.priceText}>50$</Text>
           </TouchableOpacity>
-        </View>
+        </Reanimated.View>
       </KeyboardExtender>
+      <OverKeyboardView visible={isOKVMode}>
+        <View style={{flex: 1, justifyContent: "flex-end"}}>
+          {/* TODO replace hardcoded value */}
+          <TextInput placeholder="Search..." style={[styles.input, {marginBottom: height - 61.73}]} />
+        </View>
+      </OverKeyboardView>
     </View>
   );
 }
