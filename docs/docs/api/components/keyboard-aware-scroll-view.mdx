@@ -124,7 +124,8 @@ Unlike original [react-native-keyboard-aware-scroll-view](https://github.com/APS
 If you want to integrate it with your custom virtualization list, you can pass `renderScrollComponent` prop like:
 
 ```tsx
-import { FlatList } from "react-native";
+import React from "react";
+import { FlatList, ScrollView, ScrollViewProps } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 
 <FlatList
@@ -135,9 +136,11 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 
 import { FlashList } from "@shopify/flash-list";
 
-<FlashList
-  renderScrollComponent={(props) => <KeyboardAwareScrollView {...props} />}
-/>;
+const RenderScrollComponent = React.forwardRef<ScrollView, ScrollViewProps>(
+  (props, ref) => <KeyboardAwareScrollView {...props} ref={ref} />,
+);
+
+<FlashList renderScrollComponent={RenderScrollComponent} />;
 ```
 
 <details>
