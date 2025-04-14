@@ -2,7 +2,7 @@ import React from "react";
 import { Platform, View } from "react-native";
 
 import { RCTKeyboardExtender } from "../../bindings";
-import {useWindowDimensions} from "../../hooks";
+import { useWindowDimensions } from "../../hooks";
 
 import type { KeyboardExtenderProps } from "../../types";
 import type { PropsWithChildren } from "react";
@@ -16,10 +16,12 @@ const KeyboardExtender = ({
   if (Platform.OS !== "ios") {
     return <>{children}</>;
   }
-  const {width} = useWindowDimensions();
+  const { width } = useWindowDimensions();
 
   return (
-    <RCTKeyboardExtender enabled={enabled}><View style={{width}} onLayout={(e) => console.log(112233, e.nativeEvent.layout)}>{children}</View></RCTKeyboardExtender>
+    <RCTKeyboardExtender enabled={enabled}>
+      <View style={{ width }}>{children}</View>
+    </RCTKeyboardExtender>
   );
 };
 
