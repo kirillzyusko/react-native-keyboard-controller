@@ -149,7 +149,8 @@
     "componentregistry",
     "mapbuffer",
     "nativemodule",
-    "reactnative"
+    "reactnative",
+    "SQIP"
   ],
   "ignorePaths": [
     "node_modules",
