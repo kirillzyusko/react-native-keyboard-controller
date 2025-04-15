@@ -99,11 +99,12 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
   public func canSubstituteTextFieldDelegate(delegate: UITextFieldDelegate?) -> Bool {
     let type = String(describing: delegate)
     if type.range(of: "SQIPTextFieldInputModifier") != nil {
-      // SQIPTextFieldInputModifier is a private class used by Square
-      // and it forwards all calls to the keyboard-controller delegate.
-      // To avoid infinite loop, we will not set our delegate
-      // Theirs inputs have their own keyboard handling and components
-      // from keyboard-controller can't be used there so it's safe to skip it
+      // SQIPTextFieldInputModifier is a private class used internally by Square.
+      // It forwards input events to the keyboard-controller delegate.
+      // To prevent an infinite loop, we avoid setting our delegate in this case.
+      // Since Square's SDK is used imperatively and doesn't allow adding custom components,
+      // keyboard-controller components cannot be used in this context,
+      // so it's safe to skip replacing the delegate.
       return false
     }
 
