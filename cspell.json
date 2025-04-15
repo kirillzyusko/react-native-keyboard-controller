@@ -150,7 +150,9 @@
     "mapbuffer",
     "nativemodule",
     "reactnative",
-    "SQIP"
+    "SQIP",
+    "DCMAKE",
+    "HKLM"
   ],
   "ignorePaths": [
     "node_modules",
