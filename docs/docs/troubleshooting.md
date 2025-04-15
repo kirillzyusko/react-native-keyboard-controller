@@ -85,3 +85,35 @@ You have two ways to fix this problem:
 
 - enable `allowRecursiveCommitsWithSynchronousMountOnAndroid` feature flag (see [react-native-reanimated#6418](https://github.com/software-mansion/react-native-reanimated/issues/6418#issuecomment-2296107100) and [react-native-keyboard-controller](https://github.com/kirillzyusko/react-native-keyboard-controller/issues/687))
 - upgrade to `react-native@0.77+` (starting from this version this flag is enabled by default).
+
+## Filename longer than 260 characters
+
+If you experience this error on Windows you need to perform next steps:
+
+1. **Download the Latest Version of Ninja**
+   - Download the latest Ninja release from the [official repository](https://github.com/ninja-build/ninja/releases)
+   - Replace the existing `ninja.exe` in `$SDK_PATH$\cmake\$CMAKE_VERSION$\bin` with the newly downloaded version
+2. **Update the build.gradle File**
+
+   - Open `android/app/build.gradle`
+   - Inside the `android.defaultConfig` block, add the following code:
+
+   ```json
+   externalNativeBuild {
+       cmake {
+           arguments "-DCMAKE_MAKE_PROGRAM=$YOUR_CMAKE_NINJA_PATH$", "-DCMAKE_OBJECT_PATH_MAX=1024"
+       }
+   }
+   ```
+
+   :::tip
+   Make sure to update `$YOUR_CMAKE_NINJA_PATH$` with the correct path to your `ninja.exe` file. For example, it might look something like `E:\\SDK\\cmake\\3.22.2\\bin\\ninja.exe` on Windows.
+   :::
+
+3. **Enable Long Path Support in Windows**
+
+   - Run the following `PowerShell` command to enable long path support in Windows:
+
+   ```bash
+   New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" -Name "LongPathsEnabled" -Value 1 -PropertyType DWORD -Force
+   ```
