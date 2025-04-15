@@ -50,8 +50,6 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
   // delegates
   weak var textViewDelegate: UITextViewDelegate?
   weak var textFieldDelegate: UITextFieldDelegate?
-  // state
-  private var isCheckingRespondsTo = false
 
   // Keep track of which textField we’re observing (iOS < 13 only)
   private weak var observedTextFieldForSelection: UITextField?
@@ -67,7 +65,7 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
   // MARK: setters/getters
 
   public func setTextViewDelegate(delegate: UITextViewDelegate?) {
-    // remove KVO from any old textField
+    // remove KVO from any old textView
     if let oldTextField = observedTextFieldForSelection {
       removeSelectionRangeObserver(from: oldTextField)
     }
@@ -96,6 +94,20 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
         observedTextFieldForSelection = realTextField
       }
     }
+  }
+
+  public func canSubstituteTextFieldDelegate(delegate: UITextFieldDelegate?) -> Bool {
+    let type = String(describing: delegate)
+    if type.range(of: "SQIPTextFieldInputModifier") != nil {
+      // SQIPTextFieldInputModifier is a private class used by Square
+      // and it forwards all calls to the keyboard-controller delegate.
+      // To avoid infinite loop, we will not set our delegate
+      // Theirs inputs have their own keyboard handling and components
+      // from keyboard-controller can't be used there so it's safe to skip it
+      return false
+    }
+
+    return true
   }
 
   // Getter for the active delegate
@@ -196,10 +208,6 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
   // MARK: call forwarding
 
   override func responds(to aSelector: Selector!) -> Bool {
-    guard !isCheckingRespondsTo else { return false }
-    isCheckingRespondsTo = true
-    defer { isCheckingRespondsTo = false }
-
     if super.responds(to: aSelector) {
       return true
     }
