@@ -1,13 +1,19 @@
+// eslint-disable-next-line eslint-comments/disable-enable-pair
+/* eslint-disable max-lines */
+
 import React, { forwardRef, useCallback, useMemo } from "react";
-import { findNodeHandle } from "react-native";
+import { Platform, findNodeHandle } from "react-native";
 import Reanimated, {
+  cancelAnimation,
   interpolate,
   scrollTo,
   useAnimatedReaction,
   useAnimatedRef,
+  useAnimatedScrollHandler,
   useAnimatedStyle,
-  useScrollViewOffset,
   useSharedValue,
+  withSpring,
+  withTiming,
 } from "react-native-reanimated";
 
 import {
@@ -17,7 +23,7 @@ import {
 } from "../../hooks";
 
 import { useSmoothKeyboardHandler } from "./useSmoothKeyboardHandler";
-import { debounce, scrollDistanceWithRespectToSnapPoints } from "./utils";
+import { debounce, log, scrollDistanceWithRespectToSnapPoints } from "./utils";
 
 import type {
   LayoutChangeEvent,
@@ -30,57 +36,65 @@ import type {
   NativeEvent,
 } from "react-native-keyboard-controller";
 
-export type KeyboardAwareScrollViewProps = {
-  /** The distance between keyboard and focused `TextInput` when keyboard is shown. Default is `0`. */
+export interface KeyboardAwareScrollViewProps extends ScrollViewProps {
+  /** Distance between keyboard and focused TextInput. Default: 0 */
   bottomOffset?: number;
-  /** Prevents automatic scrolling of the `ScrollView` when the keyboard gets hidden, maintaining the current screen position. Default is `false`. */
+  /** Offset for cursor position in large inputs. Positive moves cursor up. Default: -50 */
+  cursorPositionOffset?: number;
+  /** Prevents automatic scrolling when keyboard hides. Default: false */
   disableScrollOnKeyboardHide?: boolean;
-  /** Controls whether this `KeyboardAwareScrollView` instance should take effect. Default is `true` */
+  /** Controls whether this instance should take effect. Default: true */
   enabled?: boolean;
-  /** Adjusting the bottom spacing of KeyboardAwareScrollView. Default is `0` */
+  /** Additional bottom spacing. Default: 0 */
   extraKeyboardSpace?: number;
-  /** Custom component for `ScrollView`. Default is `ScrollView` */
+  /** Custom ScrollView component. Default: Reanimated.ScrollView */
   ScrollViewComponent?: React.ComponentType<ScrollViewProps>;
-} & ScrollViewProps;
-
-/*
- * Everything begins from `onStart` handler. This handler is called every time,
- * when keyboard changes its size or when focused `TextInput` was changed. In
- * this handler we are calculating/memoizing values which later will be used
- * during layout movement. For that we calculate:
- * - layout of focused field (`layout`) - to understand whether there will be overlap
- * - initial keyboard size (`initialKeyboardSize`) - used in scroll interpolation
- * - future keyboard height (`keyboardHeight`) - used in scroll interpolation
- * - current scroll position (`scrollPosition`) - used to scroll from this point
+}
+/**
+ * A smart ScrollView component that handles keyboard interactions and automatically adjusts
+ * content positioning to keep focused inputs visible.
  *
- * Once we've calculated all necessary variables - we can actually start to use them.
- * It happens in `onMove` handler - this function simply calls `maybeScroll` with
- * current keyboard frame height. This functions makes the smooth transition.
+ * @description
+ * KeyboardAwareScrollView manages the complexities of keyboard interactions in React Native apps
+ * by automatically adjusting scroll position when the keyboard appears/disappears and when inputs
+ * receive focus. It handles both single-line and multi-line text inputs, maintaining optimal
+ * cursor visibility and smooth animations.
  *
- * When the transition has finished we go to `onEnd` handler. In this handler
- * we verify, that the current field is not overlapped within a keyboard frame.
- * For full `onStart`/`onMove`/`onEnd` flow it may look like a redundant thing,
- * however there could be some cases, when `onMove` is not called:
- * - on iOS when TextInput was changed - keyboard transition is instant
- * - on Android when TextInput was changed and keyboard size wasn't changed
- * So `onEnd` handler handle the case, when `onMove` wasn't triggered.
+ * Key Features:
+ * - Auto-scrolls to keep focused inputs visible
+ * - Smooth animations for keyboard transitions
+ * - Handles multi-line input expansion
+ * - Supports custom bottom offsets and spacing
+ * - Configurable keyboard hide behavior
+ * - Compatible with custom ScrollView components
  *
- * ====================================================================================================================+
- * -----------------------------------------------------Flow chart-----------------------------------------------------+
- * ====================================================================================================================+
+ * @props {number} [bottomOffset=0] - Space to maintain between the keyboard and focused input
+ * @props {number} [cursorPositionOffset=10] - Vertical offset for cursor position in multi-line inputs
+ * @props {boolean} [disableScrollOnKeyboardHide=false] - When true, prevents automatic scrolling when keyboard hides
+ * @props {boolean} [enabled=true] - Enables/disables keyboard aware functionality
+ * @props {number} [extraKeyboardSpace=0] - Additional padding below keyboard
+ * @props {React.ComponentType<ScrollViewProps>} [ScrollViewComponent=Reanimated.ScrollView] - Custom ScrollView implementation
  *
- * +============================+       +============================+        +==================================+
- * +  User Press on TextInput   +   =>  +  Keyboard starts showing   +   =>   + As keyboard moves frame by frame +  =>
- * +                            +       +       (run `onStart`)      +        +    `onMove` is getting called    +
- * +============================+       +============================+        +==================================+
+ * @example
+ * ```tsx
+ * import { KeyboardAwareScrollView } from 'react-native-keyboard-controller';
  *
- *
- * +============================+       +============================+        +=====================================+
- * + Keyboard is shown and we   +   =>  +    User moved focus to     +   =>   + Only `onStart`/`onEnd` maybe called +
- * +    call `onEnd` handler    +       +     another `TextInput`    +        +    (without involving `onMove`)     +
- * +============================+       +============================+        +=====================================+
- *
+ * function MyForm() {
+ *   return (
+ *     <KeyboardAwareScrollView>
+ *       <TextInput placeholder="Email" />
+ *       <TextInput
+ *         placeholder="Description"
+ *         multiline
+ *         style={{ height: 100 }}
+ *       />
+ *       <TextInput placeholder="Password" />
+ *     </KeyboardAwareScrollView>
+ *   );
+ * }
+ * ```
  */
+
 const KeyboardAwareScrollView = forwardRef<
   ScrollView,
   React.PropsWithChildren<KeyboardAwareScrollViewProps>
@@ -95,25 +109,167 @@ const KeyboardAwareScrollView = forwardRef<
       extraKeyboardSpace = 0,
       ScrollViewComponent = Reanimated.ScrollView,
       snapToOffsets,
+      cursorPositionOffset = 10,
       ...rest
     },
     ref,
   ) => {
     const scrollViewAnimatedRef = useAnimatedRef<Reanimated.ScrollView>();
     const scrollViewTarget = useSharedValue<number | null>(null);
-    const scrollPosition = useSharedValue(0);
-    const position = useScrollViewOffset(scrollViewAnimatedRef);
     const currentKeyboardFrameHeight = useSharedValue(0);
-    const keyboardHeight = useSharedValue(0);
+    const keyboardHeight = useSharedValue(500);
     const keyboardWillAppear = useSharedValue(false);
     const tag = useSharedValue(-1);
-    const initialKeyboardSize = useSharedValue(0);
     const scrollBeforeKeyboardMovement = useSharedValue(0);
     const { input } = useReanimatedFocusedInput();
     const layout = useSharedValue<FocusedInputLayoutChangedEvent | null>(null);
-
+    const scrollY = useSharedValue(0);
+    const cursorOffset = useSharedValue(0);
+    const scrollViewLayout = useSharedValue({ height: 0, y: 0 });
+    const scrollableHeight = useSharedValue(0); // Add this line
+    const scrollGoal = useSharedValue(0);
+    const scrollOffsetY = useSharedValue(0);
+    const isKeyboardVisible = useSharedValue(false);
     const { height } = useWindowDimensions();
 
+    const isScrolling = useSharedValue(false);
+    const scrollHandler = useAnimatedScrollHandler({
+      onScroll: (event) => {
+        log("onSCroll");
+        // ignore eslint because https://github.com/facebook/react/issues/29640
+        // eslint-disable-next-line react-compiler/react-compiler
+        scrollOffsetY.value = event.contentOffset.y;
+      },
+      onBeginDrag: () => {
+        log("onBeginDrag - cancel any animations");
+        cancelAnimation(scrollY);
+      },
+      onMomentumEnd: () => {
+        log("onMomentumEnd");
+        scrollY.value = scrollOffsetY.value;
+      },
+    });
+
+    const scrollToPos = (y: number, animated: boolean, spring?: boolean) => {
+      "worklet";
+
+      const goal = scrollDistanceWithRespectToSnapPoints(y, snapToOffsets);
+
+      if (scrollGoal.value === goal) {
+        log(
+          "goal is within buffer zone of previous.",
+          "Goal:",
+          goal,
+          "Current:",
+          scrollOffsetY.value,
+          "StartingPosition:",
+          scrollY.value,
+        );
+
+        if (isScrolling.value) {
+          log(
+            "Scrolling is in progress.",
+            "Goal:",
+            goal,
+            "Current:",
+            scrollOffsetY.value,
+            "StartingPosition:",
+            scrollY.value,
+          );
+
+          return;
+        }
+      }
+      if (goal === scrollOffsetY.value) {
+        log(
+          "Already at target position.",
+          "Goal:",
+          goal,
+          "Current:",
+          scrollOffsetY.value,
+          "StartingPosition:",
+          scrollY.value,
+        );
+
+        return;
+      }
+      cancelAnimation(scrollY);
+
+      scrollGoal.value = goal;
+
+      if (!animated) {
+        scrollGoal.value = goal;
+      }
+      isScrolling.value = true;
+      log(
+        "Goal:",
+        goal,
+        "Current:",
+        scrollOffsetY.value,
+        "StartingPosition:",
+        scrollY.value,
+        "Distance From Goal:",
+        Math.abs(scrollOffsetY.value - goal),
+        "Distance From Start:",
+        Math.abs(scrollOffsetY.value - scrollY.value),
+        "Is keyboard opening:",
+        keyboardWillAppear.value,
+        "is keyboard visible:",
+        isKeyboardVisible.value,
+        "scrollableHeight:",
+        scrollableHeight.value - scrollViewLayout.value.height,
+        "keyboardHeight:",
+        keyboardHeight.value,
+        "keyboardFrameHeight:",
+        currentKeyboardFrameHeight.value,
+      );
+
+      // Edge Case - Android Only
+      if (
+        Math.round(Math.abs(scrollOffsetY.value - goal)) ===
+          keyboardHeight.value &&
+        Math.round(scrollableHeight.value - scrollViewLayout.value.height) ===
+          Math.round(scrollOffsetY.value) &&
+        Platform.OS === "android"
+      ) {
+        log("Keyboard is at the bottom of the scroll view.");
+        // on Android, when at the bottom of the scroll view, it can not scroll
+        // to the goal position when keyboard is opening.
+        // This is a workaround to scroll to the goal position
+        scrollY.value = goal - keyboardHeight.value;
+      }
+      scrollY.value = spring
+        ? withSpring(goal, { damping: 100, stiffness: 100 }, (finished) => {
+            log(
+              "Goal:",
+              goal,
+              "Current:",
+              scrollOffsetY.value,
+              "EndingPosition:",
+              scrollY.value,
+              "Distance From Goal:",
+              Math.abs(scrollOffsetY.value - goal),
+              "Finished:",
+              finished,
+            );
+            isScrolling.value = false;
+          })
+        : withTiming(goal, undefined, (finished) => {
+            log(
+              "Goal:",
+              goal,
+              "Current:",
+              scrollOffsetY.value,
+              "EndingPosition:",
+              scrollY.value,
+              "Distance From Goal:",
+              Math.abs(scrollOffsetY.value - goal),
+              "Finished:",
+              finished,
+            );
+            isScrolling.value = false;
+          });
+    };
     const onRef = useCallback((assignedRef: Reanimated.ScrollView) => {
       if (typeof ref === "function") {
         ref(assignedRef);
@@ -126,74 +282,128 @@ const KeyboardAwareScrollView = forwardRef<
     const onScrollViewLayout = useCallback(
       (e: LayoutChangeEvent) => {
         scrollViewTarget.value = findNodeHandle(scrollViewAnimatedRef.current);
-
+        scrollViewLayout.value = {
+          height: e.nativeEvent.layout.height,
+          y: e.nativeEvent.layout.y,
+        };
         onLayout?.(e);
       },
       [onLayout],
     );
 
-    /**
-     * Function that will scroll a ScrollView as keyboard gets moving
-     */
+    const onContentSizeChange = useCallback(
+      (_: number, newScrollableHeight: number) => {
+        scrollableHeight.value = newScrollableHeight;
+      },
+      [],
+    );
+
     const maybeScroll = useCallback(
-      (e: number, animated: boolean = false) => {
+      (animated: boolean = false, closeKeyboard?: boolean) => {
         "worklet";
 
-        if (!enabled) {
+        // Check if scrolling is enabled and if the focused input belongs to this scroll view
+        if (
+          !enabled ||
+          layout.value?.parentScrollViewTarget !== scrollViewTarget.value
+        ) {
+          log(
+            "Scrolling is disabled or input does not belong to this scroll view.",
+          );
+
           return 0;
         }
 
-        // input belongs to ScrollView
-        if (layout.value?.parentScrollViewTarget !== scrollViewTarget.value) {
-          return 0;
+        // Handle keyboard closing by restoring previous scroll position
+        if (closeKeyboard) {
+          const targetScrollY = scrollBeforeKeyboardMovement.value;
+
+          log("Handle Keyboard Close");
+          scrollToPos(targetScrollY, animated, true);
+
+          return targetScrollY - scrollOffsetY.value;
         }
 
-        const visibleRect = height - keyboardHeight.value;
+        const visibleRect =
+          scrollViewLayout.value.height - keyboardHeight.value;
         const absoluteY = layout.value?.layout.absoluteY || 0;
         const inputHeight = layout.value?.layout.height || 0;
         const point = absoluteY + inputHeight;
 
+        // Handle case where input is taller than visible area
+        if (inputHeight > visibleRect - bottomOffset) {
+          const cursorPosition = absoluteY + cursorOffset.value;
+          const targetPosition = cursorPosition + cursorPositionOffset;
+
+          // Scroll when keyboard appears or focus changes
+          if (keyboardWillAppear.value || tag.value !== -1) {
+            const targetScroll = Math.max(
+              0,
+              scrollOffsetY.value + (targetPosition - visibleRect),
+            );
+
+            log(
+              "Handle open or focus change.",
+              "isKeyboardVisible:",
+              isKeyboardVisible.value,
+            );
+
+            scrollToPos(
+              targetScroll,
+              animated,
+              keyboardWillAppear.value && Platform.OS === "ios",
+            );
+
+            return targetScroll - scrollOffsetY.value;
+          }
+
+          // Scroll when cursor position is outside visible area
+          if (targetPosition > visibleRect || targetPosition < 0) {
+            const targetScroll = Math.max(
+              0,
+              scrollOffsetY.value +
+                (targetPosition > visibleRect
+                  ? targetPosition - visibleRect
+                  : targetPosition),
+            );
+
+            log("Handle cursor position");
+            scrollToPos(targetScroll, animated);
+
+            return targetScroll - scrollOffsetY.value;
+          }
+
+          return 0;
+        }
+
+        // Handle case where input is partially hidden by keyboard
         if (visibleRect - point <= bottomOffset) {
           const relativeScrollTo =
             keyboardHeight.value - (height - point) + bottomOffset;
-          const interpolatedScrollTo = interpolate(
-            e,
-            [initialKeyboardSize.value, keyboardHeight.value],
-            [
-              0,
-              scrollDistanceWithRespectToSnapPoints(
-                relativeScrollTo + scrollPosition.value,
-                snapToOffsets,
-              ) - scrollPosition.value,
-            ],
-          );
-          const targetScrollY =
-            Math.max(interpolatedScrollTo, 0) + scrollPosition.value;
+          const targetScrollY = relativeScrollTo + scrollOffsetY.value;
 
-          scrollTo(scrollViewAnimatedRef, 0, targetScrollY, animated);
+          log("Handle partial visibility");
+          scrollToPos(targetScrollY, animated);
 
-          return interpolatedScrollTo;
-        }
-
-        if (absoluteY < 0) {
-          const positionOnScreen = visibleRect - inputHeight - bottomOffset;
-          const topOfScreen = scrollPosition.value + absoluteY;
-
-          scrollTo(
-            scrollViewAnimatedRef,
-            0,
-            topOfScreen - positionOnScreen,
-            animated,
-          );
+          return targetScrollY - scrollOffsetY.value;
         }
 
         return 0;
       },
-      [bottomOffset, enabled, height, snapToOffsets],
+      [bottomOffset, enabled, height, snapToOffsets, cursorPositionOffset],
     );
+
     const syncKeyboardFrame = useCallback(
       (e: NativeEvent) => {
         "worklet";
+
+        if (Platform.OS === "android") {
+          currentKeyboardFrameHeight.value = isKeyboardVisible.value
+            ? keyboardHeight.value + extraKeyboardSpace
+            : 0;
+
+          return;
+        }
 
         const keyboardFrame = interpolate(
           e.height,
@@ -210,14 +420,15 @@ const KeyboardAwareScrollView = forwardRef<
       (customHeight?: number) => {
         "worklet";
 
-        const prevScrollPosition = scrollPosition.value;
-        const prevLayout = layout.value;
-
+        // Skip if there's no input layout available
         if (!input.value?.layout) {
+          log("No input layout available");
+
           return;
         }
 
-        // eslint-disable-next-line react-compiler/react-compiler
+        const prevLayout = layout.value;
+
         layout.value = {
           ...input.value,
           layout: {
@@ -225,37 +436,62 @@ const KeyboardAwareScrollView = forwardRef<
             height: customHeight ?? input.value.layout.height,
           },
         };
-        scrollPosition.value = position.value;
-        maybeScroll(keyboardHeight.value, true);
-        scrollPosition.value = prevScrollPosition;
+        log("Handle scroll from current position");
+
+        maybeScroll(true);
         layout.value = prevLayout;
       },
       [maybeScroll],
     );
+
     const onChangeText = useCallback(() => {
       "worklet";
 
-      // if typing a text caused layout shift, then we need to ignore this handler
-      // because this event will be handled in `useAnimatedReaction` below
+      // Skip if layout height changed to avoid duplicate handling
       if (layout.value?.layout.height !== input.value?.layout.height) {
+        log("Layout height changed, skipping scroll on change text");
+
         return;
       }
 
-      scrollFromCurrentPosition();
-    }, [scrollFromCurrentPosition]);
+      layout.value = input.value;
+
+      const visibleRect = scrollViewLayout.value.height - keyboardHeight.value;
+      const absoluteY = layout.value?.layout.absoluteY || 0;
+      const inputHeight = layout.value?.layout.height || 0;
+      const point = absoluteY + inputHeight;
+
+      // Scroll if input is taller than visible area or partially hidden
+      if (
+        inputHeight > visibleRect - bottomOffset ||
+        visibleRect - point <= bottomOffset
+      ) {
+        log("Handle text change");
+        scrollFromCurrentPosition();
+      }
+    }, [bottomOffset]);
+
     const onSelectionChange = useCallback(
       (e: FocusedInputSelectionChangedEvent) => {
         "worklet";
 
-        if (e.selection.start.position !== e.selection.end.position) {
-          scrollFromCurrentPosition(e.selection.end.y);
+        cursorOffset.value = e.selection.end.y;
+
+        const visibleRect =
+          scrollViewLayout.value.height - keyboardHeight.value;
+        const inputHeight = layout.value?.layout.height || 0;
+
+        // Scroll if input is taller than visible area
+        if (inputHeight > visibleRect - bottomOffset) {
+          log("Handle selection change");
+          scrollFromCurrentPosition();
         }
       },
-      [scrollFromCurrentPosition],
+      [cursorOffset, bottomOffset, scrollFromCurrentPosition],
     );
 
     const onChangeTextHandler = useMemo(
-      () => debounce(onChangeText, 200),
+      () => debounce(onChangeText, 100),
       [onChangeText],
     );
 
@@ -271,71 +507,76 @@ const KeyboardAwareScrollView = forwardRef<
       {
         onStart: (e) => {
           "worklet";
+          log("[useSmoothKeyboardHandler] onStart", e);
 
           const keyboardWillChangeSize =
             keyboardHeight.value !== e.height && e.height > 0;
 
-          keyboardWillAppear.value = e.height > 0 && keyboardHeight.value === 0;
-
-          const keyboardWillHide = e.height === 0;
-          const focusWasChanged =
-            (tag.value !== e.target && e.target !== -1) ||
-            keyboardWillChangeSize;
-
           if (keyboardWillChangeSize) {
-            initialKeyboardSize.value = keyboardHeight.value;
-          }
-
-          if (keyboardWillHide) {
-            // on back transition need to interpolate as [0, keyboardHeight]
-            initialKeyboardSize.value = 0;
-            scrollPosition.value = scrollBeforeKeyboardMovement.value;
-          }
-
-          if (
-            keyboardWillAppear.value ||
-            keyboardWillChangeSize ||
-            focusWasChanged
-          ) {
-            // persist scroll value
-            scrollPosition.value = position.value;
-            // just persist height - later will be used in interpolation
+            log(
+              "keyboard changed size",
+              "from",
+              keyboardHeight.value,
+              "to",
+              e.height,
+            );
             keyboardHeight.value = e.height;
           }
 
-          // focus was changed
-          if (focusWasChanged) {
-            tag.value = e.target;
+          keyboardWillAppear.value = e.height > 0 && !isKeyboardVisible.value;
+          isKeyboardVisible.value = e.height > 0;
+          const keyboardWillHide = e.height === 0;
 
-            // save position of focused text input when keyboard starts to move
-            layout.value = input.value;
-            // save current scroll position - when keyboard will hide we'll reuse
-            // this value to achieve smooth hide effect
-            scrollBeforeKeyboardMovement.value = position.value;
+          if (Platform.OS === "android") {
+            currentKeyboardFrameHeight.value = isKeyboardVisible.value
+              ? keyboardHeight.value + extraKeyboardSpace
+              : 0;
           }
 
-          if (focusWasChanged && !keyboardWillAppear.value) {
-            // update position on scroll value, so `onEnd` handler
-            // will pick up correct values
-            position.value += maybeScroll(e.height, true);
+          const focusWasChanged =
+            (tag.value !== e.target && e.target !== -1) ||
+            keyboardWillChangeSize ||
+            keyboardWillAppear.value;
+
+          // Reset keyboard size and restore scroll position when keyboard hides
+          if (keyboardWillHide) {
+            if (!disableScrollOnKeyboardHide) {
+              log("Handle keyboard hide");
+
+              maybeScroll(true, true);
+
+              return;
+            }
+          }
+
+          // Store scroll position when keyboard appears
+          if (keyboardWillAppear.value) {
+            scrollBeforeKeyboardMovement.value = scrollOffsetY.value;
+          }
+
+          // Handle focus changes without keyboard appearance
+          if (focusWasChanged) {
+            tag.value = e.target;
+            layout.value = input.value;
+
+            log("Handle focus change");
+            maybeScroll(true);
           }
         },
         onMove: (e) => {
           "worklet";
-
+          // log("[useSmoothKeyboardHandler] onMove", e);
           syncKeyboardFrame(e);
-
-          // if the user has set disableScrollOnKeyboardHide, only auto-scroll when the keyboard opens
-          if (!disableScrollOnKeyboardHide || keyboardWillAppear.value) {
-            maybeScroll(e.height);
-          }
         },
+
         onEnd: (e) => {
           "worklet";
+          log("[useSmoothKeyboardHandler] onEnd", e);
 
-          keyboardHeight.value = e.height;
-          scrollPosition.value = position.value;
-
+          if (e.height > 0) {
+            keyboardHeight.value = e.height;
+          }
+          keyboardWillAppear.value = false;
           syncKeyboardFrame(e);
         },
       },
@@ -345,6 +586,7 @@ const KeyboardAwareScrollView = forwardRef<
     useAnimatedReaction(
       () => input.value,
       (current, previous) => {
+        // Handle input height changes while maintaining focus
         if (
           current?.target === previous?.target &&
           current?.layout.height !== previous?.layout.height
@@ -352,27 +594,45 @@ const KeyboardAwareScrollView = forwardRef<
           const prevLayout = layout.value;
 
           layout.value = input.value;
-          scrollPosition.value += maybeScroll(keyboardHeight.value, true);
+
+          const visibleRect =
+            scrollViewLayout.value.height - keyboardHeight.value;
+
+          // Scroll if input is taller than visible area and cursor is out of view
+          const absoluteY = layout.value?.layout.absoluteY || 0;
+          const visibleBottom = visibleRect - bottomOffset;
+          const cursorPosition = absoluteY + cursorOffset.value;
+
+          if (cursorPosition > visibleBottom - bottomOffset) {
+            log(
+              "Handle input height change",
+              cursorPosition,
+              ">",
+              visibleBottom,
+              "-",
+              bottomOffset,
+            );
+            maybeScroll(true);
+          }
+
           layout.value = prevLayout;
         }
       },
-      [],
+      [bottomOffset],
     );
 
     const view = useAnimatedStyle(
-      () =>
-        enabled
-          ? {
-              // animations become choppy when scrolling to the end of the `ScrollView` (when the last input is focused)
-              // this happens because the layout recalculates on every frame. To avoid this we slightly increase padding
-              // by `+1`. In this way we assure, that `scrollTo` will never scroll to the end, because it uses interpolation
-              // from 0 to `keyboardHeight`, and here our padding is `keyboardHeight + 1`. It allows us not to re-run layout
-              // re-calculation on every animation frame and it helps to achieve smooth animation.
-              // see: https://github.com/kirillzyusko/react-native-keyboard-controller/pull/342
-              paddingBottom: currentKeyboardFrameHeight.value + 1,
-            }
-          : {},
+      () => ({
+        paddingBottom: enabled ? currentKeyboardFrameHeight.value : 0,
+      }),
       [enabled],
+    );
+
+    useAnimatedReaction(
+      () => scrollY.value,
+      (current) => {
+        scrollTo(scrollViewAnimatedRef, 0, current, false);
+      },
     );
 
     return (
@@ -380,7 +640,9 @@ const KeyboardAwareScrollView = forwardRef<
         ref={onRef}
         {...rest}
         scrollEventThrottle={16}
+        onContentSizeChange={onContentSizeChange}
         onLayout={onScrollViewLayout}
+        onScroll={scrollHandler}
       >
         {children}
         <Reanimated.View style={view} />
