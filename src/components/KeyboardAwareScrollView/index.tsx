@@ -383,7 +383,7 @@ const KeyboardAwareScrollView = forwardRef<
         onLayout={onScrollViewLayout}
       >
         {children}
-        <Reanimated.View style={view} />
+        {enabled && <Reanimated.View style={view} />}
       </ScrollViewComponent>
     );
   },
