@@ -20,6 +20,7 @@ target 'KeyboardControllerExample' do
   config = use_native_modules!
 
   pod 'React-RCTText', :path => '../node_modules/react-native/Libraries/Text', :modular_headers => true
+  pod 'ShowTime'
 
   use_react_native!(
     :path => config[:reactNativePath],

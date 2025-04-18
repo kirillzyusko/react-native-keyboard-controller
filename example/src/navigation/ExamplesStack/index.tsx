@@ -61,12 +61,14 @@ const options = {
   },
   [ScreenNames.REANIMATED_CHAT_FLAT_LIST]: {
     title: "Chat FlatList",
+    headerShown: false,
   },
   [ScreenNames.EVENTS]: {
     title: "Events",
   },
   [ScreenNames.AWARE_SCROLL_VIEW]: {
     title: "Aware scroll view",
+    headerShown: false,
   },
   [ScreenNames.AWARE_SCROLL_VIEW_STICKY_FOOTER]: {
     title: "Aware scroll view sticky footer",
@@ -86,6 +88,7 @@ const options = {
   },
   [ScreenNames.INTERACTIVE_KEYBOARD_IOS]: {
     title: "Interactive keyboard 🍏",
+    headerShown: false,
   },
   [ScreenNames.NATIVE_STACK]: {
     title: "Native stack",

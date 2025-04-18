@@ -17,6 +17,7 @@ import { history } from "../../../components/Message/data";
 import styles from "./styles";
 
 import type { LayoutChangeEvent } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const AnimatedTextInput = Reanimated.createAnimatedComponent(TextInput);
 
@@ -85,6 +86,7 @@ const useKeyboardAnimation = () => {
 const TEXT_INPUT_HEIGHT = 50;
 
 const contentContainerStyle = {
+  backgroundColor: "#3A3A3C",
   paddingBottom: TEXT_INPUT_HEIGHT,
 };
 
@@ -107,7 +109,7 @@ function InteractiveKeyboard() {
       position: "absolute",
       minHeight: TEXT_INPUT_HEIGHT,
       width: "100%",
-      backgroundColor: "#BCBCBC",
+      backgroundColor: "#636366",
       transform: [{ translateY: -height.value }],
     }),
     [],
@@ -124,6 +126,7 @@ function InteractiveKeyboard() {
   }));
 
   return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#3A3A3C", overflow: "hidden" }} edges={["top"]}>
     <KeyboardGestureArea
       offset={inputHeight}
       style={styles.container}
@@ -155,6 +158,7 @@ function InteractiveKeyboard() {
         onLayout={onInputLayoutChanged}
       />
     </KeyboardGestureArea>
+    </SafeAreaView>
   );
 }
 

@@ -16,6 +16,7 @@ import styles from "./styles";
 
 import type { MessageProps } from "../../../components/Message/types";
 import type { ListRenderItem } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const reversedMessages = [...history].reverse();
 
@@ -28,10 +29,11 @@ function ReanimatedChatFlatList() {
   const ref = useRef<FlatList>(null);
 
   return (
-    <>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#3A3A3C", overflow: "hidden" }} edges={["top"]}>
+      <View style={{flex: 1, overflow: "hidden"}}>
       <KeyboardAvoidingView
         behavior="translate-with-padding"
-        keyboardVerticalOffset={headerHeight}
+        keyboardVerticalOffset={64}
         style={styles.container}
         testID="flat-list.container"
       >
@@ -45,18 +47,9 @@ function ReanimatedChatFlatList() {
           testID="flat-list.chat"
         />
         <TextInput style={styles.textInput} testID="flat-list.input" />
-        <TouchableOpacity
-          activeOpacity={0.8}
-          style={styles.fab}
-          testID="flat-list.scrollToTop"
-          onPress={() => ref.current?.scrollToEnd()}
-        >
-          <View style={styles.circle}>
-            <Text style={styles.icon}>↑</Text>
-          </View>
-        </TouchableOpacity>
-      </KeyboardAvoidingView>
-    </>
+        </KeyboardAvoidingView>
+        </View>
+    </SafeAreaView>
   );
 }
 

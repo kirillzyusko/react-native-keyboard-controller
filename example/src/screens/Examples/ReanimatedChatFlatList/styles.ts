@@ -8,8 +8,12 @@ export default StyleSheet.create({
     color: "black",
     marginRight: 12,
   },
-  contentContainer: { justifyContent: "flex-end", flexGrow: 1 },
-  textInput: { height: 50, width: "100%", backgroundColor: "#BCBCBC" },
+  contentContainer: {
+    justifyContent: "flex-end",
+    flexGrow: 1,
+    backgroundColor: "#3A3A3C",
+  },
+  textInput: { height: 50, width: "100%", backgroundColor: "#636366" },
   fab: {
     position: "absolute",
     bottom: 50,

@@ -46,7 +46,7 @@ export default function App() {
               animated
               translucent
               backgroundColor={"#FFFFFF00"}
-              barStyle={"dark-content"}
+              barStyle={"light-content"}
             />
             <RootStack />
           </NavigationContainer>

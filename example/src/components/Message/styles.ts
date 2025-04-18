@@ -10,15 +10,15 @@ const container = {
 export default StyleSheet.create({
   senderContainer: {
     alignSelf: "flex-end",
-    backgroundColor: "#e0e0e0",
+    backgroundColor: "#F8F8FC",
     ...container,
   },
   recipientContainer: {
     alignSelf: "flex-start",
-    backgroundColor: "#50FF00",
+    backgroundColor: "#64D2FF",
     ...container,
   },
   message: {
-    color: "#000000",
+    color: "transparent",
   },
 });

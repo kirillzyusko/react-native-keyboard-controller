@@ -9,6 +9,7 @@ PODS:
     - hermes-engine/Pre-built (= 0.78.0)
   - hermes-engine/Pre-built (0.78.0)
   - InputMask (6.1.0)
+  - IQKeyboardManagerSwift (6.5.16)
   - lottie-ios (4.5.0)
   - lottie-react-native (7.2.2):
     - DoubleConversion
@@ -1597,6 +1598,10 @@ PODS:
     - React-logger (= 0.78.0)
     - React-perflogger (= 0.78.0)
     - React-utils (= 0.78.0)
+  - ReactNativeKeyboardManager (6.5.16-0):
+    - IQKeyboardManagerSwift (= 6.5.16)
+    - React-Core
+    - React-RCTText
   - RNCMaskedView (0.3.2):
     - DoubleConversion
     - glog
@@ -1801,6 +1806,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
+  - ShowTime (2.5.3)
   - SocketRocket (0.7.1)
   - Yoga (0.0.0)
 
@@ -1877,17 +1883,21 @@ DEPENDENCIES:
   - ReactAppDependencyProvider (from `build/generated/ios`)
   - ReactCodegen (from `build/generated/ios`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - ReactNativeKeyboardManager (from `../node_modules/react-native-keyboard-manager`)
   - "RNCMaskedView (from `../node_modules/@react-native-masked-view/masked-view`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNReactNativeHapticFeedback (from `../node_modules/react-native-haptic-feedback`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
+  - ShowTime
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
   trunk:
     - InputMask
+    - IQKeyboardManagerSwift
     - lottie-ios
+    - ShowTime
     - SocketRocket
 
 EXTERNAL SOURCES:
@@ -2032,6 +2042,8 @@ EXTERNAL SOURCES:
     :path: build/generated/ios
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  ReactNativeKeyboardManager:
+    :path: "../node_modules/react-native-keyboard-manager"
   RNCMaskedView:
     :path: "../node_modules/@react-native-masked-view/masked-view"
   RNGestureHandler:
@@ -2054,6 +2066,7 @@ SPEC CHECKSUMS:
   glog: eb93e2f488219332457c3c4eafd2738ddc7e80b8
   hermes-engine: b417d2b2aee3b89b58e63e23a51e02be91dc876d
   InputMask: 71d291dc54d2deaeac6512afb6ec2304228c0bb7
+  IQKeyboardManagerSwift: 12d89768845bb77b55cc092ecc2b1f9370f06b76
   lottie-ios: a881093fab623c467d3bce374367755c272bdd59
   lottie-react-native: 3fd634de5c0cc095d36687d1b92b7c242d6103e8
   RCT-Folly: 36fe2295e44b10d831836cc0d1daec5f8abcf809
@@ -2118,14 +2131,16 @@ SPEC CHECKSUMS:
   ReactAppDependencyProvider: f2e81d80afd71a8058589e19d8a134243fa53f17
   ReactCodegen: a63a0ab6ae824aef2e8c744981edd718b16eb9f2
   ReactCommon: 3d39389f8e2a2157d5c999f8fba57bd1c8f226f0
+  ReactNativeKeyboardManager: 704d89bde3cb1e0f432bc273a44eec96eab9d90f
   RNCMaskedView: 6d4bf14f158d1a93484edf30850cbbd7ccbb8668
   RNGestureHandler: ebb08ce5dfc9caff34ae9cda3ef0d18daae3a7ef
   RNReactNativeHapticFeedback: 288ef2881046914e9108441e783f64899807282a
   RNReanimated: 57dc0c788faad06eaab3109e8024494071888146
   RNScreens: 92045ed4a8d561352cebaa00a8c9f1a8fb80419b
+  ShowTime: 06cc9dc79886274b21041fe19b79c9eff59b9714
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
   Yoga: 9b7fb56e7b08cde60e2153344fa6afbd88e5d99f
 
-PODFILE CHECKSUM: c51a5e2124b01c5794c41f1f13ee16704466637a
+PODFILE CHECKSUM: ac7780b1b272d4c3b68502b65f63edb28cb3e856
 
 COCOAPODS: 1.15.2

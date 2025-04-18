@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, Text, TextInput as TextInputRN } from "react-native";
 
 import type { TextInputProps } from "react-native";
@@ -10,6 +10,8 @@ type CustomTextInputProps = {
 const TextInput = (props: CustomTextInputProps) => {
   const { title, ...rest } = props;
 
+  const [focused, setFocused] = useState(false);
+
   return (
     <>
       {!!title && <Text style={styles.title}>{title}</Text>}
@@ -17,12 +19,12 @@ const TextInput = (props: CustomTextInputProps) => {
         multiline
         numberOfLines={2}
         placeholderTextColor="#6c6c6c"
-        style={[styles.container, rest.editable === false && styles.disabled]}
+        style={[styles.container, rest.editable === false && styles.disabled, focused && styles.focused]}
         testID={rest.placeholder}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
         {...rest}
-        placeholder={`${rest.placeholder} (${
-          rest.keyboardType === "default" ? "text" : "numeric"
-        })`}
+        placeholder={null}
       />
     </>
   );
@@ -40,7 +42,7 @@ const styles = StyleSheet.create({
     minHeight: 50,
     maxHeight: 200,
     marginBottom: 50,
-    borderColor: "black",
+    borderColor: "#F8F8FC",
     borderWidth: 2,
     marginRight: 160,
     borderRadius: 10,
@@ -49,6 +51,9 @@ const styles = StyleSheet.create({
   },
   disabled: {
     opacity: 0.5,
+  },
+  focused: {
+    borderColor: "#00ABFF",
   },
 });
 
