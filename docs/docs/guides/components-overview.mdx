@@ -43,22 +43,32 @@ import OverKeyboardView from "../api/over-keyboard-view/over-keyboard-view.lotti
   />
 </div>
 
-Use `KeyboardAvoidingView` when you need to prevent the keyboard from hiding important UI elements, especially `TextInput` components. It automatically adjusts its layout—by changing its height, position, or padding—when the keyboard appears.A key advantage over the standard React Native component is its focus on _consistent behavior and smoother animations_ across both iOS and Android, simplifying cross-platform development. It's ideal for general screens like forms or chat interfaces.
+Use `KeyboardAvoidingView` when you need to prevent the keyboard from hiding important UI elements, especially `TextInput` components. It automatically adjusts its layout—by changing its height, position, or padding—when the keyboard appears. A key advantage over the standard React Native component is its focus on _consistent behavior and smoother animations_ across both iOS and Android, simplifying cross-platform development. It's ideal for general screens like forms or chat interfaces.
 
 You can control how it adjusts using the `behavior` prop (`padding`, `height`, `position`, `translate-with-padding`), and remember to set `keyboardVerticalOffset` if your view is positioned below a header or navigation bar.
 
 ## [`KeyboardStickyView`](../api/components/keyboard-sticky-view)
 
-<div style={{ display: "flex", justifyContent: "center", marginBottom: 20 }}>
-  <Lottie
-    className="lottie"
-    animationData={KeyboardStickyView}
-    style={{ width: 400, height: 400 }}
-    loop
-  />
-</div>
+`KeyboardStickyView` is designed specifically to make a view "sticky" to the top edge of the keyboard, moving perfectly in sync with it as it animates.
 
-`KeyboardStickyView` is designed specifically to make a view "stick" to the top edge of the keyboard, moving perfectly in sync with it as it animates.
+import ComparisonTable from "@site/src/components/ComparisonTable";
+import ComparableLottie from "@site/src/components/Lottie";
+
+<ComparisonTable
+  left={<ComparableLottie src={KeyboardStickyView} />}
+  right={<ComparableLottie src={KeyboardAvoidingView} />}
+  leftText={
+    <i>
+      <code>KeyboardStickyView</code> - only footer is moving (container is not
+      resized)
+    </i>
+  }
+  rightText={
+    <i>
+      <code>KeyboardAvoidingView</code> - entire container is getting resized
+    </i>
+  }
+/>
 
 Unlike `KeyboardAvoidingView`, it achieves this using only _vertical translation_, meaning it moves the child view up and down without resizing the surrounding layout. This makes it the perfect choice for elements like custom input toolbars, action buttons, or footers that need to remain visually attached just above the keyboard during text input.
 
@@ -113,11 +123,11 @@ Its key difference from a standard `Modal` is precisely this ability to keep the
 
 | Component                 | Primary Action When Keyboard Appears       | Container Resizes/Adjusts? | Typical Use Case             | Key Distinction vs. Others                                |
 | ------------------------- | ------------------------------------------ | -------------------------- | ---------------------------- | --------------------------------------------------------- |
-| `KeyboardAvoidingView`    | Adjusts layout (padding, position, height) | Yes                        | Small Forms, Chat Screens    | Consistent cross-platform avoidance, layout adjustment    |
-| `KeyboardStickyView`      | Moves/Translates view with keyboard        | No (moves child only)      | Sticky Footer/Toolbar        | Moves element without resizing layout                     |
-| `KeyboardAwareScrollView` | Scrolls content to focused input           | Yes (scroll position)      | Large Scrollable Forms/Lists | Auto-scrolls within ScrollView, respects native animation |
-| `KeyboardToolbar`         | Adds Nav/Done buttons, sticks to keyboard  | No (it's sticky)           | Multi-Input Forms            | Provides UI + native logic for input navigation/dismissal |
-| `OverKeyboardView`        | Displays content _over_ the keyboard       | No (overlays content)      | Menus, Modals over keyboard  | Keeps keyboard open while showing overlay content         |
+| `KeyboardAvoidingView`    | Adjusts layout (padding, position, height) | ✅                         | Small Forms, Chat Screens    | Consistent cross-platform avoidance, layout adjustment    |
+| `KeyboardStickyView`      | Moves/Translates view with keyboard        | ❌ (moves child only)      | Sticky Footer/Toolbar        | Moves element without resizing layout                     |
+| `KeyboardAwareScrollView` | Scrolls content to focused input           | ✅ (scroll position)       | Large Scrollable Forms/Lists | Auto-scrolls within ScrollView, respects native animation |
+| `KeyboardToolbar`         | Adds Nav/Done buttons, sticks to keyboard  | ❌ (it's sticky)           | Multi-Input Forms            | Provides UI + native logic for input navigation/dismissal |
+| `OverKeyboardView`        | Displays content _over_ the keyboard       | ❌ (overlays content)      | Menus, Modals over keyboard  | Keeps keyboard open while showing overlay content         |
 
 ## Which Component Should You Use?
 
