@@ -12,11 +12,12 @@ const KeyboardExtender = ({
   children,
   enabled = false,
 }: PropsWithChildren<KeyboardExtenderProps>) => {
+  const { width } = useWindowDimensions();
+
   // iOS-only component
   if (Platform.OS !== "ios") {
     return <>{children}</>;
   }
-  const { width } = useWindowDimensions();
 
   return (
     <RCTKeyboardExtender enabled={enabled}>
