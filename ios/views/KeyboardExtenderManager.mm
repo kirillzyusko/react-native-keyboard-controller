@@ -140,21 +140,22 @@ RCT_EXPORT_VIEW_PROPERTY(enabled, BOOL)
     [self attachInputAccessoryViewTo:(UITextView *)textInput];
   }
 }
-  
-  - (void)createSharedInputAccessoryView {
-    CGRect internalFrame = _contentView.subviews[0].frame;
-    _sharedInputAccessoryView = [[UIInputView alloc]
-         initWithFrame:CGRectMake(
-                           0, 0, UIScreen.mainScreen.bounds.size.width, internalFrame.size.height)
-        inputViewStyle:UIInputViewStyleKeyboard];
-    _sharedInputAccessoryView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 
-    // Attach the contentView to the shared input accessory view
-    _contentView.frame = _sharedInputAccessoryView.bounds;
-    _contentView.autoresizingMask =
-        UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    [_sharedInputAccessoryView addSubview:_contentView];
-  }
+- (void)createSharedInputAccessoryView
+{
+  CGRect internalFrame = _contentView.subviews[0].frame;
+  _sharedInputAccessoryView = [[UIInputView alloc]
+       initWithFrame:CGRectMake(
+                         0, 0, UIScreen.mainScreen.bounds.size.width, internalFrame.size.height)
+      inputViewStyle:UIInputViewStyleKeyboard];
+  _sharedInputAccessoryView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+
+  // Attach the contentView to the shared input accessory view
+  _contentView.frame = _sharedInputAccessoryView.bounds;
+  _contentView.autoresizingMask =
+      UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+  [_sharedInputAccessoryView addSubview:_contentView];
+}
 
 - (void)attachInputAccessoryViewTo:(UIView<UITextInput> *)input
 {
@@ -173,23 +174,25 @@ RCT_EXPORT_VIEW_PROPERTY(enabled, BOOL)
   // Refresh input view to apply changes
   [input reloadInputViews];
 }
-  
-  -(void) detachInputAccessoryView {
-    // Remove the accessory view from the current text input
-    UIResponder *firstResponder = [UIResponder current];
-    if ([firstResponder isKindOfClass:[UITextField class]] || [firstResponder isKindOfClass:[UITextView class]]) {
-      UIView<UITextInput> *textInput = (UIView<UITextInput> *)firstResponder;
-      if (textInput.inputAccessoryView == _sharedInputAccessoryView) {
-        // Assign the inputAccessoryView
-        if ([textInput isKindOfClass:[UITextField class]]) {
-          ((UITextField *)textInput).inputAccessoryView = nil;
-        } else if ([textInput isKindOfClass:[UITextView class]]) {
-          ((UITextView *)textInput).inputAccessoryView = nil;
-        }
-        [textInput reloadInputViews];
+
+- (void)detachInputAccessoryView
+{
+  // Remove the accessory view from the current text input
+  UIResponder *firstResponder = [UIResponder current];
+  if ([firstResponder isKindOfClass:[UITextField class]] ||
+      [firstResponder isKindOfClass:[UITextView class]]) {
+    UIView<UITextInput> *textInput = (UIView<UITextInput> *)firstResponder;
+    if (textInput.inputAccessoryView == _sharedInputAccessoryView) {
+      // Assign the inputAccessoryView
+      if ([textInput isKindOfClass:[UITextField class]]) {
+        ((UITextField *)textInput).inputAccessoryView = nil;
+      } else if ([textInput isKindOfClass:[UITextView class]]) {
+        ((UITextView *)textInput).inputAccessoryView = nil;
       }
+      [textInput reloadInputViews];
     }
   }
+}
 
 // MARK: touch handling
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
@@ -239,29 +242,28 @@ RCT_EXPORT_VIEW_PROPERTY(enabled, BOOL)
 - (void)setEnabled:(BOOL)enabled
 {
   _enabled = enabled;
-  
+
   [self updateEnabledState:enabled];
 }
 #endif
-  
-  - (void)updateEnabledState:(BOOL)enabled
-  {
-    _enabled = enabled;
 
-    if (_sharedInputAccessoryView) {
-      if (!enabled) {
-        [self detachInputAccessoryView];
-      } else {
-        // Re-attach if a text input is active
-        UIResponder *firstResponder = [UIResponder current];
-        if ([firstResponder conformsToProtocol:@protocol(UITextInput)]) {
-          [self attachToTextInput:(UIView *)firstResponder];
-        }
+- (void)updateEnabledState:(BOOL)enabled
+{
+  _enabled = enabled;
+
+  if (_sharedInputAccessoryView) {
+    if (!enabled) {
+      [self detachInputAccessoryView];
+    } else {
+      // Re-attach if a text input is active
+      UIResponder *firstResponder = [UIResponder current];
+      if ([firstResponder conformsToProtocol:@protocol(UITextInput)]) {
+        [self attachToTextInput:(UIView *)firstResponder];
       }
     }
   }
-    
-  
+}
+
 // MARK: child management
 #ifdef RCT_NEW_ARCH_ENABLED
 - (void)mountChildComponentView:(UIView<RCTComponentViewProtocol> *)childComponentView

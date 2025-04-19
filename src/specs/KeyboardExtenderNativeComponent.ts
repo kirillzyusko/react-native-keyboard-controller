@@ -9,4 +9,5 @@ export interface NativeProps extends ViewProps {
 
 export default codegenNativeComponent<NativeProps>("KeyboardExtender", {
   interfaceOnly: true,
+  excludedPlatforms: ["android"],
 }) as HostComponent<NativeProps>;

@@ -22,10 +22,7 @@ import Reanimated, {
 
 // TODO: remove _touchHandler when view gets detached from keyboard?
 // TODO: test how GestureHandler works there
-// TODO: add ability to make custom keyboard extender for specific inputs (group/textInputNativeID)
 // TODO: don't overwrite existing inputAccessoryView?
-// TODO: remove view when enabled={false}
-// TODO: test iOS 15
 // TODO: Android implementation
 
 export default function KeyboardExtendExample() {
