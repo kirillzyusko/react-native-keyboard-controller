@@ -79,6 +79,14 @@ export default function KeyboardExtendExample() {
           style={styles.input}
         />
 
+        <TextInput
+          placeholder="Third input field..."
+          placeholderTextColor="#1c1c1c"
+          style={styles.input}
+          onFocus={() => setShowExtend(false)}
+          onBlur={() => setShowExtend(true)}
+        />
+
         <KeyboardExtender enabled={showExtend}>
           <Reanimated.View style={[styles.keyboardExtend, animatedStyle]}>
             <TouchableOpacity onPress={() => Alert.alert("10$")}>
