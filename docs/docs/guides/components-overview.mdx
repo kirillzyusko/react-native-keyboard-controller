@@ -73,7 +73,7 @@ To enhance the usability of forms with multiple `TextInput` fields, consider `Ke
 
 A major benefit is its use of the library's native focus control logic (`KeyboardController.setFocusTo`), simplifying development by handling the complexities of switching focus between inputs for you. It's highly customizable in appearance and behavior, allowing seamless integration into your app's design.
 
-## [`OverKeyboardView`](../api/components/over-keyboard-view)
+## [`OverKeyboardView`](../api/over-keyboard-view)
 
 <div style={{ display: "flex", justifyContent: "center", marginBottom: 20 }}>
   <Lottie
@@ -90,13 +90,13 @@ Its key difference from a standard `Modal` is precisely this ability to keep the
 
 ## Quick Reference Table
 
-|Component|Primary Action When Keyboard Appears|Container Resizes/Adjusts?|Typical Use Case|Key Distinction vs. Others|
-|---|---|---|---|---|
-|`KeyboardAvoidingView`|Adjusts layout (padding, position, height)|Yes|Small Forms, Chat Screens|Consistent cross-platform avoidance, layout adjustment|
-|`KeyboardStickyView`|Moves/Translates view with keyboard|No (moves child only)|Sticky Footer/Toolbar|Moves element without resizing layout|
-|`KeyboardAwareScrollView`|Scrolls content to focused input|Yes (scroll position)|Large Scrollable Forms/Lists|Auto-scrolls within ScrollView, respects native animation|
-|`KeyboardToolbar`|Adds Nav/Done buttons, sticks to keyboard|No (it's sticky)|Multi-Input Forms|Provides UI + native logic for input navigation/dismissal|
-|`OverKeyboardView`|Displays content _over_ the keyboard|No (overlays content)|Menus, Modals over keyboard|Keeps keyboard open while showing overlay content|
+| Component                 | Primary Action When Keyboard Appears       | Container Resizes/Adjusts? | Typical Use Case             | Key Distinction vs. Others                                |
+| ------------------------- | ------------------------------------------ | -------------------------- | ---------------------------- | --------------------------------------------------------- |
+| `KeyboardAvoidingView`    | Adjusts layout (padding, position, height) | Yes                        | Small Forms, Chat Screens    | Consistent cross-platform avoidance, layout adjustment    |
+| `KeyboardStickyView`      | Moves/Translates view with keyboard        | No (moves child only)      | Sticky Footer/Toolbar        | Moves element without resizing layout                     |
+| `KeyboardAwareScrollView` | Scrolls content to focused input           | Yes (scroll position)      | Large Scrollable Forms/Lists | Auto-scrolls within ScrollView, respects native animation |
+| `KeyboardToolbar`         | Adds Nav/Done buttons, sticks to keyboard  | No (it's sticky)           | Multi-Input Forms            | Provides UI + native logic for input navigation/dismissal |
+| `OverKeyboardView`        | Displays content _over_ the keyboard       | No (overlays content)      | Menus, Modals over keyboard  | Keeps keyboard open while showing overlay content         |
 
 ## Which Component Should You Use?
 
