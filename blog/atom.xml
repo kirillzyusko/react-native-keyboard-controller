@@ -37,7 +37,7 @@
 <ul>
 <li>Support for <code>react-native@0.79</code>;</li>
 <li>A new <code>KeyboardExtender</code> component that gets embedded directly into the keyboard;</li>
-<li>KeyboardToolbar.Group` component to split multiple inputs into groups, each with its own navigation and state;</li>
+<li><code>KeyboardToolbar.Group</code> component to split multiple inputs into groups, each with its own navigation and state;</li>
 <li>A complete rewrite of <code>KeyboardAwareScrollView</code> that will use cursor position instead of layout-based detection.</li>
 </ul>
 <p>Stay tuned and follow me on <a href="https://twitter.com/ziusko" target="_blank" rel="noopener noreferrer">Twitter</a> and <a href="https://github.com/kirillzyusko" target="_blank" rel="noopener noreferrer">GitHub</a> for updates. Thank you for your support! 😊</p>]]></content>
