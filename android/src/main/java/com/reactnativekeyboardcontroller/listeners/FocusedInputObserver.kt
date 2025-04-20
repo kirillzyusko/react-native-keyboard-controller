@@ -16,6 +16,7 @@ import com.reactnativekeyboardcontroller.events.FocusedInputSelectionChangedEven
 import com.reactnativekeyboardcontroller.events.FocusedInputTextChangedEvent
 import com.reactnativekeyboardcontroller.extensions.addOnSelectionChangedListener
 import com.reactnativekeyboardcontroller.extensions.addOnTextChangedListener
+import com.reactnativekeyboardcontroller.extensions.currentImePackage
 import com.reactnativekeyboardcontroller.extensions.dispatchEvent
 import com.reactnativekeyboardcontroller.extensions.dp
 import com.reactnativekeyboardcontroller.extensions.emitEvent
@@ -113,6 +114,7 @@ class FocusedInputObserver(
         lastFocusedInput = null
       }
       if (newFocus is EditText) {
+        println(context?.currentImePackage())
         lastFocusedInput = newFocus
         newFocus.addOnLayoutChangeListener(layoutListener)
         this.syncUpLayout()
