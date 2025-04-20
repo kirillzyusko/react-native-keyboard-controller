@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>iOS‑18 Keyboard Backdrop in CSS</title>
+
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <!--   R      G      B      A      bias  -->
+    <filter id="keyboardMatrix" color-interpolation-filters="sRGB">
+      <feColorMatrix type="matrix" values="
+        0.27 0     0     0   0.1679
+        0    0.27  0     0   0.1679
+        0    0     0.27  0   0.1679
+        0    0     0     0.27 0.73  " />
+    </filter>
+  </defs>
+</svg>
+
+<style>
+/* --- wallpaper just to show the blur --- */
+html,body{margin:0;height:100%}
+
+/* Dark‑mode override (iOS uses #1C1C1E @ 73 %) */
+@media (prefers-color-scheme: dark){
+  .keyboard{background:rgba(28,28,30,0.73);}          /* :contentReference[oaicite:3]{index=3} */
+}
+
+/* --- dummy keycaps so it feels like a keyboard --- */
+@media (prefers-color-scheme: dark){
+  .key{background:rgba(255,255,255,0.12);color:#fff;}
+}
+.accessory {
+ position: absolute;
+ width: 300px;
+ height: 50px;
+ /* #4d4d4d30 */
+ background: #00000005;
+ top: 315px;
+ backdrop-filter: blur(20px) saturate(1.8) url("#keyboardMatrix");
+}
+
+</style>
+</head>
+<body>
+
+  <img src="./screen4.png" style="width:300px">
+  <div class="accessory"></div>
+
+</body>
+</html>
