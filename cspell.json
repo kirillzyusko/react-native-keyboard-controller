@@ -152,7 +152,9 @@
     "reactnative",
     "SQIP",
     "DCMAKE",
-    "HKLM"
+    "HKLM",
+    "xcassets",
+    "appiconset"
   ],
   "ignorePaths": [
     "node_modules",
