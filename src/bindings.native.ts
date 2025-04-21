@@ -2,6 +2,7 @@ import { NativeEventEmitter, Platform } from "react-native";
 
 import type {
   FocusedInputEventsModule,
+  KeyboardBackgroundViewProps,
   KeyboardControllerNativeModule,
   KeyboardControllerProps,
   KeyboardEventsModule,
@@ -60,3 +61,5 @@ export const KeyboardGestureArea: React.FC<KeyboardGestureAreaProps> =
     : ({ children }: KeyboardGestureAreaProps) => children;
 export const RCTOverKeyboardView: React.FC<OverKeyboardViewProps> =
   require("./specs/OverKeyboardViewNativeComponent").default;
+export const KeyboardBackgroundView: React.FC<KeyboardBackgroundViewProps> =
+  require("./specs/KeyboardBackgroundViewNativeComponent").default;
