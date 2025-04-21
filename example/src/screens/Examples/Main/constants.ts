@@ -135,4 +135,10 @@ export const examples: Example[] = [
     info: ScreenNames.USE_KEYBOARD_STATE,
     icons: "📝",
   },
+  {
+    title: "Keyboard Background",
+    testID: "keyboard_background",
+    info: ScreenNames.KEYBOARD_BACKGROUND_VIEW,
+    icons: "",
+  },
 ];

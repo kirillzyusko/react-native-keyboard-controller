@@ -18,6 +18,17 @@
 </svg>
 
 <style>
+     @keyframes moveUpDown {
+      0% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-50px);
+      }
+      100% {
+        transform: translateY(0);
+      }
+    }
 /* --- wallpaper just to show the blur --- */
 html,body{margin:0;height:100%}
 
@@ -38,6 +49,7 @@ html,body{margin:0;height:100%}
  background: #00000005;
  top: 315px;
  backdrop-filter: blur(20px) saturate(1.8) url("#keyboardMatrix");
+ animation: moveUpDown 2s ease-in-out infinite;
 }
 
 </style>
