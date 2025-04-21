@@ -180,7 +180,8 @@
       "componentProvider": {
         "KeyboardControllerView": "KeyboardControllerView",
         "KeyboardGestureArea": "KeyboardGestureArea",
-        "OverKeyboardView": "OverKeyboardView"
+        "OverKeyboardView": "OverKeyboardView",
+        "KeyboardBackgroundView": "KeyboardBackgroundView"
       }
     }
   }
