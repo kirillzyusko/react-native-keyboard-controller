@@ -24,7 +24,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import "UIKBBackdropView.h"
+#import <objc/message.h>
 
 #ifdef RCT_NEW_ARCH_ENABLED
 using namespace facebook::react;
@@ -43,14 +43,33 @@ RCT_EXPORT_MODULE(KeyboardBackgroundViewManager)
 #ifndef RCT_NEW_ARCH_ENABLED
 - (UIView *)view
 {
-  UIKBBackdropView *backdrop = [[UIKBBackdropView alloc] initWithFrame:CGRectMake(0, 0, 50, 50)
-                                                                 style:2030];
+  Class BackdropClass = NSClassFromString(@"UIKBBackdropView");
+  if (BackdropClass) {
+      CGRect frame = CGRectMake(0, 0, 320, 200); // Your desired frame
+      long long style = 2030; // Use the appropriate style (private value)
+      
+      // Use objc_msgSend with proper casting to call the initializer
+      id backdropView = ((id (*)(id, SEL, CGRect, long long))objc_msgSend)(
+          [BackdropClass alloc],
+          @selector(initWithFrame:style:),
+          frame,
+          style
+      );
+      
+      // Use backdropView (cast to UIView/UIVisualEffectView if needed)
+      if ([backdropView isKindOfClass:[UIVisualEffectView class]]) {
+          UIVisualEffectView *visualEffectView = (UIVisualEffectView *)backdropView;
+        
+        visualEffectView.layer.masksToBounds = YES;
+        
+        return visualEffectView;
+          // Add to your view hierarchy
+      }
+  } else {
+      NSLog(@"UIKBBackdropView class not found.");
+  }
 
-  // Apply border radius (may not work as expected due to private implementation)
-  backdrop.layer.cornerRadius = 25;
-  backdrop.layer.masksToBounds = YES;
-
-  return backdrop;
+  return nil;
   // return [[KeyboardBackgroundView alloc] initWithFrame:CGRectZero];
 }
 #endif
