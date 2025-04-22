@@ -20,9 +20,11 @@ const KeyboardBackdropViewExample = () => {
   const ai = useAnimatedStyle(
     () => ({
       position: "absolute",
+      left: 0,
+      right: 0,
+      flex: 1,
+      bottom: 0,
       opacity: progress.value,
-      right: 20,
-      bottom: 20,
     }),
     [],
   );
@@ -34,16 +36,10 @@ const KeyboardBackdropViewExample = () => {
         keyboardType="default"
         style={styles.textInput}
       />
-      <Reanimated.View style={ai}>
-        <KeyboardStickyView>
-          <TouchableOpacity onPress={() => Alert.alert("Your AI assistant")}>
-            <KeyboardBackgroundView
-              style={{ width: 50, height: 50, borderRadius: 26 }}
-            />
-            <Text style={styles.ai}>AI</Text>
-          </TouchableOpacity>
-        </KeyboardStickyView>
-      </Reanimated.View>
+      <KeyboardStickyView >
+        <KeyboardBackgroundView style={{ width: "100%", height: 50 }} />
+        <Text style={styles.ai}>AI</Text>
+      </KeyboardStickyView>
     </View>
   );
 };
@@ -52,6 +48,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
+    justifyContent: "space-between",
   },
   textInput: {
     height: 50,
