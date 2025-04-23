@@ -19,6 +19,7 @@ import Reanimated, {
   interpolate,
   useAnimatedStyle,
   useSharedValue,
+  withRepeat,
   withSpring,
   withTiming,
 } from "react-native-reanimated";
@@ -32,11 +33,13 @@ const KeyboardBackdropViewExample = () => {
   const progress = useSharedValue(0);
 
   useEffect(() => {
+    progress.value = 0;
+    /*progress.value = withRepeat(withSpring(1, {
+      stiffness: 1000,
+      damping: 500,
+      mass: 3,
+    }), -1, true);*/
     KeyboardEvents.addListener("keyboardDidShow", () => {
-      /*progress.value = withTiming(1, {
-        duration: 1000,
-        easing: Easing.inOut(Easing.ease),
-      });*/
       progress.value = withSpring(1, {
         stiffness: 1000,
         damping: 500,
@@ -56,10 +59,10 @@ const KeyboardBackdropViewExample = () => {
     () => ({
       borderBottomRightRadius: interpolate(
         progress.value,
-        [0, 0.5, 1],
+        [0, 0.8, 1],
         [0, 0, 25],
       ),
-      transform: [{ translateY: -progress.value * 70 }, { rotate: "45deg" }],
+      transform: [{ translateY: -progress.value * 70 + 34 }, { rotate: "45deg" }],
     }),
     [],
   );
@@ -69,7 +72,7 @@ const KeyboardBackdropViewExample = () => {
         // { scale: interpolate(progress.value, [0, 0.5, 1], [1, 1, 0.8]) },
         {
           // 27%
-          translateY: interpolate(progress.value, [0, 0.35, 1], [12, 0, 12]),
+          translateY: interpolate(progress.value, [0, 0.35, 1], [12, -2, 12]),
         },
       ],
     }),
@@ -84,7 +87,7 @@ const KeyboardBackdropViewExample = () => {
         style={styles.textInput}
       />
       <KeyboardStickyView>
-        <Reanimated.View
+        <ReanimatedBackgroundView
           style={[
             {
               width: 50,
@@ -96,26 +99,24 @@ const KeyboardBackdropViewExample = () => {
               position: "absolute",
               justifyContent: "center",
               alignItems: "center",
-              backgroundColor: "#1e1f26",
               // zIndex: 2,
             },
             mainCircle,
           ]}
         >
-          <Image
+                  <Image
             source={require("./ai.png")}
             style={{ transform: [{ rotate: "-45deg" }], width: 20, height: 20 }}
           />
-        </Reanimated.View>
-        <Reanimated.View
+        </ReanimatedBackgroundView>
+        <ReanimatedBackgroundView
           style={[
             {
               width: 100,
               height: 100,
               borderRadius: 9999,
-              backgroundColor: "#1e1f26",
               right: -5,
-              bottom: -90,
+              bottom: -122,
               position: "absolute",
             },
             secondCircle,
@@ -129,7 +130,7 @@ const KeyboardBackdropViewExample = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#3A3A3C",
+    backgroundColor: "#8A8A8C",
     justifyContent: "space-between",
   },
   textInput: {
