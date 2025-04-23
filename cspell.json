@@ -149,7 +149,12 @@
     "componentregistry",
     "mapbuffer",
     "nativemodule",
-    "reactnative"
+    "reactnative",
+    "SQIP",
+    "DCMAKE",
+    "HKLM",
+    "xcassets",
+    "appiconset"
   ],
   "ignorePaths": [
     "node_modules",

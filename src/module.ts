@@ -7,16 +7,23 @@ import type {
 } from "./types";
 
 let isClosed = true;
-let lastEvent: KeyboardEventData | null = null;
+let lastState: KeyboardEventData = {
+  height: 0,
+  duration: 0,
+  timestamp: new Date().getTime(),
+  target: -1,
+  type: "default",
+  appearance: "default",
+};
 
 KeyboardEvents.addListener("keyboardDidHide", (e) => {
   isClosed = true;
-  lastEvent = e;
+  lastState = e;
 });
 
 KeyboardEvents.addListener("keyboardDidShow", (e) => {
   isClosed = false;
-  lastEvent = e;
+  lastState = e;
 });
 
 const dismiss = async (options?: DismissOptions): Promise<void> => {
@@ -38,7 +45,7 @@ const dismiss = async (options?: DismissOptions): Promise<void> => {
   });
 };
 const isVisible = () => !isClosed;
-const state = () => lastEvent;
+const state = () => lastState;
 
 export const KeyboardController: KeyboardControllerModule = {
   setDefaultMode: KeyboardControllerNative.setDefaultMode,

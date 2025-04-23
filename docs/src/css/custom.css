@@ -90,6 +90,23 @@
   border-left-color: #ffff0080;
 }
 
+.svg {
+  height: 100%;
+  width: 50%;
+  margin-bottom: 20px;
+}
+
+.code-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.code-block {
+  flex: 1 1 300px;
+  overflow: auto;
+}
+
 .description-block {
   padding-right: 20px;
 }

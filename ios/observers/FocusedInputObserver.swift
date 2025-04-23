@@ -228,14 +228,16 @@ public class FocusedInputObserver: NSObject {
 
   private func substituteDelegate(_ input: UIResponder?) {
     if let textField = input as? UITextField {
-      if !(textField.delegate is KCTextInputCompositeDelegate) {
+      if !(textField.delegate is KCTextInputCompositeDelegate),
+         delegate.canSubstituteTextFieldDelegate(delegate: textField.delegate)
+      {
         delegate.setTextFieldDelegate(delegate: textField.delegate, textField: textField)
         textField.delegate = delegate
       }
     } else if let textView = input as? UITextView {
       if !(textView.delegate is KCTextInputCompositeDelegate) {
         delegate.setTextViewDelegate(delegate: textView.delegate)
-        (textView as? RCTUITextView)?.setForceDelegate(delegate)
+        textView.setForceDelegate(delegate)
       }
     }
     // dispatch onSelectionChange on focus
@@ -248,7 +250,7 @@ public class FocusedInputObserver: NSObject {
     if let textField = input as? UITextField, let oldDelegate = delegate.activeDelegate as? UITextFieldDelegate {
       textField.delegate = oldDelegate
     } else if let textView = input as? UITextView, let oldDelegate = delegate.activeDelegate as? UITextViewDelegate {
-      (textView as? RCTUITextView)?.setForceDelegate(oldDelegate)
+      textView.setForceDelegate(oldDelegate)
     }
   }
 

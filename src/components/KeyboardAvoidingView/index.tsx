@@ -106,14 +106,21 @@ const KeyboardAvoidingView = forwardRef<
       [relativeKeyboardHeight],
     );
 
-    const onLayoutWorklet = useCallback((layout: LayoutRectangle) => {
-      "worklet";
+    const onLayoutWorklet = useCallback(
+      (layout: LayoutRectangle) => {
+        "worklet";
 
-      if (keyboard.isClosed.value || initialFrame.value === null) {
-        // eslint-disable-next-line react-compiler/react-compiler
-        initialFrame.value = layout;
-      }
-    }, []);
+        if (
+          keyboard.isClosed.value ||
+          initialFrame.value === null ||
+          behavior !== "height"
+        ) {
+          // eslint-disable-next-line react-compiler/react-compiler
+          initialFrame.value = layout;
+        }
+      },
+      [behavior],
+    );
     const onLayout = useCallback<NonNullable<ViewProps["onLayout"]>>(
       (e) => {
         runOnUI(onLayoutWorklet)(e.nativeEvent.layout);
