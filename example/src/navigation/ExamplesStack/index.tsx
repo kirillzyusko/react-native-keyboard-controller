@@ -124,6 +124,7 @@ const options = {
   },
   [ScreenNames.KEYBOARD_BACKGROUND_VIEW]: {
     title: "Keyboard background view",
+    headerShown: false,
   },
 };
 
