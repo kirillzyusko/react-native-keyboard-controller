@@ -23,6 +23,7 @@
 #endif
 
 #import <UIKit/UIKit.h>
+#import <React/RCTView.h>
 
 #import <objc/message.h>
 
@@ -43,12 +44,14 @@ RCT_EXPORT_MODULE(KeyboardBackgroundViewManager)
 #ifndef RCT_NEW_ARCH_ENABLED
 - (UIView *)view
 {
+  RCTView *containerView = [[RCTView alloc] initWithFrame:CGRectZero];
+  containerView.clipsToBounds = YES;
+
   Class BackdropClass = NSClassFromString(@"UIKBBackdropView");
   if (BackdropClass) {
-      CGRect frame = CGRectMake(0, 0, 320, 200); // Your desired frame
-      long long style = 2030; // Use the appropriate style (private value)
+      CGRect frame = CGRectZero;
+      long long style = 2030;
       
-      // Use objc_msgSend with proper casting to call the initializer
       id backdropView = ((id (*)(id, SEL, CGRect, long long))objc_msgSend)(
           [BackdropClass alloc],
           @selector(initWithFrame:style:),
@@ -56,21 +59,18 @@ RCT_EXPORT_MODULE(KeyboardBackgroundViewManager)
           style
       );
       
-      // Use backdropView (cast to UIView/UIVisualEffectView if needed)
       if ([backdropView isKindOfClass:[UIVisualEffectView class]]) {
           UIVisualEffectView *visualEffectView = (UIVisualEffectView *)backdropView;
-        
-        visualEffectView.layer.masksToBounds = YES;
-        
-        return visualEffectView;
-          // Add to your view hierarchy
+          visualEffectView.layer.masksToBounds = YES;
+          visualEffectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+          visualEffectView.frame = containerView.bounds;
+          [containerView addSubview:visualEffectView];
       }
   } else {
       NSLog(@"UIKBBackdropView class not found.");
   }
 
-  return nil;
-  // return [[KeyboardBackgroundView alloc] initWithFrame:CGRectZero];
+  return containerView;
 }
 #endif
 
