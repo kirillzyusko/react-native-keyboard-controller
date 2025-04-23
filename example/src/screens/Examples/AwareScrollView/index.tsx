@@ -1,6 +1,7 @@
 import BottomSheet from "@gorhom/bottom-sheet";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Button, Platform, ScrollView, Switch, Text, View, KeyboardAvoidingView } from "react-native";
+import {KeyboardAwareScrollView} from "react-native-keyboard-controller";
 
 import TextInput from "../../../components/TextInput";
 
@@ -9,12 +10,14 @@ import { styles } from "./styles";
 import type { ExamplesStackParamList } from "../../../navigation/ExamplesStack";
 import type { StackScreenProps } from "@react-navigation/stack";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+// import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 type Props = StackScreenProps<ExamplesStackParamList>;
 
 import KeyboardManager from 'react-native-keyboard-manager';
+if (Platform.OS === 'ios') {
 KeyboardManager.setEnableAutoToolbar(false);
+}
 /*if (Platform.OS === 'ios') {
     KeyboardManager.setEnable(true);
     KeyboardManager.setEnableDebugging(false);

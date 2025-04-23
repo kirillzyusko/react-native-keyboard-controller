@@ -8,7 +8,7 @@ type CustomTextInputProps = {
 } & TextInputProps;
 
 const TextInput = (props: CustomTextInputProps) => {
-  const { title, ...rest } = props;
+  const { title, onFocus, ...rest } = props;
 
   const [focused, setFocused] = useState(false);
 
@@ -21,7 +21,7 @@ const TextInput = (props: CustomTextInputProps) => {
         placeholderTextColor="#6c6c6c"
         style={[styles.container, rest.editable === false && styles.disabled, focused && styles.focused]}
         testID={rest.placeholder}
-        onFocus={() => setFocused(true)}
+        onFocus={() => { setFocused(true); onFocus?.(); }}
         onBlur={() => setFocused(false)}
         {...rest}
         placeholder={null}
@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
   title: {
     marginBottom: 6,
     marginLeft: 3,
-    color: "black",
+    color: "white",
     fontSize: 16,
   },
   container: {

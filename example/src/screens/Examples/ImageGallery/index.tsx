@@ -22,6 +22,7 @@ import Reanimated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const images = [
   [
@@ -228,11 +229,11 @@ function ImageGallery() {
   const onClose = useCallback(() => setShow(false), []);
 
   return (
-    <>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#3A3A3C", overflow: "hidden" }} edges={["top"]}>
       <View style={styles.container}>
         <TextInput
           placeholder="Search"
-          placeholderTextColor="#4c4c4c"
+          placeholderTextColor="white"
           style={styles.search}
         />
         <ScrollView
@@ -256,7 +257,7 @@ function ImageGallery() {
         </ScrollView>
       </View>
       <SharedTransition image={image} visible={show} onClose={onClose} />
-    </>
+    </SafeAreaView>
   );
 }
 
@@ -268,7 +269,8 @@ const styles = StyleSheet.create({
   },
   search: {
     height: 50,
-    backgroundColor: "white",
+    color: "white",
+    backgroundColor: "#636366",
     borderRadius: 50,
     marginHorizontal: 10,
     paddingHorizontal: 10,

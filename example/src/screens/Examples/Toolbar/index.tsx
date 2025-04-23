@@ -6,7 +6,7 @@ import {
   KeyboardAwareScrollView,
   KeyboardToolbar,
 } from "react-native-keyboard-controller";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
 import TextInput from "../../../components/TextInput";
 
@@ -39,7 +39,7 @@ function Form() {
   const insets = useSafeAreaInsets();
 
   return (
-    <>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#3A3A3C", overflow: "hidden" }} edges={["top"]}>
       <KeyboardAwareScrollView
         bottomOffset={62}
         style={[styles.withPadding, styles.container]}
@@ -78,38 +78,6 @@ function Form() {
           title="About you"
           onFocus={onHideAutoFill}
         />
-        <View style={styles.row}>
-          <View style={styles.birthday}>
-            <TextInput
-              keyboardType="numeric"
-              multiline={false}
-              placeholder="DD"
-              testID="TextInput#5"
-              title="Day"
-              onFocus={onHideAutoFill}
-            />
-          </View>
-          <View style={[styles.birthday, styles.withPadding]}>
-            <TextInput
-              keyboardType="numeric"
-              multiline={false}
-              placeholder="MM"
-              testID="TextInput#6"
-              title="Month"
-              onFocus={onHideAutoFill}
-            />
-          </View>
-          <View style={styles.birthday}>
-            <TextInput
-              keyboardType="numeric"
-              multiline={false}
-              placeholder="YYYY"
-              testID="TextInput#7"
-              title="Year"
-              onFocus={onHideAutoFill}
-            />
-          </View>
-        </View>
         <TextInput
           keyboardType="default"
           placeholder="Country"
@@ -156,19 +124,19 @@ function Form() {
         />
       </KeyboardAwareScrollView>
       <KeyboardToolbar
-        blur={blur}
+        // blur={blur}
         content={
           showAutoFill ? (
             <AutoFillContacts onContactSelected={onContactSelected} />
           ) : null
         }
         insets={insets}
-        opacity={Platform.OS === "ios" ? "4F" : "DD"}
+        // opacity={Platform.OS === "ios" ? "4F" : "DD"}
         onDoneCallback={haptic}
         onNextCallback={haptic}
         onPrevCallback={haptic}
       />
-    </>
+    </SafeAreaView>
   );
 }
 
@@ -212,7 +180,7 @@ export default function ToolbarExample({ navigation }: Props) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "white",
+    backgroundColor: "#3A3A3C",
   },
   row: {
     flexDirection: "row",

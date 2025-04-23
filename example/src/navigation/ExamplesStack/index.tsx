@@ -85,6 +85,7 @@ const options = {
   },
   [ScreenNames.INTERACTIVE_KEYBOARD]: {
     title: "Interactive keyboard",
+    headerShown: false,
   },
   [ScreenNames.INTERACTIVE_KEYBOARD_IOS]: {
     title: "Interactive keyboard 🍏",
@@ -107,6 +108,7 @@ const options = {
   },
   [ScreenNames.TOOLBAR]: {
     title: "Toolbar",
+    headerShown: false,
   },
   [ScreenNames.MODAL]: {
     title: "Modal",
@@ -119,6 +121,7 @@ const options = {
   },
   [ScreenNames.IMAGE_GALLERY]: {
     title: "Image gallery",
+    headerShown: false,
   },
   [ScreenNames.USE_KEYBOARD_STATE]: {
     title: "useKeyboardState",

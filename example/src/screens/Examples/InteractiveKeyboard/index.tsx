@@ -16,6 +16,7 @@ import styles from "./styles";
 
 import type { ExamplesStackParamList } from "../../../navigation/ExamplesStack";
 import type { StackScreenProps } from "@react-navigation/stack";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const AnimatedTextInput = Reanimated.createAnimatedComponent(TextInput);
 
@@ -45,23 +46,8 @@ const useKeyboardAnimation = () => {
 type Props = StackScreenProps<ExamplesStackParamList>;
 
 function InteractiveKeyboard({ navigation }: Props) {
-  const [interpolator, setInterpolator] = useState<"ios" | "linear">("linear");
+  const [interpolator, setInterpolator] = useState<"ios" | "linear">("ios");
   const { height } = useKeyboardAnimation();
-
-  useEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <Text
-          style={styles.header}
-          onPress={() =>
-            setInterpolator(interpolator === "ios" ? "linear" : "ios")
-          }
-        >
-          {interpolator}
-        </Text>
-      ),
-    });
-  }, [interpolator]);
 
   const scrollViewStyle = useAnimatedStyle(
     () => ({
@@ -73,7 +59,7 @@ function InteractiveKeyboard({ navigation }: Props) {
     () => ({
       height: 50,
       width: "100%",
-      backgroundColor: "#BCBCBC",
+      backgroundColor: "#636366",
       transform: [{ translateY: -height.value }],
     }),
     [],
@@ -86,6 +72,7 @@ function InteractiveKeyboard({ navigation }: Props) {
   );
 
   return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#3A3A3C", overflow: "hidden" }} edges={["top"]}>
     <View style={styles.container}>
       <KeyboardGestureArea
         showOnSwipeUp
@@ -109,6 +96,7 @@ function InteractiveKeyboard({ navigation }: Props) {
       </KeyboardGestureArea>
       <AnimatedTextInput style={textInputStyle} testID="chat.input" />
     </View>
+    </SafeAreaView>
   );
 }
 
