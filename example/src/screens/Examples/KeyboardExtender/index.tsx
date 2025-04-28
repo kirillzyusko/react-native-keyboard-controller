@@ -3,10 +3,12 @@ import {
   Alert,
   Button,
   Image,
+  Keyboard,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View,
 } from "react-native";
 import {
@@ -19,6 +21,7 @@ import Reanimated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 // TODO: remove _touchHandler when view gets detached from keyboard?
 // TODO: test how GestureHandler works there
@@ -45,43 +48,13 @@ export default function KeyboardExtendExample() {
         source={require("./background.jpg")}
         style={{ ...StyleSheet.absoluteFillObject, flex: 1, width: "100%" }}
       />
-      <View style={styles.container}>
-        <Button
-          title={isOKVMode ? "OKV" : "Default"}
-          onPress={() => setOKVMode(!isOKVMode)}
-        />
-        <Button
-          title="Change opacity"
-          onPress={() => {
-            opacity.set(
-              withTiming(opacity.value === 0 ? 1 : 0, {
-                duration: 1000,
-              }),
-            );
-          }}
-        />
-        <Button
-          title={showExtend ? "Detach" : "Attach"}
-          onPress={() => setShowExtend(!showExtend)}
-        />
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <SafeAreaView style={styles.container} edges={["top"]}>
         <TextInput
-          placeholder="Type something..."
-          placeholderTextColor="#1c1c1c"
+          placeholder="Donation amount"
+          placeholderTextColor="#5c5c5c"
+          keyboardType="numeric"
           style={styles.input}
-        />
-
-        <TextInput
-          placeholder="Another input field..."
-          placeholderTextColor="#1c1c1c"
-          style={styles.input}
-        />
-
-        <TextInput
-          placeholder="Third input field..."
-          placeholderTextColor="#1c1c1c"
-          style={styles.input}
-          onFocus={() => setShowExtend(false)}
-          onBlur={() => setShowExtend(true)}
         />
 
         <KeyboardExtender enabled={showExtend}>
@@ -106,7 +79,8 @@ export default function KeyboardExtendExample() {
             />
           </View>
         </OverKeyboardView>
-      </View>
+      </SafeAreaView>
+      </TouchableWithoutFeedback>
     </>
   );
 }
@@ -118,10 +92,11 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 40,
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: "#1c1c1c",
-    borderRadius: 4,
+    borderRadius: 8,
     padding: 10,
+    fontSize: 18,
     marginBottom: 20,
   },
   keyboardExtend: {
