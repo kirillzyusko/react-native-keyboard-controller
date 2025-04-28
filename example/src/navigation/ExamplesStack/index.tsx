@@ -124,6 +124,7 @@ const options = {
   },
   [ScreenNames.KEYBOARD_EXTENDER]: {
     title: "Keyboard Extender",
+    headerShown: false,
   },
 };
 
