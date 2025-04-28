@@ -10,9 +10,9 @@ import {
   initialWindowMetrics,
 } from "react-native-safe-area-context";
 
-AvoidSoftInput.setShouldMimicIOSBehavior(true);
-AvoidSoftInput.setEnabled(true);
-AvoidSoftInput.setAvoidOffset(-34);
+//AvoidSoftInput.setShouldMimicIOSBehavior(true);
+//AvoidSoftInput.setEnabled(true);
+//AvoidSoftInput.setAvoidOffset(-34);
 
 import RootStack from "./navigation/RootStack";
 import { AvoidSoftInput } from "react-native-avoid-softinput";
@@ -45,7 +45,7 @@ export default function App() {
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
       <GestureHandlerRootView style={styles.root}>
-        <>
+        <KeyboardProvider statusBarTranslucent>
           <NavigationContainer fallback={spinner} linking={linking}>
             <StatusBar
               animated
@@ -55,7 +55,7 @@ export default function App() {
             />
             <RootStack />
           </NavigationContainer>
-        </>
+        </KeyboardProvider>
       </GestureHandlerRootView>
     </SafeAreaProvider>
   );
