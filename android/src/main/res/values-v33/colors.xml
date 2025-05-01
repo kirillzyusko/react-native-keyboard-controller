@@ -1,0 +1,6 @@
+<resources>
+  <color name="gboard_dark">#1b1b1f</color>
+  <color name="gboard_light">#f2f0f4</color>
+  <color name="yandex_dark">#191b23</color>
+  <color name="yandex_light">#eaeef8</color>
+</resources>

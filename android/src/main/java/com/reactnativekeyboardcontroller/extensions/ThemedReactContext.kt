@@ -56,14 +56,6 @@ val ThemedReactContext?.appearance: String
   get() =
     when {
       this == null -> "default"
-      isSystemDarkMode(this) -> "dark"
+      isSystemDarkMode() -> "dark"
       else -> "light"
     }
-
-private fun isSystemDarkMode(context: Context): Boolean =
-  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-    (context.getSystemService(Context.UI_MODE_SERVICE) as? android.app.UiModeManager)
-      ?.nightMode == android.app.UiModeManager.MODE_NIGHT_YES
-  } else {
-    false
-  }

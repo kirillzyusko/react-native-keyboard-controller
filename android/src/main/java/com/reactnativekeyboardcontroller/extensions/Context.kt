@@ -8,7 +8,6 @@ import android.view.Display
 import android.view.WindowManager
 import android.view.WindowMetrics
 import android.provider.Settings
-import android.view.inputmethod.InputMethodManager
 import android.content.ComponentName
 
 @SuppressLint("ObsoleteSdkInt")
@@ -40,13 +39,21 @@ fun Context.getDisplaySize(): Point {
   return size
 }
 
+fun Context.isSystemDarkMode(): Boolean =
+  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+    (getSystemService(Context.UI_MODE_SERVICE) as? android.app.UiModeManager)
+      ?.nightMode == android.app.UiModeManager.MODE_NIGHT_YES
+  } else {
+    false
+  }
+
 fun Context.currentImePackage(): String? {
-  // 1. Read the system setting that stores the active IME
   val id = Settings.Secure.getString(
     contentResolver,
-    Settings.Secure.DEFAULT_INPUT_METHOD        // "com.google.android.inputmethod.latin/.LatinIME", for example
-  ) ?: return null                                // may be null on very old devices
+    Settings.Secure.DEFAULT_INPUT_METHOD
+  ) ?: return null
 
-  // 2. Turn the flattened ComponentName into its parts
+  println(id)
+
   return ComponentName.unflattenFromString(id)?.packageName
 }
