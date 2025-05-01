@@ -57,5 +57,6 @@ class KeyboardControllerPackage : BaseReactPackage() {
       KeyboardControllerViewManager(),
       KeyboardGestureAreaViewManager(),
       OverKeyboardViewManager(),
+      KeyboardBackgroundViewManager(),
     )
 }

@@ -114,7 +114,6 @@ class FocusedInputObserver(
         lastFocusedInput = null
       }
       if (newFocus is EditText) {
-        println(context?.currentImePackage())
         lastFocusedInput = newFocus
         newFocus.addOnLayoutChangeListener(layoutListener)
         this.syncUpLayout()
