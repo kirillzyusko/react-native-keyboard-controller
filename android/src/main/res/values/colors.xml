@@ -1,0 +1,8 @@
+<resources>
+  <color name="gboard_dark">#1c1c2c</color>
+  <color name="gboard_light">#ebeff1</color>
+  <color name="swiftkey_dark">#141414</color>
+  <color name="swiftkey_light">#f1f1f1</color>
+  <color name="yandex_dark">#1a1b20</color>
+  <color name="yandex_light">#eeedf4</color>
+</resources>
