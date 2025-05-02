@@ -1,4 +1,7 @@
 <resources>
   <color name="gboard_dark">#1a1b20</color>
   <color name="gboard_light">#f1f0f7</color>
+  <color name="yandex_dark">#1a1b20</color>
+  <color name="yandex_light">#eeedf4</color>
+  <color name="samsung_dark">#030303</color>
 </resources>
