@@ -2,12 +2,10 @@ package com.reactnativekeyboardcontroller.views.background
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
-import android.graphics.Color
 import android.view.WindowInsets
 import com.facebook.react.uimanager.BackgroundStyleApplicator
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.views.view.ReactViewGroup
-import com.reactnativekeyboardcontroller.extensions.currentImePackage
 import com.reactnativekeyboardcontroller.views.background.Skins.getInputMethodColor
 
 @SuppressLint("ViewConstructor")
@@ -24,10 +22,9 @@ class KeyboardBackgroundViewGroup(private val reactContext: ThemedReactContext) 
     BackgroundStyleApplicator.setBackgroundColor(this, reactContext.getInputMethodColor())
   }
 
-  // TODO: not getting called
   // keyboard changed
   override fun onApplyWindowInsets(insets: WindowInsets?): WindowInsets {
-    println(context.currentImePackage())
+    BackgroundStyleApplicator.setBackgroundColor(this, reactContext.getInputMethodColor())
     return super.onApplyWindowInsets(insets)
   }
 
