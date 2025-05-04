@@ -3,7 +3,7 @@
 Keyboard manager which works in identical way on both iOS and Android.
 
 <div>
-  <img align="right" width="35%" src="./gifs/demo.gif?raw=true">
+  <img align="right" width="25%" src="./gifs/demo.gif?raw=true">
 </div>
 
 ## Key features
