@@ -6,7 +6,7 @@ Keyboard manager which works in identical way on both iOS and Android.
   <img align="right" width="25%" src="./gifs/demo.gif?raw=true">
 </div>
 
-## Key features
+### Key features
 
 - mapping keyboard movement to animated values 😎
 - missing `keyboardWillShow` / `keyboardWillHide` events are available on Android 😍
@@ -20,18 +20,18 @@ Keyboard manager which works in identical way on both iOS and Android.
 - works with any navigation library 🧭
 - and more is coming... Stay tuned! 😊
 
-## Installation
+### Installation
 
 Check out the [installation](https://kirillzyusko.github.io/react-native-keyboard-controller/docs/installation) section of docs for the detailed installation instructions.
 
-## Documentation
+### Documentation
 
 Check out the dedicated documentation page for information about this library, API reference and more: [https://kirillzyusko.github.io/react-native-keyboard-controller/](https://kirillzyusko.github.io/react-native-keyboard-controller/)
 
-## Contributing
+### Contributing
 
 See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
 
-## License
+### License
 
 MIT
