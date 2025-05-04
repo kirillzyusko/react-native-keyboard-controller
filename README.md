@@ -2,9 +2,9 @@
 
 Keyboard manager which works in identical way on both iOS and Android.
 
-## Demonstration
-
-<img src="./gifs/demo.webm?raw=true" width="60%">
+<div>
+  <img align="right" width="35%" src="./gifs/demo.mp4?raw=true">
+</div>
 
 ## Key features
 
