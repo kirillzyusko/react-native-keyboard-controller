@@ -31,7 +31,13 @@
 using namespace facebook::react;
 #endif
 
-// MARK: Manager
+typedef NS_ENUM(NSInteger, KeyboardBackdropStyle) {
+  KeyboardBackdropStyleDark = 2030,
+  KeyboardBackdropStyleLight = 3901
+};
+
+#pragma mark - Manager
+
 @implementation KeyboardBackgroundViewManager
 
 RCT_EXPORT_MODULE(KeyboardBackgroundViewManager)
@@ -47,28 +53,9 @@ RCT_EXPORT_MODULE(KeyboardBackgroundViewManager)
   RCTView *containerView = [[RCTView alloc] initWithFrame:CGRectZero];
   containerView.clipsToBounds = YES;
 
-  Class BackdropClass = NSClassFromString(@"UIKBBackdropView");
-  if (BackdropClass) {
-      CGRect frame = CGRectZero;
-      long long style = 2030;
-      
-      id backdropView = ((id (*)(id, SEL, CGRect, long long))objc_msgSend)(
-          [BackdropClass alloc],
-          @selector(initWithFrame:style:),
-          frame,
-          style
-      );
-      
-      if ([backdropView isKindOfClass:[UIVisualEffectView class]]) {
-          UIVisualEffectView *visualEffectView = (UIVisualEffectView *)backdropView;
-          visualEffectView.layer.masksToBounds = YES;
-          visualEffectView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-          visualEffectView.frame = containerView.bounds;
-          [containerView addSubview:visualEffectView];
-      }
-  } else {
-      NSLog(@"UIKBBackdropView class not found.");
-  }
+  KeyboardBackgroundView *backgroundView = [[KeyboardBackgroundView alloc] initWithFrame:containerView.bounds];
+  backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+  [containerView addSubview:backgroundView];
 
   return containerView;
 }
@@ -76,7 +63,8 @@ RCT_EXPORT_MODULE(KeyboardBackgroundViewManager)
 
 @end
 
-// MARK: View
+#pragma mark - View
+
 #ifdef RCT_NEW_ARCH_ENABLED
 @interface KeyboardBackgroundView () <RCTKeyboardBackgroundViewViewProtocol>
 #else
@@ -85,6 +73,7 @@ RCT_EXPORT_MODULE(KeyboardBackgroundViewManager)
 @end
 
 @implementation KeyboardBackgroundView {
+  UIVisualEffectView *_backdropView;
 }
 
 #ifdef RCT_NEW_ARCH_ENABLED
@@ -100,30 +89,54 @@ RCT_EXPORT_MODULE(KeyboardBackgroundViewManager)
   [super load];
 }
 
-// MARK: Constructor
-#ifdef RCT_NEW_ARCH_ENABLED
-- (instancetype)init
-{
-  if (self = [super init]) {
-  }
-  return self;
-}
-#else
-- (instancetype)initWithBridge:(RCTBridge *)bridge
-{
-  self = [super initWithFrame:CGRectZero];
+- (instancetype)initWithFrame:(CGRect)frame {
+  self = [super initWithFrame:frame];
   if (self) {
+    [self setupBackdropView];
   }
-
   return self;
 }
-#endif
 
-#ifdef RCT_NEW_ARCH_ENABLED
-Class<RCTComponentViewProtocol> KeyboardBackgroundViewCls(void)
-{
-  return KeyboardBackgroundView.class;
+- (void)setupBackdropView {
+  Class BackdropClass = NSClassFromString(@"UIKBBackdropView");
+  if (BackdropClass) {
+    long long style = (self.traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark)
+                        ? KeyboardBackdropStyleDark
+                        : KeyboardBackdropStyleLight;
+
+    id backdropView = ((id (*)(id, SEL, CGRect, long long))objc_msgSend)(
+        [BackdropClass alloc],
+        @selector(initWithFrame:style:),
+        self.bounds,
+        style
+    );
+
+    if ([backdropView isKindOfClass:[UIVisualEffectView class]]) {
+      _backdropView = (UIVisualEffectView *)backdropView;
+      _backdropView.layer.masksToBounds = YES;
+      _backdropView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+      _backdropView.frame = self.bounds;
+      [self addSubview:_backdropView];
+    }
+  } else {
+    NSLog(@"UIKBBackdropView not found");
+  }
 }
-#endif
+
+- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
+  [super traitCollectionDidChange:previousTraitCollection];
+
+  if (@available(iOS 12.0, *)) {
+    if ([previousTraitCollection hasDifferentColorAppearanceComparedToTraitCollection:self.traitCollection]) {
+      long long style = (self.traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark)
+                        ? KeyboardBackdropStyleDark
+                        : KeyboardBackdropStyleLight;
+
+      if (_backdropView && [_backdropView respondsToSelector:@selector(transitionToStyle:)]) {
+        ((void (*)(id, SEL, long long))objc_msgSend)(_backdropView, @selector(transitionToStyle:), style);
+      }
+    }
+  }
+}
 
 @end

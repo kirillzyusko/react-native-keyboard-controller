@@ -11,7 +11,10 @@ import Reanimated, {
   useSharedValue,
   withSpring,
 } from "react-native-reanimated";
-import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 
 const ReanimatedBackgroundView = Reanimated.createAnimatedComponent(
   KeyboardBackgroundView,
@@ -19,6 +22,7 @@ const ReanimatedBackgroundView = Reanimated.createAnimatedComponent(
 
 const LiquidKeyboardExample = () => {
   const progress = useSharedValue(0);
+  const { bottom } = useSafeAreaInsets();
 
   useEffect(() => {
     progress.value = 0;
@@ -69,11 +73,7 @@ const LiquidKeyboardExample = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <TextInput
-        keyboardAppearance="dark"
-        keyboardType="default"
-        style={styles.textInput}
-      />
+      <TextInput keyboardType="default" style={styles.textInput} />
       <KeyboardStickyView>
         <ReanimatedBackgroundView
           style={[
@@ -87,6 +87,7 @@ const LiquidKeyboardExample = () => {
               position: "absolute",
               justifyContent: "center",
               alignItems: "center",
+              top: bottom,
               // zIndex: 2,
             },
             mainCircle,
