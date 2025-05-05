@@ -1,0 +1,36 @@
+---
+sidebar_position: 7
+description: View that matches keyboard background
+keywords:
+  [react-native-keyboard-controller, keyboard, background, keyboard extension]
+---
+
+# KeyboardBackgroundView
+
+import Lottie from "lottie-react";
+import lottie from "../over-keyboard-view/over-keyboard-view.lottie.json";
+
+<div style={{ display: "flex", justifyContent: "center", marginBottom: 20 }}>
+  <Lottie
+    className="lottie"
+    animationData={lottie}
+    style={{ width: 400, height: 400 }}
+    loop
+  />
+</div>
+
+`KeyboardBackgroundView` is designed to match the background color of the keyboard. Using this low-level component you can design various keyboard extensions, implement "shared transitions" (Safari/Photos app search) and more.
+
+:::info `KeyboardProvider` presence
+This component works independently of `KeyboardProvider`. If you're only using this component from the library, wrapping your entire app in `KeyboardProvider` is not required.
+:::
+
+:::warning
+This component works well in most cases. However, since keyboard apps can customize their background color and there's no direct API to retrieve it, the background may not perfectly match in some situations.
+:::
+
+## Example
+
+```tsx
+
+```
