@@ -99,10 +99,17 @@ If you experience this error on Windows you need to perform next steps:
    - Inside the `android.defaultConfig` block, add the following code:
 
    ```json
+   import org.apache.tools.ant.taskdefs.condition.Os
+   
    externalNativeBuild {
-       cmake {
-           arguments "-DCMAKE_MAKE_PROGRAM=$YOUR_CMAKE_NINJA_PATH$", "-DCMAKE_OBJECT_PATH_MAX=1024"
-       }
+      cmake {
+         def cmakeDir = "${android.sdkDirectory}/cmake/3.31.1/bin"
+         def ninjaExecutable = Os.isFamily(Os.FAMILY_WINDOWS) ? "ninja.exe" : "ninja"
+         def ninjaPath = "${cmakeDir}/${ninjaExecutable}".replace("\\", "/")
+
+         arguments "-DCMAKE_MAKE_PROGRAM=${ninjaPath}",
+                   "-DCMAKE_OBJECT_PATH_MAX=1024"
+      }
    }
    ```
 
