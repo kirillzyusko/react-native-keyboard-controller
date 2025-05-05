@@ -100,7 +100,7 @@ If you experience this error on Windows you need to perform next steps:
 
    ```json
    import org.apache.tools.ant.taskdefs.condition.Os
-   
+
    externalNativeBuild {
        cmake {
            def cmakeDir = "${android.sdkDirectory}/cmake/3.31.1/bin"
