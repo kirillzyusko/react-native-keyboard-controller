@@ -154,7 +154,8 @@
     "DCMAKE",
     "HKLM",
     "xcassets",
-    "appiconset"
+    "appiconset",
+    "taskdefs"
   ],
   "ignorePaths": [
     "node_modules",
