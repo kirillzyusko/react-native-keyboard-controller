@@ -8,17 +8,17 @@ Keyboard manager that works identically on both iOS and Android.
 
 ### Key features
 
-- 🧬 Map keyboard movement to animated values  
-- 🧪 `keyboardWillShow` / `keyboardWillHide` events now available on Android  
-- ⚡ Change soft input mode on Android  
-- 🚀 Reanimated support  
-- 📱 Interactive keyboard dismissing 👆📱  
-- 📚 Prebuilt components (`KeyboardStickyView`, `KeyboardAwareScrollView`, reworked `KeyboardAvoidingView`)  
-- 📐 `KeyboardToolbar` with customizable _**previous**_, _**next**_, and _**done**_ buttons  
-- 🌐 Display anything over the keyboard (without dismissing it) using `OverKeyboardView`  
-- 📝 Easy retrieval of focused input info  
-- 🧭 Compatible with any navigation library  
-- ✨ More coming soon... stay tuned! 😊  
+- 🧬 Map keyboard movement to animated values
+- 🧪 `keyboardWillShow` / `keyboardWillHide` events now available on Android
+- ⚡ Change soft input mode on Android
+- 🚀 Reanimated support
+- 📱 Interactive keyboard dismissing 👆📱
+- 📚 Prebuilt components (`KeyboardStickyView`, `KeyboardAwareScrollView`, reworked `KeyboardAvoidingView`)
+- 📐 `KeyboardToolbar` with customizable _**previous**_, _**next**_, and _**done**_ buttons
+- 🌐 Display anything over the keyboard (without dismissing it) using `OverKeyboardView`
+- 📝 Easy retrieval of focused input info
+- 🧭 Compatible with any navigation library
+- ✨ More coming soon... stay tuned! 😊
 
 ### Installation
 
