@@ -10,7 +10,7 @@ Keyboard manager which works in identical way on both iOS and Android.
 
 - 🧬 mapping keyboard movement to animated values
 - 🧪 missing `keyboardWillShow` / `keyboardWillHide` events are available on Android
-- ⚡ module for changing soft input mode on Android ✨
+- ⚡ module for changing soft input mode on Android
 - 🚀 reanimated support
 - 📱 interactive keyboard dismissing 👆📱
 - 📚 prebuilt components (`KeyboardStickyView`, `KeyboardAwareScrollView`, re-worked `KeyboardAvoidingView`)
@@ -18,7 +18,7 @@ Keyboard manager which works in identical way on both iOS and Android.
 - 🌐 show anything over the keyboard (without dismissing it) using `OverKeyboardView`
 - 📝 easy focused input information retrieval
 - 🧭 works with any navigation library
-- and more is coming... Stay tuned! 😊
+- ✨ and more is coming... Stay tuned! 😊
 
 ### Installation
 
