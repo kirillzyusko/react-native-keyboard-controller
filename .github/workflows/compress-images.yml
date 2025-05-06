@@ -9,6 +9,7 @@ on:
       - "**.jpeg"
       - "**.png"
       - "**.webp"
+      - "!gifs/demo.png"
 
 jobs:
   compress-images:
