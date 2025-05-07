@@ -13,9 +13,19 @@ keywords:
   ]
 ---
 
-# Keyboard Extender
+# KeyboardExtender
 
-<!-- PUT LOTTIE HERE -->
+import Lottie from "lottie-react";
+import lottie from "./keyboard-extender.lottie.json";
+
+<div style={{ display: "flex", justifyContent: "center", marginBottom: 20 }}>
+  <Lottie
+    className="lottie"
+    animationData={lottie}
+    style={{ width: 400, height: 400 }}
+    loop
+  />
+</div>
 
 The `KeyboardExtend` component allows you to extend the keyboard with your own UI that extends the keyboard (i. e. literally increasing its height) moves and matches its appearance.
 
@@ -49,9 +59,9 @@ A boolean prop indicating whether the component is enabled or disabled. If it's 
 ```jsx
 import React, { useState } from "react";
 import { View, Text, TextInput, StyleSheet } from "react-native";
-import { KeyboardExtend } from "react-native-keyboard-controller";
+import { KeyboardExtender } from "react-native-keyboard-controller";
 
-export default function KeyboardExtendExample() {
+export default function KeyboardExtenderExample() {
   const [keyboardVisible, setKeyboardVisible] = useState(false);
 
   return (
@@ -63,13 +73,13 @@ export default function KeyboardExtendExample() {
         onBlur={() => setKeyboardVisible(false)}
       />
 
-      <KeyboardExtend enabled={keyboardVisible}>
-        <View style={styles.keyboardExtend}>
+      <KeyboardExtender enabled={keyboardVisible}>
+        <View style={styles.keyboardExtender}>
           <Text style={styles.quickOption}>10$</Text>
           <Text style={styles.quickOption}>20$</Text>
           <Text style={styles.quickOption}>50$</Text>
         </View>
-      </KeyboardExtend>
+      </KeyboardExtender>
     </View>
   );
 }
@@ -87,7 +97,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     borderRadius: 4,
   },
-  keyboardExtend: {
+  keyboardExtender: {
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
