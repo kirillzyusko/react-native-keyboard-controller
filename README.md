@@ -17,6 +17,7 @@ A universal keyboard handling solution for React Native — lightweight, fully c
 - 📐 `KeyboardToolbar` with customizable _**previous**_, _**next**_, and _**done**_ buttons
 - 🌐 Display anything over the keyboard (without dismissing it) using `OverKeyboardView`
 - 🎨 Match keyboard background with `KeyboardBackgroundView`
+- 🧩 Extend keyboard with custom buttons/UI via `KeyboardExtender`
 - 📝 Easy retrieval of focused input info
 - 🧭 Compatible with any navigation library
 - ✨ More coming soon... stay tuned! 😊
