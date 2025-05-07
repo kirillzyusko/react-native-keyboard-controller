@@ -6,6 +6,8 @@ keywords:
     react-native-keyboard-controller,
     components,
     views,
+    extend keyboard,
+    keyboard extender,
     over keyboard view,
     keyboard toolbar,
     keyboard avoiding view,
@@ -16,6 +18,7 @@ keywords:
     KeyboardAwareScrollView,
     KeyboardToolbar,
     OverKeyboardView,
+    KeyboardExtender,
   ]
 ---
 
@@ -34,6 +37,7 @@ import KeyboardStickyView from "../api/components/keyboard-sticky-view/ksv.lotti
 import KeyboardToolbar from "../api/components/keyboard-toolbar/toolbar.lottie.json";
 import OverKeyboardView from "../api/over-keyboard-view/over-keyboard-view.lottie.json";
 import KeyboardBackgroundView from "../api/keyboard-background-view/keyboard-background-view.lottie.json";
+import KeyboardExtender from "../api/keyboard-extender/keyboard-extender.lottie.json";
 
 <div style={{ display: "flex", justifyContent: "center", marginBottom: 20 }}>
   <Lottie
@@ -120,6 +124,23 @@ A major benefit is its use of the library's native focus control logic (`Keyboar
 
 Its key difference from a standard `Modal` is precisely this ability to keep the keyboard open and active, enabling more seamless keyboard-centric interactions. Its usage is straightforward, primarily controlled via the `visible` boolean prop.
 
+## [`KeyboardExtender`](../api/components/keyboard-extender)
+
+<div style={{ display: "flex", justifyContent: "center", marginBottom: 20 }}>
+  <Lottie
+    className="lottie"
+    animationData={KeyboardExtender}
+    style={{ width: 400, height: 400 }}
+    loop
+  />
+</div>
+
+`KeyboardExtender` allows you to render custom content _inside_ the keyboard area — literally extending the keyboard with your own UI. Unlike views that float or move with the keyboard, this component integrates visually and functionally _as part of the keyboard itself_.
+
+It's perfect for adding quick action buttons or other custom input helpers directly above the system keyboard. The extender matches the native keyboard animation and hides automatically when the keyboard dismisses.
+
+Use the `enabled` prop to toggle its activation based on `TextInput` focus, and note that it **cannot contain other `TextInput`s** inside.
+
 ## [`KeyboardBackgroundView`](../api/keyboard-background-view)
 
 <div style={{ display: "flex", justifyContent: "center", marginBottom: 20 }}>
@@ -156,6 +177,7 @@ Use this when you want your UI to feel like it shares the same visual space as t
 | `KeyboardAwareScrollView` | Scrolls content to focused input           | ✅ (scroll position)       | Large Scrollable Forms/Lists | Auto-scrolls within ScrollView, respects native animation |
 | `KeyboardToolbar`         | Adds Nav/Done buttons, sticks to keyboard  | ❌ (it's sticky)           | Multi-Input Forms            | Provides UI + native logic for input navigation/dismissal |
 | `OverKeyboardView`        | Displays content _over_ the keyboard       | ❌ (overlays content)      | Menus, Modals over keyboard  | Keeps keyboard open while showing overlay content         |
+| `KeyboardExtender`        | Displays the content inside the keyboard   | ❌ (moves with keyboard)   | Quick actions, shortcuts     | Appears as part of keyboard, matches animation & style    |
 | `KeyboardBackgroundView`  | Matches keyboard background color          | ❌ (visual only)           | Visual Blending/Transitions  | Synchronizes color with keyboard for seamless UI effects  |
 
 ## Which Component Should You Use?
@@ -167,6 +189,9 @@ Here's a simple guide to choosing:
 - For **scrollable screens containing multiple inputs** (like forms or long lists), `KeyboardAwareScrollView` will handle keeping the focused input visible automatically.
 - To add standard **"Previous/Next/Done" navigation buttons** to your forms, `KeyboardToolbar` offers a convenient and customizable solution.
 - When you need to display **contextual content like suggestions or menus over an active keyboard** without dismissing it, `OverKeyboardView` provides this unique capability.
-- If you're aiming for **visual consistency between your UI and the keyboard background** — for example, to blend a panel into the keyboard area — `KeyboardBackgroundView` helps match system colors for a polished, seamless effect.
+  <<<<<<< HEAD
+- # If you're aiming for **visual consistency between your UI and the keyboard background** — for example, to blend a panel into the keyboard area — `KeyboardBackgroundView` helps match system colors for a polished, seamless effect.
+- If you want to **extend the keyboard with your own UI**, such as quick actions or input helpers that appear _inside_ the keyboard area, use `KeyboardExtender`.
+  > > > > > > > cddfd022d (docs: add chapter in components overview, improve lottie animation)
 
 This library offers specialized tools for common keyboard challenges in React Native. Choose the one that best fits your UI need.
