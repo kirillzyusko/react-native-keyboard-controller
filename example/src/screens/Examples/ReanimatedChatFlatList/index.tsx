@@ -1,13 +1,16 @@
 import { useHeaderHeight } from "@react-navigation/elements";
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import {
+  Animated,
+  Easing,
   FlatList,
   Text,
   TextInput,
   TouchableOpacity,
+  useAnimatedValue,
   View,
 } from "react-native";
-import { KeyboardAvoidingView } from "react-native-keyboard-controller";
+import { KeyboardAvoidingView, KeyboardEvents } from "react-native-keyboard-controller";
 import {
   SafeAreaView,
   useSafeAreaInsets,
@@ -28,7 +31,27 @@ const RenderItem: ListRenderItem<MessageProps> = ({ item, index }) => {
 };
 
 function ChatFlatList() {
+  const translation = useAnimatedValue(0);
   const { top } = useSafeAreaInsets();
+
+  useEffect(() => {
+    KeyboardEvents.addListener("keyboardWillShow", (e) => {
+      Animated.timing(translation, {
+        toValue: -e.height,
+        duration: e.duration,
+        useNativeDriver: true,
+        easing: Easing.inOut(Easing.ease),
+      }).start();
+    });
+    KeyboardEvents.addListener("keyboardWillHide", (e) => {
+      Animated.timing(translation, {
+        toValue: 0,
+        duration: e.duration,
+        useNativeDriver: true,
+        easing: Easing.inOut(Easing.ease),
+      }).start();
+    });
+  }, [translation]);
 
   return (
     <SafeAreaView
@@ -36,12 +59,7 @@ function ChatFlatList() {
       style={{ flex: 1, backgroundColor: "#3A3A3C", overflow: "hidden" }}
     >
       <View style={{ flex: 1, overflow: "hidden" }}>
-        <KeyboardAvoidingView
-          behavior="translate-with-padding"
-          keyboardVerticalOffset={top}
-          style={styles.container}
-          testID="flat-list.container"
-        >
+        <Animated.View style={[styles.container, { transform: [{ translateY: translation }] }]}>
           <FlatList
             inverted
             contentContainerStyle={styles.contentContainer}
@@ -51,7 +69,7 @@ function ChatFlatList() {
             testID="flat-list.chat"
           />
           <TextInput style={styles.textInput} testID="flat-list.input" />
-        </KeyboardAvoidingView>
+        </Animated.View>
       </View>
     </SafeAreaView>
   );
