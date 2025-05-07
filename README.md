@@ -1,6 +1,6 @@
 # react-native-keyboard-controller
 
-Keyboard manager that works identically on both iOS and Android.
+A universal keyboard handling solution for React Native — lightweight, fully customizable, and built for real-world apps. Smooth animations, consistent behavior on both iOS and Android, with a developer-oriented design.
 
 <div>
   <img align="right" width="30%" src="./gifs/demo.png?raw=true">
