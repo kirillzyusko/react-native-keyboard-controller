@@ -1,12 +1,32 @@
 <resources>
-  <color name="gboard_dark">#1c1c2c</color>
-  <color name="gboard_light">#ebeff1</color>
-  <color name="gboard_tts_dark">#202124</color>
-  <color name="gboard_tts_light">#f8f9fa</color>
-  <color name="swiftkey_dark">#141414</color>
-  <color name="swiftkey_light">#f1f1f1</color>
-  <color name="yandex_dark">#1a1b20</color>
-  <color name="yandex_light">#eeedf4</color>
-  <color name="samsung_dark">#080808</color>
-  <color name="samsung_light">#e4e4e4</color>
+  <style name="gboard_dark">
+    <item name="color">#1c1c2c</item>
+  </style>
+  <style name="gboard_light">
+    <item name="color">#ebeff1</item>
+  </style>
+  <style name="gboard_tts_dark">
+    <item name="color">#202124</item>
+  </style>
+  <style name="gboard_tts_light">
+    <item name="color">#f8f9fa</item>
+  </style>
+  <style name="swiftkey_dark">
+    <item name="color">#141414</item>
+  </style>
+  <style name="swiftkey_light">
+    <item name="color">#f1f1f1</item>
+  </style>
+  <style name="yandex_dark">
+    <item name="color">#1a1b20</item>
+  </style>
+  <style name="yandex_light">
+    <item name="color">#eeedf4</item>
+  </style>
+  <style name="samsung_dark">
+    <item name="color">#080808</item>
+  </style>
+  <style name="samsung_light">
+    <item name="color">#e4e4e4</item>
+  </style>
 </resources>
