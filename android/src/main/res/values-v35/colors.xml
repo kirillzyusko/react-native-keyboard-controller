@@ -1,4 +1,10 @@
 <resources>
-  <color name="gboard_dark">@android:color/system_neutral2_50</color>
-  <color name="gboard_light">@android:color/system_accent1_500</color>
+  <style name="gboard_dark">
+    <item name="color">@android:color/system_neutral1_900</item>
+    <item name="tone">4</item>
+  </style>
+  <style name="gboard_light">
+    <item name="color">@android:color/system_neutral1_50</item>
+    <item name="tone">-3</item>
+  </style>
 </resources>

@@ -1,7 +1,17 @@
 <resources>
-  <color name="gboard_dark">#1a1b20</color>
-  <color name="gboard_light">#f1f0f7</color>
-  <color name="yandex_dark">#1a1b20</color>
-  <color name="yandex_light">#eeedf4</color>
-  <color name="samsung_dark">#030303</color>
+  <style name="gboard_dark">
+    <item name="color">@android:color/system_neutral1_900</item>
+  </style>
+  <style name="gboard_light">
+    <item name="color">#f1f0f7</item>
+  </style>
+  <style name="yandex_dark">
+    <item name="color">@android:color/system_neutral1_900</item>
+  </style>
+  <style name="yandex_light">
+    <item name="color">#eeedf4</item>
+  </style>
+  <style name="samsung_dark">
+    <item name="color">#030303</item>
+  </style>
 </resources>
