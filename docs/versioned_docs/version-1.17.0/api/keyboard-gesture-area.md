@@ -39,7 +39,10 @@ A boolean prop which allows to customize interactive keyboard behavior. If set t
 
 ### `textInputNativeID` <div className="label ios"></div>
 
-A corresponding `nativeID` value from the corresponding `TextInput`.
+A corresponding `nativeID` value from the associated `TextInput` (a string that links the `KeyboardGestureArea` to one or more `TextInput` components). This is **required on iOS** in order to apply the `offset` when the keyboard is shown. Only the currently focused `TextInput` with a matching `nativeID` will receive offset behavior:
+
+- To apply the offset behavior to **multiple inputs**, you must assign the same `nativeID` to each of them.
+- If no `textInputNativeID` is provided, `offset` behavior will not be applied.
 
 ## Example
 
@@ -56,4 +59,4 @@ A corresponding `nativeID` value from the corresponding `TextInput`.
 </KeyboardGestureArea>
 ```
 
-To see full example, check out corresponding [ios](https://github.com/kirillzyusko/react-native-keyboard-controller/tree/main/example/src/screens/Examples/InteractiveKeyboardIOS) and [android](https://github.com/kirillzyusko/react-native-keyboard-controller/tree/main/example/src/screens/Examples/InteractiveKeyboard) examples.
+To see full example, check out corresponding [ios](https://github.com/kirillzyusko/react-native-keyboard-controller/tree/main/example/src/screens/Examples/InteractiveKeyboardIOS/index.tsx) and [android](https://github.com/kirillzyusko/react-native-keyboard-controller/tree/main/example/src/screens/Examples/InteractiveKeyboard/index.tsx) examples.
