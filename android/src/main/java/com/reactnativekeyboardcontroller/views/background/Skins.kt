@@ -1,5 +1,6 @@
 package com.reactnativekeyboardcontroller.views.background
 
+import android.graphics.Color
 import android.os.Build
 import android.util.Log
 import androidx.annotation.ColorInt
@@ -7,8 +8,13 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.ui.graphics.toArgb
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.ColorUtils
+import com.facebook.react.uimanager.PixelUtil.dpToPx
+import com.facebook.react.uimanager.PixelUtil.pxToDp
 import com.facebook.react.uimanager.ThemedReactContext
+import com.google.android.material.elevation.ElevationOverlayProvider
 import com.reactnativekeyboardcontroller.R
+import com.google.android.material.R as MaterialR
 import com.reactnativekeyboardcontroller.extensions.currentImePackage
 import com.reactnativekeyboardcontroller.extensions.isSystemDarkMode
 
@@ -30,6 +36,32 @@ val imeColorMap: Map<String, Pair<Int, Int>> = mapOf(
   ImePackages.SAMSUNG to (R.color.samsung_light to R.color.samsung_dark)
 )
 
+fun shiftColor(@ColorInt color: Int, shiftPercentage: Float): Int {
+  val hsl = FloatArray(3)
+  ColorUtils.colorToHSL(color, hsl) // hsl[0]=Hue, hsl[1]=Saturation, hsl[2]=Lightness
+
+  // Shift lightness (e.g., reduce lightness by 5% for a "darker" 850)
+  hsl[2] = (hsl[2] * (1 + shiftPercentage)).coerceIn(0f, 1f)
+
+  return ColorUtils.HSLToColor(hsl)
+}
+
+@ColorInt
+fun shiftRgbChannels(@ColorInt color: Int, shift: Int = 4): Int {
+  // Extract RGB channels and shift each by `shift`
+  val red = (Color.red(color) + shift).coerceIn(0, 255)
+  val green = (Color.green(color) + shift).coerceIn(0, 255)
+  val blue = (Color.blue(color) + shift).coerceIn(0, 255)
+
+  // Preserve alpha and combine shifted channels
+  return Color.argb(
+    Color.alpha(color), // Keep original alpha
+    red,
+    green,
+    blue
+  )
+}
+
 // TODO: re-work as extension?
 object Skins {
   @ColorInt
@@ -46,6 +78,8 @@ object Skins {
     } else {
       lightColorScheme() // fallback
     }
+
+    getColor(MaterialR.color.m3_ref_palette_dynamic_primary10).let {}
 
     val colors = listOf(
       "primary" to colorScheme.primary,
@@ -97,7 +131,7 @@ object Skins {
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && imePackage == ImePackages.GBOARD) {
       if (isDark) {
-        return colorScheme.onBackground.toArgb()
+        return shiftRgbChannels((colorScheme.onBackground.toArgb()), 4)
       }
       return colorScheme.surfaceContainer.toArgb()
     }
