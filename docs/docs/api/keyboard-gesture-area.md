@@ -13,7 +13,7 @@ keywords:
 `KeyboardGestureArea` allows you to define a region on the screen, where gestures will control the keyboard position.
 
 :::info Platform availability
-This component is available only for Android >= 11. For iOS and Android < 11 it will render `React.Fragment`.
+This component is available only for Android >= 11. For Android < 11 it will render `React.Fragment`.
 :::
 
 ## Props
@@ -49,9 +49,11 @@ A corresponding `nativeID` value from the corresponding `TextInput`.
   offset={50}
   textInputNativeID="composer"
 >
-  <ScrollView>
+  <ScrollView keyboardDismissMode="interactive">
     {/* The other UI components of application in your tree */}
   </ScrollView>
   <TextInput nativeID="composer" />
 </KeyboardGestureArea>
 ```
+
+To see full example, check out corresponding [ios](https://github.com/kirillzyusko/react-native-keyboard-controller/tree/main/example/src/screens/Examples/InteractiveKeyboardIOS) and [android](https://github.com/kirillzyusko/react-native-keyboard-controller/tree/main/example/src/screens/Examples/InteractiveKeyboard) examples.
