@@ -1,4 +1,4 @@
 <resources>
-  <color name="gboard_dark">#1e1f26</color>
-  <color name="gboard_light">#eeedf4</color>
+  <color name="gboard_dark">@android:color/system_neutral2_50</color>
+  <color name="gboard_light">@android:color/system_accent1_500</color>
 </resources>
