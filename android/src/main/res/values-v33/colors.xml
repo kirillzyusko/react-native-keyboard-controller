@@ -1,6 +1,14 @@
 <resources>
-  <color name="gboard_dark">#1b1b1f</color>
-  <color name="gboard_light">#f2f0f4</color>
-  <color name="yandex_dark">#191b23</color>
-  <color name="yandex_light">#eaeef8</color>
+  <style name="gboard_dark">
+    <item name="color">#1b1b1f</item>
+  </style>
+  <style name="gboard_light">
+    <item name="color">#f2f0f4</item>
+  </style>
+  <style name="yandex_dark">
+    <item name="color">#191b23</item>
+  </style>
+  <style name="yandex_light">
+    <item name="color">#eaeef8</item>
+  </style>
 </resources>

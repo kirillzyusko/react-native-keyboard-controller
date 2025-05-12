@@ -1,7 +1,17 @@
 <resources>
-  <color name="gboard_dark">#292e32</color>
-  <color name="gboard_light">#e8eaed</color>
-  <color name="gboard_tts_light">#f8f9fa</color>
-  <color name="yandex_dark">#121212</color>
-  <color name="yandex_light">#eaeef2</color>
+  <style name="gboard_dark">
+    <item name="color">#292e32</item>
+  </style>
+  <style name="gboard_light">
+    <item name="color">#e8eaed</item>
+  </style>
+  <style name="gboard_tts_light">
+    <item name="color">#f8f9fa</item>
+  </style>
+  <style name="yandex_dark">
+    <item name="color">#121212</item>
+  </style>
+  <style name="yandex_light">
+    <item name="color">#eaeef2</item>
+  </style>
 </resources>
