@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 
+private var pendingResignResponder: UIResponder?
 private var originalResignFirstResponder: IMP?
 
 @objc
@@ -22,6 +23,10 @@ extension UIResponder {
     originalResignFirstResponder = method_getImplementation(originalMethod)
 
     let swizzledImplementation: @convention(block) (UIResponder) -> Bool = { (self) in
+      if pendingResignResponder != nil {
+        pendingResignResponder = nil
+        return self.callOriginalResignFirstResponder(originalSelector)
+      }
       // Check the type of responder
       if let textField = self as? TextInput {
         // check inputAccessoryView and call original method immediately if not InvisibleInputAccessoryView
@@ -37,10 +42,13 @@ extension UIResponder {
 
       // Postpone execution of the original resignFirstResponder
       DispatchQueue.main.asyncAfter(deadline: .now() + UIUtils.nextFrame) {
+        pendingResignResponder = nil
         (self as? TextInput)?.inputAccessoryView = nil
         KeyboardAreaExtender.shared.remove()
         _ = self.callOriginalResignFirstResponder(originalSelector)
       }
+
+      pendingResignResponder = self
 
       // We need to return a value immediately, even though the actual action is delayed
       return false
