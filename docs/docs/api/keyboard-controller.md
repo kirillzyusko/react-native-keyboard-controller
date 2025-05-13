@@ -96,7 +96,7 @@ if (KeyboardController.isVisible()) {
 static state(): KeyboardEventData;
 ```
 
-This method returns the last keyboard state. It returns `null` if keyboard was not shown in the app yet.
+This method returns the last keyboard state.
 
 The `KeyboardEventData` is represented by following structure:
 
