@@ -1,14 +1,14 @@
 package com.reactnativekeyboardcontroller.extensions
 
 import android.annotation.SuppressLint
+import android.content.ComponentName
 import android.content.Context
 import android.graphics.Point
 import android.os.Build
+import android.provider.Settings
 import android.view.Display
 import android.view.WindowManager
 import android.view.WindowMetrics
-import android.provider.Settings
-import android.content.ComponentName
 
 @SuppressLint("ObsoleteSdkInt")
 @Suppress("DEPRECATION")
@@ -48,10 +48,11 @@ fun Context.isSystemDarkMode(): Boolean =
   }
 
 fun Context.currentImePackage(): String? {
-  val id = Settings.Secure.getString(
-    contentResolver,
-    Settings.Secure.DEFAULT_INPUT_METHOD
-  ) ?: return null
+  val id =
+    Settings.Secure.getString(
+      contentResolver,
+      Settings.Secure.DEFAULT_INPUT_METHOD,
+    ) ?: return null
 
   println(id)
 

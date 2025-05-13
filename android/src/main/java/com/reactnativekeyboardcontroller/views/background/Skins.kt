@@ -19,14 +19,15 @@ object ImePackages {
   const val SAMSUNG = "com.samsung.android.honeyboard"
 }
 
-val imeColorMap: Map<String, Pair<Int, Int>> = mapOf(
-  ImePackages.GBOARD to (R.style.gboard_light to R.style.gboard_dark),
-  ImePackages.SWIFT_KEY to (R.style.swiftkey_light to R.style.swiftkey_dark),
-  ImePackages.GBOARD_TTS to (R.style.gboard_tts_light to R.style.gboard_tts_dark),
-  ImePackages.GOOGLE_TTS to (R.style.gboard_tts_light to R.style.gboard_tts_dark),
-  ImePackages.YANDEX to (R.style.yandex_light to R.style.yandex_dark),
-  ImePackages.SAMSUNG to (R.style.samsung_light to R.style.samsung_dark)
-)
+val imeColorMap: Map<String, Pair<Int, Int>> =
+  mapOf(
+    ImePackages.GBOARD to (R.style.gboard_light to R.style.gboard_dark),
+    ImePackages.SWIFT_KEY to (R.style.swiftkey_light to R.style.swiftkey_dark),
+    ImePackages.GBOARD_TTS to (R.style.gboard_tts_light to R.style.gboard_tts_dark),
+    ImePackages.GOOGLE_TTS to (R.style.gboard_tts_light to R.style.gboard_tts_dark),
+    ImePackages.YANDEX to (R.style.yandex_light to R.style.yandex_dark),
+    ImePackages.SAMSUNG to (R.style.samsung_light to R.style.samsung_dark),
+  )
 
 data class ColorProperties(
   @ColorInt val color: Int,
@@ -50,7 +51,10 @@ fun Context.getColorProperties(styleResId: Int): ColorProperties {
 }
 
 @ColorInt
-fun shiftRgbChannels(@ColorInt color: Int, shift: Int = 4): Int {
+fun shiftRgbChannels(
+  @ColorInt color: Int,
+  shift: Int = 4,
+): Int {
   // Extract RGB channels and shift each by `shift`
   val red = (Color.red(color) + shift).coerceIn(0, 255)
   val green = (Color.green(color) + shift).coerceIn(0, 255)
@@ -61,7 +65,7 @@ fun shiftRgbChannels(@ColorInt color: Int, shift: Int = 4): Int {
     Color.alpha(color), // Keep original alpha
     red,
     green,
-    blue
+    blue,
   )
 }
 
@@ -76,8 +80,9 @@ object Skins {
     println(imePackage)
     Log.i("Skins", "Current IME: $imePackage")
 
-    val (lightColorRes, darkColorRes) = imeColorMap[imePackage]
-      ?: (R.style.gboard_dark to R.style.gboard_dark)
+    val (lightColorRes, darkColorRes) =
+      imeColorMap[imePackage]
+        ?: (R.style.gboard_dark to R.style.gboard_dark)
 
     // on Android 10 dark theme doesn't affect keyboard color
     val resId = if (isDark && Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) darkColorRes else lightColorRes
