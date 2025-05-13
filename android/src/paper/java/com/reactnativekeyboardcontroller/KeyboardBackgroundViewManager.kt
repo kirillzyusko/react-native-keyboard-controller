@@ -6,7 +6,9 @@ import com.facebook.react.views.view.ReactViewManager
 import com.reactnativekeyboardcontroller.managers.KeyboardBackgroundViewManagerImpl
 import com.reactnativekeyboardcontroller.views.background.KeyboardBackgroundViewGroup
 
-class KeyboardBackgroundViewManager(mReactContext: ReactApplicationContext): ReactViewManager() {
+class KeyboardBackgroundViewManager(
+  mReactContext: ReactApplicationContext,
+) : ReactViewManager() {
   private val manager = KeyboardBackgroundViewManagerImpl(mReactContext)
 
   override fun getName(): String = KeyboardBackgroundViewManagerImpl.NAME

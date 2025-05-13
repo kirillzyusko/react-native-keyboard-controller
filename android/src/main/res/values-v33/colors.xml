@@ -1,14 +1,16 @@
 <resources>
   <style name="gboard_dark">
-    <item name="color">#1b1b1f</item>
+    <item name="color">@android:color/system_neutral1_900</item>
   </style>
   <style name="gboard_light">
-    <item name="color">#f2f0f4</item>
+    <item name="color">@android:color/system_neutral1_50</item>
   </style>
   <style name="yandex_dark">
-    <item name="color">#191b23</item>
+    <item name="color">@android:color/system_neutral2_900</item>
+    <!-- TODO: doesn't match -->
   </style>
   <style name="yandex_light">
-    <item name="color">#eaeef8</item>
+    <item name="color">@android:color/system_neutral2_50</item>
+    <!-- TODO: doesn't match -->
   </style>
 </resources>
