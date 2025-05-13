@@ -9,7 +9,9 @@ import com.facebook.react.views.view.ReactViewGroup
 import com.reactnativekeyboardcontroller.views.background.Skins.getInputMethodColor
 
 @SuppressLint("ViewConstructor")
-class KeyboardBackgroundViewGroup(private val reactContext: ThemedReactContext) : ReactViewGroup(reactContext) {
+class KeyboardBackgroundViewGroup(
+  private val reactContext: ThemedReactContext,
+) : ReactViewGroup(reactContext) {
   // view mounted
   override fun onAttachedToWindow() {
     super.onAttachedToWindow()

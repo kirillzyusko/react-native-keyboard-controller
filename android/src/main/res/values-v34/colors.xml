@@ -3,13 +3,14 @@
     <item name="color">@android:color/system_neutral1_900</item>
   </style>
   <style name="gboard_light">
-    <item name="color">#f1f0f7</item>
+    <item name="color">@android:color/system_neutral1_50</item>
   </style>
   <style name="yandex_dark">
     <item name="color">@android:color/system_neutral1_900</item>
   </style>
   <style name="yandex_light">
-    <item name="color">#eeedf4</item>
+    <item name="color">@android:color/system_neutral1_50</item>
+    <item name="tone">-3</item>
   </style>
   <style name="samsung_dark">
     <item name="color">#030303</item>

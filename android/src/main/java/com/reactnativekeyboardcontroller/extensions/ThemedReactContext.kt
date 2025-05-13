@@ -1,7 +1,5 @@
 package com.reactnativekeyboardcontroller.extensions
 
-import android.content.Context
-import android.os.Build
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReactContext
 import com.facebook.react.bridge.WritableMap
