@@ -8,6 +8,9 @@ import type { KeyboardExtenderProps } from "../../types";
 import type { PropsWithChildren } from "react";
 
 // TODO: should be in views because on Android we gonna use KeyboardStickyView?
+/**
+ * A component that embeds its children into the keyboard thus enhancing keyboard functionality.
+ */
 const KeyboardExtender = ({
   children,
   enabled = false,
