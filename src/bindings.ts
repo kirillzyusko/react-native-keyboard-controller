@@ -21,6 +21,13 @@ export const KeyboardControllerNative: KeyboardControllerNativeModule = {
   addListener: NOOP,
   removeListeners: NOOP,
 };
+/**
+ * An event emitter that provides a way to subscribe to next keyboard events:
+ * - `keyboardWillShow`
+ * - `keyboardDidShow`
+ * - `keyboardWillHide`
+ * - `keyboardDidHide`
+ */
 export const KeyboardEvents: KeyboardEventsModule = {
   addListener: () => ({ remove: NOOP } as EmitterSubscription),
 };
@@ -36,6 +43,7 @@ export const WindowDimensionsEvents: WindowDimensionsEventsModule = {
 };
 export const KeyboardControllerView =
   View as unknown as React.FC<KeyboardControllerProps>;
+/** A view that defines a region on the screen, where gestures will control the keyboard position */
 export const KeyboardGestureArea =
   View as unknown as React.FC<KeyboardGestureAreaProps>;
 export const RCTOverKeyboardView =
