@@ -2,6 +2,7 @@ import { View } from "react-native";
 
 import type {
   FocusedInputEventsModule,
+  KeyboardBackgroundViewProps,
   KeyboardControllerNativeModule,
   KeyboardControllerProps,
   KeyboardEventsModule,
@@ -59,3 +60,8 @@ export const KeyboardGestureArea =
   View as unknown as React.FC<KeyboardGestureAreaProps>;
 export const RCTOverKeyboardView =
   View as unknown as React.FC<OverKeyboardViewProps>;
+/**
+ * A view that matches keyboard background.
+ */
+export const KeyboardBackgroundView =
+  View as unknown as React.FC<KeyboardBackgroundViewProps>;
