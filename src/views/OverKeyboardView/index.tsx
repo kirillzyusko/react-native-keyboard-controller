@@ -7,6 +7,20 @@ import { useWindowDimensions } from "../../hooks";
 import type { OverKeyboardViewProps } from "../../types";
 import type { PropsWithChildren } from "react";
 
+/**
+ * A view component that renders its children over the keyboard.
+ *
+ * @component
+ * @example
+ * ```tsx
+ * <OverKeyboardView visible={true}>
+ *   <Text>This will appear over the keyboard</Text>
+ * </OverKeyboardView>
+ * ```
+ *
+ * @param {OverKeyboardViewProps} props - Component props
+ * @returns {React.ReactElement} A view component that renders over the keyboard
+ */
 const OverKeyboardView = ({
   children,
   visible,

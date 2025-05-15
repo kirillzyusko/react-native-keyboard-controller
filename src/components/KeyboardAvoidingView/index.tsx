@@ -14,6 +14,12 @@ import { useKeyboardAnimation, useTranslateAnimation } from "./hooks";
 
 import type { LayoutRectangle, ViewProps } from "react-native";
 
+/**
+ * Props for the base KeyboardAvoidingView component
+ * @typedef {Object} KeyboardAvoidingViewBaseProps
+ * @property {boolean} [enabled=true] - Controls whether this KeyboardAvoidingView instance should take effect. Useful when more than one is on the screen.
+ * @property {number} [keyboardVerticalOffset=0] - Distance between the top of the user screen and the React Native view. May be non-zero in some cases.
+ */
 export type KeyboardAvoidingViewBaseProps = {
   /**
    * Controls whether this `KeyboardAvoidingView` instance should take effect.
@@ -28,30 +34,36 @@ export type KeyboardAvoidingViewBaseProps = {
   keyboardVerticalOffset?: number;
 } & ViewProps;
 
+/**
+ * Props for the KeyboardAvoidingView component
+ * @typedef {Object} KeyboardAvoidingViewProps
+ * @property {('position'|'height'|'padding'|'translate-with-padding')} [behavior] - Specify how to react to the presence of the keyboard
+ * @property {ViewProps['style']} [contentContainerStyle] - Style of the content container when behavior is 'position'
+ */
 export type KeyboardAvoidingViewProps = KeyboardAvoidingViewBaseProps &
   (
     | {
-        /**
-         * Specify how to react to the presence of the keyboard.
-         */
-        behavior?: "position";
+      /**
+       * Specify how to react to the presence of the keyboard.
+       */
+      behavior?: "position";
 
-        /**
-         * Style of the content container when `behavior` is 'position'.
-         */
-        contentContainerStyle?: ViewProps["style"];
-      }
+      /**
+       * Style of the content container when `behavior` is 'position'.
+       */
+      contentContainerStyle?: ViewProps["style"];
+    }
     | {
-        /**
-         * Specify how to react to the presence of the keyboard.
-         */
-        behavior?: "height" | "padding" | "translate-with-padding";
+      /**
+       * Specify how to react to the presence of the keyboard.
+       */
+      behavior?: "height" | "padding" | "translate-with-padding";
 
-        /**
-         * `contentContainerStyle` is not allowed for these behaviors.
-         */
-        contentContainerStyle?: never;
-      }
+      /**
+       * `contentContainerStyle` is not allowed for these behaviors.
+       */
+      contentContainerStyle?: never;
+    }
   );
 
 const defaultLayout: LayoutRectangle = {
@@ -62,8 +74,20 @@ const defaultLayout: LayoutRectangle = {
 };
 
 /**
- * View that moves out of the way when the keyboard appears by automatically
- * adjusting its height, position, or bottom padding.
+ * A View component that automatically adjusts its height, position, or bottom padding
+ * when the keyboard appears to ensure that the content remains visible.
+ * 
+ * @component
+ * @example
+ * ```tsx
+ * <KeyboardAvoidingView behavior="position">
+ *   <TextInput />
+ * </KeyboardAvoidingView>
+ * ```
+ * 
+ * @param {KeyboardAvoidingViewProps} props - Component props
+ * @param {React.Ref<View>} ref - Forwarded ref
+ * @returns {React.ReactElement} A View component that adjusts to keyboard visibility
  */
 const KeyboardAvoidingView = forwardRef<
   View,

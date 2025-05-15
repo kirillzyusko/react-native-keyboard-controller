@@ -94,6 +94,7 @@ export type KeyboardControllerProps = {
 } & ViewProps;
 
 export type KeyboardGestureAreaProps = {
+  /** */
   interpolator?: "ios" | "linear";
   /**
    * Whether to allow to show a keyboard from dismissed state by swipe up.
@@ -111,16 +112,21 @@ export type KeyboardGestureAreaProps = {
    */
   offset?: number;
   /**
-   * A corresponding `nativeID` value from the corresponding `TextInput`.
-   */
+   * A corresponding `nativeID` value from the associated `TextInput` (a string that links the `KeyboardGestureArea` to one or more `TextInput` components). This is **required on iOS** in order to apply the `offset` when the keyboard is shown. Only the currently focused `TextInput` with a matching `nativeID` will receive offset behavior. */
   textInputNativeID?: string;
 } & ViewProps;
 export type OverKeyboardViewProps = PropsWithChildren<{
+  /**
+   * A boolean prop indicating whether the view is visible or not. If it's true then view is shown on the screen. If it's false then view is hidden.
+   */
   visible: boolean;
 }>;
 
 export type Direction = "next" | "prev" | "current";
 export type DismissOptions = {
+  /**
+   * A boolean property indicating whether focus should be kept on the input after dismissing the keyboard. Default is `false`.
+   */
   keepFocus: boolean;
 };
 export type KeyboardControllerModule = {
@@ -128,8 +134,24 @@ export type KeyboardControllerModule = {
   setDefaultMode: () => void;
   setInputMode: (mode: number) => void;
   // all platforms
+  /**
+   * Dismisses the keyboard.
+   *
+   * @param options
+   * @returns promise that gets resolved when keyboard becomes fully hidden
+   */
   dismiss: (options?: DismissOptions) => Promise<void>;
+  /**
+   * Moves focus to the specified direction (`next`, `prev` or `current` to restore a focus).
+   *
+   * @param direction to move the focus
+   * @returns
+   */
   setFocusTo: (direction: Direction) => void;
+  /**
+   *
+   * @returns true if keyboard is currently visible and false otherwise
+   */
   isVisible: () => boolean;
   state: () => KeyboardEventData;
 };
@@ -152,9 +174,13 @@ export type KeyboardControllerEvents =
   | "keyboardWillHide"
   | "keyboardDidHide";
 export type KeyboardEventData = {
+  /** Height of the keyboard */
   height: number;
+  /** Duration of the keyboard animation */
   duration: number;
+  /** Timestamp of the last keyboard event */
   timestamp: number;
+  /** Tag of the focused `TextInput` */
   target: number;
   type: NonNullable<TextInputProps["keyboardType"]>;
   appearance: NonNullable<TextInputProps["keyboardAppearance"]>;
@@ -232,14 +258,20 @@ export type FocusedInputSelectionHandlerHook<TContext, Event> = (
 // package types
 export type Handlers<T> = Record<string, T | undefined>;
 export type KeyboardHandler = Partial<{
+  /** A callback that gets invoked when keyboard starts its movement. The event contains DESTINATION values */
   onStart: (e: NativeEvent) => void;
+  /** A callback that gets involved every frame when keyboard changes its position */
   onMove: (e: NativeEvent) => void;
+  /** A callback that gets invoked when keyboard finished its movement */
   onEnd: (e: NativeEvent) => void;
+  /** A callback that gets invoked every frame when keyboard changes its position due to interactive dismissal */
   onInteractive: (e: NativeEvent) => void;
 }>;
 export type KeyboardHandlers = Handlers<KeyboardHandler>;
 export type FocusedInputHandler = Partial<{
+  /** A callback that gets invoked every time when the text changes in focused input */
   onChangeText: (e: FocusedInputTextChangedEvent) => void;
+  /** A callback that gets invoked every time when the selection (cursor) coordinates change in focused input */
   onSelectionChange: (e: FocusedInputSelectionChangedEvent) => void;
 }>;
 export type FocusedInputHandlers = Handlers<FocusedInputHandler>;
