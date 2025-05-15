@@ -11,7 +11,7 @@ import type { DependencyList } from "react";
 /**
  * Hook that sets the Android soft input mode to adjust resize.
  * This ensures the keyboard properly resizes the screen content.
- * 
+ *
  * @example
  * ```tsx
  * function MyComponent() {
@@ -33,7 +33,7 @@ export const useResizeMode = () => {
 /**
  * Hook that provides animated values for keyboard movement.
  * Automatically sets the resize mode for Android.
- * 
+ *
  * @returns {AnimatedContext} Object containing animated values for keyboard movement
  * @example
  * ```tsx
@@ -53,7 +53,7 @@ export const useKeyboardAnimation = (): AnimatedContext => {
 /**
  * Hook that provides reanimated values for keyboard movement.
  * Automatically sets the resize mode for Android.
- * 
+ *
  * @returns {ReanimatedContext} Object containing reanimated values for keyboard movement
  * @example
  * ```tsx
@@ -72,7 +72,7 @@ export const useReanimatedKeyboardAnimation = (): ReanimatedContext => {
 
 /**
  * Generic hook for handling keyboard events.
- * 
+ *
  * @param {KeyboardHandler} handler - Object containing keyboard event handlers
  * @param {DependencyList} [deps] - Dependencies array for the effect
  * @example
@@ -102,7 +102,7 @@ export function useGenericKeyboardHandler(
 
 /**
  * Hook for handling keyboard events with automatic resize mode.
- * 
+ *
  * @param {KeyboardHandler} handler - Object containing keyboard event handlers
  * @param {DependencyList} [deps] - Dependencies array for the effect
  * @example
@@ -127,7 +127,7 @@ export function useKeyboardHandler(
 
 /**
  * Hook for controlling keyboard behavior.
- * 
+ *
  * @returns {Object} Object containing keyboard control functions and state
  * @property {function} setEnabled - Function to enable/disable keyboard handling
  * @property {boolean} enabled - Current enabled state
@@ -136,9 +136,9 @@ export function useKeyboardHandler(
  * function MyComponent() {
  *   const { setEnabled, enabled } = useKeyboardController();
  *   return (
- *     <Button 
- *       title={enabled ? 'Disable' : 'Enable'} 
- *       onPress={() => setEnabled(!enabled)} 
+ *     <Button
+ *       title={enabled ? 'Disable' : 'Enable'}
+ *       onPress={() => setEnabled(!enabled)}
  *     />
  *   );
  * }
@@ -152,7 +152,7 @@ export function useKeyboardController() {
 
 /**
  * Hook that provides reanimated values for the currently focused input.
- * 
+ *
  * @returns {Object} Object containing reanimated values for focused input
  * @property {Reanimated.SharedValue} input - Shared value containing focused input layout
  * @example
@@ -171,7 +171,7 @@ export function useReanimatedFocusedInput() {
 
 /**
  * Hook for handling focused input events.
- * 
+ *
  * @param {FocusedInputHandler} handler - Object containing focused input event handlers
  * @param {DependencyList} [deps] - Dependencies array for the effect
  * @example

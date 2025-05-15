@@ -16,7 +16,7 @@ const getLatestState = () => ({
  * Hook that provides the current keyboard state.
  * Returns an object containing information about the keyboard's visibility,
  * height, duration, and other properties.
- * 
+ *
  * @returns {KeyboardState} Object containing keyboard state information
  * @property {boolean} isVisible - Whether the keyboard is currently visible
  * @property {number} height - Current height of the keyboard
@@ -25,7 +25,7 @@ const getLatestState = () => ({
  * @property {number} target - Target input field ID
  * @property {string} type - Keyboard type
  * @property {string} appearance - Keyboard appearance
- * 
+ *
  * @example
  * ```tsx
  * function MyComponent() {

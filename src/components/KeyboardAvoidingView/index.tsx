@@ -43,27 +43,27 @@ export type KeyboardAvoidingViewBaseProps = {
 export type KeyboardAvoidingViewProps = KeyboardAvoidingViewBaseProps &
   (
     | {
-      /**
-       * Specify how to react to the presence of the keyboard.
-       */
-      behavior?: "position";
+        /**
+         * Specify how to react to the presence of the keyboard.
+         */
+        behavior?: "position";
 
-      /**
-       * Style of the content container when `behavior` is 'position'.
-       */
-      contentContainerStyle?: ViewProps["style"];
-    }
+        /**
+         * Style of the content container when `behavior` is 'position'.
+         */
+        contentContainerStyle?: ViewProps["style"];
+      }
     | {
-      /**
-       * Specify how to react to the presence of the keyboard.
-       */
-      behavior?: "height" | "padding" | "translate-with-padding";
+        /**
+         * Specify how to react to the presence of the keyboard.
+         */
+        behavior?: "height" | "padding" | "translate-with-padding";
 
-      /**
-       * `contentContainerStyle` is not allowed for these behaviors.
-       */
-      contentContainerStyle?: never;
-    }
+        /**
+         * `contentContainerStyle` is not allowed for these behaviors.
+         */
+        contentContainerStyle?: never;
+      }
   );
 
 const defaultLayout: LayoutRectangle = {
@@ -76,7 +76,7 @@ const defaultLayout: LayoutRectangle = {
 /**
  * A View component that automatically adjusts its height, position, or bottom padding
  * when the keyboard appears to ensure that the content remains visible.
- * 
+ *
  * @component
  * @example
  * ```tsx
@@ -84,7 +84,7 @@ const defaultLayout: LayoutRectangle = {
  *   <TextInput />
  * </KeyboardAvoidingView>
  * ```
- * 
+ *
  * @param {KeyboardAvoidingViewProps} props - Component props
  * @param {React.Ref<View>} ref - Forwarded ref
  * @returns {React.ReactElement} A View component that adjusts to keyboard visibility
