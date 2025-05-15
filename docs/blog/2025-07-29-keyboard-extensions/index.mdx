@@ -1,0 +1,68 @@
+---
+slug: keyboard-extensions
+title: Keyboard extensions or new way to interact with keyboard 🌀
+authors: [kirill]
+tags: [react-native, keyboard, KeyboardExtender, KeyboardBackgroundView]
+keywords:
+  [react-native-keyboard-controller, KeyboardExtender, KeyboardBackgroundView]
+---
+
+Welcome new `1.18.0` release of `react-native-keyboard-controller` 🎉 This release packed with a bunch of new functionality and aims to revolutionize the way we as developers interact with the keyboard.
+
+Keen to learn more? Let's dive 👇
+
+<!-- truncate -->
+
+## New `KeyboardExtender` component 🧩
+
+The `react-native-keyboard-controller` was good at:
+
+- keyboard avoidance;
+- building additional helpers for keyboard interactions (i. e. `KeyboardToolbar`);
+- and showing the content over the keyboard through `OverKeyboardView`.
+
+But this release expanding new horizons and explores new ways how you as a developer can interact with the keyboard. So... 🥁
+
+This release is bringing a new component to the table — `KeyboardExtender`.
+
+> Thanks to [Amur](./) for his idea to add that component.
+
+## New `KeyboardBackgroundView` component 🎨
+
+While `KeyboardExtender` is a great addition to the existing functionality and will be used by many react-native developers, but sometimes we want to build our own accessories, that are sticky to the keyboard and at the same time are floating near the keyboard and feels like keyboard elements. This is where `KeyboardBackgroundView` comes to the rescue.
+
+> TODO: add lottie
+
+This low-level primitive has only one purpose - to match keyboard background design so that you can attach it anywhere you want and your app users will think that it's a keyboard extensions and will interact with that.
+
+In a wild nature there is many apps that are actively using that approach: Photos, Safari and Others
+
+import ComparisonTable from "@site/src/components/ComparisonTable";
+import Video from "@site/src/components/Video";
+
+<ComparisonTable
+  left={<Video src="/video/safari.mp4" width={51} />}
+  right={<Video src="/video/photos-app.mp4" width={50} />}
+  leftText={
+    <i>
+      The keyboard movement starts only when you cross the top border of the
+      keyboard
+    </i>
+  }
+  rightText={
+    <i>
+      The keyboard movement starts only when you cross the top border of your{" "}
+      <code>TextInput</code>
+    </i>
+  }
+/>
+
+> Thanks to [Seb Vidal](https://github.com/sebjvidal) for his exploration of the keyboard background view idea.
+
+## `KeyboardAwareScrollView` work with full window `TextInputs`
+
+## `KeyboardStickyView` has correct interpolation for interactive dismissal
+
+## `KeyboardToolbar.Group` component
+
+## `KeyboardGestureArea` and inversed interpolator
