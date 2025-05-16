@@ -41,18 +41,18 @@ export type FocusedInputSelectionChangedEvent = {
   selection: {
     /** Start of the selection. Represents top-left point of rectangle. */
     start: {
-      /** X coordinate of the selection start relative to the `TextInput`. */
+      /** X coordinate of the selection start (relative to the `TextInput`). */
       x: number;
-      /** Y coordinate of the selection start relative to the `TextInput`. */
+      /** Y coordinate of the selection start (relative to the `TextInput`). */
       y: number;
       /** The start of selection. */
       position: number;
     };
     /** End of the selection. Represents bottom-right point of rectangle. */
     end: {
-      /** X coordinate of the selection end relative to the `TextInput`. */
+      /** X coordinate of the selection end (relative to the `TextInput`). */
       x: number;
-      /** Y coordinate of the selection end relative to the `TextInput`. */
+      /** Y coordinate of the selection end (relative to the `TextInput`). */
       y: number;
       /** The end of selection. */
       position: number;

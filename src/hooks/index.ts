@@ -75,7 +75,7 @@ export const useReanimatedKeyboardAnimation = (): ReanimatedContext => {
 };
 
 /**
- * An alternative to `useKeyboardHandler` that doesn't set resize mode on mount. If your
+ * An alternative to {@link useKeyboardHandler} that doesn't set resize mode on mount. If your
  * app already uses `adjustResize`, then you can use this hook instead of `useKeyboardHandler`.
  *
  * @param handler - Object containing keyboard event handlers.
@@ -161,7 +161,7 @@ export function useKeyboardHandler(
  * Hook for controlling keyboard controller module.
  * Allows to disable/enable it and check the actual state (whether it's enabled or not).
  * When disabled it fallbacks to default android keyboard handling and stops tracking all
- * events that are exposed in this library.
+ * the events that are exposed from this library.
  *
  * @property {Function} setEnabled - Function to enable/disable keyboard handling.
  * @property {boolean} enabled - Current enabled state.
@@ -187,7 +187,7 @@ export function useKeyboardController() {
 }
 
 /**
- * Hook that provides to the layout of the currently focused input.
+ * Hook that provides access to the layout of the currently focused input.
  *
  * @returns Object containing reanimated values for focused input.
  * @see {@link https://kirillzyusko.github.io/react-native-keyboard-controller/docs/api/hooks/input/use-reanimated-focused-input|Documentation} page for more details.
@@ -206,7 +206,7 @@ export function useReanimatedFocusedInput() {
 }
 
 /**
- * Hook for handling focused input events, such as selection changes, text changes, etc.
+ * Hook for handling focused input events, such as changes of selection, text etc.
  *
  * @param handler - Object containing focused input event handlers.
  * @param [deps] - Dependencies array for the effect.

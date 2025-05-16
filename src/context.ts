@@ -28,7 +28,7 @@ export type ReanimatedContext = {
   height: SharedValue<number>;
 };
 export type KeyboardAnimationContext = {
-  /** Whether KeyboardController lib is active or not. */
+  /** Whether KeyboardController library is active or not. */
   enabled: boolean;
   /** Object that stores animated values for keyboard movement. */
   animated: AnimatedContext;
@@ -40,7 +40,7 @@ export type KeyboardAnimationContext = {
   setKeyboardHandlers: (handlers: KeyboardHandler) => () => void;
   /** Method for setting workletized handlers for tracking focused input events. */
   setInputHandlers: (handlers: FocusedInputHandler) => () => void;
-  /** Method to enable/disable KeyboardController lib. */
+  /** Method to enable/disable KeyboardController library. */
   setEnabled: React.Dispatch<React.SetStateAction<boolean>>;
 };
 const NOOP = () => {};
