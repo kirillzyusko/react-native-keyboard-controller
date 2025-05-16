@@ -20,10 +20,23 @@ export type KeyboardStickyViewProps = {
     opened?: number;
   };
 
-  /** Controls whether this `KeyboardStickyView` instance should take effect. Default is `true` */
+  /** Controls whether this `KeyboardStickyView` instance should take effect. Default is `true`. */
   enabled?: boolean;
 } & ViewProps;
 
+/**
+ * A View component that sticks to the keyboard and moves with it when it appears or disappears.
+ * The view can be configured with custom offsets for both closed and open keyboard states.
+ *
+ * @returns An animated View component that sticks to the keyboard.
+ * @see {@link https://kirillzyusko.github.io/react-native-keyboard-controller/docs/api/components/keyboard-sticky-view|Documentation} page for more details.
+ * @example
+ * ```tsx
+ * <KeyboardStickyView offset={{ closed: 0, opened: 20 }}>
+ *   <Button title="Submit" />
+ * </KeyboardStickyView>
+ * ```
+ */
 const KeyboardStickyView = forwardRef<
   View,
   React.PropsWithChildren<KeyboardStickyViewProps>

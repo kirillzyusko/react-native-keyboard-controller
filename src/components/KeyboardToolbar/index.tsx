@@ -59,6 +59,9 @@ export type KeyboardToolbarProps = Omit<
    * A value for container opacity in hexadecimal format (e.g. `ff`). Default value is `ff`.
    */
   opacity?: HEX;
+  /**
+   * A object containing `left`/`right` properties. Used to specify proper container padding in landscape mode.
+   */
   insets?: SafeAreaInsets;
 } & Pick<KeyboardStickyViewProps, "offset" | "enabled">;
 
@@ -72,26 +75,35 @@ const KEYBOARD_TOOLBAR_HEIGHT = 42;
 const DEFAULT_OPACITY: HEX = "FF";
 
 /**
- * `KeyboardToolbar` is a component that is shown above the keyboard with `Prev`/`Next` and
- * `Done` buttons.
+ * `KeyboardToolbar` is a component that is shown above the keyboard with `Prev`/`Next` buttons from left and
+ * `Done` button from the right (to dismiss the keyboard). Allows to add customizable content (yours UI elements) in the middle.
+ *
+ * @param props - Component props.
+ * @returns A component that is shown above the keyboard with `Prev`/`Next` and `Done` buttons.
+ * @see {@link https://kirillzyusko.github.io/react-native-keyboard-controller/docs/api/components/keyboard-toolbar|Documentation} page for more details.
+ * @example
+ * ```tsx
+ * <KeyboardToolbar doneText="Close" />
+ * ```
  */
-const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
-  content,
-  theme = colors,
-  doneText = "Done",
-  button,
-  icon,
-  showArrows = true,
-  onNextCallback,
-  onPrevCallback,
-  onDoneCallback,
-  blur = null,
-  opacity = DEFAULT_OPACITY,
-  offset: { closed = 0, opened = 0 } = {},
-  enabled = true,
-  insets,
-  ...rest
-}) => {
+const KeyboardToolbar: React.FC<KeyboardToolbarProps> = (props) => {
+  const {
+    content,
+    theme = colors,
+    doneText = "Done",
+    button,
+    icon,
+    showArrows = true,
+    onNextCallback,
+    onPrevCallback,
+    onDoneCallback,
+    blur = null,
+    opacity = DEFAULT_OPACITY,
+    offset: { closed = 0, opened = 0 } = {},
+    enabled = true,
+    insets,
+    ...rest
+  } = props;
   const colorScheme = useColorScheme();
   const [inputs, setInputs] = useState({
     current: 0,
