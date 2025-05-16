@@ -13,7 +13,7 @@ const getLatestState = () => ({
 });
 
 /**
- * React Hook that provides the current keyboard state on iOS and Android.
+ * React Hook that represents the current keyboard state on iOS and Android.
  * It tracks keyboard visibility, height, appearance, type and other properties.
  * This hook subscribes to keyboard events and updates the state reactively.
  *

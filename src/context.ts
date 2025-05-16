@@ -30,9 +30,9 @@ export type ReanimatedContext = {
 export type KeyboardAnimationContext = {
   /** Whether KeyboardController library is active or not. */
   enabled: boolean;
-  /** Object that stores animated values for keyboard movement. */
+  /** Object that stores animated values that reflect the keyboard’s current position and movement. */
   animated: AnimatedContext;
-  /** Object that stores reanimated values for keyboard movement. */
+  /** Object that stores reanimated values that reflect the keyboard’s current position and movement. */
   reanimated: ReanimatedContext;
   /** Layout of the focused `TextInput` represented as `SharedValue`. */
   layout: SharedValue<FocusedInputLayoutChangedEvent | null>;
