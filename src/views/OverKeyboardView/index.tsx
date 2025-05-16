@@ -10,7 +10,6 @@ import type { PropsWithChildren } from "react";
 /**
  * A view component that renders its children over the keyboard.
  *
- * @component
  * @example
  * ```tsx
  * <OverKeyboardView visible={true}>

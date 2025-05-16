@@ -30,27 +30,54 @@ import type {
   NativeEvent,
 } from "react-native-keyboard-controller";
 
-/**
- * Props for the KeyboardAwareScrollView component
- * @typedef {Object} KeyboardAwareScrollViewProps
- * @property {number} [bottomOffset=0] - The distance between keyboard and focused TextInput when keyboard is shown
- * @property {boolean} [disableScrollOnKeyboardHide=false] - Prevents automatic scrolling when keyboard gets hidden
- * @property {boolean} [enabled=true] - Controls whether this KeyboardAwareScrollView instance should take effect
- * @property {number} [extraKeyboardSpace=0] - Adjusting the bottom spacing of KeyboardAwareScrollView
- * @property {React.ComponentType<ScrollViewProps>} [ScrollViewComponent=ScrollView] - Custom component for ScrollView
- */
 export type KeyboardAwareScrollViewProps = {
   /** The distance between keyboard and focused `TextInput` when keyboard is shown. Default is `0`. */
   bottomOffset?: number;
   /** Prevents automatic scrolling of the `ScrollView` when the keyboard gets hidden, maintaining the current screen position. Default is `false`. */
   disableScrollOnKeyboardHide?: boolean;
-  /** Controls whether this `KeyboardAwareScrollView` instance should take effect. Default is `true` */
+  /** Controls whether this `KeyboardAwareScrollView` instance should take effect. Default is `true`. */
   enabled?: boolean;
-  /** Adjusting the bottom spacing of KeyboardAwareScrollView. Default is `0` */
+  /** Adjusting the bottom spacing of KeyboardAwareScrollView. Default is `0`. */
   extraKeyboardSpace?: number;
-  /** Custom component for `ScrollView`. Default is `ScrollView` */
+  /** Custom component for `ScrollView`. Default is `ScrollView`. */
   ScrollViewComponent?: React.ComponentType<ScrollViewProps>;
 } & ScrollViewProps;
+
+// Everything begins from `onStart` handler. This handler is called every time,
+// when keyboard changes its size or when focused `TextInput` was changed. In
+// this handler we are calculating/memoizing values which later will be used
+// during layout movement. For that we calculate:
+// - layout of focused field (`layout`) - to understand whether there will be overlap
+// - initial keyboard size (`initialKeyboardSize`) - used in scroll interpolation
+// - future keyboard height (`keyboardHeight`) - used in scroll interpolation
+// - current scroll position (`scrollPosition`) - used to scroll from this point
+//
+// Once we've calculated all necessary variables - we can actually start to use them.
+// It happens in `onMove` handler - this function simply calls `maybeScroll` with
+// current keyboard frame height. This functions makes the smooth transition.
+//
+// When the transition has finished we go to `onEnd` handler. In this handler
+// we verify, that the current field is not overlapped within a keyboard frame.
+// For full `onStart`/`onMove`/`onEnd` flow it may look like a redundant thing,
+// however there could be some cases, when `onMove` is not called:
+// - on iOS when TextInput was changed - keyboard transition is instant
+// - on Android when TextInput was changed and keyboard size wasn't changed
+// So `onEnd` handler handle the case, when `onMove` wasn't triggered.
+//
+// ====================================================================================================================+
+// -----------------------------------------------------Flow chart-----------------------------------------------------+
+// ====================================================================================================================+
+//
+// +============================+       +============================+        +==================================+
+// +  User Press on TextInput   +   =>  +  Keyboard starts showing   +   =>   + As keyboard moves frame by frame +  =>
+// +                            +       +       (run `onStart`)      +        +    `onMove` is getting called    +
+// +============================+       +============================+        +==================================+
+//
+// +============================+       +============================+        +=====================================+
+// + Keyboard is shown and we   +   =>  +    User moved focus to     +   =>   + Only `onStart`/`onEnd` maybe called +
+// +    call `onEnd` handler    +       +     another `TextInput`    +        +    (without involving `onMove`)     +
+// +============================+       +============================+        +=====================================+
+//
 
 /**
  * A ScrollView component that automatically handles keyboard appearance and disappearance
@@ -59,7 +86,7 @@ export type KeyboardAwareScrollViewProps = {
  * The component uses a sophisticated animation system to smoothly handle keyboard transitions
  * and maintain proper scroll position during keyboard interactions.
  *
- * @component
+ * @returns {React.ReactElement} A ScrollView component that handles keyboard interactions.
  * @example
  * ```tsx
  * <KeyboardAwareScrollView bottomOffset={20}>
@@ -67,10 +94,6 @@ export type KeyboardAwareScrollViewProps = {
  *   <TextInput placeholder="Another input" />
  * </KeyboardAwareScrollView>
  * ```
- *
- * @param {KeyboardAwareScrollViewProps} props - Component props
- * @param {React.Ref<ScrollView>} ref - Forwarded ref
- * @returns {React.ReactElement} A ScrollView component that handles keyboard interactions
  */
 const KeyboardAwareScrollView = forwardRef<
   ScrollView,
@@ -124,7 +147,7 @@ const KeyboardAwareScrollView = forwardRef<
     );
 
     /**
-     * Function that will scroll a ScrollView as keyboard gets moving
+     * Function that will scroll a ScrollView as keyboard gets moving.
      */
     const maybeScroll = useCallback(
       (e: number, animated: boolean = false) => {
