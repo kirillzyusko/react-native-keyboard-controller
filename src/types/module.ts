@@ -20,6 +20,9 @@ export type KeyboardEventData = {
   /** Keyboard appearance. Can be one of `default`, `dark` or `light`. */
   appearance: NonNullable<TextInputProps["keyboardAppearance"]>;
 };
+/**
+ * An object that represent current keyboard state.
+ */
 export type KeyboardState = {
   /** Whether the keyboard is currently visible. */
   isVisible: boolean;
@@ -65,7 +68,7 @@ export type KeyboardControllerModule = {
   setInputMode: (mode: number) => void;
   // all platforms
   /**
-   * Dismisses the active keyboard. Removes a focus by default, but specifying `{keepFocus: true}` will keep focus.
+   * Dismisses the active keyboard. Removes a focus by default, but allows to pass `{keepFocus: true}` to keep focus.
    *
    * @see {@link https://kirillzyusko.github.io/react-native-keyboard-controller/docs/api/keyboard-controller#dismiss|docs} page for more details.
    */
@@ -77,7 +80,7 @@ export type KeyboardControllerModule = {
    */
   setFocusTo: (direction: Direction) => void;
   /**
-   * Whether the keyboard is last known to be visible.
+   * Whether the keyboard is fully visible.
    *
    * @see {@link https://kirillzyusko.github.io/react-native-keyboard-controller/docs/api/keyboard-controller#isvisible|docs} page for more details.
    */

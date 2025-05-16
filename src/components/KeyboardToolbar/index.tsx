@@ -75,8 +75,8 @@ const KEYBOARD_TOOLBAR_HEIGHT = 42;
 const DEFAULT_OPACITY: HEX = "FF";
 
 /**
- * `KeyboardToolbar` is a component that is shown above the keyboard with `Prev`/`Next`/
- * `Done` buttons and customizable content (yours UI elements).
+ * `KeyboardToolbar` is a component that is shown above the keyboard with `Prev`/`Next` buttons from left and
+ * `Done` button from the right (to dismiss the keyboard). Allows to add customizable content (yours UI elements) in the middle.
  *
  * @param props - Component props.
  * @returns A component that is shown above the keyboard with `Prev`/`Next` and `Done` buttons.
