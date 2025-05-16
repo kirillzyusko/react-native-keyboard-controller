@@ -62,6 +62,8 @@ export const RCTOverKeyboardView =
   View as unknown as React.FC<OverKeyboardViewProps>;
 /**
  * A view that matches keyboard background.
+ *
+ * @see {@link https://kirillzyusko.github.io/react-native-keyboard-controller/docs/api/keyboard-background-view|Documentation} page for more details.
  */
 export const KeyboardBackgroundView =
   View as unknown as React.FC<KeyboardBackgroundViewProps>;
