@@ -1,5 +1,6 @@
 import { expectBitmapsToBeEqual } from "./asserts";
 import {
+  delay,
   scrollDownUntilElementIsVisible,
   waitAndTap,
   waitForExpect,
@@ -20,6 +21,7 @@ describe("Interactive keyboard interactions", () => {
   });
 
   it("should have expected state when keyboard is opened", async () => {
+    await delay(10000);
     await waitAndTap("chat.input");
     await waitForExpect(async () => {
       await expectBitmapsToBeEqual("InteractiveKeyboardIsShown");
