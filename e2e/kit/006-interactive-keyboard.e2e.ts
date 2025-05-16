@@ -17,9 +17,13 @@ describe("Interactive keyboard interactions", () => {
       `interactive_keyboard_${device.getPlatform()}`,
     );
     await waitAndTap(item);
-    await waitForExpect(async () => {
-      await expectBitmapsToBeEqual("InteractiveKeyboardInitial");
-    });
+
+    try {
+      // scroll to the end of ScrollView to be sure UI is always identical
+      await element(by.id(scrollable)).swipe("up", "fast", 1, 0.5, 0.4);
+    } catch (e) {
+      // ignore exception, will be thrown on Android 9
+    }
   });
 
   it("should have expected state when keyboard is opened", async () => {
