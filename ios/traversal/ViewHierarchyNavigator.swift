@@ -42,7 +42,7 @@ public class ViewHierarchyNavigator: NSObject {
 
       if let textInput = isValidTextInput(view) {
         textInputs.append(textInput)
-      } else {
+      } else if String(describing: type(of: view)) != "KeyboardToolbarExcludeView" {
         for subview in view.subviews {
           findTextInputs(in: subview)
         }
@@ -90,6 +90,8 @@ public class ViewHierarchyNavigator: NSObject {
     if let validTextInput = isValidTextInput(view) {
       return validTextInput
     }
+
+    guard String(describing: type(of: view)) != "KeyboardToolbarExcludeView" else { return nil }
 
     // Determine the iteration order based on the direction
     let subviews = direction == "next" ? view.subviews : view.subviews.reversed()

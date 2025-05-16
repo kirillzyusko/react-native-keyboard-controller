@@ -6,6 +6,7 @@ import type {
   KeyboardControllerProps,
   KeyboardEventsModule,
   KeyboardGestureAreaProps,
+  KeyboardToolbarExcludeViewProps,
   OverKeyboardViewProps,
   WindowDimensionsEventsModule,
 } from "./types";
@@ -40,3 +41,5 @@ export const KeyboardGestureArea =
   View as unknown as React.FC<KeyboardGestureAreaProps>;
 export const RCTOverKeyboardView =
   View as unknown as React.FC<OverKeyboardViewProps>;
+export const RCTKeyboardToolbarExcludeView =
+  View as unknown as React.FC<KeyboardToolbarExcludeViewProps>;
