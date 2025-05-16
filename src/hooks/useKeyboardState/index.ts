@@ -18,6 +18,7 @@ const getLatestState = () => ({
  * height, duration, and other properties.
  *
  * @returns Object {@link KeyboardState|containing} keyboard state information.
+ * @see {@link https://kirillzyusko.github.io/react-native-keyboard-controller/docs/api/hooks/keyboard/use-keyboard-state|Documentation} page for more details.
  * @example
  * ```tsx
  * function MyComponent() {

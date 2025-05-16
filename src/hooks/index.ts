@@ -13,7 +13,7 @@ import type { DependencyList } from "react";
  * restores default mode on unmount. This ensures the keyboard behavior is consistent
  * on all Android versions.
  *
- * @see {@link https://kirillzyusko.github.io/react-native-keyboard-controller/docs/api/keyboard-controller#setinputmode-|documentation} page for more details.
+ * @see {@link https://kirillzyusko.github.io/react-native-keyboard-controller/docs/api/keyboard-controller#setinputmode-|Documentation} page for more details.
  * @example
  * ```tsx
  * function MyComponent() {
@@ -37,7 +37,7 @@ export const useResizeMode = () => {
  * Automatically sets the resize mode for Android.
  *
  * @returns Object {@link AnimatedContext|containing} animated values for keyboard movement.
- * @see {@link https://kirillzyusko.github.io/react-native-keyboard-controller/docs/api/hooks/keyboard/use-keyboard-animation|documentation} page for more details.
+ * @see {@link https://kirillzyusko.github.io/react-native-keyboard-controller/docs/api/hooks/keyboard/use-keyboard-animation|Documentation} page for more details.
  * @example
  * ```tsx
  * function MyComponent() {
@@ -58,7 +58,7 @@ export const useKeyboardAnimation = (): AnimatedContext => {
  * Automatically sets the resize mode for Android.
  *
  * @returns Object {@link ReanimatedContext|containing} reanimated values for keyboard movement.
- * @see {@link https://kirillzyusko.github.io/react-native-keyboard-controller/docs/api/hooks/keyboard/use-reanimated-keyboard-animation|documentation} page for more details.
+ * @see {@link https://kirillzyusko.github.io/react-native-keyboard-controller/docs/api/hooks/keyboard/use-reanimated-keyboard-animation|Documentation} page for more details.
  * @example
  * ```tsx
  * function MyComponent() {
@@ -123,7 +123,7 @@ export function useGenericKeyboardHandler(
  *
  * @param handler - Object containing keyboard event handlers.
  * @param [deps] - Dependencies array for the effect.
- * @see {@link https://kirillzyusko.github.io/react-native-keyboard-controller/docs/api/hooks/keyboard/use-keyboard-handler|documentation} page for more details.
+ * @see {@link https://kirillzyusko.github.io/react-native-keyboard-controller/docs/api/hooks/keyboard/use-keyboard-handler|Documentation} page for more details.
  * @example
  * ```tsx
  * function MyComponent() {
@@ -166,7 +166,7 @@ export function useKeyboardHandler(
  * @property {Function} setEnabled - Function to enable/disable keyboard handling.
  * @property {boolean} enabled - Current enabled state.
  * @returns Object containing keyboard control functions and state.
- * @see {@link https://kirillzyusko.github.io/react-native-keyboard-controller/docs/api/hooks/module/use-keyboard-controller|documentation} page for more details.
+ * @see {@link https://kirillzyusko.github.io/react-native-keyboard-controller/docs/api/hooks/module/use-keyboard-controller|Documentation} page for more details.
  * @example
  * ```tsx
  * function MyComponent() {
@@ -190,7 +190,7 @@ export function useKeyboardController() {
  * Hook that provides to the layout of the currently focused input.
  *
  * @returns Object containing reanimated values for focused input.
- * @see {@link https://kirillzyusko.github.io/react-native-keyboard-controller/docs/api/hooks/input/use-reanimated-focused-input|documentation} page for more details.
+ * @see {@link https://kirillzyusko.github.io/react-native-keyboard-controller/docs/api/hooks/input/use-reanimated-focused-input|Documentation} page for more details.
  * @example
  * ```tsx
  * function MyComponent() {
@@ -210,7 +210,7 @@ export function useReanimatedFocusedInput() {
  *
  * @param handler - Object containing focused input event handlers.
  * @param [deps] - Dependencies array for the effect.
- * @see {@link https://kirillzyusko.github.io/react-native-keyboard-controller/docs/api/hooks/input/use-focused-input-handler|documentation} page for more details.
+ * @see {@link https://kirillzyusko.github.io/react-native-keyboard-controller/docs/api/hooks/input/use-focused-input-handler|Documentation} page for more details.
  * @example
  * ```tsx
  * function MyComponent() {

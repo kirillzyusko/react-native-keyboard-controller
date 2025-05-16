@@ -80,7 +80,7 @@ const DEFAULT_OPACITY: HEX = "FF";
  *
  * @param props - Component props.
  * @returns A component that is shown above the keyboard with `Prev`/`Next` and `Done` buttons.
- * @see {@link https://kirillzyusko.github.io/react-native-keyboard-controller/docs/api/components/keyboard-toolbar|documentation} page for more details.
+ * @see {@link https://kirillzyusko.github.io/react-native-keyboard-controller/docs/api/components/keyboard-toolbar|Documentation} page for more details.
  * @example
  * ```tsx
  * <KeyboardToolbar doneText="Close" />

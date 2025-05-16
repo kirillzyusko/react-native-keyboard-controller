@@ -66,6 +66,7 @@ const defaultLayout: LayoutRectangle = {
  * when the keyboard appears to ensure that the content remains visible.
  *
  * @returns A View component that adjusts to keyboard visibility.
+ * @see {@link https://kirillzyusko.github.io/react-native-keyboard-controller/docs/api/components/keyboard-avoiding-view|Documentation} page for more details.
  * @example
  * ```tsx
  * <KeyboardAvoidingView behavior="padding">

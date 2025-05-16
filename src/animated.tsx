@@ -89,13 +89,28 @@ type KeyboardProviderProps = {
 // see https://github.com/kirillzyusko/react-native-keyboard-controller/issues/393 and https://github.com/kirillzyusko/react-native-keyboard-controller/issues/294 for more details
 const OS = Platform.OS;
 
-export const KeyboardProvider = ({
-  children,
-  statusBarTranslucent,
-  navigationBarTranslucent,
-  preserveEdgeToEdge,
-  enabled: initiallyEnabled = true,
-}: KeyboardProviderProps) => {
+/**
+ * A component that wrap your app. Under the hood it works with {@link https://kirillzyusko.github.io/react-native-keyboard-controller/docs/api/keyboard-controller-view|KeyboardControllerView} to receive events during keyboard movements,
+ * maps these events to `Animated`/`Reanimated` values and store them in context.
+ *
+ * @param props - Provider props, such as `statusBarTranslucent`, `navigationBarTranslucent`, etc.
+ * @returns A component that should be mounted in root of your App layout.
+ * @see {@link https://kirillzyusko.github.io/react-native-keyboard-controller/docs/api/keyboard-provider|Documentation} page for more details.
+ * @example
+ * ```tsx
+ * <KeyboardProvider>
+ *   <NavigationContainer />
+ * </KeyboardProvider>
+ * ```
+ */
+export const KeyboardProvider = (props: KeyboardProviderProps) => {
+  const {
+    children,
+    statusBarTranslucent,
+    navigationBarTranslucent,
+    preserveEdgeToEdge,
+    enabled: initiallyEnabled = true,
+  } = props;
   // ref
   const viewTagRef = useRef<React.Component<KeyboardControllerProps>>(null);
   // state

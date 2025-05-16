@@ -43,9 +43,18 @@ export const FocusedInputEvents: FocusedInputEventsModule = {
 export const WindowDimensionsEvents: WindowDimensionsEventsModule = {
   addListener: () => ({ remove: NOOP } as EmitterSubscription),
 };
+/**
+ * A view that sends events whenever keyboard or focused events are happening.
+ *
+ * @see {@link https://kirillzyusko.github.io/react-native-keyboard-controller/docs/api/keyboard-controller-view|Documentation} page for more details.
+ */
 export const KeyboardControllerView =
   View as unknown as React.FC<KeyboardControllerProps>;
-/** A view that defines a region on the screen, where gestures will control the keyboard position. */
+/**
+ * A view that defines a region on the screen, where gestures will control the keyboard position.
+ *
+ * @see {@link https://kirillzyusko.github.io/react-native-keyboard-controller/docs/api/keyboard-gesture-area|Documentation} page for more details.
+ */
 export const KeyboardGestureArea =
   View as unknown as React.FC<KeyboardGestureAreaProps>;
 export const RCTOverKeyboardView =

@@ -87,6 +87,7 @@ export type KeyboardAwareScrollViewProps = {
  * and maintain proper scroll position during keyboard interactions.
  *
  * @returns {React.ReactElement} A ScrollView component that handles keyboard interactions.
+ * @see {@link https://kirillzyusko.github.io/react-native-keyboard-controller/docs/api/components/keyboard-aware-scroll-view|Documentation} page for more details.
  * @example
  * ```tsx
  * <KeyboardAwareScrollView bottomOffset={20}>
