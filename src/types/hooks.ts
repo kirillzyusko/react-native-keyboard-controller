@@ -191,6 +191,14 @@ export type KeyboardHandler = Partial<{
   onEnd: (e: NativeEvent) => void;
   /**
    * A callback that gets invoked every frame when keyboard changes its position due to interactive dismissal.
+   *
+   * @example
+   * ```ts
+   * onInteractive: (e) => {
+   *   "worklet";
+   *
+   *   const keyboardHeight = e.height;
+   * }
    */
   onInteractive: (e: NativeEvent) => void;
 }>;

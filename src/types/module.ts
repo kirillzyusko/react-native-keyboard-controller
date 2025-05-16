@@ -25,6 +25,20 @@ export type KeyboardState = {
   isVisible: boolean;
 } & KeyboardEventData;
 export type KeyboardEventsModule = {
+  /**
+   * The `addListener` function connects a JavaScript function to an identified native
+   * keyboard notification event.
+   *
+   * This function then returns the reference to the listener.
+   *
+   * `name` is the string that identifies the event you're listening for. This
+   * can be any of the following:
+   *
+   * - `keyboardWillShow`;
+   * - `keyboardDidShow`;
+   * - `keyboardWillHide`;
+   * - `keyboardDidHide`.
+   */
   addListener: (
     name: KeyboardControllerEvents,
     cb: (e: KeyboardEventData) => void,

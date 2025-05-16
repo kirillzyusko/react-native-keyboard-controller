@@ -6,17 +6,23 @@ export type KeyboardGestureAreaProps = {
    * Determines how the keyboard position will be controlled:
    * - `ios` - keyboard will be following finger only when finger touches keyboard
    * - `linear` - keyboard will be following finger position linearly.
+   *
+   * @platform android
    */
   interpolator?: "ios" | "linear";
   /**
    * Whether to allow to show a keyboard from dismissed state by swipe up.
    * Default to `false`.
+   *
+   * @platform android
    */
   showOnSwipeUp?: boolean;
   /**
    * Whether to allow to control a keyboard by gestures. The strategy how
    * it should be controlled is determined by `interpolator` property.
    * Defaults to `true`.
+   *
+   * @platform android
    */
   enableSwipeToDismiss?: boolean;
   /**
@@ -27,6 +33,8 @@ export type KeyboardGestureAreaProps = {
    * A corresponding `nativeID` value from the associated `TextInput` (a string that links the `KeyboardGestureArea` to one or more `TextInput` components).
    * This is **required on iOS** in order to apply the `offset` when the keyboard is shown. Only the currently focused `TextInput` with a matching `nativeID`
    * will receive offset behavior.
+   *
+   * @platform ios
    */
   textInputNativeID?: string;
 } & ViewProps;

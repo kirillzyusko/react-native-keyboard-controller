@@ -7,6 +7,20 @@ import { findNodeHandle } from "./utils/findNodeHandle";
 type EventHandler = (event: never) => void;
 type ComponentOrHandle = Parameters<typeof findNodeHandle>[0];
 
+/**
+ * An internal hook that helps to register workletized event handlers.
+ *
+ * @param map - Map of event handlers and their names.
+ * @param viewTagRef - Ref to the view that produces events.
+ * @returns A function that registers supplied event handlers.
+ * @example
+ * ```ts
+ * const setKeyboardHandlers = useEventHandlerRegistration<KeyboardHandler>(
+ *     keyboardEventsMap,
+ *     viewTagRef,
+ * );
+ * ```
+ */
 export function useEventHandlerRegistration<
   H extends Partial<Record<string, EventHandler>>,
 >(
@@ -68,7 +82,14 @@ export function useEventHandlerRegistration<
  * and therefore consumes less memory. We can not use a variant from
  * RN, since this library supports earlier versions of RN.
  *
+ * @param initialValue - Initial value of the animated value (numeric).
+ * @param config - Additional {@link Animated.AnimatedConfig|configuration} for the animated value.
+ * @returns Properly memoized {@link Animated.Value|Animated} value.
  * @see https://github.com/facebook/react-native/commit/e22217fe8b9455e32695f88ca835e11442b0a937
+ * @example
+ * ```ts
+ * const progress = useAnimatedValue(0);
+ * ```
  */
 export function useAnimatedValue(
   initialValue: number,

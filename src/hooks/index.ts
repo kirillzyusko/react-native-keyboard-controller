@@ -9,9 +9,11 @@ import type { FocusedInputHandler, KeyboardHandler } from "../types";
 import type { DependencyList } from "react";
 
 /**
- * Hook that sets the Android soft input mode to adjust resize.
- * This ensures the keyboard properly resizes the screen content.
+ * Hook that sets the Android soft input mode to adjust resize on mount and
+ * restores default mode on unmount. This ensures the keyboard behavior is consistent
+ * on all Android versions.
  *
+ * @see {@link https://kirillzyusko.github.io/react-native-keyboard-controller/docs/api/keyboard-controller#setinputmode-|documentation} page for more details.
  * @example
  * ```tsx
  * function MyComponent() {
@@ -31,10 +33,11 @@ export const useResizeMode = () => {
 };
 
 /**
- * Hook that provides animated values for keyboard movement.
+ * Hook that provides animated (`height`/`progress`) values for tracking keyboard movement.
  * Automatically sets the resize mode for Android.
  *
- * @returns {AnimatedContext} Object containing animated values for keyboard movement
+ * @returns Object {@link AnimatedContext|containing} animated values for keyboard movement.
+ * @see {@link https://kirillzyusko.github.io/react-native-keyboard-controller/docs/api/hooks/keyboard/use-keyboard-animation|documentation} page for more details.
  * @example
  * ```tsx
  * function MyComponent() {
@@ -51,10 +54,11 @@ export const useKeyboardAnimation = (): AnimatedContext => {
 };
 
 /**
- * Hook that provides reanimated values for keyboard movement.
+ * Hook that provides reanimated (`height`/`progress`) values for tracking keyboard movement.
  * Automatically sets the resize mode for Android.
  *
- * @returns {ReanimatedContext} Object containing reanimated values for keyboard movement
+ * @returns Object {@link ReanimatedContext|containing} reanimated values for keyboard movement.
+ * @see {@link https://kirillzyusko.github.io/react-native-keyboard-controller/docs/api/hooks/keyboard/use-reanimated-keyboard-animation|documentation} page for more details.
  * @example
  * ```tsx
  * function MyComponent() {
@@ -71,19 +75,33 @@ export const useReanimatedKeyboardAnimation = (): ReanimatedContext => {
 };
 
 /**
- * Generic hook for handling keyboard events.
+ * An alternative to `useKeyboardHandler` that doesn't set resize mode on mount. If your
+ * app already uses `adjustResize`, then you can use this hook instead of `useKeyboardHandler`.
  *
- * @param {KeyboardHandler} handler - Object containing keyboard event handlers
- * @param {DependencyList} [deps] - Dependencies array for the effect
+ * @param handler - Object containing keyboard event handlers.
+ * @param [deps] - Dependencies array for the effect.
  * @example
  * ```tsx
  * function MyComponent() {
+ *   const height = useSharedValue(0);
+ *   const progress = useSharedValue(0);
+ *
  *   useGenericKeyboardHandler({
- *     onStart: (e) => console.log('Keyboard started moving'),
- *     onMove: (e) => console.log('Keyboard is moving'),
- *     onEnd: (e) => console.log('Keyboard finished moving')
- *   });
- *   return <View />;
+ *     onMove: (e) => {
+ *       "worklet";
+ *
+ *       height.value = e.height;
+ *       progress.value = e.progress;
+ *     },
+ *     onEnd: (e) => {
+ *       "worklet";
+ *
+ *       height.value = e.height;
+ *       progress.value = e.progress;
+ *     },
+ *   }, []);
+ *
+ *   return <Reanimated.View style={{ height: height }] }} />;
  * }
  * ```
  */
@@ -101,19 +119,33 @@ export function useGenericKeyboardHandler(
 }
 
 /**
- * Hook for handling keyboard events with automatic resize mode.
+ * Hook that gives an access to each aspect of keyboard movement with workletized `onStart`/`onMove`/`onInteractive`/`onEnd` handlers.
  *
- * @param {KeyboardHandler} handler - Object containing keyboard event handlers
- * @param {DependencyList} [deps] - Dependencies array for the effect
+ * @param handler - Object containing keyboard event handlers.
+ * @param [deps] - Dependencies array for the effect.
+ * @see {@link https://kirillzyusko.github.io/react-native-keyboard-controller/docs/api/hooks/keyboard/use-keyboard-handler|documentation} page for more details.
  * @example
  * ```tsx
  * function MyComponent() {
+ *   const height = useSharedValue(0);
+ *   const progress = useSharedValue(0);
+ *
  *   useKeyboardHandler({
- *     onStart: (e) => console.log('Keyboard started moving'),
- *     onMove: (e) => console.log('Keyboard is moving'),
- *     onEnd: (e) => console.log('Keyboard finished moving')
- *   });
- *   return <View />;
+ *     onMove: (e) => {
+ *       "worklet";
+ *
+ *       height.value = e.height;
+ *       progress.value = e.progress;
+ *     },
+ *     onEnd: (e) => {
+ *       "worklet";
+ *
+ *       height.value = e.height;
+ *       progress.value = e.progress;
+ *     },
+ *   }, []);
+ *
+ *   return <Reanimated.View style={{ height: height }] }} />;
  * }
  * ```
  */
@@ -126,11 +158,15 @@ export function useKeyboardHandler(
 }
 
 /**
- * Hook for controlling keyboard behavior.
+ * Hook for controlling keyboard controller module.
+ * Allows to disable/enable it and check the actual state (whether it's enabled or not).
+ * When disabled it fallbacks to default android keyboard handling and stops tracking all
+ * events that are exposed in this library.
  *
- * @returns {Object} Object containing keyboard control functions and state
- * @property {function} setEnabled - Function to enable/disable keyboard handling
- * @property {boolean} enabled - Current enabled state
+ * @property {Function} setEnabled - Function to enable/disable keyboard handling.
+ * @property {boolean} enabled - Current enabled state.
+ * @returns Object containing keyboard control functions and state.
+ * @see {@link https://kirillzyusko.github.io/react-native-keyboard-controller/docs/api/hooks/module/use-keyboard-controller|documentation} page for more details.
  * @example
  * ```tsx
  * function MyComponent() {
@@ -151,10 +187,10 @@ export function useKeyboardController() {
 }
 
 /**
- * Hook that provides reanimated values for the currently focused input.
+ * Hook that provides to the layout of the currently focused input.
  *
- * @returns {Object} Object containing reanimated values for focused input
- * @property {Reanimated.SharedValue} input - Shared value containing focused input layout
+ * @returns Object containing reanimated values for focused input.
+ * @see {@link https://kirillzyusko.github.io/react-native-keyboard-controller/docs/api/hooks/input/use-reanimated-focused-input|documentation} page for more details.
  * @example
  * ```tsx
  * function MyComponent() {
@@ -170,10 +206,11 @@ export function useReanimatedFocusedInput() {
 }
 
 /**
- * Hook for handling focused input events.
+ * Hook for handling focused input events, such as selection changes, text changes, etc.
  *
- * @param {FocusedInputHandler} handler - Object containing focused input event handlers
- * @param {DependencyList} [deps] - Dependencies array for the effect
+ * @param handler - Object containing focused input event handlers.
+ * @param [deps] - Dependencies array for the effect.
+ * @see {@link https://kirillzyusko.github.io/react-native-keyboard-controller/docs/api/hooks/input/use-focused-input-handler|documentation} page for more details.
  * @example
  * ```tsx
  * function MyComponent() {

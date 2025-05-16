@@ -20,12 +20,9 @@ const ModifiedNativeAndroidManager = {
   setTranslucent: (translucent: boolean): void => {
     RCTStatusBarManagerCompat.setTranslucent(translucent);
   },
-  /**
-   *  - statusBarStyles can be:
-   *    - 'default'
-   *    - 'dark-content'
-   */
-  setStyle: (statusBarStyle?: string): void => {
+  setStyle: (
+    statusBarStyle?: "default" | "dark-content" | "light-content",
+  ): void => {
     RCTStatusBarManagerCompat.setStyle(statusBarStyle);
   },
   setHidden: (hidden: boolean): void => {

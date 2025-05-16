@@ -65,16 +65,13 @@ const defaultLayout: LayoutRectangle = {
  * A View component that automatically adjusts its height, position, or bottom padding
  * when the keyboard appears to ensure that the content remains visible.
  *
+ * @returns A View component that adjusts to keyboard visibility.
  * @example
  * ```tsx
  * <KeyboardAvoidingView behavior="padding">
  *   <TextInput />
  * </KeyboardAvoidingView>
  * ```
- *
- * @param {KeyboardAvoidingViewProps} props - Component props
- * @param {React.Ref<View>} ref - Forwarded ref
- * @returns {React.ReactElement} A View component that adjusts to keyboard visibility
  */
 const KeyboardAvoidingView = forwardRef<
   View,
