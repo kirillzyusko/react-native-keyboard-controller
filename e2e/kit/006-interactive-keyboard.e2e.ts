@@ -8,12 +8,11 @@ import {
 const scrollable =
   device.getPlatform() === "android" ? "chat.gesture" : "chat.scroll";
 
-const safeSwipe = (callback: () => Promise<void>) => {
+const safeSwipe = async (callback: () => Promise<void>) => {
   try {
-    return callback();
+    await callback();
   } catch {
     // ignore exception, will be thrown on Android 9
-    return;
   }
 };
 
