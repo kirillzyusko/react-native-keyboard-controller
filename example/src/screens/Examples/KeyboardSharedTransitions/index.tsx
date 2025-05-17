@@ -74,6 +74,7 @@ const KeyboardSharedTransitionExample = () => {
               },
               inputColor,
             ]}
+            testID="shared_transition_input"
           />
         </View>
       </KeyboardStickyView>
