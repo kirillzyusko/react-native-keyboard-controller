@@ -11,6 +11,7 @@ import com.reactnativekeyboardcontroller.extensions.currentImePackage
 import com.reactnativekeyboardcontroller.extensions.isSystemDarkMode
 
 object ImePackages {
+  const val AOSP = "com.android.inputmethod.latin"
   const val GBOARD = "com.google.android.inputmethod.latin"
   const val SWIFT_KEY = "com.touchtype.swiftkey"
   const val GBOARD_TTS = "com.google.android.googlequicksearchbox"
@@ -21,6 +22,7 @@ object ImePackages {
 
 val imeColorMap: Map<String, Pair<Int, Int>> =
   mapOf(
+    ImePackages.AOSP to (R.style.aosp_light to R.style.aosp_light),
     ImePackages.GBOARD to (R.style.gboard_light to R.style.gboard_dark),
     ImePackages.SWIFT_KEY to (R.style.swiftkey_light to R.style.swiftkey_dark),
     ImePackages.GBOARD_TTS to (R.style.gboard_tts_light to R.style.gboard_tts_dark),
@@ -78,11 +80,12 @@ object Skins {
 
     println("Current IME: $imePackage")
     println(imePackage)
+    println("isDRK $isDark")
     Log.i("Skins", "Current IME: $imePackage")
 
     val (lightColorRes, darkColorRes) =
       imeColorMap[imePackage]
-        ?: (R.style.gboard_dark to R.style.gboard_dark)
+        ?: (R.style.gboard_light to R.style.gboard_dark)
 
     // on Android 10 dark theme doesn't affect keyboard color
     val resId = if (isDark && Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) darkColorRes else lightColorRes

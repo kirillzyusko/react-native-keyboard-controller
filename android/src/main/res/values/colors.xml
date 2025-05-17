@@ -1,4 +1,7 @@
 <resources>
+  <style name="aosp_light">
+    <item name="color">#ebeff1</item>
+  </style>
   <style name="gboard_dark">
     <item name="color">#1c1c2c</item>
   </style>
