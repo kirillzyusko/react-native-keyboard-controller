@@ -13,7 +13,9 @@ import InteractiveKeyboard from "../../screens/Examples/InteractiveKeyboard";
 import InteractiveKeyboardIOS from "../../screens/Examples/InteractiveKeyboardIOS";
 import KeyboardAnimation from "../../screens/Examples/KeyboardAnimation";
 import KeyboardAvoidingViewExample from "../../screens/Examples/KeyboardAvoidingView";
+import KeyboardSharedTransitionExample from "../../screens/Examples/KeyboardSharedTransitions";
 import UseKeyboardState from "../../screens/Examples/KeyboardStateHook";
+import LiquidKeyboardExample from "../../screens/Examples/LiquidKeyboard";
 import LottieAnimation from "../../screens/Examples/Lottie";
 import ModalExample from "../../screens/Examples/Modal";
 import NonUIProps from "../../screens/Examples/NonUIProps";
@@ -48,6 +50,8 @@ export type ExamplesStackParamList = {
   [ScreenNames.OVER_KEYBOARD_VIEW]: undefined;
   [ScreenNames.IMAGE_GALLERY]: undefined;
   [ScreenNames.USE_KEYBOARD_STATE]: undefined;
+  [ScreenNames.LIQUID_KEYBOARD]: undefined;
+  [ScreenNames.KEYBOARD_SHARED_TRANSITIONS]: undefined;
 };
 
 const Stack = createStackNavigator<ExamplesStackParamList>();
@@ -119,6 +123,14 @@ const options = {
   },
   [ScreenNames.USE_KEYBOARD_STATE]: {
     title: "useKeyboardState",
+  },
+  [ScreenNames.LIQUID_KEYBOARD]: {
+    title: "Liquid keyboard",
+    headerShown: false,
+  },
+  [ScreenNames.KEYBOARD_SHARED_TRANSITIONS]: {
+    title: "Keyboard shared transitions",
+    headerShown: false,
   },
 };
 
@@ -233,6 +245,16 @@ const ExamplesStack = () => (
       component={UseKeyboardState}
       name={ScreenNames.USE_KEYBOARD_STATE}
       options={options[ScreenNames.USE_KEYBOARD_STATE]}
+    />
+    <Stack.Screen
+      component={LiquidKeyboardExample}
+      name={ScreenNames.LIQUID_KEYBOARD}
+      options={options[ScreenNames.LIQUID_KEYBOARD]}
+    />
+    <Stack.Screen
+      component={KeyboardSharedTransitionExample}
+      name={ScreenNames.KEYBOARD_SHARED_TRANSITIONS}
+      options={options[ScreenNames.KEYBOARD_SHARED_TRANSITIONS]}
     />
   </Stack.Navigator>
 );
