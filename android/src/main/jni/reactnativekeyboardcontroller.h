@@ -13,6 +13,7 @@
 #include <react/renderer/components/reactnativekeyboardcontroller/RNKCKeyboardControllerViewComponentDescriptor.h>
 #include <react/renderer/components/reactnativekeyboardcontroller/RNKCKeyboardGestureAreaComponentDescriptor.h>
 #include <react/renderer/components/reactnativekeyboardcontroller/RNKCOverKeyboardViewComponentDescriptor.h>
+#include <react/renderer/components/reactnativekeyboardcontroller/RNKCKeyboardBackgroundViewComponentDescriptor.h>
 
 #include <memory>
 #include <string>
