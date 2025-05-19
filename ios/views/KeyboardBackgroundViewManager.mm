@@ -36,6 +36,12 @@ typedef NS_ENUM(NSInteger, KeyboardBackdropStyle) {
   KeyboardBackdropStyleLight = 3901
 };
 
+@protocol KeyboardBackdropViewProtocol <NSObject>
+@optional
+- (instancetype)initWithFrame:(CGRect)frame style:(long long)style;
+- (void)transitionToStyle:(long long)style;
+@end
+
 #pragma mark - Manager
 
 @implementation KeyboardBackgroundViewManager
@@ -104,22 +110,19 @@ RCT_EXPORT_MODULE(KeyboardBackgroundViewManager)
                         ? KeyboardBackdropStyleDark
                         : KeyboardBackdropStyleLight;
 
-    id backdropView = ((id (*)(id, SEL, CGRect, long long))objc_msgSend)(
-        [BackdropClass alloc],
-        @selector(initWithFrame:style:),
-        self.bounds,
-        style
-    );
+    id<KeyboardBackdropViewProtocol> backdrop =
+        (id<KeyboardBackdropViewProtocol>)[BackdropClass alloc];
+    backdrop = [backdrop initWithFrame:self.bounds style:style];
 
-    if ([backdropView isKindOfClass:[UIVisualEffectView class]]) {
-      _backdropView = (UIVisualEffectView *)backdropView;
+    if ([backdrop isKindOfClass:[UIVisualEffectView class]]) {
+      _backdropView = (UIVisualEffectView *)backdrop;
       _backdropView.layer.masksToBounds = YES;
       _backdropView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
       _backdropView.frame = self.bounds;
       [self addSubview:_backdropView];
     }
   } else {
-    NSLog(@"UIKBBackdropView not found");
+    NSLog(@"KeyboardBackdropView class not found");
   }
 }
 
@@ -132,8 +135,8 @@ RCT_EXPORT_MODULE(KeyboardBackgroundViewManager)
                         ? KeyboardBackdropStyleDark
                         : KeyboardBackdropStyleLight;
 
-      if (_backdropView && [_backdropView respondsToSelector:@selector(transitionToStyle:)]) {
-        ((void (*)(id, SEL, long long))objc_msgSend)(_backdropView, @selector(transitionToStyle:), style);
+      if ([_backdropView respondsToSelector:@selector(transitionToStyle:)]) {
+          [(id<KeyboardBackdropViewProtocol>)_backdropView transitionToStyle:style];
       }
     }
   }
