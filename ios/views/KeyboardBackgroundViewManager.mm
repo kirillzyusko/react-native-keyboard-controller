@@ -100,6 +100,7 @@ RCT_EXPORT_MODULE(KeyboardBackgroundViewManager)
   if (self) {
     [self setupBackdropView];
   }
+  self.clipsToBounds = YES;
   return self;
 }
 
@@ -125,6 +126,23 @@ RCT_EXPORT_MODULE(KeyboardBackgroundViewManager)
     NSLog(@"KeyboardBackdropView class not found");
   }
 }
+
+// MARK: child management
+#ifdef RCT_NEW_ARCH_ENABLED
+- (void)mountChildComponentView:(UIView<RCTComponentViewProtocol> *)childComponentView
+                          index:(NSInteger)index
+{
+  // preserve slot 0 for blur layer
+  [super mountChildComponentView:childComponentView index:index+1];
+}
+
+- (void)unmountChildComponentView:(UIView<RCTComponentViewProtocol> *)childComponentView
+                            index:(NSInteger)index
+{
+  // preserve slot 0 for blur layer
+  [super unmountChildComponentView:childComponentView index:index+1];
+}
+#endif
 
 - (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
   [super traitCollectionDidChange:previousTraitCollection];
