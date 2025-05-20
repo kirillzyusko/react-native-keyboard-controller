@@ -25,8 +25,6 @@
 #import <UIKit/UIKit.h>
 #import <React/RCTView.h>
 
-#import <objc/message.h>
-
 #ifdef RCT_NEW_ARCH_ENABLED
 using namespace facebook::react;
 #endif
