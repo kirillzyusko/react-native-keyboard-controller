@@ -8,7 +8,6 @@ import androidx.core.view.OnApplyWindowInsetsListener
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsAnimationCompat
 import androidx.core.view.WindowInsetsCompat
-import com.facebook.react.animated.NativeAnimatedNodesManager
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.uimanager.ThemedReactContext
@@ -21,12 +20,12 @@ import com.reactnativekeyboardcontroller.extensions.dispatchEvent
 import com.reactnativekeyboardcontroller.extensions.dp
 import com.reactnativekeyboardcontroller.extensions.emitEvent
 import com.reactnativekeyboardcontroller.extensions.isKeyboardAnimation
+import com.reactnativekeyboardcontroller.extensions.keepShadowNodesInSync
 import com.reactnativekeyboardcontroller.extensions.keyboardType
 import com.reactnativekeyboardcontroller.interactive.InteractiveKeyboardProvider
 import com.reactnativekeyboardcontroller.log.Logger
 import com.reactnativekeyboardcontroller.traversal.FocusedInputHolder
 import kotlin.math.abs
-
 
 private val TAG = KeyboardAnimationCallback::class.qualifiedName
 private val isResizeHandledInCallbackMethods = Keyboard.IS_ANIMATION_EMULATED
@@ -330,7 +329,7 @@ class KeyboardAnimationCallback(
         // reset to initial state
         duration = 0
 
-        keepShadowNodesInSync()
+        context.keepShadowNodesInSync(eventPropagationView.id)
       }
 
     if (isKeyboardInteractive) {
@@ -405,6 +404,7 @@ class KeyboardAnimationCallback(
       )
     }
     context.emitEvent("KeyboardController::keyboardDidShow", getEventParams(keyboardHeight))
+    context.keepShadowNodesInSync(eventPropagationView.id)
 
     this.persistentKeyboardHeight = keyboardHeight
   }
@@ -439,30 +439,5 @@ class KeyboardAnimationCallback(
     params.putString("appearance", context.appearance)
 
     return params
-  }
-
-  private fun keepShadowNodesInSync() {
-
-    // ask to the Node Manager for all the native nodes listening to OnScroll event
-    // val nodeManager: NativeAnimatedNodesManager = mNodesManager.get() ?: return
-    // nodeManager.getTagsOfConnectedNodes(eventPropagationView.id, "topScrollEnded")
-
-    val tags = intArrayOf(eventPropagationView.id)
-
-    if (tags.isEmpty()) {
-      return
-    }
-
-    val tagsArray = Arguments.createArray()
-    for (tag in tags) {
-      tagsArray.pushInt(tag)
-    }
-
-
-    // emit the event to JS to re-sync the trees
-    val onAnimationEndedData = Arguments.createMap()
-    onAnimationEndedData.putArray("tags", tagsArray)
-
-    context?.reactApplicationContext?.emitDeviceEvent("onUserDrivenAnimationEnded", onAnimationEndedData)
   }
 }

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Button, Text, View } from "react-native";
+import { Alert, Button, Text, View } from "react-native";
 import {
   KeyboardAwareScrollView,
   KeyboardStickyView,
@@ -82,7 +82,7 @@ export default function AwareScrollViewStickyFooter({ navigation }: Props) {
           <View style={styles.footer} onLayout={handleLayout}>
             <Text style={styles.footerText}>A mocked sticky footer</Text>
             <TextInput placeholder="Amount" style={styles.inputInFooter} />
-            <Button title="Click me" />
+            <Button title="Click me" onPress={() => Alert.alert("Clicked")} />
           </View>
         </KeyboardStickyView>
       )}
