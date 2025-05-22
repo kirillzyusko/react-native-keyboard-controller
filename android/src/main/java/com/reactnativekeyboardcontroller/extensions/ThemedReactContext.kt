@@ -2,6 +2,7 @@ package com.reactnativekeyboardcontroller.extensions
 
 import android.content.Context
 import android.os.Build
+import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.ReactContext
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.modules.core.DeviceEventManagerModule
@@ -35,6 +36,25 @@ fun ThemedReactContext?.emitEvent(
     ?.emit(event, params)
 
   Logger.i("ThemedReactContext", event)
+}
+
+fun ThemedReactContext?.keepShadowNodesInSync(viewId: Int) {
+  // originally by viewId we should lookup all connected nodes
+  // and send them to JS
+  // but at the moment JS side broadcasts events to all ViewType
+  // instances, so we can send even empty array
+  val tags = intArrayOf(viewId)
+
+  val tagsArray = Arguments.createArray()
+  for (tag in tags) {
+    tagsArray.pushInt(tag)
+  }
+
+  // emit the event to JS to re-sync the trees
+  val onAnimationEndedData = Arguments.createMap()
+  onAnimationEndedData.putArray("tags", tagsArray)
+
+  this?.reactApplicationContext?.emitDeviceEvent("onUserDrivenAnimationEnded", onAnimationEndedData)
 }
 
 val ThemedReactContext?.appearance: String
