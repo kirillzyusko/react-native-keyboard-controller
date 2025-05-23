@@ -19,7 +19,7 @@ const KeyboardExtender = ({
 
   // iOS-only component
   if (Platform.OS !== "ios") {
-    return <>{children}</>;
+    return null;
   }
 
   return (
