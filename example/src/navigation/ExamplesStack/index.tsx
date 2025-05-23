@@ -14,6 +14,7 @@ import InteractiveKeyboardIOS from "../../screens/Examples/InteractiveKeyboardIO
 import KeyboardAnimation from "../../screens/Examples/KeyboardAnimation";
 import KeyboardAvoidingViewExample from "../../screens/Examples/KeyboardAvoidingView";
 import KeyboardSharedTransitionExample from "../../screens/Examples/KeyboardSharedTransitions";
+import KeyboardExtender from "../../screens/Examples/KeyboardExtender";
 import UseKeyboardState from "../../screens/Examples/KeyboardStateHook";
 import LiquidKeyboardExample from "../../screens/Examples/LiquidKeyboard";
 import LottieAnimation from "../../screens/Examples/Lottie";
@@ -52,6 +53,7 @@ export type ExamplesStackParamList = {
   [ScreenNames.USE_KEYBOARD_STATE]: undefined;
   [ScreenNames.LIQUID_KEYBOARD]: undefined;
   [ScreenNames.KEYBOARD_SHARED_TRANSITIONS]: undefined;
+  [ScreenNames.KEYBOARD_EXTENDER]: undefined;
 };
 
 const Stack = createStackNavigator<ExamplesStackParamList>();
@@ -130,6 +132,9 @@ const options = {
   },
   [ScreenNames.KEYBOARD_SHARED_TRANSITIONS]: {
     title: "Keyboard shared transitions",
+  },
+  [ScreenNames.KEYBOARD_EXTENDER]: {
+    title: "Keyboard Extender",
     headerShown: false,
   },
 };
@@ -255,6 +260,11 @@ const ExamplesStack = () => (
       component={KeyboardSharedTransitionExample}
       name={ScreenNames.KEYBOARD_SHARED_TRANSITIONS}
       options={options[ScreenNames.KEYBOARD_SHARED_TRANSITIONS]}
+    />
+    <Stack.Screen
+      component={KeyboardExtender}
+      name={ScreenNames.KEYBOARD_EXTENDER}
+      options={options[ScreenNames.KEYBOARD_EXTENDER]}
     />
   </Stack.Navigator>
 );

@@ -6,6 +6,7 @@ import type {
   KeyboardControllerNativeModule,
   KeyboardControllerProps,
   KeyboardEventsModule,
+  KeyboardExtenderProps,
   KeyboardGestureAreaProps,
   OverKeyboardViewProps,
   WindowDimensionsEventsModule,
@@ -67,3 +68,5 @@ export const RCTOverKeyboardView =
  */
 export const KeyboardBackgroundView =
   View as unknown as React.FC<KeyboardBackgroundViewProps>;
+export const RCTKeyboardExtender =
+  View as unknown as React.FC<KeyboardExtenderProps>;
