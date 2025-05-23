@@ -135,4 +135,16 @@ export const examples: Example[] = [
     info: ScreenNames.USE_KEYBOARD_STATE,
     icons: "📝",
   },
+  {
+    title: "Liquid keyboard",
+    testID: "liquid_keyboard",
+    info: ScreenNames.LIQUID_KEYBOARD,
+    icons: "💧",
+  },
+  {
+    title: "Keyboard shared transitions",
+    testID: "keyboard_shared_transitions",
+    info: ScreenNames.KEYBOARD_SHARED_TRANSITIONS,
+    icons: "🔄",
+  },
 ];
