@@ -1,6 +1,6 @@
 {
   "name": "react-native-keyboard-controller",
-  "version": "1.17.1",
+  "version": "1.17.2",
   "description": "Keyboard manager which works in identical way on both iOS and Android",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -101,6 +101,7 @@
     "eslint-plugin-ft-flow": "^3.0.11",
     "eslint-plugin-import": "^2.28.1",
     "eslint-plugin-jest": "^26.5.3",
+    "eslint-plugin-jsdoc": "^50.6.17",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react-compiler": "0.0.0-experimental-9ed098e-20240725",
     "eslint-plugin-react-perf": "^3.3.2",

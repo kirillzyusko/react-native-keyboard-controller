@@ -20,6 +20,7 @@ import com.reactnativekeyboardcontroller.extensions.dispatchEvent
 import com.reactnativekeyboardcontroller.extensions.dp
 import com.reactnativekeyboardcontroller.extensions.emitEvent
 import com.reactnativekeyboardcontroller.extensions.isKeyboardAnimation
+import com.reactnativekeyboardcontroller.extensions.keepShadowNodesInSync
 import com.reactnativekeyboardcontroller.extensions.keyboardType
 import com.reactnativekeyboardcontroller.interactive.InteractiveKeyboardProvider
 import com.reactnativekeyboardcontroller.log.Logger
@@ -327,6 +328,8 @@ class KeyboardAnimationCallback(
 
         // reset to initial state
         duration = 0
+
+        context.keepShadowNodesInSync(eventPropagationView.id)
       }
 
     if (isKeyboardInteractive) {
@@ -401,6 +404,7 @@ class KeyboardAnimationCallback(
       )
     }
     context.emitEvent("KeyboardController::keyboardDidShow", getEventParams(keyboardHeight))
+    context.keepShadowNodesInSync(eventPropagationView.id)
 
     this.persistentKeyboardHeight = keyboardHeight
   }

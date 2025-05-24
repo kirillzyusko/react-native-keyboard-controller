@@ -98,16 +98,22 @@ If you experience this error on Windows you need to perform next steps:
    - Open `android/app/build.gradle`
    - Inside the `android.defaultConfig` block, add the following code:
 
-   ```json
+   ```kt
+   import org.apache.tools.ant.taskdefs.condition.Os
+
    externalNativeBuild {
        cmake {
-           arguments "-DCMAKE_MAKE_PROGRAM=$YOUR_CMAKE_NINJA_PATH$", "-DCMAKE_OBJECT_PATH_MAX=1024"
-       }
+           def cmakeDir = "${android.sdkDirectory}/cmake/3.31.1/bin"
+           def ninjaExecutable = Os.isFamily(Os.FAMILY_WINDOWS) ? "ninja.exe" : "ninja"
+           def ninjaPath = "${cmakeDir}/${ninjaExecutable}".replace("\\", "/")
+           arguments "-DCMAKE_MAKE_PROGRAM=${ninjaPath}",
+                      "-DCMAKE_OBJECT_PATH_MAX=1024"
+      }
    }
    ```
 
    :::tip
-   Make sure to update `$YOUR_CMAKE_NINJA_PATH$` with the correct path to your `ninja.exe` file. For example, it might look something like `E:\\SDK\\cmake\\3.22.2\\bin\\ninja.exe` on Windows.
+   This setup automatically builds the correct path to `ninja` based on the CMake version (`3.31.1`) in your Android SDK. If you're using a different version, update `cmakeDir` accordingly.
    :::
 
 3. **Enable Long Path Support in Windows**

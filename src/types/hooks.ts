@@ -1,44 +1,60 @@
-import type { PropsWithChildren } from "react";
-import type {
-  EmitterSubscription,
-  NativeSyntheticEvent,
-  TextInputProps,
-  ViewProps,
-} from "react-native";
+import type { NativeSyntheticEvent, ViewProps } from "react-native";
 
 // DirectEventHandler events declaration
 export type NativeEvent = {
+  /** A value between `0` and `1` indicating keyboard position, where `0` means keyboard is closed and `1` means keyboard is fully visible. */
   progress: number;
+  /** Height of the keyboard. */
   height: number;
+  /** Duration of the keyboard animation. */
   duration: number;
+  /** Tag of the focused `TextInput`. */
   target: number;
 };
 export type FocusedInputLayoutChangedEvent = {
+  /** Tag of the focused `TextInput`. */
   target: number;
+  /** Tag of the parent `ScrollView`. */
   parentScrollViewTarget: number;
   layout: {
+    /** X coordinate of the focused `TextInput`. */
     x: number;
+    /** Y coordinate of the focused `TextInput`. */
     y: number;
+    /** Width of the focused `TextInput`. */
     width: number;
+    /** Height of the focused `TextInput`. */
     height: number;
+    /** X coordinate of the focused `TextInput` relative to the screen. */
     absoluteX: number;
+    /** Y coordinate of the focused `TextInput` relative to the screen. */
     absoluteY: number;
   };
 };
 export type FocusedInputTextChangedEvent = {
+  /** Text that user typed in the focused `TextInput`. */
   text: string;
 };
 export type FocusedInputSelectionChangedEvent = {
+  /** Tag of the focused `TextInput`. */
   target: number;
   selection: {
+    /** Start of the selection. Represents top-left point of rectangle. */
     start: {
+      /** X coordinate of the selection start (relative to the `TextInput`). */
       x: number;
+      /** Y coordinate of the selection start (relative to the `TextInput`). */
       y: number;
+      /** The start of selection. */
       position: number;
     };
+    /** End of the selection. Represents bottom-right point of rectangle. */
     end: {
+      /** X coordinate of the selection end (relative to the `TextInput`). */
       x: number;
+      /** Y coordinate of the selection end (relative to the `TextInput`). */
       y: number;
+      /** The end of selection. */
       position: number;
     };
   };
@@ -93,104 +109,6 @@ export type KeyboardControllerProps = {
   enabled?: boolean;
 } & ViewProps;
 
-export type KeyboardGestureAreaProps = {
-  interpolator?: "ios" | "linear";
-  /**
-   * Whether to allow to show a keyboard from dismissed state by swipe up.
-   * Default to `false`.
-   */
-  showOnSwipeUp?: boolean;
-  /**
-   * Whether to allow to control a keyboard by gestures. The strategy how
-   * it should be controlled is determined by `interpolator` property.
-   * Defaults to `true`.
-   */
-  enableSwipeToDismiss?: boolean;
-  /**
-   * Extra distance to the keyboard.
-   */
-  offset?: number;
-  /**
-   * A corresponding `nativeID` value from the corresponding `TextInput`.
-   */
-  textInputNativeID?: string;
-} & ViewProps;
-export type OverKeyboardViewProps = PropsWithChildren<{
-  visible: boolean;
-}>;
-
-export type Direction = "next" | "prev" | "current";
-export type DismissOptions = {
-  keepFocus: boolean;
-};
-export type KeyboardControllerModule = {
-  // android only
-  setDefaultMode: () => void;
-  setInputMode: (mode: number) => void;
-  // all platforms
-  dismiss: (options?: DismissOptions) => Promise<void>;
-  setFocusTo: (direction: Direction) => void;
-  isVisible: () => boolean;
-  state: () => KeyboardEventData;
-};
-export type KeyboardControllerNativeModule = {
-  // android only
-  setDefaultMode: () => void;
-  setInputMode: (mode: number) => void;
-  // all platforms
-  dismiss: (keepFocus: boolean) => void;
-  setFocusTo: (direction: Direction) => void;
-  // native event module stuff
-  addListener: (eventName: string) => void;
-  removeListeners: (count: number) => void;
-};
-
-// Event module declarations
-export type KeyboardControllerEvents =
-  | "keyboardWillShow"
-  | "keyboardDidShow"
-  | "keyboardWillHide"
-  | "keyboardDidHide";
-export type KeyboardEventData = {
-  height: number;
-  duration: number;
-  timestamp: number;
-  target: number;
-  type: NonNullable<TextInputProps["keyboardType"]>;
-  appearance: NonNullable<TextInputProps["keyboardAppearance"]>;
-};
-export type KeyboardState = {
-  isVisible: boolean;
-} & KeyboardEventData;
-export type KeyboardEventsModule = {
-  addListener: (
-    name: KeyboardControllerEvents,
-    cb: (e: KeyboardEventData) => void,
-  ) => EmitterSubscription;
-};
-export type FocusedInputAvailableEvents = "focusDidSet";
-export type FocusedInputEventData = {
-  current: number;
-  count: number;
-};
-export type FocusedInputEventsModule = {
-  addListener: (
-    name: FocusedInputAvailableEvents,
-    cb: (e: FocusedInputEventData) => void,
-  ) => EmitterSubscription;
-};
-export type WindowDimensionsAvailableEvents = "windowDidResize";
-export type WindowDimensionsEventData = {
-  width: number;
-  height: number;
-};
-export type WindowDimensionsEventsModule = {
-  addListener: (
-    name: WindowDimensionsAvailableEvents,
-    cb: (e: WindowDimensionsEventData) => void,
-  ) => EmitterSubscription;
-};
-
 // reanimated hook declaration
 export type KeyboardHandlerHook<TContext, Event> = (
   handlers: {
@@ -232,14 +150,63 @@ export type FocusedInputSelectionHandlerHook<TContext, Event> = (
 // package types
 export type Handlers<T> = Record<string, T | undefined>;
 export type KeyboardHandler = Partial<{
+  /**
+   * A callback that gets invoked when keyboard starts its movement.
+   * The event contains DESTINATION values.
+   *
+   * @example
+   * ```ts
+   * onStart: (e) => {
+   *   "worklet";
+   *
+   *   const willKeyboardAppear = e.progress === 1;
+   * }
+   * ```
+   */
   onStart: (e: NativeEvent) => void;
+  /**
+   * A callback that gets involved every frame when keyboard changes its position.
+   *
+   * @example
+   * ```ts
+   * onMove: (e) => {
+   *   "worklet";
+   *
+   *   const keyboardHeight = e.height;
+   * }
+   */
   onMove: (e: NativeEvent) => void;
+  /**
+   * A callback that gets invoked when keyboard finished its movement.
+   *
+   * @example
+   * ```ts
+   * onEnd: (e) => {
+   *   "worklet";
+   *
+   *   const isKeyboardShown = e.progress === 1;
+   * }
+   * ```
+   */
   onEnd: (e: NativeEvent) => void;
+  /**
+   * A callback that gets invoked every frame when keyboard changes its position due to interactive dismissal.
+   *
+   * @example
+   * ```ts
+   * onInteractive: (e) => {
+   *   "worklet";
+   *
+   *   const keyboardHeight = e.height;
+   * }
+   */
   onInteractive: (e: NativeEvent) => void;
 }>;
 export type KeyboardHandlers = Handlers<KeyboardHandler>;
 export type FocusedInputHandler = Partial<{
+  /** A callback that gets invoked every time when the text changes in focused input. */
   onChangeText: (e: FocusedInputTextChangedEvent) => void;
+  /** A callback that gets invoked every time when the selection (cursor) coordinates change in focused input. */
   onSelectionChange: (e: FocusedInputSelectionChangedEvent) => void;
 }>;
 export type FocusedInputHandlers = Handlers<FocusedInputHandler>;

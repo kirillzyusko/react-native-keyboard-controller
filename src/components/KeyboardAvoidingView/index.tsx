@@ -62,8 +62,17 @@ const defaultLayout: LayoutRectangle = {
 };
 
 /**
- * View that moves out of the way when the keyboard appears by automatically
- * adjusting its height, position, or bottom padding.
+ * A View component that automatically adjusts its height, position, or bottom padding
+ * when the keyboard appears to ensure that the content remains visible.
+ *
+ * @returns A View component that adjusts to keyboard visibility.
+ * @see {@link https://kirillzyusko.github.io/react-native-keyboard-controller/docs/api/components/keyboard-avoiding-view|Documentation} page for more details.
+ * @example
+ * ```tsx
+ * <KeyboardAvoidingView behavior="padding">
+ *   <TextInput />
+ * </KeyboardAvoidingView>
+ * ```
  */
 const KeyboardAvoidingView = forwardRef<
   View,

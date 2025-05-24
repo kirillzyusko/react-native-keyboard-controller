@@ -1,37 +1,38 @@
 # react-native-keyboard-controller
 
-Keyboard manager which works in identical way on both iOS and Android.
+A universal keyboard handling solution for React Native — lightweight, fully customizable, and built for real-world apps. Smooth animations, consistent behavior on both iOS and Android, with a developer-oriented design.
 
-## Demonstration
+<div>
+  <img align="right" width="32%" src="./gifs/demo.png?raw=true">
+</div>
 
-<img src="./gifs/demo.gif?raw=true" width="60%">
+### Key features
 
-## Key features
+- 🧬 Map keyboard movement to animated values
+- 🧪 `keyboardWillShow` / `keyboardWillHide` events now available on Android
+- ⚡ Change soft input mode on Android
+- 🚀 Reanimated support
+- 📱 Interactive keyboard dismissing 👆📱
+- 📚 Prebuilt components (`KeyboardStickyView`, `KeyboardAwareScrollView`, reworked `KeyboardAvoidingView`)
+- 📐 `KeyboardToolbar` with customizable _**previous**_, _**next**_, and _**done**_ buttons
+- 🌐 Display anything over the keyboard (without dismissing it) using `OverKeyboardView`
+- 📝 Easy retrieval of focused input info
+- 🧭 Compatible with any navigation library
+- ✨ More coming soon... stay tuned! 😊
 
-- mapping keyboard movement to animated values 😎
-- missing `keyboardWillShow` / `keyboardWillHide` events are available on Android 😍
-- module for changing soft input mode on Android 🤔
-- reanimated support 🚀
-- interactive keyboard dismissing 👆📱
-- prebuilt components (`KeyboardStickyView`, `KeyboardAwareScrollView`, re-worked `KeyboardAvoidingView`) 📚
-- `KeyboardToolbar` with easy behavior customization of _**previous**_, _**next**_ and _**done**_ buttons in the keyboard toolbar 📐
-- show anything over the keyboard (without dismissing it) using `OverKeyboardView` 🌐
-- easy focused input information retrieval 📝 🔮
-- works with any navigation library 🧭
-- and more is coming... Stay tuned! 😊
+### Installation
 
-## Installation
+Check out the [installation](https://kirillzyusko.github.io/react-native-keyboard-controller/docs/installation) section of the docs for detailed setup instructions.
 
-Check out the [installation](https://kirillzyusko.github.io/react-native-keyboard-controller/docs/installation) section of docs for the detailed installation instructions.
+### Documentation
 
-## Documentation
+Full API reference and guides available at:  
+[https://kirillzyusko.github.io/react-native-keyboard-controller/](https://kirillzyusko.github.io/react-native-keyboard-controller/)
 
-Check out the dedicated documentation page for information about this library, API reference and more: [https://kirillzyusko.github.io/react-native-keyboard-controller/](https://kirillzyusko.github.io/react-native-keyboard-controller/)
+### Contributing
 
-## Contributing
+See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repo and development workflow.
 
-See the [contributing guide](CONTRIBUTING.md) to learn how to contribute to the repository and the development workflow.
-
-## License
+### License
 
 MIT

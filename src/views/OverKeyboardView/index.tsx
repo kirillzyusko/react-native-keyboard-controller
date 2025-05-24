@@ -7,10 +7,21 @@ import { useWindowDimensions } from "../../hooks";
 import type { OverKeyboardViewProps } from "../../types";
 import type { PropsWithChildren } from "react";
 
-const OverKeyboardView = ({
-  children,
-  visible,
-}: PropsWithChildren<OverKeyboardViewProps>) => {
+/**
+ * A view component that renders its children over the keyboard without closing the keyboard.
+ * Acts similar to modal, but doesn't close the keyboard when it's visible.
+ *
+ * @param props - Component props.
+ * @returns A view component that renders over the keyboard.
+ * @example
+ * ```tsx
+ * <OverKeyboardView visible={true}>
+ *   <Text>This will appear over the keyboard</Text>
+ * </OverKeyboardView>
+ * ```
+ */
+const OverKeyboardView = (props: PropsWithChildren<OverKeyboardViewProps>) => {
+  const { children, visible } = props;
   const { height, width } = useWindowDimensions();
   const inner = useMemo(() => ({ height, width }), [height, width]);
   const style = useMemo(

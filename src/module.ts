@@ -47,6 +47,9 @@ const dismiss = async (options?: DismissOptions): Promise<void> => {
 const isVisible = () => !isClosed;
 const state = () => lastState;
 
+/**
+ * KeyboardController module. Helps to perform imperative actions/checks with keyboard.
+ */
 export const KeyboardController: KeyboardControllerModule = {
   setDefaultMode: KeyboardControllerNative.setDefaultMode,
   setInputMode: KeyboardControllerNative.setInputMode,
