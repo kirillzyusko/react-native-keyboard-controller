@@ -4,7 +4,7 @@ import { Platform, StyleSheet, View } from "react-native";
 import { RCTOverKeyboardView } from "../../bindings";
 import { useWindowDimensions } from "../../hooks";
 
-import type { OverKeyboardViewProps } from "../../types";
+import type { OverKeyboardViewProps } from "../../types/views";
 import type { PropsWithChildren } from "react";
 
 const OverKeyboardView = ({

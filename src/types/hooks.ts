@@ -1,4 +1,3 @@
-import { PropsWithChildren } from "react";
 import type { NativeSyntheticEvent, ViewProps } from "react-native";
 
 // DirectEventHandler events declaration
@@ -109,12 +108,6 @@ export type KeyboardControllerProps = {
   preserveEdgeToEdge?: boolean;
   enabled?: boolean;
 } & ViewProps;
-
-export type OverKeyboardViewProps = PropsWithChildren<{
-  visible: boolean;
-  height?: number;
-  width?: number;
-}>;
 
 // reanimated hook declaration
 export type KeyboardHandlerHook<TContext, Event> = (

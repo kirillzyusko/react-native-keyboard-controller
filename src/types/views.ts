@@ -43,4 +43,6 @@ export type OverKeyboardViewProps = PropsWithChildren<{
    * A boolean prop indicating whether the view is visible or not. If it's true then view is shown on the screen. If it's false then view is hidden.
    */
   visible: boolean;
+  height?: number;
+  width?: number;
 }>;
