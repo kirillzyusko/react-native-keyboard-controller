@@ -4,7 +4,7 @@ import { Platform, StyleSheet, View } from "react-native";
 import { RCTOverKeyboardView } from "../../bindings";
 import { useWindowDimensions } from "../../hooks";
 
-import type { OverKeyboardViewProps } from "../../types";
+import type { OverKeyboardViewProps } from "../../types/views";
 import type { PropsWithChildren } from "react";
 
 /**
@@ -20,10 +20,20 @@ import type { PropsWithChildren } from "react";
  * </OverKeyboardView>
  * ```
  */
-const OverKeyboardView = (props: PropsWithChildren<OverKeyboardViewProps>) => {
-  const { children, visible } = props;
-  const { height, width } = useWindowDimensions();
-  const inner = useMemo(() => ({ height, width }), [height, width]);
+const OverKeyboardView = ({
+  children,
+  visible,
+  height: propHeight,
+  width: propWidth,
+}: PropsWithChildren<OverKeyboardViewProps>) => {
+  const { height: windowHeight, width: windowWidth } = useWindowDimensions();
+  const inner = useMemo(
+    () => ({
+      height: propHeight ?? windowHeight,
+      width: propWidth ?? windowWidth,
+    }),
+    [propHeight, propWidth, windowHeight, windowWidth],
+  );
   const style = useMemo(
     () => [
       styles.absolute,
