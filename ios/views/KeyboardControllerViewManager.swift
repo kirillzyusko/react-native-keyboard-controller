@@ -15,6 +15,8 @@ class KeyboardControllerView: UIView {
   private var inputObserver: FocusedInputObserver?
   private var eventDispatcher: RCTEventDispatcherProtocol
   private var bridge: RCTBridge
+  // internal state
+  private var lastScreenSize: CGSize = .zero
   // react callbacks
   /// keyboard
   @objc var onKeyboardMoveStart: RCTDirectEventBlock?
@@ -81,6 +83,23 @@ class KeyboardControllerView: UIView {
     } else {
       mount()
     }
+  }
+
+  override func layoutSubviews() {
+    super.layoutSubviews()
+
+    let screenSize = UIScreen.main.bounds.size
+
+    if lastScreenSize == screenSize {
+      return
+    }
+
+    lastScreenSize = screenSize
+
+    var data = [AnyHashable: Any]()
+    data["width"] = screenSize.width
+    data["height"] = screenSize.height
+    onNotify(event: "KeyboardController::windowDidResize", data: data)
   }
 
   func onLayoutChanged(event: NSObject) {
