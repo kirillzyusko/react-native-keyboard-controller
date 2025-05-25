@@ -37,6 +37,8 @@ using namespace facebook::react;
 @implementation KeyboardControllerView {
   KeyboardMovementObserver *keyboardObserver;
   FocusedInputObserver *inputObserver;
+
+  CGSize _lastScreenSize;
 }
 
 + (ComponentDescriptorProvider)componentDescriptorProvider
@@ -209,6 +211,22 @@ using namespace facebook::react;
   }
 
   return self;
+}
+
+- (void)layoutSubviews
+{
+  [super layoutSubviews];
+
+  CGSize screenSize = [UIScreen mainScreen].bounds.size;
+  if (CGSizeEqualToSize(screenSize, _lastScreenSize)) {
+    return;
+  }
+
+  _lastScreenSize = screenSize;
+
+  NSDictionary *data = @{@"width" : @(screenSize.width), @"height" : @(screenSize.height)};
+
+  [KeyboardController.shared sendEvent:@"KeyboardController::windowDidResize" body:data];
 }
 
 - (void)updateProps:(Props::Shared const &)props oldProps:(Props::Shared const &)oldProps

@@ -119,6 +119,8 @@ RCT_EXPORT_METHOD(setFocusTo : (nonnull NSString *)direction)
     @"KeyboardController::keyboardDidHide",
     // focused input
     @"KeyboardController::focusDidSet",
+    // window dimensions
+    @"KeyboardController::windowDidResize",
   ];
 }
 
