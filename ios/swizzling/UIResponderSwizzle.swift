@@ -84,7 +84,8 @@ extension UIResponder {
     guard let originalResignFirstResponder = originalResignFirstResponder else { return false }
     typealias Function = @convention(c) (AnyObject, Selector) -> Bool
     let castOriginalResignFirstResponder = unsafeBitCast(
-      originalResignFirstResponder, to: Function.self)
+      originalResignFirstResponder, to: Function.self
+    )
     let result = castOriginalResignFirstResponder(self, selector)
     return result
   }
@@ -93,7 +94,8 @@ extension UIResponder {
     guard let originalBecomeFirstResponder = originalBecomeFirstResponder else { return false }
     typealias Function = @convention(c) (AnyObject, Selector) -> Bool
     let castOriginalBecomeFirstResponder = unsafeBitCast(
-      originalBecomeFirstResponder, to: Function.self)
+      originalBecomeFirstResponder, to: Function.self
+    )
     let result = castOriginalBecomeFirstResponder(self, selector)
     return result
   }
