@@ -145,12 +145,13 @@ const KeyboardAvoidingView = forwardRef<
       const translateY = interpolateToRelativeKeyboardHeight(translate.value);
       const paddingBottom = interpolateToRelativeKeyboardHeight(padding.value);
       const bottomHeight = enabled ? bottom : 0;
+      const height = frame.value.height - bottomHeight;
 
       switch (behavior) {
         case "height":
-          if (!keyboard.isClosed.value) {
+          if (!keyboard.isClosed.value && height > 0) {
             return {
-              height: frame.value.height - bottomHeight,
+              height,
               flex: 0,
             };
           }
