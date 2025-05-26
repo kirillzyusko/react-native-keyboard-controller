@@ -8,7 +8,7 @@ type CustomTextInputProps = {
 } & TextInputProps;
 
 const TextInput = (props: CustomTextInputProps) => {
-  const { title, onFocus, ...rest } = props;
+  const { title, onFocus, style, ...rest } = props;
 
   const [focused, setFocused] = useState(false);
 
@@ -16,15 +16,13 @@ const TextInput = (props: CustomTextInputProps) => {
     <>
       {!!title && <Text style={styles.title}>{title}</Text>}
       <TextInputRN
-        multiline
         numberOfLines={2}
-        placeholderTextColor="#6c6c6c"
-        style={[styles.container, rest.editable === false && styles.disabled, focused && styles.focused]}
+        placeholderTextColor="#9c9c9c"
+        style={[styles.container, rest.editable === false && styles.disabled, focused && styles.focused, style]}
         testID={rest.placeholder}
         onFocus={() => { setFocused(true); onFocus?.(); }}
         onBlur={() => setFocused(false)}
         {...rest}
-        placeholder={null}
       />
     </>
   );
@@ -36,6 +34,7 @@ const styles = StyleSheet.create({
     marginLeft: 3,
     color: "white",
     fontSize: 16,
+    fontWeight: "600",
   },
   container: {
     width: "100%",

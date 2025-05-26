@@ -1,5 +1,6 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
+import {Image} from "react-native";
 
 import { ScreenNames } from "../../constants/screenNames";
 import AwareScrollView from "../../screens/Examples/AwareScrollView";
@@ -71,7 +72,15 @@ const options = {
     headerShown: false,
   },
   [ScreenNames.AWARE_SCROLL_VIEW_STICKY_FOOTER]: {
-    title: "Aware scroll view sticky footer",
+    title: "Feedback",
+    headerStyle: {
+      backgroundColor: "#2F3036"
+    },
+    headerTitleStyle: {
+      color: "white"
+    },
+    headerLeft: () => null,
+    headerBackTitle: ""
   },
   [ScreenNames.STATUS_BAR]: {
     headerShown: false,
@@ -128,6 +137,21 @@ const options = {
   },
 };
 
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+
+const Tab = createBottomTabNavigator();
+
+function MyTabs() {
+  return (
+    <Tab.Navigator screenOptions={{headerShown: false, tabBarStyle: { backgroundColor: "#2F3036" }}}>
+      <Tab.Screen name="Explore" component={AwareScrollViewStickyFooter} options={{tabBarIcon: () => <Image source={require("./Icon.png")} style={{width: 20, height: 20}} />}} />
+      <Tab.Screen name="Projects" component={AwareScrollViewStickyFooter} options={{tabBarIcon: () => <Image source={require("./Icon-2.png")} style={{width: 20, height: 20}} />}} />
+      <Tab.Screen name="Inbox" component={AwareScrollViewStickyFooter} options={{tabBarIcon: () => <Image source={require("./Icon-3.png")} style={{width: 20, height: 20}} />}} />
+      <Tab.Screen name="Profile" component={AwareScrollViewStickyFooter} options={{tabBarIcon: () => <Image source={require("./Icon-1.png")} style={{width: 20, height: 20}} />}} />
+    </Tab.Navigator>
+  );
+}
+
 const ExamplesStack = () => (
   <Stack.Navigator>
     <Stack.Screen
@@ -156,7 +180,7 @@ const ExamplesStack = () => (
       options={options[ScreenNames.AWARE_SCROLL_VIEW]}
     />
     <Stack.Screen
-      component={AwareScrollViewStickyFooter}
+      component={MyTabs}
       name={ScreenNames.AWARE_SCROLL_VIEW_STICKY_FOOTER}
       options={options[ScreenNames.AWARE_SCROLL_VIEW_STICKY_FOOTER]}
     />

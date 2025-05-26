@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Button, Text, View } from "react-native";
+import { Button, ScrollView, Text, View } from "react-native";
 import {
   KeyboardAwareScrollView,
   KeyboardStickyView,
@@ -12,85 +12,96 @@ import { styles } from "./styles";
 
 import type { ExamplesStackParamList } from "../../../navigation/ExamplesStack";
 import type { StackScreenProps } from "@react-navigation/stack";
-import type { LayoutChangeEvent } from "react-native";
+import { AvoidSoftInputView, useSoftInputHeightChanged } from "react-native-avoid-softinput";
+import Animated, { Easing, useAnimatedStyle, useSharedValue, withSpring, withTiming } from "react-native-reanimated";
 
 type Props = StackScreenProps<ExamplesStackParamList>;
 
-const variants = ["v1", "v2", "v3"] as const;
+const StickyFooterExample: React.FC = ({children}) => {
+  const buttonContainerPaddingValue = useSharedValue(0);
 
-type Variant = (typeof variants)[number];
+  const buttonContainerAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      bottom: Math.max(buttonContainerPaddingValue.value - 85, 0),
+    };
+  });
+  useSoftInputHeightChanged(({ softInputHeight }) => {
+    buttonContainerPaddingValue.value = withSpring(softInputHeight, {
+      damping: 500,
+      mass: 3,
+      stiffness: 1000,
+    });
+  });
+
+  return (
+    <Animated.View style={[ buttonContainerAnimatedStyle, styles.ctaButtonWrapper ]}>
+      {children}
+    </Animated.View>
+  );
+}
 
 export default function AwareScrollViewStickyFooter({ navigation }: Props) {
   const { bottom } = useSafeAreaInsets();
-  const [footerHeight, setFooterHeight] = useState(0);
-  const [variant, setVariant] = useState<Variant>("v1");
 
-  const handleLayout = useCallback((evt: LayoutChangeEvent) => {
-    setFooterHeight(evt.nativeEvent.layout.height);
-  }, []);
-  const offset = useMemo(
-    () => ({ closed: 0, opened: variant === "v1" ? 0 : bottom }),
-    [bottom, variant],
-  );
   const offsetV3 = useMemo(
-    () => ({ closed: -50, opened: bottom - 25 }),
+    () => ({ opened: 80 }),
     [bottom],
   );
-
-  useEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <Text
-          style={styles.header}
-          onPress={() => {
-            const index = variants.indexOf(variant);
-
-            setVariant(variants[index === variants.length - 1 ? 0 : index + 1]);
-          }}
-        >
-          {variant}
-        </Text>
-      ),
-    });
-  }, [variant]);
-
-  const v1v2 = variant === "v1" || variant === "v2";
 
   return (
     <View
       style={[
         styles.pageContainer,
-        { paddingBottom: variant === "v1" ? 0 : bottom },
       ]}
     >
-      <KeyboardAwareScrollView
-        bottomOffset={(v1v2 ? footerHeight : 0) + 50}
+      <AvoidSoftInputView>
+      <ScrollView
+        bottomOffset={50}
         contentContainerStyle={styles.content}
         keyboardShouldPersistTaps="handled"
         style={styles.container}
       >
-        {new Array(10).fill(0).map((_, i) => (
           <TextInput
-            key={i}
-            keyboardType={i % 2 === 0 ? "numeric" : "default"}
-            placeholder={`TextInput#${i}`}
+            title="Your Name"
+            keyboardType="default"
+            placeholder={`Type your name...`}
           />
-        ))}
-      </KeyboardAwareScrollView>
-      {v1v2 && (
-        <KeyboardStickyView offset={offset}>
-          <View style={styles.footer} onLayout={handleLayout}>
-            <Text style={styles.footerText}>A mocked sticky footer</Text>
-            <TextInput placeholder="Amount" style={styles.inputInFooter} />
-            <Button title="Click me" />
+
+          <TextInput
+            title="Email"
+            keyboardType="default"
+            placeholder={`name@email.com`}
+          />
+
+          <TextInput
+            title="Project"
+            keyboardType="default"
+            placeholder={""}
+          />
+
+          <TextInput
+            title="Date"
+            keyboardType="numeric"
+            placeholder={"MM/DD/YYYY"}
+          />
+
+          <TextInput
+            multiline
+            title="Anything else"
+            keyboardType="default"
+            placeholder={"Tell us everything"}
+            style={{minHeight: 200}}
+          />
+      </ScrollView>
+      </AvoidSoftInputView>
+      
+      <StickyFooterExample>
+        <View style={{backgroundColor: "#2F3036", paddingVertical: 20, position: "absolute", left: 0, right: 0, bottom: 0}}>
+          <View style={{backgroundColor: "#006FFD", paddingVertical: 17, justifyContent: "center", alignItems: "center", marginHorizontal: 22, borderRadius: 8}}>
+            <Text style={{color: "white", fontWeight: "700"}}>Submit</Text>
           </View>
-        </KeyboardStickyView>
-      )}
-      {variant === "v3" && (
-        <KeyboardStickyView offset={offsetV3}>
-          <View style={styles.circle} />
-        </KeyboardStickyView>
-      )}
+        </View>
+      </StickyFooterExample>
     </View>
   );
 }

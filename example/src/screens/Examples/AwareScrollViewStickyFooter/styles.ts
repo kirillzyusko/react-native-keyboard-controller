@@ -10,6 +10,7 @@ export const styles = StyleSheet.create({
   },
   pageContainer: {
     flex: 1,
+    backgroundColor: "#2F3036",
   },
   footer: {
     backgroundColor: "green",
