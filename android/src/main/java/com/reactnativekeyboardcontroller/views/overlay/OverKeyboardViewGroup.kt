@@ -6,6 +6,7 @@ import android.graphics.PixelFormat
 import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
+import android.view.accessibility.AccessibilityEvent
 import com.facebook.react.bridge.UiThreadUtil
 import com.facebook.react.bridge.WritableMap
 import com.facebook.react.bridge.WritableNativeMap
@@ -82,6 +83,16 @@ class OverKeyboardHostView(
   ) {
     // Do nothing as we are laid out by UIManager
   }
+  // endregion
+
+  // region Accessibility
+  override fun addChildrenForAccessibility(outChildren: ArrayList<View>) {
+    // Don’t let Android try to reach children that are not actual descendants
+  }
+
+  // Explicitly override this to prevent accessibility events being passed down to children
+  // Those will be handled by the `hostView` which lives in the `windowManager`
+  override fun dispatchPopulateAccessibilityEvent(event: AccessibilityEvent): Boolean = false
   // endregion
 
   fun show() {
