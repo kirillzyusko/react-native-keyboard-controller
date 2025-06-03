@@ -50,18 +50,17 @@ extension UIResponder {
     originalResignFirstResponder = method_getImplementation(originalResignMethod)
 
     let swizzledResignImplementation: @convention(block) (UIResponder) -> Bool = { (self) in
-      // if we already have a new focus request
-      if pendingBecomeResponder != nil {
-        pendingBecomeResponder = nil
-        KeyboardAreaExtender.shared.hide()
-        (self as? TextInput)?.inputAccessoryView = nil
-        KeyboardAreaExtender.shared.remove()
-        return self.callOriginalResignFirstResponder(originalResignSelector)
-      }
       // Check the type of responder
       if let textField = self as? TextInput {
         // check inputAccessoryView and call original method immediately if not InvisibleInputAccessoryView
         if !(textField.inputAccessoryView is InvisibleInputAccessoryView) {
+          return self.callOriginalResignFirstResponder(originalResignSelector)
+        } else if pendingBecomeResponder != nil {
+          // if we already have a new focus request
+          pendingBecomeResponder = nil
+          KeyboardAreaExtender.shared.hide()
+          (self as? TextInput)?.inputAccessoryView = nil
+          KeyboardAreaExtender.shared.remove()
           return self.callOriginalResignFirstResponder(originalResignSelector)
         }
       } else {
