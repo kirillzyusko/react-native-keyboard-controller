@@ -145,9 +145,24 @@ export const scrollUpUntilElementIsBarelyVisible = async (
         await element(by.id(elementId)).tap({ x: 0, y: 25 });
       }
     } catch (e) {
-      await element(by.id(scrollViewId)).scroll(35, "down", 0.01, 0.5);
+      await element(by.id(scrollViewId)).scroll(50, "down", 0.01, 0.5);
       break;
     }
+  }
+};
+
+export const selectText = async (id: string) => {
+  console.debug(
+    "---------------------------------\n",
+    "Select text with id:",
+    colors.magenta(id),
+  );
+
+  if (device.getPlatform() === "ios") {
+    // on Android multiTap sometimes may not work properly
+    await element(by.id(id)).multiTap(2);
+  } else {
+    await element(by.id(id)).longPress();
   }
 };
 
