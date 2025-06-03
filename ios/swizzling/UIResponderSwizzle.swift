@@ -14,22 +14,14 @@ private var originalBecomeFirstResponder: IMP?
 
 @objc
 extension UIResponder {
-  public static func swizzleResignFirstResponder() {
-    let originalResignSelector = #selector(resignFirstResponder)
+  public static func swizzleBecomeFirstResponder() {
     let originalBecomeSelector = #selector(becomeFirstResponder)
-
-    guard
-      let originalResignMethod = class_getInstanceMethod(UIResponder.self, originalResignSelector)
-    else {
-      return
-    }
     guard
       let originalBecomeMethod = class_getInstanceMethod(UIResponder.self, originalBecomeSelector)
     else {
       return
     }
 
-    originalResignFirstResponder = method_getImplementation(originalResignMethod)
     originalBecomeFirstResponder = method_getImplementation(originalBecomeMethod)
 
     let swizzledBecomeImplementation: @convention(block) (UIResponder) -> Bool = { (self) in
@@ -41,6 +33,22 @@ extension UIResponder {
 
       return self.callOriginalBecomeFirstResponder(originalBecomeSelector)
     }
+
+    let implementation = imp_implementationWithBlock(swizzledBecomeImplementation)
+    method_setImplementation(originalBecomeMethod, implementation)
+  }
+
+  public static func swizzleResignFirstResponder() {
+    let originalResignSelector = #selector(resignFirstResponder)
+
+    guard
+      let originalResignMethod = class_getInstanceMethod(UIResponder.self, originalResignSelector)
+    else {
+      return
+    }
+
+    originalResignFirstResponder = method_getImplementation(originalResignMethod)
+
     let swizzledResignImplementation: @convention(block) (UIResponder) -> Bool = { (self) in
       // if we already have a new focus request
       if pendingBecomeResponder != nil {
@@ -76,8 +84,6 @@ extension UIResponder {
 
     let implementation = imp_implementationWithBlock(swizzledResignImplementation)
     method_setImplementation(originalResignMethod, implementation)
-    let implementation1 = imp_implementationWithBlock(swizzledBecomeImplementation)
-    method_setImplementation(originalBecomeMethod, implementation1)
   }
 
   private func callOriginalResignFirstResponder(_ selector: Selector) -> Bool {
