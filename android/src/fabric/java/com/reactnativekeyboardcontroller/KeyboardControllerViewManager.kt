@@ -18,12 +18,9 @@ class KeyboardControllerViewManager(
   KeyboardControllerViewManagerInterface<ReactViewGroup> {
   private val manager = KeyboardControllerViewManagerImpl(mReactContext)
   private val mDelegate = KeyboardControllerViewManagerDelegate(this)
-  private var listener : WindowDimensionListener? = null
+  private var listener: WindowDimensionListener? = null
 
-  override fun getDelegate(): ViewManagerDelegate<ReactViewGroup> = mDelegate
-
-  override fun getName(): String = KeyboardControllerViewManagerImpl.NAME
-
+  // region Lifecycle
   override fun createViewInstance(context: ThemedReactContext): ReactViewGroup {
     if (listener == null) {
       listener = WindowDimensionListener(context)
@@ -42,6 +39,14 @@ class KeyboardControllerViewManager(
     manager.setEdgeToEdge(view as EdgeToEdgeReactViewGroup)
   }
 
+  override fun onDropViewInstance(view: ReactViewGroup) {
+    super.onDropViewInstance(view)
+    (view as EdgeToEdgeReactViewGroup).setActive(false)
+    view.removeWindowInsetsListener()
+  }
+  // endregion
+
+  // region Props setters
   @ReactProp(name = "statusBarTranslucent")
   override fun setStatusBarTranslucent(
     view: ReactViewGroup,
@@ -65,13 +70,14 @@ class KeyboardControllerViewManager(
     view: ReactViewGroup,
     value: Boolean,
   ) = manager.setEnabled(view as EdgeToEdgeReactViewGroup, value)
+  // endregion
 
-  override fun onDropViewInstance(view: ReactViewGroup) {
-    super.onDropViewInstance(view)
-    (view as EdgeToEdgeReactViewGroup).setActive(false)
-    view.removeWindowInsetsListener()
-  }
-
+  // region Constants
   override fun getExportedCustomDirectEventTypeConstants(): MutableMap<String, Any> =
     manager.getExportedCustomDirectEventTypeConstants()
+
+  override fun getDelegate(): ViewManagerDelegate<ReactViewGroup> = mDelegate
+
+  override fun getName(): String = KeyboardControllerViewManagerImpl.NAME
+  // endregion
 }

@@ -17,7 +17,7 @@ class WindowDimensionListener(
   private val context: ThemedReactContext?,
 ) {
   private var lastDispatchedDimensions = Dimensions(0.0, 0.0)
-  private var layoutListener : ViewTreeObserver.OnGlobalLayoutListener? = null
+  private var layoutListener: ViewTreeObserver.OnGlobalLayoutListener? = null
 
   public fun attachListener() {
     // attach to content view only once per app instance
@@ -28,9 +28,10 @@ class WindowDimensionListener(
 
       updateWindowDimensions(content)
 
-      layoutListener = ViewTreeObserver.OnGlobalLayoutListener {
-        updateWindowDimensions(content)
-      }
+      layoutListener =
+        ViewTreeObserver.OnGlobalLayoutListener {
+          updateWindowDimensions(content)
+        }
 
       content?.viewTreeObserver?.addOnGlobalLayoutListener(layoutListener)
     }
