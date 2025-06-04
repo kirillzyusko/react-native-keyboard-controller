@@ -8,6 +8,7 @@ import com.facebook.react.viewmanagers.KeyboardControllerViewManagerDelegate
 import com.facebook.react.viewmanagers.KeyboardControllerViewManagerInterface
 import com.facebook.react.views.view.ReactViewGroup
 import com.facebook.react.views.view.ReactViewManager
+import com.reactnativekeyboardcontroller.listeners.WindowDimensionListener
 import com.reactnativekeyboardcontroller.managers.KeyboardControllerViewManagerImpl
 import com.reactnativekeyboardcontroller.views.EdgeToEdgeReactViewGroup
 
@@ -17,18 +18,35 @@ class KeyboardControllerViewManager(
   KeyboardControllerViewManagerInterface<ReactViewGroup> {
   private val manager = KeyboardControllerViewManagerImpl(mReactContext)
   private val mDelegate = KeyboardControllerViewManagerDelegate(this)
+  private var listener: WindowDimensionListener? = null
 
-  override fun getDelegate(): ViewManagerDelegate<ReactViewGroup> = mDelegate
+  // region Lifecycle
+  override fun createViewInstance(context: ThemedReactContext): ReactViewGroup {
+    if (listener == null) {
+      listener = WindowDimensionListener(context)
+      listener?.attachListener()
+    }
+    return manager.createViewInstance(context)
+  }
 
-  override fun getName(): String = KeyboardControllerViewManagerImpl.NAME
-
-  override fun createViewInstance(context: ThemedReactContext): ReactViewGroup = manager.createViewInstance(context)
+  override fun invalidate() {
+    super.invalidate()
+    listener?.detachListener()
+  }
 
   override fun onAfterUpdateTransaction(view: ReactViewGroup) {
     super.onAfterUpdateTransaction(view)
     manager.setEdgeToEdge(view as EdgeToEdgeReactViewGroup)
   }
 
+  override fun onDropViewInstance(view: ReactViewGroup) {
+    super.onDropViewInstance(view)
+    (view as EdgeToEdgeReactViewGroup).setActive(false)
+    view.removeWindowInsetsListener()
+  }
+  // endregion
+
+  // region Props setters
   @ReactProp(name = "statusBarTranslucent")
   override fun setStatusBarTranslucent(
     view: ReactViewGroup,
@@ -52,7 +70,14 @@ class KeyboardControllerViewManager(
     view: ReactViewGroup,
     value: Boolean,
   ) = manager.setEnabled(view as EdgeToEdgeReactViewGroup, value)
+  // endregion
 
+  // region Constants
   override fun getExportedCustomDirectEventTypeConstants(): MutableMap<String, Any> =
     manager.getExportedCustomDirectEventTypeConstants()
+
+  override fun getDelegate(): ViewManagerDelegate<ReactViewGroup> = mDelegate
+
+  override fun getName(): String = KeyboardControllerViewManagerImpl.NAME
+  // endregion
 }
