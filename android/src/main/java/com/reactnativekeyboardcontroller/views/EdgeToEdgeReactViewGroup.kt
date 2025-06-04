@@ -15,7 +15,6 @@ import com.reactnativekeyboardcontroller.extensions.content
 import com.reactnativekeyboardcontroller.extensions.removeSelf
 import com.reactnativekeyboardcontroller.extensions.requestApplyInsetsWhenAttached
 import com.reactnativekeyboardcontroller.extensions.rootView
-import com.reactnativekeyboardcontroller.extensions.setupWindowDimensionsListener
 import com.reactnativekeyboardcontroller.listeners.KeyboardAnimationCallback
 import com.reactnativekeyboardcontroller.listeners.KeyboardAnimationCallbackConfig
 import com.reactnativekeyboardcontroller.log.Logger
@@ -51,7 +50,6 @@ class EdgeToEdgeReactViewGroup(
   private val modalAttachedWatcher = ModalAttachedWatcher(this, reactContext, config, ::getKeyboardCallback)
 
   init {
-    reactContext.setupWindowDimensionsListener()
     tag = VIEW_TAG
   }
 
@@ -121,6 +119,13 @@ class EdgeToEdgeReactViewGroup(
           defaultInsets.systemWindowInsetBottom,
         )
       }
+    }
+  }
+
+  fun removeWindowInsetsListener() {
+    val rootView = reactContext.rootView
+    if (rootView != null) {
+      ViewCompat.setOnApplyWindowInsetsListener(rootView, null)
     }
   }
 

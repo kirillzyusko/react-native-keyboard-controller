@@ -13,10 +13,6 @@ import com.facebook.react.uimanager.events.EventDispatcher
 import com.reactnativekeyboardcontroller.listeners.WindowDimensionListener
 import com.reactnativekeyboardcontroller.log.Logger
 
-fun ThemedReactContext.setupWindowDimensionsListener() {
-  WindowDimensionListener(this)
-}
-
 fun ThemedReactContext?.dispatchEvent(
   viewId: Int,
   event: Event<*>,
