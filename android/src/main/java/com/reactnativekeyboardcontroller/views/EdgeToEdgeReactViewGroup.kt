@@ -15,7 +15,6 @@ import com.reactnativekeyboardcontroller.extensions.content
 import com.reactnativekeyboardcontroller.extensions.removeSelf
 import com.reactnativekeyboardcontroller.extensions.requestApplyInsetsWhenAttached
 import com.reactnativekeyboardcontroller.extensions.rootView
-import com.reactnativekeyboardcontroller.extensions.setupWindowDimensionsListener
 import com.reactnativekeyboardcontroller.listeners.KeyboardAnimationCallback
 import com.reactnativekeyboardcontroller.listeners.KeyboardAnimationCallbackConfig
 import com.reactnativekeyboardcontroller.log.Logger
@@ -51,7 +50,6 @@ class EdgeToEdgeReactViewGroup(
   private val modalAttachedWatcher = ModalAttachedWatcher(this, reactContext, config, ::getKeyboardCallback)
 
   init {
-    reactContext.setupWindowDimensionsListener()
     tag = VIEW_TAG
   }
 
@@ -65,13 +63,13 @@ class EdgeToEdgeReactViewGroup(
       return
     }
 
-    this.setupKeyboardCallbacks()
+    this.activate()
   }
 
   override fun onDetachedFromWindow() {
     super.onDetachedFromWindow()
 
-    this.removeKeyboardCallbacks()
+    this.deactivate()
   }
 
   override fun onConfigurationChanged(newConfig: Configuration?) {
@@ -189,12 +187,20 @@ class EdgeToEdgeReactViewGroup(
   // region State managers
   private fun enable() {
     this.setupWindowInsets()
-    this.setupKeyboardCallbacks()
-    modalAttachedWatcher.enable()
+    this.activate()
   }
 
   private fun disable() {
     this.setupWindowInsets()
+    this.deactivate()
+  }
+
+  private fun activate() {
+    this.setupKeyboardCallbacks()
+    modalAttachedWatcher.enable()
+  }
+
+  private fun deactivate() {
     this.removeKeyboardCallbacks()
     modalAttachedWatcher.disable()
   }
