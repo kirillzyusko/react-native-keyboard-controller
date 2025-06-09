@@ -85,7 +85,6 @@ class KeyboardControllerViewManagerImpl(
 
   fun onDropViewInstance(view: EdgeToEdgeReactViewGroup) {
     view.setActive(false)
-    view.removeWindowInsetsListener()
   }
 
   companion object {
