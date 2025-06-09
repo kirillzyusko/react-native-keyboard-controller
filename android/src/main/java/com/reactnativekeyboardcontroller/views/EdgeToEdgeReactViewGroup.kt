@@ -63,13 +63,13 @@ class EdgeToEdgeReactViewGroup(
       return
     }
 
-    this.setupKeyboardCallbacks()
+    this.activate()
   }
 
   override fun onDetachedFromWindow() {
     super.onDetachedFromWindow()
 
-    this.removeKeyboardCallbacks()
+    this.deactivate()
   }
 
   override fun onConfigurationChanged(newConfig: Configuration?) {
@@ -187,12 +187,20 @@ class EdgeToEdgeReactViewGroup(
   // region State managers
   private fun enable() {
     this.setupWindowInsets()
-    this.setupKeyboardCallbacks()
-    modalAttachedWatcher.enable()
+    this.activate()
   }
 
   private fun disable() {
     this.setupWindowInsets()
+    this.deactivate()
+  }
+
+  private fun activate() {
+    this.setupKeyboardCallbacks()
+    modalAttachedWatcher.enable()
+  }
+
+  private fun deactivate() {
     this.removeKeyboardCallbacks()
     modalAttachedWatcher.disable()
   }

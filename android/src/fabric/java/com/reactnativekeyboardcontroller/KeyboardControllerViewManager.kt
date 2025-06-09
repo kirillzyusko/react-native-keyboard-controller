@@ -18,6 +18,7 @@ class KeyboardControllerViewManager(
   private val manager = KeyboardControllerViewManagerImpl(mReactContext)
   private val mDelegate = KeyboardControllerViewManagerDelegate(this)
 
+  // region Lifecycle
   override fun createViewInstance(context: ThemedReactContext): ReactViewGroup = manager.createViewInstance(context)
 
   override fun invalidate() {
@@ -28,11 +29,6 @@ class KeyboardControllerViewManager(
   override fun onAfterUpdateTransaction(view: ReactViewGroup) {
     super.onAfterUpdateTransaction(view)
     manager.setEdgeToEdge(view as EdgeToEdgeReactViewGroup)
-  }
-
-  override fun onDropViewInstance(view: ReactViewGroup) {
-    super.onDropViewInstance(view)
-    manager.onDropViewInstance(view as EdgeToEdgeReactViewGroup)
   }
   // endregion
 

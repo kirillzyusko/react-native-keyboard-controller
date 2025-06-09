@@ -25,11 +25,6 @@ class KeyboardControllerViewManager(
     super.onAfterUpdateTransaction(view)
     manager.setEdgeToEdge(view as EdgeToEdgeReactViewGroup)
   }
-
-  override fun onDropViewInstance(view: ReactViewGroup) {
-    super.onDropViewInstance(view)
-    manager.onDropViewInstance(view as EdgeToEdgeReactViewGroup)
-  }
   // endregion
 
   // region Props setters

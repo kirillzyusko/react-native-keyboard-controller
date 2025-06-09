@@ -82,10 +82,6 @@ class KeyboardControllerViewManagerImpl(
     return map
   }
 
-  fun onDropViewInstance(view: EdgeToEdgeReactViewGroup) {
-    view.setActive(false)
-  }
-
   companion object {
     const val NAME = "KeyboardControllerView"
   }
