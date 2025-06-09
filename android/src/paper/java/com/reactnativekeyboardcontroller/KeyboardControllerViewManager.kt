@@ -13,20 +13,15 @@ class KeyboardControllerViewManager(
   mReactContext: ReactApplicationContext,
 ) : ReactViewManager() {
   private val manager = KeyboardControllerViewManagerImpl(mReactContext)
-  private var listener: WindowDimensionListener? = null
 
   // region Lifecycle
   override fun createViewInstance(context: ThemedReactContext): ReactViewGroup {
-    if (listener == null) {
-      listener = WindowDimensionListener(context)
-      listener?.attachListener()
-    }
     return manager.createViewInstance(context)
   }
 
   override fun invalidate() {
     super.invalidate()
-    listener?.detachListener()
+    manager.invalidate()
   }
 
   override fun onAfterUpdateTransaction(view: ReactViewGroup) {
@@ -36,7 +31,7 @@ class KeyboardControllerViewManager(
 
   override fun onDropViewInstance(view: ReactViewGroup) {
     super.onDropViewInstance(view)
-    (view as EdgeToEdgeReactViewGroup).setActive(false)
+    manager.onDropViewInstance(view as EdgeToEdgeReactViewGroup)
   }
   // endregion
 
@@ -74,7 +69,7 @@ class KeyboardControllerViewManager(
   }
   // endregion
 
-  // region Constants
+  // region Getters
   override fun getExportedCustomDirectEventTypeConstants(): MutableMap<String, Any> =
     manager.getExportedCustomDirectEventTypeConstants()
 

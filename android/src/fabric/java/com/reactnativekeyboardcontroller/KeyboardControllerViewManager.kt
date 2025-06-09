@@ -8,7 +8,6 @@ import com.facebook.react.viewmanagers.KeyboardControllerViewManagerDelegate
 import com.facebook.react.viewmanagers.KeyboardControllerViewManagerInterface
 import com.facebook.react.views.view.ReactViewGroup
 import com.facebook.react.views.view.ReactViewManager
-import com.reactnativekeyboardcontroller.listeners.WindowDimensionListener
 import com.reactnativekeyboardcontroller.managers.KeyboardControllerViewManagerImpl
 import com.reactnativekeyboardcontroller.views.EdgeToEdgeReactViewGroup
 
@@ -18,20 +17,14 @@ class KeyboardControllerViewManager(
   KeyboardControllerViewManagerInterface<ReactViewGroup> {
   private val manager = KeyboardControllerViewManagerImpl(mReactContext)
   private val mDelegate = KeyboardControllerViewManagerDelegate(this)
-  private var listener: WindowDimensionListener? = null
 
-  // region Lifecycle
   override fun createViewInstance(context: ThemedReactContext): ReactViewGroup {
-    if (listener == null) {
-      listener = WindowDimensionListener(context)
-      listener?.attachListener()
-    }
     return manager.createViewInstance(context)
   }
 
   override fun invalidate() {
     super.invalidate()
-    listener?.detachListener()
+    manager.invalidate()
   }
 
   override fun onAfterUpdateTransaction(view: ReactViewGroup) {
@@ -41,7 +34,7 @@ class KeyboardControllerViewManager(
 
   override fun onDropViewInstance(view: ReactViewGroup) {
     super.onDropViewInstance(view)
-    (view as EdgeToEdgeReactViewGroup).setActive(false)
+    manager.onDropViewInstance(view as EdgeToEdgeReactViewGroup)
   }
   // endregion
 
@@ -71,7 +64,7 @@ class KeyboardControllerViewManager(
   ) = manager.setEnabled(view as EdgeToEdgeReactViewGroup, value)
   // endregion
 
-  // region Constants
+  // region Getters
   override fun getExportedCustomDirectEventTypeConstants(): MutableMap<String, Any> =
     manager.getExportedCustomDirectEventTypeConstants()
 
