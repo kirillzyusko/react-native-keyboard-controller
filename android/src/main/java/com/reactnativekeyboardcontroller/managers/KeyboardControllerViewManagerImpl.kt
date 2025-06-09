@@ -7,14 +7,27 @@ import com.reactnativekeyboardcontroller.events.FocusedInputLayoutChangedEvent
 import com.reactnativekeyboardcontroller.events.FocusedInputSelectionChangedEvent
 import com.reactnativekeyboardcontroller.events.FocusedInputTextChangedEvent
 import com.reactnativekeyboardcontroller.events.KeyboardTransitionEvent
+import com.reactnativekeyboardcontroller.listeners.WindowDimensionListener
 import com.reactnativekeyboardcontroller.views.EdgeToEdgeReactViewGroup
 
 @Suppress("detekt:UnusedPrivateProperty")
 class KeyboardControllerViewManagerImpl(
   mReactContext: ReactApplicationContext,
 ) {
-  fun createViewInstance(reactContext: ThemedReactContext): EdgeToEdgeReactViewGroup =
-    EdgeToEdgeReactViewGroup(reactContext)
+
+  private var listener : WindowDimensionListener? = null
+
+  fun createViewInstance(reactContext: ThemedReactContext): EdgeToEdgeReactViewGroup {
+    if (listener == null) {
+      listener = WindowDimensionListener(reactContext)
+      listener?.attachListener()
+    }
+    return EdgeToEdgeReactViewGroup(reactContext)
+  }
+
+  fun invalidate() {
+    listener?.detachListener()
+  }
 
   fun setEnabled(
     view: EdgeToEdgeReactViewGroup,
@@ -68,6 +81,11 @@ class KeyboardControllerViewManagerImpl(
       )
 
     return map
+  }
+
+  fun onDropViewInstance(view: EdgeToEdgeReactViewGroup) {
+    view.setActive(false)
+    view.removeWindowInsetsListener()
   }
 
   companion object {
