@@ -122,6 +122,13 @@ class EdgeToEdgeReactViewGroup(
     }
   }
 
+  fun removeWindowInsetsListener() {
+    val rootView = reactContext.rootView
+    if (rootView != null) {
+      ViewCompat.setOnApplyWindowInsetsListener(rootView, null)
+    }
+  }
+
   fun setEdgeToEdge() {
     val nextValue = active || isPreservingEdgeToEdge
 
