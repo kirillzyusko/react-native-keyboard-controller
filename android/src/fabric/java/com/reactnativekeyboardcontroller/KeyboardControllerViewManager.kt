@@ -18,9 +18,7 @@ class KeyboardControllerViewManager(
   private val manager = KeyboardControllerViewManagerImpl(mReactContext)
   private val mDelegate = KeyboardControllerViewManagerDelegate(this)
 
-  override fun createViewInstance(context: ThemedReactContext): ReactViewGroup {
-    return manager.createViewInstance(context)
-  }
+  override fun createViewInstance(context: ThemedReactContext): ReactViewGroup = manager.createViewInstance(context)
 
   override fun invalidate() {
     super.invalidate()

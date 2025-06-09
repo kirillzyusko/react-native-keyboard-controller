@@ -14,8 +14,7 @@ import com.reactnativekeyboardcontroller.views.EdgeToEdgeReactViewGroup
 class KeyboardControllerViewManagerImpl(
   mReactContext: ReactApplicationContext,
 ) {
-
-  private var listener : WindowDimensionListener? = null
+  private var listener: WindowDimensionListener? = null
 
   fun createViewInstance(reactContext: ThemedReactContext): EdgeToEdgeReactViewGroup {
     if (listener == null) {
