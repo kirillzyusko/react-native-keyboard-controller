@@ -42,7 +42,6 @@ class KeyboardControllerViewManager(
   override fun onDropViewInstance(view: ReactViewGroup) {
     super.onDropViewInstance(view)
     (view as EdgeToEdgeReactViewGroup).setActive(false)
-    view.removeWindowInsetsListener()
   }
   // endregion
 
