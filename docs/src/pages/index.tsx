@@ -36,10 +36,10 @@ const trustedBy = [
     name: "Expensify",
   },
   {
-    img: "https://avatars.githubusercontent.com/u/94650532?s=200&v=4",
-    alt: "BlueSky Mobile App",
+    img: "https://play-lh.googleusercontent.com/VsgCCgW-ct98JhgVoQzndWCAaXxlP6uMwcjzINYPmeja8cCNISsJDqDFNQrF2IRq9xM=w200-h480-rw",
+    alt: "Bluesky mobile app",
     link: "https://github.com/bluesky-social/social-app",
-    name: "BlueSky",
+    name: "Bluesky",
   },
   {
     img: "https://avatars.githubusercontent.com/u/12504344?s=200&v=4",
