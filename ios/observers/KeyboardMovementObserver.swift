@@ -123,6 +123,7 @@ public class KeyboardMovementObserver: NSObject {
     if UIResponder.isKeyboardPreloading {
       return
     }
+    // TODO: track touch somehow?
     // if we are currently animating keyboard -> we need to ignore values from KVO
     if !displayLink.isPaused {
       return
@@ -131,6 +132,7 @@ public class KeyboardMovementObserver: NSObject {
     // values, since they'll be invalid and will cause UI jumps
     if #unavailable(iOS 26.0) {
       if floor(keyboardView?.bounds.size.height ?? 0) != floor(_keyboardHeight) {
+        print("KeyboardMovementObserver: Ignoring interactive keyboard move event due to height mismatch.")
         return
       }
     }
@@ -149,8 +151,8 @@ public class KeyboardMovementObserver: NSObject {
         currentValue: keyboardPosition
       )
     }
-    position = position - KeyboardAreaExtender.shared.offset
-print("P \(position) \(keyboardFrameY) H \(keyboardView?.bounds.size.height ?? 0.0)")
+    position -= KeyboardAreaExtender.shared.offset
+    print("KWH \(keyboardWindowH) \(keyboardFrameY) H \(keyboardView?.bounds.size.height ?? 0.0)")
     if position == 0 {
       // it will be triggered before `keyboardWillDisappear` and
       // we don't need to trigger `onInteractive` handler for that

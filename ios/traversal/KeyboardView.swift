@@ -14,6 +14,7 @@ enum KeyboardView {
   private static let containerPrefixes = ["<UIInputSetContainerView", "<UITrackingWindowView"]
   private static let hostPrefixes = ["<UIInputSetHostView", "<UIKeyboardItemContainerView"]
   // inspired by https://stackoverflow.com/questions/32598490/show-uiview-with-buttons-over-keyboard-like-in-skype-viber-messengers-swift-i
+
   static func find() -> UIView? {
     let windows = UIApplication.shared.windows
     for window in windows {
