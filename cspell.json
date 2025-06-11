@@ -155,7 +155,9 @@
     "HKLM",
     "xcassets",
     "appiconset",
-    "taskdefs"
+    "taskdefs",
+    "llms",
+    "signalwire"
   ],
   "ignorePaths": [
     "node_modules",
