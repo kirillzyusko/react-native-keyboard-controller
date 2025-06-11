@@ -1,5 +1,6 @@
 import React, { forwardRef, useCallback, useEffect, useMemo } from "react";
 import Reanimated, {
+  clamp,
   interpolate,
   runOnUI,
   scrollTo,
@@ -127,6 +128,8 @@ const KeyboardAwareScrollView = forwardRef<
     const scrollBeforeKeyboardMovement = useSharedValue(0);
     const { input } = useReanimatedFocusedInput();
     const layout = useSharedValue<FocusedInputLayoutChangedEvent | null>(null);
+    const lastSelection =
+      useSharedValue<FocusedInputSelectionChangedEvent | null>(null);
 
     const { height } = useWindowDimensions();
 
@@ -169,9 +172,13 @@ const KeyboardAwareScrollView = forwardRef<
         const inputHeight = layout.value?.layout.height || 0;
         const point = absoluteY + inputHeight;
 
+        console.log({ absoluteY, inputHeight, point, visibleRect });
+
         if (visibleRect - point <= bottomOffset) {
           const relativeScrollTo =
             keyboardHeight.value - (height - point) + bottomOffset;
+
+          console.log({ relativeScrollTo });
           const interpolatedScrollTo = interpolate(
             e,
             [initialKeyboardSize.value, keyboardHeight.value],
@@ -186,6 +193,11 @@ const KeyboardAwareScrollView = forwardRef<
           const targetScrollY =
             Math.max(interpolatedScrollTo, 0) + scrollPosition.value;
 
+          console.log({
+            targetScrollY,
+            scrollPosition: scrollPosition.value,
+            interpolatedScrollTo,
+          });
           scrollTo(scrollViewAnimatedRef, 0, targetScrollY, animated);
 
           return interpolatedScrollTo;
@@ -223,7 +235,7 @@ const KeyboardAwareScrollView = forwardRef<
     );
 
     const scrollFromCurrentPosition = useCallback(
-      (customHeight?: number) => {
+      (customHeight: number) => {
         "worklet";
 
         const prevScrollPosition = scrollPosition.value;
@@ -238,49 +250,70 @@ const KeyboardAwareScrollView = forwardRef<
           ...input.value,
           layout: {
             ...input.value.layout,
-            height: customHeight ?? input.value.layout.height,
+            // when we have multiline input with limited amount of lines, then custom height can be very big
+            // so we clamp it to max input height
+            height: clamp(customHeight, 0, input.value.layout.height),
           },
         };
         scrollPosition.value = position.value;
         maybeScroll(keyboardHeight.value, true);
         scrollPosition.value = prevScrollPosition;
         layout.value = prevLayout;
+
+        console.log({ customHeight });
       },
       [maybeScroll],
     );
-    const onChangeText = useCallback(() => {
-      "worklet";
-
-      // if typing a text caused layout shift, then we need to ignore this handler
-      // because this event will be handled in `useAnimatedReaction` below
-      if (layout.value?.layout.height !== input.value?.layout.height) {
-        return;
-      }
-
-      scrollFromCurrentPosition();
-    }, [scrollFromCurrentPosition]);
-    const onSelectionChange = useCallback(
-      (e: FocusedInputSelectionChangedEvent) => {
+    const onChangeText = useCallback(
+      (customHeight: number) => {
         "worklet";
 
-        if (e.selection.start.position !== e.selection.end.position) {
-          scrollFromCurrentPosition(e.selection.end.y);
+        // if typing a text caused layout shift, then we need to ignore this handler
+        // because this event will be handled in `useAnimatedReaction` below
+        if (layout.value?.layout.height !== input.value?.layout.height) {
+          return;
         }
+
+        console.debug("maybeScroll - onChangeText");
+        scrollFromCurrentPosition(customHeight);
       },
       [scrollFromCurrentPosition],
     );
-
     const onChangeTextHandler = useMemo(
       () => debounce(onChangeText, 200),
       [onChangeText],
     );
+    const onSelectionChange = useCallback(
+      (e: FocusedInputSelectionChangedEvent) => {
+        "worklet";
+
+        const lastTarget = lastSelection.value?.target;
+
+        lastSelection.value = e;
+
+        if (e.target !== lastTarget) {
+          // ignore this event, because "focus changed" event handled in `useSmoothKeyboardHandler`
+          return;
+        }
+
+        console.log(e);
+
+        if (e.selection.start.position !== e.selection.end.position) {
+          console.debug("onSelectionChange - onChangeText");
+
+          return scrollFromCurrentPosition(e.selection.end.y);
+        }
+
+        onChangeTextHandler(e.selection.end.y);
+      },
+      [scrollFromCurrentPosition, onChangeTextHandler],
+    );
 
     useFocusedInputHandler(
       {
-        onChangeText: onChangeTextHandler,
         onSelectionChange: onSelectionChange,
       },
-      [onChangeTextHandler, onSelectionChange],
+      [onSelectionChange],
     );
 
     useSmoothKeyboardHandler(
@@ -333,6 +366,7 @@ const KeyboardAwareScrollView = forwardRef<
           if (focusWasChanged && !keyboardWillAppear.value) {
             // update position on scroll value, so `onEnd` handler
             // will pick up correct values
+            console.debug("maybeScroll - onStart");
             position.value += maybeScroll(e.height, true);
           }
         },
@@ -343,6 +377,7 @@ const KeyboardAwareScrollView = forwardRef<
 
           // if the user has set disableScrollOnKeyboardHide, only auto-scroll when the keyboard opens
           if (!disableScrollOnKeyboardHide || keyboardWillAppear.value) {
+            console.debug("maybeScroll - onMove");
             maybeScroll(e.height);
           }
         },
@@ -372,6 +407,7 @@ const KeyboardAwareScrollView = forwardRef<
           const prevLayout = layout.value;
 
           layout.value = input.value;
+          console.debug("maybeScroll - animated reaction");
           scrollPosition.value += maybeScroll(keyboardHeight.value, true);
           layout.value = prevLayout;
         }
