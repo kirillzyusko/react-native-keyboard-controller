@@ -107,6 +107,23 @@ const config = {
       }),
     ],
   ],
+  plugins: [
+    [
+      "@signalwire/docusaurus-plugin-llms-txt",
+      {
+        // Plugin options
+        depth: 3,
+        siteTitle: "react-native0keyboard-controller",
+        siteDescription:
+          "Documentation for react-native-keyboard-controller. Package that allows to control each frame of keyboard movement in react native.",
+        content: {
+          includeBlog: true,
+          includePages: true,
+          enableMarkdownFiles: true,
+        },
+      },
+    ],
+  ],
 
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
