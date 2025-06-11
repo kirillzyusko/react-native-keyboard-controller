@@ -119,6 +119,7 @@ const config = {
         content: {
           includeBlog: true,
           includePages: true,
+          excludeRoutes: ["**/docs/1.*/**"],
           enableMarkdownFiles: true,
         },
       },
