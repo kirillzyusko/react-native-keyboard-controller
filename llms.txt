@@ -1,0 +1,257 @@
+# react-native0keyboard-controller
+
+> Documentation for react-native-keyboard-controller. Package that allows to control each frame of keyboard movement in react native.
+
+
+## react-native-keyboard-controller
+
+Control each frame of keyboard movement in react native
+
+- [Keyboard Controller](/index.md)react-native-keyboard-controller: landing page
+
+### blog
+
+Blog
+
+- [Blog](/blog.md)blog: landing page
+
+#### archive
+
+Archive
+
+- [Archive](/blog/archive.md)archive: landing page
+
+#### components
+
+I'm glad to announce the upcoming release of react-native-keyboard-controller, a library designed to enhance your React Native app's user experience. This release marks a significant milestone as I introduce a powerful new feature: the KeyboardAvoidingView. But that's not all – I have exciting plans to expand the collection of pre-built components to simplify handling keyboard insets even further.
+
+- [Introducing KeyboardAvoidingView - Elevating Your React Native UI Experience](/blog/components.md)components: landing page
+
+#### enhanced-metadata
+
+I'm thrilled to unveil the latest upgrade to the react-native-keyboard-controller library - version 1.6.0! This release is all about empowering developers like you with enhanced event metadata, providing you with advanced techniques to take your keyboard handling to the next level.
+
+- [Enhanced events metadata - say goodbye to guesswork and hello to precision!](/blog/enhanced-metadata.md)enhanced-metadata: landing page
+
+#### fabric
+
+I'm glad to announce, that new upcoming release 1.2.0 brings a support for new react native architecture 😎
+
+- [Version 1.2.0 with new architecture support](/blog/fabric.md)fabric: landing page
+
+#### interactive-keyboard
+
+I'm excited to announce that the upcoming release of react-native-keyboard-controller, version 1.5.0, will include a new feature that allows users to control the position of the keyboard on the screen via gestures. This new interactive keyboard feature will make it easier for users to interact with the keyboard in a more natural and intuitive way, improving the overall user experience of your React Native app.
+
+- [Interactive keyboard support](/blog/interactive-keyboard.md)interactive-keyboard: landing page
+
+#### interactive-keyboard-ios-with-offset
+
+Say hello to the first release of the year for react-native-keyboard-controller version 1.16.0! 🎉
+
+- [Interactive keyboard on iOS with offset 🔥](/blog/interactive-keyboard-ios-with-offset.md)interactive-keyboard-ios-with-offset: landing page
+
+#### keyboard-toolbar
+
+I'm glad to announce a groundbreaking feature that's set to transform the way users interact with keyboards in your app: the KeyboardToolbar. This feature will enhance typing efficiency and increase user satisfaction. 😎
+
+- [New KeyboardToolbar component 😍](/blog/keyboard-toolbar.md)keyboard-toolbar: landing page
+
+#### mastering-keyboard-management
+
+Today I'm glad to announce a new 1.15.0 version of react-native-keyboard-controller 🎉
+
+- [Mastering keyboard management 🥷🏼](/blog/mastering-keyboard-management.md)mastering-keyboard-management: landing page
+
+#### new-features-achieved-milestones
+
+In this blog post I'd like to make an overview of new features available in 1.9.0 as well as going through the big milestones that were achieved 😎
+
+- [New release, new features, achieved milestones](/blog/new-features-achieved-milestones.md)new-features-achieved-milestones: landing page
+
+#### new-hook
+
+New 1.4.0 release enhance API and adds new useKeyboardHandler hook. While keeping no breaking changes this release (via new hook) adds an ability to have intermediate values on iOS for height and progress values (before it was not possible and it was a restriction of the library).
+
+- [Version 1.4.0 with new hook](/blog/new-hook.md)new-hook: landing page
+
+#### over-keyboard-view
+
+Meet new OverKeyboardView component and corresponding 1.14.0 release! 🎉
+
+- [New OverKeyboardView component](/blog/over-keyboard-view.md)over-keyboard-view: landing page
+
+#### page
+
+- [Blog](/blog/page/2.md): Blog
+
+#### release-1-10
+
+I'm thrilled to announce the latest release, version 1.10.0, of react-native-keyboard-controller! Packed with new functionalities and improvements, this update aims to enhance your React Native development experience.
+
+- [New release features, a year overview](/blog/release-1-10.md)release-1-10: landing page
+
+#### release-1-12
+
+I'm excited to announce the latest release, version 1.12.0, of react-native-keyboard-controller!
+
+- [Announcing upcoming release 📣](/blog/release-1-12.md)release-1-12: landing page
+
+#### release-1-13
+
+I'm excited to announce the latest release, version 1.13.0, of react-native-keyboard-controller! 🎉
+
+- [A new 1.13 release 😎](/blog/release-1-13.md)release-1-13: landing page
+
+#### set-enabled
+
+I'm thrilled to announce the release of react-native-keyboard-controller version 1.8.0. With this latest release, I introduce the useKeyboardController hook and setEnabled method, which allows for a gradual integration of the library into your project, enabling you to disable the module on specific screens as needed. This flexible feature ensures that your app's keyboard behavior remains seamless and user-friendly.
+
+- [New setEnabled method](/blog/set-enabled.md)set-enabled: landing page
+
+#### tags
+
+- [Tags](/blog/tags.md)tags: landing page
+- [One post tagged with "achieved milestones"](/blog/tags/achieved-milestones.md)
+- [One post tagged with "android"](/blog/tags/android.md)
+- [One post tagged with "animation"](/blog/tags/animation.md)
+- [One post tagged with "appearance"](/blog/tags/appearance.md)
+- [One post tagged with "avoiding view"](/blog/tags/avoiding-view.md)
+- [One post tagged with "bridgeless"](/blog/tags/bridgeless.md)
+- [2 posts tagged with "dismiss"](/blog/tags/dismiss.md)
+- [One post tagged with "duration"](/blog/tags/duration.md)
+- [One post tagged with "fabric"](/blog/tags/fabric.md)
+- [2 posts tagged with "focused text input"](/blog/tags/focused-text-input.md)
+- [One post tagged with "iOS"](/blog/tags/i-os.md)
+- [2 posts tagged with "interactive"](/blog/tags/interactive.md)
+- [One post tagged with "intermediate values"](/blog/tags/intermediate-values.md)
+- [2 posts tagged with "ios"](/blog/tags/ios.md)
+- [One post tagged with "isVisible"](/blog/tags/is-visible.md)
+- [One post tagged with "keepFocus"](/blog/tags/keep-focus.md)
+- [14 posts tagged with "keyboard"](/blog/tags/keyboard.md)
+- [One post tagged with "keyboard aware scroll view"](/blog/tags/keyboard-aware-scroll-view.md)
+- [One post tagged with "keyboard toolbar"](/blog/tags/keyboard-toolbar.md)
+- [14 posts tagged with "keyboard"](/blog/tags/keyboard/page/2.md)
+- [2 posts tagged with "modal"](/blog/tags/modal.md)
+- [One post tagged with "new architecture"](/blog/tags/new-architecture.md)
+- [2 posts tagged with "new hook"](/blog/tags/new-hook.md)
+- [2 posts tagged with "offset"](/blog/tags/offset.md)
+- [One post tagged with "over keyboard view"](/blog/tags/over-keyboard-view.md)
+- [15 posts tagged with "react-native"](/blog/tags/react-native.md)
+- [15 posts tagged with "react-native"](/blog/tags/react-native/page/2.md)
+- [One post tagged with "release"](/blog/tags/release.md)
+- [One post tagged with "selection"](/blog/tags/selection.md)
+- [One post tagged with "setEnabled"](/blog/tags/set-enabled.md)
+- [One post tagged with "state"](/blog/tags/state.md)
+- [One post tagged with "sticky view"](/blog/tags/sticky-view.md)
+- [One post tagged with "translucent status bar"](/blog/tags/translucent-status-bar.md)
+- [One post tagged with "turbo modules"](/blog/tags/turbo-modules.md)
+- [One post tagged with "type"](/blog/tags/type.md)
+- [One post tagged with "useKeyboardState"](/blog/tags/use-keyboard-state.md)
+
+#### use-keyboard-state
+
+Say hello to new 1.17.0 release of react-native-keyboard-controller 👋
+
+- [Meet new 1.17 release with useKeyboardState hook 👋](/blog/use-keyboard-state.md)use-keyboard-state: landing page
+
+#### welcome
+
+Many flagship applications that are written natively (such as Telegram, Instagram, etc.) use the full power of platform-specific native APIs (iOS, Android) to make transitions between opening/closing the keyboard animated and smooth.
+
+- [React Native meets smooth keyboard animations](/blog/welcome.md)welcome: landing page
+
+### docs
+
+
+#### next
+
+- [KeyboardAvoidingView](/docs/next/api/components/keyboard-avoiding-view.md): This component will automatically adjust its height, position, or bottom padding based on the keyboard height to remain visible while the virtual keyboard is displayed.
+- [KeyboardAwareScrollView](/docs/next/api/components/keyboard-aware-scroll-view.md): <Lottie
+- [KeyboardStickyView](/docs/next/api/components/keyboard-sticky-view.md): A KeyboardStickyView component seamlessly ensures that a designated view sticks to the keyboard's movements, maintaining visibility and interaction. Use it when you want to enhance the user experience by preventing important UI elements from being obscured by the keyboard, creating a smooth and user-friendly interface in your React Native application.
+- [KeyboardToolbar](/docs/next/api/components/keyboard-toolbar.md): KeyboardToolbar is a view that sticky to the keyboard and has next and previous buttons for switching between inputs as well as Done button for closing the keyboard.
+- [useFocusedInputHandler](/docs/next/api/hooks/input/use-focused-input-handler.md): useFocusedInputHandler is a hook that allows to intercept events from a focused TextInput.
+- [useReanimatedFocusedInput](/docs/next/api/hooks/input/use-reanimated-focused-input.md): Hook that returns an information about TextInput that currently has a focus. Returns null if no input has focus.
+- [useKeyboardAnimation](/docs/next/api/hooks/keyboard/use-keyboard-animation.md): useKeyboardAnimation is a hook which gives access to two animated values:
+- [useKeyboardHandler](/docs/next/api/hooks/keyboard/use-keyboard-handler.md): useKeyboardHandler is a hook that offers low-level but more powerful API in comparison to useKeyboardAnimation. Using this hook you are getting an access to keyboard lifecycle events and you can easily determine the moment of the beginning animation, the end of the animation and get keyboard position in every frame of the animation.
+- [useKeyboardState](/docs/next/api/hooks/keyboard/use-keyboard-state.md): useKeyboardState is a hook which gives an access to current keyboard state. This hook combines data from KeyboardController.state() and KeyboardController.isVisible() methods and makes it reactive (i. e. triggers a re-render when keyboard state/visibility has changed).
+- [useReanimatedKeyboardAnimation](/docs/next/api/hooks/keyboard/use-reanimated-keyboard-animation.md): useReanimatedKeyboardAnimation is a hook which gives access to two reanimated values:
+- [useKeyboardController](/docs/next/api/hooks/module/use-keyboard-controller.md): useKeyboardController is a hook which gives an access to the state of the react-native-keyboard-controller library. It return two values:
+- [KeyboardController](/docs/next/api/keyboard-controller.md): The KeyboardController module in React Native provides a convenient set of methods for managing the behavior of the keyboard. With seamless runtime adjustments, this module allows developers to dynamically change the windowSoftInputMode on Android and dismiss the keyboard on both platforms.
+- [KeyboardControllerView](/docs/next/api/keyboard-controller-view.md): A plain react-native View with some additional methods and props. Used internally in KeyboardProvider
+- [KeyboardEvents](/docs/next/api/keyboard-events.md): This library exposes 4 events which are available on all platforms:
+- [KeyboardGestureArea](/docs/next/api/keyboard-gesture-area.md): KeyboardGestureArea allows you to define a region on the screen, where gestures will control the keyboard position.
+- [KeyboardProvider](/docs/next/api/keyboard-provider.md): KeyboardProvider should wrap your app. Under the hood it works with KeyboardControllerView to receive events during keyboard movements, maps these events to Animated/Reanimated values and store them in context.
+- [OverKeyboardView](/docs/next/api/over-keyboard-view.md): Display views over keyboard without closing it.
+- [API Reference](/docs/next/category/api-reference.md): API reference containing information about all public methods and their signatures
+- [Guides](/docs/next/category/guides.md): Most useful topics to start quickly.
+- [Recipes](/docs/next/category/recipes.md)
+- [FAQ](/docs/next/faq.md): Frequently asked questions and answers on them
+- [Building own hook](/docs/next/guides/building-own-hook.md): Default hooks may not perfectly fit in your app, because it changes/restores softInputMode on mount/unmount of the component where it's used.
+- [Compatibility](/docs/next/guides/compatibility.md): Compatibility of library with different react-native versions and architectures
+- [Components Overview](/docs/next/guides/components-overview.md): Overview and comparison of view and components available in this package
+- [First animation](/docs/next/guides/first-animation.md): To build your first animation you will need to use two hooks: useKeyboardAnimation or useReanimatedKeyboardAnimation.
+- [Interactive Keyboard](/docs/next/guides/interactive-keyboard.md): This guide focuses on adding an ability to dismiss keyboard interactively. Below you can see a step by step guide which will explain how different pieces of the code work together.
+- [Installation](/docs/next/installation.md): Guide dedicated to installation process
+- [Architecture](/docs/next/recipes/architecture.md): This library requires to wrap an app with KeyboardProvider component. It's needed because it stores animated values in context.
+- [Jest testing guide](/docs/next/recipes/jest-testing-guide.md): A testing-guide showing how to write unit-tests using jest
+- [Platforms capabilities and limitations](/docs/next/recipes/platform-differences.md): This library relies on WindowInsetsCompat API on Android and keyboard listeners (NotificationCenter) on iOS.
+- [Troubleshooting](/docs/next/troubleshooting.md): Troubleshooting guide
+
+#### api
+
+- [KeyboardAvoidingView](/docs/api/components/keyboard-avoiding-view.md): This component will automatically adjust its height, position, or bottom padding based on the keyboard height to remain visible while the virtual keyboard is displayed.
+- [KeyboardAwareScrollView](/docs/api/components/keyboard-aware-scroll-view.md): <Lottie
+- [KeyboardStickyView](/docs/api/components/keyboard-sticky-view.md): A KeyboardStickyView component seamlessly ensures that a designated view sticks to the keyboard's movements, maintaining visibility and interaction. Use it when you want to enhance the user experience by preventing important UI elements from being obscured by the keyboard, creating a smooth and user-friendly interface in your React Native application.
+- [KeyboardToolbar](/docs/api/components/keyboard-toolbar.md): KeyboardToolbar is a view that sticky to the keyboard and has next and previous buttons for switching between inputs as well as Done button for closing the keyboard.
+- [useFocusedInputHandler](/docs/api/hooks/input/use-focused-input-handler.md): useFocusedInputHandler is a hook that allows to intercept events from a focused TextInput.
+- [useReanimatedFocusedInput](/docs/api/hooks/input/use-reanimated-focused-input.md): Hook that returns an information about TextInput that currently has a focus. Returns null if no input has focus.
+- [useKeyboardAnimation](/docs/api/hooks/keyboard/use-keyboard-animation.md): useKeyboardAnimation is a hook which gives access to two animated values:
+- [useKeyboardHandler](/docs/api/hooks/keyboard/use-keyboard-handler.md): useKeyboardHandler is a hook that offers low-level but more powerful API in comparison to useKeyboardAnimation. Using this hook you are getting an access to keyboard lifecycle events and you can easily determine the moment of the beginning animation, the end of the animation and get keyboard position in every frame of the animation.
+- [useKeyboardState](/docs/api/hooks/keyboard/use-keyboard-state.md): useKeyboardState is a hook which gives an access to current keyboard state. This hook combines data from KeyboardController.state() and KeyboardController.isVisible() methods and makes it reactive (i. e. triggers a re-render when keyboard state/visibility has changed).
+- [useReanimatedKeyboardAnimation](/docs/api/hooks/keyboard/use-reanimated-keyboard-animation.md): useReanimatedKeyboardAnimation is a hook which gives access to two reanimated values:
+- [useKeyboardController](/docs/api/hooks/module/use-keyboard-controller.md): useKeyboardController is a hook which gives an access to the state of the react-native-keyboard-controller library. It return two values:
+- [KeyboardController](/docs/api/keyboard-controller.md): The KeyboardController module in React Native provides a convenient set of methods for managing the behavior of the keyboard. With seamless runtime adjustments, this module allows developers to dynamically change the windowSoftInputMode on Android and dismiss the keyboard on both platforms.
+- [KeyboardControllerView](/docs/api/keyboard-controller-view.md): A plain react-native View with some additional methods and props. Used internally in KeyboardProvider
+- [KeyboardEvents](/docs/api/keyboard-events.md): This library exposes 4 events which are available on all platforms:
+- [KeyboardGestureArea](/docs/api/keyboard-gesture-area.md): KeyboardGestureArea allows you to define a region on the screen, where gestures will control the keyboard position.
+- [KeyboardProvider](/docs/api/keyboard-provider.md): KeyboardProvider should wrap your app. Under the hood it works with KeyboardControllerView to receive events during keyboard movements, maps these events to Animated/Reanimated values and store them in context.
+- [OverKeyboardView](/docs/api/over-keyboard-view.md): Display views over keyboard without closing it.
+
+#### category
+
+- [API Reference](/docs/category/api-reference.md): API reference containing information about all public methods and their signatures
+- [Guides](/docs/category/guides.md): Most useful topics to start quickly.
+- [Recipes](/docs/category/recipes.md)
+
+#### faq
+
+Frequently asked questions and answers on them
+
+- [FAQ](/docs/faq.md)faq: landing page
+
+#### guides
+
+- [Building own hook](/docs/guides/building-own-hook.md): Default hooks may not perfectly fit in your app, because it changes/restores softInputMode on mount/unmount of the component where it's used.
+- [Compatibility](/docs/guides/compatibility.md): Compatibility of library with different react-native versions and architectures
+- [Components Overview](/docs/guides/components-overview.md): Overview and comparison of view and components available in this package
+- [First animation](/docs/guides/first-animation.md): To build your first animation you will need to use two hooks: useKeyboardAnimation or useReanimatedKeyboardAnimation.
+- [Interactive Keyboard](/docs/guides/interactive-keyboard.md): This guide focuses on adding an ability to dismiss keyboard interactively. Below you can see a step by step guide which will explain how different pieces of the code work together.
+
+#### installation
+
+Guide dedicated to installation process
+
+- [Installation](/docs/installation.md)installation: landing page
+
+#### recipes
+
+- [Architecture](/docs/recipes/architecture.md): This library requires to wrap an app with KeyboardProvider component. It's needed because it stores animated values in context.
+- [Jest testing guide](/docs/recipes/jest-testing-guide.md): A testing-guide showing how to write unit-tests using jest
+- [Platforms capabilities and limitations](/docs/recipes/platform-differences.md): This library relies on WindowInsetsCompat API on Android and keyboard listeners (NotificationCenter) on iOS.
+
+#### troubleshooting
+
+Troubleshooting guide
+
+- [Troubleshooting](/docs/troubleshooting.md)troubleshooting: landing page
