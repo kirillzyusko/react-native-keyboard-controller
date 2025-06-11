@@ -13,12 +13,14 @@
     "https": "HTTPS=true SSL_CRT_FILE=localhost.pem SSL_KEY_FILE=localhost-key.pem docusaurus start",
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
-    "typescript": "tsc"
+    "typescript": "tsc",
+    "postinstall": "patch-package"
   },
   "dependencies": {
     "@docusaurus/core": "3.4.0",
     "@docusaurus/preset-classic": "3.4.0",
     "@mdx-js/react": "^3.0.0",
+    "@signalwire/docusaurus-plugin-llms-txt": "^1.0.1",
     "clsx": "^2.0.0",
     "lottie-react": "^2.4.0",
     "prism-react-renderer": "^2.3.0",
@@ -34,6 +36,7 @@
     "@playwright/test": "^1.46.0",
     "cheerio": "^1.0.0-rc.12",
     "markdownlint-cli2": "^0.12.1",
+    "patch-package": "^8.0.0",
     "typescript": "^5.2.2"
   },
   "browserslist": {
