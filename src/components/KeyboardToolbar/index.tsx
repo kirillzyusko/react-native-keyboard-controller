@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Platform, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 
 import { FocusedInputEvents } from "../../bindings";
 import { KeyboardController } from "../../module";
@@ -9,6 +9,17 @@ import KeyboardStickyView from "../KeyboardStickyView";
 import Arrow from "./Arrow";
 import Button from "./Button";
 import { colors } from "./colors";
+import {
+  DEFAULT_OPACITY,
+  KEYBOARD_HAS_ROUNDED_CORNERS,
+  KEYBOARD_TOOLBAR_HEIGHT,
+  OPENED_OFFSET,
+  TEST_ID_KEYBOARD_TOOLBAR,
+  TEST_ID_KEYBOARD_TOOLBAR_CONTENT,
+  TEST_ID_KEYBOARD_TOOLBAR_DONE,
+  TEST_ID_KEYBOARD_TOOLBAR_NEXT,
+  TEST_ID_KEYBOARD_TOOLBAR_PREVIOUS,
+} from "./constants";
 
 import type { HEX, KeyboardToolbarTheme } from "./types";
 import type { KeyboardStickyViewProps } from "../KeyboardStickyView";
@@ -65,18 +76,6 @@ export type KeyboardToolbarProps = Omit<
   insets?: SafeAreaInsets;
 } & Pick<KeyboardStickyViewProps, "offset" | "enabled">;
 
-const TEST_ID_KEYBOARD_TOOLBAR = "keyboard.toolbar";
-const TEST_ID_KEYBOARD_TOOLBAR_PREVIOUS = `${TEST_ID_KEYBOARD_TOOLBAR}.previous`;
-const TEST_ID_KEYBOARD_TOOLBAR_NEXT = `${TEST_ID_KEYBOARD_TOOLBAR}.next`;
-const TEST_ID_KEYBOARD_TOOLBAR_CONTENT = `${TEST_ID_KEYBOARD_TOOLBAR}.content`;
-const TEST_ID_KEYBOARD_TOOLBAR_DONE = `${TEST_ID_KEYBOARD_TOOLBAR}.done`;
-
-const KEYBOARD_TOOLBAR_HEIGHT = 42;
-const DEFAULT_OPACITY: HEX = "FF";
-const KEYBOARD_HAS_ROUNDED_CORNERS =
-  Platform.OS === "ios" && parseInt(Platform.Version, 10) >= 26;
-const OPENED_OFFSET = KEYBOARD_HAS_ROUNDED_CORNERS ? -10 : 0;
-
 /**
  * `KeyboardToolbar` is a component that is shown above the keyboard with `Prev`/`Next` buttons from left and
  * `Done` button from the right (to dismiss the keyboard). Allows to add customizable content (yours UI elements) in the middle.
@@ -132,13 +131,26 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = (props) => {
       {
         backgroundColor: `${theme[colorScheme].background}${opacity}`,
       },
-      {
-        paddingLeft: insets?.left,
-        paddingRight: insets?.right,
-      },
+      !KEYBOARD_HAS_ROUNDED_CORNERS
+        ? {
+            paddingLeft: insets?.left,
+            paddingRight: insets?.right,
+          }
+        : null,
       KEYBOARD_HAS_ROUNDED_CORNERS ? styles.floating : null,
     ],
     [colorScheme, opacity, theme, insets],
+  );
+  const containerStyle = useMemo(
+    () => [
+      KEYBOARD_HAS_ROUNDED_CORNERS
+        ? {
+            marginLeft: (insets?.left ?? 0) + 16,
+            marginRight: (insets?.right ?? 0) + 16,
+          }
+        : null,
+    ],
+    [insets],
   );
   const offset = useMemo(
     () => ({
@@ -182,7 +194,11 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = (props) => {
   );
 
   return (
-    <KeyboardStickyView enabled={enabled} offset={offset}>
+    <KeyboardStickyView
+      enabled={enabled}
+      offset={offset}
+      style={containerStyle}
+    >
       <View {...rest} style={toolbarStyle} testID={TEST_ID_KEYBOARD_TOOLBAR}>
         {blur}
         {showArrows && (
@@ -266,9 +282,7 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   floating: {
-    width: "92%",
-    marginLeft: "4%",
-    marginRight: "4%",
+    alignSelf: "center",
     borderRadius: 20,
     overflow: "hidden",
   },
