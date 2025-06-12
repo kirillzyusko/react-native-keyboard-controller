@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Platform, StyleSheet, Text, View } from "react-native";
 
 import { FocusedInputEvents } from "../../bindings";
 import { KeyboardController } from "../../module";
@@ -73,6 +73,9 @@ const TEST_ID_KEYBOARD_TOOLBAR_DONE = `${TEST_ID_KEYBOARD_TOOLBAR}.done`;
 
 const KEYBOARD_TOOLBAR_HEIGHT = 42;
 const DEFAULT_OPACITY: HEX = "FF";
+const KEYBOARD_HAS_ROUNDED_CORNERS =
+  Platform.OS === "ios" && parseInt(Platform.Version, 10) >= 26;
+const OPENED_OFFSET = KEYBOARD_HAS_ROUNDED_CORNERS ? -10 : 0;
 
 /**
  * `KeyboardToolbar` is a component that is shown above the keyboard with `Prev`/`Next` buttons from left and
@@ -133,11 +136,15 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = (props) => {
         paddingLeft: insets?.left,
         paddingRight: insets?.right,
       },
+      KEYBOARD_HAS_ROUNDED_CORNERS ? styles.floating : null,
     ],
     [colorScheme, opacity, theme, insets],
   );
   const offset = useMemo(
-    () => ({ closed: closed + KEYBOARD_TOOLBAR_HEIGHT, opened }),
+    () => ({
+      closed: closed + KEYBOARD_TOOLBAR_HEIGHT,
+      opened: opened + OPENED_OFFSET,
+    }),
     [closed, opened],
   );
   const ButtonContainer = button || Button;
@@ -257,6 +264,13 @@ const styles = StyleSheet.create({
   doneButtonContainer: {
     marginRight: 16,
     marginLeft: 8,
+  },
+  floating: {
+    width: "92%",
+    marginLeft: "4%",
+    marginRight: "4%",
+    borderRadius: 20,
+    overflow: "hidden",
   },
 });
 
