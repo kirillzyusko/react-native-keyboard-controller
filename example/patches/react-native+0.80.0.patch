@@ -1,0 +1,12 @@
+diff --git a/node_modules/react-native/jest/setup.js b/node_modules/react-native/jest/setup.js
+index 723a3a1..5e8c1fa 100644
+--- a/node_modules/react-native/jest/setup.js
++++ b/node_modules/react-native/jest/setup.js
+@@ -202,7 +202,7 @@ jest
+   .mock('../Libraries/Components/RefreshControl/RefreshControl', () => ({
+     __esModule: true,
+     default: jest.requireActual(
+-      '../Libraries/Components/RefreshControl/__mocks__/RefreshControlMock',
++      '../Libraries/Components/RefreshControl/RefreshControl',
+     ),
+   }))

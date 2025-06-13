@@ -166,7 +166,8 @@
     "googlequicksearchbox",
     "androidkeyboard",
     "honeyboard",
-    "unflatten"
+    "unflatten",
+    "bigdecimal"
   ],
   "ignorePaths": [
     "node_modules",
