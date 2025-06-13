@@ -157,7 +157,8 @@
     "appiconset",
     "taskdefs",
     "llms",
-    "signalwire"
+    "signalwire",
+    "bigdecimal"
   ],
   "ignorePaths": [
     "node_modules",
