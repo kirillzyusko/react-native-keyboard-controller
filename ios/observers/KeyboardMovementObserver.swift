@@ -32,7 +32,7 @@ public class KeyboardMovementObserver: NSObject {
 
   private var _windowsCount: Int = 0
   private var prevKeyboardPosition = 0.0
-  private var displayLink: CADisplayLink?
+  private var displayLink: CADisplayLink!
   private var interactiveKeyboardObserver: NSKeyValueObservation?
   private var isMounted = false
   // state variables
@@ -57,6 +57,18 @@ public class KeyboardMovementObserver: NSObject {
     self.onNotify = onNotify
     self.onRequestAnimation = onRequestAnimation
     self.onCancelAnimation = onCancelAnimation
+    
+    super.init()
+    
+    displayLink = CADisplayLink(target: self, selector: #selector(updateKeyboardFrame))
+    displayLink.preferredFramesPerSecond = 120 // will fallback to 60 fps for devices without Pro Motion display
+    displayLink.add(to: .main, forMode: .common)
+    displayLink.isPaused = true
+  }
+  
+  deinit {
+    displayLink.invalidate()
+    displayLink = nil
   }
 
   @objc public func mount() {
@@ -109,7 +121,7 @@ public class KeyboardMovementObserver: NSObject {
 
   private func keyboardDidMoveInteractively(changeValue: CGPoint) {
     // if we are currently animating keyboard -> we need to ignore values from KVO
-    if displayLink != nil {
+    if !displayLink.isPaused {
       return
     }
     // if keyboard height is not equal to its bounds - we can ignore
@@ -232,18 +244,15 @@ public class KeyboardMovementObserver: NSObject {
     // sometimes `will` events can be called multiple times.
     // To avoid double re-creation of listener we are adding this condition
     // (if active link is present, then no need to re-setup a listener)
-    if displayLink != nil {
+    if !displayLink.isPaused {
       return
     }
 
-    displayLink = CADisplayLink(target: self, selector: #selector(updateKeyboardFrame))
-    displayLink?.preferredFramesPerSecond = 120 // will fallback to 60 fps for devices without Pro Motion display
-    displayLink?.add(to: .main, forMode: .common)
+    displayLink.isPaused = false
   }
 
   @objc func removeKeyboardWatcher() {
-    displayLink?.invalidate()
-    displayLink = nil
+    displayLink.isPaused = true
   }
 
   func initializeAnimation(fromValue: Double, toValue: Double) {
