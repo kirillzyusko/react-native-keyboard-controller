@@ -171,7 +171,8 @@
     "Pixelfed",
     "Kwai",
     "Kwibo",
-    "revolut"
+    "revolut",
+    "bigdecimal"
   ],
   "ignorePaths": [
     "node_modules",
