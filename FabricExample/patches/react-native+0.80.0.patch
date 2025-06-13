@@ -10,3 +10,4 @@ index 723a3a1..5e8c1fa 100644
 +      '../Libraries/Components/RefreshControl/RefreshControl',
      ),
    }))
+   .mock('../Libraries/Components/ScrollView/ScrollView', () => {
