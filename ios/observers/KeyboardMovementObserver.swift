@@ -57,15 +57,15 @@ public class KeyboardMovementObserver: NSObject {
     self.onNotify = onNotify
     self.onRequestAnimation = onRequestAnimation
     self.onCancelAnimation = onCancelAnimation
-    
+
     super.init()
-    
+
     displayLink = CADisplayLink(target: self, selector: #selector(updateKeyboardFrame))
     displayLink.preferredFramesPerSecond = 120 // will fallback to 60 fps for devices without Pro Motion display
     displayLink.add(to: .main, forMode: .common)
     displayLink.isPaused = true
   }
-  
+
   deinit {
     displayLink.invalidate()
     displayLink = nil
