@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <declare-styleable name="ColorProperties">
+    <attr name="color" format="color" />
+    <attr name="tone" format="integer" />
+  </declare-styleable>
+</resources>

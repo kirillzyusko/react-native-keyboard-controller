@@ -60,6 +60,7 @@
     "avoid keyboard",
     "sticky view",
     "over keyboard view",
+    "keyboard background view",
     "keyboard aware scroll view",
     "keyboard toolbar",
     "keyboard done button",
@@ -180,7 +181,8 @@
       "componentProvider": {
         "KeyboardControllerView": "KeyboardControllerView",
         "KeyboardGestureArea": "KeyboardGestureArea",
-        "OverKeyboardView": "OverKeyboardView"
+        "OverKeyboardView": "OverKeyboardView",
+        "KeyboardBackgroundView": "KeyboardBackgroundView"
       }
     }
   }
