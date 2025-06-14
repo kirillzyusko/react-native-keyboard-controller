@@ -25,25 +25,29 @@ const LiquidKeyboardExample = () => {
   const { bottom } = useSafeAreaInsets();
 
   useEffect(() => {
-    progress.value = 0;
+    progress.set(0);
     /*progress.value = withRepeat(withSpring(1, {
       stiffness: 1000,
       damping: 500,
       mass: 3,
     }), -1, true);*/
     KeyboardEvents.addListener("keyboardDidShow", () => {
-      progress.value = withSpring(1, {
-        stiffness: 1000,
-        damping: 500,
-        mass: 3,
-      });
+      progress.set(
+        withSpring(1, {
+          stiffness: 1000,
+          damping: 500,
+          mass: 3,
+        }),
+      );
     });
     KeyboardEvents.addListener("keyboardWillHide", () => {
-      progress.value = withSpring(0, {
-        stiffness: 1000,
-        damping: 500,
-        mass: 3,
-      });
+      progress.set(
+        withSpring(0, {
+          stiffness: 1000,
+          damping: 500,
+          mass: 3,
+        }),
+      );
     });
   }, []);
 
