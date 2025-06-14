@@ -44,4 +44,4 @@ export type OverKeyboardViewProps = PropsWithChildren<{
    */
   visible: boolean;
 }>;
-export type KeyboardBackgroundViewProps = PropsWithChildren<{}>;
+export type KeyboardBackgroundViewProps = PropsWithChildren<ViewProps>;
