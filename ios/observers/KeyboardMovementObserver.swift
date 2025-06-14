@@ -128,11 +128,14 @@ public class KeyboardMovementObserver: NSObject {
     if !displayLink.isPaused {
       return
     }
+    // ignore all events if screen is not touched
+    if !KeyboardAreaExtender.shared.isInteractiveGesture {
+      return
+    }
     // if keyboard height is not equal to its bounds - we can ignore
     // values, since they'll be invalid and will cause UI jumps
     if #unavailable(iOS 26.0) {
       if floor(keyboardView?.bounds.size.height ?? 0) != floor(_keyboardHeight) {
-        print("KeyboardMovementObserver: Ignoring interactive keyboard move event due to height mismatch.")
         return
       }
     }
@@ -152,7 +155,7 @@ public class KeyboardMovementObserver: NSObject {
       )
     }
     position -= KeyboardAreaExtender.shared.offset
-    print("KWH \(keyboardWindowH) \(keyboardFrameY) H \(keyboardView?.bounds.size.height ?? 0.0)")
+
     if position == 0 {
       // it will be triggered before `keyboardWillDisappear` and
       // we don't need to trigger `onInteractive` handler for that
@@ -178,6 +181,7 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc func keyboardWillAppear(_ notification: Notification) {
+    print("keyboardWillAppear \(Date.currentTimeStamp)")
     guard !KeyboardEventsIgnorer.shared.shouldIgnore, !UIResponder.isKeyboardPreloading else { return }
 
     let (duration, frame) = notification.keyboardMetaData()
@@ -198,7 +202,9 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc func keyboardWillDisappear(_ notification: Notification) {
+    print("keyboardWillDisappear \(Date.currentTimeStamp)")
     guard !UIResponder.isKeyboardPreloading else { return }
+
     let (duration, _) = notification.keyboardMetaData()
     tag = UIResponder.current.reactViewTag
     self.duration = duration
@@ -213,7 +219,9 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc func keyboardDidAppear(_ notification: Notification) {
+    print("keyboardDidAppear \(Date.currentTimeStamp)")
     guard !UIResponder.isKeyboardPreloading else { return }
+
     let timestamp = Date.currentTimeStamp
     let (duration, frame) = notification.keyboardMetaData()
     if let keyboardFrame = frame {
@@ -244,7 +252,9 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc func keyboardDidDisappear(_ notification: Notification) {
+    print("keyboardDidDisappear \(Date.currentTimeStamp)")
     guard !UIResponder.isKeyboardPreloading else { return }
+
     let (duration, _) = notification.keyboardMetaData()
     tag = UIResponder.current.reactViewTag
 
@@ -285,13 +295,14 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc func updateKeyboardFrame(link: CADisplayLink) {
+    print("updateKeyboardFrame - (1) \(Date.currentTimeStamp)")
     if keyboardView == nil {
       return
     }
 
     let (visibleKeyboardHeight, keyboardFrameY) = keyboardView.frameTransitionInWindow
     var keyboardPosition = visibleKeyboardHeight - KeyboardAreaExtender.shared.offset
-
+    print("updateKeyboardFrame - (2) \(keyboardPosition)")
     if keyboardPosition == prevKeyboardPosition || keyboardFrameY == 0 {
       return
     }
@@ -322,6 +333,8 @@ public class KeyboardMovementObserver: NSObject {
       // but CASpringAnimation can never get to this final destination
       let race: (CGFloat, CGFloat) -> CGFloat = animation.isIncreasing ? max : min
       keyboardPosition = race(position, keyboardPosition)
+
+      print("posiiton: \(position)")
     }
 
     onEvent(

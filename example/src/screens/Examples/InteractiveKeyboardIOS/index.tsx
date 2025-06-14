@@ -88,6 +88,10 @@ const contentContainerStyle = {
   paddingBottom: TEXT_INPUT_HEIGHT,
 };
 
+// TODO: after interactive dismissal keyboard (if it moves up) we get incorrect will hide event
+// TODO: after keyboard appears - if we simply close it via touch, then `shouldIgnore` will be true and all subsequent events will be ignored
+// TODO: if input accessory view is not attached - we don't get KVO values
+// TODO: touch events should be provided by KeyboardGestureArea?
 function InteractiveKeyboard() {
   const ref = useRef<Reanimated.ScrollView>(null);
   const { height, onScroll, inset, offset } = useKeyboardAnimation();
@@ -127,7 +131,7 @@ function InteractiveKeyboard() {
     <KeyboardGestureArea
       offset={inputHeight}
       style={styles.container}
-      textInputNativeID="chat-input"
+      // textInputNativeID="chat-input"
     >
       <Reanimated.ScrollView
         ref={ref}
