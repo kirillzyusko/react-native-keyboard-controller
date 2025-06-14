@@ -22,8 +22,8 @@
 #import "RCTFabricComponentsPlugins.h"
 #endif
 
-#import <UIKit/UIKit.h>
 #import <React/RCTView.h>
+#import <UIKit/UIKit.h>
 
 #ifdef RCT_NEW_ARCH_ENABLED
 using namespace facebook::react;
@@ -57,8 +57,10 @@ RCT_EXPORT_MODULE(KeyboardBackgroundViewManager)
   RCTView *containerView = [[RCTView alloc] initWithFrame:CGRectZero];
   containerView.clipsToBounds = YES;
 
-  KeyboardBackgroundView *backgroundView = [[KeyboardBackgroundView alloc] initWithFrame:containerView.bounds];
-  backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+  KeyboardBackgroundView *backgroundView =
+      [[KeyboardBackgroundView alloc] initWithFrame:containerView.bounds];
+  backgroundView.autoresizingMask =
+      UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
   [containerView addSubview:backgroundView];
 
   return containerView;
@@ -93,7 +95,8 @@ RCT_EXPORT_MODULE(KeyboardBackgroundViewManager)
   [super load];
 }
 
-- (instancetype)initWithFrame:(CGRect)frame {
+- (instancetype)initWithFrame:(CGRect)frame
+{
   self = [super initWithFrame:frame];
   if (self) {
     [self setupBackdropView];
@@ -102,12 +105,13 @@ RCT_EXPORT_MODULE(KeyboardBackgroundViewManager)
   return self;
 }
 
-- (void)setupBackdropView {
+- (void)setupBackdropView
+{
   Class BackdropClass = NSClassFromString(@"UIKBBackdropView");
   if (BackdropClass) {
     long long style = (self.traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark)
-                        ? KeyboardBackdropStyleDark
-                        : KeyboardBackdropStyleLight;
+        ? KeyboardBackdropStyleDark
+        : KeyboardBackdropStyleLight;
 
     id<KeyboardBackdropViewProtocol> backdrop =
         (id<KeyboardBackdropViewProtocol>)[BackdropClass alloc];
@@ -116,7 +120,8 @@ RCT_EXPORT_MODULE(KeyboardBackgroundViewManager)
     if ([backdrop isKindOfClass:[UIVisualEffectView class]]) {
       _backdropView = (UIVisualEffectView *)backdrop;
       _backdropView.layer.masksToBounds = YES;
-      _backdropView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+      _backdropView.autoresizingMask =
+          UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
       _backdropView.frame = self.bounds;
       [self addSubview:_backdropView];
     }
@@ -131,28 +136,30 @@ RCT_EXPORT_MODULE(KeyboardBackgroundViewManager)
                           index:(NSInteger)index
 {
   // preserve slot 0 for blur layer
-  [super mountChildComponentView:childComponentView index:index+1];
+  [super mountChildComponentView:childComponentView index:index + 1];
 }
 
 - (void)unmountChildComponentView:(UIView<RCTComponentViewProtocol> *)childComponentView
                             index:(NSInteger)index
 {
   // preserve slot 0 for blur layer
-  [super unmountChildComponentView:childComponentView index:index+1];
+  [super unmountChildComponentView:childComponentView index:index + 1];
 }
 #endif
 
-- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
+- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection
+{
   [super traitCollectionDidChange:previousTraitCollection];
 
   if (@available(iOS 12.0, *)) {
-    if ([previousTraitCollection hasDifferentColorAppearanceComparedToTraitCollection:self.traitCollection]) {
+    if ([previousTraitCollection
+            hasDifferentColorAppearanceComparedToTraitCollection:self.traitCollection]) {
       long long style = (self.traitCollection.userInterfaceStyle == UIUserInterfaceStyleDark)
-                        ? KeyboardBackdropStyleDark
-                        : KeyboardBackdropStyleLight;
+          ? KeyboardBackdropStyleDark
+          : KeyboardBackdropStyleLight;
 
       if ([_backdropView respondsToSelector:@selector(transitionToStyle:)]) {
-          [(id<KeyboardBackdropViewProtocol>)_backdropView transitionToStyle:style];
+        [(id<KeyboardBackdropViewProtocol>)_backdropView transitionToStyle:style];
       }
     }
   }
