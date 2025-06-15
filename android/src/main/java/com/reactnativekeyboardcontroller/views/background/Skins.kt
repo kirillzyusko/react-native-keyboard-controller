@@ -75,7 +75,7 @@ fun shiftRgbChannels(
 fun ThemedReactContext.getInputMethodColor(): Int {
   val imePackage = currentImePackage()
   val isDark = isSystemDarkMode()
-  
+
   Log.i("Skins", "Current IME: $imePackage")
 
   val (lightColorRes, darkColorRes) =
