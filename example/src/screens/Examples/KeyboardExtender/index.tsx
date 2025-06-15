@@ -49,37 +49,38 @@ export default function KeyboardExtendExample() {
         style={{ ...StyleSheet.absoluteFillObject, flex: 1, width: "100%" }}
       />
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <SafeAreaView style={styles.container} edges={["top"]}>
-        <TextInput
-          placeholder="Donation amount"
-          placeholderTextColor="#5c5c5c"
-          keyboardType="numeric"
-          style={styles.input}
-        />
+        <SafeAreaView edges={["top"]} style={styles.container}>
+          <TextInput
+            keyboardType="numeric"
+            placeholder="Donation amount"
+            placeholderTextColor="#5c5c5c"
+            style={styles.input}
+            testID="donation_amount"
+          />
 
-        <KeyboardExtender enabled={showExtend}>
-          <Reanimated.View style={[styles.keyboardExtend, animatedStyle]}>
-            <TouchableOpacity onPress={() => Alert.alert("10$")}>
-              <Text style={styles.priceText}>10$</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => Alert.alert("20$")}>
-              <Text style={styles.priceText}>20$</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => Alert.alert("50$")}>
-              <Text style={styles.priceText}>50$</Text>
-            </TouchableOpacity>
-          </Reanimated.View>
-        </KeyboardExtender>
-        <OverKeyboardView visible={isOKVMode}>
-          <View style={{ flex: 1, justifyContent: "flex-end" }}>
-            {/* TODO replace hardcoded value */}
-            <TextInput
-              placeholder="Search..."
-              style={[styles.input, { marginBottom: height - 61.73 }]}
-            />
-          </View>
-        </OverKeyboardView>
-      </SafeAreaView>
+          <KeyboardExtender enabled={showExtend}>
+            <Reanimated.View style={[styles.keyboardExtend, animatedStyle]}>
+              <TouchableOpacity onPress={() => Alert.alert("10$")}>
+                <Text style={styles.priceText}>10$</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => Alert.alert("20$")}>
+                <Text style={styles.priceText}>20$</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => Alert.alert("50$")}>
+                <Text style={styles.priceText}>50$</Text>
+              </TouchableOpacity>
+            </Reanimated.View>
+          </KeyboardExtender>
+          <OverKeyboardView visible={isOKVMode}>
+            <View style={{ flex: 1, justifyContent: "flex-end" }}>
+              {/* TODO replace hardcoded value */}
+              <TextInput
+                placeholder="Search..."
+                style={[styles.input, { marginBottom: height - 61.73 }]}
+              />
+            </View>
+          </OverKeyboardView>
+        </SafeAreaView>
       </TouchableWithoutFeedback>
     </>
   );
