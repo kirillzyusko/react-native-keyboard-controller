@@ -1,0 +1,119 @@
+---
+sidebar_position: 8
+description: Display views over keyboard without closing it.
+keywords:
+  [
+    react-native-keyboard-controller,
+    keyboard,
+    extend keyboard,
+    UIInputView,
+    input accessory view,
+    KeyboardExtender,
+    custom buttons inside keyboard,
+  ]
+---
+
+# KeyboardExtender
+
+import Lottie from "lottie-react";
+import lottie from "./keyboard-extender.lottie.json";
+
+<div style={{ display: "flex", justifyContent: "center", marginBottom: 20 }}>
+  <Lottie
+    className="lottie"
+    animationData={lottie}
+    style={{ width: 400, height: 400 }}
+    loop
+  />
+</div>
+
+The `KeyboardExtend` component allows you to extend the keyboard with your own UI that extends the keyboard (i. e. literally increasing its height) moves and matches its appearance.
+
+## `KeyboardStickyView` vs `KeyboardExtender`
+
+While both components serve similar purposes they are intended for different use cases. Below is the table that can help you to decide which component to use:
+
+| Feature                       | KeyboardExtender | KeyboardStickyView |
+| ----------------------------- | ---------------- | ------------------ |
+| Matches keyboard design       | ✅               | ❌                 |
+| Is part of the keyboard       | ✅               | ❌                 |
+| Hides when keyboard is hidden | ✅               | ❌                 |
+| Increases keyboard height     | ✅               | ❌                 |
+
+## Features
+
+- ✅ **Automatically attaches** to all `TextInput`s when enabled
+- 📏 **Automatically calculates its height** based on content
+- 🎯 **Moves with the keyboard animation**
+- 🎨 **Matches the keyboard UI** for seamless integration
+- 🎭 **Renders as if it's part of the keyboard**
+
+## Props
+
+### `enabled`
+
+A boolean prop indicating whether the component is enabled or disabled. If it's `true`, the component attaches to the keyboard. If it's `false`, it detaches.
+
+## Usage
+
+```jsx
+import React, { useState } from "react";
+import { View, Text, TextInput, StyleSheet } from "react-native";
+import { KeyboardExtender } from "react-native-keyboard-controller";
+
+export default function KeyboardExtenderExample() {
+  const [keyboardVisible, setKeyboardVisible] = useState(false);
+
+  return (
+    <View style={styles.container}>
+      <TextInput
+        style={styles.input}
+        placeholder="Type something..."
+        onFocus={() => setKeyboardVisible(true)}
+        onBlur={() => setKeyboardVisible(false)}
+      />
+
+      <KeyboardExtender enabled={keyboardVisible}>
+        <View style={styles.keyboardExtender}>
+          <Text style={styles.quickOption}>10$</Text>
+          <Text style={styles.quickOption}>20$</Text>
+          <Text style={styles.quickOption}>50$</Text>
+        </View>
+      </KeyboardExtender>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+  },
+  input: {
+    height: 40,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    padding: 10,
+    marginBottom: 20,
+    borderRadius: 4,
+  },
+  keyboardExtender: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+    backgroundColor: "#f5f5f5",
+    borderTopWidth: 1,
+    borderTopColor: "#ccc",
+    padding: 15,
+  },
+  quickOption: {
+    fontSize: 16,
+    fontWeight: "bold",
+    padding: 10,
+  },
+});
+```
+
+## Limitations
+
+- You can not put `TextInput` inside `KeyboardExtender`. Consider to use [KeyboardBackgroundView](../api/components/keyboard-sticky-view) + [KeyboardStickyView](../api/components/keyboard-sticky-view) instead.

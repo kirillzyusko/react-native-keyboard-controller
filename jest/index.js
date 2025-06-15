@@ -93,6 +93,7 @@ const mock = {
   KeyboardControllerView: "KeyboardControllerView",
   KeyboardGestureArea: "KeyboardGestureArea",
   OverKeyboardView: "OverKeyboardView",
+  KeyboardExtender: "KeyboardExtender",
   // providers
   KeyboardProvider: "KeyboardProvider",
   // components
