@@ -4,6 +4,7 @@ import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.uimanager.ThemedReactContext
 import com.reactnativekeyboardcontroller.views.background.KeyboardBackgroundViewGroup
 
+@Suppress("detekt:UnusedPrivateProperty")
 class KeyboardBackgroundViewManagerImpl(
   mReactContext: ReactApplicationContext,
 ) {

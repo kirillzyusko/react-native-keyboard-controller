@@ -6,7 +6,6 @@ import android.view.WindowInsets
 import com.facebook.react.uimanager.BackgroundStyleApplicator
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.views.view.ReactViewGroup
-import com.reactnativekeyboardcontroller.views.background.Skins.getInputMethodColor
 
 @SuppressLint("ViewConstructor")
 class KeyboardBackgroundViewGroup(
