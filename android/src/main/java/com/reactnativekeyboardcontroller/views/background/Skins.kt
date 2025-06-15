@@ -10,6 +10,8 @@ import com.reactnativekeyboardcontroller.R
 import com.reactnativekeyboardcontroller.extensions.currentImePackage
 import com.reactnativekeyboardcontroller.extensions.isSystemDarkMode
 
+private const val MAX_RGB_VALUE = 255
+
 object ImePackages {
   const val AOSP = "com.android.inputmethod.latin"
   const val GBOARD = "com.google.android.inputmethod.latin"
@@ -57,40 +59,32 @@ fun shiftRgbChannels(
   @ColorInt color: Int,
   shift: Int = 4,
 ): Int {
-  // Extract RGB channels and shift each by `shift`
-  val red = (Color.red(color) + shift).coerceIn(0, 255)
-  val green = (Color.green(color) + shift).coerceIn(0, 255)
-  val blue = (Color.blue(color) + shift).coerceIn(0, 255)
+  val red = (Color.red(color) + shift).coerceIn(0, MAX_RGB_VALUE)
+  val green = (Color.green(color) + shift).coerceIn(0, MAX_RGB_VALUE)
+  val blue = (Color.blue(color) + shift).coerceIn(0, MAX_RGB_VALUE)
 
-  // Preserve alpha and combine shifted channels
   return Color.argb(
-    Color.alpha(color), // Keep original alpha
+    Color.alpha(color),
     red,
     green,
     blue,
   )
 }
 
-// TODO: re-work as extension?
-object Skins {
-  @ColorInt
-  fun ThemedReactContext.getInputMethodColor(): Int {
-    val imePackage = currentImePackage()
-    val isDark = isSystemDarkMode()
+@ColorInt
+fun ThemedReactContext.getInputMethodColor(): Int {
+  val imePackage = currentImePackage()
+  val isDark = isSystemDarkMode()
+  
+  Log.i("Skins", "Current IME: $imePackage")
 
-    println("Current IME: $imePackage")
-    println(imePackage)
-    println("isDRK $isDark")
-    Log.i("Skins", "Current IME: $imePackage")
+  val (lightColorRes, darkColorRes) =
+    imeColorMap[imePackage]
+      ?: (R.style.gboard_light to R.style.gboard_dark)
 
-    val (lightColorRes, darkColorRes) =
-      imeColorMap[imePackage]
-        ?: (R.style.gboard_light to R.style.gboard_dark)
+  // on Android 10 dark theme doesn't affect keyboard color
+  val resId = if (isDark && Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) darkColorRes else lightColorRes
+  val color = getColorProperties(resId).blend
 
-    // on Android 10 dark theme doesn't affect keyboard color
-    val resId = if (isDark && Build.VERSION.SDK_INT > Build.VERSION_CODES.Q) darkColorRes else lightColorRes
-    val color = getColorProperties(resId).blend
-
-    return color
-  }
+  return color
 }

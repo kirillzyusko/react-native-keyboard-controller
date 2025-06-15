@@ -54,7 +54,5 @@ fun Context.currentImePackage(): String? {
       Settings.Secure.DEFAULT_INPUT_METHOD,
     ) ?: return null
 
-  println(id)
-
   return ComponentName.unflattenFromString(id)?.packageName
 }
