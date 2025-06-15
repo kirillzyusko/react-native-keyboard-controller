@@ -1,0 +1,17 @@
+<resources>
+  <style name="gboard_dark">
+    <item name="color">#292e32</item>
+  </style>
+  <style name="gboard_light">
+    <item name="color">#e8eaed</item>
+  </style>
+  <style name="gboard_tts_light">
+    <item name="color">#f8f9fa</item>
+  </style>
+  <style name="yandex_dark">
+    <item name="color">#121212</item>
+  </style>
+  <style name="yandex_light">
+    <item name="color">#eaeef2</item>
+  </style>
+</resources>

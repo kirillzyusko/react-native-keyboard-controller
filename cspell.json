@@ -157,7 +157,16 @@
     "appiconset",
     "taskdefs",
     "llms",
-    "signalwire"
+    "signalwire",
+    "UIKB",
+    "gboard",
+    "swiftkey",
+    "styleable",
+    "touchtype",
+    "googlequicksearchbox",
+    "androidkeyboard",
+    "honeyboard",
+    "unflatten"
   ],
   "ignorePaths": [
     "node_modules",

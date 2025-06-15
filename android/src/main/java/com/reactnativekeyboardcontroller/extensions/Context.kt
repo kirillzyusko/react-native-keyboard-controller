@@ -1,9 +1,11 @@
 package com.reactnativekeyboardcontroller.extensions
 
 import android.annotation.SuppressLint
+import android.content.ComponentName
 import android.content.Context
 import android.graphics.Point
 import android.os.Build
+import android.provider.Settings
 import android.view.Display
 import android.view.WindowManager
 import android.view.WindowMetrics
@@ -35,4 +37,22 @@ fun Context.getDisplaySize(): Point {
   }
 
   return size
+}
+
+fun Context.isSystemDarkMode(): Boolean =
+  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+    (getSystemService(Context.UI_MODE_SERVICE) as? android.app.UiModeManager)
+      ?.nightMode == android.app.UiModeManager.MODE_NIGHT_YES
+  } else {
+    false
+  }
+
+fun Context.currentImePackage(): String? {
+  val id =
+    Settings.Secure.getString(
+      contentResolver,
+      Settings.Secure.DEFAULT_INPUT_METHOD,
+    ) ?: return null
+
+  return ComponentName.unflattenFromString(id)?.packageName
 }

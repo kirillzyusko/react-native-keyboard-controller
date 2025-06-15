@@ -46,6 +46,8 @@ exports[`components rendering should render \`KeyboardAwareScrollView\` 1`] = `
 </RCTScrollView>
 `;
 
+exports[`components rendering should render \`KeyboardBackgroundView\` 1`] = `<KeyboardBackgroundView />`;
+
 exports[`components rendering should render \`KeyboardControllerView\` 1`] = `
 <KeyboardControllerView
   statusBarTranslucent={true}
