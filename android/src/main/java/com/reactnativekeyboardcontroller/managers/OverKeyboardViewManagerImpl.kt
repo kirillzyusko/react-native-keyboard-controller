@@ -1,13 +1,9 @@
 package com.reactnativekeyboardcontroller.managers
 
-import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.uimanager.ThemedReactContext
 import com.reactnativekeyboardcontroller.views.overlay.OverKeyboardHostView
 
-@Suppress("detekt:UnusedPrivateProperty")
-class OverKeyboardViewManagerImpl(
-  mReactContext: ReactApplicationContext,
-) {
+class OverKeyboardViewManagerImpl {
   fun createViewInstance(reactContext: ThemedReactContext): OverKeyboardHostView = OverKeyboardHostView(reactContext)
 
   fun setVisible(

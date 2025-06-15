@@ -1,6 +1,5 @@
 package com.reactnativekeyboardcontroller.managers
 
-import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.common.MapBuilder
 import com.facebook.react.uimanager.ThemedReactContext
 import com.reactnativekeyboardcontroller.events.FocusedInputLayoutChangedEvent
@@ -10,10 +9,7 @@ import com.reactnativekeyboardcontroller.events.KeyboardTransitionEvent
 import com.reactnativekeyboardcontroller.listeners.WindowDimensionListener
 import com.reactnativekeyboardcontroller.views.EdgeToEdgeReactViewGroup
 
-@Suppress("detekt:UnusedPrivateProperty")
-class KeyboardControllerViewManagerImpl(
-  mReactContext: ReactApplicationContext,
-) {
+class KeyboardControllerViewManagerImpl {
   private var listener: WindowDimensionListener? = null
 
   fun createViewInstance(reactContext: ThemedReactContext): EdgeToEdgeReactViewGroup {

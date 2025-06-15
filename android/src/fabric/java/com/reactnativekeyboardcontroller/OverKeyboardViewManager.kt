@@ -1,6 +1,5 @@
 package com.reactnativekeyboardcontroller
 
-import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.uimanager.LayoutShadowNode
 import com.facebook.react.uimanager.ReactStylesDiffMap
 import com.facebook.react.uimanager.StateWrapper
@@ -14,11 +13,10 @@ import com.reactnativekeyboardcontroller.managers.OverKeyboardViewManagerImpl
 import com.reactnativekeyboardcontroller.views.overlay.OverKeyboardHostShadowNode
 import com.reactnativekeyboardcontroller.views.overlay.OverKeyboardHostView
 
-class OverKeyboardViewManager(
-  mReactContext: ReactApplicationContext,
-) : ViewGroupManager<OverKeyboardHostView>(),
+class OverKeyboardViewManager :
+  ViewGroupManager<OverKeyboardHostView>(),
   OverKeyboardViewManagerInterface<OverKeyboardHostView> {
-  private val manager = OverKeyboardViewManagerImpl(mReactContext)
+  private val manager = OverKeyboardViewManagerImpl()
   private val mDelegate = OverKeyboardViewManagerDelegate(this)
 
   override fun getDelegate(): ViewManagerDelegate<OverKeyboardHostView> = mDelegate

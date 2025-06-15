@@ -1,6 +1,5 @@
 package com.reactnativekeyboardcontroller
 
-import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.annotations.ReactProp
 import com.facebook.react.views.view.ReactViewGroup
@@ -8,10 +7,8 @@ import com.facebook.react.views.view.ReactViewManager
 import com.reactnativekeyboardcontroller.managers.KeyboardControllerViewManagerImpl
 import com.reactnativekeyboardcontroller.views.EdgeToEdgeReactViewGroup
 
-class KeyboardControllerViewManager(
-  mReactContext: ReactApplicationContext,
-) : ReactViewManager() {
-  private val manager = KeyboardControllerViewManagerImpl(mReactContext)
+class KeyboardControllerViewManager : ReactViewManager() {
+  private val manager = KeyboardControllerViewManagerImpl()
 
   // region Lifecycle
   override fun createViewInstance(context: ThemedReactContext): ReactViewGroup = manager.createViewInstance(context)
