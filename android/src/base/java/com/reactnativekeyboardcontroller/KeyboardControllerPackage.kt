@@ -54,8 +54,8 @@ class KeyboardControllerPackage : BaseReactPackage() {
 
   override fun createViewManagers(reactContext: ReactApplicationContext): List<ViewManager<*, *>> =
     listOf(
-      KeyboardControllerViewManager(reactContext),
-      KeyboardGestureAreaViewManager(reactContext),
-      OverKeyboardViewManager(reactContext),
+      KeyboardControllerViewManager(),
+      KeyboardGestureAreaViewManager(),
+      OverKeyboardViewManager(),
     )
 }
