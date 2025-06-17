@@ -118,7 +118,7 @@ const config = {
           "Documentation for react-native-keyboard-controller. Package that allows to control each frame of keyboard movement in react native.",
         content: {
           includePages: true,
-          excludeRoutes: ["**/docs/1.*/**"],
+          excludeRoutes: ["**/docs/1.*/**", "**/docs/next/**"],
           enableMarkdownFiles: true,
           enableLlmsFullTxt: true,
         },
