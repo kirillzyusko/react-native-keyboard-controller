@@ -1884,10 +1884,10 @@
   resolved "https://registry.yarnpkg.com/@sideway/pinpoint/-/pinpoint-2.0.0.tgz#cff8ffadc372ad29fd3f78277aeb29e632cc70df"
   integrity sha512-RNiOoTPkptFtSVzQevY/yWtZwf/RxyVnPy/OcA9HBM3MlGDnBEYL5B41H0MTn0Uec8Hi+2qUtTfG2WWZBmMejQ==
 
-"@signalwire/docusaurus-plugin-llms-txt@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@signalwire/docusaurus-plugin-llms-txt/-/docusaurus-plugin-llms-txt-1.0.1.tgz#1f4d3f7aa5f5c5e4ac5de799067797322569cdd6"
-  integrity sha512-90wg9LM6/I1pSHud6iNVUd6r25MmeHaRWo9vpfkyvTAPbuHYArLJyCiYxkKWssKSaMbdz7HrGNe+fPDAhwk6jg==
+"@signalwire/docusaurus-plugin-llms-txt@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@signalwire/docusaurus-plugin-llms-txt/-/docusaurus-plugin-llms-txt-1.1.0.tgz#fb008911b28b7ee642fd3f556f3636fac32acf14"
+  integrity sha512-3smrvEDT343aBcOOlw39MF4/XANFrZPzBUVSuo0URgZvaguwBVrc3+Ih0Ogl2SCOo4XGzuSwRRn3Mk1IxYAIwQ==
   dependencies:
     fs-extra "^11.0.0"
     hast-util-select "^6.0.4"
