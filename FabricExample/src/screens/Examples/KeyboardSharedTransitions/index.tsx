@@ -64,7 +64,7 @@ const KeyboardSharedTransitionExample = () => {
         >
           <ReanimatedTextInput
             placeholder="127.0.0.1"
-            placeholderTextColor="#ecececec"
+            placeholderTextColor="#ececec"
             style={[
               {
                 width: "100%",
