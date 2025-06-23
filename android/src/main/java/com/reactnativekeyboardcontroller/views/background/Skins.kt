@@ -9,7 +9,9 @@ import com.facebook.react.uimanager.ThemedReactContext
 import com.reactnativekeyboardcontroller.R
 import com.reactnativekeyboardcontroller.extensions.currentImePackage
 import com.reactnativekeyboardcontroller.extensions.isSystemDarkMode
+import com.reactnativekeyboardcontroller.log.Logger
 
+private const val TAG = "Skins"
 private const val MAX_RGB_VALUE = 255
 
 object ImePackages {
@@ -76,7 +78,7 @@ fun ThemedReactContext.getInputMethodColor(): Int {
   val imePackage = currentImePackage()
   val isDark = isSystemDarkMode()
 
-  Log.i("Skins", "Current IME: $imePackage")
+  Logger.i(TAG, "Current IME: $imePackage")
 
   val (lightColorRes, darkColorRes) =
     imeColorMap[imePackage]
