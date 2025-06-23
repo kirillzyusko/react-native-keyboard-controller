@@ -58,19 +58,6 @@ export default function KeyboardExtendExample() {
             testID="donation_amount"
           />
 
-          <KeyboardExtender enabled={showExtend}>
-            <Reanimated.View style={[styles.keyboardExtend, animatedStyle]}>
-              <TouchableOpacity onPress={() => Alert.alert("10$")}>
-                <Text style={styles.priceText}>10$</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => Alert.alert("20$")}>
-                <Text style={styles.priceText}>20$</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => Alert.alert("50$")}>
-                <Text style={styles.priceText}>50$</Text>
-              </TouchableOpacity>
-            </Reanimated.View>
-          </KeyboardExtender>
           <OverKeyboardView visible={isOKVMode}>
             <View style={{ flex: 1, justifyContent: "flex-end" }}>
               {/* TODO replace hardcoded value */}
@@ -82,6 +69,19 @@ export default function KeyboardExtendExample() {
           </OverKeyboardView>
         </SafeAreaView>
       </TouchableWithoutFeedback>
+      <KeyboardExtender enabled={showExtend}>
+        <Reanimated.View style={[styles.keyboardExtend, animatedStyle]}>
+          <TouchableOpacity onPress={() => Alert.alert("10$")}>
+            <Text style={styles.priceText}>10$</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => Alert.alert("20$")}>
+            <Text style={styles.priceText}>20$</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => Alert.alert("50$")}>
+            <Text style={styles.priceText}>50$</Text>
+          </TouchableOpacity>
+        </Reanimated.View>
+      </KeyboardExtender>
     </>
   );
 }
