@@ -3,7 +3,6 @@ package com.reactnativekeyboardcontroller.views.background
 import android.content.Context
 import android.graphics.Color
 import android.os.Build
-import android.util.Log
 import androidx.annotation.ColorInt
 import com.facebook.react.uimanager.ThemedReactContext
 import com.reactnativekeyboardcontroller.R
