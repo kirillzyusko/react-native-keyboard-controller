@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Alert,
-  Button,
   Image,
   Keyboard,
   StyleSheet,
@@ -9,13 +8,8 @@ import {
   TextInput,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  View,
 } from "react-native";
-import {
-  KeyboardExtender,
-  OverKeyboardView,
-  useKeyboardState,
-} from "react-native-keyboard-controller";
+import { KeyboardExtender } from "react-native-keyboard-controller";
 import Reanimated, {
   useAnimatedStyle,
   useSharedValue,
@@ -26,14 +20,14 @@ import { SafeAreaView } from "react-native-safe-area-context";
 // TODO: remove _touchHandler when view gets detached from keyboard?
 // TODO: test how GestureHandler works there
 // TODO: don't overwrite existing inputAccessoryView?
-// TODO: Android implementation
 
 export default function KeyboardExtendExample() {
   const [showExtend, setShowExtend] = useState(true);
-  const [isOKVMode, setOKVMode] = useState(false);
   const opacity = useSharedValue(1);
-  // TODO: replace with animated value
-  const { height } = useKeyboardState();
+
+  useEffect(() => {
+    opacity.set(withTiming(showExtend ? 1 : 0));
+  }, [showExtend]);
 
   const animatedStyle = useAnimatedStyle(
     () => ({
@@ -44,10 +38,7 @@ export default function KeyboardExtendExample() {
 
   return (
     <>
-      <Image
-        source={require("./background.jpg")}
-        style={{ ...StyleSheet.absoluteFillObject, flex: 1, width: "100%" }}
-      />
+      <Image source={require("./background.jpg")} style={styles.background} />
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <SafeAreaView edges={["top"]} style={styles.container}>
           <TextInput
@@ -56,28 +47,36 @@ export default function KeyboardExtendExample() {
             placeholderTextColor="#5c5c5c"
             style={styles.input}
             testID="donation_amount"
+            onFocus={() => setShowExtend(true)}
           />
-
-          <OverKeyboardView visible={isOKVMode}>
-            <View style={{ flex: 1, justifyContent: "flex-end" }}>
-              {/* TODO replace hardcoded value */}
-              <TextInput
-                placeholder="Search..."
-                style={[styles.input, { marginBottom: height - 61.73 }]}
-              />
-            </View>
-          </OverKeyboardView>
+          <TextInput
+            keyboardType="numeric"
+            placeholder="Postal code"
+            placeholderTextColor="#5c5c5c"
+            style={styles.input}
+            testID="postal_code"
+            onFocus={() => setShowExtend(false)}
+          />
         </SafeAreaView>
       </TouchableWithoutFeedback>
       <KeyboardExtender enabled={showExtend}>
         <Reanimated.View style={[styles.keyboardExtend, animatedStyle]}>
-          <TouchableOpacity onPress={() => Alert.alert("10$")}>
+          <TouchableOpacity
+            testID="donation_10"
+            onPress={() => Alert.alert("10 dollars")}
+          >
             <Text style={styles.priceText}>10$</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => Alert.alert("20$")}>
+          <TouchableOpacity
+            testID="donation_20"
+            onPress={() => Alert.alert("20 dollars")}
+          >
             <Text style={styles.priceText}>20$</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => Alert.alert("50$")}>
+          <TouchableOpacity
+            testID="donation_50"
+            onPress={() => Alert.alert("50 dollars")}
+          >
             <Text style={styles.priceText}>50$</Text>
           </TouchableOpacity>
         </Reanimated.View>
@@ -87,6 +86,11 @@ export default function KeyboardExtendExample() {
 }
 
 const styles = StyleSheet.create({
+  background: {
+    ...StyleSheet.absoluteFillObject,
+    flex: 1,
+    width: "100%",
+  },
   container: {
     flex: 1,
     paddingHorizontal: 20,
@@ -107,23 +111,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   priceText: {
-    color: "white",
+    color: "black",
     fontSize: 18,
-    fontWeight: "bold",
+    fontWeight: "600",
     padding: 20,
-  },
-  overKeyboardView: {
-    width: "100%",
-    padding: 10,
-    backgroundColor: "rgba(255, 255, 255, 0.9)",
-    alignItems: "center",
-  },
-  hiddenInput: {
-    height: 0,
-    width: 0,
-  },
-  helpText: {
-    fontSize: 14,
-    color: "#666",
   },
 });
