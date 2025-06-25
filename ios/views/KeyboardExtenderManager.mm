@@ -233,7 +233,7 @@ RCT_EXPORT_VIEW_PROPERTY(enabled, BOOL)
   const auto &newViewProps = *std::static_pointer_cast<const KeyboardExtenderProps>(props);
 
   if (newViewProps.enabled != oldViewProps.enabled) {
-    // TODO: implement
+    [self updateEnabledState:newViewProps.enabled];
   }
 
   [super updateProps:props oldProps:oldProps];
