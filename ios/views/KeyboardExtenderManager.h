@@ -2,8 +2,8 @@
 //  KeyboardExtenderManager.h
 //  KeyboardController
 //
-//  Created by Kiryl Ziusko on 17.09.24.
-//  Copyright © 2024 Facebook. All rights reserved.
+//  Created by Kiryl Ziusko on 13.04.25.
+//  Copyright © 2025 Facebook. All rights reserved.
 //
 #ifdef RCT_NEW_ARCH_ENABLED
 #import <React/RCTViewComponentView.h>

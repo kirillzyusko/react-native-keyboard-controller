@@ -2,7 +2,7 @@
 //  KeyboardExtenderManager.mm
 //  react-native-keyboard-controller
 //
-//  Created by Kiryl Ziusko on 11/09/2024.
+//  Created by Kiryl Ziusko on 13/04/2025.
 //
 
 #import "KeyboardExtenderManager.h"

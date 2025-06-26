@@ -17,10 +17,6 @@ import Reanimated, {
 } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-// TODO: remove _touchHandler when view gets detached from keyboard?
-// TODO: test how GestureHandler works there
-// TODO: don't overwrite existing inputAccessoryView?
-
 export default function KeyboardExtendExample() {
   const [showExtend, setShowExtend] = useState(true);
   const opacity = useSharedValue(1);

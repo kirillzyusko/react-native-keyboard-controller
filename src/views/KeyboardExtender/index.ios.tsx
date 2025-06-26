@@ -7,8 +7,6 @@ import { useWindowDimensions } from "../../hooks";
 import type { KeyboardExtenderProps } from "../../types";
 import type { PropsWithChildren } from "react";
 
-// TODO: e2e tests with dark UI? force keyboardAppearance or change system UI?
-
 /**
  * A component that embeds its children into the keyboard thus enhancing keyboard functionality.
  *
