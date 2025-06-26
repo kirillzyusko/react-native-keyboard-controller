@@ -1,4 +1,8 @@
 {
   "label": "🎣 Hooks",
-  "position": 1
+  "position": 1,
+  "link": {
+    "type": "generated-index",
+    "description": "react hooks exposed by this library"
+  }
 }

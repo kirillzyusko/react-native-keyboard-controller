@@ -37,9 +37,9 @@ import KeyboardAwareScrollView from "@site/src/components/HomepageFeatures/text-
 
 import KeyboardStickyView from "../api/components/keyboard-sticky-view/ksv.lottie.json";
 import KeyboardToolbar from "../api/components/keyboard-toolbar/toolbar.lottie.json";
-import OverKeyboardView from "../api/over-keyboard-view/over-keyboard-view.lottie.json";
-import KeyboardBackgroundView from "../api/keyboard-background-view/keyboard-background-view.lottie.json";
-import KeyboardExtender from "../api/keyboard-extender/keyboard-extender.lottie.json";
+import OverKeyboardView from "../api/views/over-keyboard-view/over-keyboard-view.lottie.json";
+import KeyboardBackgroundView from "../api/views/keyboard-background-view/keyboard-background-view.lottie.json";
+import KeyboardExtender from "../api/views/keyboard-extender/keyboard-extender.lottie.json";
 
 <div style={{ display: "flex", justifyContent: "center", marginBottom: 20 }}>
   <Lottie
@@ -126,7 +126,7 @@ A major benefit is its use of the library's native focus control logic (`Keyboar
 
 Its key difference from a standard `Modal` is precisely this ability to keep the keyboard open and active, enabling more seamless keyboard-centric interactions. Its usage is straightforward, primarily controlled via the `visible` boolean prop.
 
-## [`KeyboardExtender`](../api/keyboard-extender)
+## [`KeyboardExtender`](../api/views/keyboard-extender)
 
 <div style={{ display: "flex", justifyContent: "center", marginBottom: 20 }}>
   <Lottie
@@ -143,7 +143,7 @@ It's perfect for adding quick action buttons or other custom input helpers direc
 
 Use the `enabled` prop to toggle its activation based on `TextInput` focus, and note that it **cannot contain other `TextInput`s** inside.
 
-## [`KeyboardBackgroundView`](../api/keyboard-background-view)
+## [`KeyboardBackgroundView`](../api/views/keyboard-background-view)
 
 <div style={{ display: "flex", justifyContent: "center", marginBottom: 20 }}>
   <Lottie

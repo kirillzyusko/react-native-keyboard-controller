@@ -1,5 +1,5 @@
 ---
-sidebar_position: 3
+sidebar_position: 5
 keywords: [react-native-keyboard-controller, KeyboardControllerView, view]
 ---
 

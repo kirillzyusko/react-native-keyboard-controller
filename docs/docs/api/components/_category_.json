@@ -1,4 +1,8 @@
 {
   "label": "📚 Components",
-  "position": 2
+  "position": 2,
+  "link": {
+    "type": "generated-index",
+    "description": "JS components that provides high-level abstraction for handling keyboard and interactions with it"
+  }
 }

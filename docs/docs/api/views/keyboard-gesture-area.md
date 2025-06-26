@@ -1,6 +1,7 @@
 ---
 sidebar_position: 4
 title: KeyboardGestureArea
+description: View for keyboard dismissal gestures
 keywords:
   [
     react-native-keyboard-controller,
