@@ -6,6 +6,7 @@ import {
   KeyboardAwareScrollView,
   KeyboardBackgroundView,
   KeyboardControllerView,
+  KeyboardExtender,
   KeyboardProvider,
   KeyboardStickyView,
   KeyboardToolbar,
@@ -79,6 +80,10 @@ function KeyboardBackgroundViewTest() {
   return <KeyboardBackgroundView />;
 }
 
+function KeyboardExtenderTest() {
+  return <KeyboardExtender enabled={true}>{<EmptyView />}</KeyboardExtender>;
+}
+
 describe("components rendering", () => {
   it("should render `KeyboardControllerView`", () => {
     expect(render(<KeyboardControllerViewTest />)).toMatchSnapshot();
@@ -110,5 +115,9 @@ describe("components rendering", () => {
 
   it("should render `KeyboardBackgroundView`", () => {
     expect(render(<KeyboardBackgroundViewTest />)).toMatchSnapshot();
+  });
+
+  it("should render `KeyboardExtenderTest`", () => {
+    expect(render(<KeyboardExtenderTest />)).toMatchSnapshot();
   });
 });

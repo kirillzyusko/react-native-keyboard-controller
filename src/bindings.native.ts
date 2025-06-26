@@ -6,6 +6,7 @@ import type {
   KeyboardControllerNativeModule,
   KeyboardControllerProps,
   KeyboardEventsModule,
+  KeyboardExtenderProps,
   KeyboardGestureAreaProps,
   OverKeyboardViewProps,
   WindowDimensionsEventsModule,
@@ -63,3 +64,7 @@ export const RCTOverKeyboardView: React.FC<OverKeyboardViewProps> =
   require("./specs/OverKeyboardViewNativeComponent").default;
 export const KeyboardBackgroundView: React.FC<KeyboardBackgroundViewProps> =
   require("./specs/KeyboardBackgroundViewNativeComponent").default;
+export const RCTKeyboardExtender: React.FC<KeyboardExtenderProps> =
+  Platform.OS === "ios"
+    ? require("./specs/KeyboardExtenderNativeComponent").default
+    : ({ children }: KeyboardExtenderProps) => children;

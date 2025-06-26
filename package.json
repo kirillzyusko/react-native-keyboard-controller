@@ -66,6 +66,7 @@
     "keyboard done button",
     "keyboard next button",
     "keyboard previous button",
+    "extend keyboard",
     "ios",
     "android"
   ],
@@ -182,7 +183,8 @@
         "KeyboardControllerView": "KeyboardControllerView",
         "KeyboardGestureArea": "KeyboardGestureArea",
         "OverKeyboardView": "OverKeyboardView",
-        "KeyboardBackgroundView": "KeyboardBackgroundView"
+        "KeyboardBackgroundView": "KeyboardBackgroundView",
+        "KeyboardExtender": "KeyboardExtender"
       }
     }
   }

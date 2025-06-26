@@ -147,4 +147,10 @@ export const examples: Example[] = [
     info: ScreenNames.KEYBOARD_SHARED_TRANSITIONS,
     icons: "🔄",
   },
+  {
+    title: "Keyboard Extender",
+    testID: "keyboard_extender",
+    info: ScreenNames.KEYBOARD_EXTENDER,
+    icons: "🧩",
+  },
 ];

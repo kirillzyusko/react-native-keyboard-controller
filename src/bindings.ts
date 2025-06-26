@@ -6,6 +6,7 @@ import type {
   KeyboardControllerNativeModule,
   KeyboardControllerProps,
   KeyboardEventsModule,
+  KeyboardExtenderProps,
   KeyboardGestureAreaProps,
   OverKeyboardViewProps,
   WindowDimensionsEventsModule,
@@ -67,3 +68,11 @@ export const RCTOverKeyboardView =
  */
 export const KeyboardBackgroundView =
   View as unknown as React.FC<KeyboardBackgroundViewProps>;
+/**
+ * A container that will embed its children into the keyboard
+ * and will always show them above the keyboard.
+ *
+ * @see {@link https://kirillzyusko.github.io/react-native-keyboard-controller/docs/api/keyboard-extender|Documentation} page for more details.
+ */
+export const RCTKeyboardExtender =
+  View as unknown as React.FC<KeyboardExtenderProps>;

@@ -54,6 +54,22 @@ exports[`components rendering should render \`KeyboardControllerView\` 1`] = `
 />
 `;
 
+exports[`components rendering should render \`KeyboardExtenderTest\` 1`] = `
+<KeyboardExtender
+  enabled={true}
+>
+  <View
+    style={
+      {
+        "backgroundColor": "black",
+        "height": 20,
+        "width": 20,
+      }
+    }
+  />
+</KeyboardExtender>
+`;
+
 exports[`components rendering should render \`KeyboardProvider\` 1`] = `
 <KeyboardProvider
   statusBarTranslucent={true}
