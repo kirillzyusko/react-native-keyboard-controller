@@ -11,6 +11,18 @@ keywords:
   ]
 ---
 
+import Lottie from "lottie-react";
+import lottie from "@site/src/components/HomepageFeatures/interactive.lottie.json";
+
+<div style={{ display: "flex", justifyContent: "center", marginBottom: 20 }}>
+  <Lottie
+    className="lottie"
+    animationData={lottie}
+    style={{ width: 400, height: 400 }}
+    loop
+  />
+</div>
+
 `KeyboardGestureArea` allows you to define a region on the screen, where gestures will control the keyboard position.
 
 :::info Platform availability
