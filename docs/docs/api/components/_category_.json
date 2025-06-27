@@ -3,6 +3,6 @@
   "position": 2,
   "link": {
     "type": "generated-index",
-    "description": "JS components that provides high-level abstraction for handling keyboard and interactions with it"
+    "description": "A set of JS components that simplify keyboard management and user interaction handling"
   }
 }
