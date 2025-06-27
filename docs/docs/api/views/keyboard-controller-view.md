@@ -5,7 +5,7 @@ keywords: [react-native-keyboard-controller, KeyboardControllerView, view]
 
 # KeyboardControllerView
 
-A plain react-native `View` with some additional methods and props. Used internally in [KeyboardProvider](./keyboard-provider.md)
+A plain react-native `View` with some additional methods and props. Used internally in [KeyboardProvider](../keyboard-provider.md)
 
 ## Props
 
