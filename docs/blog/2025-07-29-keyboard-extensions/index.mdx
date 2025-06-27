@@ -1,6 +1,6 @@
 ---
 slug: keyboard-extensions
-title: Keyboard extensions or new way to interact with keyboard 🌀
+title: Keyboard extensions or new way to interact with keyboard 💡
 authors: [kirill]
 tags: [react-native, keyboard, KeyboardExtender, KeyboardBackgroundView]
 keywords:
@@ -19,23 +19,46 @@ The `react-native-keyboard-controller` was good at:
 
 - keyboard avoidance;
 - building additional helpers for keyboard interactions (i. e. `KeyboardToolbar`);
-- and showing the content over the keyboard through `OverKeyboardView`.
+- and showing the content over the keyboard via `OverKeyboardView`.
 
 But this release expanding new horizons and explores new ways how you as a developer can interact with the keyboard. So... 🥁
 
 This release is bringing a new component to the table — `KeyboardExtender`.
 
-> Thanks to [Amur](./) for his idea to add that component.
+import Lottie from "lottie-react";
+import KeyboardExtender from "../../docs/api/views/keyboard-extender/keyboard-extender.lottie.json";
+
+<div style={{ display: "flex", justifyContent: "center", marginBottom: 20 }}>
+  <Lottie
+    className="lottie"
+    animationData={KeyboardExtender}
+    style={{ width: 400, height: 400 }}
+    loop
+  />
+</div>
+
+Using this component you not only can avoid the keyboard, but you can design experiences that works with it. If you are building money transfer app, you can use it to show the pre-defined set amount of money **inside** the keyboard.
+
+> Thanks to [Amur](https://github.com/Amurmurmur) for his idea to add that component.
 
 ## New `KeyboardBackgroundView` component 🎨
 
-While `KeyboardExtender` is a great addition to the existing functionality and will be used by many react-native developers, but sometimes we want to build our own accessories, that are sticky to the keyboard and at the same time are floating near the keyboard and feels like keyboard elements. This is where `KeyboardBackgroundView` comes to the rescue.
+While `KeyboardExtender` is a great addition to the existing functionality and will be used by many react-native developers — sometimes we want to build our own accessories, that are sticky to the keyboard and at the same time are floating near the keyboard and feels like keyboard elements. This is where `KeyboardBackgroundView` comes to the rescue.
 
-> TODO: add lottie
+import KeyboardBackgroundView from "../../docs/api/views/keyboard-background-view/keyboard-background-view.lottie.json";
 
-This low-level primitive has only one purpose - to match keyboard background design so that you can attach it anywhere you want and your app users will think that it's a keyboard extensions and will interact with that.
+<div style={{ display: "flex", justifyContent: "center", marginBottom: 20 }}>
+  <Lottie
+    className="lottie"
+    animationData={KeyboardBackgroundView}
+    style={{ width: 400, height: 400 }}
+    loop
+  />
+</div>
 
-In a wild nature there is many apps that are actively using that approach: Photos, Safari and Others
+This low-level primitive has only one purpose - to match keyboard background design so that you can attach it anywhere you want and your app users will think that it's a **keyboard extensions** and will interact with that.
+
+In a wild nature there is many apps that are actively using that approach: Photos, Safari and others
 
 import ComparisonTable from "@site/src/components/ComparisonTable";
 import Video from "@site/src/components/Video";
@@ -43,21 +66,17 @@ import Video from "@site/src/components/Video";
 <ComparisonTable
   left={<Video src="/video/safari.mp4" width={51} />}
   right={<Video src="/video/photos-app.mp4" width={50} />}
-  leftText={
-    <i>
-      The keyboard movement starts only when you cross the top border of the
-      keyboard
-    </i>
-  }
-  rightText={
-    <i>
-      The keyboard movement starts only when you cross the top border of your{" "}
-      <code>TextInput</code>
-    </i>
-  }
+  leftText={<i>iOS Safari app.</i>}
+  rightText={<i>iOS Photos app.</i>}
 />
 
-> Thanks to [Seb Vidal](https://github.com/sebjvidal) for his exploration of the keyboard background view idea.
+Take your imagination to design new experiences for advanced use cases (...)
+
+> Thanks to [Seb Vidal](https://github.com/sebjvidal) for his exploration of the keyboard background view idea. ❤️
+
+<hr></hr>
+
+With just a bit of creativity, components like `KeyboardExtender` or `KeyboardBackgroundView` with `KeyboardStickyView` let you go far beyond simple avoidance. Now you have tools to _extend_, _blend_, and _enhance_ the keyboard area by building _rich_, _interactive_ UI elements that actually **extend** the keyboard’s functionality. So instead of just _avoiding_ the keyboard... you’re designing experiences that **work** with it — or even feel like **they’re part** of it!
 
 ## `KeyboardAwareScrollView` work with full window `TextInputs`
 
