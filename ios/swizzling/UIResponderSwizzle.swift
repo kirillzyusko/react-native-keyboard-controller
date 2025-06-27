@@ -72,6 +72,9 @@ extension UIResponder {
 
       // Postpone execution of the original resignFirstResponder
       DispatchQueue.main.asyncAfter(deadline: .now() + UIUtils.nextFrame) {
+        NotificationCenter.default.post(
+          name: .shouldIgnoreKeyboardEvents, object: nil, userInfo: ["ignore": false]
+        )
         (self as? TextInput)?.inputAccessoryView = nil
         KeyboardAreaExtender.shared.remove()
         _ = self.callOriginalResignFirstResponder(originalResignSelector)
