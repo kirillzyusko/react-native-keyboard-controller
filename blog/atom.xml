@@ -2,11 +2,28 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://kirillzyusko.github.io/react-native-keyboard-controller/blog</id>
     <title>Keyboard Controller Blog</title>
-    <updated>2025-04-09T00:00:00.000Z</updated>
+    <updated>2025-06-28T00:00:00.000Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog"/>
     <subtitle>Keyboard Controller Blog</subtitle>
     <icon>https://kirillzyusko.github.io/react-native-keyboard-controller/favicon.ico</icon>
+    <entry>
+        <title type="html"><![CDATA[Keyboard Management Evolution in React Native 🚀🪐💫]]></title>
+        <id>https://kirillzyusko.github.io/react-native-keyboard-controller/blog/keyboard-management-evolution</id>
+        <link href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/keyboard-management-evolution"/>
+        <updated>2025-06-28T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[Ever wondered why keyboard behavior in React Native used to feel so unpredictable?]]></summary>
+        <content type="html"><![CDATA[<p><strong>Ever wondered why keyboard behavior in React Native used to feel so unpredictable?</strong></p>
+<p>In my talk <strong>Keyboard Management Evolution in React Native</strong> at <a href="https://appjs.co/" target="_blank" rel="noopener noreferrer">AppJS conf</a>, I invite you on a cosmic adventure — from the chaotic black holes of early keyboard handling to the sleek, stable solutions of the present day with teasing some of upcoming features.</p>
+<p>Hop aboard the ship and join me for the ride!</p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/W_Y0Y18aFV8" title="Keyboard Management Evolution in React Native" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe>]]></content>
+        <author>
+            <name>Kirill Zyusko</name>
+            <uri>https://github.com/kirillzyusko</uri>
+        </author>
+        <category label="react-native" term="react-native"/>
+        <category label="keyboard" term="keyboard"/>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Meet new 1.17 release with useKeyboardState hook 👋]]></title>
         <id>https://kirillzyusko.github.io/react-native-keyboard-controller/blog/use-keyboard-state</id>
