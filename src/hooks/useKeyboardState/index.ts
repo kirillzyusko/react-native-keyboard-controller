@@ -14,12 +14,15 @@ const getLatestState = () => ({
 
 type KeyboardStateSelector<T> = (state: KeyboardState) => T;
 
+const defaultSelector: KeyboardStateSelector<KeyboardState> = (state) => state;
+
 /**
  * React Hook that represents the current keyboard state on iOS and Android.
  * It tracks keyboard visibility, height, appearance, type and other properties.
  * This hook subscribes to keyboard events and updates the state reactively.
  *
- * @param selector - a function that receives the current keyboard state and picks only necessary properties to avoid frequent re-renders.
+ * @template T - A type of the returned object from the `selector`.
+ * @param selector - A function that receives the current keyboard state and picks only necessary properties to avoid frequent re-renders.
  * @returns Object {@link KeyboardState|containing} keyboard state information.
  * @see {@link https://kirillzyusko.github.io/react-native-keyboard-controller/docs/api/hooks/keyboard/use-keyboard-state|Documentation} page for more details.
  * @example
@@ -35,8 +38,8 @@ type KeyboardStateSelector<T> = (state: KeyboardState) => T;
  * }
  * ```
  */
-function useKeyboardState<T>(
-  selector: KeyboardStateSelector<T> = (state) => state as T,
+function useKeyboardState<T = KeyboardState>(
+  selector: KeyboardStateSelector<T> = defaultSelector as KeyboardStateSelector<T>,
 ): T {
   const [state, setState] = useState<T>(() => selector(getLatestState()));
 
