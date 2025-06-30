@@ -1,9 +1,10 @@
 import React, { useEffect } from "react";
-import { Image, StyleSheet, TextInput } from "react-native";
+import { Image, StyleSheet, TextInput, useColorScheme } from "react-native";
 import {
   KeyboardBackgroundView,
   KeyboardEvents,
   KeyboardStickyView,
+  useKeyboardState,
 } from "react-native-keyboard-controller";
 import Reanimated, {
   interpolate,
@@ -16,13 +17,19 @@ import {
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
 
+import DarkIcon from "./ai-dark.png";
+import LightIcon from "./ai.png";
+
 const ReanimatedBackgroundView = Reanimated.createAnimatedComponent(
   KeyboardBackgroundView,
 );
 
 const LiquidKeyboardExample = () => {
+  const scheme = useColorScheme();
+  const appearance = useKeyboardState((state) => state.appearance);
   const progress = useSharedValue(0);
   const { bottom } = useSafeAreaInsets();
+  const color = appearance === "default" ? scheme : appearance;
 
   useEffect(() => {
     progress.set(0);
@@ -98,7 +105,7 @@ const LiquidKeyboardExample = () => {
           ]}
         >
           <Image
-            source={require("./ai.png")}
+            source={color === "dark" ? LightIcon : DarkIcon}
             style={{ transform: [{ rotate: "-45deg" }], width: 20, height: 20 }}
           />
         </ReanimatedBackgroundView>
