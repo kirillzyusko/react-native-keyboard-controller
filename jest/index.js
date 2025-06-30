@@ -51,7 +51,9 @@ const mock = {
   useGenericKeyboardHandler: jest.fn(),
   useKeyboardHandler: jest.fn(),
   useKeyboardContext: jest.fn().mockReturnValue(values),
-  useKeyboardState: jest.fn().mockReturnValue(state),
+  useKeyboardState: jest
+    .fn()
+    .mockImplementation((selector) => (selector ? selector(state) : state)),
   /// input
   useReanimatedFocusedInput: jest.fn().mockReturnValue(focusedInput),
   useFocusedInputHandler: jest.fn(),
