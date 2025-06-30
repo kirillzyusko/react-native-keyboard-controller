@@ -67,6 +67,16 @@ const { isVisible } = useKeyboardState();
 Also make sure that if you need to change style based on keyboard presence then you are using corresponding [animated](./use-keyboard-animation) hooks to offload animation to a native thread and free up resources for JS thread.
 :::
 
+## Selectors
+
+`useKeyboardState` allows you to pass a **selector** function to pick only the necessary part of the keyboard state data. This is a powerful technique to prevent unnecessary re-renders of your component when only a specific property of the keyboard state changes.
+
+```ts
+const appearance = useKeyboardState((state) => state.appearance);
+```
+
+In this example, your component will only re-render when the `appearance` property of the `KeyboardState` changes, rather than for any change in the entire state object.
+
 ## Data structure
 
 The `KeyboardState` is represented by following structure:
