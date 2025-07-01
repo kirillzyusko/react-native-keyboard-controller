@@ -23,7 +23,7 @@ The `react-native-keyboard-controller` was good at:
 
 But this release expanding new horizons and explores new ways how you as a developer can interact with the keyboard. So... 🥁
 
-This release is bringing a new component to the table — `KeyboardExtender`.
+This release brings a new component to the table — `KeyboardExtender`.
 
 import Lottie from "lottie-react";
 import KeyboardExtender from "../../docs/api/views/keyboard-extender/keyboard-extender.lottie.json";
@@ -70,13 +70,19 @@ import Video from "@site/src/components/Video";
   rightText={<i>iOS Photos app.</i>}
 />
 
-Take your imagination to design new experiences for advanced use cases (...)
+With just a bit of creativity, components like `KeyboardExtender` or `KeyboardBackgroundView` with `KeyboardStickyView` let you go far beyond simple avoidance. Now you have tools to _extend_, _blend_, and _enhance_ the keyboard area by building _rich_, _interactive_ UI elements that actually **extend** the keyboard’s functionality. So instead of just _avoiding_ the keyboard... you’re designing experiences that **work** with it — or even feel like **they’re part** of it!
 
 > Thanks to [Seb Vidal](https://github.com/sebjvidal) for his exploration of the keyboard background view idea. ❤️
 
-<hr></hr>
+## `useKeyboardState` with selectors
 
-With just a bit of creativity, components like `KeyboardExtender` or `KeyboardBackgroundView` with `KeyboardStickyView` let you go far beyond simple avoidance. Now you have tools to _extend_, _blend_, and _enhance_ the keyboard area by building _rich_, _interactive_ UI elements that actually **extend** the keyboard’s functionality. So instead of just _avoiding_ the keyboard... you’re designing experiences that **work** with it — or even feel like **they’re part** of it!
+Starting from `1.18.0` the `useKeyboardState` accepts a new argument `selector` which allows you to select a subset of the keyboard state. This is useful when you want to get a specific value from the state, for example, the `height` or `appearance` of the keyboard:
+
+```ts
+const appearance = useKeyboardState((state) => state.appearance);
+```
+
+Using `selectors` you can reduce amount of frequent re-renders and optimize your app performance.
 
 ## `KeyboardAwareScrollView` work with full window `TextInputs`
 
