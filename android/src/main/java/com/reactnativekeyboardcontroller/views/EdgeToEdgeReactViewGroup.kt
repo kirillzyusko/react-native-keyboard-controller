@@ -31,8 +31,8 @@ class EdgeToEdgeReactViewGroup(
   private var isStatusBarTranslucent = false
   private var isNavigationBarTranslucent = false
   private var isPreservingEdgeToEdge = false
-  private var active = false
   private var isEdgeToEdge = false
+  var active = false
 
   // internal class members
   private var eventView: ReactViewGroup? = null

@@ -11,7 +11,6 @@ import { KeyboardControllerView } from "./bindings";
 import { KeyboardContext } from "./context";
 import { focusedInputEventsMap, keyboardEventsMap } from "./event-mappings";
 import { useAnimatedValue, useEventHandlerRegistration } from "./internal";
-import { applyMonkeyPatch, revertMonkeyPatch } from "./monkey-patch";
 import {
   useAnimatedKeyboardHandler,
   useFocusedInputLayoutHandler,
@@ -215,15 +214,6 @@ export const KeyboardProvider = (props: KeyboardProviderProps) => {
     },
     [],
   );
-
-  // layout effects
-  useLayoutEffect(() => {
-    if (enabled) {
-      applyMonkeyPatch();
-    } else {
-      revertMonkeyPatch();
-    }
-  }, [enabled]);
 
   if (__DEV__) {
     controlEdgeToEdgeValues({

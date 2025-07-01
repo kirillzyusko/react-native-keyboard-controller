@@ -9,6 +9,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.UiThreadUtil
+import com.facebook.react.modules.statusbar.StatusBarModule
 import com.reactnativekeyboardcontroller.extensions.rootView
 import com.reactnativekeyboardcontroller.log.Logger
 import com.reactnativekeyboardcontroller.views.EdgeToEdgeReactViewGroup
@@ -19,10 +20,15 @@ private val TAG = StatusBarManagerCompatModuleImpl::class.qualifiedName
 class StatusBarManagerCompatModuleImpl(
   private val mReactContext: ReactApplicationContext,
 ) {
+  private var original = StatusBarModule(mReactContext)
   private var controller: WindowInsetsControllerCompat? = null
   private var lastActivity = WeakReference<Activity?>(null)
 
   fun setHidden(hidden: Boolean) {
+    if (!isEnabled()) {
+      return original.setHidden(hidden)
+    }
+
     UiThreadUtil.runOnUiThread {
       if (hidden) {
         getController()?.hide(WindowInsetsCompat.Type.statusBars())
@@ -37,6 +43,10 @@ class StatusBarManagerCompatModuleImpl(
     color: Int,
     animated: Boolean,
   ) {
+    if (!isEnabled()) {
+      return original.setColor(color.toDouble(), animated)
+    }
+
     val activity = mReactContext.currentActivity
     if (activity == null) {
       Logger.w(TAG, "StatusBarManagerCompatModule: Ignored status bar change, current activity is null.")
@@ -61,17 +71,26 @@ class StatusBarManagerCompatModuleImpl(
   }
 
   fun setTranslucent(translucent: Boolean) {
+    if (!isEnabled()) {
+      return original.setTranslucent(translucent)
+    }
+
     UiThreadUtil.runOnUiThread {
-      val view = mReactContext.rootView?.findViewWithTag<EdgeToEdgeReactViewGroup>(EdgeToEdgeReactViewGroup.VIEW_TAG)
-      view?.forceStatusBarTranslucent(translucent)
+      view()?.forceStatusBarTranslucent(translucent)
     }
   }
 
   fun setStyle(style: String) {
+    if (!isEnabled()) {
+      return original.setStyle(style)
+    }
+
     UiThreadUtil.runOnUiThread {
       getController()?.isAppearanceLightStatusBars = style == "dark-content"
     }
   }
+
+  fun getConstants(): MutableMap<String, Any>? = original.constants
 
   private fun getController(): WindowInsetsControllerCompat? {
     val activity = mReactContext.currentActivity
@@ -94,8 +113,13 @@ class StatusBarManagerCompatModuleImpl(
     return this.controller
   }
 
+  private fun isEnabled(): Boolean = view()?.active ?: false
+
+  private fun view(): EdgeToEdgeReactViewGroup? =
+    mReactContext.rootView?.findViewWithTag<EdgeToEdgeReactViewGroup>(EdgeToEdgeReactViewGroup.VIEW_TAG)
+
   companion object {
-    const val NAME = "StatusBarManagerCompat"
+    const val NAME = "StatusBarManager"
     private const val DEFAULT_ANIMATION_TIME = 300L
   }
 }
