@@ -32,7 +32,15 @@ class EdgeToEdgeReactViewGroup(
   private var isNavigationBarTranslucent = false
   private var isPreservingEdgeToEdge = false
   private var isEdgeToEdge = false
-  var active = false
+  var active: Boolean = false
+    set(value) {
+      field = value
+      if (value) {
+        enable()
+      } else {
+        disable()
+      }
+    }
 
   // internal class members
   private var eventView: ReactViewGroup? = null
@@ -222,16 +230,6 @@ class EdgeToEdgeReactViewGroup(
 
   fun setPreserveEdgeToEdge(isPreservingEdgeToEdge: Boolean) {
     this.isPreservingEdgeToEdge = isPreservingEdgeToEdge
-  }
-
-  fun setActive(active: Boolean) {
-    this.active = active
-
-    if (active) {
-      this.enable()
-    } else {
-      this.disable()
-    }
   }
   // endregion
 
