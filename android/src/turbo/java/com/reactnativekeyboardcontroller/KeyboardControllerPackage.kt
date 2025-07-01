@@ -45,7 +45,7 @@ class KeyboardControllerPackage : TurboReactPackage() {
         ReactModuleInfo(
           StatusBarManagerCompatModuleImpl.NAME,
           StatusBarManagerCompatModuleImpl.NAME,
-          false, // canOverrideExistingModule
+          true, // canOverrideExistingModule
           false, // needsEagerInit
           true, // hasConstants
           false, // isCxxModule

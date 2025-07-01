@@ -1,5 +1,5 @@
 /* eslint react/jsx-sort-props: off */
-import React, { useLayoutEffect, useMemo, useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { Animated, Platform, StyleSheet } from "react-native";
 import {
   controlEdgeToEdgeValues,
@@ -11,7 +11,6 @@ import { KeyboardControllerView } from "./bindings";
 import { KeyboardContext } from "./context";
 import { focusedInputEventsMap, keyboardEventsMap } from "./event-mappings";
 import { useAnimatedValue, useEventHandlerRegistration } from "./internal";
-import { applyMonkeyPatch, revertMonkeyPatch } from "./monkey-patch";
 import {
   useAnimatedKeyboardHandler,
   useFocusedInputLayoutHandler,
@@ -215,15 +214,6 @@ export const KeyboardProvider = (props: KeyboardProviderProps) => {
     },
     [],
   );
-
-  // layout effects
-  useLayoutEffect(() => {
-    if (enabled) {
-      applyMonkeyPatch();
-    } else {
-      revertMonkeyPatch();
-    }
-  }, [enabled]);
 
   if (__DEV__) {
     controlEdgeToEdgeValues({

@@ -14,6 +14,8 @@ class StatusBarManagerCompatModule(
 
   override fun getName(): String = StatusBarManagerCompatModuleImpl.NAME
 
+  override fun getConstants(): MutableMap<String, Any>? = module.getConstants()
+
   @ReactMethod
   private fun setHidden(hidden: Boolean) {
     module.setHidden(hidden)
