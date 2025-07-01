@@ -1,5 +1,5 @@
 /* eslint react/jsx-sort-props: off */
-import React, { useLayoutEffect, useMemo, useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { Animated, Platform, StyleSheet } from "react-native";
 import {
   controlEdgeToEdgeValues,
