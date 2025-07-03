@@ -53,7 +53,7 @@ fun ThemedReactContext?.keepShadowNodesInSync(viewId: Int) {
 val ThemedReactContext?.appearance: String
   get() =
     when {
-      this == null -> "default"
+      this == null -> "light"
       isSystemDarkMode() -> "dark"
       else -> "light"
     }

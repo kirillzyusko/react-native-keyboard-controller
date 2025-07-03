@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { Animated, StyleSheet, View } from "react-native";
 
-import useColorScheme from "../hooks/useColorScheme";
+import { useKeyboardState } from "../../hooks";
 
 import type { KeyboardToolbarTheme } from "./types";
 import type { ViewStyle } from "react-native";
@@ -13,7 +13,7 @@ type ArrowProps = {
 };
 
 const ArrowComponent: React.FC<ArrowProps> = ({ type, disabled, theme }) => {
-  const colorScheme = useColorScheme();
+  const colorScheme = useKeyboardState((state) => state.appearance);
 
   const color = useMemo(
     () => ({
