@@ -13,7 +13,7 @@ let lastState: KeyboardEventData = {
   timestamp: new Date().getTime(),
   target: -1,
   type: "default",
-  appearance: "default",
+  appearance: "light",
 };
 
 KeyboardEvents.addListener("keyboardDidHide", (e) => {

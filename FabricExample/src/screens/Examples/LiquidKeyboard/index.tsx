@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Image, StyleSheet, TextInput, useColorScheme } from "react-native";
+import { Image, StyleSheet, TextInput } from "react-native";
 import {
   KeyboardBackgroundView,
   KeyboardEvents,
@@ -25,11 +25,9 @@ const ReanimatedBackgroundView = Reanimated.createAnimatedComponent(
 );
 
 const LiquidKeyboardExample = () => {
-  const scheme = useColorScheme();
-  const appearance = useKeyboardState((state) => state.appearance);
+  const color = useKeyboardState((state) => state.appearance);
   const progress = useSharedValue(0);
   const { bottom } = useSafeAreaInsets();
-  const color = appearance === "default" ? scheme : appearance;
 
   useEffect(() => {
     progress.set(0);
