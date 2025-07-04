@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Alert,
   Image,
@@ -9,7 +9,10 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from "react-native";
-import { KeyboardExtender } from "react-native-keyboard-controller";
+import {
+  KeyboardExtender,
+  useKeyboardState,
+} from "react-native-keyboard-controller";
 import Reanimated, {
   useAnimatedStyle,
   useSharedValue,
@@ -18,6 +21,7 @@ import Reanimated, {
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function KeyboardExtendExample() {
+  const appearance = useKeyboardState((state) => state.appearance);
   const [showExtend, setShowExtend] = useState(true);
   const opacity = useSharedValue(1);
 
@@ -30,6 +34,15 @@ export default function KeyboardExtendExample() {
       opacity: opacity.value,
     }),
     [],
+  );
+  const textStyle = useMemo(
+    () => [
+      styles.priceText,
+      appearance === "light"
+        ? styles.lightKeyboardText
+        : styles.darkKeyboardText,
+    ],
+    [appearance],
   );
 
   return (
@@ -61,19 +74,19 @@ export default function KeyboardExtendExample() {
             testID="donation_10"
             onPress={() => Alert.alert("10 dollars")}
           >
-            <Text style={styles.priceText}>10$</Text>
+            <Text style={textStyle}>10$</Text>
           </TouchableOpacity>
           <TouchableOpacity
             testID="donation_20"
             onPress={() => Alert.alert("20 dollars")}
           >
-            <Text style={styles.priceText}>20$</Text>
+            <Text style={textStyle}>20$</Text>
           </TouchableOpacity>
           <TouchableOpacity
             testID="donation_50"
             onPress={() => Alert.alert("50 dollars")}
           >
-            <Text style={styles.priceText}>50$</Text>
+            <Text style={textStyle}>50$</Text>
           </TouchableOpacity>
         </Reanimated.View>
       </KeyboardExtender>
@@ -107,9 +120,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   priceText: {
-    color: "black",
     fontSize: 18,
     fontWeight: "600",
     padding: 20,
+  },
+  lightKeyboardText: {
+    color: "black",
+  },
+  darkKeyboardText: {
+    color: "white",
   },
 });
