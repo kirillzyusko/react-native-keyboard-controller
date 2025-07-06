@@ -22,7 +22,7 @@
     "lottie-react-native": "^7.2.3",
     "react": "19.1.0",
     "react-native": "0.80.1",
-    "react-native-gesture-handler": "2.25.0",
+    "react-native-gesture-handler": "2.27.1",
     "react-native-haptic-feedback": "2.3.3",
     "react-native-keyboard-controller": "link:../",
     "react-native-reanimated": "3.18.0",
