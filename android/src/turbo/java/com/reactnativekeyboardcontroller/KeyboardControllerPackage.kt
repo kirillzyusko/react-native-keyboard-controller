@@ -7,7 +7,7 @@ import com.facebook.react.module.model.ReactModuleInfo
 import com.facebook.react.module.model.ReactModuleInfoProvider
 import com.facebook.react.uimanager.ViewManager
 import com.reactnativekeyboardcontroller.modules.KeyboardControllerModuleImpl
-import com.reactnativekeyboardcontroller.modules.StatusBarManagerCompatModuleImpl
+import com.reactnativekeyboardcontroller.modules.statusbar.StatusBarManagerCompatModuleImpl
 
 class KeyboardControllerPackage : TurboReactPackage() {
   override fun getModule(

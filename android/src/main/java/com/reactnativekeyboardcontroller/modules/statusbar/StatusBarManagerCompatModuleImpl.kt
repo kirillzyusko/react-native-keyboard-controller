@@ -1,4 +1,4 @@
-package com.reactnativekeyboardcontroller.modules
+package com.reactnativekeyboardcontroller.modules.statusbar
 
 import android.animation.ArgbEvaluator
 import android.animation.ValueAnimator
@@ -9,7 +9,6 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.UiThreadUtil
-import com.facebook.react.modules.statusbar.StatusBarModule
 import com.reactnativekeyboardcontroller.extensions.rootView
 import com.reactnativekeyboardcontroller.log.Logger
 import com.reactnativekeyboardcontroller.views.EdgeToEdgeReactViewGroup
@@ -20,7 +19,7 @@ private val TAG = StatusBarManagerCompatModuleImpl::class.qualifiedName
 class StatusBarManagerCompatModuleImpl(
   private val mReactContext: ReactApplicationContext,
 ) {
-  private var original = StatusBarModule(mReactContext)
+  private var original = StatusBarModuleProxy(mReactContext)
   private var controller: WindowInsetsControllerCompat? = null
   private var lastActivity = WeakReference<Activity?>(null)
 
@@ -49,7 +48,10 @@ class StatusBarManagerCompatModuleImpl(
 
     val activity = mReactContext.currentActivity
     if (activity == null) {
-      Logger.w(TAG, "StatusBarManagerCompatModule: Ignored status bar change, current activity is null.")
+      Logger.w(
+        TAG,
+        "StatusBarManagerCompatModule: Ignored status bar change, current activity is null.",
+      )
       return
     }
 
@@ -90,7 +92,7 @@ class StatusBarManagerCompatModuleImpl(
     }
   }
 
-  fun getConstants(): MutableMap<String, Any>? = original.constants
+  fun getConstants(): MutableMap<String, Any>? = original.getConstants()
 
   private fun getController(): WindowInsetsControllerCompat? {
     val activity = mReactContext.currentActivity

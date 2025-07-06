@@ -5,7 +5,7 @@ import androidx.annotation.RequiresApi
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
-import com.reactnativekeyboardcontroller.modules.StatusBarManagerCompatModuleImpl
+import com.reactnativekeyboardcontroller.modules.statusbar.StatusBarManagerCompatModuleImpl
 
 class StatusBarManagerCompatModule(
   mReactContext: ReactApplicationContext,

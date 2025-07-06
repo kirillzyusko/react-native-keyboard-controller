@@ -1,7 +1,7 @@
 package com.reactnativekeyboardcontroller
 
 import com.facebook.react.bridge.ReactApplicationContext
-import com.reactnativekeyboardcontroller.modules.StatusBarManagerCompatModuleImpl
+import com.reactnativekeyboardcontroller.modules.statusbar.StatusBarManagerCompatModuleImpl
 
 class StatusBarManagerCompatModule(
   mReactContext: ReactApplicationContext,
