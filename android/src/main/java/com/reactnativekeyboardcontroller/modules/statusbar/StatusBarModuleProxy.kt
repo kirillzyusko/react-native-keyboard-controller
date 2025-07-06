@@ -1,3 +1,5 @@
+@file:Suppress("detekt:TooGenericExceptionCaught")
+
 package com.reactnativekeyboardcontroller.modules.statusbar
 
 import com.facebook.react.bridge.ReactApplicationContext
@@ -75,6 +77,7 @@ class StatusBarModuleProxy(
 
   fun getConstants(): MutableMap<String, Any>? =
     try {
+      @Suppress("UNCHECKED_CAST")
       getConstantsMethod?.invoke(instance) as? MutableMap<String, Any>
     } catch (e: Exception) {
       Logger.w(TAG, "Error invoking StatusBarModule.getConstants method", e)
