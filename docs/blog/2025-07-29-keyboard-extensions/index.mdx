@@ -84,10 +84,16 @@ const appearance = useKeyboardState((state) => state.appearance);
 
 Using `selectors` you can reduce amount of frequent re-renders and optimize your app performance.
 
+## Preparation for deep imports deprecation ⚠️
+
+Starting from `react-native@0.80+` the react-native team [deprecates](https://github.com/react-native-community/discussions-and-proposals/discussions/893) deep imports.
+
+This library was relying on some specific deep imports, but now it adopts the code to the latest adjustments in the code and the latest version of the library shouldn't pollute your console with warnings 🤓.
+
 ## `KeyboardAwareScrollView` work with full window `TextInputs`
 
 ## `KeyboardStickyView` has correct interpolation for interactive dismissal
 
 ## `KeyboardToolbar.Group` component
 
-## `KeyboardGestureArea` and inversed interpolator
+## `KeyboardGestureArea` and inverted interpolator
