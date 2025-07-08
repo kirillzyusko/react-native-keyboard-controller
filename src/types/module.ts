@@ -17,8 +17,8 @@ export type KeyboardEventData = {
   target: number;
   /** `keyboardType` property from focused `TextInput`. */
   type: NonNullable<TextInputProps["keyboardType"]>;
-  /** Keyboard appearance. Can be one of `default`, `dark` or `light`. */
-  appearance: NonNullable<TextInputProps["keyboardAppearance"]>;
+  /** Keyboard appearance. Can be one of `dark` or `light`. */
+  appearance: "dark" | "light";
 };
 /**
  * An object that represent current keyboard state.

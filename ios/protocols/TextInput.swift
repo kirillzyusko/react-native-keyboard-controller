@@ -30,3 +30,25 @@ extension UITextView: TextInput {
     becomeFirstResponder()
   }
 }
+
+extension TextInput {
+  var keyboardAppearanceValue: String {
+    switch keyboardAppearance {
+    case .dark:
+      return "dark"
+    case .light:
+      return "light"
+    case .default:
+      switch traitCollection.userInterfaceStyle {
+      case .dark:
+        return "dark"
+      case .light, .unspecified:
+        return "light"
+      @unknown default:
+        return "light"
+      }
+    @unknown default:
+      return "light"
+    }
+  }
+}

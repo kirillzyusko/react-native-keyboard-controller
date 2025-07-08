@@ -2,8 +2,8 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 import { FocusedInputEvents } from "../../bindings";
+import { useKeyboardState } from "../../hooks";
 import { KeyboardController } from "../../module";
-import useColorScheme from "../hooks/useColorScheme";
 import KeyboardStickyView from "../KeyboardStickyView";
 
 import Arrow from "./Arrow";
@@ -106,7 +106,7 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = (props) => {
     insets,
     ...rest
   } = props;
-  const colorScheme = useColorScheme();
+  const colorScheme = useKeyboardState((state) => state.appearance);
   const [inputs, setInputs] = useState({
     current: 0,
     count: 0,

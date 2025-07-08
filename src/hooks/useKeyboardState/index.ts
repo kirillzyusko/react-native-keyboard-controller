@@ -28,7 +28,9 @@ const defaultSelector: KeyboardStateSelector<KeyboardState> = (state) => state;
  * @example
  * ```tsx
  * function MyComponent() {
- *   const { isVisible, height } = useKeyboardState();
+ *   const isVisible = useKeyboardState((state) => state.isVisible);
+ *   const height = useKeyboardState((state) => state.height);
+ *
  *   return (
  *     <View>
  *       <Text>Keyboard is {isVisible ? 'visible' : 'hidden'}</Text>
@@ -51,6 +53,12 @@ function useKeyboardState<T = KeyboardState>(
         setState(selector(getLatestState())),
       ),
     );
+    // update `appearance` prematurely
+    const willShowSubscription = KeyboardEvents.addListener(
+      "keyboardWillShow",
+      (e) =>
+        setState(selector({ ...getLatestState(), appearance: e.appearance })),
+    );
 
     // we might have missed an update between reading a value in render and
     // `addListener` in this handler, so we set it here. If there was
@@ -59,6 +67,7 @@ function useKeyboardState<T = KeyboardState>(
 
     return () => {
       subscriptions.forEach((subscription) => subscription.remove());
+      willShowSubscription.remove();
     };
   }, []);
 
