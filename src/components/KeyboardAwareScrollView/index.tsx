@@ -1,5 +1,6 @@
 import React, { forwardRef, useCallback, useEffect, useMemo } from "react";
 import Reanimated, {
+  clamp,
   interpolate,
   runOnUI,
   scrollTo,
@@ -127,6 +128,8 @@ const KeyboardAwareScrollView = forwardRef<
     const scrollBeforeKeyboardMovement = useSharedValue(0);
     const { input } = useReanimatedFocusedInput();
     const layout = useSharedValue<FocusedInputLayoutChangedEvent | null>(null);
+    const lastSelection =
+      useSharedValue<FocusedInputSelectionChangedEvent | null>(null);
 
     const { height } = useWindowDimensions();
 
@@ -223,7 +226,7 @@ const KeyboardAwareScrollView = forwardRef<
     );
 
     const scrollFromCurrentPosition = useCallback(
-      (customHeight?: number) => {
+      (customHeight: number) => {
         "worklet";
 
         const prevScrollPosition = scrollPosition.value;
@@ -238,7 +241,9 @@ const KeyboardAwareScrollView = forwardRef<
           ...input.value,
           layout: {
             ...input.value.layout,
-            height: customHeight ?? input.value.layout.height,
+            // when we have multiline input with limited amount of lines, then custom height can be very big
+            // so we clamp it to max input height
+            height: clamp(customHeight, 0, input.value.layout.height),
           },
         };
         scrollPosition.value = position.value;
@@ -248,39 +253,51 @@ const KeyboardAwareScrollView = forwardRef<
       },
       [maybeScroll],
     );
-    const onChangeText = useCallback(() => {
-      "worklet";
-
-      // if typing a text caused layout shift, then we need to ignore this handler
-      // because this event will be handled in `useAnimatedReaction` below
-      if (layout.value?.layout.height !== input.value?.layout.height) {
-        return;
-      }
-
-      scrollFromCurrentPosition();
-    }, [scrollFromCurrentPosition]);
-    const onSelectionChange = useCallback(
-      (e: FocusedInputSelectionChangedEvent) => {
+    const onChangeText = useCallback(
+      (customHeight: number) => {
         "worklet";
 
-        if (e.selection.start.position !== e.selection.end.position) {
-          scrollFromCurrentPosition(e.selection.end.y);
+        // if typing a text caused layout shift, then we need to ignore this handler
+        // because this event will be handled in `useAnimatedReaction` below
+        if (layout.value?.layout.height !== input.value?.layout.height) {
+          return;
         }
+
+        scrollFromCurrentPosition(customHeight);
       },
       [scrollFromCurrentPosition],
     );
-
     const onChangeTextHandler = useMemo(
       () => debounce(onChangeText, 200),
       [onChangeText],
     );
+    const onSelectionChange = useCallback(
+      (e: FocusedInputSelectionChangedEvent) => {
+        "worklet";
+
+        const lastTarget = lastSelection.value?.target;
+
+        lastSelection.value = e;
+
+        if (e.target !== lastTarget) {
+          // ignore this event, because "focus changed" event handled in `useSmoothKeyboardHandler`
+          return;
+        }
+
+        if (e.selection.start.position !== e.selection.end.position) {
+          return scrollFromCurrentPosition(e.selection.end.y);
+        }
+
+        onChangeTextHandler(e.selection.end.y);
+      },
+      [scrollFromCurrentPosition, onChangeTextHandler],
+    );
 
     useFocusedInputHandler(
       {
-        onChangeText: onChangeTextHandler,
         onSelectionChange: onSelectionChange,
       },
-      [onChangeTextHandler, onSelectionChange],
+      [onSelectionChange],
     );
 
     useSmoothKeyboardHandler(
