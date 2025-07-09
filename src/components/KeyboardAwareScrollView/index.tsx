@@ -172,13 +172,10 @@ const KeyboardAwareScrollView = forwardRef<
         const inputHeight = layout.value?.layout.height || 0;
         const point = absoluteY + inputHeight;
 
-        console.log({ absoluteY, inputHeight, point, visibleRect });
-
         if (visibleRect - point <= bottomOffset) {
           const relativeScrollTo =
             keyboardHeight.value - (height - point) + bottomOffset;
 
-          console.log({ relativeScrollTo });
           const interpolatedScrollTo = interpolate(
             e,
             [initialKeyboardSize.value, keyboardHeight.value],
@@ -193,11 +190,6 @@ const KeyboardAwareScrollView = forwardRef<
           const targetScrollY =
             Math.max(interpolatedScrollTo, 0) + scrollPosition.value;
 
-          console.log({
-            targetScrollY,
-            scrollPosition: scrollPosition.value,
-            interpolatedScrollTo,
-          });
           scrollTo(scrollViewAnimatedRef, 0, targetScrollY, animated);
 
           return interpolatedScrollTo;
@@ -259,8 +251,6 @@ const KeyboardAwareScrollView = forwardRef<
         maybeScroll(keyboardHeight.value, true);
         scrollPosition.value = prevScrollPosition;
         layout.value = prevLayout;
-
-        console.log({ customHeight });
       },
       [maybeScroll],
     );
@@ -274,7 +264,6 @@ const KeyboardAwareScrollView = forwardRef<
           return;
         }
 
-        console.debug("maybeScroll - onChangeText");
         scrollFromCurrentPosition(customHeight);
       },
       [scrollFromCurrentPosition],
@@ -296,11 +285,7 @@ const KeyboardAwareScrollView = forwardRef<
           return;
         }
 
-        console.log(e);
-
         if (e.selection.start.position !== e.selection.end.position) {
-          console.debug("onSelectionChange - onChangeText");
-
           return scrollFromCurrentPosition(e.selection.end.y);
         }
 
@@ -366,7 +351,6 @@ const KeyboardAwareScrollView = forwardRef<
           if (focusWasChanged && !keyboardWillAppear.value) {
             // update position on scroll value, so `onEnd` handler
             // will pick up correct values
-            console.debug("maybeScroll - onStart");
             position.value += maybeScroll(e.height, true);
           }
         },
@@ -377,7 +361,6 @@ const KeyboardAwareScrollView = forwardRef<
 
           // if the user has set disableScrollOnKeyboardHide, only auto-scroll when the keyboard opens
           if (!disableScrollOnKeyboardHide || keyboardWillAppear.value) {
-            console.debug("maybeScroll - onMove");
             maybeScroll(e.height);
           }
         },
@@ -407,7 +390,6 @@ const KeyboardAwareScrollView = forwardRef<
           const prevLayout = layout.value;
 
           layout.value = input.value;
-          console.debug("maybeScroll - animated reaction");
           scrollPosition.value += maybeScroll(keyboardHeight.value, true);
           layout.value = prevLayout;
         }
