@@ -175,7 +175,6 @@ const KeyboardAwareScrollView = forwardRef<
         if (visibleRect - point <= bottomOffset) {
           const relativeScrollTo =
             keyboardHeight.value - (height - point) + bottomOffset;
-
           const interpolatedScrollTo = interpolate(
             e,
             [initialKeyboardSize.value, keyboardHeight.value],
