@@ -116,8 +116,8 @@ function Feature({ title, lottie, description, reversed }: FeatureItem) {
           style={{
             padding: "40px 70px",
             width: "100%",
-            background:
-              "linear-gradient(-45deg, rgb(151, 189, 245) 0%, rgb(38, 89, 183) 50%, rgb(37, 139, 222) 100%)",
+            // background:
+            //  "linear-gradient(-45deg, rgb(151, 189, 245) 0%, rgb(38, 89, 183) 50%, rgb(37, 139, 222) 100%)",
             borderRadius: 10,
           }}
         >
@@ -149,6 +149,25 @@ function Feature({ title, lottie, description, reversed }: FeatureItem) {
 export default function HomepageFeatures(): JSX.Element {
   return (
     <section className={styles.features}>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320" style={{position: "absolute"}}>
+    <defs>
+
+    <linearGradient id="fade-mask" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="white" stop-opacity="0" />
+      <stop offset="100%" stop-color="white" stop-opacity="1" />
+    </linearGradient>
+    
+    <mask id="mask" maskUnits="userSpaceOnUse" x="0" y="0" width="1440" height="320">
+      <rect x="0" y="0" width="1440" height="320" fill="url(#fade-mask)" />
+    </mask>
+  </defs>
+    <path 
+    fill="#1c1c1c" 
+    fill-opacity="0.5"
+    mask="url(#mask)"
+    d="M0,32L60,32C120,32,240,32,360,42.7C480,53,600,75,720,96C840,117,960,139,1080,128C1200,117,1320,75,1380,53.3L1440,32L1440,0L1380,0C1320,0,1200,0,1080,0C960,0,840,0,720,0C600,0,480,0,360,0C240,0,120,0,60,0L0,0Z"
+  />
+</svg>
       <div className="container">
         <h2 className={clsx("text--center main-page-h2")}>Features</h2>
         <div className="row" style={{justifyContent: "center"}}>
