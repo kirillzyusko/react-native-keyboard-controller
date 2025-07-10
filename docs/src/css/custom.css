@@ -229,6 +229,18 @@ h3 .label {
   top: -2px;
 }
 
+.main-page-h2 {
+  font-size: 2rem;
+}
+
+.main-page-h3 {
+  font-size: 1.5rem;
+}
+
+.main-page-p {
+  font-size: 1.2rem;
+}
+
 /* to become a circle in table of contents */
 .table-of-contents .label {
   border-radius: 100%;

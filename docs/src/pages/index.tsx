@@ -7,6 +7,12 @@ import React from "react";
 
 import styles from "./index.module.css";
 
+function Section() {
+  return (
+    <div></div>
+  );
+}
+
 function HomepageHeader() {
   const { siteConfig } = useDocusaurusContext();
 
@@ -154,7 +160,7 @@ const trustedBy = [
 function TrustedBy(): JSX.Element {
   return (
     <section className={clsx(styles.trustedBySection)}>
-      <h2 class={clsx(styles.trustedByTitle)}>Trusted by</h2>
+      <h2 class={clsx(styles.trustedByTitle, "main-page-h2")}>Trusted by</h2>
       <div className={clsx(styles.trustedByContainer)}>
         {trustedBy.map((item, index) => (
           <a key={index} href={item.link} target="_blank">
