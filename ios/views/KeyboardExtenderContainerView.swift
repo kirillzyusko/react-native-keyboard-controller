@@ -10,25 +10,32 @@ import UIKit
 @objc
 public class KeyboardExtenderContainerView: UIView {
   @objc public static func create(frame: CGRect, contentView: UIView) -> UIView {
-    #if compiler(>=6.0)
-      if #available(iOS 26.0, *) {
+    if #available(iOS 26.0, *) {
+      // backward compatibility with old XCode versions
+      if let glassEffectClass = NSClassFromString("UIGlassEffect") as? UIVisualEffect.Type {
+        let glassEffect = glassEffectClass.init()
+        glassEffect.setValue(UIColor.black.withAlphaComponent(0.3), forKey: "tintColor")
+        glassEffect.setValue(true, forKey: "interactive")
+
         let padding = 20.0
         let visualEffectView = UIVisualEffectView()
-        let glassEffect = UIGlassEffect()
-        glassEffect.tintColor = UIColor.black.withAlphaComponent(0.3)
-        glassEffect.isInteractive = true
         visualEffectView.effect = glassEffect
-        visualEffectView.bounds = CGRect(x: 0, y: padding, width: frame.width - (2 * padding), height: frame.height)
+        visualEffectView.bounds = CGRect(
+          x: 0,
+          y: padding,
+          width: frame.width - (2 * padding),
+          height: frame.height
+        )
 
-        // visualEffectView.bounds = CGRect(x: padding, y: padding, width: frame.width - 2 * padding, height: frame.height)
-        visualEffectView.overrideUserInterfaceStyle = FocusedInputHolder.shared.get()?.keyboardAppearanceValue == "dark" ? .dark : .light
+        visualEffectView.overrideUserInterfaceStyle =
+          FocusedInputHolder.shared.get()?.keyboardAppearanceValue == "dark" ? .dark : .light
 
         visualEffectView.contentView.addSubview(contentView)
-        // contentView.bounds = visualEffectView.contentView.bounds
 
         return visualEffectView
       }
-    #endif
+    }
+
     let inputView = UIInputView(frame: frame, inputViewStyle: .keyboard)
     inputView.addSubview(contentView)
 
