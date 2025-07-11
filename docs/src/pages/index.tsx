@@ -30,6 +30,12 @@ function HomepageHeader() {
 
 const trustedBy = [
   {
+    img: "https://avatars.githubusercontent.com/u/1965106?s=200&v=4",
+    alt: "Discord Mobile App",
+    link: "https://play.google.com/store/apps/details?id=com.discord",
+    name: "Discord",
+  },
+  {
     img: "https://avatars.githubusercontent.com/u/476779?s=200&v=4",
     alt: "Expensify Mobile App",
     link: "https://github.com/Expensify/App",
@@ -52,6 +58,18 @@ const trustedBy = [
     alt: "InfiniteRed Ignite react native project boilerplate",
     link: "https://github.com/infinitered/ignite",
     name: "Ignite",
+  },
+  {
+    img: "https://avatars.githubusercontent.com/u/36115574?s=200&v=4",
+    alt: "Uniswap Mobile App",
+    link: "https://github.com/Uniswap/interface",
+    name: "Uniswap",
+  },
+  {
+    img: "https://avatars.githubusercontent.com/u/12508788?s=200&v=4",
+    alt: "Rocket Chat Mobile App",
+    link: "https://github.com/RocketChat/Rocket.Chat.ReactNative",
+    name: "Rocket Chat",
   },
   {
     img: "https://avatars.githubusercontent.com/u/48327834?s=200&v=4",
@@ -88,6 +106,12 @@ const trustedBy = [
     alt: "Minds app",
     link: "https://github.com/Minds/mobile-native",
     name: "Minds",
+  },
+  {
+    img: "https://avatars.githubusercontent.com/u/61685601?s=200&v=4",
+    alt: "OneKey: Crypto DeFi Wallet App",
+    link: "https://github.com/OneKeyHQ/app-monorepo",
+    name: "OneKey",
   },
   {
     img: "https://avatars.githubusercontent.com/u/79029086?s=200&v=4",
