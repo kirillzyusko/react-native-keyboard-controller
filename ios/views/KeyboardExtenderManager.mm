@@ -144,14 +144,10 @@ RCT_EXPORT_VIEW_PROPERTY(enabled, BOOL)
 - (void)createSharedInputAccessoryView
 {
   CGRect internalFrame = _contentView.subviews[0].frame;
-  _sharedInputAccessoryView = [KeyboardExtenderContainerView createWithFrame:CGRectMake(
-                                                                                        0, 0, UIScreen.mainScreen.bounds.size.width, internalFrame.size.height) contentView: _contentView];
-  _sharedInputAccessoryView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-
-  // Attach the contentView to the shared input accessory view
-  // _contentView.frame = _sharedInputAccessoryView.bounds;
-  // _contentView.autoresizingMask =
-  //    UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+  _sharedInputAccessoryView = [KeyboardExtenderContainerView
+      createWithFrame:CGRectMake(
+                          0, 0, UIScreen.mainScreen.bounds.size.width, internalFrame.size.height)
+          contentView:_contentView];
 }
 
 - (void)attachInputAccessoryViewTo:(UIView<UITextInput> *)input
