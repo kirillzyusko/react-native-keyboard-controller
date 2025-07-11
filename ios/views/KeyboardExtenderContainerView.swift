@@ -9,8 +9,6 @@ import UIKit
 
 @objc
 public class KeyboardExtenderContainerView: UIView {
-  private var visualEffectView: UIVisualEffectView?
-
   @objc public static func create(frame: CGRect, contentView: UIView) -> UIView {
     #if compiler(>=6.0)
       if #available(iOS 26.0, *) {
