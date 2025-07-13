@@ -90,6 +90,25 @@ Starting from `react-native@0.80+` the react-native team [deprecates](https://gi
 
 This library was relying on some specific deep imports, but now it adopts the code to the latest adjustments in the code and the latest version of the library shouldn't pollute your console with warnings 🤓.
 
+## Preloading the keyboard to improve TTI 🚀
+
+I think maybe react-native developers noticed that in some cases when you set focus the first time, then the keyboard may appear with delay. And this bug is not specific to `react-native-keyboard-controller` — it's a general issue with the keyboard on iOS.
+
+<ComparisonTable
+  left={<Video src="/video/keyboard-without-preload.mp4" width={65} />}
+  right={<Video src="/video/keyboard-with-preload.mp4" width={65} />}
+  leftText={<i>The keyboard appears after a significant delay</i>}
+  rightText={<i>The keyboard appears instantly</i>}
+/>
+
+To solve this problem, I've added a new `preload` method that preloads the keyboard. It's useful when you want to avoid a delay when the user focuses the first input:
+
+```ts
+import { KeyboardController } from "react-native-keyboard-controller";
+
+KeyboardController.preload();
+```
+
 ## `KeyboardAwareScrollView` work with full window `TextInputs`
 
 ## `KeyboardStickyView` has correct interpolation for interactive dismissal
