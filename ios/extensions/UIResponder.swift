@@ -63,3 +63,30 @@ public extension Optional where Wrapped: UIResponder {
     return -1
   }
 }
+
+@objc
+public extension UIResponder {
+  private static var hasPreloadedKeyboard = false
+  static var isKeyboardPreloading = false
+
+  /// Preloads the keyboard UI to reduce first-time lag when showing a keyboard.
+  /// https://stackoverflow.com/questions/9357026/super-slow-lag-delay-on-initial-keyboard-animation-of-uitextfield/20436797#20436797
+  static func preloadKeyboardIfNeeded() {
+    guard !hasPreloadedKeyboard else { return }
+    hasPreloadedKeyboard = true
+    isKeyboardPreloading = true
+
+    DispatchQueue.main.async {
+      defer { isKeyboardPreloading = false }
+      guard let window = UIApplication.shared.activeWindow else { return }
+
+      let lagFreeField = UITextField(frame: .zero)
+      lagFreeField.isHidden = true
+      window.addSubview(lagFreeField)
+
+      lagFreeField.becomeFirstResponder()
+      lagFreeField.resignFirstResponder()
+      lagFreeField.removeFromSuperview()
+    }
+  }
+}

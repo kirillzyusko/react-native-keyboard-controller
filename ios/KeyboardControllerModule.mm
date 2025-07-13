@@ -68,6 +68,15 @@ RCT_EXPORT_METHOD(setInputMode : (nonnull NSNumber *)mode)
 }
 
 #ifdef RCT_NEW_ARCH_ENABLED
+- (void)preload
+#else
+RCT_EXPORT_METHOD(preload)
+#endif
+{
+  [UIResponder preloadKeyboardIfNeeded];
+}
+
+#ifdef RCT_NEW_ARCH_ENABLED
 - (void)dismiss:(BOOL)keepFocus
 #else
 RCT_EXPORT_METHOD(dismiss : (BOOL)keepFocus)

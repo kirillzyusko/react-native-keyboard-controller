@@ -4,7 +4,10 @@ import { NavigationContainer } from "@react-navigation/native";
 import * as React from "react";
 import { ActivityIndicator, StatusBar, StyleSheet } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { KeyboardProvider } from "react-native-keyboard-controller";
+import {
+  KeyboardController,
+  KeyboardProvider,
+} from "react-native-keyboard-controller";
 import {
   SafeAreaProvider,
   initialWindowMetrics,
@@ -35,6 +38,8 @@ const linking = {
   },
 };
 const spinner = <ActivityIndicator color="blue" size="large" />;
+
+KeyboardController.preload();
 
 export default function App() {
   return (

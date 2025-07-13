@@ -67,6 +67,7 @@ const mock = {
   KeyboardController: {
     setInputMode: jest.fn(),
     setDefaultMode: jest.fn(),
+    preload: jest.fn(),
     dismiss: jest.fn().mockReturnValue(Promise.resolve()),
     setFocusTo: jest.fn(),
     isVisible: jest.fn().mockReturnValue(false),

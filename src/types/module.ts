@@ -59,13 +59,25 @@ export type KeyboardControllerModule = {
   /**
    * Sets default `windowSoftInputMode` (the one that declared in `AndroidManifest.xml`).
    *
+   * @platform android
    * @see {@link https://kirillzyusko.github.io/react-native-keyboard-controller/docs/api/keyboard-controller#setdefaultmode-|docs} page for more details.
    */
   setDefaultMode: () => void;
   /**
-   * Changes `windowSoftInputMode` on Android. @see AndroidSoftInputModes for all possible values and {@link https://kirillzyusko.github.io/react-native-keyboard-controller/docs/api/keyboard-controller#setinputmode-|docs} page for more details.
+   * Changes `windowSoftInputMode` on Android.
+   *
+   * @platform android
+   * @see AndroidSoftInputModes for all possible values and {@link https://kirillzyusko.github.io/react-native-keyboard-controller/docs/api/keyboard-controller#setinputmode-|docs} page for more details.
    */
   setInputMode: (mode: number) => void;
+  // ios only
+  /**
+   * A method that preloads the keyboard. It's useful when you want to avoid a delay when the user focuses the first input.
+   *
+   * @platform ios
+   * @see {@link https://kirillzyusko.github.io/react-native-keyboard-controller/docs/api/keyboard-controller#preload-|docs} page for more details.
+   */
+  preload: () => void;
   // all platforms
   /**
    * Dismisses the active keyboard. Removes a focus by default, but allows to pass `{keepFocus: true}` to keep focus.
@@ -96,6 +108,8 @@ export type KeyboardControllerNativeModule = {
   // android only
   setDefaultMode: () => void;
   setInputMode: (mode: number) => void;
+  // ios only
+  preload: () => void;
   // all platforms
   dismiss: (keepFocus: boolean) => void;
   setFocusTo: (direction: Direction) => void;

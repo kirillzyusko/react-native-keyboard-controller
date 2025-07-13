@@ -23,6 +23,11 @@ class KeyboardControllerModule(
   }
 
   @ReactMethod
+  fun preload() {
+    module.preload()
+  }
+
+  @ReactMethod
   fun dismiss(keepFocus: Boolean) {
     module.dismiss(keepFocus)
   }

@@ -18,6 +18,7 @@ const NOOP = () => {};
 export const KeyboardControllerNative: KeyboardControllerNativeModule = {
   setDefaultMode: NOOP,
   setInputMode: NOOP,
+  preload: NOOP,
   dismiss: NOOP,
   setFocusTo: NOOP,
   addListener: NOOP,

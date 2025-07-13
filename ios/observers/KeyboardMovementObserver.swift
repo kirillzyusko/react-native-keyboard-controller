@@ -120,6 +120,9 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   private func keyboardDidMoveInteractively(changeValue: CGPoint) {
+    if UIResponder.isKeyboardPreloading {
+      return
+    }
     // if we are currently animating keyboard -> we need to ignore values from KVO
     if !displayLink.isPaused {
       return
@@ -165,7 +168,7 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc func keyboardWillAppear(_ notification: Notification) {
-    guard !KeyboardEventsIgnorer.shared.shouldIgnore else { return }
+    guard !KeyboardEventsIgnorer.shared.shouldIgnore, !UIResponder.isKeyboardPreloading else { return }
 
     let (duration, frame) = notification.keyboardMetaData()
     if let keyboardFrame = frame {
@@ -185,6 +188,7 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc func keyboardWillDisappear(_ notification: Notification) {
+    guard !UIResponder.isKeyboardPreloading else { return }
     let (duration, _) = notification.keyboardMetaData()
     tag = UIResponder.current.reactViewTag
     self.duration = duration
@@ -199,6 +203,7 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc func keyboardDidAppear(_ notification: Notification) {
+    guard !UIResponder.isKeyboardPreloading else { return }
     let timestamp = Date.currentTimeStamp
     let (duration, frame) = notification.keyboardMetaData()
     if let keyboardFrame = frame {
@@ -229,6 +234,7 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc func keyboardDidDisappear(_ notification: Notification) {
+    guard !UIResponder.isKeyboardPreloading else { return }
     let (duration, _) = notification.keyboardMetaData()
     tag = UIResponder.current.reactViewTag
 
