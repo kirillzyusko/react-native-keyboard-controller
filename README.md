@@ -10,7 +10,8 @@ A universal keyboard handling solution for React Native — lightweight, fully c
 
 - 🧬 Map keyboard movement to animated values
 - 🧪 `keyboardWillShow` / `keyboardWillHide` events now available on Android
-- ⚡ Change soft input mode on Android
+- 🔮 Change soft input mode on Android
+- ⚡ Preload keyboard to avoid first-time focus lag
 - 🚀 Reanimated support
 - 📱 Interactive keyboard dismissing 👆📱
 - 📚 Prebuilt components (`KeyboardStickyView`, `KeyboardAwareScrollView`, reworked `KeyboardAvoidingView`)
