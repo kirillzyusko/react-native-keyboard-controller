@@ -75,15 +75,7 @@ public extension UIResponder {
     hasPreloadedKeyboard = true
 
     DispatchQueue.main.async {
-      guard
-        let window = UIApplication.shared
-        .connectedScenes
-        .compactMap({ $0 as? UIWindowScene })
-        .flatMap(\.windows)
-        .first(where: { $0.isKeyWindow })
-      else {
-        return
-      }
+      guard let window = UIApplication.shared.activeWindow else { return }
 
       let lagFreeField = UITextField(frame: .zero)
       lagFreeField.isHidden = true
