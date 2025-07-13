@@ -18,6 +18,10 @@ class KeyboardControllerModule(
     module.setDefaultMode()
   }
 
+  override fun preload() {
+    module.preload()
+  }
+
   override fun dismiss(keepFocus: Boolean) {
     module.dismiss(keepFocus)
   }

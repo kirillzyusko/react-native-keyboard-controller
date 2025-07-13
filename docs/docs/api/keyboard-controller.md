@@ -52,6 +52,18 @@ This method is used to restore the default `windowSoftInputMode` (`softwareKeybo
 KeyboardController.setDefaultMode();
 ```
 
+### `preload` <div className="label ios"></div>
+
+```ts
+static preload(): void;
+```
+
+This method is used to preload the keyboard, so that users will not see a significant delay when they focus a first input since app has been opened.
+
+```ts
+KeyboardController.preload();
+```
+
 ### `dismiss`
 
 ```ts
