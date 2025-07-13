@@ -120,7 +120,7 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   private func keyboardDidMoveInteractively(changeValue: CGPoint) {
-    if (UIResponder.isKeyboardPreloading) {
+    if UIResponder.isKeyboardPreloading {
       return
     }
     // if we are currently animating keyboard -> we need to ignore values from KVO
