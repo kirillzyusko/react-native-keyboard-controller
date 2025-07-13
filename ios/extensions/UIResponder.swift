@@ -77,10 +77,10 @@ public extension UIResponder {
     DispatchQueue.main.async {
       guard
         let window = UIApplication.shared
-          .connectedScenes
-          .compactMap({ $0 as? UIWindowScene })
-          .flatMap({ $0.windows })
-          .first(where: { $0.isKeyWindow })
+        .connectedScenes
+        .compactMap({ $0 as? UIWindowScene })
+        .flatMap(\.windows)
+        .first(where: { $0.isKeyWindow })
       else {
         return
       }
