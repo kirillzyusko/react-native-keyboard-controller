@@ -29,6 +29,18 @@ A boolean property indicating whether to keep [edge-to-edge](https://developer.a
 If you use [react-native-edge-to-edge](https://github.com/zoontek/react-native-edge-to-edge), then `statusBarTranslucent`, `navigationBarTranslucent` and `preserveEdgeToEdge` are automatically set to `true`, so you don't need to worry about them.
 :::
 
+### `preload` <div className="label ios"></div>
+
+A boolean prop that determines whether to preload the keyboard to eliminate the initial focus lag (improve TTI). Defaults to `true`.
+
+Internally it calls imperative [`KeyboardController.preload()`](./keyboard-controller.md#preload-) API.
+
+:::info Opting out of preloading
+Set this to `false` if your app's initial screen doesn't include any inputs or if you prefer to control keyboard preloading manually.
+
+In general, this method is lightweight and safe to call on app start without any noticeable performance cost.
+:::
+
 ### `enabled`
 
 A boolean prop indicating whether the module is enabled. It indicate only initial state, i. e. if you try to change this prop after component mount it will not have any effect. To change the property in runtime use [useKeyboardController](./hooks/module/use-keyboard-controller.md) hook and `setEnabled` method. Defaults to `true`.
