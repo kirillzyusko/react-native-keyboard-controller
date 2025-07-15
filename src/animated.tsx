@@ -1,5 +1,5 @@
 /* eslint react/jsx-sort-props: off */
-import React, { useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Animated, Platform, StyleSheet } from "react-native";
 import {
   controlEdgeToEdgeValues,
@@ -11,6 +11,7 @@ import { KeyboardControllerView } from "./bindings";
 import { KeyboardContext } from "./context";
 import { focusedInputEventsMap, keyboardEventsMap } from "./event-mappings";
 import { useAnimatedValue, useEventHandlerRegistration } from "./internal";
+import { KeyboardController } from "./module";
 import {
   useAnimatedKeyboardHandler,
   useFocusedInputLayoutHandler,
@@ -82,6 +83,13 @@ type KeyboardProviderProps = {
    * Defaults to `true`.
    */
   enabled?: boolean;
+  /**
+   * A boolean prop indicating whether to preload the keyboard to reduce time-to-interaction (TTI) on first input focus.
+   * Defaults to `true`.
+   *
+   * @platform ios
+   */
+  preload?: boolean;
 };
 
 // capture `Platform.OS` in separate variable to avoid deep workletization of entire RN package
@@ -109,6 +117,7 @@ export const KeyboardProvider = (props: KeyboardProviderProps) => {
     navigationBarTranslucent,
     preserveEdgeToEdge,
     enabled: initiallyEnabled = true,
+    preload = true,
   } = props;
   // ref
   const viewTagRef = useRef<React.Component<KeyboardControllerProps>>(null);
@@ -214,6 +223,12 @@ export const KeyboardProvider = (props: KeyboardProviderProps) => {
     },
     [],
   );
+
+  useEffect(() => {
+    if (preload) {
+      KeyboardController.preload();
+    }
+  }, [preload]);
 
   if (__DEV__) {
     controlEdgeToEdgeValues({
