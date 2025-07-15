@@ -58,7 +58,7 @@ KeyboardController.setDefaultMode();
 static preload(): void;
 ```
 
-This method is used to preload the keyboard, so that users will not see a significant delay when they focus a first input since app has been opened.
+This method preloads the keyboard to prevent noticeable delay when the user focuses the first input after launching the app.
 
 ```ts
 KeyboardController.preload();
