@@ -84,12 +84,6 @@ const trustedBy = [
     name: "Follow",
   },
   {
-    img: "https://avatars.githubusercontent.com/u/88587596?s=200&v=4",
-    alt: "TonKeeper Wallet app",
-    link: "https://github.com/tonkeeper/wallet",
-    name: "TON Wallet",
-  },
-  {
     img: "https://avatars.githubusercontent.com/u/23416667?s=200&v=4",
     alt: "Chatwoot mobile app",
     link: "https://github.com/chatwoot/chatwoot-mobile-app",
@@ -120,16 +114,28 @@ const trustedBy = [
     name: "Showtime",
   },
   {
-    img: "https://avatars.githubusercontent.com/u/97704884?s=200&v=4",
-    alt: "Converse Messenger",
-    link: "https://github.com/ephemeraHQ/converse-app",
-    name: "Converse",
-  },
-  {
     img: "https://avatars.githubusercontent.com/u/6613230?s=200&v=4",
     alt: "Edge App",
     link: "https://github.com/EdgeApp/edge-react-gui",
     name: "Edge",
+  },
+  {
+    img: "https://play-lh.googleusercontent.com/4G1ZS2y5ekD1eRgpOahOj6v_vq1UlN0VVNcmHFFIS2SFGotr3vbZStS_6RZU8l4G7Ryy=w200-h480-rw",
+    alt: "Pixelfed App",
+    link: "https://github.com/pixelfed/pixelfed-rn",
+    name: "Pixelfed",
+  },
+  {
+    img: "https://play-lh.googleusercontent.com/xs4ZUIOATV_bGfdl2yd0mWev9bcK2_a4ofnUEIIQe2_BecUqOVQ7YmtXu41Ereg0Kg=w200-h480-rw",
+    alt: "Trezor Suite App",
+    link: "https://github.com/trezor/trezor-suite",
+    name: "Trezor Suite",
+  },
+  {
+    img: "https://play-lh.googleusercontent.com/BFYQT9Pugt8shdo75MjFZh5F_IMn7btSj8mXknbvSfmVV6JASCKQqcLcERvGdD0iN8A=w200-h480-rw",
+    alt: "PocketPal AI App",
+    link: "https://github.com/a-ghorbani/pocketpal-ai",
+    name: "PocketPal AI",
   },
   {
     img: "https://avatars.githubusercontent.com/u/7648832?s=200&v=4",
@@ -154,7 +160,7 @@ const trustedBy = [
 function TrustedBy(): JSX.Element {
   return (
     <section className={clsx(styles.trustedBySection)}>
-      <h2 class={clsx(styles.trustedByTitle)}>Trusted by</h2>
+      <h2 className={clsx(styles.trustedByTitle)}>Trusted by</h2>
       <div className={clsx(styles.trustedByContainer)}>
         {trustedBy.map((item, index) => (
           <a key={index} href={item.link} target="_blank">
@@ -167,7 +173,7 @@ function TrustedBy(): JSX.Element {
           </a>
         ))}
       </div>
-      <p class={clsx(styles.addYourApp)}>
+      <p className={clsx(styles.addYourApp)}>
         Would like to show your project here?{" "}
         <a href="https://github.com/kirillzyusko/react-native-keyboard-controller/edit/main/docs/src/pages/index.tsx">
           Submit a PR
