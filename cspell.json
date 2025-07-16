@@ -195,7 +195,8 @@
     "lottiefiles",
     "dotlottie",
     "legendapp",
-    "kortix"
+    "kortix",
+    "desynchronized"
   ],
   "ignorePaths": [
     "node_modules",

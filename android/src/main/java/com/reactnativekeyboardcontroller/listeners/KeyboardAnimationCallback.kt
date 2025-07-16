@@ -51,6 +51,7 @@ class KeyboardAnimationCallback(
   val view: View,
   val context: ThemedReactContext?,
   private val config: KeyboardAnimationCallbackConfig,
+  private val source: KeyboardAnimationCallback? = null,
 ) : WindowInsetsAnimationCompat.Callback(config.dispatchMode),
   OnApplyWindowInsetsListener,
   Suspendable {
@@ -67,6 +68,13 @@ class KeyboardAnimationCallback(
   private val isKeyboardInteractive: Boolean
     get() = duration == -1
   override var isSuspended: Boolean = false
+
+  init {
+    if (source != null) {
+      this.persistentKeyboardHeight = source.persistentKeyboardHeight
+      this.prevKeyboardHeight = source.prevKeyboardHeight
+    }
+  }
 
   // listeners
   private val focusListener =
@@ -166,13 +174,13 @@ class KeyboardAnimationCallback(
       return insets
     }
 
-    // always verify insets, because sometimes default lifecycles may not be invoked
-    // (when we press "Share" on Android 16, for example)
+    // always verify insets, because sometimes default lifecycle methods may not be invoked
+    // (when we press "Share" on Android 16, when Modal closes keyboard, etc.)
     val newHeight = getCurrentKeyboardHeight(insets)
-    if (prevKeyboardHeight != newHeight && !isTransitioning) {
+    if (prevKeyboardHeight != newHeight && !isMoving && !isSuspended) {
       Logger.w(
         TAG,
-        "detected desynchronized state - force updating it. $prevKeyboardHeight -> $newHeight"
+        "detected desynchronized state - force updating it. $prevKeyboardHeight -> $newHeight. Modal ${this.source}",
       )
       this.syncKeyboardPosition(newHeight, newHeight > 0)
     }
