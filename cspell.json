@@ -166,7 +166,8 @@
     "googlequicksearchbox",
     "androidkeyboard",
     "honeyboard",
-    "unflatten"
+    "unflatten",
+    "Pixelfed"
   ],
   "ignorePaths": [
     "node_modules",
