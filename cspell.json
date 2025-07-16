@@ -167,7 +167,8 @@
     "androidkeyboard",
     "honeyboard",
     "unflatten",
-    "Pixelfed"
+    "Pixelfed",
+    "desynchronized"
   ],
   "ignorePaths": [
     "node_modules",
