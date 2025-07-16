@@ -155,6 +155,12 @@ const trustedBy = [
     link: "https://github.com/swan-io/swan-partner-mobile",
     name: "Swan",
   },
+  {
+    img: "https://play-lh.googleusercontent.com/N2Rh_iRbYkX4a5l4u3kMqFu6n5Wk7KkVQnWwXh0MmSGdAfau4IiGFlLmzVU_oeoV9Lo=w240-h480-rw",
+    alt: "Kwibo: Fast Kwai HD Videos Downloader",
+    link: "https://play.google.com/store/apps/details?id=com.kwai.video.downloader.nowatermark",
+    name: "Kwibo",
+  },
 ];
 
 function TrustedBy(): JSX.Element {
