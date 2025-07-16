@@ -167,7 +167,9 @@
     "androidkeyboard",
     "honeyboard",
     "unflatten",
-    "Pixelfed"
+    "Pixelfed",
+    "Kwai",
+    "Kwibo",
   ],
   "ignorePaths": [
     "node_modules",
