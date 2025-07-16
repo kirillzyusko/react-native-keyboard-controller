@@ -169,7 +169,7 @@
     "unflatten",
     "Pixelfed",
     "Kwai",
-    "Kwibo",
+    "Kwibo"
   ],
   "ignorePaths": [
     "node_modules",
