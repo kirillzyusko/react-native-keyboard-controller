@@ -171,7 +171,8 @@
     "Pixelfed",
     "Kwai",
     "Kwibo",
-    "revolut"
+    "revolut",
+    "desynchronized"
   ],
   "ignorePaths": [
     "node_modules",
