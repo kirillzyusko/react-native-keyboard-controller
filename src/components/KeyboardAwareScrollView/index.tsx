@@ -4,7 +4,6 @@ import Reanimated, {
   interpolate,
   runOnUI,
   scrollTo,
-  useAnimatedReaction,
   useAnimatedRef,
   useAnimatedStyle,
   useScrollViewOffset,
@@ -257,12 +256,7 @@ const KeyboardAwareScrollView = forwardRef<
       (customHeight: number) => {
         "worklet";
 
-        // if typing a text caused layout shift, then we need to ignore this handler
-        // because this event will be handled in `useAnimatedReaction` below
-        if (layout.value?.layout.height !== input.value?.layout.height) {
-          return;
-        }
-
+        console.debug("maybeScroll - onChangeText");
         scrollFromCurrentPosition(customHeight);
       },
       [scrollFromCurrentPosition],
@@ -276,6 +270,7 @@ const KeyboardAwareScrollView = forwardRef<
         "worklet";
 
         const lastTarget = lastSelection.value?.target;
+        const latestSelection = lastSelection.value?.selection;
 
         lastSelection.value = e;
 
@@ -283,11 +278,23 @@ const KeyboardAwareScrollView = forwardRef<
           // ignore this event, because "focus changed" event handled in `useSmoothKeyboardHandler`
           return;
         }
+        // caret in the end + end coordinates has been changed -> we moved to a new line
+        if (
+          e.selection.end.position === e.selection.start.position &&
+          latestSelection?.end.y !== e.selection.end.y
+        ) {
+          console.log("input will grow");
+          scrollFromCurrentPosition(e.selection.end.y);
 
-        if (e.selection.start.position !== e.selection.end.position) {
-          return scrollFromCurrentPosition(e.selection.end.y);
+          return;
         }
 
+        if (e.selection.start.position !== e.selection.end.position) {
+          console.debug("onSelectionChange");
+
+          return scrollFromCurrentPosition(e.selection.end.y);
+        }
+        console.log("onChangeText", latestSelection, e.selection);
         onChangeTextHandler(e.selection.end.y);
       },
       [scrollFromCurrentPosition, onChangeTextHandler],
@@ -378,23 +385,6 @@ const KeyboardAwareScrollView = forwardRef<
     useEffect(() => {
       runOnUI(maybeScroll)(keyboardHeight.value, true);
     }, [bottomOffset]);
-
-    useAnimatedReaction(
-      () => input.value,
-      (current, previous) => {
-        if (
-          current?.target === previous?.target &&
-          current?.layout.height !== previous?.layout.height
-        ) {
-          const prevLayout = layout.value;
-
-          layout.value = input.value;
-          scrollPosition.value += maybeScroll(keyboardHeight.value, true);
-          layout.value = prevLayout;
-        }
-      },
-      [],
-    );
 
     const view = useAnimatedStyle(
       () =>
