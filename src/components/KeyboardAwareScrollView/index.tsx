@@ -171,6 +171,8 @@ const KeyboardAwareScrollView = forwardRef<
         const inputHeight = layout.value?.layout.height || 0;
         const point = absoluteY + inputHeight;
 
+        console.log({absoluteY, inputHeight, point, visibleRect});
+
         if (visibleRect - point <= bottomOffset) {
           const relativeScrollTo =
             keyboardHeight.value - (height - point) + bottomOffset;
@@ -187,16 +189,16 @@ const KeyboardAwareScrollView = forwardRef<
           );
           const targetScrollY =
             Math.max(interpolatedScrollTo, 0) + scrollPosition.value;
-
+console.log(11111);
           scrollTo(scrollViewAnimatedRef, 0, targetScrollY, animated);
 
           return interpolatedScrollTo;
         }
 
-        if (absoluteY < 0) {
-          const positionOnScreen = visibleRect - inputHeight - bottomOffset;
-          const topOfScreen = scrollPosition.value + absoluteY;
-
+        if (point < 0) {
+          const positionOnScreen = visibleRect - bottomOffset;
+          const topOfScreen = scrollPosition.value + point;
+console.log(22222);
           scrollTo(
             scrollViewAnimatedRef,
             0,
@@ -235,6 +237,8 @@ const KeyboardAwareScrollView = forwardRef<
           return;
         }
 
+        console.log(1, layout.value);
+
         // eslint-disable-next-line react-compiler/react-compiler
         layout.value = {
           ...input.value,
@@ -245,6 +249,9 @@ const KeyboardAwareScrollView = forwardRef<
             height: clamp(customHeight, 0, input.value.layout.height),
           },
         };
+
+        console.log(2, layout.value);
+
         scrollPosition.value = position.value;
         maybeScroll(keyboardHeight.value, true);
         scrollPosition.value = prevScrollPosition;
@@ -283,7 +290,7 @@ const KeyboardAwareScrollView = forwardRef<
           e.selection.end.position === e.selection.start.position &&
           latestSelection?.end.y !== e.selection.end.y
         ) {
-          console.log("input will grow");
+          console.log("input will grow", latestSelection, e.selection);
           scrollFromCurrentPosition(e.selection.end.y);
 
           return;
