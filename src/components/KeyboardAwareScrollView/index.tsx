@@ -171,7 +171,7 @@ const KeyboardAwareScrollView = forwardRef<
         const inputHeight = layout.value?.layout.height || 0;
         const point = absoluteY + inputHeight;
 
-        console.log({absoluteY, inputHeight, point, visibleRect});
+        console.log({ absoluteY, inputHeight, point, visibleRect });
 
         if (visibleRect - point <= bottomOffset) {
           const relativeScrollTo =
@@ -189,7 +189,8 @@ const KeyboardAwareScrollView = forwardRef<
           );
           const targetScrollY =
             Math.max(interpolatedScrollTo, 0) + scrollPosition.value;
-console.log(11111);
+
+          console.log(11111);
           scrollTo(scrollViewAnimatedRef, 0, targetScrollY, animated);
 
           return interpolatedScrollTo;
@@ -198,7 +199,8 @@ console.log(11111);
         if (point < 0) {
           const positionOnScreen = visibleRect - bottomOffset;
           const topOfScreen = scrollPosition.value + point;
-console.log(22222);
+
+          console.log(22222);
           scrollTo(
             scrollViewAnimatedRef,
             0,
@@ -226,48 +228,53 @@ console.log(22222);
       [extraKeyboardSpace],
     );
 
-    const scrollFromCurrentPosition = useCallback(
-      (customHeight: number) => {
-        "worklet";
+    const updateLayoutFromSelection = useCallback(() => {
+      "worklet";
 
-        const prevScrollPosition = scrollPosition.value;
-        const prevLayout = layout.value;
+      const customHeight = lastSelection.value?.selection.end.y;
 
-        if (!input.value?.layout) {
-          return;
-        }
+      if (!input.value?.layout || !customHeight) {
+        return false;
+      }
 
-        console.log(1, layout.value);
+      layout.value = {
+        ...input.value,
+        layout: {
+          ...input.value.layout,
+          // when we have multiline input with limited amount of lines, then custom height can be very big
+          // so we clamp it to max input height
+          height: clamp(customHeight, 0, input.value.layout.height),
+        },
+      };
 
-        // eslint-disable-next-line react-compiler/react-compiler
-        layout.value = {
-          ...input.value,
-          layout: {
-            ...input.value.layout,
-            // when we have multiline input with limited amount of lines, then custom height can be very big
-            // so we clamp it to max input height
-            height: clamp(customHeight, 0, input.value.layout.height),
-          },
-        };
+      return true;
+    }, [input, lastSelection, layout]);
+    const scrollFromCurrentPosition = useCallback(() => {
+      "worklet";
 
-        console.log(2, layout.value);
+      const prevScrollPosition = scrollPosition.value;
+      const prevLayout = layout.value;
 
-        scrollPosition.value = position.value;
-        maybeScroll(keyboardHeight.value, true);
-        scrollPosition.value = prevScrollPosition;
-        layout.value = prevLayout;
-      },
-      [maybeScroll],
-    );
-    const onChangeText = useCallback(
-      (customHeight: number) => {
-        "worklet";
+      console.log(1, layout.value);
 
-        console.debug("maybeScroll - onChangeText");
-        scrollFromCurrentPosition(customHeight);
-      },
-      [scrollFromCurrentPosition],
-    );
+      if (!updateLayoutFromSelection()) {
+        return;
+      }
+
+      console.log(2, layout.value);
+
+      // eslint-disable-next-line react-compiler/react-compiler
+      scrollPosition.value = position.value;
+      maybeScroll(keyboardHeight.value, true);
+      scrollPosition.value = prevScrollPosition;
+      layout.value = prevLayout;
+    }, [maybeScroll]);
+    const onChangeText = useCallback(() => {
+      "worklet";
+
+      console.debug("maybeScroll - onChangeText");
+      scrollFromCurrentPosition();
+    }, [scrollFromCurrentPosition]);
     const onChangeTextHandler = useMemo(
       () => debounce(onChangeText, 200),
       [onChangeText],
@@ -275,6 +282,8 @@ console.log(22222);
     const onSelectionChange = useCallback(
       (e: FocusedInputSelectionChangedEvent) => {
         "worklet";
+
+        console.log("onSelectionChange", e);
 
         const lastTarget = lastSelection.value?.target;
         const latestSelection = lastSelection.value?.selection;
@@ -291,7 +300,7 @@ console.log(22222);
           latestSelection?.end.y !== e.selection.end.y
         ) {
           console.log("input will grow", latestSelection, e.selection);
-          scrollFromCurrentPosition(e.selection.end.y);
+          scrollFromCurrentPosition();
 
           return;
         }
@@ -299,10 +308,10 @@ console.log(22222);
         if (e.selection.start.position !== e.selection.end.position) {
           console.debug("onSelectionChange");
 
-          return scrollFromCurrentPosition(e.selection.end.y);
+          return scrollFromCurrentPosition();
         }
         console.log("onChangeText", latestSelection, e.selection);
-        onChangeTextHandler(e.selection.end.y);
+        onChangeTextHandler();
       },
       [scrollFromCurrentPosition, onChangeTextHandler],
     );
@@ -354,8 +363,9 @@ console.log(22222);
           if (focusWasChanged) {
             tag.value = e.target;
 
+            console.log("save - 3", e.target);
             // save position of focused text input when keyboard starts to move
-            layout.value = input.value;
+            updateLayoutFromSelection();
             // save current scroll position - when keyboard will hide we'll reuse
             // this value to achieve smooth hide effect
             scrollBeforeKeyboardMovement.value = position.value;

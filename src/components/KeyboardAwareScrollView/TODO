@@ -1,2 +1,3 @@
-- [ ] focus large input -> scroll till the end
+- [x] focus large input -> scroll till the end
 - [x] top part is not visible + change selection coordinates (don't interfere with keyboard frame) -> scroll gets triggered -- `if (point < 0) {`
+- [ ] new e2e test to cover full screen input scenario
