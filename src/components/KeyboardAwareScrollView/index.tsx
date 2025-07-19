@@ -33,7 +33,7 @@ import type {
 } from "react-native-keyboard-controller";
 
 export type KeyboardAwareScrollViewProps = {
-  /** The distance between keyboard and focused `TextInput` when keyboard is shown. Default is `0`. */
+  /** The distance between the keyboard and the caret inside a focused `TextInput` when the keyboard is shown. Default is `0`. */
   bottomOffset?: number;
   /** Prevents automatic scrolling of the `ScrollView` when the keyboard gets hidden, maintaining the current screen position. Default is `false`. */
   disableScrollOnKeyboardHide?: boolean;
