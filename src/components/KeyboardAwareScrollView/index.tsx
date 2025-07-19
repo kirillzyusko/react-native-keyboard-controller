@@ -4,6 +4,7 @@ import Reanimated, {
   interpolate,
   runOnUI,
   scrollTo,
+  useAnimatedReaction,
   useAnimatedRef,
   useAnimatedStyle,
   useScrollViewOffset,
@@ -402,6 +403,22 @@ const KeyboardAwareScrollView = forwardRef<
     useEffect(() => {
       runOnUI(maybeScroll)(keyboardHeight.value, true);
     }, [bottomOffset]);
+
+    useAnimatedReaction(
+      () => input.value,
+      (current, previous) => {
+        if (
+          current?.target === previous?.target &&
+          current?.layout.height !== previous?.layout.height
+        ) {
+          // input has changed layout - let's check if we need to scroll
+          // may happen when you paste text, then onSelectionChange will be
+          // fired earlier than text actually changes its layout
+          scrollFromCurrentPosition();
+        }
+      },
+      [],
+    );
 
     const view = useAnimatedStyle(
       () =>
