@@ -140,6 +140,11 @@ public class FocusedInputObserver: NSObject {
     currentInput = currentResponder?.superview as UIView?
 
     setupObservers()
+    // dispatch onSelectionChange on focus
+    if let textInput = responder as? UITextInput {
+      updateSelectionPosition(textInput: textInput, sendEvent: onSelectionChange)
+    }
+    
     syncUpLayout()
 
     FocusedInputHolder.shared.set(currentResponder as? TextInput)
@@ -210,8 +215,12 @@ public class FocusedInputObserver: NSObject {
         guard let self = self else { return }
         self.onLayoutChange(view: view, change: change)
       }
-
-      substituteDelegate(currentResponder)
+      
+      // substitute a delegate into the next frame.
+      // so that other libraries can inject their own delegates
+      DispatchQueue.main.async {
+        self.substituteDelegate(self.currentResponder)
+      }
     }
   }
 
@@ -239,10 +248,6 @@ public class FocusedInputObserver: NSObject {
         delegate.setTextViewDelegate(delegate: textView.delegate)
         textView.setForceDelegate(delegate)
       }
-    }
-    // dispatch onSelectionChange on focus
-    if let textInput = input as? UITextInput {
-      updateSelectionPosition(textInput: textInput, sendEvent: onSelectionChange)
     }
   }
 
