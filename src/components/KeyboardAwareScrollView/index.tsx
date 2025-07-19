@@ -172,8 +172,6 @@ const KeyboardAwareScrollView = forwardRef<
         const inputHeight = layout.value?.layout.height || 0;
         const point = absoluteY + inputHeight;
 
-        console.log({ absoluteY, inputHeight, point, visibleRect });
-
         if (visibleRect - point <= bottomOffset) {
           const relativeScrollTo =
             keyboardHeight.value - (height - point) + bottomOffset;
@@ -191,7 +189,6 @@ const KeyboardAwareScrollView = forwardRef<
           const targetScrollY =
             Math.max(interpolatedScrollTo, 0) + scrollPosition.value;
 
-          console.log(11111);
           scrollTo(scrollViewAnimatedRef, 0, targetScrollY, animated);
 
           return interpolatedScrollTo;
@@ -201,7 +198,6 @@ const KeyboardAwareScrollView = forwardRef<
           const positionOnScreen = visibleRect - bottomOffset;
           const topOfScreen = scrollPosition.value + point;
 
-          console.log(22222);
           scrollTo(
             scrollViewAnimatedRef,
             0,
@@ -256,13 +252,9 @@ const KeyboardAwareScrollView = forwardRef<
       const prevScrollPosition = scrollPosition.value;
       const prevLayout = layout.value;
 
-      console.log(1, layout.value);
-
       if (!updateLayoutFromSelection()) {
         return;
       }
-
-      console.log(2, layout.value);
 
       // eslint-disable-next-line react-compiler/react-compiler
       scrollPosition.value = position.value;
@@ -284,8 +276,6 @@ const KeyboardAwareScrollView = forwardRef<
       (e: FocusedInputSelectionChangedEvent) => {
         "worklet";
 
-        console.log("onSelectionChange", e);
-
         const lastTarget = lastSelection.value?.target;
         const latestSelection = lastSelection.value?.selection;
 
@@ -296,22 +286,18 @@ const KeyboardAwareScrollView = forwardRef<
           return;
         }
         // caret in the end + end coordinates has been changed -> we moved to a new line
+        // so input may grow
         if (
           e.selection.end.position === e.selection.start.position &&
           latestSelection?.end.y !== e.selection.end.y
         ) {
-          console.log("input will grow", latestSelection, e.selection);
-          scrollFromCurrentPosition();
-
-          return;
-        }
-
-        if (e.selection.start.position !== e.selection.end.position) {
-          console.debug("onSelectionChange");
-
           return scrollFromCurrentPosition();
         }
-        console.log("onChangeText", latestSelection, e.selection);
+        // selection has been changed
+        if (e.selection.start.position !== e.selection.end.position) {
+          return scrollFromCurrentPosition();
+        }
+
         onChangeTextHandler();
       },
       [scrollFromCurrentPosition, onChangeTextHandler],
@@ -363,8 +349,6 @@ const KeyboardAwareScrollView = forwardRef<
           // focus was changed
           if (focusWasChanged) {
             tag.value = e.target;
-
-            console.log("save - 3", e.target);
             // save position of focused text input when keyboard starts to move
             updateLayoutFromSelection();
             // save current scroll position - when keyboard will hide we'll reuse
