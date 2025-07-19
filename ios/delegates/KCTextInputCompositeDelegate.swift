@@ -54,7 +54,7 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
   // Keep track of which textField we’re observing (iOS < 13 only)
   private weak var observedTextFieldForSelection: UITextField?
 
-  public init(
+  init(
     onSelectionChange: @escaping (_ event: NSDictionary) -> Void,
     onTextChange: @escaping (_ text: String?) -> Void
   ) {
@@ -64,7 +64,7 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
 
   // MARK: setters/getters
 
-  public func setTextViewDelegate(delegate: UITextViewDelegate?) {
+  func setTextViewDelegate(delegate: UITextViewDelegate?) {
     // remove KVO from any old textView
     if let oldTextField = observedTextFieldForSelection {
       removeSelectionRangeObserver(from: oldTextField)
@@ -75,7 +75,7 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
     observedTextFieldForSelection = nil
   }
 
-  public func setTextFieldDelegate(delegate: UITextFieldDelegate?, textField: UITextField?) {
+  func setTextFieldDelegate(delegate: UITextFieldDelegate?, textField: UITextField?) {
     // remove KVO from any old textField
     if let oldTextField = observedTextFieldForSelection {
       removeSelectionRangeObserver(from: oldTextField)
@@ -96,7 +96,7 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
     }
   }
 
-  public func canSubstituteTextFieldDelegate(delegate: UITextFieldDelegate?) -> Bool {
+  func canSubstituteTextFieldDelegate(delegate: UITextFieldDelegate?) -> Bool {
     let type = String(describing: delegate)
     if type.range(of: "SQIPTextFieldInputModifier") != nil {
       // SQIPTextFieldInputModifier is a private class used internally by Square.
@@ -112,7 +112,7 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
   }
 
   // Getter for the active delegate
-  public var activeDelegate: AnyObject? {
+  var activeDelegate: AnyObject? {
     return textViewDelegate ?? textFieldDelegate
   }
 

@@ -36,7 +36,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Install SwiftFormat
-        run: brew install swiftformat@0.56.4
+        run: brew install swiftformat
 
       - name: Format Swift code
         run: swiftformat --verbose .

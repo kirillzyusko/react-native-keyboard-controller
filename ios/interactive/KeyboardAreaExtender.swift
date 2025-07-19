@@ -8,7 +8,7 @@
 class KeyboardAreaExtender: NSObject {
   private var currentInputAccessoryView: InvisibleInputAccessoryView?
 
-  @objc public static let shared = KeyboardAreaExtender()
+  @objc static let shared = KeyboardAreaExtender()
 
   override private init() {
     super.init()
@@ -24,11 +24,11 @@ class KeyboardAreaExtender: NSObject {
     NotificationCenter.default.removeObserver(self)
   }
 
-  public var offset: CGFloat {
+  var offset: CGFloat {
     return currentInputAccessoryView?.frame.height ?? 0
   }
 
-  public func hide() {
+  func hide() {
     if isVisible {
       NotificationCenter.default.post(
         name: .shouldIgnoreKeyboardEvents, object: nil, userInfo: ["ignore": true]
@@ -37,11 +37,11 @@ class KeyboardAreaExtender: NSObject {
     }
   }
 
-  public func remove() {
+  func remove() {
     currentInputAccessoryView = nil
   }
 
-  public func updateHeight(to newHeight: CGFloat, for nativeID: String) {
+  func updateHeight(to newHeight: CGFloat, for nativeID: String) {
     if UIResponder.current.nativeID == nativeID {
       currentInputAccessoryView?.updateHeight(to: newHeight)
     }
