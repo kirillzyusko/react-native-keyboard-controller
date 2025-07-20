@@ -140,6 +140,11 @@ public class FocusedInputObserver: NSObject {
     currentInput = currentResponder?.superview as UIView?
 
     setupObservers()
+    // dispatch onSelectionChange on focus
+    if let textInput = responder as? UITextInput {
+      updateSelectionPosition(textInput: textInput, sendEvent: onSelectionChange)
+    }
+
     syncUpLayout()
 
     FocusedInputHolder.shared.set(currentResponder as? TextInput)
@@ -211,7 +216,15 @@ public class FocusedInputObserver: NSObject {
         self.onLayoutChange(view: view, change: change)
       }
 
-      substituteDelegate(currentResponder)
+      // Substitute a delegate in the next frame.
+      // This is only applicable if the autoFocus prop is true.
+      // Other libraries (e.g., decorator views) might mount *after* the
+      // TextInput and inject their own delegates at that point.
+      // If we substitute our delegate too early (e.g., during autoFocus), and later restore it when the keyboard hides,
+      // we may accidentally overwrite a delegate injected by another library — breaking its logic.
+      DispatchQueue.main.async {
+        self.substituteDelegate(self.currentResponder)
+      }
     }
   }
 
@@ -239,10 +252,6 @@ public class FocusedInputObserver: NSObject {
         delegate.setTextViewDelegate(delegate: textView.delegate)
         textView.setForceDelegate(delegate)
       }
-    }
-    // dispatch onSelectionChange on focus
-    if let textInput = input as? UITextInput {
-      updateSelectionPosition(textInput: textInput, sendEvent: onSelectionChange)
     }
   }
 
