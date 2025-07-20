@@ -216,8 +216,12 @@ public class FocusedInputObserver: NSObject {
         self.onLayoutChange(view: view, change: change)
       }
 
-      // substitute a delegate into the next frame.
-      // so that other libraries can inject their own delegates
+      // Substitute a delegate in the next frame.
+      // This is only applicable if the autofocus prop is true.
+      // Other libraries (e.g., decorator views) might mount *after* the 
+      // TextInput and inject their own delegates at that point.
+      // If we substitute our delegate too early (e.g., during autofocus), and later restore it when the keyboard hides,
+      // we may accidentally overwrite a delegate injected by another library — breaking its logic.
       DispatchQueue.main.async {
         self.substituteDelegate(self.currentResponder)
       }
