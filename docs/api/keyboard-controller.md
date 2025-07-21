@@ -36,6 +36,18 @@ This method is used to restore the default `windowSoftInputMode` (`softwareKeybo
 KeyboardController.setDefaultMode();
 ```
 
+### `preload`[​](/react-native-keyboard-controller/docs/api/keyboard-controller.md#preload- "Direct link to preload-")
+
+```
+static preload(): void;
+```
+
+This method preloads the keyboard to prevent noticeable delay when the user focuses the first input after launching the app.
+
+```
+KeyboardController.preload();
+```
+
 ### `dismiss`[​](/react-native-keyboard-controller/docs/api/keyboard-controller.md#dismiss "Direct link to dismiss")
 
 ```

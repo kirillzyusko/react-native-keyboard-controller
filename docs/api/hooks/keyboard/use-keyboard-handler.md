@@ -152,7 +152,7 @@ useKeyboardHandler(
 
 Event availability
 
-This event is available only on Android >= 11. To receive it you need to use [KeyboardGestureArea](/react-native-keyboard-controller/docs/api/keyboard-gesture-area.md).
+This event is available only on Android >= 11. To receive it you need to use [KeyboardGestureArea](/react-native-keyboard-controller/docs/api/views/keyboard-gesture-area.md).
 
 On iOS you need to specify `keyboardDismissMode="interactive"` on your `ScrollView`.
 

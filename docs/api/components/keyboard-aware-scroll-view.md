@@ -52,7 +52,7 @@ import { ScrollView } from "react-native-gesture-handler";
 
 ### `bottomOffset`[​](/react-native-keyboard-controller/docs/api/components/keyboard-aware-scroll-view.md#bottomoffset "Direct link to bottomoffset")
 
-The distance between keyboard and focused `TextInput` when keyboard is shown. Default is `0`.
+The distance between the keyboard and the caret inside a focused `TextInput` when the keyboard is shown. Default is `0`.
 
 `react-native-keyboard-aware-scroll-view` equivalent
 

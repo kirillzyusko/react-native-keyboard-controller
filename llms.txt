@@ -26,14 +26,19 @@ Control each frame of keyboard movement in react native
 - [useReanimatedKeyboardAnimation](/docs/api/hooks/keyboard/use-reanimated-keyboard-animation.md): useReanimatedKeyboardAnimation is a hook which gives access to two reanimated values:
 - [useKeyboardController](/docs/api/hooks/module/use-keyboard-controller.md): useKeyboardController is a hook which gives an access to the state of the react-native-keyboard-controller library. It return two values:
 - [KeyboardController](/docs/api/keyboard-controller.md): The KeyboardController module in React Native provides a convenient set of methods for managing the behavior of the keyboard. With seamless runtime adjustments, this module allows developers to dynamically change the windowSoftInputMode on Android and dismiss the keyboard on both platforms.
-- [KeyboardControllerView](/docs/api/keyboard-controller-view.md): A plain react-native View with some additional methods and props. Used internally in KeyboardProvider
 - [KeyboardEvents](/docs/api/keyboard-events.md): This library exposes 4 events which are available on all platforms:
-- [KeyboardGestureArea](/docs/api/keyboard-gesture-area.md): KeyboardGestureArea allows you to define a region on the screen, where gestures will control the keyboard position.
 - [KeyboardProvider](/docs/api/keyboard-provider.md): KeyboardProvider should wrap your app. Under the hood it works with KeyboardControllerView to receive events during keyboard movements, maps these events to Animated/Reanimated values and store them in context.
-- [OverKeyboardView](/docs/api/over-keyboard-view.md): Display views over keyboard without closing it.
+- [KeyboardBackgroundView](/docs/api/views/keyboard-background-view.md): View that matches keyboard background
+- [KeyboardControllerView](/docs/api/views/keyboard-controller-view.md): A plain react-native View with some additional methods and props. Used internally in KeyboardProvider
+- [KeyboardExtender](/docs/api/views/keyboard-extender.md): Display views inside the keyboard
+- [KeyboardGestureArea](/docs/api/views/keyboard-gesture-area.md): View for gestures that will control keyboard position
+- [OverKeyboardView](/docs/api/views/over-keyboard-view.md): Display views over keyboard without closing it.
 
 #### category
 
+- [📚 Components](/docs/category/-components.md): A set of JS components that simplify keyboard management and user interaction handling
+- [🎣 Hooks](/docs/category/-hooks.md): React hooks provided by this library
+- [✨ Views](/docs/category/-views.md): Native views provided by this library
 - [API Reference](/docs/category/api-reference.md): API reference containing information about all public methods and their signatures
 - [Guides](/docs/category/guides.md): Most useful topics to start quickly.
 - [Recipes](/docs/category/recipes.md)

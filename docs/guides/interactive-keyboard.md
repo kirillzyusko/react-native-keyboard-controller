@@ -18,7 +18,7 @@ First of all let's consider a simple example and layout for typical chat applica
 
 ### Adding `KeyboardGestureArea`[​](/react-native-keyboard-controller/docs/guides/interactive-keyboard.md#adding-keyboardgesturearea "Direct link to adding-keyboardgesturearea")
 
-To make interactive dismissing work on Android we need to add `KeyboardGestureArea` view. This view will track all gestures and will control the keyboard positioning. To customize the way how the keyboard will be dismissed you can specify `interpolator` [prop](/react-native-keyboard-controller/docs/api/keyboard-gesture-area.md#interpolator-).
+To make interactive dismissing work on Android we need to add `KeyboardGestureArea` view. This view will track all gestures and will control the keyboard positioning. To customize the way how the keyboard will be dismissed you can specify `interpolator` [prop](/react-native-keyboard-controller/docs/api/views/keyboard-gesture-area.md#interpolator-).
 
 In order to recognize all gestures on a `ScrollView` we need to wrap a `ScrollView` within `KeyboardGestureArea`:
 

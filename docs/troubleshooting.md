@@ -98,12 +98,13 @@ If you experience this error on Windows you need to perform next steps:
    import org.apache.tools.ant.taskdefs.condition.Os
 
    externalNativeBuild {
-       cmake {
-           def cmakeDir = "${android.sdkDirectory}/cmake/3.31.1/bin"
-           def ninjaExecutable = Os.isFamily(Os.FAMILY_WINDOWS) ? "ninja.exe" : "ninja"
-           def ninjaPath = "${cmakeDir}/${ninjaExecutable}".replace("\\", "/")
-           arguments "-DCMAKE_MAKE_PROGRAM=${ninjaPath}",
-                      "-DCMAKE_OBJECT_PATH_MAX=1024"
+      cmake {
+         def cmakeDir = "${android.sdkDirectory}/cmake/3.31.1/bin"
+         def ninjaExecutable = Os.isFamily(Os.FAMILY_WINDOWS) ? "ninja.exe" : "ninja"
+         def ninjaPath = "${cmakeDir}/${ninjaExecutable}".replace("\\", "/")
+
+         arguments "-DCMAKE_MAKE_PROGRAM=${ninjaPath}",
+                   "-DCMAKE_OBJECT_PATH_MAX=1024"
       }
    }
    ```
