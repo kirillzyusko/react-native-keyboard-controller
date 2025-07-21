@@ -29,6 +29,9 @@
 <div style="display:flex;justify-content:center;margin-bottom:20px"><div style="width:400px;height:400px" class="lottie"></div></div>
 <p>With <code>KeyboardExtender</code>, you’re not just avoiding the keyboard — you’re <strong>designing experiences that live within it</strong>. This allows you to create rich, contextual UI that feels like a natural extension of the keyboard itself.</p>
 <p>For example, if you're building a <strong>money transfer</strong> or <strong>payment</strong> app, you can now display a predefined set of quick-select amounts (e.g., $5, $10, $20) <strong>inside the keyboard space</strong> — making the experience more fluid and faster for your users.</p>
+<!-- -->
+<!-- -->
+<div class="swiper custom-swiper"><div class="swiper-wrapper"><div class="swiper-slide"><img src="https://kirillzyusko.github.io/react-native-keyboard-controller/pr-preview/pr-1029/assets/images/revolut-presets-db32ea8ff0327fb40a88e3dd30261009.png" style="border-radius:10px"></div><div class="swiper-slide"><img src="https://kirillzyusko.github.io/react-native-keyboard-controller/pr-preview/pr-1029/assets/images/revolut-math-94c6ad1a6d224a31e00b0e24193e7cdb.png" style="border-radius:10px"></div><div class="swiper-slide"><img src="https://kirillzyusko.github.io/react-native-keyboard-controller/pr-preview/pr-1029/assets/images/chrome-7dd276637f240f367a869f72688850b2.png" style="border-radius:10px"></div></div><div class="swiper-pagination"></div></div>
 <blockquote>
 <p>Thanks to <a href="https://github.com/Amurmurmur" target="_blank" rel="noopener noreferrer">Amur</a> for sparking the idea behind this component! 💡</p>
 </blockquote>
