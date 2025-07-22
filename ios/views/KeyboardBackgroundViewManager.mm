@@ -165,4 +165,11 @@ RCT_EXPORT_MODULE(KeyboardBackgroundViewManager)
   }
 }
 
+#ifdef RCT_NEW_ARCH_ENABLED
+Class<RCTComponentViewProtocol> KeyboardBackgroundViewCls(void)
+{
+  return KeyboardBackgroundView.class;
+}
+#endif
+
 @end
