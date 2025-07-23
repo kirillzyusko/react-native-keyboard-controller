@@ -22,6 +22,7 @@ class KeyboardControllerViewManagerImpl {
 
   fun invalidate() {
     listener?.detachListener()
+    listener = null
   }
 
   fun setEnabled(
