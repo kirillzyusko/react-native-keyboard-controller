@@ -207,7 +207,7 @@ RCT_EXPORT_VIEW_PROPERTY(visible, BOOL)
   if (_visible) {
     return;
   }
-  
+
   UIWindow *topWindow = [UIWindow topWindow];
   _visible = true;
   _contentView.frame = topWindow.bounds;
