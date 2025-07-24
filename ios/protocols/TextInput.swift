@@ -39,13 +39,17 @@ extension TextInput {
     case .light:
       return "light"
     case .default:
-      switch traitCollection.userInterfaceStyle {
-      case .dark:
-        return "dark"
-      case .light, .unspecified:
-        return "light"
-      @unknown default:
-        return "light"
+      if #available(iOS 12.0, *) {
+        switch traitCollection.userInterfaceStyle {
+        case .dark:
+          return "dark"
+        case .light, .unspecified:
+          return "light"
+        @unknown default:
+          return "light"
+        }
+      } else {
+        return "light" // Default fallback for iOS < 12
       }
     @unknown default:
       return "light"
