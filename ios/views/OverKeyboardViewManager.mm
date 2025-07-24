@@ -158,7 +158,6 @@ RCT_EXPORT_VIEW_PROPERTY(visible, BOOL)
 #ifdef RCT_NEW_ARCH_ENABLED
 - (void)updateProps:(Props::Shared const &)props oldProps:(Props::Shared const &)oldProps
 {
-  const auto &oldViewProps = *std::static_pointer_cast<const OverKeyboardViewProps>(_props);
   const auto &newViewProps = *std::static_pointer_cast<const OverKeyboardViewProps>(props);
 
   if (newViewProps.visible != _visible) {
