@@ -161,7 +161,7 @@ RCT_EXPORT_VIEW_PROPERTY(visible, BOOL)
   const auto &oldViewProps = *std::static_pointer_cast<const OverKeyboardViewProps>(_props);
   const auto &newViewProps = *std::static_pointer_cast<const OverKeyboardViewProps>(props);
 
-  if (newViewProps.visible != oldViewProps.visible) {
+  if (newViewProps.visible != _visible) {
     if (newViewProps.visible) {
       [self show];
     } else {
