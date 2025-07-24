@@ -207,13 +207,14 @@ RCT_EXPORT_VIEW_PROPERTY(visible, BOOL)
   if (_visible) {
     return;
   }
+  
+  UIWindow *topWindow = [UIWindow topWindow];
   _visible = true;
-  _contentView.frame = self.window.bounds;
+  _contentView.frame = topWindow.bounds;
   _contentView.autoresizingMask =
       UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-  [_touchHandler attachToView:_contentView];
 
-  UIWindow *topWindow = [UIWindow topWindow];
+  [_touchHandler attachToView:_contentView];
   [topWindow addSubview:_contentView];
 }
 
