@@ -64,8 +64,11 @@ final class KeyboardTrackingView: UIView {
       return
     }
 
-    // TODO: with cross fade
-    let keyboardHeight = max(0, window.bounds.height - window.convert(endFrame, from: nil).minY)
+    let convertedEndFrame = window.convert(endFrame, from: nil)
+    // Handle both cross-fade (empty) and normal hide (offscreen)
+    let isKeyboardHiding = convertedEndFrame.isEmpty || convertedEndFrame.minY >= window.bounds.height
+
+    let keyboardHeight: CGFloat = isKeyboardHiding ? 0 : max(0, window.bounds.height - convertedEndFrame.minY)
 
     let options = UIView.AnimationOptions(rawValue: animationCurve << 16)
     UIView.animate(withDuration: animationDuration, delay: 0, options: options, animations: {
