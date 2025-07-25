@@ -19,7 +19,7 @@ final class KeyboardTrackingView: UIView {
     super.init(coder: coder)
     setup()
   }
-  
+
   required init() {
     super.init(frame: .zero)
     setup()
@@ -47,7 +47,7 @@ final class KeyboardTrackingView: UIView {
       name: UIResponder.keyboardDidHideNotification,
       object: nil
     )
-    
+
     guard let window = UIApplication.shared.activeWindow else {
       return
     }
@@ -59,7 +59,7 @@ final class KeyboardTrackingView: UIView {
           let endFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect,
           let animationDuration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval,
           let animationCurve = userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as? UInt,
-          let window = self.window
+          let window = window
     else {
       return
     }
@@ -75,10 +75,10 @@ final class KeyboardTrackingView: UIView {
     keyboardVisibleHeight = keyboardHeight
   }
 
-  @objc private func keyboardDidHide(_ notification: Notification) {
+  @objc private func keyboardDidHide(_: Notification) {
     // Reset
     keyboardVisibleHeight = 0
-    self.frame.size.height = 0
+    frame.size.height = 0
   }
 
   func currentHeight() -> CGFloat {
