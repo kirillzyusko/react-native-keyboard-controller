@@ -158,10 +158,9 @@ RCT_EXPORT_VIEW_PROPERTY(visible, BOOL)
 #ifdef RCT_NEW_ARCH_ENABLED
 - (void)updateProps:(Props::Shared const &)props oldProps:(Props::Shared const &)oldProps
 {
-  const auto &oldViewProps = *std::static_pointer_cast<const OverKeyboardViewProps>(_props);
   const auto &newViewProps = *std::static_pointer_cast<const OverKeyboardViewProps>(props);
 
-  if (newViewProps.visible != oldViewProps.visible) {
+  if (newViewProps.visible != _visible) {
     if (newViewProps.visible) {
       [self show];
     } else {
@@ -207,13 +206,14 @@ RCT_EXPORT_VIEW_PROPERTY(visible, BOOL)
   if (_visible) {
     return;
   }
-  _visible = true;
-  _contentView.frame = self.window.bounds;
-  _contentView.autoresizingMask =
-      UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-  [_touchHandler attachToView:_contentView];
 
   UIWindow *topWindow = [UIWindow topWindow];
+  _visible = true;
+  _contentView.frame = topWindow.bounds;
+  _contentView.autoresizingMask =
+      UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+
+  [_touchHandler attachToView:_contentView];
   [topWindow addSubview:_contentView];
 }
 
