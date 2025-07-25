@@ -49,20 +49,10 @@ public extension UIView {
 }
 
 public extension Optional where Wrapped == UIView {
-  var frameTransitionInWindow: (Double, Double) {
-    let areCrossFadeTransitionsEnabled = (self?.layer.presentation()?.animationKeys() ?? []).contains("opacity")
-    let frameY = self?.layer.presentation()?.frame.origin.y ?? 0
-    let windowH = self?.window?.bounds.size.height ?? 0
-    var position = windowH - frameY
+  var frameTransitionInWindow: Double {
+    let position = self?.layer.presentation()?.frame.height ?? 0
 
-    // when cross fade transitions enabled, then keyboard changes
-    // its `opacity` instead of `translateY`, so we handle it here
-    if areCrossFadeTransitionsEnabled {
-      let opacity = self?.layer.presentation()?.opacity ?? 0
-      position = CGFloat(opacity) * position
-    }
-
-    return (position, frameY)
+    return position
   }
 
   func isVisibleInHierarchy(initial: Bool = true) -> Bool {

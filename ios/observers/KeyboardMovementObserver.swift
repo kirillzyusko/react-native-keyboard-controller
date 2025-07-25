@@ -18,19 +18,9 @@ public class KeyboardMovementObserver: NSObject {
   var onRequestAnimation: () -> Void
   var onCancelAnimation: () -> Void
   // progress tracker
-  private var _keyboardView: UIView?
-  private var keyboardView: UIView? {
-    let windowsCount = UIApplication.shared.windows.count
+  private var keyboardView: UIView? { KeyboardViewLocator.shared.resolve() }
+  private var keyboardTrackingView: UIView? = KeyboardTrackingView()
 
-    if _keyboardView == nil || windowsCount != _windowsCount {
-      _keyboardView = KeyboardView.find()
-      _windowsCount = windowsCount
-    }
-
-    return _keyboardView
-  }
-
-  private var _windowsCount: Int = 0
   private var prevKeyboardPosition = 0.0
   private var displayLink: CADisplayLink!
   private var interactiveKeyboardObserver: NSKeyValueObservation?
@@ -204,10 +194,11 @@ public class KeyboardMovementObserver: NSObject {
 
   @objc func keyboardDidAppear(_ notification: Notification) {
     guard !UIResponder.isKeyboardPreloading else { return }
+
     let timestamp = Date.currentTimeStamp
     let (duration, frame) = notification.keyboardMetaData()
     if let keyboardFrame = frame {
-      let (position, _) = keyboardView.frameTransitionInWindow
+      let position = keyboardTrackingView.frameTransitionInWindow
       let keyboardHeight = keyboardFrame.cgRectValue.size.height
       tag = UIResponder.current.reactViewTag
       self.keyboardHeight = keyboardHeight
@@ -262,15 +253,13 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   func initializeAnimation(fromValue: Double, toValue: Double) {
-    for key in ["position", "opacity"] {
-      if let keyboardAnimation = keyboardView?.layer.presentation()?.animation(forKey: key) {
-        if let springAnimation = keyboardAnimation as? CASpringAnimation {
-          animation = SpringAnimation(animation: springAnimation, fromValue: fromValue, toValue: toValue)
-        } else if let basicAnimation = keyboardAnimation as? CABasicAnimation {
-          animation = TimingAnimation(animation: basicAnimation, fromValue: fromValue, toValue: toValue)
-        }
-        return
+    if let keyboardAnimation = keyboardView?.layer.presentation()?.animation(forKey: "position") {
+      if let springAnimation = keyboardAnimation as? CASpringAnimation {
+        animation = SpringAnimation(animation: springAnimation, fromValue: fromValue, toValue: toValue)
+      } else if let basicAnimation = keyboardAnimation as? CABasicAnimation {
+        animation = TimingAnimation(animation: basicAnimation, fromValue: fromValue, toValue: toValue)
       }
+      return
     }
   }
 
@@ -278,11 +267,13 @@ public class KeyboardMovementObserver: NSObject {
     if keyboardView == nil {
       return
     }
-
-    let (visibleKeyboardHeight, keyboardFrameY) = keyboardView.frameTransitionInWindow
+    
+    let visibleKeyboardHeight = keyboardTrackingView.frameTransitionInWindow
     var keyboardPosition = visibleKeyboardHeight - KeyboardAreaExtender.shared.offset
 
-    if keyboardPosition == prevKeyboardPosition || keyboardFrameY == 0 {
+    print("updateKeyboardFrame \(keyboardPosition) \(prevKeyboardPosition)")
+    
+    if keyboardPosition == prevKeyboardPosition {
       return
     }
 

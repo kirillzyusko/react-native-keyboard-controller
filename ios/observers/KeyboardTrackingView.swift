@@ -1,0 +1,87 @@
+//
+//  KeyboardTrackingView.swift
+//  Pods
+//
+//  Created by Kiryl Ziusko on 25/07/2025.
+//
+
+import UIKit
+
+final class KeyboardTrackingView: UIView {
+  private var keyboardVisibleHeight: CGFloat = 0
+
+  override init(frame: CGRect) {
+    super.init(frame: frame)
+    setup()
+  }
+
+  required init?(coder: NSCoder) {
+    super.init(coder: coder)
+    setup()
+  }
+  
+  required init() {
+    super.init(frame: .zero)
+    setup()
+  }
+
+  deinit {
+    NotificationCenter.default.removeObserver(self)
+  }
+
+  private func setup() {
+    isUserInteractionEnabled = false
+    isHidden = true
+    frame = CGRect(x: 0, y: -1, width: 0, height: 0)
+
+    NotificationCenter.default.addObserver(
+      self,
+      selector: #selector(keyboardWillChangeFrame(_:)),
+      name: UIResponder.keyboardWillChangeFrameNotification,
+      object: nil
+    )
+
+    NotificationCenter.default.addObserver(
+      self,
+      selector: #selector(keyboardDidHide(_:)),
+      name: UIResponder.keyboardDidHideNotification,
+      object: nil
+    )
+    
+    guard let window = UIApplication.shared.activeWindow else {
+      return
+    }
+    window.addSubview(self)
+  }
+
+  @objc private func keyboardWillChangeFrame(_ notification: Notification) {
+    guard let userInfo = notification.userInfo,
+          let endFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect,
+          let animationDuration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval,
+          let animationCurve = userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as? UInt,
+          let window = self.window
+    else {
+      return
+    }
+
+    // TODO: with cross fade
+    let keyboardHeight = max(0, window.bounds.height - window.convert(endFrame, from: nil).minY)
+
+    let options = UIView.AnimationOptions(rawValue: animationCurve << 16)
+    UIView.animate(withDuration: animationDuration, delay: 0, options: options, animations: {
+      self.frame = CGRect(x: 0, y: -1, width: 0, height: keyboardHeight)
+    }, completion: nil)
+
+    keyboardVisibleHeight = keyboardHeight
+  }
+
+  @objc private func keyboardDidHide(_ notification: Notification) {
+    // Reset
+    keyboardVisibleHeight = 0
+    self.frame.size.height = 0
+  }
+
+  func currentHeight() -> CGFloat {
+    return keyboardVisibleHeight
+  }
+}
