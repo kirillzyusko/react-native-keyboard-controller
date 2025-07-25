@@ -19,6 +19,8 @@ public class KeyboardMovementObserver: NSObject {
   var onCancelAnimation: () -> Void
   // progress tracker
   private var keyboardView: UIView? { KeyboardViewLocator.shared.resolve() }
+  private var keyboardTrackingView: UIView? = KeyboardTrackingView()
+
   private var prevKeyboardPosition = 0.0
   private var displayLink: CADisplayLink!
   private var interactiveKeyboardObserver: NSKeyValueObservation?
@@ -49,7 +51,7 @@ public class KeyboardMovementObserver: NSObject {
     super.init()
 
     displayLink = CADisplayLink(target: self, selector: #selector(updateKeyboardFrame))
-    displayLink.preferredFramesPerSecond = 120 // will fallback to 60 fps for devices without Pro Motion display
+    displayLink.preferredFramesPerSecond = 120  // will fallback to 60 fps for devices without Pro Motion display
     displayLink.add(to: .main, forMode: .common)
     displayLink.isPaused = true
   }
@@ -125,11 +127,12 @@ public class KeyboardMovementObserver: NSObject {
     let keyboardWindowH = keyboardView?.window?.bounds.size.height ?? 0
     let keyboardPosition = keyboardWindowH - keyboardFrameY
 
-    let position = CGFloat.interpolate(
-      inputRange: [_keyboardHeight / 2, -_keyboardHeight / 2],
-      outputRange: [_keyboardHeight, 0],
-      currentValue: keyboardPosition
-    ) - KeyboardAreaExtender.shared.offset
+    let position =
+      CGFloat.interpolate(
+        inputRange: [_keyboardHeight / 2, -_keyboardHeight / 2],
+        outputRange: [_keyboardHeight, 0],
+        currentValue: keyboardPosition
+      ) - KeyboardAreaExtender.shared.offset
 
     if position == 0 {
       // it will be triggered before `keyboardWillDisappear` and
@@ -156,7 +159,9 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc func keyboardWillAppear(_ notification: Notification) {
-    guard !KeyboardEventsIgnorer.shared.shouldIgnore, !UIResponder.isKeyboardPreloading else { return }
+    guard !KeyboardEventsIgnorer.shared.shouldIgnore, !UIResponder.isKeyboardPreloading else {
+      return
+    }
 
     let (duration, frame) = notification.keyboardMetaData()
     if let keyboardFrame = frame {
@@ -167,8 +172,11 @@ public class KeyboardMovementObserver: NSObject {
       didShowDeadline = Date.currentTimeStamp + Int64(duration)
 
       onRequestAnimation()
-      onEvent("onKeyboardMoveStart", Float(self.keyboardHeight) as NSNumber, 1, duration as NSNumber, tag)
-      onNotify("KeyboardController::keyboardWillShow", buildEventParams(self.keyboardHeight, duration, tag))
+      onEvent(
+        "onKeyboardMoveStart", Float(self.keyboardHeight) as NSNumber, 1, duration as NSNumber, tag)
+      onNotify(
+        "KeyboardController::keyboardWillShow", buildEventParams(self.keyboardHeight, duration, tag)
+      )
 
       setupKeyboardWatcher()
       initializeAnimation(fromValue: prevKeyboardPosition, toValue: self.keyboardHeight)
@@ -192,10 +200,11 @@ public class KeyboardMovementObserver: NSObject {
 
   @objc func keyboardDidAppear(_ notification: Notification) {
     guard !UIResponder.isKeyboardPreloading else { return }
+
     let timestamp = Date.currentTimeStamp
     let (duration, frame) = notification.keyboardMetaData()
     if let keyboardFrame = frame {
-      let (position, _) = keyboardView.frameTransitionInWindow
+      let position = keyboardTrackingView.frameTransitionInWindow
       let keyboardHeight = keyboardFrame.cgRectValue.size.height
       tag = UIResponder.current.reactViewTag
       self.keyboardHeight = keyboardHeight
@@ -207,12 +216,15 @@ public class KeyboardMovementObserver: NSObject {
 
       // if the event is caught in between it's highly likely that it could be a "resize" event
       // so we just read actual keyboard frame value in this case
-      let height = timestamp >= didShowDeadline ? self.keyboardHeight : position - KeyboardAreaExtender.shared.offset
+      let height =
+        timestamp >= didShowDeadline
+        ? self.keyboardHeight : position - KeyboardAreaExtender.shared.offset
       // always limit progress to the maximum possible value
       let progress = min(height / self.keyboardHeight, 1.0)
 
       onCancelAnimation()
-      onEvent("onKeyboardMoveEnd", height as NSNumber, progress as NSNumber, duration as NSNumber, tag)
+      onEvent(
+        "onKeyboardMoveEnd", height as NSNumber, progress as NSNumber, duration as NSNumber, tag)
       onNotify("KeyboardController::keyboardDidShow", buildEventParams(height, duration, tag))
 
       removeKeyboardWatcher()
@@ -250,15 +262,15 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   func initializeAnimation(fromValue: Double, toValue: Double) {
-    for key in ["position", "opacity"] {
-      if let keyboardAnimation = keyboardView?.layer.presentation()?.animation(forKey: key) {
-        if let springAnimation = keyboardAnimation as? CASpringAnimation {
-          animation = SpringAnimation(animation: springAnimation, fromValue: fromValue, toValue: toValue)
-        } else if let basicAnimation = keyboardAnimation as? CABasicAnimation {
-          animation = TimingAnimation(animation: basicAnimation, fromValue: fromValue, toValue: toValue)
-        }
-        return
+    if let keyboardAnimation = keyboardView?.layer.presentation()?.animation(forKey: "position") {
+      if let springAnimation = keyboardAnimation as? CASpringAnimation {
+        animation = SpringAnimation(
+          animation: springAnimation, fromValue: fromValue, toValue: toValue)
+      } else if let basicAnimation = keyboardAnimation as? CABasicAnimation {
+        animation = TimingAnimation(
+          animation: basicAnimation, fromValue: fromValue, toValue: toValue)
       }
+      return
     }
   }
 
@@ -267,10 +279,12 @@ public class KeyboardMovementObserver: NSObject {
       return
     }
 
-    let (visibleKeyboardHeight, keyboardFrameY) = keyboardView.frameTransitionInWindow
+    let visibleKeyboardHeight = keyboardTrackingView.frameTransitionInWindow
     var keyboardPosition = visibleKeyboardHeight - KeyboardAreaExtender.shared.offset
 
-    if keyboardPosition == prevKeyboardPosition || keyboardFrameY == 0 {
+    print("updateKeyboardFrame \(keyboardPosition) \(prevKeyboardPosition)")
+
+    if keyboardPosition == prevKeyboardPosition {
       return
     }
 
