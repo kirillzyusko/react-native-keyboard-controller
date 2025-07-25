@@ -9,12 +9,13 @@ class KeyboardControllerViewManager: RCTViewManager {
   }
 }
 
-class KeyboardControllerView: UIView {
+class KeyboardControllerView: UIView, UIGestureRecognizerDelegate {
   // internal variables
   private var keyboardObserver: KeyboardMovementObserver?
   private var inputObserver: FocusedInputObserver?
   private var eventDispatcher: RCTEventDispatcherProtocol
   private var bridge: RCTBridge
+  private var panGestureRecognizer: UIPanGestureRecognizer!
   // internal state
   private var lastScreenSize: CGSize = .zero
   // react callbacks
@@ -64,6 +65,9 @@ class KeyboardControllerView: UIView {
         self?.onCancelAnimation()
       }
     )
+    panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
+    panGestureRecognizer.delegate = self
+    addGestureRecognizer(panGestureRecognizer)
   }
 
   @available(*, unavailable)
@@ -160,5 +164,19 @@ class KeyboardControllerView: UIView {
   private func isJSThreadReady() -> Bool {
     // we don't want to send event to JS before the JS thread is ready
     return bridge.value(forKey: "_jsThread") != nil
+  }
+
+  // MARK: Gesture recognizers
+
+  @objc private func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
+    if gesture.state == .began {
+      KeyboardAreaExtender.shared.isInteractiveGesture = true
+    } else if gesture.state == .ended {
+      KeyboardAreaExtender.shared.isInteractiveGesture = false
+    }
+  }
+
+  func gestureRecognizer(_: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith _: UIGestureRecognizer) -> Bool {
+    return true
   }
 }

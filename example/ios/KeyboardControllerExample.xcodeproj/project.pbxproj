@@ -244,7 +244,7 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						DevelopmentTeam = LZ65PSZ7CS;
+						DevelopmentTeam = 7JPW5W7JHV;
 						LastSwiftMigration = 1620;
 					};
 					2D02E47A1E0B4A5D006451C7 = {
@@ -552,7 +552,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = LZ65PSZ7CS;
+				DEVELOPMENT_TEAM = 7JPW5W7JHV;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = KeyboardControllerExample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -577,7 +577,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = LZ65PSZ7CS;
+				DEVELOPMENT_TEAM = 7JPW5W7JHV;
 				INFOPLIST_FILE = KeyboardControllerExample/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MARKETING_VERSION = 1.0;

@@ -8,7 +8,8 @@
 class KeyboardAreaExtender: NSObject {
   private var currentInputAccessoryView: InvisibleInputAccessoryView?
 
-  @objc static let shared = KeyboardAreaExtender()
+  @objc public static let shared = KeyboardAreaExtender()
+  @objc public var isInteractiveGesture = false
 
   override private init() {
     super.init()

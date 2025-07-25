@@ -123,25 +123,38 @@ public class KeyboardMovementObserver: NSObject {
     if UIResponder.isKeyboardPreloading {
       return
     }
+    // TODO: track touch somehow?
     // if we are currently animating keyboard -> we need to ignore values from KVO
     if !displayLink.isPaused {
       return
     }
+    // ignore all events if screen is not touched
+    if !KeyboardAreaExtender.shared.isInteractiveGesture {
+      return
+    }
     // if keyboard height is not equal to its bounds - we can ignore
     // values, since they'll be invalid and will cause UI jumps
-    if floor(keyboardView?.bounds.size.height ?? 0) != floor(_keyboardHeight) {
-      return
+    if #unavailable(iOS 26.0) {
+      if floor(keyboardView?.bounds.size.height ?? 0) != floor(_keyboardHeight) {
+        return
+      }
     }
 
     let keyboardFrameY = changeValue.y
     let keyboardWindowH = keyboardView?.window?.bounds.size.height ?? 0
     let keyboardPosition = keyboardWindowH - keyboardFrameY
 
-    let position = CGFloat.interpolate(
-      inputRange: [_keyboardHeight / 2, -_keyboardHeight / 2],
-      outputRange: [_keyboardHeight, 0],
-      currentValue: keyboardPosition
-    ) - KeyboardAreaExtender.shared.offset
+    var position: CGFloat = 0.0
+    if #available(iOS 26.0, *) {
+      position = keyboardView?.bounds.size.height ?? 0.0
+    } else {
+      position = CGFloat.interpolate(
+        inputRange: [_keyboardHeight / 2, -_keyboardHeight / 2],
+        outputRange: [_keyboardHeight, 0],
+        currentValue: keyboardPosition
+      )
+    }
+    position -= KeyboardAreaExtender.shared.offset
 
     if position == 0 {
       // it will be triggered before `keyboardWillDisappear` and
@@ -168,6 +181,7 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc func keyboardWillAppear(_ notification: Notification) {
+    print("keyboardWillAppear \(Date.currentTimeStamp)")
     guard !KeyboardEventsIgnorer.shared.shouldIgnore, !UIResponder.isKeyboardPreloading else { return }
 
     let (duration, frame) = notification.keyboardMetaData()
@@ -188,7 +202,9 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc func keyboardWillDisappear(_ notification: Notification) {
+    print("keyboardWillDisappear \(Date.currentTimeStamp)")
     guard !UIResponder.isKeyboardPreloading else { return }
+
     let (duration, _) = notification.keyboardMetaData()
     tag = UIResponder.current.reactViewTag
     self.duration = duration
@@ -203,7 +219,9 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc func keyboardDidAppear(_ notification: Notification) {
+    print("keyboardDidAppear \(Date.currentTimeStamp)")
     guard !UIResponder.isKeyboardPreloading else { return }
+
     let timestamp = Date.currentTimeStamp
     let (duration, frame) = notification.keyboardMetaData()
     if let keyboardFrame = frame {
@@ -234,7 +252,9 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc func keyboardDidDisappear(_ notification: Notification) {
+    print("keyboardDidDisappear \(Date.currentTimeStamp)")
     guard !UIResponder.isKeyboardPreloading else { return }
+
     let (duration, _) = notification.keyboardMetaData()
     tag = UIResponder.current.reactViewTag
 
@@ -275,13 +295,14 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   @objc func updateKeyboardFrame(link: CADisplayLink) {
+    print("updateKeyboardFrame - (1) \(Date.currentTimeStamp)")
     if keyboardView == nil {
       return
     }
 
     let (visibleKeyboardHeight, keyboardFrameY) = keyboardView.frameTransitionInWindow
     var keyboardPosition = visibleKeyboardHeight - KeyboardAreaExtender.shared.offset
-
+    print("updateKeyboardFrame - (2) \(keyboardPosition)")
     if keyboardPosition == prevKeyboardPosition || keyboardFrameY == 0 {
       return
     }
@@ -312,6 +333,8 @@ public class KeyboardMovementObserver: NSObject {
       // but CASpringAnimation can never get to this final destination
       let race: (CGFloat, CGFloat) -> CGFloat = animation.isIncreasing ? max : min
       keyboardPosition = race(position, keyboardPosition)
+
+      print("posiiton: \(position)")
     }
 
     onEvent(
