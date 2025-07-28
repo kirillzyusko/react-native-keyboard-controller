@@ -57,8 +57,6 @@ final class KeyboardTrackingView: UIView {
   @objc private func keyboardWillChangeFrame(_ notification: Notification) {
     guard let userInfo = notification.userInfo,
           let endFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect,
-          let animationDuration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? TimeInterval,
-          let animationCurve = userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as? UInt,
           let window = window
     else {
       return
@@ -70,10 +68,9 @@ final class KeyboardTrackingView: UIView {
 
     let keyboardHeight: CGFloat = isKeyboardHiding ? 0 : max(0, window.bounds.height - convertedEndFrame.minY)
 
-    let options = UIView.AnimationOptions(rawValue: animationCurve << 16)
-    UIView.animate(withDuration: animationDuration, delay: 0, options: options, animations: {
-      self.frame = CGRect(x: 0, y: -1, width: 0, height: keyboardHeight)
-    }, completion: nil)
+    // TODO: fix keyboard show after interactive gesture
+    // TODO: change translateY to optimize performance
+    self.frame = CGRect(x: 0, y: -1, width: 0, height: keyboardHeight)
 
     keyboardVisibleHeight = keyboardHeight
   }

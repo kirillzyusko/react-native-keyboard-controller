@@ -262,7 +262,7 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   func initializeAnimation(fromValue: Double, toValue: Double) {
-    if let keyboardAnimation = keyboardView?.layer.presentation()?.animation(forKey: "position") {
+    if let keyboardAnimation = keyboardTrackingView?.layer.presentation()?.animation(forKey: "position") {
       if let springAnimation = keyboardAnimation as? CASpringAnimation {
         animation = SpringAnimation(
           animation: springAnimation, fromValue: fromValue, toValue: toValue)
@@ -270,7 +270,6 @@ public class KeyboardMovementObserver: NSObject {
         animation = TimingAnimation(
           animation: basicAnimation, fromValue: fromValue, toValue: toValue)
       }
-      return
     }
   }
 
