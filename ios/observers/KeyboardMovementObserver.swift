@@ -18,19 +18,7 @@ public class KeyboardMovementObserver: NSObject {
   var onRequestAnimation: () -> Void
   var onCancelAnimation: () -> Void
   // progress tracker
-  private var _keyboardView: UIView?
-  private var keyboardView: UIView? {
-    let windowsCount = UIApplication.shared.windows.count
-
-    if _keyboardView == nil || windowsCount != _windowsCount {
-      _keyboardView = KeyboardView.find()
-      _windowsCount = windowsCount
-    }
-
-    return _keyboardView
-  }
-
-  private var _windowsCount: Int = 0
+  private var keyboardView: UIView? { KeyboardViewLocator.shared.resolve() }
   private var prevKeyboardPosition = 0.0
   private var displayLink: CADisplayLink!
   private var interactiveKeyboardObserver: NSKeyValueObservation?
