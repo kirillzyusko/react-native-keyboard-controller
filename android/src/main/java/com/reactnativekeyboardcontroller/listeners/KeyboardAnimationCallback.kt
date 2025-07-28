@@ -57,8 +57,8 @@ class KeyboardAnimationCallback(
   private val surfaceId = UIManagerHelper.getSurfaceId(eventPropagationView)
 
   // state variables
-  private var persistentKeyboardHeight = 0.0
-  private var prevKeyboardHeight = 0.0
+  private var persistentKeyboardHeight = getCurrentKeyboardHeight()
+  private var prevKeyboardHeight = getCurrentKeyboardHeight()
   private var isKeyboardVisible = false
   private var isTransitioning = false
   private var duration = 0
@@ -67,13 +67,6 @@ class KeyboardAnimationCallback(
   private val isKeyboardInteractive: Boolean
     get() = duration == -1
   override var isSuspended: Boolean = false
-
-  init {
-    if (source != null) {
-      this.persistentKeyboardHeight = source.persistentKeyboardHeight
-      this.prevKeyboardHeight = source.prevKeyboardHeight
-    }
-  }
 
   // listeners
   private val focusListener =
@@ -179,7 +172,7 @@ class KeyboardAnimationCallback(
     if (prevKeyboardHeight != newHeight && !isMoving && !isSuspended) {
       Logger.w(
         TAG,
-        "detected desynchronized state - force updating it. $prevKeyboardHeight -> $newHeight. Modal ${this.source}",
+        "detected desynchronized state - force updating it. $prevKeyboardHeight -> $newHeight. Attached: ${view.isAttachedToWindow} EVA: ${this.eventPropagationView.isAttachedToWindow} Modal ${this.source}",
       )
       this.syncKeyboardPosition(newHeight, newHeight > 0)
     }
@@ -189,6 +182,8 @@ class KeyboardAnimationCallback(
 
   override fun onPrepare(animation: WindowInsetsAnimationCompat) {
     super.onPrepare(animation)
+
+    println("desynchronized - onPrepare")
 
     if (!animation.isKeyboardAnimation || isSuspended) {
       return
