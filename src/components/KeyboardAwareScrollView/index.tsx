@@ -264,8 +264,6 @@ const KeyboardAwareScrollView = forwardRef<
     }, [maybeScroll]);
     const onChangeText = useCallback(() => {
       "worklet";
-
-      console.debug("maybeScroll - onChangeText");
       scrollFromCurrentPosition();
     }, [scrollFromCurrentPosition]);
     const onChangeTextHandler = useMemo(
