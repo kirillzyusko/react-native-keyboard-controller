@@ -82,7 +82,7 @@ final class KeyboardTrackingView: UIView {
     frame.size.height = 0
   }
 
-  func currentHeight() -> CGFloat {
-    return keyboardVisibleHeight
+  @objc public func update(newHeight: CGFloat) {
+    frame.size.height = newHeight
   }
 }

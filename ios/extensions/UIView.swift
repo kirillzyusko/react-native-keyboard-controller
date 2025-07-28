@@ -14,6 +14,11 @@ public extension UIView {
     let rootView = UIApplication.shared.activeWindow?.rootViewController?.view
     return superview?.convert(frame, to: rootView)
   }
+  var frameTransitionInWindow: Double {
+    let position = self.layer.presentation()?.frame.height ?? 0
+
+    return position
+  }
 
   func isVisibleInHierarchy(initial: Bool = true) -> Bool {
     guard let window = window else {
@@ -49,12 +54,6 @@ public extension UIView {
 }
 
 public extension Optional where Wrapped == UIView {
-  var frameTransitionInWindow: Double {
-    let position = self?.layer.presentation()?.frame.height ?? 0
-
-    return position
-  }
-
   func isVisibleInHierarchy(initial: Bool = true) -> Bool {
     guard let view = self else {
       return false

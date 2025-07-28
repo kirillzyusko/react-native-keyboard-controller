@@ -19,7 +19,7 @@ public class KeyboardMovementObserver: NSObject {
   var onCancelAnimation: () -> Void
   // progress tracker
   private var keyboardView: UIView? { KeyboardViewLocator.shared.resolve() }
-  private var keyboardTrackingView: UIView? = KeyboardTrackingView()
+  private var keyboardTrackingView = KeyboardTrackingView()
 
   private var prevKeyboardPosition = 0.0
   private var displayLink: CADisplayLink!
@@ -143,6 +143,7 @@ public class KeyboardMovementObserver: NSObject {
 
     prevKeyboardPosition = position
 
+    keyboardTrackingView.update(newHeight: position)
     onEvent(
       "onKeyboardMoveInteractive",
       position as NSNumber,
@@ -262,7 +263,8 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   func initializeAnimation(fromValue: Double, toValue: Double) {
-    if let keyboardAnimation = keyboardTrackingView?.layer.presentation()?.animation(forKey: "position") {
+    if let keyboardAnimation = keyboardTrackingView.layer.presentation()?.animation(forKey: "position") {
+      print(keyboardAnimation)
       if let springAnimation = keyboardAnimation as? CASpringAnimation {
         animation = SpringAnimation(
           animation: springAnimation, fromValue: fromValue, toValue: toValue)
