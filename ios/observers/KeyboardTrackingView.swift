@@ -68,9 +68,10 @@ final class KeyboardTrackingView: UIView {
 
     let keyboardHeight: CGFloat = isKeyboardHiding ? 0 : max(0, window.bounds.height - convertedEndFrame.minY)
 
+    // TODO: cross fade transitions
     // TODO: fix keyboard show after interactive gesture
     // TODO: change translateY to optimize performance
-    self.frame = CGRect(x: 0, y: -1, width: 0, height: keyboardHeight)
+    frame = CGRect(x: 0, y: -1, width: 0, height: keyboardHeight)
 
     keyboardVisibleHeight = keyboardHeight
   }
