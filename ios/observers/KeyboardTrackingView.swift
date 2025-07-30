@@ -7,8 +7,16 @@
 
 import UIKit
 
+// TODO: cross fade transitions
+// TODO: fix keyboard show after interactive gesture
+// TODO: change translateY to optimize performance
+// TODO: test Modal
+/**
+ * A compatibility view that resolves to `KeyboardView` on iOS < 26
+ * and uses `keyboardLayoutGuide` on iOS 26+.
+ */
 final class KeyboardTrackingView: UIView {
-  private var keyboardVisibleHeight: CGFloat = 0
+  private var keyboardView: UIView? { KeyboardViewLocator.shared.resolve() }
 
   override init(frame: CGRect) {
     super.init(frame: frame)
@@ -25,64 +33,40 @@ final class KeyboardTrackingView: UIView {
     setup()
   }
 
-  deinit {
-    NotificationCenter.default.removeObserver(self)
-  }
-
   private func setup() {
+    // for debug purposes
+    // self.backgroundColor = .red
     isUserInteractionEnabled = false
     isHidden = true
-    frame = CGRect(x: 0, y: -1, width: 0, height: 0)
 
-    NotificationCenter.default.addObserver(
-      self,
-      selector: #selector(keyboardWillChangeFrame(_:)),
-      name: UIResponder.keyboardWillChangeFrameNotification,
-      object: nil
-    )
-
-    NotificationCenter.default.addObserver(
-      self,
-      selector: #selector(keyboardDidHide(_:)),
-      name: UIResponder.keyboardDidHideNotification,
-      object: nil
-    )
-
-    guard let window = UIApplication.shared.activeWindow else {
-      return
-    }
-    window.addSubview(self)
-  }
-
-  @objc private func keyboardWillChangeFrame(_ notification: Notification) {
-    guard let userInfo = notification.userInfo,
-          let endFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect,
-          let window = window
+    guard
+      let window = UIApplication.shared.activeWindow,
+      let rootView = window.rootViewController?.view
     else {
       return
     }
 
-    let convertedEndFrame = window.convert(endFrame, from: nil)
-    // Handle both cross-fade (empty) and normal hide (offscreen)
-    let isKeyboardHiding = convertedEndFrame.isEmpty || convertedEndFrame.minY >= window.bounds.height
+    rootView.addSubview(self)
 
-    let keyboardHeight: CGFloat = isKeyboardHiding ? 0 : max(0, window.bounds.height - convertedEndFrame.minY)
+    translatesAutoresizingMaskIntoConstraints = false
 
-    // TODO: cross fade transitions
-    // TODO: fix keyboard show after interactive gesture
-    // TODO: change translateY to optimize performance
-    frame = CGRect(x: 0, y: -1, width: 0, height: keyboardHeight)
+    if #available(iOS 17.0, *) {
+      rootView.keyboardLayoutGuide.usesBottomSafeArea = false
+    }
 
-    keyboardVisibleHeight = keyboardHeight
+    NSLayoutConstraint.activate([
+      leadingAnchor.constraint(equalTo: rootView.leadingAnchor, constant: 0),
+      trailingAnchor.constraint(equalTo: rootView.trailingAnchor, constant: 0),
+      bottomAnchor.constraint(equalTo: rootView.keyboardLayoutGuide.topAnchor, constant: 0),
+      heightAnchor.constraint(equalToConstant: 0),
+    ])
   }
 
-  @objc private func keyboardDidHide(_: Notification) {
-    // Reset
-    keyboardVisibleHeight = 0
-    frame.size.height = 0
-  }
-
-  @objc public func update(newHeight: CGFloat) {
-    frame.size.height = newHeight
+  @objc var view: UIView? {
+    if #available(iOS 26.0, *) {
+      return self
+    } else {
+      return keyboardView
+    }
   }
 }
