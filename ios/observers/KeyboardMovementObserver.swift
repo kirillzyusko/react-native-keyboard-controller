@@ -116,21 +116,13 @@ public class KeyboardMovementObserver: NSObject {
     if !displayLink.isPaused {
       return
     }
-    // if keyboard height is not equal to its bounds - we can ignore
-    // values, since they'll be invalid and will cause UI jumps
-    if floor(keyboardTrackingView.view?.bounds.size.height ?? 0) != floor(_keyboardHeight) {
+    
+    let interactive = keyboardTrackingView.interactive(point: changeValue)
+    
+    if interactive == KeyboardTrackingView.invalidPosition {
       return
     }
-
-    let keyboardFrameY = changeValue.y
-    let keyboardWindowH = keyboardTrackingView.view?.window?.bounds.size.height ?? 0
-    let keyboardPosition = keyboardWindowH - keyboardFrameY
-
-    let position = CGFloat.interpolate(
-      inputRange: [_keyboardHeight / 2, -_keyboardHeight / 2],
-      outputRange: [_keyboardHeight, 0],
-      currentValue: keyboardPosition
-    ) - KeyboardAreaExtender.shared.offset
+    let position = interactive - KeyboardAreaExtender.shared.offset
 
     if position == 0 {
       // it will be triggered before `keyboardWillDisappear` and
