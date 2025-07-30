@@ -18,7 +18,6 @@ public class KeyboardMovementObserver: NSObject {
   var onRequestAnimation: () -> Void
   var onCancelAnimation: () -> Void
   // progress tracker
-  private var keyboardView: UIView? { KeyboardViewLocator.shared.resolve() }
   private var keyboardTrackingView = KeyboardTrackingView()
 
   private var prevKeyboardPosition = 0.0
@@ -273,7 +272,7 @@ public class KeyboardMovementObserver: NSObject {
     let (visibleKeyboardHeight, keyboardFrameY) = keyboardTrackingView.view.frameTransitionInWindow
     var keyboardPosition = visibleKeyboardHeight - KeyboardAreaExtender.shared.offset
 
-    print("updateKeyboardFrame \(keyboardPosition) \(prevKeyboardPosition) kv: \(keyboardView?.layer.presentation()?.frame.origin.y)")
+    print("updateKeyboardFrame \(keyboardPosition) \(prevKeyboardPosition) kv: \(KeyboardViewLocator.shared.resolve()?.layer.presentation()?.frame.origin.y)")
 
     if keyboardPosition == prevKeyboardPosition || keyboardFrameY == 0 {
       return

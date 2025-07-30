@@ -49,13 +49,6 @@ public extension UIView {
 }
 
 public extension Optional where Wrapped == UIView {
-  func isVisibleInHierarchy(initial: Bool = true) -> Bool {
-    guard let view = self else {
-      return false
-    }
-    return view.isVisibleInHierarchy(initial: initial)
-  }
-
   var frameTransitionInWindow: (Double, Double) {
     let areCrossFadeTransitionsEnabled = (self?.layer.presentation()?.animationKeys() ?? []).contains("opacity")
     let frameY = self?.layer.presentation()?.frame.origin.y ?? 0
@@ -70,5 +63,12 @@ public extension Optional where Wrapped == UIView {
     }
 
     return (position, frameY)
+  }
+  
+  func isVisibleInHierarchy(initial: Bool = true) -> Bool {
+    guard let view = self else {
+      return false
+    }
+    return view.isVisibleInHierarchy(initial: initial)
   }
 }
