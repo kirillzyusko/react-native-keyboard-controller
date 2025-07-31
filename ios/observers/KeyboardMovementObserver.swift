@@ -116,9 +116,9 @@ public class KeyboardMovementObserver: NSObject {
     if !displayLink.isPaused {
       return
     }
-    
+
     let interactive = keyboardTrackingView.interactive(point: changeValue)
-    
+
     if interactive == KeyboardTrackingView.invalidPosition {
       return
     }

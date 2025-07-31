@@ -64,7 +64,7 @@ public extension Optional where Wrapped == UIView {
 
     return (position, frameY)
   }
-  
+
   func isVisibleInHierarchy(initial: Bool = true) -> Bool {
     guard let view = self else {
       return false
