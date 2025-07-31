@@ -7,10 +7,6 @@
 
 import UIKit
 
-// TODO: cross fade transitions
-// TODO: fix keyboard show after interactive gesture
-// TODO: change translateY to optimize performance
-// TODO: test Modal
 /**
  * A compatibility view that resolves to `KeyboardView` on iOS < 26
  * and uses `keyboardLayoutGuide` on iOS 26+.

@@ -264,8 +264,6 @@ public class KeyboardMovementObserver: NSObject {
     let (visibleKeyboardHeight, keyboardFrameY) = keyboardTrackingView.view.frameTransitionInWindow
     var keyboardPosition = visibleKeyboardHeight - KeyboardAreaExtender.shared.offset
 
-    print("updateKeyboardFrame \(keyboardPosition) \(prevKeyboardPosition) kv: \(KeyboardViewLocator.shared.resolve()?.layer.presentation()?.frame.origin.y)")
-
     if keyboardPosition == prevKeyboardPosition || keyboardFrameY == 0 {
       return
     }
