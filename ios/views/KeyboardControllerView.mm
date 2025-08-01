@@ -181,13 +181,12 @@ using namespace facebook::react;
             if ([event isEqualToString:@"onKeyboardMoveInteractive"]) {
               std::dynamic_pointer_cast<const facebook::react::KeyboardControllerViewEventEmitter>(
                   self->_eventEmitter)
-                  ->onKeyboardMoveInteractive(
-                      facebook::react::KeyboardControllerViewEventEmitter::
-                          OnKeyboardMoveInteractive{
-                              .height = [height doubleValue],
-                              .progress = [progress doubleValue],
-                              .duration = [duration intValue],
-                              .target = [target intValue]});
+                  ->onKeyboardMoveInteractive(facebook::react::KeyboardControllerViewEventEmitter::
+                                                  OnKeyboardMoveInteractive{
+                                                      .height = [height doubleValue],
+                                                      .progress = [progress doubleValue],
+                                                      .duration = [duration intValue],
+                                                      .target = [target intValue]});
             }
           }
 
