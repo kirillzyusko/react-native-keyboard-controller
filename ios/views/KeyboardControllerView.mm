@@ -182,11 +182,12 @@ using namespace facebook::react;
               std::dynamic_pointer_cast<const facebook::react::KeyboardControllerViewEventEmitter>(
                   self->_eventEmitter)
                   ->onKeyboardMoveInteractive(
-                      facebook::react::KeyboardControllerViewEventEmitter::OnKeyboardMoveInteractive{
-                          .height = [height doubleValue],
-                          .progress = [progress doubleValue],
-                          .duration = [duration intValue],
-                          .target = [target intValue]});
+                      facebook::react::KeyboardControllerViewEventEmitter::
+                          OnKeyboardMoveInteractive{
+                              .height = [height doubleValue],
+                              .progress = [progress doubleValue],
+                              .duration = [duration intValue],
+                              .target = [target intValue]});
             }
           }
 
