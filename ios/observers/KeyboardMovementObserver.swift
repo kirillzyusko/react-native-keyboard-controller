@@ -33,8 +33,33 @@ public class KeyboardMovementObserver: NSObject {
 
   private var duration = 0
   private var tag: NSNumber = -1
-  private var animation: KeyboardAnimation?
-  private var didShowDeadline: Int64 = 0
+  private var animation: KeyboardAnimation? {
+    didSet {
+      keyboardDidTask?.cancel()
+
+      guard let animation = animation, let notification = notification else {
+        return
+      }
+
+      let toValue = animation.toValue
+      let duration = animation.duration
+
+      let task = DispatchWorkItem { [weak self] in
+        guard let self = self else { return }
+        if toValue > 0 {
+          self.keyboardDidAppear(notification)
+        } else {
+          self.keyboardDidDisappear(notification)
+        }
+      }
+
+      keyboardDidTask = task
+      DispatchQueue.main.asyncAfter(deadline: .now() + duration, execute: task)
+    }
+  }
+
+  private var notification: Notification?
+  private var keyboardDidTask: DispatchWorkItem?
 
   @objc public init(
     handler: @escaping (NSString, NSNumber, NSNumber, NSNumber, NSNumber) -> Void,
@@ -77,18 +102,6 @@ public class KeyboardMovementObserver: NSObject {
       self,
       selector: #selector(keyboardWillAppear),
       name: UIResponder.keyboardWillShowNotification,
-      object: nil
-    )
-    NotificationCenter.default.addObserver(
-      self,
-      selector: #selector(keyboardDidAppear),
-      name: UIResponder.keyboardDidShowNotification,
-      object: nil
-    )
-    NotificationCenter.default.addObserver(
-      self,
-      selector: #selector(keyboardDidDisappear),
-      name: UIResponder.keyboardDidHideNotification,
       object: nil
     )
   }
@@ -157,7 +170,7 @@ public class KeyboardMovementObserver: NSObject {
       let keyboardHeight = keyboardFrame.cgRectValue.size.height
       self.keyboardHeight = keyboardHeight
       self.duration = duration
-      didShowDeadline = Date.currentTimeStamp + Int64(duration)
+      self.notification = notification
 
       onRequestAnimation()
       onEvent("onKeyboardMoveStart", Float(self.keyboardHeight) as NSNumber, 1, duration as NSNumber, tag)
@@ -165,6 +178,10 @@ public class KeyboardMovementObserver: NSObject {
 
       setupKeyboardWatcher()
       initializeAnimation(fromValue: prevKeyboardPosition, toValue: self.keyboardHeight)
+
+      if duration == 0 {
+        keyboardDidAppear(notification)
+      }
     }
   }
 
@@ -173,6 +190,7 @@ public class KeyboardMovementObserver: NSObject {
     let (duration, _) = notification.keyboardMetaData()
     tag = UIResponder.current.reactViewTag
     self.duration = duration
+    self.notification = notification
 
     onRequestAnimation()
     onEvent("onKeyboardMoveStart", 0, 0, duration as NSNumber, tag)
@@ -181,15 +199,17 @@ public class KeyboardMovementObserver: NSObject {
     setupKeyboardWatcher()
     removeKVObserver()
     initializeAnimation(fromValue: prevKeyboardPosition, toValue: 0)
+
+    if duration == 0 {
+      keyboardDidDisappear(notification)
+    }
   }
 
   @objc func keyboardDidAppear(_ notification: Notification) {
     guard !UIResponder.isKeyboardPreloading else { return }
 
-    let timestamp = Date.currentTimeStamp
     let (duration, frame) = notification.keyboardMetaData()
     if let keyboardFrame = frame {
-      let (position, _) = keyboardTrackingView.view.frameTransitionInWindow
       let keyboardHeight = keyboardFrame.cgRectValue.size.height
       tag = UIResponder.current.reactViewTag
       self.keyboardHeight = keyboardHeight
@@ -199,9 +219,7 @@ public class KeyboardMovementObserver: NSObject {
         return
       }
 
-      // if the event is caught in between it's highly likely that it could be a "resize" event
-      // so we just read actual keyboard frame value in this case
-      let height = timestamp >= didShowDeadline ? self.keyboardHeight : position - KeyboardAreaExtender.shared.offset
+      let height = self.keyboardHeight - KeyboardAreaExtender.shared.offset
       // always limit progress to the maximum possible value
       let progress = min(height / self.keyboardHeight, 1.0)
 
