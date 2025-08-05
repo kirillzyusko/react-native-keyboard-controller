@@ -35,7 +35,9 @@ public class KeyboardMovementObserver: NSObject {
     didSet {
       keyboardDidTask?.cancel()
 
-      guard let notification = notification, let height = notification.keyboardMetaData().1?.cgRectValue.size.height else {
+      guard let notification = notification,
+            let height = notification.keyboardMetaData().1?.cgRectValue.size.height, duration == 0
+      else {
         return
       }
 
@@ -243,6 +245,10 @@ public class KeyboardMovementObserver: NSObject {
       removeKeyboardWatcher()
       setupKVObserver()
       animation = nil
+
+      NotificationCenter.default.post(
+        name: .keyboardDidAppear, object: notification, userInfo: nil
+      )
     }
   }
 
