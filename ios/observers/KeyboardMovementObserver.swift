@@ -31,7 +31,28 @@ public class KeyboardMovementObserver: NSObject {
     set { _keyboardHeight = newValue }
   }
 
-  private var duration = 0
+  private var duration = 0 {
+    didSet {
+      keyboardDidTask?.cancel()
+
+      guard let notification = notification, let height = notification.keyboardMetaData().1?.cgRectValue.size.height else {
+        return
+      }
+
+      let task = DispatchWorkItem { [weak self] in
+        guard let self = self else { return }
+        if height > 0 {
+          self.keyboardDidAppear(notification)
+        } else {
+          self.keyboardDidDisappear(notification)
+        }
+      }
+
+      keyboardDidTask = task
+      DispatchQueue.main.asyncAfter(deadline: .now() + UIUtils.nextFrame, execute: task)
+    }
+  }
+
   private var tag: NSNumber = -1
   private var animation: KeyboardAnimation? {
     didSet {
@@ -178,10 +199,6 @@ public class KeyboardMovementObserver: NSObject {
 
       setupKeyboardWatcher()
       initializeAnimation(fromValue: prevKeyboardPosition, toValue: self.keyboardHeight)
-
-      if duration == 0 {
-        keyboardDidAppear(notification)
-      }
     }
   }
 
@@ -199,10 +216,6 @@ public class KeyboardMovementObserver: NSObject {
     setupKeyboardWatcher()
     removeKVObserver()
     initializeAnimation(fromValue: prevKeyboardPosition, toValue: 0)
-
-    if duration == 0 {
-      keyboardDidDisappear(notification)
-    }
   }
 
   @objc func keyboardDidAppear(_ notification: Notification) {
