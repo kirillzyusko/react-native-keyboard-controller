@@ -244,15 +244,13 @@ RCT_EXPORT_VIEW_PROPERTY(enabled, BOOL)
 {
   _enabled = enabled;
 
-  if (_sharedInputAccessoryView) {
-    if (!enabled) {
-      [self detachInputAccessoryView];
-    } else {
-      // Re-attach if a text input is active
-      UIResponder *firstResponder = [UIResponder current];
-      if ([firstResponder conformsToProtocol:@protocol(UITextInput)]) {
-        [self attachToTextInput:(UIView *)firstResponder];
-      }
+  if (!enabled) {
+    [self detachInputAccessoryView];
+  } else {
+    // Re-attach if a text input is active
+    UIResponder *firstResponder = [UIResponder current];
+    if ([firstResponder conformsToProtocol:@protocol(UITextInput)]) {
+      [self attachToTextInput:(UIView *)firstResponder];
     }
   }
 }

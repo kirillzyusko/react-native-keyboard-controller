@@ -55,7 +55,6 @@ private class BaseContainerView: UIInputView {
     if frame.height != desiredHeight {
       frame.size.height = desiredHeight
 
-      // Update content frame
       updateContentFrame(desiredHeight: desiredHeight)
 
       // Trigger layout updates
@@ -105,8 +104,6 @@ private class ModernContainerView: BaseContainerView {
   }
 
   override func updateContentFrame(desiredHeight: CGFloat) {
-    let totalHeight = desiredHeight + paddingBottom
-
     visualEffectView?.frame = CGRect(
       x: paddingHorizontal,
       y: -paddingBottom,
