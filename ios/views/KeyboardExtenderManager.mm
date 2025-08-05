@@ -277,6 +277,11 @@ RCT_EXPORT_VIEW_PROPERTY(enabled, BOOL)
 }
 #endif
 
+- (void)layoutSubviews
+{
+  [_sharedInputAccessoryView layoutSubviews];
+}
+
 #ifdef RCT_NEW_ARCH_ENABLED
 Class<RCTComponentViewProtocol> KeyboardExtenderCls(void)
 {
