@@ -113,7 +113,7 @@ final class KeyboardTrackingView: UIView {
     if #available(iOS 26.0, *) {
       // when we are the top position KVO takes `inputAccessoryView` into consideration,
       // so we handle it here
-      if (keyboardPosition == keyboardHeight) {
+      if keyboardPosition == keyboardHeight {
         return keyboardPosition - KeyboardAreaExtender.shared.offset
       }
       return keyboardPosition
