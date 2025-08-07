@@ -96,6 +96,7 @@ private class ModernContainerView: BaseContainerView {
 
     visualEffectView = UIVisualEffectView(effect: glassEffect)
     visualEffectView?.overrideUserInterfaceStyle = isDark ? .dark : .light
+    visualEffectView?.cornerConfiguration = .capsule()
 
     if let visualEffectView = visualEffectView {
       visualEffectView.contentView.addSubview(contentView)
