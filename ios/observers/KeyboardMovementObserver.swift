@@ -117,12 +117,11 @@ public class KeyboardMovementObserver: NSObject {
       return
     }
 
-    let interactive = keyboardTrackingView.interactive(point: changeValue)
+    let position = keyboardTrackingView.interactive(point: changeValue)
 
-    if interactive == KeyboardTrackingView.invalidPosition {
+    if position == KeyboardTrackingView.invalidPosition {
       return
     }
-    let position = interactive - KeyboardAreaExtender.shared.offset
 
     if position == 0 {
       // it will be triggered before `keyboardWillDisappear` and

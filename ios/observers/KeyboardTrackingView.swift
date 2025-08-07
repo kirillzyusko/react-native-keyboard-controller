@@ -111,6 +111,11 @@ final class KeyboardTrackingView: UIView {
 
     // for `keyboardLayoutGuide` case we can just read keyboard position directly - no interpolation needed
     if #available(iOS 26.0, *) {
+      // when we are the top position KVO takes `inputAccessoryView` into consideration,
+      // so we handle it here
+      if (keyboardPosition == keyboardHeight) {
+        return keyboardPosition - KeyboardAreaExtender.shared.offset
+      }
       return keyboardPosition
     }
 
@@ -127,6 +132,6 @@ final class KeyboardTrackingView: UIView {
       currentValue: keyboardPosition
     )
 
-    return position
+    return position - KeyboardAreaExtender.shared.offset
   }
 }
