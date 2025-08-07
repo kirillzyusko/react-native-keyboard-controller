@@ -66,16 +66,18 @@ final class KeyboardTrackingView: UIView {
 
     translatesAutoresizingMaskIntoConstraints = false
 
-    if #available(iOS 17.0, *) {
-      rootView.keyboardLayoutGuide.usesBottomSafeArea = false
-    }
+    if #available(iOS 15.0, *) {
+      if #available(iOS 17.0, *) {
+        rootView.keyboardLayoutGuide.usesBottomSafeArea = false
+      }
 
-    NSLayoutConstraint.activate([
-      leadingAnchor.constraint(equalTo: rootView.leadingAnchor, constant: 0),
-      trailingAnchor.constraint(equalTo: rootView.trailingAnchor, constant: 0),
-      bottomAnchor.constraint(equalTo: rootView.keyboardLayoutGuide.topAnchor, constant: 0),
-      heightAnchor.constraint(equalToConstant: 0),
-    ])
+      NSLayoutConstraint.activate([
+        leadingAnchor.constraint(equalTo: rootView.leadingAnchor, constant: 0),
+        trailingAnchor.constraint(equalTo: rootView.trailingAnchor, constant: 0),
+        bottomAnchor.constraint(equalTo: rootView.keyboardLayoutGuide.topAnchor, constant: 0),
+        heightAnchor.constraint(equalToConstant: 0),
+      ])
+    }
   }
 
   @objc private func keyboardWillAppear(_ notification: Notification) {
