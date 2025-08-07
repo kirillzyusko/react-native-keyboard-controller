@@ -18,23 +18,23 @@ public class KeyboardMovementObserver: NSObject {
   var onRequestAnimation: () -> Void
   var onCancelAnimation: () -> Void
   // progress tracker
-  private var keyboardTrackingView = KeyboardTrackingView()
+  var keyboardTrackingView = KeyboardTrackingView()
+  var animation: KeyboardAnimation?
 
-  private var prevKeyboardPosition = 0.0
-  private var displayLink: CADisplayLink!
-  private var interactiveKeyboardObserver: NSKeyValueObservation?
-  private var isMounted = false
+  var prevKeyboardPosition = 0.0
+  var displayLink: CADisplayLink!
+  var interactiveKeyboardObserver: NSKeyValueObservation?
+  var isMounted = false
   // state variables
   private var _keyboardHeight: CGFloat = 0.0
-  private var keyboardHeight: CGFloat {
+  var keyboardHeight: CGFloat {
     get { _keyboardHeight - KeyboardAreaExtender.shared.offset }
     set { _keyboardHeight = newValue }
   }
 
-  private var duration = 0
-  private var tag: NSNumber = -1
-  private var animation: KeyboardAnimation?
-  private var didShowDeadline: Int64 = 0
+  var duration = 0
+  var tag: NSNumber = -1
+  var didShowDeadline: Int64 = 0
 
   @objc public init(
     handler: @escaping (NSString, NSNumber, NSNumber, NSNumber, NSNumber) -> Void,
