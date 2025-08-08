@@ -86,28 +86,23 @@ private class ModernContainerView: BaseContainerView {
   }
 
   private func setupVisualEffect() {
-    guard let glassEffectClass = NSClassFromString("UIGlassEffect") as? UIVisualEffect.Type else {
-      return
-    }
+    #if USES_XCODE_26_OR_HIGHER
+      let isDark = FocusedInputHolder.shared.get()?.keyboardAppearanceValue == "dark"
+      let glassEffect = UIGlassEffect()
+      let color =
+        isDark ? UIColor.black.withAlphaComponent(0.3) : UIColor.gray.withAlphaComponent(0.3)
+      glassEffect.tintColor = color
+      glassEffect.isInteractive = true
 
-    let isDark = FocusedInputHolder.shared.get()?.keyboardAppearanceValue == "dark"
-    let glassEffect = glassEffectClass.init()
-    let color =
-      isDark ? UIColor.black.withAlphaComponent(0.3) : UIColor.gray.withAlphaComponent(0.3)
-    glassEffect.setValue(color, forKey: "tintColor")
-    glassEffect.setValue(true, forKey: "interactive")
-
-    visualEffectView = UIVisualEffectView(effect: glassEffect)
-    visualEffectView?.overrideUserInterfaceStyle = isDark ? .dark : .light
-
-    #if USES_XCODE_26
+      visualEffectView = UIVisualEffectView(effect: glassEffect)
+      visualEffectView?.overrideUserInterfaceStyle = isDark ? .dark : .light
       visualEffectView?.cornerConfiguration = .capsule()
-    #endif
 
-    if let visualEffectView = visualEffectView {
-      visualEffectView.contentView.addSubview(contentView)
-      addSubview(visualEffectView)
-    }
+      if let visualEffectView = visualEffectView {
+        visualEffectView.contentView.addSubview(contentView)
+        addSubview(visualEffectView)
+      }
+    #endif
   }
 
   override func updateContentFrame(desiredHeight: CGFloat) {
