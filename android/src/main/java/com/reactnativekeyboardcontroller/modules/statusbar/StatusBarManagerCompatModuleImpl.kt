@@ -9,9 +9,9 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.UiThreadUtil
-import com.reactnativekeyboardcontroller.extensions.rootView
 import com.reactnativekeyboardcontroller.log.Logger
 import com.reactnativekeyboardcontroller.views.EdgeToEdgeReactViewGroup
+import com.reactnativekeyboardcontroller.views.EdgeToEdgeViewRegistry
 import java.lang.ref.WeakReference
 
 private val TAG = StatusBarManagerCompatModuleImpl::class.qualifiedName
@@ -117,8 +117,7 @@ class StatusBarManagerCompatModuleImpl(
 
   private fun isEnabled(): Boolean = view()?.active ?: false
 
-  private fun view(): EdgeToEdgeReactViewGroup? =
-    mReactContext.rootView?.findViewWithTag<EdgeToEdgeReactViewGroup>(EdgeToEdgeReactViewGroup.VIEW_TAG)
+  private fun view(): EdgeToEdgeReactViewGroup? = EdgeToEdgeViewRegistry.get()
 
   companion object {
     const val NAME = "StatusBarManager"

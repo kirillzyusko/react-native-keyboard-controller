@@ -19,8 +19,19 @@ import com.reactnativekeyboardcontroller.listeners.KeyboardAnimationCallback
 import com.reactnativekeyboardcontroller.listeners.KeyboardAnimationCallbackConfig
 import com.reactnativekeyboardcontroller.log.Logger
 import com.reactnativekeyboardcontroller.modal.ModalAttachedWatcher
+import java.lang.ref.WeakReference
 
 private val TAG = EdgeToEdgeReactViewGroup::class.qualifiedName
+
+object EdgeToEdgeViewRegistry {
+  private var lastCreatedView: WeakReference<EdgeToEdgeReactViewGroup>? = null
+
+  fun register(view: EdgeToEdgeReactViewGroup) {
+    lastCreatedView = WeakReference(view)
+  }
+
+  fun get(): EdgeToEdgeReactViewGroup? = lastCreatedView?.get()
+}
 
 @Suppress("detekt:TooManyFunctions")
 @SuppressLint("ViewConstructor")
@@ -58,7 +69,7 @@ class EdgeToEdgeReactViewGroup(
   private val modalAttachedWatcher = ModalAttachedWatcher(this, reactContext, config, ::getKeyboardCallback)
 
   init {
-    tag = VIEW_TAG
+    EdgeToEdgeViewRegistry.register(this)
   }
 
   // region View life cycles
@@ -241,8 +252,4 @@ class EdgeToEdgeReactViewGroup(
     }
   }
   // endregion
-
-  companion object {
-    val VIEW_TAG = EdgeToEdgeReactViewGroup::class.simpleName
-  }
 }
