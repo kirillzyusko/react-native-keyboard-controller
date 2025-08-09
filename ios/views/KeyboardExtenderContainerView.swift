@@ -10,11 +10,13 @@ import UIKit
 @objc
 public class KeyboardExtenderContainerView: NSObject {
   @objc public static func create(frame: CGRect, contentView: UIView) -> UIView {
-    if #available(iOS 26.0, *) {
-      return ModernContainerView(frame: frame, contentView: contentView)
-    } else {
-      return LegacyContainerView(frame: frame, contentView: contentView)
-    }
+    #if canImport(UIKit.UIGlassEffect)
+      if #available(iOS 26.0, *) {
+        return ModernContainerView(frame: frame, contentView: contentView)
+      }
+    #endif
+
+    return LegacyContainerView(frame: frame, contentView: contentView)
   }
 }
 
@@ -86,7 +88,7 @@ private class ModernContainerView: BaseContainerView {
   }
 
   private func setupVisualEffect() {
-    #if USES_XCODE_26_OR_HIGHER
+    #if canImport(UIKit.UIGlassEffect)
       let isDark = FocusedInputHolder.shared.get()?.keyboardAppearanceValue == "dark"
       let glassEffect = UIGlassEffect()
       let color =

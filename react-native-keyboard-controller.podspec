@@ -6,15 +6,6 @@ folly_compiler_flags = '-DFOLLY_NO_CONFIG -DFOLLY_MOBILE=1 -DFOLLY_USE_LIBCPP=1 
 
 new_arch_enabled = ENV['RCT_NEW_ARCH_ENABLED'] == '1'
 
-begin
-  xcode_version_output = `xcodebuild -version`
-  xcode_version_line = xcode_version_output.lines.first
-  xcode_version = xcode_version_line.split(' ').last
-  xcode_major_version = xcode_version.split('.').first.to_i
-rescue
-  xcode_major_version = 0
-end
-
 Pod::Spec.new do |s|
   s.name         = "react-native-keyboard-controller"
   s.version      = package["version"]
@@ -42,16 +33,6 @@ Pod::Spec.new do |s|
       # #endif
       "OTHER_SWIFT_FLAGS" => "-DKEYBOARD_CONTROLLER_NEW_ARCH_ENABLED"
     }
-  end
-
-  if xcode_major_version >= 26
-    existing_xcconfig = s.attributes_hash["pod_target_xcconfig"] || {}
-    s.pod_target_xcconfig = existing_xcconfig.merge(
-      "OTHER_SWIFT_FLAGS" => [
-        existing_xcconfig["OTHER_SWIFT_FLAGS"],
-        "-DUSES_XCODE_26_OR_HIGHER"
-      ].compact.join(" ")
-    )
   end
 
   # install_modules_dependencies has been defined since React Native 71
