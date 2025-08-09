@@ -10,11 +10,13 @@ import UIKit
 @objc
 public class KeyboardExtenderContainerView: NSObject {
   @objc public static func create(frame: CGRect, contentView: UIView) -> UIView {
-    if #available(iOS 26.0, *) {
-      return ModernContainerView(frame: frame, contentView: contentView)
-    } else {
-      return LegacyContainerView(frame: frame, contentView: contentView)
-    }
+    #if canImport(UIKit.UIGlassEffect)
+      if #available(iOS 26.0, *) {
+        return ModernContainerView(frame: frame, contentView: contentView)
+      }
+    #endif
+
+    return LegacyContainerView(frame: frame, contentView: contentView)
   }
 }
 
@@ -86,21 +88,23 @@ private class ModernContainerView: BaseContainerView {
   }
 
   private func setupVisualEffect() {
-    guard let glassEffectClass = NSClassFromString("UIGlassEffect") as? UIVisualEffect.Type else { return }
+    #if canImport(UIKit.UIGlassEffect)
+      let isDark = FocusedInputHolder.shared.get()?.keyboardAppearanceValue == "dark"
+      let glassEffect = UIGlassEffect()
+      let color =
+        isDark ? UIColor.black.withAlphaComponent(0.3) : UIColor.gray.withAlphaComponent(0.3)
+      glassEffect.tintColor = color
+      glassEffect.isInteractive = true
 
-    let isDark = FocusedInputHolder.shared.get()?.keyboardAppearanceValue == "dark"
-    let glassEffect = glassEffectClass.init()
-    let color = isDark ? UIColor.black.withAlphaComponent(0.3) : UIColor.gray.withAlphaComponent(0.3)
-    glassEffect.setValue(color, forKey: "tintColor")
-    glassEffect.setValue(true, forKey: "interactive")
+      visualEffectView = UIVisualEffectView(effect: glassEffect)
+      visualEffectView?.overrideUserInterfaceStyle = isDark ? .dark : .light
+      visualEffectView?.cornerConfiguration = .capsule()
 
-    visualEffectView = UIVisualEffectView(effect: glassEffect)
-    visualEffectView?.overrideUserInterfaceStyle = isDark ? .dark : .light
-
-    if let visualEffectView = visualEffectView {
-      visualEffectView.contentView.addSubview(contentView)
-      addSubview(visualEffectView)
-    }
+      if let visualEffectView = visualEffectView {
+        visualEffectView.contentView.addSubview(contentView)
+        addSubview(visualEffectView)
+      }
+    #endif
   }
 
   override func updateContentFrame(desiredHeight: CGFloat) {

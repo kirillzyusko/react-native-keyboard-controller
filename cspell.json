@@ -101,6 +101,7 @@
     "CPLUSPLUSFLAGS",
     "xcconfig",
     "DKEYBOARD",
+    "DUSES",
     "DRCT",
     "DFOLLY",
     "upto",
