@@ -20,12 +20,23 @@ import com.reactnativekeyboardcontroller.extensions.dispatchEvent
 import com.reactnativekeyboardcontroller.extensions.dp
 import com.reactnativekeyboardcontroller.extensions.emitEvent
 import com.reactnativekeyboardcontroller.extensions.isKeyboardAnimation
-import com.reactnativekeyboardcontroller.extensions.keepShadowNodesInSync
 import com.reactnativekeyboardcontroller.extensions.keyboardType
 import com.reactnativekeyboardcontroller.interactive.InteractiveKeyboardProvider
 import com.reactnativekeyboardcontroller.log.Logger
 import com.reactnativekeyboardcontroller.traversal.FocusedInputHolder
 import kotlin.math.abs
+import androidx.core.view.OneShotPreDrawListener
+
+private var preDrawScheduled = false
+
+private fun deferToPreDrawOnce(target: View, block: () -> Unit) {
+  if (preDrawScheduled) return
+  preDrawScheduled = true
+  OneShotPreDrawListener.add(target) {
+    preDrawScheduled = false
+    block() // run with freshest insets right before draw
+  }
+}
 
 private val TAG = KeyboardAnimationCallback::class.qualifiedName
 private val isResizeHandledInCallbackMethods = Keyboard.IS_ANIMATION_EMULATED
@@ -50,6 +61,7 @@ class KeyboardAnimationCallback(
   val view: View,
   val context: ThemedReactContext?,
   private val config: KeyboardAnimationCallbackConfig,
+  val deferFire: Boolean = true
 ) : WindowInsetsAnimationCompat.Callback(config.dispatchMode),
   OnApplyWindowInsetsListener,
   Suspendable {
@@ -60,6 +72,7 @@ class KeyboardAnimationCallback(
   private var prevKeyboardHeight = 0.0
   private var isKeyboardVisible = false
   private var isTransitioning = false
+  private var isPreparing = false
   private var duration = 0
   private var viewTagFocused = -1
   private var animationsToSkip = hashSetOf<WindowInsetsAnimationCompat>()
@@ -80,32 +93,47 @@ class KeyboardAnimationCallback(
           // 2. event should be send only when keyboard is visible, since this event arrives earlier -> `tag` will be
           // 100% included in onStart/onMove/onEnd life cycles, but triggering onStart/onEnd several time
           // can bring breaking changes
-          context.dispatchEvent(
-            eventPropagationView.id,
-            KeyboardTransitionEvent(
-              surfaceId,
+          val lambda = {
+            context.dispatchEvent(
               eventPropagationView.id,
-              KeyboardTransitionEvent.Start,
-              this.persistentKeyboardHeight,
-              1.0,
-              0,
-              viewTagFocused,
-            ),
-          )
-          context.dispatchEvent(
-            eventPropagationView.id,
-            KeyboardTransitionEvent(
-              surfaceId,
+              KeyboardTransitionEvent(
+                surfaceId,
+                eventPropagationView.id,
+                KeyboardTransitionEvent.Start,
+                this.persistentKeyboardHeight,
+                1.0,
+                0,
+                viewTagFocused,
+              ),
+            )
+            context.dispatchEvent(
               eventPropagationView.id,
-              KeyboardTransitionEvent.End,
-              this.persistentKeyboardHeight,
-              1.0,
-              0,
-              viewTagFocused,
-            ),
-          )
-          context.emitEvent("KeyboardController::keyboardWillShow", getEventParams(this.persistentKeyboardHeight))
-          context.emitEvent("KeyboardController::keyboardDidShow", getEventParams(this.persistentKeyboardHeight))
+              KeyboardTransitionEvent(
+                surfaceId,
+                eventPropagationView.id,
+                KeyboardTransitionEvent.End,
+                this.persistentKeyboardHeight,
+                1.0,
+                0,
+                viewTagFocused,
+              ),
+            )
+            context.emitEvent(
+              "KeyboardController::keyboardWillShow",
+              getEventParams(this.persistentKeyboardHeight)
+            )
+            context.emitEvent(
+              "KeyboardController::keyboardDidShow",
+              getEventParams(this.persistentKeyboardHeight)
+            )
+          }
+          if (deferFire) {
+            deferToPreDrawOnce(view) {
+              lambda()
+            }
+          } else {
+            lambda()
+          }
         }
       }
     }
@@ -135,6 +163,7 @@ class KeyboardAnimationCallback(
     v: View,
     insets: WindowInsetsCompat,
   ): WindowInsetsCompat {
+
     val keyboardHeight = getCurrentKeyboardHeight()
     // when keyboard appears values will be (false && true)
     // when keyboard disappears values will be (true && false)
@@ -157,13 +186,39 @@ class KeyboardAnimationCallback(
     // in this method
     val isKeyboardSizeEqual = this.persistentKeyboardHeight == keyboardHeight
 
+    // Handle cases where the Android OS shows/hides the IME without an
+    // animation, for example when presenting the OS share sheet or in split app mode.
+    if (!isMoving && !isPreparing) {
+      Logger.i(TAG, "IME changed without animation – sending synthetic events")
+      if (deferFire) {
+        deferToPreDrawOnce(view) {
+          syncKeyboardPosition(keyboardHeight, isKeyboardVisible())
+        }
+      } else {
+        syncKeyboardPosition(keyboardHeight, isKeyboardVisible())
+      }
+    }
+
     if (isKeyboardFullyVisible && !isKeyboardSizeEqual && !isResizeHandledInCallbackMethods) {
       Logger.i(TAG, "onApplyWindowInsets: ${this.persistentKeyboardHeight} -> $keyboardHeight")
-      layoutObserver?.syncUpLayout()
-      this.onKeyboardResized(keyboardHeight)
+
+      if (deferFire) {
+        deferToPreDrawOnce(view) {
+          layoutObserver?.syncUpLayout()
+          this.onKeyboardResized(keyboardHeight)
+        }
+      } else {
+        layoutObserver?.syncUpLayout()
+        this.onKeyboardResized(keyboardHeight)
+      }
     }
 
     return insets
+  }
+
+  override fun onPrepare(animation: WindowInsetsAnimationCompat) {
+    super.onPrepare(animation)
+    isPreparing = true
   }
 
   @Suppress("detekt:ReturnCount")
@@ -175,6 +230,7 @@ class KeyboardAnimationCallback(
       return bounds
     }
 
+    isPreparing = false
     isTransitioning = true
     isKeyboardVisible = isKeyboardVisible()
     duration = animation.durationMillis.toInt()
@@ -292,7 +348,7 @@ class KeyboardAnimationCallback(
     if (!animation.isKeyboardAnimation || isSuspended) {
       return
     }
-
+    isPreparing = false
     isTransitioning = false
     duration = animation.durationMillis.toInt()
 
@@ -328,8 +384,6 @@ class KeyboardAnimationCallback(
 
         // reset to initial state
         duration = 0
-
-        context.keepShadowNodesInSync(eventPropagationView.id)
       }
 
     if (isKeyboardInteractive) {
@@ -384,28 +438,35 @@ class KeyboardAnimationCallback(
   private fun onKeyboardResized(keyboardHeight: Double) {
     duration = 0
 
-    context.emitEvent("KeyboardController::keyboardWillShow", getEventParams(keyboardHeight))
-    listOf(
-      KeyboardTransitionEvent.Start,
-      KeyboardTransitionEvent.Move,
-      KeyboardTransitionEvent.End,
-    ).forEach { eventName ->
-      context.dispatchEvent(
-        eventPropagationView.id,
-        KeyboardTransitionEvent(
-          surfaceId,
+    val lambda = {
+      context.emitEvent("KeyboardController::keyboardWillShow", getEventParams(keyboardHeight))
+      listOf(
+        KeyboardTransitionEvent.Start,
+        KeyboardTransitionEvent.Move,
+        KeyboardTransitionEvent.End,
+      ).forEach { eventName ->
+        context.dispatchEvent(
           eventPropagationView.id,
-          eventName,
-          keyboardHeight,
-          1.0,
-          0,
-          viewTagFocused,
-        ),
-      )
+          KeyboardTransitionEvent(
+            surfaceId,
+            eventPropagationView.id,
+            eventName,
+            keyboardHeight,
+            1.0,
+            0,
+            viewTagFocused,
+          ),
+        )
+      }
+      context.emitEvent("KeyboardController::keyboardDidShow", getEventParams(keyboardHeight))
     }
-    context.emitEvent("KeyboardController::keyboardDidShow", getEventParams(keyboardHeight))
-    context.keepShadowNodesInSync(eventPropagationView.id)
-
+    if (deferFire) {
+      deferToPreDrawOnce(view) {
+        lambda()
+      }
+    } else {
+      lambda()
+    }
     this.persistentKeyboardHeight = keyboardHeight
   }
 
