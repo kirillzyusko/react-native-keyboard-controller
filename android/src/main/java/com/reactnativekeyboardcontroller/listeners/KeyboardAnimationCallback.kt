@@ -26,6 +26,7 @@ import com.reactnativekeyboardcontroller.log.Logger
 import com.reactnativekeyboardcontroller.traversal.FocusedInputHolder
 import kotlin.math.abs
 import androidx.core.view.OneShotPreDrawListener
+import android.util.Log
 
 private var preDrawScheduled = false
 
@@ -230,6 +231,8 @@ class KeyboardAnimationCallback(
       return bounds
     }
 
+    Log.v("Keyboard xxxxx", "onStart start");
+
     isPreparing = false
     isTransitioning = true
     isKeyboardVisible = isKeyboardVisible()
@@ -241,7 +244,13 @@ class KeyboardAnimationCallback(
       this.persistentKeyboardHeight = keyboardHeight
     }
 
-    layoutObserver?.syncUpLayout()
+    if (deferFire) {
+      deferToPreDrawOnce(view) {
+        layoutObserver?.syncUpLayout()
+      }
+    } else {
+      layoutObserver?.syncUpLayout()
+    }
 
     // keyboard gets resized - we do not want to have a default animated transition
     // so we skip these animations
@@ -251,28 +260,42 @@ class KeyboardAnimationCallback(
       onKeyboardResized(keyboardHeight)
       animationsToSkip.add(animation)
 
+      Log.v("Keyboard xxxxx", "onStart end");
       return bounds
     }
 
-    context.emitEvent(
-      "KeyboardController::" + if (!isKeyboardVisible) "keyboardWillHide" else "keyboardWillShow",
-      getEventParams(keyboardHeight),
-    )
+    val lambda = {
+      context.emitEvent(
+        "KeyboardController::" + if (!isKeyboardVisible) "keyboardWillHide" else "keyboardWillShow",
+        getEventParams(keyboardHeight),
+      )
 
-    Logger.i(TAG, "HEIGHT:: $keyboardHeight TAG:: $viewTagFocused")
-    context.dispatchEvent(
-      eventPropagationView.id,
-      KeyboardTransitionEvent(
-        surfaceId,
+      Logger.i(TAG, "HEIGHT:: $keyboardHeight TAG:: $viewTagFocused")
+      context.dispatchEvent(
         eventPropagationView.id,
-        KeyboardTransitionEvent.Start,
-        keyboardHeight,
-        if (!isKeyboardVisible) 0.0 else 1.0,
-        duration,
-        viewTagFocused,
-      ),
-    )
+        KeyboardTransitionEvent(
+          surfaceId,
+          eventPropagationView.id,
+          KeyboardTransitionEvent.Start,
+          keyboardHeight,
+          if (!isKeyboardVisible) 0.0 else 1.0,
+          duration,
+          viewTagFocused,
+        ),
+      )
+    }
 
+    if (deferFire) {
+      deferToPreDrawOnce(view) {
+        lambda()
+      }
+    } else {
+      lambda()
+    }
+
+
+
+    Log.v("Keyboard xxxxx", "onStart end");
     return super.onStart(animation, bounds)
   }
 
