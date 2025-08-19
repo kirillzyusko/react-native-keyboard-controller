@@ -129,4 +129,28 @@ export const examples: Example[] = [
     info: ScreenNames.IMAGE_GALLERY,
     icons: "🖼️",
   },
+  {
+    title: "useKeyboardState",
+    testID: "use_keyboard_State",
+    info: ScreenNames.USE_KEYBOARD_STATE,
+    icons: "📝",
+  },
+  {
+    title: "Liquid keyboard",
+    testID: "liquid_keyboard",
+    info: ScreenNames.LIQUID_KEYBOARD,
+    icons: "💧",
+  },
+  {
+    title: "Keyboard shared transitions",
+    testID: "keyboard_shared_transitions",
+    info: ScreenNames.KEYBOARD_SHARED_TRANSITIONS,
+    icons: "🔄",
+  },
+  {
+    title: "Keyboard Extender",
+    testID: "keyboard_extender",
+    info: ScreenNames.KEYBOARD_EXTENDER,
+    icons: "🧩",
+  },
 ];

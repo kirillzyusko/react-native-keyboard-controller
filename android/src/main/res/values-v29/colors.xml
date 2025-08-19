@@ -1,0 +1,5 @@
+<resources>
+  <style name="gboard_tts_light">
+    <item name="color">#ebeff1</item>
+  </style>
+</resources>

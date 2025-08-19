@@ -22,6 +22,10 @@ class KeyboardControllerModuleImpl(
     setSoftInputMode(mDefaultMode)
   }
 
+  fun preload() {
+    // no-op on Android
+  }
+
   fun dismiss(keepFocus: Boolean) {
     val activity = mReactContext.currentActivity
     val view: View? = FocusedInputHolder.get()

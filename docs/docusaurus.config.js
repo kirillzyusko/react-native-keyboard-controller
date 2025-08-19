@@ -84,6 +84,15 @@ const config = {
             "1.15.0": {
               label: "1.15.0",
             },
+            "1.16.0": {
+              label: "1.16.0",
+            },
+            "1.17.0": {
+              label: "1.17.0",
+            },
+            "1.18.0": {
+              label: "1.18.0",
+            },
           },
         },
         blog: {
@@ -99,6 +108,24 @@ const config = {
           anonymizeIP: true,
         },
       }),
+    ],
+  ],
+  plugins: [
+    [
+      "@signalwire/docusaurus-plugin-llms-txt",
+      {
+        // Plugin options
+        depth: 3,
+        siteTitle: "react-native-keyboard-controller",
+        siteDescription:
+          "Documentation for react-native-keyboard-controller. Package that allows to control each frame of keyboard movement in react native.",
+        content: {
+          includePages: true,
+          excludeRoutes: ["**/docs/1.*/**", "**/docs/next/**"],
+          enableMarkdownFiles: true,
+          enableLlmsFullTxt: true,
+        },
+      },
     ],
   ],
 

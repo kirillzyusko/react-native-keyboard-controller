@@ -11,6 +11,7 @@ on:
       - "FabricExample/ios/**"
       - "yarn.lock"
       - "FabricExample/yarn.lock"
+      - "FabricExample/patches/**"
       - "src/specs/**"
   pull_request:
     branches:
@@ -22,6 +23,7 @@ on:
       - "FabricExample/ios/**"
       - "yarn.lock"
       - "FabricExample/yarn.lock"
+      - "FabricExample/patches/**"
       - "src/specs/**"
 
 jobs:
@@ -36,7 +38,7 @@ jobs:
 
       - uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: "15.4"
+          xcode-version: "16.2"
 
       - name: Get yarn cache directory path
         id: fabric-yarn-cache-dir-path
@@ -85,7 +87,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-fabric-pods-
       - name: Install Pods
-        run: export USE_CCACHE=1 && pod install
+        run: export USE_CCACHE=1 && pod install || pod update --repo-update
       - name: Install xcpretty
         run: gem install xcpretty
       - name: Build App
@@ -96,6 +98,6 @@ jobs:
           -scheme KeyboardControllerFabricExample \
           -sdk iphonesimulator \
           -configuration Debug \
-          -destination 'platform=iOS Simulator,name=iPhone 11 Pro' \
+          -destination 'platform=iOS Simulator,name=iPhone 16 Pro' \
           build \
           CODE_SIGNING_ALLOWED=NO | xcpretty"

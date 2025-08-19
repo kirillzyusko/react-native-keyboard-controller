@@ -1,0 +1,180 @@
+---
+slug: keyboard-extensions
+title: Keyboard extensions or new way to interact with keyboard 💡
+authors: [kirill]
+tags:
+  [react-native, keyboard, KeyboardExtender, KeyboardBackgroundView, preload]
+keywords:
+  [
+    react-native-keyboard-controller,
+    KeyboardExtender,
+    KeyboardBackgroundView,
+    preload,
+  ]
+---
+
+Welcome new `1.18.0` release of `react-native-keyboard-controller` 🎉 This release packed with a bunch of new functionality and aims to revolutionize the way we as developers interact with the keyboard.
+
+Keen to learn more? Let's dive 👇
+
+<!-- truncate -->
+
+## 🧩 New `KeyboardExtender` component
+
+Until now, `react-native-keyboard-controller` has been your go-to tool for:
+
+- Avoiding the keyboard overlap with views;
+- Building additional helpers for keyboard interactions (i. e. `KeyboardToolbar`);
+- And presenting content **over** the keyboard using `OverKeyboardView`.
+
+But this release goes a step further. It opens up a **new dimension** in how you — as a developer — can **collaborate** with the keyboard, rather than just react to it. So... 🥁
+
+This release brings a new component to the table — `KeyboardExtender`.
+
+import Lottie from "lottie-react";
+import KeyboardExtender from "../../docs/api/views/keyboard-extender/keyboard-extender.lottie.json";
+
+<div style={{ display: "flex", justifyContent: "center", marginBottom: 20 }}>
+  <Lottie
+    className="lottie"
+    animationData={KeyboardExtender}
+    style={{ width: 400, height: 400 }}
+    loop
+  />
+</div>
+
+With `KeyboardExtender`, you’re not just avoiding the keyboard — you’re **designing experiences that live within it**. This allows you to create rich, contextual UI that feels like a natural extension of the keyboard itself.
+
+For example, if you're building a **money transfer** or **payment** app, you can now display a predefined set of quick-select amounts (e.g., $5, $10, $20) **inside the keyboard space** — making the experience more fluid and faster for your users.
+
+import Swiper from "@site/src/components/Swiper";
+
+import Chrome from "./images/chrome.png";
+import RevolutMath from "./images/revolut-math.png";
+import RevolutPresets from "./images/revolut-presets.png";
+
+<Swiper images={[RevolutPresets, RevolutMath, Chrome]} />
+
+> Thanks to [Amur](https://github.com/Amurmurmur) for sparking the idea behind this component! 💡
+
+## 🎨 New `KeyboardBackgroundView` component
+
+While the `KeyboardExtender` is a powerful addition — and will no doubt become a favorite among many React Native developers — there are times when you want **more control**.
+
+Sometimes, you need to build your **own accessories** — custom UI that appears _alongside_ the keyboard, sticks to it seamlessly, and **feels like** a natural extension of the system keyboard. That’s exactly where the `KeyboardBackgroundView` shines.
+
+import KeyboardBackgroundView from "../../docs/api/views/keyboard-background-view/keyboard-background-view.lottie.json";
+
+<div style={{ display: "flex", justifyContent: "center", marginBottom: 20 }}>
+  <Lottie
+    className="lottie"
+    animationData={KeyboardBackgroundView}
+    style={{ width: 400, height: 400 }}
+    loop
+  />
+</div>
+
+This low-level primitive has a **very specific mission**: to **visually match** the keyboard’s background — giving you the flexibility to place custom elements that _blend in perfectly_. It allows you to create UI that looks and feels like part of the keyboard, even though it technically isn’t.
+
+In the wild, many native iOS apps use this technique to elevate their UX — such as Safari and Photos:
+
+import ComparisonTable from "@site/src/components/ComparisonTable";
+import Video from "@site/src/components/Video";
+
+<ComparisonTable
+  left={<Video src="/video/safari.mp4" width={51} />}
+  right={<Video src="/video/photos-app.mp4" width={50} />}
+  leftText={<i>iOS Safari app.</i>}
+  rightText={<i>iOS Photos app.</i>}
+/>
+
+With just a little creativity, `KeyboardBackgroundView` (combined with `KeyboardStickyView`) or `KeyboardExtender`, unlocks an entirely new design space.
+
+You’re no longer limited to **avoiding** the keyboard — you’re now empowered to:
+
+- **Extend** the keyboard with custom actions or shortcuts;
+- **Blend** UI elements into the keyboard area seamlessly;
+- **Enhance** the experience by making the keyboard feel like a dynamic, interactive part of your app.
+
+So instead of just _avoiding_ the keyboard... you’re designing experiences that **work** with it — or even feel like **they’re part** of it!
+
+> Huge thanks to [Seb Vidal](https://github.com/sebjvidal) for his early exploration and inspiration behind the `KeyboardBackgroundView`! ❤️
+
+## 🚀 `useKeyboardState` with selectors
+
+As of version `1.18.0`, the `useKeyboardState` hook now supports an optional `selector` argument. This enables you to **extract just the part of the keyboard state you care about**, making your components leaner and more performant.
+
+For example, if you're only interested in the keyboard's `appearance` (like light or dark), you can write:
+
+```ts
+const appearance = useKeyboardState((state) => state.appearance);
+```
+
+Or if you only need the current keyboard height:
+
+```ts
+const height = useKeyboardState((state) => state.height);
+```
+
+By using **selectors**, you avoid unnecessary re-renders when unrelated parts of the state change — making this a simple but powerful optimization, especially in complex UI or heavy screens (where each re-render counts).
+
+This pattern is inspired by modern state management libraries (like Zustand or Redux) and allows your app to be more **reactive and efficient**, without compromising on readability.
+
+## ⚠️ Preparing for deep imports deprecation
+
+Starting with `react-native@0.80+` the react-native team [officially deprecates](https://github.com/react-native-community/discussions-and-proposals/discussions/893) **deep imports** — a practice where internal modules are imported directly from react-native, bypassing its public API surface.
+
+Previously, this library relied on some of those deep imports to access lower-level internals. But with this release, the implementation has been fully updated to align with the latest best practices.
+
+That means: **no more deep import warnings cluttering your console** — everything is now future-proof and compliant with the new standards introduced in React Native 0.80+. ✅
+
+## ⚡ Preloading the keyboard to improve TTI
+
+Many React Native developers have noticed an annoying delay when showing the keyboard **for the first time** — especially after app launch or screen transition. This isn’t a bug in `react-native-keyboard-controller`; it’s a known quirk in **iOS itself**, where the keyboard can take an extra moment to initialize.
+
+<ComparisonTable
+  left={<Video src="/video/keyboard-without-preload.mp4" width={65} />}
+  right={<Video src="/video/keyboard-with-preload.mp4" width={65} />}
+  leftText={<i>The keyboard appears after a significant delay</i>}
+  rightText={<i>The keyboard appears instantly</i>}
+/>
+
+To address this, a new `preload()` method has been added to proactively warm up the keyboard **before** the user focuses the first input:
+
+```ts
+import { KeyboardController } from "react-native-keyboard-controller";
+
+KeyboardController.preload();
+```
+
+If you already use `react-native-keyboard-controller` and your app is wrapped in `KeyboardProvider`, then you get this optimization **automatically** — no extra code required! 🎉
+
+If you find that keyboard preloading introduces any unexpected behavior in your app, you can disable it via the `preload` prop:
+
+```tsx
+import { KeyboardProvider } from "react-native-keyboard-controller";
+
+function App() {
+  return <KeyboardProvider preload={false}>{/* ... */}</KeyboardProvider>;
+}
+```
+
+If you run into issues with this feature, feel free to open an issue — your feedback helps improve the default behavior and documentation for everyone!
+
+## 📜 Full window `TextInputs` support for `KeyboardAwareScrollView`
+
+In this release, `KeyboardAwareScrollView` removes a long-standing limitation: it now **fully supports** `TextInput`s **that occupy the entire screen height**, such as full-screen note editors or message composer fields.
+
+This improvement required a significant internal refactor, and as a result, there’s **one important change** to be aware of: previously, the `bottomOffset` prop controlled the distance between the **keyboard and the bottom of the** `TextInput`. Now, it controls the distance between the **keyboard** and **the caret (cursor)** inside the focused `TextInput`.
+
+If your layout was tuned for the old behavior, you might need to slightly **increase** `bottomOffset` to maintain the same visual spacing. In most cases, though, this change should improve the user experience without requiring adjustments.
+
+## 🤔 What's next?
+
+With the upcoming public release of **iOS 26** and the anticipated redesign in **Android 16**, the near-term focus for `react-native-keyboard-controller` will be on **stability and bug fixes**.
+
+The goal is to ensure that all existing features work reliably across platforms and OS versions, while maintaining the smooth keyboard experience you've come to expect.
+
+Feel free to start to use `KeyboardExtender` and `KeyboardBackgroundView` components and share on Twitter what you've build with it 😍
+
+Stay tuned and follow me on [Twitter](https://twitter.com/ziusko) and [GitHub](https://github.com/kirillzyusko) for updates. Thank you for your support! 😊

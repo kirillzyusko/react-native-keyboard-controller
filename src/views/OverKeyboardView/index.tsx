@@ -7,19 +7,30 @@ import { useWindowDimensions } from "../../hooks";
 import type { OverKeyboardViewProps } from "../../types";
 import type { PropsWithChildren } from "react";
 
-const OverKeyboardView = ({
-  children,
-  visible,
-}: PropsWithChildren<OverKeyboardViewProps>) => {
+/**
+ * A view component that renders its children over the keyboard without closing the keyboard.
+ * Acts similar to modal, but doesn't close the keyboard when it's visible.
+ *
+ * @param props - Component props.
+ * @returns A view component that renders over the keyboard.
+ * @example
+ * ```tsx
+ * <OverKeyboardView visible={true}>
+ *   <Text>This will appear over the keyboard</Text>
+ * </OverKeyboardView>
+ * ```
+ */
+const OverKeyboardView = (props: PropsWithChildren<OverKeyboardViewProps>) => {
+  const { children, visible } = props;
   const { height, width } = useWindowDimensions();
   const inner = useMemo(() => ({ height, width }), [height, width]);
   const style = useMemo(
     () => [
       styles.absolute,
       // On iOS - stretch view to full window dimensions to make yoga work
-      // On Android Fabric we temporarily use the same approach
-      // @ts-expect-error `_IS_FABRIC` is injected by REA
-      Platform.OS === "ios" || global._IS_FABRIC ? inner : undefined,
+      Platform.OS === "ios" ? inner : undefined,
+      // On Android - we are laid out by ShadowNode, so just stretch to full container
+      Platform.OS === "android" ? styles.stretch : undefined,
     ],
     [inner],
   );
@@ -28,7 +39,8 @@ const OverKeyboardView = ({
     <RCTOverKeyboardView visible={visible}>
       {/* `OverKeyboardView` should always have a single child */}
       <View collapsable={false} style={style}>
-        {children}
+        {/* Match RN behavior and trigger mount/unmount when visibility changes */}
+        {visible && children}
       </View>
     </RCTOverKeyboardView>
   );
@@ -37,6 +49,12 @@ const OverKeyboardView = ({
 const styles = StyleSheet.create({
   absolute: {
     position: "absolute",
+  },
+  stretch: {
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
   },
 });
 

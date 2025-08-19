@@ -11,7 +11,6 @@
 
 // Thanks to this guard, we won't import this header when we build for the old architecture.
 #ifdef RCT_NEW_ARCH_ENABLED
-#import <FBReactNativeSpec/FBReactNativeSpec.h>
 #import <reactnativekeyboardcontroller/reactnativekeyboardcontroller.h>
 #endif
 
@@ -68,6 +67,15 @@ RCT_EXPORT_METHOD(setInputMode : (nonnull NSNumber *)mode)
 }
 
 #ifdef RCT_NEW_ARCH_ENABLED
+- (void)preload
+#else
+RCT_EXPORT_METHOD(preload)
+#endif
+{
+  [UIResponder preloadKeyboardIfNeeded];
+}
+
+#ifdef RCT_NEW_ARCH_ENABLED
 - (void)dismiss:(BOOL)keepFocus
 #else
 RCT_EXPORT_METHOD(dismiss : (BOOL)keepFocus)
@@ -119,6 +127,8 @@ RCT_EXPORT_METHOD(setFocusTo : (nonnull NSString *)direction)
     @"KeyboardController::keyboardDidHide",
     // focused input
     @"KeyboardController::focusDidSet",
+    // window dimensions
+    @"KeyboardController::windowDidResize",
   ];
 }
 

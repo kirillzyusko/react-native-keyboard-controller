@@ -53,6 +53,7 @@ export interface NativeProps extends ViewProps {
   enabled?: boolean;
   statusBarTranslucent?: boolean;
   navigationBarTranslucent?: boolean;
+  preserveEdgeToEdge?: boolean;
   // callbacks
   /// keyboard
   onKeyboardMoveStart?: DirectEventHandler<KeyboardMoveEvent>;
@@ -65,6 +66,6 @@ export interface NativeProps extends ViewProps {
   onFocusedInputSelectionChanged?: DirectEventHandler<FocusedInputSelectionChangedEvent>;
 }
 
-export default codegenNativeComponent<NativeProps>(
-  "KeyboardControllerView",
-) as HostComponent<NativeProps>;
+export default codegenNativeComponent<NativeProps>("KeyboardControllerView", {
+  interfaceOnly: true,
+}) as HostComponent<NativeProps>;

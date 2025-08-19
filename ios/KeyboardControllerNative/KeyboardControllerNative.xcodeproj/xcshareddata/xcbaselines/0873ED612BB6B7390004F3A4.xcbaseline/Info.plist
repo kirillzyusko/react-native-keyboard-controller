@@ -4,7 +4,7 @@
 <dict>
 	<key>runDestinationsByUUID</key>
 	<dict>
-		<key>1A32030D-32A5-4C54-9D19-E5D6E86658C9</key>
+		<key>AE1417BE-2A84-4C63-BD95-0B7DE93E2975</key>
 		<dict>
 			<key>localComputer</key>
 			<dict>
@@ -30,7 +30,38 @@
 			<key>targetDevice</key>
 			<dict>
 				<key>modelCode</key>
-				<string>iPhone16,2</string>
+				<string>iPhone16,1</string>
+				<key>platformIdentifier</key>
+				<string>com.apple.platform.iphonesimulator</string>
+			</dict>
+		</dict>
+		<key>D5199330-AFF6-4C67-A368-DA66545865D7</key>
+		<dict>
+			<key>localComputer</key>
+			<dict>
+				<key>busSpeedInMHz</key>
+				<integer>0</integer>
+				<key>cpuCount</key>
+				<integer>1</integer>
+				<key>cpuKind</key>
+				<string>Apple M1 Pro</string>
+				<key>cpuSpeedInMHz</key>
+				<integer>0</integer>
+				<key>logicalCPUCoresPerPackage</key>
+				<integer>10</integer>
+				<key>modelCode</key>
+				<string>MacBookPro18,1</string>
+				<key>physicalCPUCoresPerPackage</key>
+				<integer>10</integer>
+				<key>platformIdentifier</key>
+				<string>com.apple.platform.macosx</string>
+			</dict>
+			<key>targetArchitecture</key>
+			<string>arm64</string>
+			<key>targetDevice</key>
+			<dict>
+				<key>modelCode</key>
+				<string>iPhone17,1</string>
 				<key>platformIdentifier</key>
 				<string>com.apple.platform.iphonesimulator</string>
 			</dict>

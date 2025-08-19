@@ -4,7 +4,9 @@ import { View } from "react-native";
 import {
   KeyboardAvoidingView,
   KeyboardAwareScrollView,
+  KeyboardBackgroundView,
   KeyboardControllerView,
+  KeyboardExtender,
   KeyboardProvider,
   KeyboardStickyView,
   KeyboardToolbar,
@@ -60,8 +62,10 @@ function KeyboardStickyViewTest() {
   );
 }
 
+const content = <EmptyView />;
+
 function KeyboardToolbarTest() {
-  return <KeyboardToolbar content={<EmptyView />} />;
+  return <KeyboardToolbar content={content} />;
 }
 
 function OverKeyboardViewTest() {
@@ -70,6 +74,14 @@ function OverKeyboardViewTest() {
       <EmptyView />
     </OverKeyboardView>
   );
+}
+
+function KeyboardBackgroundViewTest() {
+  return <KeyboardBackgroundView />;
+}
+
+function KeyboardExtenderTest() {
+  return <KeyboardExtender enabled={true}>{<EmptyView />}</KeyboardExtender>;
 }
 
 describe("components rendering", () => {
@@ -99,5 +111,13 @@ describe("components rendering", () => {
 
   it("should render `OverKeyboardView`", () => {
     expect(render(<OverKeyboardViewTest />)).toMatchSnapshot();
+  });
+
+  it("should render `KeyboardBackgroundView`", () => {
+    expect(render(<KeyboardBackgroundViewTest />)).toMatchSnapshot();
+  });
+
+  it("should render `KeyboardExtenderTest`", () => {
+    expect(render(<KeyboardExtenderTest />)).toMatchSnapshot();
   });
 });

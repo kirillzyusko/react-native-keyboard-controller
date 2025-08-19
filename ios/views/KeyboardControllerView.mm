@@ -20,10 +20,10 @@
 #import <react_native_keyboard_controller/react_native_keyboard_controller-Swift.h>
 #endif
 
-#import <react/renderer/components/reactnativekeyboardcontroller/ComponentDescriptors.h>
 #import <react/renderer/components/reactnativekeyboardcontroller/EventEmitters.h>
 #import <react/renderer/components/reactnativekeyboardcontroller/Props.h>
 #import <react/renderer/components/reactnativekeyboardcontroller/RCTComponentViewHelpers.h>
+#import <react/renderer/components/reactnativekeyboardcontroller/RNKCKeyboardControllerViewComponentDescriptor.h>
 
 #import "KeyboardControllerModule-Header.h"
 #import "RCTFabricComponentsPlugins.h"
@@ -37,6 +37,8 @@ using namespace facebook::react;
 @implementation KeyboardControllerView {
   KeyboardMovementObserver *keyboardObserver;
   FocusedInputObserver *inputObserver;
+
+  CGSize _lastScreenSize;
 }
 
 + (ComponentDescriptorProvider)componentDescriptorProvider
@@ -176,16 +178,16 @@ using namespace facebook::react;
                           .duration = [duration intValue],
                           .target = [target intValue]});
             }
-          }
-          if ([event isEqualToString:@"onKeyboardMoveInteractive"]) {
-            std::dynamic_pointer_cast<const facebook::react::KeyboardControllerViewEventEmitter>(
-                self->_eventEmitter)
-                ->onKeyboardMoveInteractive(
-                    facebook::react::KeyboardControllerViewEventEmitter::OnKeyboardMoveInteractive{
-                        .height = [height doubleValue],
-                        .progress = [progress doubleValue],
-                        .duration = [duration intValue],
-                        .target = [target intValue]});
+            if ([event isEqualToString:@"onKeyboardMoveInteractive"]) {
+              std::dynamic_pointer_cast<const facebook::react::KeyboardControllerViewEventEmitter>(
+                  self->_eventEmitter)
+                  ->onKeyboardMoveInteractive(facebook::react::KeyboardControllerViewEventEmitter::
+                                                  OnKeyboardMoveInteractive{
+                                                      .height = [height doubleValue],
+                                                      .progress = [progress doubleValue],
+                                                      .duration = [duration intValue],
+                                                      .target = [target intValue]});
+            }
           }
 
           KeyboardMoveEvent *keyboardMoveEvent =
@@ -209,6 +211,22 @@ using namespace facebook::react;
   }
 
   return self;
+}
+
+- (void)layoutSubviews
+{
+  [super layoutSubviews];
+
+  CGSize screenSize = [UIScreen mainScreen].bounds.size;
+  if (CGSizeEqualToSize(screenSize, _lastScreenSize)) {
+    return;
+  }
+
+  _lastScreenSize = screenSize;
+
+  NSDictionary *data = @{@"width" : @(screenSize.width), @"height" : @(screenSize.height)};
+
+  [KeyboardController.shared sendEvent:@"KeyboardController::windowDidResize" body:data];
 }
 
 - (void)updateProps:(Props::Shared const &)props oldProps:(Props::Shared const &)oldProps

@@ -6,22 +6,29 @@ import type {
   KeyboardEventData,
 } from "./types";
 
-let isClosed = false;
-let lastEvent: KeyboardEventData | null = null;
+let isClosed = true;
+let lastState: KeyboardEventData = {
+  height: 0,
+  duration: 0,
+  timestamp: new Date().getTime(),
+  target: -1,
+  type: "default",
+  appearance: "light",
+};
 
 KeyboardEvents.addListener("keyboardDidHide", (e) => {
   isClosed = true;
-  lastEvent = e;
+  lastState = e;
 });
 
 KeyboardEvents.addListener("keyboardDidShow", (e) => {
   isClosed = false;
-  lastEvent = e;
+  lastState = e;
 });
 
-const dismiss = async (
-  { keepFocus }: DismissOptions = { keepFocus: false },
-): Promise<void> => {
+const dismiss = async (options?: DismissOptions): Promise<void> => {
+  const keepFocus = options?.keepFocus ?? false;
+
   return new Promise((resolve) => {
     if (isClosed) {
       resolve();
@@ -38,12 +45,16 @@ const dismiss = async (
   });
 };
 const isVisible = () => !isClosed;
-const state = () => lastEvent;
+const state = () => lastState;
 
+/**
+ * KeyboardController module. Helps to perform imperative actions/checks with keyboard.
+ */
 export const KeyboardController: KeyboardControllerModule = {
   setDefaultMode: KeyboardControllerNative.setDefaultMode,
   setInputMode: KeyboardControllerNative.setInputMode,
   setFocusTo: KeyboardControllerNative.setFocusTo,
+  preload: KeyboardControllerNative.preload,
   dismiss,
   isVisible,
   state,

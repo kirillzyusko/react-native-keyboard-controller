@@ -4,10 +4,10 @@ import android.text.TextWatcher
 import android.view.View
 import android.view.View.OnLayoutChangeListener
 import android.view.ViewTreeObserver.OnGlobalFocusChangeListener
+import android.widget.EditText
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.UIManagerHelper
-import com.facebook.react.views.textinput.ReactEditText
 import com.facebook.react.views.view.ReactViewGroup
 import com.reactnativekeyboardcontroller.events.FocusedInputLayoutChangedEvent
 import com.reactnativekeyboardcontroller.events.FocusedInputLayoutChangedEventData
@@ -46,7 +46,7 @@ class FocusedInputObserver(
   private val surfaceId = UIManagerHelper.getSurfaceId(view)
 
   // state variables
-  private var lastFocusedInput: ReactEditText? = null
+  private var lastFocusedInput: EditText? = null
   private var lastEventDispatched: FocusedInputLayoutChangedEventData = noFocusedInputEvent
   private var textWatcher: TextWatcher? = null
   private var selectionSubscription: (() -> Unit)? = null
@@ -101,11 +101,18 @@ class FocusedInputObserver(
       // unfocused or focus was changed
       if (newFocus == null || oldFocus != null) {
         lastFocusedInput?.removeOnLayoutChangeListener(layoutListener)
-        lastFocusedInput?.removeTextChangedListener(textWatcher)
+        lastFocusedInput?.let { input ->
+          val watcher = textWatcher
+          // remove it asynchronously to avoid crash in stripe input
+          // see https://github.com/stripe/stripe-android/issues/10178
+          input.post {
+            input.removeTextChangedListener(watcher)
+          }
+        }
         selectionSubscription?.invoke()
         lastFocusedInput = null
       }
-      if (newFocus is ReactEditText) {
+      if (newFocus is EditText) {
         lastFocusedInput = newFocus
         newFocus.addOnLayoutChangeListener(layoutListener)
         this.syncUpLayout()

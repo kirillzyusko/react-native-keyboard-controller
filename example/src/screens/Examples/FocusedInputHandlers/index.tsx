@@ -28,6 +28,7 @@ type MaskedInputState = {
 const TextInputWithMicSelection = (props: TextInputProps) => {
   const ref = useRef<TextInput>(null);
   const tag = useSharedValue(-1);
+  const position0 = useSharedValue({ x: 0, y: 0 });
   const position = useSharedValue({ x: 0, y: 0 });
 
   useEffect(() => {
@@ -41,6 +42,10 @@ const TextInputWithMicSelection = (props: TextInputProps) => {
         "worklet";
 
         if (event.target === tag.value) {
+          position0.value = {
+            x: event.selection.start.x,
+            y: event.selection.start.y,
+          };
           position.value = {
             x: event.selection.end.x,
             y: event.selection.end.y,
@@ -48,6 +53,46 @@ const TextInputWithMicSelection = (props: TextInputProps) => {
         }
       },
     },
+    [],
+  );
+
+  const style0 = useAnimatedStyle(
+    () => ({
+      position: "absolute",
+      width: 100,
+      height: 1,
+      backgroundColor: "red",
+      left: 0,
+      top: 0,
+      transform: [
+        {
+          translateX: position0.value.x,
+        },
+        {
+          translateY: position0.value.y,
+        },
+      ],
+    }),
+    [],
+  );
+
+  const style1 = useAnimatedStyle(
+    () => ({
+      position: "absolute",
+      width: 100,
+      height: 1,
+      backgroundColor: "blue",
+      left: 0,
+      top: 0,
+      transform: [
+        {
+          translateX: position.value.x,
+        },
+        {
+          translateY: position.value.y,
+        },
+      ],
+    }),
     [],
   );
 
@@ -73,6 +118,8 @@ const TextInputWithMicSelection = (props: TextInputProps) => {
   return (
     <View>
       <TextInput ref={ref} {...props} />
+      <Reanimated.View style={style0} />
+      <Reanimated.View style={style1} />
       <Reanimated.View style={style} />
     </View>
   );
@@ -193,7 +240,7 @@ const style = StyleSheet.create({
     marginHorizontal: 12,
   },
   input: {
-    height: 50,
+    height: 100,
     backgroundColor: "#dcdcdc",
     color: "black",
     borderRadius: 8,

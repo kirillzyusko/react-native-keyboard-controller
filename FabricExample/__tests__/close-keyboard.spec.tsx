@@ -19,6 +19,6 @@ describe("closing keyboard flow", () => {
 
     fireEvent.press(getByTestId("close_keyboard"));
 
-    expect(KeyboardController.dismiss).toBeCalledTimes(1);
+    expect(KeyboardController.dismiss).toHaveBeenCalledTimes(1);
   });
 });

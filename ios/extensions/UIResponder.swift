@@ -11,28 +11,9 @@ import UIKit
 
 @objc
 public extension UIResponder {
-  private weak static var _currentFirstResponder: UIResponder?
-
   static var current: UIResponder? {
-    UIResponder._currentFirstResponder = nil
-    UIApplication.shared.sendAction(#selector(findFirstResponder(sender:)), to: nil, from: nil, for: nil)
-    return UIResponder._currentFirstResponder
-  }
-
-  internal func findFirstResponder(sender _: AnyObject) {
-    let type = String(describing: type(of: self))
-    // handle `contextMenuHidden` prop - in this case the parent is considered as a first responder
-    // (but actually its children is an actual input), so we apply correction here and point out
-    // to the actual first responder (first children)
-    let isChildrenActuallyFirstResponder =
-      type == "RCTMultilineTextInputView" ||
-      type == "RCTSinglelineTextInputView" ||
-      type == "RCTTextInputComponentView"
-    if isChildrenActuallyFirstResponder {
-      UIResponder._currentFirstResponder = (self as? UIView)?.subviews[0]
-    } else {
-      UIResponder._currentFirstResponder = self
-    }
+    guard let window = UIApplication.shared.activeWindow else { return nil }
+    return window.findFirstResponder()
   }
 }
 
@@ -49,7 +30,11 @@ public extension Optional where Wrapped == UIResponder {
     guard let superview = (self as? UIView)?.superview else { return nil }
 
     #if KEYBOARD_CONTROLLER_NEW_ARCH_ENABLED
-      return (superview as NSObject).value(forKey: "nativeId") as? String
+      if superview.responds(to: Selector(("nativeId"))) == true {
+        return (superview as NSObject).value(forKey: "nativeId") as? String
+      }
+
+      return nil
     #else
       return superview.nativeID
     #endif
@@ -76,5 +61,32 @@ public extension Optional where Wrapped: UIResponder {
 
     // UIScrollView is not found
     return -1
+  }
+}
+
+@objc
+public extension UIResponder {
+  private static var hasPreloadedKeyboard = false
+  static var isKeyboardPreloading = false
+
+  /// Preloads the keyboard UI to reduce first-time lag when showing a keyboard.
+  /// https://stackoverflow.com/questions/9357026/super-slow-lag-delay-on-initial-keyboard-animation-of-uitextfield/20436797#20436797
+  static func preloadKeyboardIfNeeded() {
+    guard !hasPreloadedKeyboard else { return }
+    hasPreloadedKeyboard = true
+    isKeyboardPreloading = true
+
+    DispatchQueue.main.async {
+      defer { isKeyboardPreloading = false }
+      guard let window = UIApplication.shared.activeWindow else { return }
+
+      let lagFreeField = UITextField(frame: .zero)
+      lagFreeField.isHidden = true
+      window.addSubview(lagFreeField)
+
+      lagFreeField.becomeFirstResponder()
+      lagFreeField.resignFirstResponder()
+      lagFreeField.removeFromSuperview()
+    }
   }
 }

@@ -1,6 +1,5 @@
 package com.reactnativekeyboardcontroller
 
-import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.ViewManagerDelegate
 import com.facebook.react.uimanager.annotations.ReactProp
@@ -11,14 +10,13 @@ import com.facebook.react.views.view.ReactViewManager
 import com.reactnativekeyboardcontroller.managers.KeyboardGestureAreaViewManagerImpl
 import com.reactnativekeyboardcontroller.views.KeyboardGestureAreaReactViewGroup
 
-class KeyboardGestureAreaViewManager(
-  mReactContext: ReactApplicationContext,
-) : ReactViewManager(),
+class KeyboardGestureAreaViewManager :
+  ReactViewManager(),
   KeyboardGestureAreaManagerInterface<ReactViewGroup> {
-  private val manager = KeyboardGestureAreaViewManagerImpl(mReactContext)
+  private val manager = KeyboardGestureAreaViewManagerImpl()
   private val mDelegate = KeyboardGestureAreaManagerDelegate(this)
 
-  override fun getDelegate(): ViewManagerDelegate<ReactViewGroup?> = mDelegate
+  override fun getDelegate(): ViewManagerDelegate<ReactViewGroup> = mDelegate
 
   override fun getName(): String = KeyboardGestureAreaViewManagerImpl.NAME
 

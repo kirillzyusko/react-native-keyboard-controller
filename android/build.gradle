@@ -70,6 +70,12 @@ android {
       } else {
         java.srcDirs += ['src/paper']
       }
+
+      if (project.ext.shouldUseBaseReactPackage()) {
+        java.srcDirs += ['src/base']
+      } else {
+        java.srcDirs += ['src/turbo']
+      }
     }
   }
 

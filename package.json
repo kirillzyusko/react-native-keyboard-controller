@@ -1,6 +1,6 @@
 {
   "name": "react-native-keyboard-controller",
-  "version": "1.15.2",
+  "version": "1.18.5",
   "description": "Keyboard manager which works in identical way on both iOS and Android",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -12,11 +12,15 @@
     "lib",
     "android",
     "ios",
+    "common",
     "cpp",
     "react-native-keyboard-controller.podspec",
+    "react-native.config.js",
     "jest",
     "!lib/typescript/example",
+    "!android/detekt.yml",
     "!android/build",
+    "!android/src/test",
     "!android/.gradle",
     "!android/gradle",
     "!android/gradlew",
@@ -56,11 +60,13 @@
     "avoid keyboard",
     "sticky view",
     "over keyboard view",
+    "keyboard background view",
     "keyboard aware scroll view",
     "keyboard toolbar",
     "keyboard done button",
     "keyboard next button",
     "keyboard previous button",
+    "extend keyboard",
     "ios",
     "android"
   ],
@@ -75,16 +81,17 @@
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
-    "react-native-is-edge-to-edge": "^1.1.6"
+    "react-native-is-edge-to-edge": "^1.2.1"
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^11.0.0",
-    "@react-native/babel-preset": "0.76.2",
-    "@react-native/eslint-config": "0.76.2",
+    "@react-native/babel-preset": "0.78.0",
+    "@react-native/eslint-config": "0.78.0",
     "@release-it/conventional-changelog": "^2.0.0",
     "@testing-library/react-hooks": "^8.0.1",
-    "@types/jest": "^29.2.1",
-    "@types/react": "^18.2.6",
+    "@types/jest": "^29.5.13",
+    "@types/react": "^19.0.0",
+    "@types/react-test-renderer": "^19.0.0",
     "@typescript-eslint/eslint-plugin": "^6.7.4",
     "@typescript-eslint/parser": "^6.7.4",
     "clang-format": "^1.8.0",
@@ -96,18 +103,19 @@
     "eslint-plugin-ft-flow": "^3.0.11",
     "eslint-plugin-import": "^2.28.1",
     "eslint-plugin-jest": "^26.5.3",
+    "eslint-plugin-jsdoc": "^50.6.17",
     "eslint-plugin-prettier": "^4.2.1",
-    "eslint-plugin-react-compiler": "^0.0.0-experimental-0998c1e-20240625",
+    "eslint-plugin-react-compiler": "0.0.0-experimental-9ed098e-20240725",
     "eslint-plugin-react-perf": "^3.3.2",
     "husky": "^6.0.0",
     "jest": "^29.6.3",
     "pod-install": "^0.1.0",
     "prettier": "^2.8.8",
-    "react": "18.3.1",
-    "react-native": "0.76.2",
+    "react": "19.0.0",
+    "react-native": "0.78.0",
     "react-native-builder-bob": "^0.18.0",
-    "react-native-reanimated": "3.16.1",
-    "react-test-renderer": "18.2.0",
+    "react-native-reanimated": "3.17.0",
+    "react-test-renderer": "19.0.0",
     "release-it": "^14.2.2",
     "typescript": "5.6.3"
   },
@@ -169,6 +177,15 @@
     "jsSrcsDir": "./src/specs",
     "android": {
       "javaPackageName": "com.reactnativekeyboardcontroller"
+    },
+    "ios": {
+      "componentProvider": {
+        "KeyboardControllerView": "KeyboardControllerView",
+        "KeyboardGestureArea": "KeyboardGestureArea",
+        "OverKeyboardView": "OverKeyboardView",
+        "KeyboardBackgroundView": "KeyboardBackgroundView",
+        "KeyboardExtender": "KeyboardExtender"
+      }
     }
   }
 }

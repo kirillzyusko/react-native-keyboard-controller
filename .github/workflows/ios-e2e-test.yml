@@ -39,7 +39,7 @@ jobs:
           cache: "yarn"
       - uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: "15.4"
+          xcode-version: "16.2"
       - name: Get Xcode version
         run: xcodebuild -version
       - name: Save yarn cache directory path
@@ -84,7 +84,7 @@ jobs:
             ${{ runner.os }}-pods-
       - name: Install pods
         working-directory: ${{ env.WORKING_DIRECTORY }}/ios
-        run: export USE_CCACHE=1 && pod install
+        run: export USE_CCACHE=1 && pod install || pod update --repo-update
       - name: Build app
         working-directory: e2e
         run: yarn build-example:ios

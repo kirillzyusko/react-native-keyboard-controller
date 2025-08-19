@@ -2,25 +2,41 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 
 import { FocusedInputEvents } from "../../bindings";
+import { useKeyboardState } from "../../hooks";
 import { KeyboardController } from "../../module";
-import useColorScheme from "../hooks/useColorScheme";
 import KeyboardStickyView from "../KeyboardStickyView";
 
 import Arrow from "./Arrow";
 import Button from "./Button";
 import { colors } from "./colors";
+import {
+  DEFAULT_OPACITY,
+  KEYBOARD_HAS_ROUNDED_CORNERS,
+  KEYBOARD_TOOLBAR_HEIGHT,
+  OPENED_OFFSET,
+  TEST_ID_KEYBOARD_TOOLBAR,
+  TEST_ID_KEYBOARD_TOOLBAR_CONTENT,
+  TEST_ID_KEYBOARD_TOOLBAR_DONE,
+  TEST_ID_KEYBOARD_TOOLBAR_NEXT,
+  TEST_ID_KEYBOARD_TOOLBAR_PREVIOUS,
+} from "./constants";
 
 import type { HEX, KeyboardToolbarTheme } from "./types";
 import type { KeyboardStickyViewProps } from "../KeyboardStickyView";
 import type { ReactNode } from "react";
 import type { GestureResponderEvent, ViewProps } from "react-native";
 
+type SafeAreaInsets = {
+  left: number;
+  right: number;
+};
+
 export type KeyboardToolbarProps = Omit<
   ViewProps,
   "style" | "testID" | "children"
 > & {
   /** An element that is shown in the middle of the toolbar. */
-  content?: JSX.Element | null;
+  content?: React.JSX.Element | null;
   /** A set of dark/light colors consumed by toolbar component. */
   theme?: KeyboardToolbarTheme;
   /** Custom text for done button. */
@@ -49,43 +65,48 @@ export type KeyboardToolbarProps = Omit<
   /**
    * A component that applies blur effect to the toolbar.
    */
-  blur?: JSX.Element | null;
+  blur?: React.JSX.Element | null;
   /**
    * A value for container opacity in hexadecimal format (e.g. `ff`). Default value is `ff`.
    */
   opacity?: HEX;
+  /**
+   * A object containing `left`/`right` properties. Used to specify proper container padding in landscape mode.
+   */
+  insets?: SafeAreaInsets;
 } & Pick<KeyboardStickyViewProps, "offset" | "enabled">;
 
-const TEST_ID_KEYBOARD_TOOLBAR = "keyboard.toolbar";
-const TEST_ID_KEYBOARD_TOOLBAR_PREVIOUS = `${TEST_ID_KEYBOARD_TOOLBAR}.previous`;
-const TEST_ID_KEYBOARD_TOOLBAR_NEXT = `${TEST_ID_KEYBOARD_TOOLBAR}.next`;
-const TEST_ID_KEYBOARD_TOOLBAR_CONTENT = `${TEST_ID_KEYBOARD_TOOLBAR}.content`;
-const TEST_ID_KEYBOARD_TOOLBAR_DONE = `${TEST_ID_KEYBOARD_TOOLBAR}.done`;
-
-const KEYBOARD_TOOLBAR_HEIGHT = 42;
-const DEFAULT_OPACITY: HEX = "FF";
-
 /**
- * `KeyboardToolbar` is a component that is shown above the keyboard with `Prev`/`Next` and
- * `Done` buttons.
+ * `KeyboardToolbar` is a component that is shown above the keyboard with `Prev`/`Next` buttons from left and
+ * `Done` button from the right (to dismiss the keyboard). Allows to add customizable content (yours UI elements) in the middle.
+ *
+ * @param props - Component props.
+ * @returns A component that is shown above the keyboard with `Prev`/`Next` and `Done` buttons.
+ * @see {@link https://kirillzyusko.github.io/react-native-keyboard-controller/docs/api/components/keyboard-toolbar|Documentation} page for more details.
+ * @example
+ * ```tsx
+ * <KeyboardToolbar doneText="Close" />
+ * ```
  */
-const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
-  content,
-  theme = colors,
-  doneText,
-  button,
-  icon,
-  showArrows = true,
-  onNextCallback,
-  onPrevCallback,
-  onDoneCallback,
-  blur = null,
-  opacity = DEFAULT_OPACITY,
-  offset: { closed = 0, opened = 0 } = {},
-  enabled = true,
-  ...rest
-}) => {
-  const colorScheme = useColorScheme();
+const KeyboardToolbar: React.FC<KeyboardToolbarProps> = (props) => {
+  const {
+    content,
+    theme = colors,
+    doneText = "Done",
+    button,
+    icon,
+    showArrows = true,
+    onNextCallback,
+    onPrevCallback,
+    onDoneCallback,
+    blur = null,
+    opacity = DEFAULT_OPACITY,
+    offset: { closed = 0, opened = 0 } = {},
+    enabled = true,
+    insets,
+    ...rest
+  } = props;
+  const colorScheme = useKeyboardState((state) => state.appearance);
   const [inputs, setInputs] = useState({
     current: 0,
     count: 0,
@@ -110,11 +131,32 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
       {
         backgroundColor: `${theme[colorScheme].background}${opacity}`,
       },
+      !KEYBOARD_HAS_ROUNDED_CORNERS
+        ? {
+            paddingLeft: insets?.left,
+            paddingRight: insets?.right,
+          }
+        : null,
+      KEYBOARD_HAS_ROUNDED_CORNERS ? styles.floating : null,
     ],
-    [colorScheme, opacity, theme],
+    [colorScheme, opacity, theme, insets],
+  );
+  const containerStyle = useMemo(
+    () => [
+      KEYBOARD_HAS_ROUNDED_CORNERS
+        ? {
+            marginLeft: (insets?.left ?? 0) + 16,
+            marginRight: (insets?.right ?? 0) + 16,
+          }
+        : null,
+    ],
+    [insets],
   );
   const offset = useMemo(
-    () => ({ closed: closed + KEYBOARD_TOOLBAR_HEIGHT, opened }),
+    () => ({
+      closed: closed + KEYBOARD_TOOLBAR_HEIGHT,
+      opened: opened + OPENED_OFFSET,
+    }),
     [closed, opened],
   );
   const ButtonContainer = button || Button;
@@ -152,11 +194,15 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
   );
 
   return (
-    <KeyboardStickyView enabled={enabled} offset={offset}>
+    <KeyboardStickyView
+      enabled={enabled}
+      offset={offset}
+      style={containerStyle}
+    >
       <View {...rest} style={toolbarStyle} testID={TEST_ID_KEYBOARD_TOOLBAR}>
         {blur}
         {showArrows && (
-          <>
+          <View style={styles.arrows}>
             <ButtonContainer
               accessibilityHint="Moves focus to the previous field"
               accessibilityLabel="Previous"
@@ -185,25 +231,27 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> = ({
                 type="next"
               />
             </ButtonContainer>
-          </>
+          </View>
         )}
 
         <View style={styles.flex} testID={TEST_ID_KEYBOARD_TOOLBAR_CONTENT}>
           {content}
         </View>
-        <ButtonContainer
-          accessibilityHint="Closes the keyboard"
-          accessibilityLabel="Done"
-          rippleRadius={28}
-          style={styles.doneButtonContainer}
-          testID={TEST_ID_KEYBOARD_TOOLBAR_DONE}
-          theme={theme}
-          onPress={onPressDone}
-        >
-          <Text maxFontSizeMultiplier={1.3} style={doneStyle}>
-            {doneText || "Done"}
-          </Text>
-        </ButtonContainer>
+        {doneText && (
+          <ButtonContainer
+            accessibilityHint="Closes the keyboard"
+            accessibilityLabel="Done"
+            rippleRadius={28}
+            style={styles.doneButtonContainer}
+            testID={TEST_ID_KEYBOARD_TOOLBAR_DONE}
+            theme={theme}
+            onPress={onPressDone}
+          >
+            <Text maxFontSizeMultiplier={1.3} style={doneStyle}>
+              {doneText}
+            </Text>
+          </ButtonContainer>
+        )}
       </View>
     </KeyboardStickyView>
   );
@@ -220,14 +268,23 @@ const styles = StyleSheet.create({
     width: "100%",
     flexDirection: "row",
     height: KEYBOARD_TOOLBAR_HEIGHT,
-    paddingHorizontal: 8,
+  },
+  arrows: {
+    flexDirection: "row",
+    paddingLeft: 8,
   },
   doneButton: {
     fontWeight: "600",
     fontSize: 15,
   },
   doneButtonContainer: {
-    marginRight: 8,
+    marginRight: 16,
+    marginLeft: 8,
+  },
+  floating: {
+    alignSelf: "center",
+    borderRadius: 20,
+    overflow: "hidden",
   },
 });
 

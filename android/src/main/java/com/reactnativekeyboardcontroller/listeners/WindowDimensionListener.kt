@@ -1,7 +1,7 @@
 package com.reactnativekeyboardcontroller.listeners
 
 import android.view.ViewGroup
-import androidx.core.view.marginTop
+import android.view.ViewTreeObserver
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.uimanager.ThemedReactContext
 import com.reactnativekeyboardcontroller.extensions.content
@@ -17,8 +17,9 @@ class WindowDimensionListener(
   private val context: ThemedReactContext?,
 ) {
   private var lastDispatchedDimensions = Dimensions(0.0, 0.0)
+  private var layoutListener: ViewTreeObserver.OnGlobalLayoutListener? = null
 
-  init {
+  public fun attachListener() {
     // attach to content view only once per app instance
     if (context != null && listenerID != context.hashCode()) {
       listenerID = context.hashCode()
@@ -27,10 +28,17 @@ class WindowDimensionListener(
 
       updateWindowDimensions(content)
 
-      content?.viewTreeObserver?.addOnGlobalLayoutListener {
-        updateWindowDimensions(content)
-      }
+      layoutListener =
+        ViewTreeObserver.OnGlobalLayoutListener {
+          updateWindowDimensions(content)
+        }
+
+      content?.viewTreeObserver?.addOnGlobalLayoutListener(layoutListener)
     }
+  }
+
+  public fun detachListener() {
+    context?.content?.viewTreeObserver?.removeOnGlobalLayoutListener(layoutListener)
   }
 
   private fun updateWindowDimensions(content: ViewGroup?) {
@@ -41,7 +49,7 @@ class WindowDimensionListener(
     val newDimensions =
       Dimensions(
         content.width.toFloat().dp,
-        content.height.toFloat().dp + content.marginTop.toFloat().dp,
+        content.height.toFloat().dp,
       )
 
     if (newDimensions != lastDispatchedDimensions) {

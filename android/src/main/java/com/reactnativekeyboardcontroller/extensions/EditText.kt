@@ -79,6 +79,13 @@ fun EditText.addOnTextChangedListener(action: (String) -> Unit): TextWatcher {
     Logger.w(javaClass.simpleName, "Can not attach listener because casting failed: ${e.message}")
   } catch (e: NoSuchFieldException) {
     Logger.w(javaClass.simpleName, "Can not attach listener because field `mListeners` not found: ${e.message}")
+  } catch (e: IllegalArgumentException) {
+    Logger.w(
+      javaClass.simpleName,
+      "Can not attach listener to be the first in the list: ${e.message}. Attaching to the end...",
+    )
+    // it's plain EditText - it doesn't have the same problem as ReactEditText
+    this.addTextChangedListener(listener)
   }
 
   return listener
@@ -147,7 +154,7 @@ val EditText?.keyboardType: String
   }
 
 class KeyboardControllerSelectionWatcher(
-  private val editText: ReactEditText,
+  private val editText: EditText,
   private val action: (start: Int, end: Int, startX: Double, startY: Double, endX: Double, endY: Double) -> Unit,
 ) {
   private var lastSelectionStart: Int = -1
@@ -173,11 +180,6 @@ class KeyboardControllerSelectionWatcher(
           lastSelectionEnd = end
           lastEditTextHeight = editTextHeight
 
-          val cursorPositionStartX: Float
-          val cursorPositionStartY: Float
-          val cursorPositionEndX: Float
-          val cursorPositionEndY: Float
-
           val realStart = min(start, end)
           val realEnd = max(start, end)
 
@@ -192,23 +194,31 @@ class KeyboardControllerSelectionWatcher(
               0
             }
           val gravity = editText.gravity and Gravity.VERTICAL_GRAVITY_MASK
+          val paddingVertical = editText.paddingTop + editText.paddingBottom
+          val lineHeightHalfHearted = editText.lineHeight / 2
+          val availableVertical = editTextHeight - paddingVertical
           val verticalOffset =
-            when (gravity) {
-              Gravity.CENTER_VERTICAL -> (editTextHeight - textHeight) / 2 + editText.paddingTop
-              Gravity.BOTTOM -> editTextHeight - textHeight
-              // Default to Gravity.TOP or other cases
-              else -> editText.paddingTop * 2
+            if (textHeight <= availableVertical) {
+              when (gravity) {
+                Gravity.CENTER_VERTICAL ->
+                  (availableVertical - textHeight) / 2 + editText.paddingTop + lineHeightHalfHearted
+                Gravity.BOTTOM ->
+                  editText.paddingTop + (availableVertical - textHeight) + lineHeightHalfHearted
+                else -> editText.paddingTop + lineHeightHalfHearted
+              }
+            } else {
+              editText.paddingTop + lineHeightHalfHearted
             }
 
-          cursorPositionStartX = layout.getPrimaryHorizontal(realStart)
-          cursorPositionStartY = (baselineStart + verticalOffset).toFloat()
+          val cursorPositionStartX = layout.getPrimaryHorizontal(realStart)
+          val cursorPositionStartY = (baselineStart + verticalOffset - view.scrollY).toFloat()
 
           val lineEnd = layout.getLineForOffset(realEnd)
           val right = layout.getPrimaryHorizontal(realEnd)
           val bottom = layout.getLineBottom(lineEnd)
 
-          cursorPositionEndX = right + cursorWidth
-          cursorPositionEndY = (bottom + verticalOffset).toFloat()
+          val cursorPositionEndX = right + cursorWidth
+          val cursorPositionEndY = (bottom + verticalOffset - view.scrollY).toFloat()
 
           action(
             start,
@@ -233,7 +243,7 @@ class KeyboardControllerSelectionWatcher(
   }
 }
 
-fun ReactEditText.addOnSelectionChangedListener(
+fun EditText.addOnSelectionChangedListener(
   action: (start: Int, end: Int, startX: Double, startY: Double, endX: Double, endY: Double) -> Unit,
 ): () -> Unit {
   val listener = KeyboardControllerSelectionWatcher(this, action)

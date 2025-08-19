@@ -27,6 +27,7 @@ export default function ModalExample() {
       </View>
 
       <Modal
+        statusBarTranslucent
         transparent
         visible={modalVisible}
         onDismiss={() => setModalVisible(false)}

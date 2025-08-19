@@ -30,16 +30,22 @@ function HomepageHeader() {
 
 const trustedBy = [
   {
+    img: "https://avatars.githubusercontent.com/u/1965106?s=200&v=4",
+    alt: "Discord Mobile App",
+    link: "https://play.google.com/store/apps/details?id=com.discord",
+    name: "Discord",
+  },
+  {
     img: "https://avatars.githubusercontent.com/u/476779?s=200&v=4",
     alt: "Expensify Mobile App",
     link: "https://github.com/Expensify/App",
     name: "Expensify",
   },
   {
-    img: "https://avatars.githubusercontent.com/u/94650532?s=200&v=4",
-    alt: "BlueSky Mobile App",
+    img: "https://play-lh.googleusercontent.com/VsgCCgW-ct98JhgVoQzndWCAaXxlP6uMwcjzINYPmeja8cCNISsJDqDFNQrF2IRq9xM=w200-h480-rw",
+    alt: "Bluesky mobile app",
     link: "https://github.com/bluesky-social/social-app",
-    name: "BlueSky",
+    name: "Bluesky",
   },
   {
     img: "https://avatars.githubusercontent.com/u/12504344?s=200&v=4",
@@ -54,16 +60,28 @@ const trustedBy = [
     name: "Ignite",
   },
   {
+    img: "https://avatars.githubusercontent.com/u/36115574?s=200&v=4",
+    alt: "Uniswap Mobile App",
+    link: "https://github.com/Uniswap/interface",
+    name: "Uniswap",
+  },
+  {
+    img: "https://avatars.githubusercontent.com/u/12508788?s=200&v=4",
+    alt: "Rocket Chat Mobile App",
+    link: "https://github.com/RocketChat/Rocket.Chat.ReactNative",
+    name: "Rocket Chat",
+  },
+  {
+    img: "https://avatars.githubusercontent.com/u/48327834?s=200&v=4",
+    alt: "Rainbow Mobile App",
+    link: "https://github.com/rainbow-me/rainbow",
+    name: "Rainbow",
+  },
+  {
     img: "https://avatars.githubusercontent.com/u/95456295?s=200&v=4",
     alt: "RSSNext Follow app",
     link: "https://github.com/RSSNext/Follow",
     name: "Follow",
-  },
-  {
-    img: "https://avatars.githubusercontent.com/u/88587596?s=200&v=4",
-    alt: "TonKeeper Wallet app",
-    link: "https://github.com/tonkeeper/wallet",
-    name: "TON Wallet",
   },
   {
     img: "https://avatars.githubusercontent.com/u/23416667?s=200&v=4",
@@ -84,22 +102,40 @@ const trustedBy = [
     name: "Minds",
   },
   {
+    img: "https://avatars.githubusercontent.com/u/61685601?s=200&v=4",
+    alt: "OneKey: Crypto DeFi Wallet App",
+    link: "https://github.com/OneKeyHQ/app-monorepo",
+    name: "OneKey",
+  },
+  {
     img: "https://avatars.githubusercontent.com/u/79029086?s=200&v=4",
     alt: "Showtime mobile app",
     link: "https://github.com/showtime-xyz/showtime-frontend",
     name: "Showtime",
   },
   {
-    img: "https://avatars.githubusercontent.com/u/97704884?s=200&v=4",
-    alt: "Converse Messenger",
-    link: "https://github.com/ephemeraHQ/converse-app",
-    name: "Converse",
-  },
-  {
     img: "https://avatars.githubusercontent.com/u/6613230?s=200&v=4",
     alt: "Edge App",
     link: "https://github.com/EdgeApp/edge-react-gui",
     name: "Edge",
+  },
+  {
+    img: "https://play-lh.googleusercontent.com/4G1ZS2y5ekD1eRgpOahOj6v_vq1UlN0VVNcmHFFIS2SFGotr3vbZStS_6RZU8l4G7Ryy=w200-h480-rw",
+    alt: "Pixelfed App",
+    link: "https://github.com/pixelfed/pixelfed-rn",
+    name: "Pixelfed",
+  },
+  {
+    img: "https://play-lh.googleusercontent.com/xs4ZUIOATV_bGfdl2yd0mWev9bcK2_a4ofnUEIIQe2_BecUqOVQ7YmtXu41Ereg0Kg=w200-h480-rw",
+    alt: "Trezor Suite App",
+    link: "https://github.com/trezor/trezor-suite",
+    name: "Trezor Suite",
+  },
+  {
+    img: "https://play-lh.googleusercontent.com/BFYQT9Pugt8shdo75MjFZh5F_IMn7btSj8mXknbvSfmVV6JASCKQqcLcERvGdD0iN8A=w200-h480-rw",
+    alt: "PocketPal AI App",
+    link: "https://github.com/a-ghorbani/pocketpal-ai",
+    name: "PocketPal AI",
   },
   {
     img: "https://avatars.githubusercontent.com/u/7648832?s=200&v=4",
@@ -113,12 +149,24 @@ const trustedBy = [
     link: "https://play.google.com/store/apps/details?id=app.drakula",
     name: "Drakula",
   },
+  {
+    img: "https://avatars.githubusercontent.com/u/47886602?s=200&v=4",
+    alt: "Swan: the easiest way to add a banking SDK to your app",
+    link: "https://github.com/swan-io/swan-partner-mobile",
+    name: "Swan",
+  },
+  {
+    img: "https://play-lh.googleusercontent.com/N2Rh_iRbYkX4a5l4u3kMqFu6n5Wk7KkVQnWwXh0MmSGdAfau4IiGFlLmzVU_oeoV9Lo=w240-h480-rw",
+    alt: "Kwibo: Fast Kwai HD Videos Downloader",
+    link: "https://play.google.com/store/apps/details?id=com.kwai.video.downloader.nowatermark",
+    name: "Kwibo",
+  },
 ];
 
 function TrustedBy(): JSX.Element {
   return (
     <section className={clsx(styles.trustedBySection)}>
-      <h2 class={clsx(styles.trustedByTitle)}>Trusted by</h2>
+      <h2 className={clsx(styles.trustedByTitle)}>Trusted by</h2>
       <div className={clsx(styles.trustedByContainer)}>
         {trustedBy.map((item, index) => (
           <a key={index} href={item.link} target="_blank">
@@ -131,7 +179,7 @@ function TrustedBy(): JSX.Element {
           </a>
         ))}
       </div>
-      <p class={clsx(styles.addYourApp)}>
+      <p className={clsx(styles.addYourApp)}>
         Would like to show your project here?{" "}
         <a href="https://github.com/kirillzyusko/react-native-keyboard-controller/edit/main/docs/src/pages/index.tsx">
           Submit a PR

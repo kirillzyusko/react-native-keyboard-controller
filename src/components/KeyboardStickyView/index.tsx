@@ -1,10 +1,7 @@
 import React, { forwardRef, useMemo } from "react";
-import Reanimated, {
-  interpolate,
-  useAnimatedStyle,
-} from "react-native-reanimated";
+import { Animated } from "react-native";
 
-import { useReanimatedKeyboardAnimation } from "../../hooks";
+import { useKeyboardAnimation } from "../../hooks";
 
 import type { View, ViewProps } from "react-native";
 
@@ -23,10 +20,23 @@ export type KeyboardStickyViewProps = {
     opened?: number;
   };
 
-  /** Controls whether this `KeyboardStickyView` instance should take effect. Default is `true` */
+  /** Controls whether this `KeyboardStickyView` instance should take effect. Default is `true`. */
   enabled?: boolean;
 } & ViewProps;
 
+/**
+ * A View component that sticks to the keyboard and moves with it when it appears or disappears.
+ * The view can be configured with custom offsets for both closed and open keyboard states.
+ *
+ * @returns An animated View component that sticks to the keyboard.
+ * @see {@link https://kirillzyusko.github.io/react-native-keyboard-controller/docs/api/components/keyboard-sticky-view|Documentation} page for more details.
+ * @example
+ * ```tsx
+ * <KeyboardStickyView offset={{ closed: 0, opened: 20 }}>
+ *   <Button title="Submit" />
+ * </KeyboardStickyView>
+ * ```
+ */
 const KeyboardStickyView = forwardRef<
   View,
   React.PropsWithChildren<KeyboardStickyViewProps>
@@ -41,25 +51,29 @@ const KeyboardStickyView = forwardRef<
     },
     ref,
   ) => {
-    const { height, progress } = useReanimatedKeyboardAnimation();
+    const { height, progress } = useKeyboardAnimation();
 
-    const stickyViewStyle = useAnimatedStyle(() => {
-      const offset = interpolate(progress.value, [0, 1], [closed, opened]);
-
-      return {
-        transform: [{ translateY: enabled ? height.value + offset : closed }],
-      };
-    }, [closed, opened, enabled]);
+    const offset = progress.interpolate({
+      inputRange: [0, 1],
+      outputRange: [closed, opened],
+    });
 
     const styles = useMemo(
-      () => [style, stickyViewStyle],
-      [style, stickyViewStyle],
+      () => [
+        {
+          transform: [
+            { translateY: enabled ? Animated.add(height, offset) : closed },
+          ],
+        },
+        style,
+      ],
+      [closed, enabled, height, offset, style],
     );
 
     return (
-      <Reanimated.View ref={ref} style={styles} {...props}>
+      <Animated.View ref={ref} style={styles} {...props}>
         {children}
-      </Reanimated.View>
+      </Animated.View>
     );
   },
 );

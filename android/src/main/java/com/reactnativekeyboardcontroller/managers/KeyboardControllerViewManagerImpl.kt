@@ -1,26 +1,35 @@
 package com.reactnativekeyboardcontroller.managers
 
-import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.common.MapBuilder
 import com.facebook.react.uimanager.ThemedReactContext
 import com.reactnativekeyboardcontroller.events.FocusedInputLayoutChangedEvent
 import com.reactnativekeyboardcontroller.events.FocusedInputSelectionChangedEvent
 import com.reactnativekeyboardcontroller.events.FocusedInputTextChangedEvent
 import com.reactnativekeyboardcontroller.events.KeyboardTransitionEvent
+import com.reactnativekeyboardcontroller.listeners.WindowDimensionListener
 import com.reactnativekeyboardcontroller.views.EdgeToEdgeReactViewGroup
 
-@Suppress("detekt:UnusedPrivateProperty")
-class KeyboardControllerViewManagerImpl(
-  mReactContext: ReactApplicationContext,
-) {
-  fun createViewInstance(reactContext: ThemedReactContext): EdgeToEdgeReactViewGroup =
-    EdgeToEdgeReactViewGroup(reactContext)
+class KeyboardControllerViewManagerImpl {
+  private var listener: WindowDimensionListener? = null
+
+  fun createViewInstance(reactContext: ThemedReactContext): EdgeToEdgeReactViewGroup {
+    if (listener == null) {
+      listener = WindowDimensionListener(reactContext)
+      listener?.attachListener()
+    }
+    return EdgeToEdgeReactViewGroup(reactContext)
+  }
+
+  fun invalidate() {
+    listener?.detachListener()
+    listener = null
+  }
 
   fun setEnabled(
     view: EdgeToEdgeReactViewGroup,
     enabled: Boolean,
   ) {
-    view.setActive(enabled)
+    view.active = enabled
   }
 
   fun setStatusBarTranslucent(
@@ -35,6 +44,17 @@ class KeyboardControllerViewManagerImpl(
     isNavigationBarTranslucent: Boolean,
   ) {
     view.setNavigationBarTranslucent(isNavigationBarTranslucent)
+  }
+
+  fun setPreserveEdgeToEdge(
+    view: EdgeToEdgeReactViewGroup,
+    isPreservingEdgeToEdge: Boolean,
+  ) {
+    view.setPreserveEdgeToEdge(isPreservingEdgeToEdge)
+  }
+
+  fun setEdgeToEdge(view: EdgeToEdgeReactViewGroup) {
+    view.setEdgeToEdge()
   }
 
   fun getExportedCustomDirectEventTypeConstants(): MutableMap<String, Any> {

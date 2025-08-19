@@ -1,10 +1,13 @@
-import React from "react";
-import { FlatList, TextInput, View } from "react-native";
-import { useKeyboardHandler } from "react-native-keyboard-controller";
-import Animated, {
-  useAnimatedStyle,
-  useSharedValue,
-} from "react-native-reanimated";
+import { useHeaderHeight } from "@react-navigation/elements";
+import React, { useRef } from "react";
+import {
+  FlatList,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { KeyboardAvoidingView } from "react-native-keyboard-controller";
 
 import Message from "../../../components/Message";
 import { history } from "../../../components/Message/data";
@@ -20,51 +23,40 @@ const RenderItem: ListRenderItem<MessageProps> = ({ item, index }) => {
   return <Message key={index} {...item} />;
 };
 
-const useGradualAnimation = () => {
-  const height = useSharedValue(0);
-
-  useKeyboardHandler(
-    {
-      onMove: (e) => {
-        "worklet";
-
-        // eslint-disable-next-line react-compiler/react-compiler
-        height.value = e.height;
-      },
-      onEnd: (e) => {
-        "worklet";
-
-        height.value = e.height;
-      },
-    },
-    [],
-  );
-
-  return { height };
-};
-
 function ReanimatedChatFlatList() {
-  const { height } = useGradualAnimation();
-
-  const fakeView = useAnimatedStyle(
-    () => ({
-      height: Math.abs(height.value),
-    }),
-    [],
-  );
+  const headerHeight = useHeaderHeight();
+  const ref = useRef<FlatList>(null);
 
   return (
-    <View style={styles.container}>
-      <FlatList
-        inverted
-        contentContainerStyle={styles.contentContainer}
-        data={reversedMessages}
-        initialNumToRender={15}
-        renderItem={RenderItem}
-      />
-      <TextInput style={styles.textInput} />
-      <Animated.View style={fakeView} />
-    </View>
+    <>
+      <KeyboardAvoidingView
+        behavior="translate-with-padding"
+        keyboardVerticalOffset={headerHeight}
+        style={styles.container}
+        testID="flat-list.container"
+      >
+        <FlatList
+          ref={ref}
+          inverted
+          contentContainerStyle={styles.contentContainer}
+          data={reversedMessages}
+          initialNumToRender={15}
+          renderItem={RenderItem}
+          testID="flat-list.chat"
+        />
+        <TextInput style={styles.textInput} testID="flat-list.input" />
+        <TouchableOpacity
+          activeOpacity={0.8}
+          style={styles.fab}
+          testID="flat-list.scrollToTop"
+          onPress={() => ref.current?.scrollToEnd()}
+        >
+          <View style={styles.circle}>
+            <Text style={styles.icon}>↑</Text>
+          </View>
+        </TouchableOpacity>
+      </KeyboardAvoidingView>
+    </>
   );
 }
 

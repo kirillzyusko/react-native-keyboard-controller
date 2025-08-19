@@ -16,6 +16,13 @@ public final class SpringAnimation: KeyboardAnimation {
   private let omega0: Double // Undamped angular frequency of the oscillator
   private let omega1: Double // Exponential decay
   private let v0: Double // Initial velocity
+  // pre-computed values
+  private let x0: Double
+  private let isUnderDamped: Bool
+  private let aUnder: Double
+  private let bUnder: Double
+  private let aCritical: Double
+  private let bCritical: Double
 
   // constructor variables
   private let stiffness: Double
@@ -33,24 +40,40 @@ public final class SpringAnimation: KeyboardAnimation {
     omega0 = sqrt(stiffness / mass) // Undamped angular frequency of the oscillator
     omega1 = omega0 * sqrt(1.0 - zeta * zeta) // Exponential decay
     v0 = -initialVelocity
+    x0 = toValue - fromValue
+    isUnderDamped = zeta < 1
+
+    if isUnderDamped {
+      // Under damped
+      aCritical = 0
+      bCritical = 0
+      aUnder = (v0 + zeta * omega0 * x0) / omega1
+      bUnder = x0
+    } else {
+      // Critically damped
+      aCritical = x0
+      bCritical = (v0 + omega0 * x0)
+      aUnder = 0
+      bUnder = 0
+    }
 
     super.init(fromValue: fromValue, toValue: toValue, animation: animation)
   }
 
   // public functions
   override func valueAt(time: Double) -> Double {
-    let t = time * Double(speed)
-    let x0 = toValue - fromValue
+    let t = time * speed
 
     var y: Double
-    if zeta < 1 {
+    if isUnderDamped {
       // Under damped
       let envelope = exp(-zeta * omega0 * t)
-      y = toValue - envelope * (((v0 + zeta * omega0 * x0) / omega1) * sin(omega1 * t) + x0 * cos(omega1 * t))
+      let angle = omega1 * t
+      y = toValue - envelope * (aUnder * sin(angle) + bUnder * cos(angle))
     } else {
       // Critically damped
       let envelope = exp(-omega0 * t)
-      y = toValue - envelope * (x0 + (v0 + omega0 * x0) * t)
+      y = toValue - envelope * (aCritical + bCritical * t)
     }
 
     return y

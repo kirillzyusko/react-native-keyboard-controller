@@ -15,13 +15,23 @@ import com.reactnativekeyboardcontroller.extensions.content
 import com.reactnativekeyboardcontroller.extensions.removeSelf
 import com.reactnativekeyboardcontroller.extensions.requestApplyInsetsWhenAttached
 import com.reactnativekeyboardcontroller.extensions.rootView
-import com.reactnativekeyboardcontroller.extensions.setupWindowDimensionsListener
 import com.reactnativekeyboardcontroller.listeners.KeyboardAnimationCallback
 import com.reactnativekeyboardcontroller.listeners.KeyboardAnimationCallbackConfig
 import com.reactnativekeyboardcontroller.log.Logger
 import com.reactnativekeyboardcontroller.modal.ModalAttachedWatcher
+import java.lang.ref.WeakReference
 
 private val TAG = EdgeToEdgeReactViewGroup::class.qualifiedName
+
+object EdgeToEdgeViewRegistry {
+  private var lastCreatedView: WeakReference<EdgeToEdgeReactViewGroup>? = null
+
+  fun register(view: EdgeToEdgeReactViewGroup) {
+    lastCreatedView = WeakReference(view)
+  }
+
+  fun get(): EdgeToEdgeReactViewGroup? = lastCreatedView?.get()
+}
 
 @Suppress("detekt:TooManyFunctions")
 @SuppressLint("ViewConstructor")
@@ -31,27 +41,35 @@ class EdgeToEdgeReactViewGroup(
   // props
   private var isStatusBarTranslucent = false
   private var isNavigationBarTranslucent = false
-  private var active = false
+  private var isPreservingEdgeToEdge = false
+  private var isEdgeToEdge = false
+  var active: Boolean = false
+    set(value) {
+      field = value
+      if (value) {
+        enable()
+      } else {
+        disable()
+      }
+    }
 
   // internal class members
   private var eventView: ReactViewGroup? = null
   private var wasMounted = false
   private var callback: KeyboardAnimationCallback? = null
-  private val config: KeyboardAnimationCallbackConfig
-    get() =
-      KeyboardAnimationCallbackConfig(
-        persistentInsetTypes = WindowInsetsCompat.Type.systemBars(),
-        deferredInsetTypes = WindowInsetsCompat.Type.ime(),
-        dispatchMode = WindowInsetsAnimationCompat.Callback.DISPATCH_MODE_CONTINUE_ON_SUBTREE,
-        hasTranslucentNavigationBar = isNavigationBarTranslucent,
-      )
+  private val config =
+    KeyboardAnimationCallbackConfig(
+      persistentInsetTypes = WindowInsetsCompat.Type.systemBars(),
+      deferredInsetTypes = WindowInsetsCompat.Type.ime(),
+      dispatchMode = WindowInsetsAnimationCompat.Callback.DISPATCH_MODE_CONTINUE_ON_SUBTREE,
+      hasTranslucentNavigationBar = isNavigationBarTranslucent,
+    )
 
   // managers/watchers
-  private val modalAttachedWatcher = ModalAttachedWatcher(this, reactContext, ::config, ::getKeyboardCallback)
+  private val modalAttachedWatcher = ModalAttachedWatcher(this, reactContext, config, ::getKeyboardCallback)
 
   init {
-    reactContext.setupWindowDimensionsListener()
-    tag = VIEW_TAG
+    EdgeToEdgeViewRegistry.register(this)
   }
 
   // region View life cycles
@@ -64,13 +82,13 @@ class EdgeToEdgeReactViewGroup(
       return
     }
 
-    this.setupKeyboardCallbacks()
+    this.activate()
   }
 
   override fun onDetachedFromWindow() {
     super.onDetachedFromWindow()
 
-    this.removeKeyboardCallbacks()
+    this.deactivate()
   }
 
   override fun onConfigurationChanged(newConfig: Configuration?) {
@@ -123,12 +141,18 @@ class EdgeToEdgeReactViewGroup(
     }
   }
 
-  private fun goToEdgeToEdge(edgeToEdge: Boolean) {
-    reactContext.currentActivity?.let {
-      WindowCompat.setDecorFitsSystemWindows(
-        it.window,
-        !edgeToEdge,
-      )
+  fun setEdgeToEdge() {
+    val nextValue = active || isPreservingEdgeToEdge
+
+    if (isEdgeToEdge != nextValue) {
+      isEdgeToEdge = nextValue
+
+      reactContext.currentActivity?.let {
+        WindowCompat.setDecorFitsSystemWindows(
+          it.window,
+          !isEdgeToEdge,
+        )
+      }
     }
   }
 
@@ -181,15 +205,21 @@ class EdgeToEdgeReactViewGroup(
 
   // region State managers
   private fun enable() {
-    this.goToEdgeToEdge(true)
     this.setupWindowInsets()
+    this.activate()
+  }
+
+  private fun disable() {
+    this.setupWindowInsets()
+    this.deactivate()
+  }
+
+  private fun activate() {
     this.setupKeyboardCallbacks()
     modalAttachedWatcher.enable()
   }
 
-  private fun disable() {
-    this.goToEdgeToEdge(false)
-    this.setupWindowInsets()
+  private fun deactivate() {
     this.removeKeyboardCallbacks()
     modalAttachedWatcher.disable()
   }
@@ -206,16 +236,11 @@ class EdgeToEdgeReactViewGroup(
 
   fun setNavigationBarTranslucent(isNavigationBarTranslucent: Boolean) {
     this.isNavigationBarTranslucent = isNavigationBarTranslucent
+    this.config.hasTranslucentNavigationBar = isNavigationBarTranslucent
   }
 
-  fun setActive(active: Boolean) {
-    this.active = active
-
-    if (active) {
-      this.enable()
-    } else {
-      this.disable()
-    }
+  fun setPreserveEdgeToEdge(isPreservingEdgeToEdge: Boolean) {
+    this.isPreservingEdgeToEdge = isPreservingEdgeToEdge
   }
   // endregion
 
@@ -227,8 +252,4 @@ class EdgeToEdgeReactViewGroup(
     }
   }
   // endregion
-
-  companion object {
-    val VIEW_TAG = EdgeToEdgeReactViewGroup::class.simpleName
-  }
 }

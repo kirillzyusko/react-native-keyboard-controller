@@ -6,13 +6,22 @@ import android.graphics.PixelFormat
 import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
+import android.view.accessibility.AccessibilityEvent
 import com.facebook.react.bridge.UiThreadUtil
+import com.facebook.react.bridge.WritableMap
+import com.facebook.react.bridge.WritableNativeMap
 import com.facebook.react.config.ReactFeatureFlags
 import com.facebook.react.uimanager.JSTouchDispatcher
+import com.facebook.react.uimanager.StateWrapper
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.UIManagerHelper
 import com.facebook.react.uimanager.events.EventDispatcher
 import com.facebook.react.views.view.ReactViewGroup
+import com.reactnativekeyboardcontroller.extensions.dp
+import com.reactnativekeyboardcontroller.extensions.getDisplaySize
+import com.reactnativekeyboardcontroller.log.Logger
+
+private val TAG = OverKeyboardHostView::class.qualifiedName
 
 @SuppressLint("ViewConstructor")
 class OverKeyboardHostView(
@@ -21,6 +30,12 @@ class OverKeyboardHostView(
   private val dispatcher = UIManagerHelper.getEventDispatcherForReactTag(reactContext, this.id)
   private var windowManager: WindowManager = reactContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
   private var hostView: OverKeyboardRootViewGroup = OverKeyboardRootViewGroup(reactContext)
+
+  var stateWrapper: StateWrapper?
+    get() = hostView.stateWrapper
+    set(stateWrapper) {
+      hostView.stateWrapper = stateWrapper
+    }
 
   init {
     hostView.eventDispatcher = dispatcher
@@ -70,6 +85,16 @@ class OverKeyboardHostView(
   }
   // endregion
 
+  // region Accessibility
+  override fun addChildrenForAccessibility(outChildren: ArrayList<View>) {
+    // Don’t let Android try to reach children that are not actual descendants
+  }
+
+  // Explicitly override this to prevent accessibility events being passed down to children
+  // Those will be handled by the `hostView` which lives in the `windowManager`
+  override fun dispatchPopulateAccessibilityEvent(event: AccessibilityEvent): Boolean = false
+  // endregion
+
   fun show() {
     val layoutParams =
       WindowManager.LayoutParams(
@@ -100,6 +125,7 @@ class OverKeyboardRootViewGroup(
   private val jsTouchDispatcher: JSTouchDispatcher = JSTouchDispatcher(this)
   private var jsPointerDispatcher: JSPointerDispatcherCompat? = null
   internal var eventDispatcher: EventDispatcher? = null
+  internal var stateWrapper: StateWrapper? = null
   internal var isAttached = false
 
   init {
@@ -111,20 +137,40 @@ class OverKeyboardRootViewGroup(
   // region life cycles
   override fun onAttachedToWindow() {
     super.onAttachedToWindow()
+    val displaySize = reactContext.getDisplaySize()
+    stretchTo(width = displaySize.x, height = displaySize.y)
     isAttached = true
   }
 
   override fun onDetachedFromWindow() {
     super.onDetachedFromWindow()
+    stretchTo(width = 0, height = 0)
     isAttached = false
   }
+
+  override fun onSizeChanged(
+    width: Int,
+    height: Int,
+    oldWidth: Int,
+    oldHeight: Int,
+  ) {
+    super.onSizeChanged(width, height, oldWidth, oldHeight)
+    stretchTo(width, height)
+  }
+
   // endregion
 
   // region Touch events handling
   override fun onInterceptTouchEvent(event: MotionEvent): Boolean {
     eventDispatcher?.let { eventDispatcher ->
-      jsTouchDispatcher.handleTouchEvent(event, eventDispatcher)
-      jsPointerDispatcher?.handleMotionEventCompat(event, eventDispatcher, true)
+      try {
+        jsTouchDispatcher.handleTouchEvent(event, eventDispatcher)
+        jsPointerDispatcher?.handleMotionEventCompat(event, eventDispatcher, true)
+      } catch (
+        @Suppress("detekt:TooGenericExceptionCaught") e: RuntimeException,
+      ) {
+        Logger.w(TAG, "Can not handle touch event", e)
+      }
     }
     return super.onInterceptTouchEvent(event)
   }
@@ -132,8 +178,14 @@ class OverKeyboardRootViewGroup(
   @SuppressLint("ClickableViewAccessibility")
   override fun onTouchEvent(event: MotionEvent): Boolean {
     eventDispatcher?.let { eventDispatcher ->
-      jsTouchDispatcher.handleTouchEvent(event, eventDispatcher)
-      jsPointerDispatcher?.handleMotionEventCompat(event, eventDispatcher, false)
+      try {
+        jsTouchDispatcher.handleTouchEvent(event, eventDispatcher)
+        jsPointerDispatcher?.handleMotionEventCompat(event, eventDispatcher, false)
+      } catch (
+        @Suppress("detekt:TooGenericExceptionCaught") e: RuntimeException,
+      ) {
+        Logger.w(TAG, "Can not handle touch event", e)
+      }
     }
     super.onTouchEvent(event)
     // In case when there is no children interested in handling touch event, we return true from
@@ -163,7 +215,7 @@ class OverKeyboardRootViewGroup(
 
   // region RootView methods
   override fun onChildStartedNativeGesture(
-    childView: View,
+    childView: View?,
     ev: MotionEvent,
   ) {
     eventDispatcher?.let { eventDispatcher ->
@@ -184,4 +236,14 @@ class OverKeyboardRootViewGroup(
     reactContext.reactApplicationContext.handleException(RuntimeException(t))
   }
   // endregion
+
+  private fun stretchTo(
+    width: Int,
+    height: Int,
+  ) {
+    val newStateData: WritableMap = WritableNativeMap()
+    newStateData.putDouble("screenWidth", width.toFloat().dp)
+    newStateData.putDouble("screenHeight", height.toFloat().dp)
+    stateWrapper?.updateState(newStateData)
+  }
 }

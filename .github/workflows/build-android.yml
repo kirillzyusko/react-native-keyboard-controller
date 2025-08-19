@@ -10,6 +10,7 @@ on:
       - "example/android/**"
       - "yarn.lock"
       - "example/yarn.lock"
+      - "example/patches/**"
   pull_request:
     paths:
       - ".github/workflows/build-android.yml"
@@ -17,6 +18,7 @@ on:
       - "example/android/**"
       - "yarn.lock"
       - "example/yarn.lock"
+      - "example/patches/**"
 
 jobs:
   build:

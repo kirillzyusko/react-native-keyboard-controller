@@ -14,9 +14,10 @@ public class KeyboardControllerModuleImpl: NSObject {
 
   @objc
   public static func dismiss(_ keepFocus: Bool) {
-    guard let input = UIResponder.current as? TextInput else { return }
+    let responder = UIResponder.current
 
     if keepFocus {
+      guard let input = responder as? TextInput else { return }
       let tapGesture = UITapGestureRecognizer(target: self, action: #selector(onTextInputTapped(_:)))
       tapGesture.name = keyboardRevealGestureName
       input.addGestureRecognizer(tapGesture)
@@ -31,7 +32,7 @@ public class KeyboardControllerModuleImpl: NSObject {
         object: input
       )
     } else {
-      input.resignFirstResponder()
+      responder?.resignFirstResponder()
     }
   }
 

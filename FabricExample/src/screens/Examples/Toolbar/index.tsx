@@ -1,17 +1,20 @@
 import { BlurView } from "@react-native-community/blur";
-import React, { useCallback, useState } from "react";
-import { Platform, StyleSheet, View } from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
+import { Modal, Platform, StyleSheet, Text, View } from "react-native";
 import { trigger } from "react-native-haptic-feedback";
 import {
   KeyboardAwareScrollView,
   KeyboardToolbar,
 } from "react-native-keyboard-controller";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import TextInput from "../../../components/TextInput";
 
 import AutoFillContacts from "./Contacts";
 
 import type { Contact } from "./Contacts";
+import type { ExamplesStackParamList } from "../../../navigation/ExamplesStack";
+import type { StackScreenProps } from "@react-navigation/stack";
 
 // Optional configuration
 const options = {
@@ -21,7 +24,7 @@ const options = {
 const haptic = () =>
   trigger(Platform.OS === "ios" ? "impactLight" : "keyboardTap", options);
 
-export default function ToolbarExample() {
+function Form() {
   const [showAutoFill, setShowAutoFill] = useState(false);
   const [name, setName] = useState("");
   const onContactSelected = useCallback((contact: Contact) => {
@@ -33,6 +36,7 @@ export default function ToolbarExample() {
   const onHideAutoFill = useCallback(() => {
     setShowAutoFill(false);
   }, []);
+  const insets = useSafeAreaInsets();
 
   return (
     <>
@@ -158,11 +162,50 @@ export default function ToolbarExample() {
             <AutoFillContacts onContactSelected={onContactSelected} />
           ) : null
         }
+        insets={insets}
         opacity={Platform.OS === "ios" ? "4F" : "DD"}
         onDoneCallback={haptic}
         onNextCallback={haptic}
         onPrevCallback={haptic}
       />
+    </>
+  );
+}
+
+type Props = StackScreenProps<ExamplesStackParamList>;
+
+export default function ToolbarExample({ navigation }: Props) {
+  const [isVisible, setVisible] = useState(false);
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <View style={styles.row}>
+          <Text
+            style={styles.header}
+            testID="toolbar.kyc"
+            onPress={() => setVisible(true)}
+          >
+            KYC
+          </Text>
+        </View>
+      ),
+    });
+  }, [navigation]);
+
+  return (
+    <>
+      <Form />
+      <Modal
+        animationType="slide"
+        presentationStyle="formSheet"
+        visible={isVisible}
+        onRequestClose={() => setVisible(false)}
+      >
+        <View style={styles.modal}>
+          <Form />
+        </View>
+      </Modal>
     </>
   );
 }
@@ -186,6 +229,13 @@ const styles = StyleSheet.create({
     left: 0,
     bottom: 0,
     right: 0,
+  },
+  header: {
+    color: "black",
+    marginRight: 12,
+  },
+  modal: {
+    marginTop: 32,
   },
 });
 

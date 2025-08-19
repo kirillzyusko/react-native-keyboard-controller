@@ -1,8 +1,13 @@
 import { useRef, useState } from "react";
 import { Button, StyleSheet, TextInput, View } from "react-native";
-import { KeyboardController } from "react-native-keyboard-controller";
+import {
+  KeyboardController,
+  useResizeMode,
+} from "react-native-keyboard-controller";
 
 function CloseScreen() {
+  useResizeMode();
+
   const ref = useRef<TextInput>(null);
   const [keepFocus, setKeepFocus] = useState(false);
 

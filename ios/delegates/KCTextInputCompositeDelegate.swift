@@ -54,7 +54,7 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
   // Keep track of which textField we’re observing (iOS < 13 only)
   private weak var observedTextFieldForSelection: UITextField?
 
-  public init(
+  init(
     onSelectionChange: @escaping (_ event: NSDictionary) -> Void,
     onTextChange: @escaping (_ text: String?) -> Void
   ) {
@@ -64,8 +64,8 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
 
   // MARK: setters/getters
 
-  public func setTextViewDelegate(delegate: UITextViewDelegate?) {
-    // remove KVO from any old textField
+  func setTextViewDelegate(delegate: UITextViewDelegate?) {
+    // remove KVO from any old textView
     if let oldTextField = observedTextFieldForSelection {
       removeSelectionRangeObserver(from: oldTextField)
     }
@@ -75,7 +75,7 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
     observedTextFieldForSelection = nil
   }
 
-  public func setTextFieldDelegate(delegate: UITextFieldDelegate?, textField: UITextField?) {
+  func setTextFieldDelegate(delegate: UITextFieldDelegate?, textField: UITextField?) {
     // remove KVO from any old textField
     if let oldTextField = observedTextFieldForSelection {
       removeSelectionRangeObserver(from: oldTextField)
@@ -96,8 +96,23 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
     }
   }
 
+  func canSubstituteTextFieldDelegate(delegate: UITextFieldDelegate?) -> Bool {
+    let type = String(describing: delegate)
+    if type.range(of: "SQIPTextFieldInputModifier") != nil {
+      // SQIPTextFieldInputModifier is a private class used internally by Square.
+      // It forwards input events to the keyboard-controller delegate.
+      // To prevent an infinite loop, we avoid setting our delegate in this case.
+      // Since Square's SDK is used imperatively and doesn't allow adding custom components,
+      // keyboard-controller components cannot be used in this context,
+      // so it's safe to skip replacing the delegate.
+      return false
+    }
+
+    return true
+  }
+
   // Getter for the active delegate
-  public var activeDelegate: AnyObject? {
+  var activeDelegate: AnyObject? {
     return textViewDelegate ?? textFieldDelegate
   }
 
