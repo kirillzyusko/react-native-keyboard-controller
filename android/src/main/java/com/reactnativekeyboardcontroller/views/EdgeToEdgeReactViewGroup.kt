@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.os.Handler
 import android.os.Looper
+import android.view.WindowManager
 import android.widget.FrameLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
@@ -153,6 +154,8 @@ class EdgeToEdgeReactViewGroup(
           !isEdgeToEdge,
         )
       }
+      // unclear legacy flag if it was set earlier
+      reactContext.currentActivity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
     }
   }
 
