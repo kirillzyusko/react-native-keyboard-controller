@@ -16,6 +16,7 @@ Below you can find a table with supported versions:
 
 | library version | react-native version |
 | --------------- | -------------------- |
+| 1.18.0+         | 0.81.0+              |
 | 1.16.0+         | 0.77.0+              |
 | 1.13.0+         | 0.75.0+              |
 | 1.12.0+         | 0.74.0+              |
