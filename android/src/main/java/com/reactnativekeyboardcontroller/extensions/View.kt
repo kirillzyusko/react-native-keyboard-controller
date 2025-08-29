@@ -3,7 +3,6 @@ package com.reactnativekeyboardcontroller.extensions
 import android.graphics.Rect
 import android.os.Build
 import android.view.View
-import androidx.annotation.RequiresApi
 import com.reactnativekeyboardcontroller.log.Logger
 
 /**
@@ -38,14 +37,15 @@ private val tmpIntArr = IntArray(2)
 /**
  * Function which updates the given [rect] with this view's position and bounds in its window.
  */
-@RequiresApi(Build.VERSION_CODES.KITKAT)
 fun View.copyBoundsInWindow(rect: Rect) {
-  if (isAttachedToWindow) {
-    rect.set(0, 0, width, height)
-    getLocationInWindow(tmpIntArr)
-    rect.offset(tmpIntArr[0], tmpIntArr[1])
-  } else {
-    Logger.w("View.copyBoundsInWindow", "Can not copy bounds as view is not attached to window")
+  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+    if (isAttachedToWindow) {
+      rect.set(0, 0, width, height)
+      getLocationInWindow(tmpIntArr)
+      rect.offset(tmpIntArr[0], tmpIntArr[1])
+    } else {
+      Logger.w("View.copyBoundsInWindow", "Can not copy bounds as view is not attached to window")
+    }
   }
 }
 

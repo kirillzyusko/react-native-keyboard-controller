@@ -4,7 +4,6 @@ import android.animation.ArgbEvaluator
 import android.animation.ValueAnimator
 import android.app.Activity
 import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.facebook.react.bridge.ReactApplicationContext
@@ -37,37 +36,38 @@ class StatusBarManagerCompatModuleImpl(
     }
   }
 
-  @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
   fun setColor(
     color: Int,
     animated: Boolean,
   ) {
-    if (!isEnabled()) {
-      return original.setColor(color.toDouble(), animated)
-    }
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      if (!isEnabled()) {
+        return original.setColor(color.toDouble(), animated)
+      }
 
-    val activity = mReactContext.currentActivity
-    if (activity == null) {
-      Logger.w(
-        TAG,
-        "StatusBarManagerCompatModule: Ignored status bar change, current activity is null.",
-      )
-      return
-    }
+      val activity = mReactContext.currentActivity
+      if (activity == null) {
+        Logger.w(
+          TAG,
+          "StatusBarManagerCompatModule: Ignored status bar change, current activity is null.",
+        )
+        return
+      }
 
-    UiThreadUtil.runOnUiThread {
-      val window = activity.window
+      UiThreadUtil.runOnUiThread {
+        val window = activity.window
 
-      if (animated) {
-        val curColor: Int = window.statusBarColor
-        val colorAnimation = ValueAnimator.ofObject(ArgbEvaluator(), curColor, color)
-        colorAnimation.addUpdateListener { animator ->
-          window.statusBarColor = animator.animatedValue as Int
+        if (animated) {
+          val curColor: Int = window.statusBarColor
+          val colorAnimation = ValueAnimator.ofObject(ArgbEvaluator(), curColor, color)
+          colorAnimation.addUpdateListener { animator ->
+            window.statusBarColor = animator.animatedValue as Int
+          }
+          colorAnimation.setDuration(DEFAULT_ANIMATION_TIME).startDelay = 0
+          colorAnimation.start()
+        } else {
+          window.statusBarColor = color
         }
-        colorAnimation.setDuration(DEFAULT_ANIMATION_TIME).startDelay = 0
-        colorAnimation.start()
-      } else {
-        window.statusBarColor = color
       }
     }
   }

@@ -86,7 +86,6 @@ class KeyboardGestureAreaReactViewGroup(
   // endregion
 
   // region Handlers
-  @RequiresApi(Build.VERSION_CODES.KITKAT)
   private fun onActionDown(event: MotionEvent) {
     velocityTracker?.addMovement(event)
 
