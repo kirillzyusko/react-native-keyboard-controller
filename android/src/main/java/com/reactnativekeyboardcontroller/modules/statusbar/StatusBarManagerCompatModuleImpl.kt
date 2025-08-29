@@ -2,6 +2,7 @@ package com.reactnativekeyboardcontroller.modules.statusbar
 
 import android.animation.ArgbEvaluator
 import android.animation.ValueAnimator
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Build
 import androidx.core.view.WindowInsetsCompat
@@ -36,6 +37,7 @@ class StatusBarManagerCompatModuleImpl(
     }
   }
 
+  @SuppressLint("ObsoleteSdkInt")
   fun setColor(
     color: Int,
     animated: Boolean,

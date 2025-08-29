@@ -1,5 +1,6 @@
 package com.reactnativekeyboardcontroller.extensions
 
+import android.annotation.SuppressLint
 import android.graphics.Rect
 import android.os.Build
 import android.view.View
@@ -10,6 +11,7 @@ import com.reactnativekeyboardcontroller.log.Logger
  * to ensure that insets are always received.
  * @see https://stackoverflow.com/a/61909205/9272042
  */
+@SuppressLint("ObsoleteSdkInt")
 fun View.requestApplyInsetsWhenAttached() {
   // https://chris.banes.dev/2019/04/12/insets-listeners-to-layouts/
   if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT && isAttachedToWindow) {
@@ -37,6 +39,7 @@ private val tmpIntArr = IntArray(2)
 /**
  * Function which updates the given [rect] with this view's position and bounds in its window.
  */
+@SuppressLint("ObsoleteSdkInt")
 fun View.copyBoundsInWindow(rect: Rect) {
   if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
     if (isAttachedToWindow) {
