@@ -6,7 +6,6 @@ import android.os.Build
 import android.view.MotionEvent
 import android.view.VelocityTracker
 import android.view.ViewConfiguration
-import androidx.annotation.RequiresApi
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.facebook.react.uimanager.ThemedReactContext
@@ -50,7 +49,6 @@ class KeyboardGestureAreaReactViewGroup(
 
   private var velocityTracker: VelocityTracker? = null
 
-  @RequiresApi(Build.VERSION_CODES.R)
   override fun dispatchTouchEvent(event: MotionEvent?): Boolean {
     if (velocityTracker == null) {
       // Obtain a VelocityTracker if we don't have one yet
@@ -86,7 +84,6 @@ class KeyboardGestureAreaReactViewGroup(
   // endregion
 
   // region Handlers
-  @RequiresApi(Build.VERSION_CODES.KITKAT)
   private fun onActionDown(event: MotionEvent) {
     velocityTracker?.addMovement(event)
 
@@ -97,7 +94,6 @@ class KeyboardGestureAreaReactViewGroup(
     lastWindowY = bounds.top
   }
 
-  @RequiresApi(Build.VERSION_CODES.R)
   private fun onActionMove(event: MotionEvent) {
     // Since the view is likely to be translated/moved as the WindowInsetsAnimation
     // progresses, we need to make sure we account for that change in our touch
@@ -230,11 +226,14 @@ class KeyboardGestureAreaReactViewGroup(
     else -> false
   }
 
-  @RequiresApi(Build.VERSION_CODES.R)
   private fun getWindowHeight(): Int {
-    val metrics = reactContext.currentActivity?.windowManager?.currentWindowMetrics
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+      val metrics = reactContext.currentActivity?.windowManager?.currentWindowMetrics
 
-    return metrics?.bounds?.height() ?: 0
+      return metrics?.bounds?.height() ?: 0
+    }
+
+    return 0
   }
 
   companion object {
