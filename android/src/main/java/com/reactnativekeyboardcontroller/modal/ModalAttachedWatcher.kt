@@ -35,6 +35,7 @@ class ModalAttachedWatcher(
       return
     }
 
+    val cb = this.callback()
     val modal =
       try {
         uiManager?.resolveView(event.viewTag) as? ReactModalHostView
@@ -44,6 +45,9 @@ class ModalAttachedWatcher(
       }
 
     if (modal == null) {
+      return
+    }
+    if (cb == null) {
       return
     }
 
@@ -62,6 +66,7 @@ class ModalAttachedWatcher(
           eventPropagationView = view,
           context = reactContext,
           config = config,
+          source = cb,
         )
 
       rootView.addView(eventView)
@@ -70,28 +75,22 @@ class ModalAttachedWatcher(
         // on Android < 12 all events for `WindowInsetsAnimationCallback`
         // go through main `rootView`, so we don't need to stop main
         // callback - otherwise keyboard transitions will not be animated
-        this.callback()?.suspend(true)
+        cb.suspend(true)
         // attaching callback to Modal on Android < 12 can cause ghost animations, see: https://github.com/kirillzyusko/react-native-keyboard-controller/pull/718
-        // and overall attaching additional callbacks (if animation events go through the main window) is not necessary
+        // and overall attaching additional callbacks (if animation events go through the main window)
+        // is not necessary
         ViewCompat.setWindowInsetsAnimationCallback(rootView, callback)
         ViewCompat.setOnApplyWindowInsetsListener(eventView, callback)
-
-        // when modal is shown then keyboard will be hidden by default
-        //
-        // - if events are coming from main window - then keyboard position
-        //   will be synchronized from main window callback
-        // - if events are coming from modal window - then we need to update
-        //   position ourself, because callback can be attached after keyboard
-        //   auto-dismissal and we may miss some events and keyboard position
-        //   will be outdated
-        callback.syncKeyboardPosition(0.0, false)
       }
 
       dialog?.setOnDismissListener {
         callback.syncKeyboardPosition()
         callback.destroy()
         eventView.removeSelf()
-        this.callback()?.suspend(false)
+        // un-pause it in next frame because straight away `onApplyWindowInsets` will be called
+        view.post {
+          this.callback()?.suspend(false)
+        }
       }
 
       // imitating edge-to-edge mode behavior
