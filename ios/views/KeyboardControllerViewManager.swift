@@ -88,7 +88,8 @@ class KeyboardControllerView: UIView {
   override func layoutSubviews() {
     super.layoutSubviews()
 
-    let screenSize = UIScreen.main.bounds.size
+    guard let window = self.window else { return }
+    let screenSize = window.bounds.size
 
     if lastScreenSize == screenSize {
       return
