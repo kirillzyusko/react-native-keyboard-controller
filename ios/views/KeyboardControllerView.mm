@@ -217,7 +217,12 @@ using namespace facebook::react;
 {
   [super layoutSubviews];
 
-  CGSize screenSize = [self window].bounds.size;
+  UIWindow *window = self.window;
+  if (!window) {
+    return;
+  }
+
+  CGSize screenSize = window.bounds.size;
   if (CGSizeEqualToSize(screenSize, _lastScreenSize)) {
     return;
   }
