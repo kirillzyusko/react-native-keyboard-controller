@@ -5,11 +5,11 @@ import { WindowDimensionsEvents } from "../../bindings";
 
 import type { WindowDimensionsEventData } from "../../types";
 
-const screen = Dimensions.get("screen");
+const window = Dimensions.get("window");
 
 let initialDimensions: WindowDimensionsEventData = {
-  width: screen.width,
-  height: screen.height,
+  width: window.width,
+  height: window.height,
 };
 
 WindowDimensionsEvents.addListener("windowDidResize", (e) => {
