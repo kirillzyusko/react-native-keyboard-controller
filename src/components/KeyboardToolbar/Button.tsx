@@ -6,7 +6,7 @@ import {
   View,
 } from "react-native";
 
-import { useKeyboardState } from "../../hooks";
+import { useKeyboardToolbarTheme } from "../../hooks";
 
 import type { KeyboardToolbarTheme } from "./types";
 import type { PropsWithChildren } from "react";
@@ -64,7 +64,8 @@ const ButtonAndroid = ({
   style,
   theme,
 }: PropsWithChildren<ButtonProps>) => {
-  const colorScheme = useKeyboardState((state) => state.appearance);
+  const colorScheme = useKeyboardToolbarTheme();
+
   const accessibilityState = useMemo(() => ({ disabled }), [disabled]);
   const ripple = useMemo(
     () =>
