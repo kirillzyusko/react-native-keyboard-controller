@@ -237,4 +237,3 @@ export function useFocusedInputHandler(
 
 export * from "./useWindowDimensions";
 export * from "./useKeyboardState";
-export * from "./useKeyboardToolbarTheme";
