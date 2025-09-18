@@ -221,5 +221,5 @@ KeyboardToolbar.Prev = Prev;
 KeyboardToolbar.Next = Next;
 KeyboardToolbar.Done = Done;
 
-export { colors as DefaultKeyboardToolbarTheme };
+export { colors as DefaultKeyboardToolbarTheme, KeyboardToolbarProps };
 export default KeyboardToolbar;
