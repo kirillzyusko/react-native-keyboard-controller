@@ -2,6 +2,8 @@ import React from "react";
 import { useCallback } from "react";
 
 import { KeyboardController } from "../../../../module";
+import Arrow from "../../Arrow";
+import Button from "../../Button";
 import { TEST_ID_KEYBOARD_TOOLBAR_PREVIOUS } from "../../constants";
 import { useToolbarContext } from "../context";
 
@@ -14,14 +16,11 @@ const Prev: React.FC<ButtonSubProps> = ({
   disabled,
   rippleRadius,
   style,
+  button: ButtonContainer = Button,
+  icon: IconContainer = Arrow,
 }) => {
   const context = useToolbarContext();
-  const {
-    theme,
-    buttonContainer: ButtonContainer,
-    iconContainer: IconContainer,
-    isPrevDisabled,
-  } = context;
+  const { theme, isPrevDisabled } = context;
 
   const isDisabled = disabled ?? isPrevDisabled;
 

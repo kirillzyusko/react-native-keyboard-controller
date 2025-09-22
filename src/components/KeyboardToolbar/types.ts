@@ -70,9 +70,27 @@ export type KeyboardToolbarProps = Omit<
    * @deprecated Use compound API with `<KeyboardToolbar.Done />` component and `text` prop instead.
    */
   doneText?: ReactNode;
-  /** Custom touchable component for toolbar (used for prev/next/done buttons). */
+  /**
+   * Custom touchable component for toolbar (used for prev/next/done buttons).
+   *
+   * @deprecated Use `button` property for corresponding element instead:
+   * ```tsx
+   * <KeyboardToolbar>
+   *   <KeyboardToolbar.Prev button={MyCustomButton} />
+   * </KeyboardToolbar>
+   * ```.
+   */
   button?: typeof Button;
-  /** Custom icon component used to display next/prev buttons. */
+  /**
+   * Custom icon component used to display next/prev buttons.
+   *
+   * @deprecated Use `icon` property for corresponding element instead:
+   * ```tsx
+   * <KeyboardToolbar>
+   *   <KeyboardToolbar.Prev icon={MyCustomIcon} />
+   * </KeyboardToolbar>
+   * ```.
+   */
   icon?: typeof Arrow;
   /**
    * Whether to show next and previous buttons. Can be useful to set it to `false` if you have only one input

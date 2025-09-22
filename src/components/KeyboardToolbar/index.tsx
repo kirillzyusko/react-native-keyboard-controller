@@ -67,6 +67,8 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> & {
   });
   const isPrevDisabled = inputs.current === 0;
   const isNextDisabled = inputs.current === inputs.count - 1;
+  const buttonContainer = button ?? Button;
+  const iconContainer = icon ?? Arrow;
 
   useEffect(() => {
     const subscription = FocusedInputEvents.addListener("focusDidSet", (e) => {
@@ -110,7 +112,7 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> & {
     [closed, opened],
   );
 
-  let blurElement: ReactNode = null;
+  let backgroundElement: ReactNode = null;
   let arrowsElement: ReactNode = null;
   let contentContainer: ReactNode = null;
   let doneElement: ReactNode = null;
@@ -120,7 +122,7 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> & {
     let nextChild: ReactNode = null;
     let contentChild: ReactNode = null;
     let doneChild: ReactNode = null;
-    let blurChild: ReactNode = null;
+    let backgroundChild: ReactNode = null;
 
     React.Children.forEach(children, (child) => {
       if (!React.isValidElement(child)) {
@@ -129,7 +131,7 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> & {
       const type = child.type;
 
       if (type === Background) {
-        blurChild = child;
+        backgroundChild = child;
       } else if (type === Content) {
         contentChild = child;
       } else if (type === Prev) {
@@ -141,7 +143,7 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> & {
       }
     });
 
-    blurElement = blurChild;
+    backgroundElement = backgroundChild;
     doneElement = doneChild;
     arrowsElement =
       prevChild || nextChild ? (
@@ -152,16 +154,24 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> & {
       ) : null;
     contentContainer = contentChild ?? <Content>{contentChild}</Content>;
   } else {
-    blurElement = blur;
+    backgroundElement = blur;
     arrowsElement = showArrows ? (
       <View style={styles.arrows}>
-        <Prev onPress={onPrevCallback} />
-        <Next onPress={onNextCallback} />
+        <Prev
+          button={buttonContainer}
+          icon={iconContainer}
+          onPress={onPrevCallback}
+        />
+        <Next
+          button={buttonContainer}
+          icon={iconContainer}
+          onPress={onNextCallback}
+        />
       </View>
     ) : null;
     contentContainer = <Content>{content}</Content>;
     doneElement = doneText ? (
-      <Done text={doneText} onPress={onDoneCallback} />
+      <Done button={buttonContainer} text={doneText} onPress={onDoneCallback} />
     ) : null;
   }
 
@@ -169,8 +179,6 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> & {
     () => ({
       theme,
       colorScheme,
-      buttonContainer: button ?? Button,
-      iconContainer: icon ?? Arrow,
       isPrevDisabled,
       isNextDisabled,
     }),
@@ -185,7 +193,7 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> & {
         style={containerStyle}
       >
         <View {...rest} style={toolbarStyle} testID={TEST_ID_KEYBOARD_TOOLBAR}>
-          {blurElement}
+          {backgroundElement}
           {arrowsElement}
           {contentContainer}
           {doneElement}

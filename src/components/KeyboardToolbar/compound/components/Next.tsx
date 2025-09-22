@@ -1,6 +1,8 @@
 import React, { useCallback } from "react";
 
 import { KeyboardController } from "../../../../module";
+import Arrow from "../../Arrow";
+import Button from "../../Button";
 import { TEST_ID_KEYBOARD_TOOLBAR_NEXT } from "../../constants";
 import { useToolbarContext } from "../context";
 
@@ -13,14 +15,11 @@ const Next: React.FC<ButtonSubProps> = ({
   disabled,
   rippleRadius,
   style,
+  button: ButtonContainer = Button,
+  icon: IconContainer = Arrow,
 }) => {
   const context = useToolbarContext();
-  const {
-    theme,
-    buttonContainer: ButtonContainer,
-    iconContainer: IconContainer,
-    isNextDisabled,
-  } = context;
+  const { theme, isNextDisabled } = context;
 
   const isDisabled = disabled ?? isNextDisabled;
 

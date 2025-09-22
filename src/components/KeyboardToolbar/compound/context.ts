@@ -1,14 +1,10 @@
 import { createContext, useContext } from "react";
 
-import type Arrow from "../Arrow";
-import type Button from "../Button";
 import type { KeyboardToolbarTheme } from "../types";
 
 type ToolbarContextType = {
   theme: KeyboardToolbarTheme;
   colorScheme: "light" | "dark";
-  buttonContainer: typeof Button;
-  iconContainer: typeof Arrow;
   isPrevDisabled: boolean;
   isNextDisabled: boolean;
 };
