@@ -88,6 +88,137 @@ import { KeyboardToolbar } from "react-native-keyboard-controller";
 
 ### `<KeyboardToolbar.Prev>`
 
+#### `onPress`
+
+A callback that is called when the user presses the **previous** button. The callback receives an instance of `GestureResponderEvent` which can be used to cancel the default action (for advanced use-cases).
+
+```tsx
+import { Platform } from "react-native";
+import { KeyboardToolbar } from "react-native-keyboard-controller";
+import { trigger } from "react-native-haptic-feedback";
+
+const options = {
+  enableVibrateFallback: true,
+  ignoreAndroidSystemSettings: false,
+};
+const haptic = () =>
+  trigger(Platform.OS === "ios" ? "impactLight" : "keyboardTap", options);
+
+// ...
+
+<KeyboardToolbar>
+  <KeyboardToolbar.Prev onPress={haptic} />
+</KeyboardToolbar>;
+```
+
+:::tip Prevent Default Action
+To prevent the default action, call `e.preventDefault()` inside the callback:
+
+```tsx
+<KeyboardToolbar>
+  <KeyboardToolbar.Prev
+    onPress={(e) => {
+      // the focus will not be moved to the prev input
+      e.preventDefault();
+    }}
+  />
+</KeyboardToolbar>
+```
+
+:::
+
+### `<KeyboardToolbar.Next>`
+
+#### `onPress`
+
+A callback that is called when the user presses the **next** button. The callback receives an instance of `GestureResponderEvent` which can be used to cancel the default action (for advanced use-cases).
+
+```tsx
+import { Platform } from "react-native";
+import { KeyboardToolbar } from "react-native-keyboard-controller";
+import { trigger } from "react-native-haptic-feedback";
+
+const options = {
+  enableVibrateFallback: true,
+  ignoreAndroidSystemSettings: false,
+};
+const haptic = () =>
+  trigger(Platform.OS === "ios" ? "impactLight" : "keyboardTap", options);
+
+// ...
+
+<KeyboardToolbar>
+  <KeyboardToolbar.Next onPress={haptic} />
+</KeyboardToolbar>;
+```
+
+:::tip Prevent Default Action
+To prevent the default action, call `e.preventDefault()` inside the callback:
+
+```tsx
+<KeyboardToolbar>
+  <KeyboardToolbar.Next
+    onPress={(e) => {
+      // the focus will not be moved to the next input
+      e.preventDefault();
+    }}
+  />
+</KeyboardToolbar>
+```
+
+:::
+
+### `<KeyboardToolbar.Done>`
+
+#### `text`
+
+The property that allows to specify custom text for `Done` button.
+
+```tsx
+<KeyboardToolbar>
+  <KeyboardToolbar.Done text="Close" />
+</KeyboardToolbar>
+```
+
+#### `onPress`
+
+A callback that is called when the user presses the **done** button. The callback receives an instance of `GestureResponderEvent` which can be used to cancel the default action (for advanced use-cases).
+
+```tsx
+import { Platform } from "react-native";
+import { KeyboardToolbar } from "react-native-keyboard-controller";
+import { trigger } from "react-native-haptic-feedback";
+
+const options = {
+  enableVibrateFallback: true,
+  ignoreAndroidSystemSettings: false,
+};
+const haptic = () =>
+  trigger(Platform.OS === "ios" ? "impactLight" : "keyboardTap", options);
+
+// ...
+
+<KeyboardToolbar>
+  <KeyboardToolbar.Done onPress={haptic} />
+</KeyboardToolbar>;
+```
+
+:::tip Prevent Default Action
+To prevent the default action, call `e.preventDefault()` inside the callback:
+
+```tsx
+<KeyboardToolbar>
+  <KeyboardToolbar.Done
+    onPress={(e) => {
+      // keyboard will not be dismissed, since we cancelled the default action
+      e.preventDefault();
+    }}
+  />
+</KeyboardToolbar>
+```
+
+:::
+
 ## Props
 
 ### [`View Props`](https://reactnative.dev/docs/view#props)
@@ -117,14 +248,6 @@ const CustomButton: KeyboardToolbarProps["button"] = ({
 // ...
 
 <KeyboardToolbar button={CustomButton} />;
-```
-
-### `doneText`
-
-The property that allows to specify custom text for `Done` button.
-
-```tsx
-<KeyboardToolbar doneText="Close" />
 ```
 
 ### `icon`
@@ -161,108 +284,6 @@ const insets = useSafeAreaInsets();
 <KeyboardToolbar insets={insets} />;
 ```
 
-### `onDoneCallback`
-
-A callback that is called when the user presses the **done** button. The callback receives an instance of `GestureResponderEvent` which can be used to cancel the default action (for advanced use-cases).
-
-```tsx
-import { Platform } from "react-native";
-import { KeyboardToolbar } from "react-native-keyboard-controller";
-import { trigger } from "react-native-haptic-feedback";
-
-const options = {
-  enableVibrateFallback: true,
-  ignoreAndroidSystemSettings: false,
-};
-const haptic = () =>
-  trigger(Platform.OS === "ios" ? "impactLight" : "keyboardTap", options);
-
-// ...
-
-<KeyboardToolbar onDoneCallback={haptic} />;
-```
-
-:::tip Prevent Default Action
-To prevent the default action, call `e.preventDefault()` inside the callback:
-
-```tsx
-<KeyboardToolbar
-  onDoneCallback={(e) => {
-    e.preventDefault(); // keyboard will not be dismissed, since we cancelled the default action
-  }}
-/>
-```
-
-:::
-
-### `onNextCallback`
-
-A callback that is called when the user presses the **next** button. The callback receives an instance of `GestureResponderEvent` which can be used to cancel the default action (for advanced use-cases).
-
-```tsx
-import { Platform } from "react-native";
-import { KeyboardToolbar } from "react-native-keyboard-controller";
-import { trigger } from "react-native-haptic-feedback";
-
-const options = {
-  enableVibrateFallback: true,
-  ignoreAndroidSystemSettings: false,
-};
-const haptic = () =>
-  trigger(Platform.OS === "ios" ? "impactLight" : "keyboardTap", options);
-
-// ...
-
-<KeyboardToolbar onNextCallback={haptic} />;
-```
-
-:::tip Prevent Default Action
-To prevent the default action, call `e.preventDefault()` inside the callback:
-
-```tsx
-<KeyboardToolbar
-  onNextCallback={(e) => {
-    e.preventDefault(); // the focus will not be moved to the next input
-  }}
-/>
-```
-
-:::
-
-### `onPrevCallback`
-
-A callback that is called when the user presses the **previous** button. The callback receives an instance of `GestureResponderEvent` which can be used to cancel the default action (for advanced use-cases).
-
-```tsx
-import { Platform } from "react-native";
-import { KeyboardToolbar } from "react-native-keyboard-controller";
-import { trigger } from "react-native-haptic-feedback";
-
-const options = {
-  enableVibrateFallback: true,
-  ignoreAndroidSystemSettings: false,
-};
-const haptic = () =>
-  trigger(Platform.OS === "ios" ? "impactLight" : "keyboardTap", options);
-
-// ...
-
-<KeyboardToolbar onPrevCallback={haptic} />;
-```
-
-:::tip Prevent Default Action
-To prevent the default action, call `e.preventDefault()` inside the callback:
-
-```tsx
-<KeyboardToolbar
-  onPrevCallback={(e) => {
-    e.preventDefault(); // the focus will not be moved to the prev input
-  }}
-/>
-```
-
-:::
-
 ### `opacity`
 
 This property allows to specify the opacity of the toolbar container. The value must be specified in hexadecimal format. Default value is `FF`.
@@ -270,10 +291,6 @@ This property allows to specify the opacity of the toolbar container. The value 
 ```tsx
 <KeyboardToolbar opacity="EE" />
 ```
-
-### `showArrows`
-
-A boolean prop indicating whether to show `next` and `prev` buttons. Can be useful to set it to `false` if you have only one input and want to show only `Done` button. Default to `true`.
 
 ### `theme`
 
@@ -473,7 +490,7 @@ To migrate from the legacy prop-based API to the compound API:
 
 ```tsx
 // Old:
-<KeyboardToolbar content={<AutoFillContacts />} blur={<BlurView />} />
+<KeyboardToolbar content={<AutoFillContacts />} blur={<BlurView />} doneText="Close" />
 
 // New:
 <KeyboardToolbar>
