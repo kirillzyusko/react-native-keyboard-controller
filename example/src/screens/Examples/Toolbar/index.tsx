@@ -156,18 +156,26 @@ function Form() {
         />
       </KeyboardAwareScrollView>
       <KeyboardToolbar
-        blur={blur}
-        content={
-          showAutoFill ? (
-            <AutoFillContacts onContactSelected={onContactSelected} />
-          ) : null
-        }
         insets={insets}
         opacity={Platform.OS === "ios" ? "4F" : "DD"}
-        onDoneCallback={haptic}
-        onNextCallback={haptic}
-        onPrevCallback={haptic}
-      />
+      >
+        <KeyboardToolbar.Background>
+          <BlurView
+            blurAmount={32}
+            blurType={Platform.OS === "ios" ? "chromeMaterial" : "light"}
+            reducedTransparencyFallbackColor="white"
+            style={styles.absolute}
+          />
+        </KeyboardToolbar.Background>
+        <KeyboardToolbar.Content>
+          {showAutoFill ? (
+            <AutoFillContacts onContactSelected={onContactSelected} />
+          ) : null}
+        </KeyboardToolbar.Content>
+        <KeyboardToolbar.Prev onPress={haptic} />
+        <KeyboardToolbar.Next onPress={haptic} />
+        <KeyboardToolbar.Done onPress={haptic} />
+      </KeyboardToolbar>
     </>
   );
 }
@@ -238,12 +246,3 @@ const styles = StyleSheet.create({
     marginTop: 32,
   },
 });
-
-const blur = (
-  <BlurView
-    blurAmount={32}
-    blurType={Platform.OS === "ios" ? "chromeMaterial" : "light"}
-    reducedTransparencyFallbackColor="white"
-    style={styles.absolute}
-  />
-);
