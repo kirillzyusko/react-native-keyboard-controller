@@ -88,6 +88,51 @@ import { KeyboardToolbar } from "react-native-keyboard-controller";
 
 ### `<KeyboardToolbar.Prev>`
 
+#### `button`
+
+This property allows to render custom touchable component.
+
+```tsx
+import { TouchableOpacity } from "react-native-gesture-handler";
+import {
+  KeyboardToolbar,
+  KeyboardToolbarProps,
+} from "react-native-keyboard-controller";
+
+const CustomButton: KeyboardToolbarProps["button"] = ({
+  children,
+  onPress,
+}) => <TouchableOpacity onPress={onPress}>{children}</TouchableOpacity>;
+
+// ...
+
+<KeyboardToolbar>
+  <KeyboardToolbar.Prev button={CustomButton} />
+</KeyboardToolbar>;
+```
+
+#### `icon`
+
+`icon` property allows to render custom icons.
+
+```tsx
+import { Text } from "react-native";
+import {
+  KeyboardToolbar,
+  KeyboardToolbarProps,
+} from "react-native-keyboard-controller";
+
+const Icon: KeyboardToolbarProps["icon"] = ({ type }) => {
+  return <Text>{type === "next" ? "⬇️" : "⬆️"}</Text>;
+};
+
+// ...
+
+<KeyboardToolbar>
+  <KeyboardToolbar.Prev icon={Icon} />
+</KeyboardToolbar>;
+```
+
 #### `onPress`
 
 A callback that is called when the user presses the **previous** button. The callback receives an instance of `GestureResponderEvent` which can be used to cancel the default action (for advanced use-cases).
@@ -128,6 +173,51 @@ To prevent the default action, call `e.preventDefault()` inside the callback:
 :::
 
 ### `<KeyboardToolbar.Next>`
+
+#### `button`
+
+This property allows to render custom touchable component.
+
+```tsx
+import { TouchableOpacity } from "react-native-gesture-handler";
+import {
+  KeyboardToolbar,
+  KeyboardToolbarProps,
+} from "react-native-keyboard-controller";
+
+const CustomButton: KeyboardToolbarProps["button"] = ({
+  children,
+  onPress,
+}) => <TouchableOpacity onPress={onPress}>{children}</TouchableOpacity>;
+
+// ...
+
+<KeyboardToolbar>
+  <KeyboardToolbar.Next button={CustomButton} />
+</KeyboardToolbar>;
+```
+
+#### `icon`
+
+`icon` property allows to render custom icons.
+
+```tsx
+import { Text } from "react-native";
+import {
+  KeyboardToolbar,
+  KeyboardToolbarProps,
+} from "react-native-keyboard-controller";
+
+const Icon: KeyboardToolbarProps["icon"] = ({ type }) => {
+  return <Text>{type === "next" ? "⬇️" : "⬆️"}</Text>;
+};
+
+// ...
+
+<KeyboardToolbar>
+  <KeyboardToolbar.Next icon={Icon} />
+</KeyboardToolbar>;
+```
 
 #### `onPress`
 
@@ -170,14 +260,27 @@ To prevent the default action, call `e.preventDefault()` inside the callback:
 
 ### `<KeyboardToolbar.Done>`
 
-#### `text`
+#### `button`
 
-The property that allows to specify custom text for `Done` button.
+This property allows to render custom touchable component.
 
 ```tsx
+import { TouchableOpacity } from "react-native-gesture-handler";
+import {
+  KeyboardToolbar,
+  KeyboardToolbarProps,
+} from "react-native-keyboard-controller";
+
+const CustomButton: KeyboardToolbarProps["button"] = ({
+  children,
+  onPress,
+}) => <TouchableOpacity onPress={onPress}>{children}</TouchableOpacity>;
+
+// ...
+
 <KeyboardToolbar>
-  <KeyboardToolbar.Done text="Close" />
-</KeyboardToolbar>
+  <KeyboardToolbar.Next button={CustomButton} />
+</KeyboardToolbar>;
 ```
 
 #### `onPress`
@@ -219,6 +322,16 @@ To prevent the default action, call `e.preventDefault()` inside the callback:
 
 :::
 
+#### `text`
+
+The property that allows to specify custom text for `Done` button.
+
+```tsx
+<KeyboardToolbar>
+  <KeyboardToolbar.Done text="Close" />
+</KeyboardToolbar>
+```
+
 ## Props
 
 ### [`View Props`](https://reactnative.dev/docs/view#props)
@@ -228,47 +341,6 @@ Inherits [View Props](https://reactnative.dev/docs/view#props).
 ### [`KeyboardStickyViewProps`](./keyboard-sticky-view)
 
 Inherits [KeyboardStickyViewProps](./keyboard-sticky-view).
-
-### `button`
-
-This property allows to render custom touchable component for next, previous and done button.
-
-```tsx
-import { TouchableOpacity } from "react-native-gesture-handler";
-import {
-  KeyboardToolbar,
-  KeyboardToolbarProps,
-} from "react-native-keyboard-controller";
-
-const CustomButton: KeyboardToolbarProps["button"] = ({
-  children,
-  onPress,
-}) => <TouchableOpacity onPress={onPress}>{children}</TouchableOpacity>;
-
-// ...
-
-<KeyboardToolbar button={CustomButton} />;
-```
-
-### `icon`
-
-`icon` property allows to render custom icons for prev and next buttons.
-
-```tsx
-import { Text } from "react-native";
-import {
-  KeyboardToolbar,
-  KeyboardToolbarProps,
-} from "react-native-keyboard-controller";
-
-const Icon: KeyboardToolbarProps["icon"] = ({ type }) => {
-  return <Text>{type === "next" ? "⬇️" : "⬆️"}</Text>;
-};
-
-// ...
-
-<KeyboardToolbar icon={Icon} />;
-```
 
 ### `insets`
 
