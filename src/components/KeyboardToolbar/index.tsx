@@ -178,11 +178,10 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> & {
   const contextValue = useMemo(
     () => ({
       theme,
-      colorScheme,
       isPrevDisabled,
       isNextDisabled,
     }),
-    [theme, colorScheme, button, icon, isPrevDisabled, isNextDisabled],
+    [theme, isPrevDisabled, isNextDisabled],
   );
 
   return (

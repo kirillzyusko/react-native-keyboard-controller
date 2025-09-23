@@ -4,7 +4,6 @@ import type { KeyboardToolbarTheme } from "../types";
 
 type ToolbarContextType = {
   theme: KeyboardToolbarTheme;
-  colorScheme: "light" | "dark";
   isPrevDisabled: boolean;
   isNextDisabled: boolean;
 };

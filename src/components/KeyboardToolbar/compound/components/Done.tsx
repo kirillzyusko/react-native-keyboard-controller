@@ -2,6 +2,7 @@ import React from "react";
 import { useCallback, useMemo } from "react";
 import { StyleSheet, Text } from "react-native";
 
+import { useKeyboardState } from "../../../../hooks";
 import { KeyboardController } from "../../../../module";
 import Button from "../../Button";
 import { TEST_ID_KEYBOARD_TOOLBAR_DONE } from "../../constants";
@@ -18,8 +19,9 @@ const Done: React.FC<Omit<ButtonSubProps, "icon"> & { text?: ReactNode }> = ({
   text,
   button: ButtonContainer = Button,
 }) => {
+  const colorScheme = useKeyboardState((state) => state.appearance);
   const context = useToolbarContext();
-  const { theme, colorScheme } = context;
+  const { theme } = context;
 
   const doneStyle = useMemo(
     () => [styles.doneButton, { color: theme[colorScheme].primary }],
