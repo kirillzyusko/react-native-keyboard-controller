@@ -6,7 +6,6 @@ import android.os.Handler
 import android.os.Looper
 import android.view.WindowManager
 import android.widget.FrameLayout
-import androidx.core.graphics.Insets
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsAnimationCompat
@@ -15,6 +14,7 @@ import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.views.view.ReactViewGroup
 import com.reactnativekeyboardcontroller.extensions.content
 import com.reactnativekeyboardcontroller.extensions.removeSelf
+import com.reactnativekeyboardcontroller.extensions.replaceStatusBarInsets
 import com.reactnativekeyboardcontroller.extensions.requestApplyInsetsWhenAttached
 import com.reactnativekeyboardcontroller.extensions.rootView
 import com.reactnativekeyboardcontroller.listeners.KeyboardAnimationCallback
@@ -22,7 +22,6 @@ import com.reactnativekeyboardcontroller.listeners.KeyboardAnimationCallbackConf
 import com.reactnativekeyboardcontroller.log.Logger
 import com.reactnativekeyboardcontroller.modal.ModalAttachedWatcher
 import java.lang.ref.WeakReference
-import kotlin.math.min
 
 private val TAG = EdgeToEdgeReactViewGroup::class.qualifiedName
 
@@ -132,20 +131,7 @@ class EdgeToEdgeReactViewGroup(
         )
         content?.layoutParams = params
 
-        val sysBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-        val navBars = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
-        val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
-        val adjustedTop = if (isStatusBarTranslucent) 0 else sysBars.top
-        // pick bottom: use IME if present, otherwise nav bar bottom (respect translucency)
-        val bottomFromImeOrNav = if (ime.bottom > 0) ime.bottom else navBars.bottom
-        val adjustedInsets = WindowInsetsCompat.Builder(insets)
-          .setInsets(
-            WindowInsetsCompat.Type.systemBars(),
-            Insets.of(sysBars.left, adjustedTop, sysBars.right, if (active) sysBars.bottom else bottomFromImeOrNav)
-          )
-          .build()
-
-        ViewCompat.onApplyWindowInsets(v, adjustedInsets)
+        v.replaceStatusBarInsets(insets, this.isStatusBarTranslucent, active)
       }
     }
   }
