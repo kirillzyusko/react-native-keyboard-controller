@@ -21,6 +21,7 @@ import com.reactnativekeyboardcontroller.listeners.KeyboardAnimationCallbackConf
 import com.reactnativekeyboardcontroller.log.Logger
 import com.reactnativekeyboardcontroller.modal.ModalAttachedWatcher
 import java.lang.ref.WeakReference
+import kotlin.math.min
 
 private val TAG = EdgeToEdgeReactViewGroup::class.qualifiedName
 
@@ -136,7 +137,14 @@ class EdgeToEdgeReactViewGroup(
           defaultInsets.systemWindowInsetLeft,
           if (this.isStatusBarTranslucent) 0 else defaultInsets.systemWindowInsetTop,
           defaultInsets.systemWindowInsetRight,
-          defaultInsets.systemWindowInsetBottom,
+          if (active) {
+            min(
+              defaultInsets.systemWindowInsetBottom,
+              navBarInsets.bottom,
+            )
+          } else {
+            defaultInsets.systemWindowInsetBottom
+          },
         )
       }
     }
