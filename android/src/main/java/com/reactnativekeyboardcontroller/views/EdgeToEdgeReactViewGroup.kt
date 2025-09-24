@@ -6,6 +6,7 @@ import android.os.Handler
 import android.os.Looper
 import android.view.WindowManager
 import android.widget.FrameLayout
+import androidx.core.graphics.Insets
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsAnimationCompat
@@ -131,21 +132,20 @@ class EdgeToEdgeReactViewGroup(
         )
         content?.layoutParams = params
 
-        val defaultInsets = ViewCompat.onApplyWindowInsets(v, insets)
+        val sysBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+        val navBars = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
+        val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
+        val adjustedTop = if (isStatusBarTranslucent) 0 else sysBars.top
+        // pick bottom: use IME if present, otherwise nav bar bottom (respect translucency)
+        val bottomFromImeOrNav = if (ime.bottom > 0) ime.bottom else navBars.bottom
+        val adjustedInsets = WindowInsetsCompat.Builder(insets)
+          .setInsets(
+            WindowInsetsCompat.Type.systemBars(),
+            Insets.of(sysBars.left, adjustedTop, sysBars.right, if (active) sysBars.bottom else bottomFromImeOrNav)
+          )
+          .build()
 
-        defaultInsets.replaceSystemWindowInsets(
-          defaultInsets.systemWindowInsetLeft,
-          if (this.isStatusBarTranslucent) 0 else defaultInsets.systemWindowInsetTop,
-          defaultInsets.systemWindowInsetRight,
-          if (active) {
-            min(
-              defaultInsets.systemWindowInsetBottom,
-              navBarInsets.bottom,
-            )
-          } else {
-            defaultInsets.systemWindowInsetBottom
-          },
-        )
+        ViewCompat.onApplyWindowInsets(v, adjustedInsets)
       }
     }
   }
