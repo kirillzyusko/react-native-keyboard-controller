@@ -14,6 +14,7 @@ import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.views.view.ReactViewGroup
 import com.reactnativekeyboardcontroller.extensions.content
 import com.reactnativekeyboardcontroller.extensions.removeSelf
+import com.reactnativekeyboardcontroller.extensions.replaceStatusBarInsets
 import com.reactnativekeyboardcontroller.extensions.requestApplyInsetsWhenAttached
 import com.reactnativekeyboardcontroller.extensions.rootView
 import com.reactnativekeyboardcontroller.listeners.KeyboardAnimationCallback
@@ -130,14 +131,7 @@ class EdgeToEdgeReactViewGroup(
         )
         content?.layoutParams = params
 
-        val defaultInsets = ViewCompat.onApplyWindowInsets(v, insets)
-
-        defaultInsets.replaceSystemWindowInsets(
-          defaultInsets.systemWindowInsetLeft,
-          if (this.isStatusBarTranslucent) 0 else defaultInsets.systemWindowInsetTop,
-          defaultInsets.systemWindowInsetRight,
-          defaultInsets.systemWindowInsetBottom,
-        )
+        v.replaceStatusBarInsets(insets, this.isStatusBarTranslucent, active)
       }
     }
   }

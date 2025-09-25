@@ -4,6 +4,9 @@ import android.annotation.SuppressLint
 import android.graphics.Rect
 import android.os.Build
 import android.view.View
+import androidx.core.graphics.Insets
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.reactnativekeyboardcontroller.log.Logger
 
 /**
@@ -57,4 +60,42 @@ val View.screenLocation get(): IntArray {
   getLocationOnScreen(point)
 
   return point
+}
+
+/**
+ * Safely replaces status bar insets so that when we edge-to-edge mode gets disabled/enabled
+ * the app content is not jumping/resizing a window.
+ * */
+@Suppress("DEPRECATION")
+fun View.replaceStatusBarInsets(
+  insets: WindowInsetsCompat,
+  isStatusBarTranslucent: Boolean,
+  active: Boolean,
+): WindowInsetsCompat {
+  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+    val sysBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+    val navBars = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
+    val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
+    val adjustedTop = if (isStatusBarTranslucent) 0 else sysBars.top
+    // pick bottom: use IME if present, otherwise nav bar bottom (respect translucency)
+    val bottomFromImeOrNav = if (ime.bottom > 0) ime.bottom else navBars.bottom
+    val adjustedInsets =
+      WindowInsetsCompat
+        .Builder(insets)
+        .setInsets(
+          WindowInsetsCompat.Type.systemBars(),
+          Insets.of(sysBars.left, adjustedTop, sysBars.right, if (active) sysBars.bottom else bottomFromImeOrNav),
+        ).build()
+
+    return ViewCompat.onApplyWindowInsets(this, adjustedInsets)
+  } else {
+    val defaultInsets = ViewCompat.onApplyWindowInsets(this, insets)
+
+    return defaultInsets.replaceSystemWindowInsets(
+      defaultInsets.systemWindowInsetLeft,
+      if (isStatusBarTranslucent) 0 else defaultInsets.systemWindowInsetTop,
+      defaultInsets.systemWindowInsetRight,
+      defaultInsets.systemWindowInsetBottom,
+    )
+  }
 }
