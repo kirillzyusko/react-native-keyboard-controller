@@ -21,6 +21,9 @@ const config = {
   onBrokenMarkdownLinks: "warn",
   favicon: "favicon.ico",
 
+  // Runs animations on page change
+  clientModules: ["./src/modules/page-transitions.ts"],
+
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
   organizationName: "kirillzyusko",
