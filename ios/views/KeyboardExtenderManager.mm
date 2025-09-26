@@ -222,10 +222,9 @@ RCT_EXPORT_VIEW_PROPERTY(enabled, BOOL)
 #ifdef RCT_NEW_ARCH_ENABLED
 - (void)updateProps:(Props::Shared const &)props oldProps:(Props::Shared const &)oldProps
 {
-  const auto &oldViewProps = *std::static_pointer_cast<const KeyboardExtenderProps>(_props);
   const auto &newViewProps = *std::static_pointer_cast<const KeyboardExtenderProps>(props);
 
-  if (newViewProps.enabled != oldViewProps.enabled) {
+  if (newViewProps.enabled != self.enabled) {
     [self updateEnabledState:newViewProps.enabled];
   }
 
