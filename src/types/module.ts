@@ -53,6 +53,10 @@ export type DismissOptions = {
    * A boolean property indicating whether focus should be kept on the input after dismissing the keyboard. Default is `false`.
    */
   keepFocus: boolean;
+  /**
+   * A boolean property controlling whether dismissal should be animated. Default is `true`.
+   */
+  animated: boolean;
 };
 export type KeyboardControllerModule = {
   // android only
