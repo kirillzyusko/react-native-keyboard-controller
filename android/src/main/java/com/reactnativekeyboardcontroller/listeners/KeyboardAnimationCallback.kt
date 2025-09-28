@@ -50,14 +50,15 @@ class KeyboardAnimationCallback(
   val view: View,
   val context: ThemedReactContext?,
   private val config: KeyboardAnimationCallbackConfig,
+  private val source: KeyboardAnimationCallback? = null,
 ) : WindowInsetsAnimationCompat.Callback(config.dispatchMode),
   OnApplyWindowInsetsListener,
   Suspendable {
   private val surfaceId = UIManagerHelper.getSurfaceId(eventPropagationView)
 
   // state variables
-  private var persistentKeyboardHeight = 0.0
-  private var prevKeyboardHeight = 0.0
+  private var persistentKeyboardHeight = getCurrentKeyboardHeight()
+  private var prevKeyboardHeight = getCurrentKeyboardHeight()
   private var isKeyboardVisible = false
   private var isTransitioning = false
   private var duration = 0
@@ -161,9 +162,34 @@ class KeyboardAnimationCallback(
       Logger.i(TAG, "onApplyWindowInsets: ${this.persistentKeyboardHeight} -> $keyboardHeight")
       layoutObserver?.syncUpLayout()
       this.onKeyboardResized(keyboardHeight)
+
+      return insets
+    }
+
+    // always verify insets, because sometimes default lifecycle methods may not be invoked
+    // (when we press "Share" on Android 16, when Modal closes keyboard, etc.)
+    val newHeight = getCurrentKeyboardHeight(insets)
+    if (prevKeyboardHeight != newHeight && !isMoving && !isSuspended) {
+      Logger.w(
+        TAG,
+        "detected desynchronized state - force updating it. $prevKeyboardHeight -> $newHeight. Attached: ${view.isAttachedToWindow} EVA: ${this.eventPropagationView.isAttachedToWindow} Modal ${this.source}",
+      )
+      this.syncKeyboardPosition(newHeight, newHeight > 0)
     }
 
     return insets
+  }
+
+  override fun onPrepare(animation: WindowInsetsAnimationCompat) {
+    super.onPrepare(animation)
+
+    println("desynchronized - onPrepare")
+
+    if (!animation.isKeyboardAnimation || isSuspended) {
+      return
+    }
+
+    isTransitioning = true
   }
 
   @Suppress("detekt:ReturnCount")
@@ -175,7 +201,6 @@ class KeyboardAnimationCallback(
       return bounds
     }
 
-    isTransitioning = true
     isKeyboardVisible = isKeyboardVisible()
     duration = animation.durationMillis.toInt()
     val keyboardHeight = getCurrentKeyboardHeight()
@@ -415,14 +440,15 @@ class KeyboardAnimationCallback(
     return insets?.isVisible(WindowInsetsCompat.Type.ime()) ?: false
   }
 
-  private fun getCurrentKeyboardHeight(): Double {
-    val insets = ViewCompat.getRootWindowInsets(view)
-    val keyboardHeight = insets?.getInsets(WindowInsetsCompat.Type.ime())?.bottom ?: 0
+  private fun getCurrentKeyboardHeight(insets: WindowInsetsCompat? = null): Double {
+    val root = ViewCompat.getRootWindowInsets(view)
+    val final = insets ?: root
+    val keyboardHeight = final?.getInsets(WindowInsetsCompat.Type.ime())?.bottom ?: 0
     val navigationBar =
       if (config.hasTranslucentNavigationBar) {
         0
       } else {
-        insets?.getInsets(WindowInsetsCompat.Type.navigationBars())?.bottom ?: 0
+        root?.getInsets(WindowInsetsCompat.Type.navigationBars())?.bottom ?: 0
       }
 
     // on hide it will be negative value, so we are using max function
