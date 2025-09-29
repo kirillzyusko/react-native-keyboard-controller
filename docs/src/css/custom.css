@@ -326,7 +326,9 @@ h3 .label {
   margin-bottom: 24px;
 }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+}
 
 @media (prefers-reduced-motion: no-preference) {
   .doc-fade--run {
@@ -334,7 +336,11 @@ html { scroll-behavior: smooth; }
     will-change: opacity, transform, filter;
   }
   @keyframes doc-fade-in {
-    from { opacity: 0; }
-    to   { opacity: 1; }
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
   }
 }
