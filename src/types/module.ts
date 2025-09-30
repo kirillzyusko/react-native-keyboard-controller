@@ -115,7 +115,7 @@ export type KeyboardControllerNativeModule = {
   // ios only
   preload: () => void;
   // all platforms
-  dismiss: (keepFocus: boolean) => void;
+  dismiss: (keepFocus: boolean, animated: boolean) => void;
   setFocusTo: (direction: Direction) => void;
   // native event module stuff
   addListener: (eventName: string) => void;
