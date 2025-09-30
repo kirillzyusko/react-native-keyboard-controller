@@ -22,7 +22,10 @@ class KeyboardControllerModule(
     module.preload()
   }
 
-  override fun dismiss(keepFocus: Boolean, animated: Boolean) {
+  override fun dismiss(
+    keepFocus: Boolean,
+    animated: Boolean,
+  ) {
     module.dismiss(keepFocus, animated)
   }
 

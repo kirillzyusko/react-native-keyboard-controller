@@ -29,7 +29,10 @@ class KeyboardControllerModuleImpl(
     // no-op on Android
   }
 
-  fun dismiss(keepFocus: Boolean, animated: Boolean) {
+  fun dismiss(
+    keepFocus: Boolean,
+    animated: Boolean,
+  ) {
     val activity = mReactContext.currentActivity
     val view: View? = FocusedInputHolder.get()
 

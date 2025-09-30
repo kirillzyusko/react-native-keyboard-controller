@@ -28,7 +28,10 @@ class KeyboardControllerModule(
   }
 
   @ReactMethod
-  fun dismiss(keepFocus: Boolean, animated: Boolean) {
+  fun dismiss(
+    keepFocus: Boolean,
+    animated: Boolean,
+  ) {
     module.dismiss(keepFocus, animated)
   }
 
