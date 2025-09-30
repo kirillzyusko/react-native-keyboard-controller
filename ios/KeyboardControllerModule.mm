@@ -76,13 +76,13 @@ RCT_EXPORT_METHOD(preload)
 }
 
 #ifdef RCT_NEW_ARCH_ENABLED
-- (void)dismiss:(BOOL)keepFocus
+- (void)dismiss:(BOOL)keepFocus animated:(BOOL)animated
 #else
-RCT_EXPORT_METHOD(dismiss : (BOOL)keepFocus)
+RCT_EXPORT_METHOD(dismiss : (BOOL)keepFocus animated : (BOOL)animated)
 #endif
 {
   dispatch_async(dispatch_get_main_queue(), ^{
-    [KeyboardControllerModuleImpl dismiss:keepFocus];
+    [KeyboardControllerModuleImpl dismiss:keepFocus animated:animated];
   });
 }
 

@@ -26,8 +26,9 @@ KeyboardEvents.addListener("keyboardDidShow", (e) => {
   lastState = e;
 });
 
-const dismiss = async (options?: DismissOptions): Promise<void> => {
+const dismiss = async (options?: Partial<DismissOptions>): Promise<void> => {
   const keepFocus = options?.keepFocus ?? false;
+  const animated = options?.animated ?? true;
 
   return new Promise((resolve) => {
     if (isClosed) {
@@ -41,7 +42,7 @@ const dismiss = async (options?: DismissOptions): Promise<void> => {
       subscription.remove();
     });
 
-    KeyboardControllerNative.dismiss(keepFocus);
+    KeyboardControllerNative.dismiss(keepFocus, animated);
   });
 };
 const isVisible = () => !isClosed;

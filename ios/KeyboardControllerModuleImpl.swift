@@ -13,26 +13,36 @@ public class KeyboardControllerModuleImpl: NSObject {
   private static let keyboardRevealGestureName = "keyboardRevealGesture"
 
   @objc
-  public static func dismiss(_ keepFocus: Bool) {
-    let responder = UIResponder.current
+  public static func dismiss(_ keepFocus: Bool, animated: Bool) {
+    let work = {
+      let responder = UIResponder.current
 
-    if keepFocus {
-      guard let input = responder as? TextInput else { return }
-      let tapGesture = UITapGestureRecognizer(target: self, action: #selector(onTextInputTapped(_:)))
-      tapGesture.name = keyboardRevealGestureName
-      input.addGestureRecognizer(tapGesture)
+      if keepFocus {
+        guard let input = responder as? TextInput else { return }
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(onTextInputTapped(_:)))
+        tapGesture.name = keyboardRevealGestureName
+        input.addGestureRecognizer(tapGesture)
 
-      input.inputView = UIView()
-      input.reloadInputViews()
+        input.inputView = UIView()
+        input.reloadInputViews()
 
-      NotificationCenter.default.addObserver(
-        self,
-        selector: #selector(onResponderResigned(_:)),
-        name: UITextField.textDidEndEditingNotification,
-        object: input
-      )
+        NotificationCenter.default.addObserver(
+          self,
+          selector: #selector(onResponderResigned(_:)),
+          name: UITextField.textDidEndEditingNotification,
+          object: input
+        )
+      } else {
+        responder?.resignFirstResponder()
+      }
+    }
+
+    if !animated {
+      UIView.performWithoutAnimation {
+        work()
+      }
     } else {
-      responder?.resignFirstResponder()
+      work()
     }
   }
 

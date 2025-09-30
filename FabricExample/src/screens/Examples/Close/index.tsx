@@ -10,6 +10,7 @@ function CloseScreen() {
 
   const ref = useRef<TextInput>(null);
   const [keepFocus, setKeepFocus] = useState(false);
+  const [animated, setAnimated] = useState(true);
 
   return (
     <View>
@@ -17,6 +18,11 @@ function CloseScreen() {
         testID="keep_focus_button"
         title={keepFocus ? "Keep focus" : "Don't keep focus"}
         onPress={() => setKeepFocus(!keepFocus)}
+      />
+      <Button
+        testID="animated_button"
+        title={animated ? "Animated" : "Instant"}
+        onPress={() => setAnimated(!animated)}
       />
       <Button
         testID="set_focus_to_current"
@@ -36,7 +42,7 @@ function CloseScreen() {
       <Button
         testID="close_keyboard_button"
         title="Close keyboard"
-        onPress={() => KeyboardController.dismiss({ keepFocus })}
+        onPress={() => KeyboardController.dismiss({ keepFocus, animated })}
       />
       <TextInput
         ref={ref}
