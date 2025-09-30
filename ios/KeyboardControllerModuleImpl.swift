@@ -16,16 +16,16 @@ public class KeyboardControllerModuleImpl: NSObject {
   public static func dismiss(_ keepFocus: Bool, animated: Bool) {
     let work = {
       let responder = UIResponder.current
-      
+
       if keepFocus {
         guard let input = responder as? TextInput else { return }
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(onTextInputTapped(_:)))
         tapGesture.name = keyboardRevealGestureName
         input.addGestureRecognizer(tapGesture)
-        
+
         input.inputView = UIView()
         input.reloadInputViews()
-        
+
         NotificationCenter.default.addObserver(
           self,
           selector: #selector(onResponderResigned(_:)),
@@ -36,7 +36,7 @@ public class KeyboardControllerModuleImpl: NSObject {
         responder?.resignFirstResponder()
       }
     }
-    
+
     if !animated {
       UIView.performWithoutAnimation {
         work()
