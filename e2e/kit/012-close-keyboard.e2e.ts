@@ -61,4 +61,21 @@ describe("`KeyboardController.dismiss()` specification", () => {
     await waitAndTap("blur_from_ref");
     await expect(element(by.id("input"))).not.toBeFocused();
   });
+
+  it("should reveal a keyboard", async () => {
+    await waitAndTap("keep_focus_button");
+    await waitAndTap("input");
+    await waitForExpect(async () => {
+      await expectBitmapsToBeEqual("CloseKeyboardOpened");
+    });
+  });
+
+  it("should close keyboard immediately", async () => {
+    await waitAndTap("animated_button");
+    await waitAndTap("close_keyboard_button");
+    await expect(element(by.id("input"))).not.toBeFocused();
+    await waitForExpect(async () => {
+      await expectBitmapsToBeEqual("CloseKeyboardClosed");
+    });
+  });
 });

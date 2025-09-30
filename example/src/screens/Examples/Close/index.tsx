@@ -27,7 +27,7 @@ function CloseScreen() {
       <Button
         testID="set_focus_to_current"
         title="KeyboardController.setFocusTo('current')"
-        onPress={() => setAnimated(!animated)}
+        onPress={() => KeyboardController.setFocusTo("current")}
       />
       <Button
         testID="focus_from_ref"
