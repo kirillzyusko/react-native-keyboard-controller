@@ -27,7 +27,7 @@ on:
 jobs:
   build:
     name: Build iOS Example App
-    runs-on: macOS-15
+    runs-on: macOS-14
     defaults:
       run:
         working-directory: example/ios
