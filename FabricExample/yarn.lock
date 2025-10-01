@@ -4520,6 +4520,11 @@ react-is@^19.1.0:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-19.1.0.tgz#805bce321546b7e14c084989c77022351bbdd11b"
   integrity sha512-Oe56aUPnkHyyDxxkvqtd7KkdQP5uIUfHxd5XTb3wE9d/kRnZLmKbDB0GWk919tdQ+mxxPtG6EAs6RMT6i1qtHg==
 
+react-native-advanced-input-mask@^1.4.5:
+  version "1.4.5"
+  resolved "https://registry.yarnpkg.com/react-native-advanced-input-mask/-/react-native-advanced-input-mask-1.4.5.tgz#548b7fd3c6e2f90a502d9467e06a4535751fe3e1"
+  integrity sha512-sNIbIItm23uoXE25zIifkTIzYCDP9w/xqXk2aWVboF+YRnh9YHf9cz25FrN9oN5mZhdjH6jUKuDAh8yH8flcXQ==
+
 react-native-gesture-handler@2.27.1:
   version "2.27.1"
   resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-2.27.1.tgz#8865b2345f4c65536517f20cedc420481fc72d49"

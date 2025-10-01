@@ -178,7 +178,7 @@ export default function TextInputMaskExample() {
         mask="+1 ([000]) [000] [00] [00]"
         placeholder="+1 (___) ___ __ __"
         placeholderTextColor="gray"
-        style={style.input}
+        style={[style.input, style.masked]}
         testID="masked_input"
         onChangeText={onChangeText}
         onSelectionChange={({ nativeEvent }) =>
@@ -247,6 +247,9 @@ const style = StyleSheet.create({
     paddingHorizontal: 12,
     marginBottom: 12,
     marginVertical: 12,
+  },
+  masked: {
+    height: 50,
   },
   text: {
     color: "black",

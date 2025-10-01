@@ -4,6 +4,7 @@ PODS:
   - fast_float (8.0.0)
   - FBLazyVector (0.80.1)
   - fmt (11.0.2)
+  - ForkInputMask (7.3.3)
   - glog (0.3.5)
   - hermes-engine (0.80.1):
     - hermes-engine/Pre-built (= 0.80.1)
@@ -1679,6 +1680,36 @@ PODS:
     - React-RCTFBReactNativeSpec
     - ReactCommon/turbomodule/core
     - SocketRocket
+  - react-native-advanced-input-mask (1.4.5):
+    - boost
+    - DoubleConversion
+    - fast_float
+    - fmt
+    - ForkInputMask (~> 7.3.2)
+    - glog
+    - hermes-engine
+    - RCT-Folly
+    - RCT-Folly/Fabric
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-hermes
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - SocketRocket
+    - Yoga
   - react-native-blur (4.4.1):
     - boost
     - DoubleConversion
@@ -2706,6 +2737,7 @@ DEPENDENCIES:
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - React-Mapbuffer (from `../node_modules/react-native/ReactCommon`)
   - React-microtasksnativemodule (from `../node_modules/react-native/ReactCommon/react/nativemodule/microtasks`)
+  - react-native-advanced-input-mask (from `../node_modules/react-native-advanced-input-mask`)
   - "react-native-blur (from `../node_modules/@react-native-community/blur`)"
   - react-native-keyboard-controller (from `../node_modules/react-native-keyboard-controller`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
@@ -2751,6 +2783,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - ForkInputMask
     - lottie-ios
     - SocketRocket
 
@@ -2838,6 +2871,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   React-microtasksnativemodule:
     :path: "../node_modules/react-native/ReactCommon/react/nativemodule/microtasks"
+  react-native-advanced-input-mask:
+    :path: "../node_modules/react-native-advanced-input-mask"
   react-native-blur:
     :path: "../node_modules/@react-native-community/blur"
   react-native-keyboard-controller:
@@ -2927,6 +2962,7 @@ SPEC CHECKSUMS:
   fast_float: b32c788ed9c6a8c584d114d0047beda9664e7cc6
   FBLazyVector: 09f03e4b6f42f955734b64a118f86509cc719427
   fmt: a40bb5bd0294ea969aaaba240a927bd33d878cdd
+  ForkInputMask: 55e3fbab504b22da98483e9f9a6514b98fdd2f3c
   glog: 5683914934d5b6e4240e497e0f4a3b42d1854183
   hermes-engine: 4f07404533b808de66cf48ac4200463068d0e95a
   lottie-ios: a881093fab623c467d3bce374367755c272bdd59
@@ -2964,6 +3000,7 @@ SPEC CHECKSUMS:
   React-logger: 2f0d40bc8e648fbb1ff3b6580ad54189a8753290
   React-Mapbuffer: 9a7c65078c6851397c1999068989e4fc239d0c80
   React-microtasksnativemodule: 4f1ef719ba6c7ebbd2d75346ffa2916f9b4771c9
+  react-native-advanced-input-mask: 9c3752d9b082bf16014a25f18ed09b42c25ed532
   react-native-blur: 736888dd75460ec75605254214caded098066cfc
   react-native-keyboard-controller: b1af08e5705dd3216555b4055a4d469b5f6e1290
   react-native-safe-area-context: 6775aa9089fa84b77abd7ebdcf45e224a2a2ad3e

@@ -6,6 +6,7 @@ import {
   View,
   findNodeHandle,
 } from "react-native";
+import { MaskedTextInput } from "react-native-advanced-input-mask";
 import { useFocusedInputHandler } from "react-native-keyboard-controller";
 import Reanimated, {
   runOnJS,
@@ -17,6 +18,7 @@ import type {
   TextInputProps,
   TextInputSelectionChangeEventData,
 } from "react-native";
+import type { MaskedTextInputProps } from "react-native-advanced-input-mask";
 
 type MaskedInputState = {
   formatted: string; // +1 (123) 456-78-90
@@ -164,13 +166,25 @@ export default function TextInputMaskExample() {
   );
 
   const onChangeText = useCallback<
-    (formatted: string, extracted?: string) => void
+    NonNullable<MaskedTextInputProps["onChangeText"]>
   >((formatted, extracted) => {
     setData({ formatted, extracted });
   }, []);
 
   return (
     <View style={style.container}>
+      <MaskedTextInput
+        keyboardType="phone-pad"
+        mask="+1 ([000]) [000] [00] [00]"
+        placeholder="+1 (___) ___ __ __"
+        placeholderTextColor="gray"
+        style={[style.input, style.masked]}
+        testID="masked_input"
+        onChangeText={onChangeText}
+        onSelectionChange={({ nativeEvent }) =>
+          setOriginalSelection(nativeEvent)
+        }
+      />
       <TextInputWithMicSelection
         multiline
         style={style.input}
@@ -233,6 +247,9 @@ const style = StyleSheet.create({
     paddingHorizontal: 12,
     marginBottom: 12,
     marginVertical: 12,
+  },
+  masked: {
+    height: 50,
   },
   text: {
     color: "black",
