@@ -80,7 +80,7 @@ fun EditText.addOnTextChangedListener(action: (String) -> Unit): TextWatcher {
   } catch (e: NoSuchFieldException) {
     Logger.w(
       javaClass.simpleName,
-      "Can not attach listener because field `mListeners` not found: ${e.message}. Attaching to the end..."
+      "Can not attach listener because field `mListeners` not found: ${e.message}. Attaching to the end...",
     )
 
     // in RN 0.80+ field was renamed to `listeners`, but https://github.com/facebook/react-native/pull/49109
