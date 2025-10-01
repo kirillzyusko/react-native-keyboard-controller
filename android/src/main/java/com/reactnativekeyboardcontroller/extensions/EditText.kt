@@ -78,7 +78,14 @@ fun EditText.addOnTextChangedListener(action: (String) -> Unit): TextWatcher {
   } catch (e: ClassCastException) {
     Logger.w(javaClass.simpleName, "Can not attach listener because casting failed: ${e.message}")
   } catch (e: NoSuchFieldException) {
-    Logger.w(javaClass.simpleName, "Can not attach listener because field `mListeners` not found: ${e.message}")
+    Logger.w(
+      javaClass.simpleName,
+      "Can not attach listener because field `mListeners` not found: ${e.message}. Attaching to the end...",
+    )
+
+    // in RN 0.80+ field was renamed to `listeners`, but https://github.com/facebook/react-native/pull/49109
+    // was already merged so we can simply add our listener to the end
+    this.addTextChangedListener(listener)
   } catch (e: IllegalArgumentException) {
     Logger.w(
       javaClass.simpleName,

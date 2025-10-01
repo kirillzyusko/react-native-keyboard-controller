@@ -31,8 +31,11 @@ export default StyleSheet.create({
     borderColor: "#000000",
     borderWidth: 1,
     borderRadius: 10,
-    marginBottom: 36,
     paddingLeft: 10,
+  },
+  inputs: {
+    gap: 36,
+    marginBottom: 36,
   },
   button: {
     marginTop: 12,
