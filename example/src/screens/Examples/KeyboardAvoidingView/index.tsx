@@ -79,7 +79,6 @@ export default function KeyboardAvoidingViewExample({ navigation }: Props) {
             placeholderTextColor="#7C7C7C"
             style={styles.textInput}
             testID="keyboard_avoiding_view.password"
-            underlineColorAndroid="transparent"
           />
         </View>
         <TouchableOpacity
