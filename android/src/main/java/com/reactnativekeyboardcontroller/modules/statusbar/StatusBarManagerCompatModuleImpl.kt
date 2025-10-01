@@ -23,11 +23,11 @@ class StatusBarManagerCompatModuleImpl(
   private var controller: WindowInsetsControllerCompat? = null
   private var lastActivity = WeakReference<Activity?>(null)
 
+  /**
+   * This method always uses new API, because original implementation may mess up system insets
+   * and they will never be restored properly (even if you enabled edge-to-edge mode etc.)
+   */
   fun setHidden(hidden: Boolean) {
-    if (!isEnabled()) {
-      return original.setHidden(hidden)
-    }
-
     UiThreadUtil.runOnUiThread {
       if (hidden) {
         getController()?.hide(WindowInsetsCompat.Type.statusBars())
