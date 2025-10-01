@@ -29,7 +29,7 @@ on:
 jobs:
   build:
     name: Build iOS FabricExample App
-    runs-on: macOS-14
+    runs-on: macOS-15
     defaults:
       run:
         working-directory: FabricExample/ios
