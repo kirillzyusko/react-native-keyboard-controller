@@ -13,20 +13,60 @@ This component is fully customizable and allows you to define any behavior for p
 * **Extended accessibility support** 🔍: Ensures that all users, including those with disabilities, can navigate through inputs effectively.
 * **Full control over the buttons behavior** 🔧: Customize the actions triggered by the next, previous, and done buttons according to your needs.
 * **Extends ViewProps** 📜: Supports all the props that `View` component has.
+* **Compound component pattern** 🔌: Mix and match sub-components for granular control over the toolbar's structure.
 
-## Props[​](/react-native-keyboard-controller/docs/api/components/keyboard-toolbar.md#props "Direct link to Props")
+## Compound Components[​](/react-native-keyboard-controller/docs/api/components/keyboard-toolbar.md#compound-components "Direct link to Compound Components")
 
-### [`View Props`](https://reactnative.dev/docs/view#props)[​](/react-native-keyboard-controller/docs/api/components/keyboard-toolbar.md#view-props "Direct link to view-props")
+The new API uses sub-components as children of `KeyboardToolbar`. These allow for precise customization, such as conditional rendering of buttons or injecting custom elements.
 
-Inherits [View Props](https://reactnative.dev/docs/view#props).
+### `<KeyboardToolbar.Background>`[​](/react-native-keyboard-controller/docs/api/components/keyboard-toolbar.md#keyboardtoolbarbackground "Direct link to keyboardtoolbarbackground")
 
-### [`KeyboardStickyViewProps`](/react-native-keyboard-controller/docs/api/components/keyboard-sticky-view.md)[​](/react-native-keyboard-controller/docs/api/components/keyboard-toolbar.md#keyboardstickyviewprops "Direct link to keyboardstickyviewprops")
+Renders a custom background (e.g., blur effect) that overlays the entire toolbar. Accepts any React node as children.
 
-Inherits [KeyboardStickyViewProps](/react-native-keyboard-controller/docs/api/components/keyboard-sticky-view.md).
+```
+import { Platform } from "react-native";
+import { KeyboardToolbar } from "react-native-keyboard-controller";
+import { BlurView } from "@react-native-community/blur";
 
-### `button`[​](/react-native-keyboard-controller/docs/api/components/keyboard-toolbar.md#button "Direct link to button")
+<KeyboardToolbar opacity="4F">
+  <KeyboardToolbar.Background>
+    <BlurView
+      blurAmount={32}
+      blurType={Platform.OS === "ios" ? "chromeMaterial" : "light"}
+      reducedTransparencyFallbackColor="white"
+      style={{ position: "absolute", top: 0, left: 0, bottom: 0, right: 0 }}
+    />
+  </KeyboardToolbar.Background>
+  {/* Other sub-components */}
+</KeyboardToolbar>;
+```
 
-This property allows to render custom touchable component for next, previous and done button.
+warning
+
+Please, note, that you need to specify `opacity` prop for this prop to work. Because otherwise you will not see a blur effect.
+
+### `<KeyboardToolbar.Content>`[​](/react-native-keyboard-controller/docs/api/components/keyboard-toolbar.md#keyboardtoolbarcontent "Direct link to keyboardtoolbarcontent")
+
+Renders a custom content (e.g., yours UI elements) in the middle of the toolbar. Accepts any React node as children.
+
+```
+import { KeyboardToolbar } from "react-native-keyboard-controller";
+
+<KeyboardToolbar>
+  <KeyboardToolbar.Content>
+    {showAutoFill ? (
+      <AutoFillContacts onContactSelected={onContactSelected} />
+    ) : null}
+  </KeyboardToolbar.Content>
+  {/* Other sub-components */}
+</KeyboardToolbar>;
+```
+
+### `<KeyboardToolbar.Prev>`[​](/react-native-keyboard-controller/docs/api/components/keyboard-toolbar.md#keyboardtoolbarprev "Direct link to keyboardtoolbarprev")
+
+#### `button`[​](/react-native-keyboard-controller/docs/api/components/keyboard-toolbar.md#button "Direct link to button")
+
+This property allows to render custom touchable component.
 
 ```
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -42,67 +82,14 @@ const CustomButton: KeyboardToolbarProps["button"] = ({
 
 // ...
 
-<KeyboardToolbar button={CustomButton} />;
+<KeyboardToolbar>
+  <KeyboardToolbar.Prev button={CustomButton} />
+</KeyboardToolbar>;
 ```
 
-### `blur`[​](/react-native-keyboard-controller/docs/api/components/keyboard-toolbar.md#blur "Direct link to blur")
+#### `icon`[​](/react-native-keyboard-controller/docs/api/components/keyboard-toolbar.md#icon "Direct link to icon")
 
-This property allows to render custom blur effect for the toolbar (by default iOS keyboard is opaque and it blurs the content underneath, so if you want to follow **HIG** ([*Human Interface Guidelines*](https://developer.apple.com/design/human-interface-guidelines/materials)) properly - consider to add this effect).
-
-By default it is `null` and will not render any blur effect, because it's not a responsibility of this library to provide a blur effect. Instead it provides a property where you can specify your own blur effect and its provider, i. e. `@react-native-community/blur`, `expo-blur` or maybe even `react-native-skia` (based on your project preferences of course).
-
-warning
-
-Please, note, that you need to specify `opacity` prop for this prop to work. Because otherwise you will not see a blur effect.
-
-```
-import { BlurView } from "@react-native-community/blur";
-import {
-  KeyboardToolbar,
-  KeyboardToolbarProps,
-} from "react-native-keyboard-controller";
-
-const CustomBlur: KeyboardToolbarProps["blur"] = ({ children }) => (
-  <BlurView
-    blurType="chromeMaterial"
-    blurAmount={10}
-    reducedTransparencyFallbackColor="white"
-    style={{ position: "absolute", top: 0, left: 0, bottom: 0, right: 0 }}
-  >
-    {children}
-  </BlurView>
-);
-
-// ...
-
-<KeyboardToolbar blur={CustomBlur} opacity="4F" />;
-```
-
-### `content`[​](/react-native-keyboard-controller/docs/api/components/keyboard-toolbar.md#content "Direct link to content")
-
-This property allows you to show a custom content in the middle of the toolbar. It accepts JSX element. Default value is `null`.
-
-```
-<KeyboardToolbar
-  content={
-    showAutoFill ? (
-      <AutoFillContacts onContactSelected={onContactSelected} />
-    ) : null
-  }
-/>
-```
-
-### `doneText`[​](/react-native-keyboard-controller/docs/api/components/keyboard-toolbar.md#donetext "Direct link to donetext")
-
-The property that allows to specify custom text for `Done` button.
-
-```
-<KeyboardToolbar doneText="Close" />
-```
-
-### `icon`[​](/react-native-keyboard-controller/docs/api/components/keyboard-toolbar.md#icon "Direct link to icon")
-
-`icon` property allows to render custom icons for prev and next buttons.
+`icon` property allows to render custom icons.
 
 ```
 import { Text } from "react-native";
@@ -117,90 +104,12 @@ const Icon: KeyboardToolbarProps["icon"] = ({ type }) => {
 
 // ...
 
-<KeyboardToolbar icon={Icon} />;
+<KeyboardToolbar>
+  <KeyboardToolbar.Prev icon={Icon} />
+</KeyboardToolbar>;
 ```
 
-### `insets`[​](/react-native-keyboard-controller/docs/api/components/keyboard-toolbar.md#insets "Direct link to insets")
-
-An object containing `left` and `right` properties that define the `KeyboardToolbar` padding. This helps prevent overlap with system UI elements, especially in landscape orientation:
-
-```
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-
-// ...
-
-const insets = useSafeAreaInsets();
-
-<KeyboardToolbar insets={insets} />;
-```
-
-### `onDoneCallback`[​](/react-native-keyboard-controller/docs/api/components/keyboard-toolbar.md#ondonecallback "Direct link to ondonecallback")
-
-A callback that is called when the user presses the **done** button. The callback receives an instance of `GestureResponderEvent` which can be used to cancel the default action (for advanced use-cases).
-
-```
-import { Platform } from "react-native";
-import { KeyboardToolbar } from "react-native-keyboard-controller";
-import { trigger } from "react-native-haptic-feedback";
-
-const options = {
-  enableVibrateFallback: true,
-  ignoreAndroidSystemSettings: false,
-};
-const haptic = () =>
-  trigger(Platform.OS === "ios" ? "impactLight" : "keyboardTap", options);
-
-// ...
-
-<KeyboardToolbar onDoneCallback={haptic} />;
-```
-
-Prevent Default Action
-
-To prevent the default action, call `e.preventDefault()` inside the callback:
-
-```
-<KeyboardToolbar
-  onDoneCallback={(e) => {
-    e.preventDefault(); // keyboard will not be dismissed, since we cancelled the default action
-  }}
-/>
-```
-
-### `onNextCallback`[​](/react-native-keyboard-controller/docs/api/components/keyboard-toolbar.md#onnextcallback "Direct link to onnextcallback")
-
-A callback that is called when the user presses the **next** button. The callback receives an instance of `GestureResponderEvent` which can be used to cancel the default action (for advanced use-cases).
-
-```
-import { Platform } from "react-native";
-import { KeyboardToolbar } from "react-native-keyboard-controller";
-import { trigger } from "react-native-haptic-feedback";
-
-const options = {
-  enableVibrateFallback: true,
-  ignoreAndroidSystemSettings: false,
-};
-const haptic = () =>
-  trigger(Platform.OS === "ios" ? "impactLight" : "keyboardTap", options);
-
-// ...
-
-<KeyboardToolbar onNextCallback={haptic} />;
-```
-
-Prevent Default Action
-
-To prevent the default action, call `e.preventDefault()` inside the callback:
-
-```
-<KeyboardToolbar
-  onNextCallback={(e) => {
-    e.preventDefault(); // the focus will not be moved to the next input
-  }}
-/>
-```
-
-### `onPrevCallback`[​](/react-native-keyboard-controller/docs/api/components/keyboard-toolbar.md#onprevcallback "Direct link to onprevcallback")
+#### `onPress`[​](/react-native-keyboard-controller/docs/api/components/keyboard-toolbar.md#onpress "Direct link to onpress")
 
 A callback that is called when the user presses the **previous** button. The callback receives an instance of `GestureResponderEvent` which can be used to cancel the default action (for advanced use-cases).
 
@@ -218,7 +127,9 @@ const haptic = () =>
 
 // ...
 
-<KeyboardToolbar onPrevCallback={haptic} />;
+<KeyboardToolbar>
+  <KeyboardToolbar.Prev onPress={haptic} />
+</KeyboardToolbar>;
 ```
 
 Prevent Default Action
@@ -226,11 +137,196 @@ Prevent Default Action
 To prevent the default action, call `e.preventDefault()` inside the callback:
 
 ```
-<KeyboardToolbar
-  onPrevCallback={(e) => {
-    e.preventDefault(); // the focus will not be moved to the prev input
-  }}
-/>
+<KeyboardToolbar>
+  <KeyboardToolbar.Prev
+    onPress={(e) => {
+      // the focus will not be moved to the prev input
+      e.preventDefault();
+    }}
+  />
+</KeyboardToolbar>
+```
+
+### `<KeyboardToolbar.Next>`[​](/react-native-keyboard-controller/docs/api/components/keyboard-toolbar.md#keyboardtoolbarnext "Direct link to keyboardtoolbarnext")
+
+#### `button`[​](/react-native-keyboard-controller/docs/api/components/keyboard-toolbar.md#button-1 "Direct link to button-1")
+
+This property allows to render custom touchable component.
+
+```
+import { TouchableOpacity } from "react-native-gesture-handler";
+import {
+  KeyboardToolbar,
+  KeyboardToolbarProps,
+} from "react-native-keyboard-controller";
+
+const CustomButton: KeyboardToolbarProps["button"] = ({
+  children,
+  onPress,
+}) => <TouchableOpacity onPress={onPress}>{children}</TouchableOpacity>;
+
+// ...
+
+<KeyboardToolbar>
+  <KeyboardToolbar.Next button={CustomButton} />
+</KeyboardToolbar>;
+```
+
+#### `icon`[​](/react-native-keyboard-controller/docs/api/components/keyboard-toolbar.md#icon-1 "Direct link to icon-1")
+
+`icon` property allows to render custom icons.
+
+```
+import { Text } from "react-native";
+import {
+  KeyboardToolbar,
+  KeyboardToolbarProps,
+} from "react-native-keyboard-controller";
+
+const Icon: KeyboardToolbarProps["icon"] = ({ type }) => {
+  return <Text>{type === "next" ? "⬇️" : "⬆️"}</Text>;
+};
+
+// ...
+
+<KeyboardToolbar>
+  <KeyboardToolbar.Next icon={Icon} />
+</KeyboardToolbar>;
+```
+
+#### `onPress`[​](/react-native-keyboard-controller/docs/api/components/keyboard-toolbar.md#onpress-1 "Direct link to onpress-1")
+
+A callback that is called when the user presses the **next** button. The callback receives an instance of `GestureResponderEvent` which can be used to cancel the default action (for advanced use-cases).
+
+```
+import { Platform } from "react-native";
+import { KeyboardToolbar } from "react-native-keyboard-controller";
+import { trigger } from "react-native-haptic-feedback";
+
+const options = {
+  enableVibrateFallback: true,
+  ignoreAndroidSystemSettings: false,
+};
+const haptic = () =>
+  trigger(Platform.OS === "ios" ? "impactLight" : "keyboardTap", options);
+
+// ...
+
+<KeyboardToolbar>
+  <KeyboardToolbar.Next onPress={haptic} />
+</KeyboardToolbar>;
+```
+
+Prevent Default Action
+
+To prevent the default action, call `e.preventDefault()` inside the callback:
+
+```
+<KeyboardToolbar>
+  <KeyboardToolbar.Next
+    onPress={(e) => {
+      // the focus will not be moved to the next input
+      e.preventDefault();
+    }}
+  />
+</KeyboardToolbar>
+```
+
+### `<KeyboardToolbar.Done>`[​](/react-native-keyboard-controller/docs/api/components/keyboard-toolbar.md#keyboardtoolbardone "Direct link to keyboardtoolbardone")
+
+#### `button`[​](/react-native-keyboard-controller/docs/api/components/keyboard-toolbar.md#button-2 "Direct link to button-2")
+
+This property allows to render custom touchable component.
+
+```
+import { TouchableOpacity } from "react-native-gesture-handler";
+import {
+  KeyboardToolbar,
+  KeyboardToolbarProps,
+} from "react-native-keyboard-controller";
+
+const CustomButton: KeyboardToolbarProps["button"] = ({
+  children,
+  onPress,
+}) => <TouchableOpacity onPress={onPress}>{children}</TouchableOpacity>;
+
+// ...
+
+<KeyboardToolbar>
+  <KeyboardToolbar.Next button={CustomButton} />
+</KeyboardToolbar>;
+```
+
+#### `onPress`[​](/react-native-keyboard-controller/docs/api/components/keyboard-toolbar.md#onpress-2 "Direct link to onpress-2")
+
+A callback that is called when the user presses the **done** button. The callback receives an instance of `GestureResponderEvent` which can be used to cancel the default action (for advanced use-cases).
+
+```
+import { Platform } from "react-native";
+import { KeyboardToolbar } from "react-native-keyboard-controller";
+import { trigger } from "react-native-haptic-feedback";
+
+const options = {
+  enableVibrateFallback: true,
+  ignoreAndroidSystemSettings: false,
+};
+const haptic = () =>
+  trigger(Platform.OS === "ios" ? "impactLight" : "keyboardTap", options);
+
+// ...
+
+<KeyboardToolbar>
+  <KeyboardToolbar.Done onPress={haptic} />
+</KeyboardToolbar>;
+```
+
+Prevent Default Action
+
+To prevent the default action, call `e.preventDefault()` inside the callback:
+
+```
+<KeyboardToolbar>
+  <KeyboardToolbar.Done
+    onPress={(e) => {
+      // keyboard will not be dismissed, since we cancelled the default action
+      e.preventDefault();
+    }}
+  />
+</KeyboardToolbar>
+```
+
+#### `text`[​](/react-native-keyboard-controller/docs/api/components/keyboard-toolbar.md#text "Direct link to text")
+
+The property that allows to specify custom text for `Done` button.
+
+```
+<KeyboardToolbar>
+  <KeyboardToolbar.Done text="Close" />
+</KeyboardToolbar>
+```
+
+## Props[​](/react-native-keyboard-controller/docs/api/components/keyboard-toolbar.md#props "Direct link to Props")
+
+### [`View Props`](https://reactnative.dev/docs/view#props)[​](/react-native-keyboard-controller/docs/api/components/keyboard-toolbar.md#view-props "Direct link to view-props")
+
+Inherits [View Props](https://reactnative.dev/docs/view#props).
+
+### [`KeyboardStickyViewProps`](/react-native-keyboard-controller/docs/api/components/keyboard-sticky-view.md)[​](/react-native-keyboard-controller/docs/api/components/keyboard-toolbar.md#keyboardstickyviewprops "Direct link to keyboardstickyviewprops")
+
+Inherits [KeyboardStickyViewProps](/react-native-keyboard-controller/docs/api/components/keyboard-sticky-view.md).
+
+### `insets`[​](/react-native-keyboard-controller/docs/api/components/keyboard-toolbar.md#insets "Direct link to insets")
+
+An object containing `left` and `right` properties that define the `KeyboardToolbar` padding. This helps prevent overlap with system UI elements, especially in landscape orientation:
+
+```
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+
+// ...
+
+const insets = useSafeAreaInsets();
+
+<KeyboardToolbar insets={insets} />;
 ```
 
 ### `opacity`[​](/react-native-keyboard-controller/docs/api/components/keyboard-toolbar.md#opacity "Direct link to opacity")
@@ -240,10 +336,6 @@ This property allows to specify the opacity of the toolbar container. The value 
 ```
 <KeyboardToolbar opacity="EE" />
 ```
-
-### `showArrows`[​](/react-native-keyboard-controller/docs/api/components/keyboard-toolbar.md#showarrows "Direct link to showarrows")
-
-A boolean prop indicating whether to show `next` and `prev` buttons. Can be useful to set it to `false` if you have only one input and want to show only `Done` button. Default to `true`.
 
 ### `theme`[​](/react-native-keyboard-controller/docs/api/components/keyboard-toolbar.md#theme "Direct link to theme")
 
@@ -318,7 +410,11 @@ export default function ToolbarExample() {
         <TextInput placeholder="House number" title="House" />
         <TextInput placeholder="Flat number" title="Flat" />
       </KeyboardAwareScrollView>
-      <KeyboardToolbar />
+      <KeyboardToolbar>
+        <KeyboardToolbar.Prev />
+        <KeyboardToolbar.Next />
+        <KeyboardToolbar.Done />
+      </KeyboardToolbar>
     </>
   );
 }
@@ -416,6 +512,77 @@ const textInputStyles = StyleSheet.create({
 More comprehensive usage
 
 For more comprehensive usage that covers more complex interactions please check [example](https://github.com/kirillzyusko/react-native-keyboard-controller/tree/main/example) app.
+
+## Migration to compound component[​](/react-native-keyboard-controller/docs/api/components/keyboard-toolbar.md#migration-to-compound-component "Direct link to Migration to compound component")
+
+To migrate from the legacy prop-based API to the compound API:
+
+1. Add elements that you want to render in the toolbar (e.g., `Prev`, `Next`, `Done`, `Content`, `Background`).
+
+```
+// Old:
+<KeyboardToolbar />
+
+// New:
+<KeyboardToolbar>
+  <KeyboardToolbar.Prev />
+  <KeyboardToolbar.Next />
+  <KeyboardToolbar.Done />
+</KeyboardToolbar>
+```
+
+2. Move props like `content`, `blur`, `doneText` into dedicated sub-components:
+
+```
+// Old:
+<KeyboardToolbar content={<AutoFillContacts />} blur={<BlurView />} doneText="Close" />
+
+// New:
+<KeyboardToolbar>
+  <KeyboardToolbar.Background>
+    <BlurView />
+  </KeyboardToolbar.Background>
+  <KeyboardToolbar.Content>
+    <AutoFillContacts />
+  </KeyboardToolbar.Content>
+  <KeyboardToolbar.Done text="Close" />
+</KeyboardToolbar>
+```
+
+3. If you used button callbacks, move them into dedicated sub-components:
+
+```
+// Old:
+<KeyboardToolbar
+  onNextCallback={haptic}
+  onPrevCallback={haptic}
+  onDoneCallback={haptic}
+/>
+
+// New:
+<KeyboardToolbar>
+  <KeyboardToolbar.Next onPress={haptic} />
+  <KeyboardToolbar.Prev onPress={haptic} />
+  <KeyboardToolbar.Done onPress={haptic} />
+</KeyboardToolbar>
+```
+
+4. If you used `showArrows` prop, move it into conditional rendering:
+
+```
+// Old:
+<KeyboardToolbar showArrows={false} />
+
+// New:
+<KeyboardToolbar>
+  {showArrows ? <KeyboardToolbar.Prev /> : null}
+  {showArrows ? <KeyboardToolbar.Next /> : null}
+</KeyboardToolbar>
+```
+
+Struggle to migrate?
+
+If you found any bugs or inconsistent behavior comparing to old implementation and can not migrate to new compound API - don't hesitate to open an [issue](https://github.com/kirillzyusko/react-native-keyboard-controller/issues/new?assignees=kirillzyusko\&labels=bug\&template=bug_report.md\&title=). It will help the project 🙏
 
 ## Limitations[​](/react-native-keyboard-controller/docs/api/components/keyboard-toolbar.md#limitations "Direct link to Limitations")
 

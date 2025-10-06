@@ -66,6 +66,12 @@ If you want to hide a keyboard and keep focus then you can pass `keepFocus` opti
 await KeyboardController.dismiss({ keepFocus: true });
 ```
 
+If you want to hide keyboard immediately (i. e. without animation), you can pass `animated` option:
+
+```
+await KeyboardController.dismiss({ animated: false });
+```
+
 What is the difference comparing to `react-native` implementation?
 
 The equivalent method from `react-native` relies on specific internal components, such as `TextInput`, and may not work as intended if a custom input component is used.
