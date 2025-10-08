@@ -3015,6 +3015,12 @@ export default function App() {
 
 Congratulations! 🎉 You've just finished installation process. Go to the [next section](/react-native-keyboard-controller/docs/guides/first-animation.md) to get more insights of what you can do using this library. 😎
 
+Flickering keyboard on app start
+
+`KeyboardProvider` preloads the keyboard when the app starts to avoid an initial delay later. However, in some situations, this may cause the keyboard to [briefly appear](https://github.com/kirillzyusko/react-native-keyboard-controller/issues/1077) on launch.
+
+To prevent this, disable preloading by setting the [`preload={false}`](/react-native-keyboard-controller/docs/api/keyboard-provider.md#preload-) prop on `KeyboardProvider`. And don't forget to manually [`preload`](/react-native-keyboard-controller/docs/api/keyboard-controller.md#preload-) the keyboard later via `KeyboardController` when appropriate.
+
 Troubleshooting guide
 
 If you encounter some issues make sure to read the [Troubleshooting](/react-native-keyboard-controller/docs/troubleshooting.md) section.
