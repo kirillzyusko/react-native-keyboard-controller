@@ -38,7 +38,7 @@
     "cheerio": "^1.0.0-rc.12",
     "markdownlint-cli2": "^0.12.1",
     "patch-package": "^8.0.0",
-    "typescript": "^5.2.2"
+    "typescript": "^5.8.3"
   },
   "browserslist": {
     "production": [
@@ -53,6 +53,6 @@
     ]
   },
   "engines": {
-    "node": ">=18.0"
+    "node": ">=20"
   }
 }

@@ -19,15 +19,15 @@
     "@react-navigation/native": "^6.1.18",
     "@react-navigation/native-stack": "^6.11.0",
     "@react-navigation/stack": "^6.4.1",
-    "lottie-react-native": "^7.2.3",
+    "lottie-react-native": "^7.3.4",
     "react": "19.1.0",
-    "react-native": "0.80.1",
-    "react-native-gesture-handler": "2.27.1",
+    "react-native": "0.81.4",
+    "react-native-gesture-handler": "2.28.0",
     "react-native-haptic-feedback": "2.3.3",
     "react-native-keyboard-controller": "link:../",
-    "react-native-reanimated": "3.18.0",
-    "react-native-safe-area-context": "5.4.1",
-    "react-native-screens": "4.11.1",
+    "react-native-reanimated": "3.19.2",
+    "react-native-safe-area-context": "5.6.1",
+    "react-native-screens": "4.16.0",
     "react-native-text-input-mask": "3.1.5",
     "react-native-toast-message": "^2.3.0"
   },
@@ -35,12 +35,12 @@
     "@babel/core": "^7.25.2",
     "@babel/preset-env": "^7.25.3",
     "@babel/runtime": "^7.25.0",
-    "@react-native-community/cli": "19.0.0",
-    "@react-native-community/cli-platform-android": "19.0.0",
-    "@react-native-community/cli-platform-ios": "19.0.0",
-    "@react-native/babel-preset": "0.80.1",
-    "@react-native/metro-config": "0.80.1",
-    "@react-native/typescript-config": "0.80.1",
+    "@react-native-community/cli": "20.0.0",
+    "@react-native-community/cli-platform-android": "20.0.0",
+    "@react-native-community/cli-platform-ios": "20.0.0",
+    "@react-native/babel-preset": "0.81.4",
+    "@react-native/metro-config": "0.81.4",
+    "@react-native/typescript-config": "0.81.4",
     "@testing-library/jest-native": "^5.3.2",
     "@testing-library/react-hooks": "8.0.1",
     "@testing-library/react-native": "^13.0.1",
@@ -66,6 +66,6 @@
     ]
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   }
 }
