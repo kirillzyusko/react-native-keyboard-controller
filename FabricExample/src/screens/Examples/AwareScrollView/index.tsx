@@ -1,6 +1,6 @@
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Button, Platform, Switch, Text, View } from "react-native";
+import { Button, Platform, Text, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 
 import TextInput from "../../../components/TextInput";
@@ -9,6 +9,7 @@ import { styles } from "./styles";
 
 import type { ExamplesStackParamList } from "../../../navigation/ExamplesStack";
 import type { StackScreenProps } from "@react-navigation/stack";
+import Switch from "./Switch";
 
 type Props = StackScreenProps<ExamplesStackParamList>;
 const snapToOffsets = [125, 225, 325, 425, 525, 625];

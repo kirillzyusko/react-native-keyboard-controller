@@ -1,11 +1,12 @@
-import BottomSheet from "@gorhom/bottom-sheet";
+import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Button, Platform, Switch, Text, View } from "react-native";
+import { Button, Platform, Text, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 
 import TextInput from "../../../components/TextInput";
 
 import { styles } from "./styles";
+import Switch from "./Switch";
 
 import type { ExamplesStackParamList } from "../../../navigation/ExamplesStack";
 import type { StackScreenProps } from "@react-navigation/stack";
@@ -106,42 +107,44 @@ export default function AwareScrollView({ navigation }: Props) {
         />
       </KeyboardAwareScrollView>
       <BottomSheet ref={bottomSheetModalRef} index={-1} snapPoints={["40%"]}>
-        <Button
-          testID="bottom_sheet_close_modal"
-          title="Close modal"
-          onPress={() => bottomSheetModalRef.current?.close()}
-        />
-        <View style={styles.switchContainer}>
-          <Text>Toggle back scroll</Text>
-          <Switch
-            testID="bottom_sheet_toggle_back_scroll"
-            value={disableScrollOnKeyboardHide}
-            onChange={() => {
-              setDisableScrollOnKeyboardHide(!disableScrollOnKeyboardHide);
-            }}
+        <BottomSheetView style={styles.bottomSheetContent}>
+          <Button
+            testID="bottom_sheet_close_modal"
+            title="Close modal"
+            onPress={() => bottomSheetModalRef.current?.close()}
           />
-        </View>
-        <View style={styles.switchContainer}>
-          <Text>Toggle enabled</Text>
-          <Switch
-            testID="bottom_sheet_toggle_enabled_state"
-            value={enabled}
-            onChange={() => {
-              setEnabled(!enabled);
-            }}
-          />
-        </View>
+          <View style={styles.switchContainer}>
+            <Text>Toggle back scroll</Text>
+            <Switch
+              testID="bottom_sheet_toggle_back_scroll"
+              value={disableScrollOnKeyboardHide}
+              onChange={() => {
+                setDisableScrollOnKeyboardHide(!disableScrollOnKeyboardHide);
+              }}
+            />
+          </View>
+          <View style={styles.switchContainer}>
+            <Text>Toggle enabled</Text>
+            <Switch
+              testID="bottom_sheet_toggle_enabled_state"
+              value={enabled}
+              onChange={() => {
+                setEnabled(!enabled);
+              }}
+            />
+          </View>
 
-        <View style={styles.switchContainer}>
-          <Text>Toggle snapToOffsets</Text>
-          <Switch
-            testID="bottom_sheet_toggle_snap_to_offsets"
-            value={snapToOffsetsEnabled}
-            onChange={() => {
-              setSnapToOffsetsEnabled(!snapToOffsetsEnabled);
-            }}
-          />
-        </View>
+          <View style={styles.switchContainer}>
+            <Text>Toggle snapToOffsets</Text>
+            <Switch
+              testID="bottom_sheet_toggle_snap_to_offsets"
+              value={snapToOffsetsEnabled}
+              onChange={() => {
+                setSnapToOffsetsEnabled(!snapToOffsetsEnabled);
+              }}
+            />
+          </View>
+        </BottomSheetView>
       </BottomSheet>
     </>
   );

@@ -38,4 +38,7 @@ export const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 12,
   },
+  bottomSheetContent: {
+    flex: 1,
+  },
 });
