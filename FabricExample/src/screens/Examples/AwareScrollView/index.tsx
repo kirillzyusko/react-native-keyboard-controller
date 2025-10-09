@@ -6,10 +6,10 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 import TextInput from "../../../components/TextInput";
 
 import { styles } from "./styles";
+import Switch from "./Switch";
 
 import type { ExamplesStackParamList } from "../../../navigation/ExamplesStack";
 import type { StackScreenProps } from "@react-navigation/stack";
-import Switch from "./Switch";
 
 type Props = StackScreenProps<ExamplesStackParamList>;
 const snapToOffsets = [125, 225, 325, 425, 525, 625];
