@@ -1,11 +1,12 @@
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Button, Platform, Switch, Text, View } from "react-native";
+import { Button, Platform, Text, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 
 import TextInput from "../../../components/TextInput";
 
 import { styles } from "./styles";
+import Switch from "./Switch";
 
 import type { ExamplesStackParamList } from "../../../navigation/ExamplesStack";
 import type { StackScreenProps } from "@react-navigation/stack";
