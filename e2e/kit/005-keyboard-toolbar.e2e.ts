@@ -65,7 +65,11 @@ describe("`KeyboardToolbar` specification", () => {
   });
 
   it("should handle multiple clicks in row", async () => {
-    await doActionNTimes(() => tap("keyboard.toolbar.next"), 3);
+    await tap("keyboard.toolbar.next");
+    await expect(element(by.id("TextInput#6"))).toBeFocused();
+    await tap("keyboard.toolbar.next");
+    await expect(element(by.id("TextInput#7"))).toBeFocused();
+    await tap("keyboard.toolbar.next");
     await expect(element(by.id("TextInput#8"))).toBeFocused();
   });
 
