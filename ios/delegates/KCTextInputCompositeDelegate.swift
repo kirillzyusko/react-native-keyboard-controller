@@ -221,4 +221,17 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
     }
     return super.forwardingTarget(for: aSelector)
   }
+  
+  override func doesNotRecognizeSelector(_ aSelector: Selector!) {
+    let className = NSStringFromClass(type(of: self))
+    let selectorName = NSStringFromSelector(aSelector)
+
+    print("⚠️ [\(className)] does not recognize selector: \(selectorName)")
+
+    if let delegate = activeDelegate {
+      print("ℹ️ activeDelegate: \(type(of: delegate)) (responds: \(delegate.responds(to: aSelector)))")
+    } else {
+      print("ℹ️ activeDelegate is nil")
+    }
+  }
 }
