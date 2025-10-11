@@ -70,7 +70,7 @@ private class BaseContainerView: UIInputView {
     // Override in subclasses
   }
 
-  override public var intrinsicContentSize: CGSize {
+  override var intrinsicContentSize: CGSize {
     return CGSize(width: UIView.noIntrinsicMetric, height: frame.height)
   }
 }
