@@ -14,6 +14,7 @@ import UIKit
 final class KeyboardTrackingView: UIView {
   private var keyboardView: UIView? { KeyboardViewLocator.shared.resolve() }
   private var keyboardHeight = 0.0
+  private weak var currentAttachedView: UIView?
 
   static let invalidPosition: CGFloat = -.greatestFiniteMagnitude
 
@@ -54,27 +55,35 @@ final class KeyboardTrackingView: UIView {
       name: UIResponder.keyboardDidShowNotification,
       object: nil
     )
+    NotificationCenter.default.addObserver(
+      self,
+      selector: #selector(attachToTopmostView),
+      name: UIWindow.didBecomeVisibleNotification,
+      object: nil
+    )
+  }
 
-    guard
-      let window = UIApplication.shared.activeWindow,
-      let rootView = window.rootViewController?.view
-    else {
-      return
-    }
+  @objc private func attachToTopmostView() {
+    guard let topView = UIApplication.topViewController()?.view else { return }
 
-    rootView.addSubview(self)
+    if currentAttachedView === topView { return }
+
+    removeFromSuperview()
+
+    topView.addSubview(self)
+    currentAttachedView = topView
 
     translatesAutoresizingMaskIntoConstraints = false
 
     if #available(iOS 15.0, *) {
       if #available(iOS 17.0, *) {
-        rootView.keyboardLayoutGuide.usesBottomSafeArea = false
+        topView.keyboardLayoutGuide.usesBottomSafeArea = false
       }
 
       NSLayoutConstraint.activate([
-        leadingAnchor.constraint(equalTo: rootView.leadingAnchor, constant: 0),
-        trailingAnchor.constraint(equalTo: rootView.trailingAnchor, constant: 0),
-        bottomAnchor.constraint(equalTo: rootView.keyboardLayoutGuide.topAnchor, constant: 0),
+        leadingAnchor.constraint(equalTo: topView.leadingAnchor, constant: 0),
+        trailingAnchor.constraint(equalTo: topView.trailingAnchor, constant: 0),
+        bottomAnchor.constraint(equalTo: topView.keyboardLayoutGuide.topAnchor, constant: 0),
         heightAnchor.constraint(equalToConstant: 0),
       ])
     }
