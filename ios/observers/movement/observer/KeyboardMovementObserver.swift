@@ -19,7 +19,30 @@ public class KeyboardMovementObserver: NSObject {
   var onCancelAnimation: () -> Void
   // progress tracker
   @objc public var keyboardTrackingView = KeyboardTrackingView()
-  var animation: KeyboardAnimation?
+  var animation: KeyboardAnimation? {
+    didSet {
+      keyboardDidTask?.cancel()
+
+      guard let animation = animation, let notification = notification else {
+        return
+      }
+
+      let toValue = animation.toValue
+      let duration = animation.duration
+
+      let task = DispatchWorkItem { [weak self] in
+        guard let self = self else { return }
+        if toValue > 0 {
+          self.keyboardDidAppear(notification)
+        } else {
+          self.keyboardDidDisappear(notification)
+        }
+      }
+
+      keyboardDidTask = task
+      DispatchQueue.main.asyncAfter(deadline: .now() + duration, execute: task)
+    }
+  }
 
   var prevKeyboardPosition = 0.0
   var displayLink: CADisplayLink!
@@ -32,9 +55,34 @@ public class KeyboardMovementObserver: NSObject {
     set { _keyboardHeight = newValue }
   }
 
-  var duration = 0
+  var duration = 0 {
+    didSet {
+      keyboardDidTask?.cancel()
+
+      guard let notification = notification,
+            let height = notification.keyboardMetaData().1?.cgRectValue.size.height, duration == 0
+      else {
+        return
+      }
+
+      let task = DispatchWorkItem { [weak self] in
+        guard let self = self else { return }
+        if height > 0 {
+          self.keyboardDidAppear(notification)
+        } else {
+          self.keyboardDidDisappear(notification)
+        }
+      }
+
+      keyboardDidTask = task
+      DispatchQueue.main.asyncAfter(deadline: .now() + UIUtils.nextFrame, execute: task)
+    }
+  }
+
   var tag: NSNumber = -1
-  var didShowDeadline: Int64 = 0
+  // manual did events
+  var notification: Notification?
+  var keyboardDidTask: DispatchWorkItem?
 
   @objc public init(
     handler: @escaping (NSString, NSNumber, NSNumber, NSNumber, NSNumber) -> Void,
