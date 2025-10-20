@@ -15,6 +15,7 @@ final class KeyboardTrackingView: UIView {
   private var keyboardView: UIView? { KeyboardViewLocator.shared.resolve() }
   private var keyboardHeight = 0.0
   private weak var currentAttachedView: UIView?
+  private var isAttaching = false
 
   static let invalidPosition: CGFloat = -.greatestFiniteMagnitude
 
@@ -55,12 +56,14 @@ final class KeyboardTrackingView: UIView {
       name: UIResponder.keyboardDidShowNotification,
       object: nil
     )
-    NotificationCenter.default.addObserver(
-      self,
-      selector: #selector(attachToTopmostView),
-      name: UIWindow.didBecomeVisibleNotification,
-      object: nil
-    )
+    attachToTopmostView()
+  }
+
+  override func willMove(toWindow newWindow: UIWindow?) {
+    // When the view is being removed from the window, we need to re-attach it
+    if newWindow == nil, !isAttaching {
+      attachToTopmostView()
+    }
   }
 
   @objc private func attachToTopmostView() {
@@ -68,6 +71,7 @@ final class KeyboardTrackingView: UIView {
 
     if currentAttachedView === topView { return }
 
+    isAttaching = true
     removeFromSuperview()
 
     topView.addSubview(self)
@@ -87,6 +91,7 @@ final class KeyboardTrackingView: UIView {
         heightAnchor.constraint(equalToConstant: 0),
       ])
     }
+    isAttaching = false
   }
 
   @objc private func keyboardWillAppear(_ notification: Notification) {
