@@ -7,6 +7,7 @@ export * from "./module";
 export * from "./types";
 
 export {
+  KeyboardLayout,
   KeyboardAvoidingView,
   KeyboardStickyView,
   KeyboardAwareScrollView,
