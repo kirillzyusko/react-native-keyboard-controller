@@ -14,10 +14,11 @@ public extension UITextInput {
     if let selfObj = self as? NSObject,
        let delegate = selfObj.value(forKey: "textInputDelegate") as? NSObject,
        let comingFromJS = delegate.value(forKey: "_comingFromJS") as? Bool,
-       comingFromJS {
+       comingFromJS
+    {
       return false
     }
-    
+
     guard let selectedRange = selectedTextRange else { return false }
 
     guard let range = textRange(from: selectedRange.start, to: selectedRange.end) else { return false }
