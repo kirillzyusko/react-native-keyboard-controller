@@ -8,12 +8,12 @@
 #import "NSObject+SafeKVC.h"
 
 @implementation NSObject (SafeKVC)
-- (id)_safeValueForKey:(NSString *)key {
-    @try {
-        return [self valueForKey:key];
-    }
-    @catch (NSException *exception) {
-        return nil;
-    }
+- (id)_safeValueForKey:(NSString *)key
+{
+  @try {
+    return [self valueForKey:key];
+  } @catch (NSException *exception) {
+    return nil;
+  }
 }
 @end
