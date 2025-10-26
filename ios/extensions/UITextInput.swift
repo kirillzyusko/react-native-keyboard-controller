@@ -13,7 +13,7 @@ public extension UITextInput {
   var canSelectionFitIntoLayout: Bool {
     if let selfObj = self as? NSObject,
        let delegate = selfObj.safeValue(forKey: "textInputDelegate") as? NSObject,
-       let comingFromJS = delegate.value(forKey: "_comingFromJS") as? Bool,
+       let comingFromJS = delegate.safeValue(forKey: "_comingFromJS") as? Bool,
        comingFromJS
     {
       return false

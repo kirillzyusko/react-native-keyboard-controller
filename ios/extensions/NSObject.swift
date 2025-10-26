@@ -7,12 +7,6 @@
 
 public extension NSObject {
   func safeValue(forKey key: String) -> Any? {
-    let selector = Selector(key)
-
-    if responds(to: selector) {
-      return value(forKey: key)
-    }
-
-    return nil
+    return _safeValue(forKey: key)
   }
 }
