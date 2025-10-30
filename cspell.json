@@ -172,7 +172,8 @@
     "Kwai",
     "Kwibo",
     "revolut",
-    "bigdecimal"
+    "bigdecimal",
+    "yeetd"
   ],
   "ignorePaths": [
     "node_modules",
