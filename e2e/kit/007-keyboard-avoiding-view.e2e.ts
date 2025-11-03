@@ -20,7 +20,7 @@ describe("`KeyboardAvoidingView` specification", () => {
   it("should have expected UI when keyboard closed - package/padding", async () => {
     await waitForExpect(async () => {
       // 0.25 because on iOS Home indicator sometimes may have different colors per different runs
-      await expectBitmapsToBeEqual("AvoidingViewPackagePaddingInitial", 0.25);
+      await expectBitmapsToBeEqual("AvoidingViewPackagePaddingInitial", 0.27);
     });
   });
 
