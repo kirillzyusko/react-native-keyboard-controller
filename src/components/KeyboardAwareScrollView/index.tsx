@@ -319,9 +319,6 @@ const KeyboardAwareScrollView = forwardRef<
           keyboardWillAppear.value = e.height > 0 && keyboardHeight.value === 0;
 
           const keyboardWillHide = e.height === 0;
-          const focusWasChanged =
-            (tag.value !== e.target && e.target !== -1) ||
-            keyboardWillChangeSize;
 
           if (keyboardWillChangeSize) {
             initialKeyboardSize.value = keyboardHeight.value;
@@ -333,31 +330,11 @@ const KeyboardAwareScrollView = forwardRef<
             scrollPosition.value = scrollBeforeKeyboardMovement.value;
           }
 
-          if (
-            keyboardWillAppear.value ||
-            keyboardWillChangeSize ||
-            focusWasChanged
-          ) {
+          if (keyboardWillAppear.value || keyboardWillChangeSize) {
             // persist scroll value
             scrollPosition.value = position.value;
             // just persist height - later will be used in interpolation
             keyboardHeight.value = e.height;
-          }
-
-          // focus was changed
-          if (focusWasChanged) {
-            tag.value = e.target;
-            // save position of focused text input when keyboard starts to move
-            updateLayoutFromSelection();
-            // save current scroll position - when keyboard will hide we'll reuse
-            // this value to achieve smooth hide effect
-            scrollBeforeKeyboardMovement.value = position.value;
-          }
-
-          if (focusWasChanged && !keyboardWillAppear.value) {
-            // update position on scroll value, so `onEnd` handler
-            // will pick up correct values
-            position.value += maybeScroll(e.height, true);
           }
         },
         onMove: (e) => {
@@ -400,6 +377,35 @@ const KeyboardAwareScrollView = forwardRef<
         }
       },
       [],
+    );
+    // track input change
+    useAnimatedReaction(
+      () => input.value?.target,
+      (currentTarget, previousTarget) => {
+        if (
+          currentTarget !== previousTarget &&
+          currentTarget !== undefined &&
+          currentTarget !== -1
+        ) {
+          console.log(71717, "input changed", previousTarget);
+
+          tag.value = currentTarget;
+          scrollPosition.value = position.value;
+
+          // Save position of focused text input when focus changes
+          updateLayoutFromSelection();
+
+          // Save current scroll position - when keyboard will hide we'll reuse
+          // this value to achieve smooth hide effect
+          scrollBeforeKeyboardMovement.value = position.value;
+
+          // If keyboard is already visible, do immediate scroll
+          if (keyboardHeight.value > 0 && !keyboardWillAppear.value) {
+            position.value += maybeScroll(keyboardHeight.value, true);
+          }
+        }
+      },
+      [maybeScroll, updateLayoutFromSelection],
     );
 
     const view = useAnimatedStyle(
