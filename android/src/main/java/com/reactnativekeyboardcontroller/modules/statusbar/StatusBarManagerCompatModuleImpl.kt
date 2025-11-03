@@ -39,6 +39,7 @@ class StatusBarManagerCompatModuleImpl(
   }
 
   @SuppressLint("ObsoleteSdkInt")
+  @Suppress("detekt:ReturnCount")
   fun setColor(
     color: Int,
     animated: Boolean,
