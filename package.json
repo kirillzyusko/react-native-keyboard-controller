@@ -1,6 +1,6 @@
 {
   "name": "react-native-keyboard-controller",
-  "version": "1.19.3",
+  "version": "1.19.4",
   "description": "Keyboard manager which works in identical way on both iOS and Android",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -40,7 +40,7 @@
     "test": "jest",
     "typescript": "tsc --noEmit --project tsconfig.build.json",
     "lint": "eslint --quiet \"**/*.{js,ts,tsx}\"",
-    "lint-clang": "find ios/ -iname *.h -o -iname *.m -o -iname *.mm | grep -v -e Pods -e build | xargs clang-format -i --Werror",
+    "lint-clang": "find ios/ -iname *.h -o -iname *.m -o -iname *.mm | grep -v -e Pods -e build | xargs clang-format -i -n --Werror",
     "prepare": "bob build > /dev/null 2>&1",
     "release": "release-it",
     "example": "yarn --cwd example",
