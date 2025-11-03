@@ -103,11 +103,12 @@ jobs:
       cancel-in-progress: true
     strategy:
       matrix:
-        devices: [
+        devices:
+          [
             { ios: 15, xcode: "16.4", macos: 15, runtime: "15.5" },
             { ios: 16, xcode: "16.4", macos: 15, runtime: "16.4" },
             { ios: 17, xcode: "16.4", macos: 15, runtime: "17.5" },
-            # { ios: 18, xcode: "16.0", macos: 15 },
+            { ios: 18, xcode: "16.0", macos: 15 },
           ]
     needs: build
     steps:
