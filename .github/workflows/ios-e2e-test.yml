@@ -24,7 +24,7 @@ on:
 jobs:
   build:
     name: 🏗️ Build E2E ipa
-    runs-on: macos-14
+    runs-on: macos-15
     timeout-minutes: 60
     env:
       WORKING_DIRECTORY: example
@@ -39,7 +39,7 @@ jobs:
           cache: "yarn"
       - uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: "16.2"
+          xcode-version: "16.4"
       - name: Get Xcode version
         run: xcodebuild -version
       - name: Save yarn cache directory path
@@ -104,9 +104,9 @@ jobs:
     strategy:
       matrix:
         devices: [
-            { ios: 15, xcode: "15.4", macos: 14, runtime: "15.5" },
-            { ios: 16, xcode: "15.4", macos: 14, runtime: "16.4" },
-            { ios: 17, xcode: "15.4", macos: 14 },
+            { ios: 15, xcode: "15.4", macos: 15, runtime: "15.5" },
+            { ios: 16, xcode: "15.4", macos: 15, runtime: "16.4" },
+            { ios: 17, xcode: "15.4", macos: 15 },
             # { ios: 18, xcode: "16.0", macos: 15 },
           ]
     needs: build

@@ -29,7 +29,7 @@ on:
 jobs:
   build:
     name: Build iOS FabricExample App
-    runs-on: macOS-14
+    runs-on: macOS-15
     defaults:
       run:
         working-directory: FabricExample/ios
@@ -38,7 +38,7 @@ jobs:
 
       - uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: "16.2"
+          xcode-version: "16.4"
 
       - name: Get yarn cache directory path
         id: fabric-yarn-cache-dir-path
