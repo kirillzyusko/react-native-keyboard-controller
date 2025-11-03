@@ -50,6 +50,7 @@ class StatusBarManagerCompatModuleImpl(
 
       if (BuildConfig.IS_EDGE_TO_EDGE_ENABLED) {
         Logger.w(TAG, "StatusBarModule: Ignored status bar change, current activity is edge-to-edge.")
+        return
       }
 
       val activity = mReactContext.currentActivity
@@ -86,6 +87,7 @@ class StatusBarManagerCompatModuleImpl(
 
     if (BuildConfig.IS_EDGE_TO_EDGE_ENABLED) {
       Logger.w(TAG, "StatusBarModule: Ignored status bar change, current activity is edge-to-edge.")
+      return
     }
 
     UiThreadUtil.runOnUiThread {
