@@ -9,6 +9,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.UiThreadUtil
+import com.reactnativekeyboardcontroller.BuildConfig
 import com.reactnativekeyboardcontroller.log.Logger
 import com.reactnativekeyboardcontroller.views.EdgeToEdgeReactViewGroup
 import com.reactnativekeyboardcontroller.views.EdgeToEdgeViewRegistry
@@ -47,6 +48,10 @@ class StatusBarManagerCompatModuleImpl(
         return original.setColor(color.toDouble(), animated)
       }
 
+      if (BuildConfig.IS_EDGE_TO_EDGE_ENABLED) {
+        Logger.w(TAG, "StatusBarModule: Ignored status bar change, current activity is edge-to-edge.")
+      }
+
       val activity = mReactContext.currentActivity
       if (activity == null) {
         Logger.w(
@@ -77,6 +82,10 @@ class StatusBarManagerCompatModuleImpl(
   fun setTranslucent(translucent: Boolean) {
     if (!isEnabled()) {
       return original.setTranslucent(translucent)
+    }
+
+    if (BuildConfig.IS_EDGE_TO_EDGE_ENABLED) {
+      Logger.w(TAG, "StatusBarModule: Ignored status bar change, current activity is edge-to-edge.")
     }
 
     UiThreadUtil.runOnUiThread {
