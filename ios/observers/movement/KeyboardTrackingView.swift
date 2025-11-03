@@ -56,7 +56,12 @@ final class KeyboardTrackingView: UIView {
       name: UIResponder.keyboardDidShowNotification,
       object: nil
     )
-    attachToTopmostView()
+    NotificationCenter.default.addObserver(
+      self,
+      selector: #selector(attachToTopmostView),
+      name: UIApplication.didBecomeActiveNotification,
+      object: nil
+    )
   }
 
   override func willMove(toWindow newWindow: UIWindow?) {
