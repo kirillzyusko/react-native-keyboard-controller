@@ -15,7 +15,7 @@ class KeyboardAreaExtender: NSObject {
     NotificationCenter.default.addObserver(
       self,
       selector: #selector(keyboardDidAppear),
-      name: UIResponder.keyboardDidShowNotification,
+      name: .keyboardDidAppear,
       object: nil
     )
   }
