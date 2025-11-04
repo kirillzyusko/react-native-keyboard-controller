@@ -96,7 +96,7 @@ jobs:
           name: ios-e2e-ipa-xcode${{ matrix.config.xcode }}
           path: example/ios/build/Build/Products/Release-iphonesimulator/KeyboardControllerExample.app/**
   e2e-test:
-    name: ⚙️ Automated test cases (iOS-${{ matrix.devices.ios }})
+    name: ⚙️ Automated test cases (iOS-${{ matrix.devices.ios }}, XCode-${{ matrix.devices.xcode }})
     runs-on: macos-${{ matrix.devices.macos }}
     timeout-minutes: 90
     env:
