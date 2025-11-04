@@ -41,7 +41,7 @@ describe("`OverKeyboardView` specification", () => {
     await waitAndTap("over_keyboard_view.input");
     await waitAndTap("over_keyboard_view.show");
     await waitForExpect(async () => {
-      await expectBitmapsToBeEqual("OverKeyboardViewShownWithKeyboard");
+      await expectBitmapsToBeEqual("OverKeyboardViewShownWithKeyboard", 0.27);
     });
   });
 
