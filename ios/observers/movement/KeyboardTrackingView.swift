@@ -11,7 +11,7 @@ import UIKit
  * A compatibility view that resolves to `KeyboardView` on iOS < 26
  * and uses `keyboardLayoutGuide` on iOS 26+.
  */
-final class KeyboardTrackingView: UIView {
+public final class KeyboardTrackingView: UIView {
   private var keyboardView: UIView? { KeyboardViewLocator.shared.resolve() }
   private var keyboardHeight = 0.0
   private weak var currentAttachedView: UIView?
@@ -56,23 +56,17 @@ final class KeyboardTrackingView: UIView {
       name: UIResponder.keyboardDidShowNotification,
       object: nil
     )
-    NotificationCenter.default.addObserver(
-      self,
-      selector: #selector(attachToTopmostView),
-      name: UIApplication.didBecomeActiveNotification,
-      object: nil
-    )
   }
 
-  override func willMove(toWindow newWindow: UIWindow?) {
+  override public func willMove(toWindow newWindow: UIWindow?) {
     // When the view is being removed from the window, we need to re-attach it
     if newWindow == nil, !isAttaching {
       attachToTopmostView()
     }
   }
 
-  @objc private func attachToTopmostView() {
-    guard let topView = UIApplication.topViewController()?.view else { return }
+  @objc public func attachToTopmostView(toWindow window: UIWindow? = nil) {
+    guard let topView = (window?.rootViewController ?? UIApplication.topViewController())?.view else { return }
 
     if currentAttachedView === topView { return }
 

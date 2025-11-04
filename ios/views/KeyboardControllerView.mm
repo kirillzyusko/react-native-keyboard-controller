@@ -259,6 +259,14 @@ using namespace facebook::react;
   }
 }
 
+- (void)didMoveToWindow
+{
+  [super didMoveToWindow];
+  if (self.window) {
+    [keyboardObserver.keyboardTrackingView attachToTopmostViewToWindow:self.window];
+  }
+}
+
 - (void)mount
 {
   [inputObserver mount];
