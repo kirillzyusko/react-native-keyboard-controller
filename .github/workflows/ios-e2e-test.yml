@@ -102,7 +102,7 @@ jobs:
     env:
       WORKING_DIRECTORY: example
     concurrency:
-      group: ios-e2e-${{ matrix.devices.ios }}-${{ github.ref }}
+      group: ios-e2e-${{ matrix.devices.ios }}-${{ matrix.devices.xcode }}-${{ github.ref }}
       cancel-in-progress: true
     strategy:
       matrix:
