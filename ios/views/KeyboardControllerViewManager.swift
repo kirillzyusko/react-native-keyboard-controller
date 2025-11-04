@@ -88,7 +88,7 @@ class KeyboardControllerView: UIView {
   override func didMoveToWindow() {
     super.didMoveToWindow()
     if window != nil {
-      keyboardObserver?.keyboardTrackingView.attachToTopmostView(window: window)
+      keyboardObserver?.keyboardTrackingView.attachToTopmostView(toWindow: window)
     }
   }
 

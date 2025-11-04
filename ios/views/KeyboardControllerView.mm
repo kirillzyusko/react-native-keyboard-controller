@@ -263,7 +263,7 @@ using namespace facebook::react;
 {
   [super didMoveToWindow];
   if (self.window) {
-    [keyboardObserver.keyboardTrackingView attachToTopmostViewWithWindow:self.window];
+    [keyboardObserver.keyboardTrackingView attachToTopmostViewToWindow:self.window];
   }
 }
 
