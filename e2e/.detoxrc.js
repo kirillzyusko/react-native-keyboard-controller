@@ -69,6 +69,13 @@ module.exports = {
         os: "iOS 18.5",
       },
     },
+    simulator26: {
+      type: "ios.simulator",
+      device: {
+        type: "iPhone 17 Pro",
+        os: "iOS 26.0",
+      },
+    },
     attached: {
       type: "android.attached",
       device: {
@@ -120,6 +127,14 @@ module.exports = {
     },
     "example.ios.sim-18.release": {
       device: "simulator18",
+      app: "example.ios.release",
+    },
+    "example.ios.sim-26.debug": {
+      device: "simulator26",
+      app: "example.ios.debug",
+    },
+    "example.ios.sim-26.release": {
+      device: "simulator26",
       app: "example.ios.release",
     },
     "example.android.att.debug": {
