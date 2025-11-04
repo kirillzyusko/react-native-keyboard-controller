@@ -67,7 +67,7 @@ jobs:
         uses: hendrikmuhs/ccache-action@v1.2
         with:
           max-size: 1.5G
-          key: ${{ runner.os }}-ccache-e2e-ios
+          key: ${{ runner.os }}-xcode-${{ matrix.config.xcode }}-ccache-e2e-ios
           create-symlink: true
       - name: Setup ccache behavior
         run: |
@@ -82,9 +82,9 @@ jobs:
             example/ios/Pods
             ~/Library/Caches/CocoaPods
             ~/.cocoapods
-          key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
+          key: ${{ runner.os }}-xcode-${{ matrix.config.xcode }}-pods-${{ hashFiles('**/Podfile.lock') }}
           restore-keys: |
-            ${{ runner.os }}-pods-
+            ${{ runner.os }}-xcode-${{ matrix.config.xcode }}-pods-
       - name: Install pods
         working-directory: ${{ env.WORKING_DIRECTORY }}/ios
         run: export USE_CCACHE=1 && pod install || pod update --repo-update
