@@ -18,7 +18,7 @@ public class KeyboardMovementObserver: NSObject {
   var onRequestAnimation: () -> Void
   var onCancelAnimation: () -> Void
   // progress tracker
-  var keyboardTrackingView = KeyboardTrackingView()
+  @objc public var keyboardTrackingView = KeyboardTrackingView()
   var animation: KeyboardAnimation?
 
   var prevKeyboardPosition = 0.0
