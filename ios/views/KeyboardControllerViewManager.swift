@@ -84,14 +84,13 @@ class KeyboardControllerView: UIView {
       mount()
     }
   }
-  
+
   override func didMoveToWindow() {
     super.didMoveToWindow()
     if window != nil {
       keyboardObserver?.keyboardTrackingView.attachToTopmostView()
     }
   }
-
 
   override func layoutSubviews() {
     super.layoutSubviews()
