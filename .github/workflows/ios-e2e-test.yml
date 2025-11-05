@@ -33,7 +33,8 @@ jobs:
       cancel-in-progress: true
     strategy:
       matrix:
-        config: [{ xcode: "16.4", macos: 15 }, { xcode: "26.1.0", macos: 26 }]
+        config:
+          [{ xcode: "16.4", macos: 15 }, { xcode: "26.1-beta", macos: 26 }]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
