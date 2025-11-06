@@ -59,5 +59,6 @@ class KeyboardControllerPackage : TurboReactPackage() {
       KeyboardControllerViewManager(),
       KeyboardGestureAreaViewManager(),
       OverKeyboardViewManager(),
+      KeyboardBackgroundViewManager(),
     )
 }
