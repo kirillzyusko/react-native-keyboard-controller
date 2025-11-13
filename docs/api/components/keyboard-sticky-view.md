@@ -1,6 +1,6 @@
 # KeyboardStickyView
 
-A `KeyboardStickyView` component seamlessly ensures that a designated view sticks to the keyboard's movements, maintaining visibility and interaction. Use it when you want to enhance the user experience by preventing important UI elements from being obscured by the keyboard, creating a smooth and user-friendly interface in your React Native application.
+A `KeyboardStickyView` component seamlessly ensures that a designated view sticks to the keyboard's movements, maintaining visibility and interaction. Often referred to as a **keyboard accessory** or **keyboard accessory view**, it helps you enhance the user experience by preventing important UI elements from being obscured by the keyboard, creating a smooth and user-friendly interface in your React Native application.
 
 `KeyboardAvoidingView` vs `KeyboardStickyView`
 
