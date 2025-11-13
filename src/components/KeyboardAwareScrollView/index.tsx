@@ -210,6 +210,19 @@ const KeyboardAwareScrollView = forwardRef<
       },
       [bottomOffset, enabled, height, snapToOffsets],
     );
+    const performScrollWithPositionRestoration = useCallback(
+      (newPosition: number) => {
+        "worklet";
+
+        const prevScroll = scrollPosition.value;
+
+        // eslint-disable-next-line react-compiler/react-compiler
+        scrollPosition.value = newPosition;
+        maybeScroll(keyboardHeight.value, true);
+        scrollPosition.value = prevScroll;
+      },
+      [scrollPosition, keyboardHeight, maybeScroll],
+    );
     const syncKeyboardFrame = useCallback(
       (e: NativeEvent) => {
         "worklet";
@@ -249,19 +262,16 @@ const KeyboardAwareScrollView = forwardRef<
     const scrollFromCurrentPosition = useCallback(() => {
       "worklet";
 
-      const prevScrollPosition = scrollPosition.value;
       const prevLayout = layout.value;
 
       if (!updateLayoutFromSelection()) {
         return;
       }
 
-      // eslint-disable-next-line react-compiler/react-compiler
-      scrollPosition.value = position.value;
-      maybeScroll(keyboardHeight.value, true);
-      scrollPosition.value = prevScrollPosition;
+      performScrollWithPositionRestoration(position.value);
+
       layout.value = prevLayout;
-    }, [maybeScroll]);
+    }, [performScrollWithPositionRestoration]);
     const onChangeText = useCallback(() => {
       "worklet";
       scrollFromCurrentPosition();
@@ -383,7 +393,9 @@ const KeyboardAwareScrollView = forwardRef<
     );
 
     useEffect(() => {
-      runOnUI(maybeScroll)(keyboardHeight.value, true);
+      runOnUI(performScrollWithPositionRestoration)(
+        scrollBeforeKeyboardMovement.value,
+      );
     }, [bottomOffset]);
 
     useAnimatedReaction(
