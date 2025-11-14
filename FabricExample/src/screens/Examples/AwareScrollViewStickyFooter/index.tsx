@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Alert, Button, Text, View } from "react-native";
+import { Button, Text, View } from "react-native";
 import {
   KeyboardAwareScrollView,
   KeyboardStickyView,
@@ -23,6 +23,7 @@ type Variant = (typeof variants)[number];
 export default function AwareScrollViewStickyFooter({ navigation }: Props) {
   const { bottom } = useSafeAreaInsets();
   const [footerHeight, setFooterHeight] = useState(0);
+  const [additionalHeight, setAdditionalHeight] = useState(0);
   const [variant, setVariant] = useState<Variant>("v1");
 
   const handleLayout = useCallback((evt: LayoutChangeEvent) => {
@@ -64,7 +65,7 @@ export default function AwareScrollViewStickyFooter({ navigation }: Props) {
       ]}
     >
       <KeyboardAwareScrollView
-        bottomOffset={(v1v2 ? footerHeight : 0) + 50}
+        bottomOffset={(v1v2 ? footerHeight + additionalHeight : 0) + 50}
         contentContainerStyle={styles.content}
         keyboardShouldPersistTaps="handled"
         style={styles.container}
@@ -79,10 +80,16 @@ export default function AwareScrollViewStickyFooter({ navigation }: Props) {
       </KeyboardAwareScrollView>
       {v1v2 && (
         <KeyboardStickyView offset={offset}>
+          <View
+            style={{ height: additionalHeight, backgroundColor: "magenta" }}
+          />
           <View style={styles.footer} onLayout={handleLayout}>
             <Text style={styles.footerText}>A mocked sticky footer</Text>
             <TextInput placeholder="Amount" style={styles.inputInFooter} />
-            <Button title="Click me" onPress={() => Alert.alert("Clicked")} />
+            <Button
+              title="Toggle height"
+              onPress={() => setAdditionalHeight(additionalHeight ? 0 : 50)}
+            />
           </View>
         </KeyboardStickyView>
       )}
