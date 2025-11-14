@@ -69,6 +69,7 @@ export default function AwareScrollViewStickyFooter({ navigation }: Props) {
         contentContainerStyle={styles.content}
         keyboardShouldPersistTaps="handled"
         style={styles.container}
+        testID="aware_scroll_sticky_view_scroll_container"
       >
         {new Array(10).fill(0).map((_, i) => (
           <TextInput
@@ -87,6 +88,7 @@ export default function AwareScrollViewStickyFooter({ navigation }: Props) {
             <Text style={styles.footerText}>A mocked sticky footer</Text>
             <TextInput placeholder="Amount" style={styles.inputInFooter} />
             <Button
+              testID="toggle_height"
               title="Toggle height"
               onPress={() => setAdditionalHeight(additionalHeight ? 0 : 50)}
             />
