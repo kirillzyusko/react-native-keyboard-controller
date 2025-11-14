@@ -137,6 +137,8 @@ jobs:
           retry_interval: 60
       - name: List all available simulators
         run: xcrun simctl list
+      - name: Update shared cache
+        run: xcrun simctl runtime dyld_shared_cache update --all
       - name: Install AppleSimulatorUtils
         run: brew tap wix/brew && brew install applesimutils
       - name: Save yarn cache directory path
