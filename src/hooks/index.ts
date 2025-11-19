@@ -262,9 +262,7 @@ export function useFocusedInputHandler(
 ) {
   const context = useKeyboardContext();
 
-  // TODO: fix it later
-  // @ts-expect-error fix it later
-  const { doDependenciesDiffer } = useHandler(handler, deps);
+  const { doDependenciesDiffer } = useHandler<never, never>(handler, deps);
 
   const eventHandler = useEvent<
     FocusedInputSelectionChangedEvent | FocusedInputTextChangedEvent

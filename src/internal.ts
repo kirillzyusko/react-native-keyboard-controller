@@ -7,6 +7,17 @@ import type { EventHandlerProcessed } from "react-native-reanimated";
 
 type ComponentOrHandle = Parameters<typeof findNodeHandle>[0];
 
+type WorkletHandler = {
+  registerForEvents: (viewTag: number) => void;
+  unregisterFromEvents: (viewTag: number) => void;
+};
+
+type WorkletHandlerOrWorkletHandlerObject =
+  | WorkletHandler
+  | {
+      workletEventHandler: WorkletHandler;
+    };
+
 /**
  * An internal hook that helps to register workletized event handlers.
  *
@@ -24,6 +35,8 @@ export function useEventHandlerRegistration(
   viewTagRef: React.MutableRefObject<ComponentOrHandle>,
 ) {
   const onRegisterHandler = (handler: EventHandlerProcessed<never, never>) => {
+    const currentHandler =
+      handler as unknown as WorkletHandlerOrWorkletHandlerObject;
     const attachWorkletHandlers = () => {
       const viewTag = findNodeHandle(viewTagRef.current);
 
@@ -33,9 +46,13 @@ export function useEventHandlerRegistration(
         );
       }
 
-      // TODO: must be a compat layer? Property `workletEventHandler` from `ref` may be missing. Should be on useEvent layer?
-      // @ts-expect-error this handler is not exposed publicly
-      handler.workletEventHandler.registerForEvents(viewTag);
+      if (viewTag) {
+        if ("workletEventHandler" in currentHandler) {
+          currentHandler.workletEventHandler.registerForEvents(viewTag);
+        } else {
+          currentHandler.registerForEvents(viewTag);
+        }
+      }
     };
 
     if (viewTagRef.current) {
@@ -48,9 +65,13 @@ export function useEventHandlerRegistration(
     return () => {
       const viewTag = findNodeHandle(viewTagRef.current);
 
-      // TODO: must be a compat layer? Property `workletEventHandler` from `ref` may be missing. Should be on useEvent layer?
-      // @ts-expect-error this handler is not exposed publicly
-      handler.workletEventHandler.unregisterFromEvents(viewTag);
+      if (viewTag) {
+        if ("workletEventHandler" in currentHandler) {
+          currentHandler.workletEventHandler.unregisterFromEvents(viewTag);
+        } else {
+          currentHandler.unregisterFromEvents(viewTag);
+        }
+      }
     };
   };
 
