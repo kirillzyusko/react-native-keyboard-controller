@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect } from "react";
+import { useEvent } from "react-native-reanimated";
 
 import { AndroidSoftInputModes } from "../constants";
 import { useKeyboardContext } from "../context";
@@ -111,8 +112,36 @@ export function useGenericKeyboardHandler(
 ) {
   const context = useKeyboardContext();
 
+  const eventHandler = useEvent(
+    (event) => {
+      "worklet";
+
+      if (event.eventName.endsWith("onKeyboardMoveStart")) {
+        handler.onStart?.(event);
+      }
+
+      if (event.eventName.endsWith("onKeyboardMove")) {
+        handler.onMove?.(event);
+      }
+
+      if (event.eventName.endsWith("onKeyboardMoveEnd")) {
+        handler.onEnd?.(event);
+      }
+
+      if (event.eventName.endsWith("onKeyboardMoveInteractive")) {
+        handler.onInteractive?.(event);
+      }
+    },
+    [
+      "onKeyboardMoveStart",
+      "onKeyboardMove",
+      "onKeyboardMoveEnd",
+      "onKeyboardMoveInteractive",
+    ],
+  );
+
   useLayoutEffect(() => {
-    const cleanup = context.setKeyboardHandlers(handler);
+    const cleanup = context.setKeyboardHandlers(eventHandler);
 
     return () => cleanup();
   }, deps);
@@ -228,8 +257,23 @@ export function useFocusedInputHandler(
 ) {
   const context = useKeyboardContext();
 
+  const eventHandler = useEvent(
+    (event) => {
+      "worklet";
+
+      if (event.eventName.endsWith("onFocusedInputTextChanged")) {
+        handler.onChangeText?.(event);
+      }
+
+      if (event.eventName.endsWith("onFocusedInputSelectionChanged")) {
+        handler.onSelectionChange?.(event);
+      }
+    },
+    ["onFocusedInputTextChanged", "onFocusedInputSelectionChanged"],
+  );
+
   useLayoutEffect(() => {
-    const cleanup = context.setInputHandlers(handler);
+    const cleanup = context.setInputHandlers(eventHandler);
 
     return () => cleanup();
   }, deps);

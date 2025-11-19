@@ -1,7 +1,6 @@
 import { useRef } from "react";
 import { Animated } from "react-native";
 
-import { registerEventHandler, unregisterEventHandler } from "./event-handler";
 import { findNodeHandle } from "./utils/findNodeHandle";
 
 type EventHandler = (event: never) => void;
@@ -23,12 +22,8 @@ type ComponentOrHandle = Parameters<typeof findNodeHandle>[0];
  */
 export function useEventHandlerRegistration<
   H extends Partial<Record<string, EventHandler>>,
->(
-  map: Map<keyof H, string>,
-  viewTagRef: React.MutableRefObject<ComponentOrHandle>,
-) {
+>(viewTagRef: React.MutableRefObject<ComponentOrHandle>) {
   const onRegisterHandler = (handler: H) => {
-    const ids: (number | null)[] = [];
     const attachWorkletHandlers = () => {
       const viewTag = findNodeHandle(viewTagRef.current);
 
@@ -38,26 +33,8 @@ export function useEventHandlerRegistration<
         );
       }
 
-      ids.push(
-        ...Object.keys(handler).map((handlerName) => {
-          const eventName = map.get(handlerName as keyof H);
-          const functionToCall = handler[handlerName as keyof H];
-
-          if (eventName && viewTag) {
-            return registerEventHandler(
-              (event: Parameters<NonNullable<H[keyof H]>>[0]) => {
-                "worklet";
-
-                functionToCall?.(event);
-              },
-              eventName,
-              viewTag,
-            );
-          }
-
-          return null;
-        }),
-      );
+      // TODO: must be a compat layer? Property `workletEventHandler` from `ref` may be missing. Should be on useEvent layer?
+      handler.workletEventHandler.registerForEvents(viewTag);
     };
 
     if (viewTagRef.current) {
@@ -68,7 +45,9 @@ export function useEventHandlerRegistration<
     }
 
     return () => {
-      ids.forEach((id) => (id ? unregisterEventHandler(id) : null));
+      const viewTag = findNodeHandle(viewTagRef.current);
+
+      handler.workletEventHandler.unregisterFromEvents(viewTag);
     };
   };
 

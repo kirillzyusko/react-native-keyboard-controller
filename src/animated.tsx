@@ -9,7 +9,6 @@ import Reanimated, { useSharedValue } from "react-native-reanimated";
 
 import { KeyboardControllerView } from "./bindings";
 import { KeyboardContext } from "./context";
-import { focusedInputEventsMap, keyboardEventsMap } from "./event-mappings";
 import { useAnimatedValue, useEventHandlerRegistration } from "./internal";
 import { KeyboardController } from "./module";
 import {
@@ -130,14 +129,10 @@ export const KeyboardProvider = (props: KeyboardProviderProps) => {
   const progressSV = useSharedValue(0);
   const heightSV = useSharedValue(0);
   const layout = useSharedValue<FocusedInputLayoutChangedEvent | null>(null);
-  const setKeyboardHandlers = useEventHandlerRegistration<KeyboardHandler>(
-    keyboardEventsMap,
-    viewTagRef,
-  );
-  const setInputHandlers = useEventHandlerRegistration<FocusedInputHandler>(
-    focusedInputEventsMap,
-    viewTagRef,
-  );
+  const setKeyboardHandlers =
+    useEventHandlerRegistration<KeyboardHandler>(viewTagRef);
+  const setInputHandlers =
+    useEventHandlerRegistration<FocusedInputHandler>(viewTagRef);
   // memo
   const context = useMemo<KeyboardAnimationContext>(
     () => ({
