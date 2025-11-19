@@ -3,13 +3,13 @@ import { Animated } from "react-native";
 
 import { findNodeHandle } from "./utils/findNodeHandle";
 
-type EventHandler = (event: never) => void;
+import type { EventHandlerProcessed } from "react-native-reanimated";
+
 type ComponentOrHandle = Parameters<typeof findNodeHandle>[0];
 
 /**
  * An internal hook that helps to register workletized event handlers.
  *
- * @param map - Map of event handlers and their names.
  * @param viewTagRef - Ref to the view that produces events.
  * @returns A function that registers supplied event handlers.
  * @example
@@ -20,10 +20,10 @@ type ComponentOrHandle = Parameters<typeof findNodeHandle>[0];
  * );
  * ```
  */
-export function useEventHandlerRegistration<
-  H extends Partial<Record<string, EventHandler>>,
->(viewTagRef: React.MutableRefObject<ComponentOrHandle>) {
-  const onRegisterHandler = (handler: H) => {
+export function useEventHandlerRegistration(
+  viewTagRef: React.MutableRefObject<ComponentOrHandle>,
+) {
+  const onRegisterHandler = (handler: EventHandlerProcessed<never, never>) => {
     const attachWorkletHandlers = () => {
       const viewTag = findNodeHandle(viewTagRef.current);
 
@@ -34,6 +34,7 @@ export function useEventHandlerRegistration<
       }
 
       // TODO: must be a compat layer? Property `workletEventHandler` from `ref` may be missing. Should be on useEvent layer?
+      // @ts-expect-error this handler is not exposed publicly
       handler.workletEventHandler.registerForEvents(viewTag);
     };
 
@@ -47,6 +48,8 @@ export function useEventHandlerRegistration<
     return () => {
       const viewTag = findNodeHandle(viewTagRef.current);
 
+      // TODO: must be a compat layer? Property `workletEventHandler` from `ref` may be missing. Should be on useEvent layer?
+      // @ts-expect-error this handler is not exposed publicly
       handler.workletEventHandler.unregisterFromEvents(viewTag);
     };
   };

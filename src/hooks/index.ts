@@ -6,7 +6,13 @@ import { useKeyboardContext } from "../context";
 import { KeyboardController } from "../module";
 
 import type { AnimatedContext, ReanimatedContext } from "../context";
-import type { FocusedInputHandler, KeyboardHandler } from "../types";
+import type {
+  FocusedInputHandler,
+  FocusedInputSelectionChangedEvent,
+  FocusedInputTextChangedEvent,
+  KeyboardHandler,
+  NativeEvent,
+} from "../types";
 import type { DependencyList } from "react";
 
 /**
@@ -112,7 +118,7 @@ export function useGenericKeyboardHandler(
 ) {
   const context = useKeyboardContext();
 
-  const eventHandler = useEvent(
+  const eventHandler = useEvent<NativeEvent>(
     (event) => {
       "worklet";
 
@@ -257,16 +263,18 @@ export function useFocusedInputHandler(
 ) {
   const context = useKeyboardContext();
 
-  const eventHandler = useEvent(
+  const eventHandler = useEvent<
+    FocusedInputSelectionChangedEvent | FocusedInputTextChangedEvent
+  >(
     (event) => {
       "worklet";
 
       if (event.eventName.endsWith("onFocusedInputTextChanged")) {
-        handler.onChangeText?.(event);
+        handler.onChangeText?.(event as FocusedInputTextChangedEvent);
       }
 
       if (event.eventName.endsWith("onFocusedInputSelectionChanged")) {
-        handler.onSelectionChange?.(event);
+        handler.onSelectionChange?.(event as FocusedInputSelectionChangedEvent);
       }
     },
     ["onFocusedInputTextChanged", "onFocusedInputSelectionChanged"],

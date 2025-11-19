@@ -18,10 +18,8 @@ import {
 
 import type { KeyboardAnimationContext } from "./context";
 import type {
-  FocusedInputHandler,
   FocusedInputLayoutChangedEvent,
   KeyboardControllerProps,
-  KeyboardHandler,
   NativeEvent,
 } from "./types";
 import type { ViewStyle } from "react-native";
@@ -129,10 +127,8 @@ export const KeyboardProvider = (props: KeyboardProviderProps) => {
   const progressSV = useSharedValue(0);
   const heightSV = useSharedValue(0);
   const layout = useSharedValue<FocusedInputLayoutChangedEvent | null>(null);
-  const setKeyboardHandlers =
-    useEventHandlerRegistration<KeyboardHandler>(viewTagRef);
-  const setInputHandlers =
-    useEventHandlerRegistration<FocusedInputHandler>(viewTagRef);
+  const setKeyboardHandlers = useEventHandlerRegistration(viewTagRef);
+  const setInputHandlers = useEventHandlerRegistration(viewTagRef);
   // memo
   const context = useMemo<KeyboardAnimationContext>(
     () => ({
