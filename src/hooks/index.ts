@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect } from "react";
-import { useEvent } from "react-native-reanimated";
+import { useEvent, useHandler } from "react-native-reanimated";
 
 import { AndroidSoftInputModes } from "../constants";
 import { useKeyboardContext } from "../context";
@@ -13,7 +13,6 @@ import type {
   KeyboardHandler,
   NativeEvent,
 } from "../types";
-import type { DependencyList } from "react";
 
 /**
  * Hook that sets the Android soft input mode to adjust resize on mount and
@@ -114,9 +113,11 @@ export const useReanimatedKeyboardAnimation = (): ReanimatedContext => {
  */
 export function useGenericKeyboardHandler(
   handler: KeyboardHandler,
-  deps?: DependencyList,
+  deps?: unknown[],
 ) {
   const context = useKeyboardContext();
+
+  const { doDependenciesDiffer } = useHandler(handler, deps);
 
   const eventHandler = useEvent<NativeEvent>(
     (event) => {
@@ -144,6 +145,7 @@ export function useGenericKeyboardHandler(
       "onKeyboardMoveEnd",
       "onKeyboardMoveInteractive",
     ],
+    doDependenciesDiffer,
   );
 
   useLayoutEffect(() => {
@@ -184,10 +186,7 @@ export function useGenericKeyboardHandler(
  * }
  * ```
  */
-export function useKeyboardHandler(
-  handler: KeyboardHandler,
-  deps?: DependencyList,
-) {
+export function useKeyboardHandler(handler: KeyboardHandler, deps?: unknown[]) {
   useResizeMode();
   useGenericKeyboardHandler(handler, deps);
 }
@@ -259,9 +258,13 @@ export function useReanimatedFocusedInput() {
  */
 export function useFocusedInputHandler(
   handler: FocusedInputHandler,
-  deps?: DependencyList,
+  deps?: unknown[],
 ) {
   const context = useKeyboardContext();
+
+  // TODO: fix it later
+  // @ts-expect-error fix it later
+  const { doDependenciesDiffer } = useHandler(handler, deps);
 
   const eventHandler = useEvent<
     FocusedInputSelectionChangedEvent | FocusedInputTextChangedEvent
@@ -278,6 +281,7 @@ export function useFocusedInputHandler(
       }
     },
     ["onFocusedInputTextChanged", "onFocusedInputSelectionChanged"],
+    doDependenciesDiffer,
   );
 
   useLayoutEffect(() => {
