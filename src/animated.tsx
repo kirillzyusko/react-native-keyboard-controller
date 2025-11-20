@@ -143,7 +143,7 @@ export const KeyboardProvider = (props: KeyboardProviderProps) => {
       return;
     }
 
-    KeyboardControllerNative.synchronizeFocusedInputLayout(viewTag);
+    await KeyboardControllerNative.synchronizeFocusedInputLayout(viewTag);
   }, []);
   // memo
   const context = useMemo<KeyboardAnimationContext>(
