@@ -1,4 +1,10 @@
-import React, { forwardRef, useCallback, useEffect, useMemo } from "react";
+import React, {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+} from "react";
 import Reanimated, {
   clamp,
   interpolate,
@@ -126,7 +132,7 @@ const KeyboardAwareScrollView = forwardRef<
     const tag = useSharedValue(-1);
     const initialKeyboardSize = useSharedValue(0);
     const scrollBeforeKeyboardMovement = useSharedValue(0);
-    const { input } = useReanimatedFocusedInput();
+    const { input, update } = useReanimatedFocusedInput();
     const layout = useSharedValue<FocusedInputLayoutChangedEvent | null>(null);
     const lastSelection =
       useSharedValue<FocusedInputSelectionChangedEvent | null>(null);
@@ -392,10 +398,25 @@ const KeyboardAwareScrollView = forwardRef<
       [maybeScroll, disableScrollOnKeyboardHide, syncKeyboardFrame],
     );
 
+    const synchronize = useCallback(async () => {
+      await update();
+
+      runOnUI(() => {
+        "worklet";
+        // TODO: why I get valid values if add console.log in the beginning? Because I lock threads somehow?
+        scrollFromCurrentPosition();
+      })();
+    }, [update, scrollFromCurrentPosition]);
+
+    // TODO: check that scrollTo etc. methods can be accessed from ref
+    useImperativeHandle(
+      ref,
+      () => ({ assureFocusedInputVisible: synchronize }),
+      [synchronize],
+    );
+
     useEffect(() => {
-      runOnUI(performScrollWithPositionRestoration)(
-        scrollBeforeKeyboardMovement.value,
-      );
+      synchronize();
     }, [bottomOffset]);
 
     useAnimatedReaction(

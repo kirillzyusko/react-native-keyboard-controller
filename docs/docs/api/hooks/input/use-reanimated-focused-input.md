@@ -26,7 +26,7 @@ Hook will update its value in next cases:
 The value from `useReanimatedFocusedInput` will be always updated before keyboard events, so you can safely read values in `onStart` handler and be sure they are up-to-date.
 :::
 
-## Event structure
+## `input`
 
 The `input` property from this hook is returned as `SharedValue`. The returned data has next structure:
 
@@ -47,10 +47,14 @@ type FocusedInputLayoutChangedEvent = {
 };
 ```
 
+### `update`
+
+To update the focused input, use `update` function. Thus you can query the position on demand from JS thread.
+
 ## Example
 
 ```tsx
-const { input } = useReanimatedFocusedInput();
+const { input, update } = useReanimatedFocusedInput();
 ```
 
 Also have a look on [example](https://github.com/kirillzyusko/react-native-keyboard-controller/tree/main/example) app for more comprehensive usage.

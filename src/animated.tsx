@@ -1,5 +1,11 @@
 /* eslint react/jsx-sort-props: off */
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Animated, Platform, StyleSheet } from "react-native";
 import {
   controlEdgeToEdgeValues,
@@ -7,7 +13,7 @@ import {
 } from "react-native-is-edge-to-edge";
 import Reanimated, { useSharedValue } from "react-native-reanimated";
 
-import { KeyboardControllerView } from "./bindings";
+import { KeyboardControllerNative, KeyboardControllerView } from "./bindings";
 import { KeyboardContext } from "./context";
 import { useAnimatedValue, useEventHandlerRegistration } from "./internal";
 import { KeyboardController } from "./module";
@@ -15,6 +21,7 @@ import {
   useAnimatedKeyboardHandler,
   useFocusedInputLayoutHandler,
 } from "./reanimated";
+import { findNodeHandle } from "./utils/findNodeHandle";
 
 import type { KeyboardAnimationContext } from "./context";
 import type {
@@ -129,6 +136,15 @@ export const KeyboardProvider = (props: KeyboardProviderProps) => {
   const layout = useSharedValue<FocusedInputLayoutChangedEvent | null>(null);
   const setKeyboardHandlers = useEventHandlerRegistration(viewTagRef);
   const setInputHandlers = useEventHandlerRegistration(viewTagRef);
+  const update = useCallback(async () => {
+    const viewTag = findNodeHandle(viewTagRef.current);
+
+    if (!viewTag) {
+      return;
+    }
+
+    KeyboardControllerNative.synchronizeFocusedInputLayout(viewTag);
+  }, []);
   // memo
   const context = useMemo<KeyboardAnimationContext>(
     () => ({
@@ -136,6 +152,7 @@ export const KeyboardProvider = (props: KeyboardProviderProps) => {
       animated: { progress: progress, height: Animated.multiply(height, -1) },
       reanimated: { progress: progressSV, height: heightSV },
       layout,
+      update,
       setKeyboardHandlers,
       setInputHandlers,
       setEnabled,

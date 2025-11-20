@@ -32,4 +32,18 @@ describe("AwareScrollView with StickyView test cases", () => {
       );
     });
   });
+
+  it("should react on `bottomOffset` change even if input is nopt visible", async () => {
+    await scrollDownUntilElementIsVisible(
+      "aware_scroll_sticky_view_scroll_container",
+      "TextInput#9",
+    );
+    await waitAndTap("toggle_height");
+    await waitForExpect(async () => {
+      await expectBitmapsToBeEqual(
+        "AwareScrollViewWithStickyViewFirstInputFocused",
+        BLINKING_CURSOR,
+      );
+    });
+  });
 });
