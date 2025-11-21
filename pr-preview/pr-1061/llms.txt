@@ -1,0 +1,52 @@
+# react-native-keyboard-controller
+
+> Documentation for react-native-keyboard-controller. Package that allows to control each frame of keyboard movement in react native.
+
+
+## react-native-keyboard-controller
+
+
+### pr-preview
+
+
+#### pr-1061
+
+Control each frame of keyboard movement in react native
+
+- [Keyboard Controller](/index.md): Control each frame of keyboard movement in react native
+- [KeyboardAvoidingView](/docs/api/components/keyboard-avoiding-view.md): This component will automatically adjust its height, position, or bottom padding based on the keyboard height to remain visible while the virtual keyboard is displayed.
+- [KeyboardAwareScrollView](/docs/api/components/keyboard-aware-scroll-view.md): <Lottie
+- [KeyboardStickyView](/docs/api/components/keyboard-sticky-view.md): A KeyboardStickyView component seamlessly ensures that a designated view sticks to the keyboard's movements, maintaining visibility and interaction. Often referred to as a keyboard accessory or keyboard accessory view, it helps you enhance the user experience by preventing important UI elements from being obscured by the keyboard, creating a smooth and user-friendly interface in your React Native application.
+- [KeyboardToolbar](/docs/api/components/keyboard-toolbar.md): KeyboardToolbar is a view that sticky to the keyboard and has next and previous buttons for switching between inputs as well as Done button for closing the keyboard.
+- [useFocusedInputHandler](/docs/api/hooks/input/use-focused-input-handler.md): useFocusedInputHandler is a hook that allows to intercept events from a focused TextInput.
+- [useReanimatedFocusedInput](/docs/api/hooks/input/use-reanimated-focused-input.md): Hook that returns an information about TextInput that currently has a focus. Returns null if no input has focus.
+- [useKeyboardAnimation](/docs/api/hooks/keyboard/use-keyboard-animation.md): useKeyboardAnimation is a hook which gives access to two animated values:
+- [useKeyboardHandler](/docs/api/hooks/keyboard/use-keyboard-handler.md): useKeyboardHandler is a hook that offers low-level but more powerful API in comparison to useKeyboardAnimation. Using this hook you are getting an access to keyboard lifecycle events and you can easily determine the moment of the beginning animation, the end of the animation and get keyboard position in every frame of the animation.
+- [useKeyboardState](/docs/api/hooks/keyboard/use-keyboard-state.md): useKeyboardState is a hook which gives an access to current keyboard state. This hook combines data from KeyboardController.state() and KeyboardController.isVisible() methods and makes it reactive (i. e. triggers a re-render when keyboard state/visibility has changed).
+- [useReanimatedKeyboardAnimation](/docs/api/hooks/keyboard/use-reanimated-keyboard-animation.md): useReanimatedKeyboardAnimation is a hook which gives access to two reanimated values:
+- [useKeyboardController](/docs/api/hooks/module/use-keyboard-controller.md): useKeyboardController is a hook which gives an access to the state of the react-native-keyboard-controller library. It return two values:
+- [KeyboardController](/docs/api/keyboard-controller.md): The KeyboardController module in React Native provides a convenient set of methods for managing the behavior of the keyboard. With seamless runtime adjustments, this module allows developers to dynamically change the windowSoftInputMode on Android and dismiss the keyboard on both platforms.
+- [KeyboardEvents](/docs/api/keyboard-events.md): This library exposes 4 events which are available on all platforms:
+- [KeyboardProvider](/docs/api/keyboard-provider.md): KeyboardProvider should wrap your app. Under the hood it works with KeyboardControllerView to receive events during keyboard movements, maps these events to Animated/Reanimated values and store them in context.
+- [KeyboardBackgroundView](/docs/api/views/keyboard-background-view.md): View that matches keyboard background
+- [KeyboardControllerView](/docs/api/views/keyboard-controller-view.md): A plain react-native View with some additional methods and props. Used internally in KeyboardProvider
+- [KeyboardExtender](/docs/api/views/keyboard-extender.md): Display views inside the keyboard
+- [KeyboardGestureArea](/docs/api/views/keyboard-gesture-area.md): View for gestures that will control keyboard position
+- [OverKeyboardView](/docs/api/views/over-keyboard-view.md): Display views over keyboard without closing it.
+- [📚 Components](/docs/category/-components.md): A set of JS components that simplify keyboard management and user interaction handling
+- [🎣 Hooks](/docs/category/-hooks.md): React hooks provided by this library
+- [✨ Views](/docs/category/-views.md): Native views provided by this library
+- [API Reference](/docs/category/api-reference.md): API reference containing information about all public methods and their signatures
+- [Guides](/docs/category/guides.md): Most useful topics to start quickly.
+- [Recipes](/docs/category/recipes.md)
+- [FAQ](/docs/faq.md): Frequently asked questions and answers on them
+- [Building own hook](/docs/guides/building-own-hook.md): Default hooks may not perfectly fit in your app, because it changes/restores softInputMode on mount/unmount of the component where it's used.
+- [Compatibility](/docs/guides/compatibility.md): Compatibility of library with different react-native versions and architectures
+- [Components Overview](/docs/guides/components-overview.md): Overview and comparison of view and components available in this package
+- [First animation](/docs/guides/first-animation.md): To build your first animation you will need to use two hooks: useKeyboardAnimation or useReanimatedKeyboardAnimation.
+- [Interactive Keyboard](/docs/guides/interactive-keyboard.md): This guide focuses on adding an ability to dismiss keyboard interactively. Below you can see a step by step guide which will explain how different pieces of the code work together.
+- [Installation](/docs/installation.md): Guide dedicated to installation process
+- [Architecture](/docs/recipes/architecture.md): This library requires to wrap an app with KeyboardProvider component. It's needed because it stores animated values in context.
+- [Jest testing guide](/docs/recipes/jest-testing-guide.md): A testing-guide showing how to write unit-tests using jest
+- [Platforms capabilities and limitations](/docs/recipes/platform-differences.md): This library relies on WindowInsetsCompat API on Android and keyboard listeners (NotificationCenter) on iOS.
+- [Troubleshooting](/docs/troubleshooting.md): Troubleshooting guide
