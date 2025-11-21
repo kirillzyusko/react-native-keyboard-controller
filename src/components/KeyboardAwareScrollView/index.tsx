@@ -1,10 +1,4 @@
-import React, {
-  forwardRef,
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useMemo,
-} from "react";
+import React, { forwardRef, useCallback, useEffect, useMemo } from "react";
 import Reanimated, {
   clamp,
   interpolate,
@@ -409,11 +403,11 @@ const KeyboardAwareScrollView = forwardRef<
     }, [update, scrollFromCurrentPosition]);
 
     // TODO: check that scrollTo etc. methods can be accessed from ref
-    useImperativeHandle(
+    /*useImperativeHandle(
       ref,
       () => ({ assureFocusedInputVisible: synchronize }),
       [synchronize],
-    );
+    );*/
 
     useEffect(() => {
       synchronize();
