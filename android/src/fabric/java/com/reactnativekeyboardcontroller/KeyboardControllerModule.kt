@@ -34,7 +34,10 @@ class KeyboardControllerModule(
     module.setFocusTo(direction)
   }
 
-  override fun synchronizeFocusedInputLayout(viewTag: Double, promise: Promise) {
+  override fun synchronizeFocusedInputLayout(
+    viewTag: Double,
+    promise: Promise,
+  ) {
     module.synchronizeFocusedInputLayout(viewTag.toInt(), promise)
   }
 

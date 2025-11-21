@@ -42,7 +42,10 @@ class KeyboardControllerModule(
   }
 
   @ReactMethod
-  fun synchronizeFocusedInputLayout(viewTag: Double, promise: Promise) {
+  fun synchronizeFocusedInputLayout(
+    viewTag: Double,
+    promise: Promise,
+  ) {
     module.synchronizeFocusedInputLayout(viewTag.toInt(), promise)
   }
 

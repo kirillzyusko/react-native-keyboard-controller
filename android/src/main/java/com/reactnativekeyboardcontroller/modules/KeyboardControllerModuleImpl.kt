@@ -80,7 +80,10 @@ class KeyboardControllerModuleImpl(
     }
   }
 
-  fun synchronizeFocusedInputLayout(viewTag: Int, promise: Promise) {
+  fun synchronizeFocusedInputLayout(
+    viewTag: Int,
+    promise: Promise,
+  ) {
     UiThreadUtil.runOnUiThread {
       try {
         val uiManager = UIManagerHelper.getUIManagerForReactTag(mReactContext, viewTag)
