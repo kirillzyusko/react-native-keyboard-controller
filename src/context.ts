@@ -1,13 +1,12 @@
 import { createContext, useContext } from "react";
 import { Animated } from "react-native";
 
-import type {
-  FocusedInputHandler,
-  FocusedInputLayoutChangedEvent,
-  KeyboardHandler,
-} from "./types";
+import type { FocusedInputLayoutChangedEvent } from "./types";
 import type React from "react";
-import type { SharedValue } from "react-native-reanimated";
+import type {
+  EventHandlerProcessed,
+  SharedValue,
+} from "react-native-reanimated";
 
 export type AnimatedContext = {
   /**
@@ -37,9 +36,13 @@ export type KeyboardAnimationContext = {
   /** Layout of the focused `TextInput` represented as `SharedValue`. */
   layout: SharedValue<FocusedInputLayoutChangedEvent | null>;
   /** Method for setting workletized keyboard handlers. */
-  setKeyboardHandlers: (handlers: KeyboardHandler) => () => void;
+  setKeyboardHandlers: (
+    handlers: EventHandlerProcessed<never, never>,
+  ) => () => void;
   /** Method for setting workletized handlers for tracking focused input events. */
-  setInputHandlers: (handlers: FocusedInputHandler) => () => void;
+  setInputHandlers: (
+    handlers: EventHandlerProcessed<never, never>,
+  ) => () => void;
   /** Method to enable/disable KeyboardController library. */
   setEnabled: React.Dispatch<React.SetStateAction<boolean>>;
 };

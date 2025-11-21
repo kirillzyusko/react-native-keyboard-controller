@@ -1,16 +1,26 @@
 import { useRef } from "react";
 import { Animated } from "react-native";
 
-import { registerEventHandler, unregisterEventHandler } from "./event-handler";
 import { findNodeHandle } from "./utils/findNodeHandle";
 
-type EventHandler = (event: never) => void;
+import type { EventHandlerProcessed } from "react-native-reanimated";
+
 type ComponentOrHandle = Parameters<typeof findNodeHandle>[0];
+
+type WorkletHandler = {
+  registerForEvents: (viewTag: number) => void;
+  unregisterFromEvents: (viewTag: number) => void;
+};
+
+type WorkletHandlerOrWorkletHandlerObject =
+  | WorkletHandler
+  | {
+      workletEventHandler: WorkletHandler;
+    };
 
 /**
  * An internal hook that helps to register workletized event handlers.
  *
- * @param map - Map of event handlers and their names.
  * @param viewTagRef - Ref to the view that produces events.
  * @returns A function that registers supplied event handlers.
  * @example
@@ -21,14 +31,12 @@ type ComponentOrHandle = Parameters<typeof findNodeHandle>[0];
  * );
  * ```
  */
-export function useEventHandlerRegistration<
-  H extends Partial<Record<string, EventHandler>>,
->(
-  map: Map<keyof H, string>,
+export function useEventHandlerRegistration(
   viewTagRef: React.MutableRefObject<ComponentOrHandle>,
 ) {
-  const onRegisterHandler = (handler: H) => {
-    const ids: (number | null)[] = [];
+  const onRegisterHandler = (handler: EventHandlerProcessed<never, never>) => {
+    const currentHandler =
+      handler as unknown as WorkletHandlerOrWorkletHandlerObject;
     const attachWorkletHandlers = () => {
       const viewTag = findNodeHandle(viewTagRef.current);
 
@@ -38,26 +46,13 @@ export function useEventHandlerRegistration<
         );
       }
 
-      ids.push(
-        ...Object.keys(handler).map((handlerName) => {
-          const eventName = map.get(handlerName as keyof H);
-          const functionToCall = handler[handlerName as keyof H];
-
-          if (eventName && viewTag) {
-            return registerEventHandler(
-              (event: Parameters<NonNullable<H[keyof H]>>[0]) => {
-                "worklet";
-
-                functionToCall?.(event);
-              },
-              eventName,
-              viewTag,
-            );
-          }
-
-          return null;
-        }),
-      );
+      if (viewTag) {
+        if ("workletEventHandler" in currentHandler) {
+          currentHandler.workletEventHandler.registerForEvents(viewTag);
+        } else {
+          currentHandler.registerForEvents(viewTag);
+        }
+      }
     };
 
     if (viewTagRef.current) {
@@ -68,7 +63,15 @@ export function useEventHandlerRegistration<
     }
 
     return () => {
-      ids.forEach((id) => (id ? unregisterEventHandler(id) : null));
+      const viewTag = findNodeHandle(viewTagRef.current);
+
+      if (viewTag) {
+        if ("workletEventHandler" in currentHandler) {
+          currentHandler.workletEventHandler.unregisterFromEvents(viewTag);
+        } else {
+          currentHandler.unregisterFromEvents(viewTag);
+        }
+      }
     };
   };
 

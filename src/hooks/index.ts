@@ -1,12 +1,18 @@
 import { useEffect, useLayoutEffect } from "react";
+import { useEvent, useHandler } from "react-native-reanimated";
 
 import { AndroidSoftInputModes } from "../constants";
 import { useKeyboardContext } from "../context";
 import { KeyboardController } from "../module";
 
 import type { AnimatedContext, ReanimatedContext } from "../context";
-import type { FocusedInputHandler, KeyboardHandler } from "../types";
-import type { DependencyList } from "react";
+import type {
+  FocusedInputHandler,
+  FocusedInputSelectionChangedEvent,
+  FocusedInputTextChangedEvent,
+  KeyboardHandler,
+  NativeEvent,
+} from "../types";
 
 /**
  * Hook that sets the Android soft input mode to adjust resize on mount and
@@ -107,12 +113,43 @@ export const useReanimatedKeyboardAnimation = (): ReanimatedContext => {
  */
 export function useGenericKeyboardHandler(
   handler: KeyboardHandler,
-  deps?: DependencyList,
+  deps?: unknown[],
 ) {
   const context = useKeyboardContext();
 
+  const { doDependenciesDiffer } = useHandler(handler, deps);
+
+  const eventHandler = useEvent<NativeEvent>(
+    (event) => {
+      "worklet";
+
+      if (event.eventName.endsWith("onKeyboardMoveStart")) {
+        handler.onStart?.(event);
+      }
+
+      if (event.eventName.endsWith("onKeyboardMove")) {
+        handler.onMove?.(event);
+      }
+
+      if (event.eventName.endsWith("onKeyboardMoveEnd")) {
+        handler.onEnd?.(event);
+      }
+
+      if (event.eventName.endsWith("onKeyboardMoveInteractive")) {
+        handler.onInteractive?.(event);
+      }
+    },
+    [
+      "onKeyboardMoveStart",
+      "onKeyboardMove",
+      "onKeyboardMoveEnd",
+      "onKeyboardMoveInteractive",
+    ],
+    doDependenciesDiffer,
+  );
+
   useLayoutEffect(() => {
-    const cleanup = context.setKeyboardHandlers(handler);
+    const cleanup = context.setKeyboardHandlers(eventHandler);
 
     return () => cleanup();
   }, deps);
@@ -149,10 +186,7 @@ export function useGenericKeyboardHandler(
  * }
  * ```
  */
-export function useKeyboardHandler(
-  handler: KeyboardHandler,
-  deps?: DependencyList,
-) {
+export function useKeyboardHandler(handler: KeyboardHandler, deps?: unknown[]) {
   useResizeMode();
   useGenericKeyboardHandler(handler, deps);
 }
@@ -224,12 +258,32 @@ export function useReanimatedFocusedInput() {
  */
 export function useFocusedInputHandler(
   handler: FocusedInputHandler,
-  deps?: DependencyList,
+  deps?: unknown[],
 ) {
   const context = useKeyboardContext();
 
+  const { doDependenciesDiffer } = useHandler<never, never>(handler, deps);
+
+  const eventHandler = useEvent<
+    FocusedInputSelectionChangedEvent | FocusedInputTextChangedEvent
+  >(
+    (event) => {
+      "worklet";
+
+      if (event.eventName.endsWith("onFocusedInputTextChanged")) {
+        handler.onChangeText?.(event as FocusedInputTextChangedEvent);
+      }
+
+      if (event.eventName.endsWith("onFocusedInputSelectionChanged")) {
+        handler.onSelectionChange?.(event as FocusedInputSelectionChangedEvent);
+      }
+    },
+    ["onFocusedInputTextChanged", "onFocusedInputSelectionChanged"],
+    doDependenciesDiffer,
+  );
+
   useLayoutEffect(() => {
-    const cleanup = context.setInputHandlers(handler);
+    const cleanup = context.setInputHandlers(eventHandler);
 
     return () => cleanup();
   }, deps);
