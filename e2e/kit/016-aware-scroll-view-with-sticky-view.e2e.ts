@@ -46,4 +46,6 @@ describe("AwareScrollView with StickyView test cases", () => {
       );
     });
   });
+
+  // TODO: add test that focusing input inside sticky view shouldn't scroll a scroll view
 });
