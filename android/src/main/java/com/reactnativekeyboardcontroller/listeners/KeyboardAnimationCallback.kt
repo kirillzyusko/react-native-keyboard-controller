@@ -109,7 +109,7 @@ class KeyboardAnimationCallback(
         }
       }
     }
-  private var layoutObserver: FocusedInputObserver? = null
+  internal var layoutObserver: FocusedInputObserver? = null
 
   init {
     require(config.persistentInsetTypes and config.deferredInsetTypes == 0) {

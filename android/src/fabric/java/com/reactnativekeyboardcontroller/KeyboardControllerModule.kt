@@ -1,5 +1,6 @@
 package com.reactnativekeyboardcontroller
 
+import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.reactnativekeyboardcontroller.modules.KeyboardControllerModuleImpl
 
@@ -31,6 +32,10 @@ class KeyboardControllerModule(
 
   override fun setFocusTo(direction: String) {
     module.setFocusTo(direction)
+  }
+
+  override fun synchronizeFocusedInputLayout(viewTag: Double, promise: Promise) {
+    module.synchronizeFocusedInputLayout(viewTag.toInt(), promise)
   }
 
   override fun addListener(eventName: String?) {

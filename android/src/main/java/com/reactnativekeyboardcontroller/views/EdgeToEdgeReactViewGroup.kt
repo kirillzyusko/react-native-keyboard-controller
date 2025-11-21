@@ -58,7 +58,7 @@ class EdgeToEdgeReactViewGroup(
   // internal class members
   private var eventView: ReactViewGroup? = null
   private var wasMounted = false
-  private var callback: KeyboardAnimationCallback? = null
+  internal var callback: KeyboardAnimationCallback? = null
   private val config =
     KeyboardAnimationCallbackConfig(
       persistentInsetTypes = WindowInsetsCompat.Type.systemBars(),

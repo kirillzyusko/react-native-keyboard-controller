@@ -11,6 +11,7 @@ export interface Spec extends TurboModule {
   preload(): void;
   dismiss(keepFocus: boolean, animated: boolean): void;
   setFocusTo(direction: string): void;
+  synchronizeFocusedInputLayout(viewTag: number): Promise<void>;
 
   // event emitter
   addListener: (eventName: string) => void;

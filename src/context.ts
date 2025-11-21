@@ -35,6 +35,8 @@ export type KeyboardAnimationContext = {
   reanimated: ReanimatedContext;
   /** Layout of the focused `TextInput` represented as `SharedValue`. */
   layout: SharedValue<FocusedInputLayoutChangedEvent | null>;
+  /** Method for updating focused input. */
+  update: () => Promise<void>;
   /** Method for setting workletized keyboard handlers. */
   setKeyboardHandlers: (
     handlers: EventHandlerProcessed<never, never>,
@@ -71,6 +73,7 @@ const defaultContext: KeyboardAnimationContext = {
     height: DEFAULT_SHARED_VALUE,
   },
   layout: DEFAULT_LAYOUT,
+  update: Promise.resolve,
   setKeyboardHandlers: NESTED_NOOP,
   setInputHandlers: NESTED_NOOP,
   setEnabled: NOOP,
