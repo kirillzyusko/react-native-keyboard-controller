@@ -41,6 +41,17 @@ using namespace facebook::react;
   CGSize _lastScreenSize;
 }
 
+- (void)handleCommand:(const NSString *)commandName args:(const NSArray *)args
+{
+  RCTKeyboardControllerViewHandleCommand(self, commandName, args);
+}
+
+- (void)synchronizeFocusedInputLayout
+{
+  [inputObserver syncUpLayout];
+  [KeyboardController.shared sendEvent:@"KeyboardController::layoutDidSynchronize" body:nil];
+}
+
 + (ComponentDescriptorProvider)componentDescriptorProvider
 {
   return concreteComponentDescriptorProvider<KeyboardControllerViewComponentDescriptor>();

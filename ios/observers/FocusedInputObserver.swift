@@ -165,7 +165,7 @@ public class FocusedInputObserver: NSObject {
     dispatchEventToJS(data: noFocusedInputEvent)
   }
 
-  @objc func syncUpLayout() {
+  @objc public func syncUpLayout() {
     let responder = currentResponder as UIResponder?
     let focusedInput = currentInput
     let globalFrame = focusedInput?.globalFrame
