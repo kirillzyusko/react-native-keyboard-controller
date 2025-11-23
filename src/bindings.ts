@@ -23,7 +23,6 @@ export const KeyboardControllerNative: KeyboardControllerNativeModule = {
   setFocusTo: NOOP,
   addListener: NOOP,
   removeListeners: NOOP,
-  synchronizeFocusedInputLayout: Promise.resolve,
 };
 /**
  * An event emitter that provides a way to subscribe to next keyboard events:

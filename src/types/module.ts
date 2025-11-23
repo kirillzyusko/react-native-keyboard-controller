@@ -117,7 +117,6 @@ export type KeyboardControllerNativeModule = {
   // all platforms
   dismiss: (keepFocus: boolean, animated: boolean) => void;
   setFocusTo: (direction: Direction) => void;
-  synchronizeFocusedInputLayout: (viewTag: number | null) => Promise<void>;
   // native event module stuff
   addListener: (eventName: string) => void;
   removeListeners: (count: number) => void;
