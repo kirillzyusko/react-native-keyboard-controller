@@ -140,7 +140,7 @@ export const KeyboardProvider = (props: KeyboardProviderProps) => {
   const setKeyboardHandlers = useEventHandlerRegistration(viewRef);
   const setInputHandlers = useEventHandlerRegistration(viewRef);
   const update = useCallback(async () => {
-    KeyboardControllerViewCommands.synchronizeFocusedInputLayout(viewRef);
+    KeyboardControllerViewCommands.synchronizeFocusedInputLayout(viewRef.current);
 
     await new Promise((resolve) =>
       FocusedInputEvents.addListener("layoutDidSynchronize", () => {
