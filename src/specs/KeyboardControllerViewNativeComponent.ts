@@ -8,7 +8,6 @@ import type {
   Double,
   Int32,
 } from "react-native/Libraries/Types/CodegenTypes";
-import type { NativeComponentType } from "react-native/Libraries/Utilities/codegenNativeComponent";
 
 type KeyboardMoveEvent = Readonly<{
   height: Double;
@@ -68,12 +67,9 @@ export interface NativeProps extends ViewProps {
   onFocusedInputSelectionChanged?: DirectEventHandler<FocusedInputSelectionChangedEvent>;
 }
 
-type KeyboardControllerViewNativeComponentType =
-  NativeComponentType<NativeProps>;
-
 interface NativeCommands {
   synchronizeFocusedInputLayout: (
-    viewRef: React.ElementRef<KeyboardControllerViewNativeComponentType>,
+    viewRef: React.ElementRef<HostComponent<NativeProps>>,
   ) => void;
 }
 
