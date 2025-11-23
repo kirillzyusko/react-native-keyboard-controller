@@ -1,12 +1,14 @@
-import codegenNativeComponent from "react-native/Libraries/Utilities/codegenNativeComponent";
+import { codegenNativeComponent } from "react-native";
+import { codegenNativeCommands } from "react-native";
 
 import type { HostComponent } from "react-native";
-import type { ViewProps } from "react-native/Libraries/Components/View/ViewPropTypes";
+import type { ViewProps } from "react-native";
 import type {
   DirectEventHandler,
   Double,
   Int32,
 } from "react-native/Libraries/Types/CodegenTypes";
+import type { NativeComponentType } from "react-native/Libraries/Utilities/codegenNativeComponent";
 
 type KeyboardMoveEvent = Readonly<{
   height: Double;
@@ -65,6 +67,19 @@ export interface NativeProps extends ViewProps {
   onFocusedInputTextChanged?: DirectEventHandler<FocusedInputTextChangedEvent>;
   onFocusedInputSelectionChanged?: DirectEventHandler<FocusedInputSelectionChangedEvent>;
 }
+
+type KeyboardControllerViewNativeComponentType =
+  NativeComponentType<NativeProps>;
+
+interface NativeCommands {
+  synchronizeFocusedInputLayout: (
+    viewRef: React.ElementRef<KeyboardControllerViewNativeComponentType>,
+  ) => void;
+}
+
+export const Commands: NativeCommands = codegenNativeCommands<NativeCommands>({
+  supportedCommands: ["synchronizeFocusedInputLayout"],
+});
 
 export default codegenNativeComponent<NativeProps>("KeyboardControllerView", {
   interfaceOnly: true,

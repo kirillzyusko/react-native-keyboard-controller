@@ -100,17 +100,6 @@ RCT_EXPORT_METHOD(setFocusTo : (nonnull NSString *)direction)
   return shared;
 }
 
-#ifdef RCT_NEW_ARCH_ENABLED
-- (void)synchronizeFocusedInputLayout:(double)viewTag
-#else
-RCT_EXPORT_METHOD(synchronizeFocusedInputLayout : (nonnull NSNumber *)direction)
-#endif
-{
-  UIView *view = [self.bridge.uiManager viewForReactTag:@(reactTag)];
-  if ([view isKindOfClass:[KeyboardControllerView class]]) {
-  }
-}
-
 - (void)startObserving
 {
   hasListeners = YES;

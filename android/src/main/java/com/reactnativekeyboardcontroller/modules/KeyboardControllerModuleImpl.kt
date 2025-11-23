@@ -5,14 +5,11 @@ import android.os.Build
 import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
-import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.UiThreadUtil
-import com.facebook.react.uimanager.UIManagerHelper
 import com.reactnativekeyboardcontroller.interactive.KeyboardAnimationController
 import com.reactnativekeyboardcontroller.traversal.FocusedInputHolder
 import com.reactnativekeyboardcontroller.traversal.ViewHierarchyNavigator
-import com.reactnativekeyboardcontroller.views.EdgeToEdgeReactViewGroup
 
 class KeyboardControllerModuleImpl(
   private val mReactContext: ReactApplicationContext,
@@ -77,23 +74,6 @@ class KeyboardControllerModuleImpl(
 
     if (view != null) {
       ViewHierarchyNavigator.setFocusTo(direction, view)
-    }
-  }
-
-  fun synchronizeFocusedInputLayout(
-    viewTag: Int,
-    promise: Promise,
-  ) {
-    UiThreadUtil.runOnUiThread {
-      try {
-        val uiManager = UIManagerHelper.getUIManagerForReactTag(mReactContext, viewTag)
-        val view = uiManager?.resolveView(viewTag) as? EdgeToEdgeReactViewGroup
-        view?.callback?.layoutObserver?.syncUpLayout()
-      } catch (_: Throwable) {
-        null
-      } finally {
-        promise.resolve(null)
-      }
     }
   }
 

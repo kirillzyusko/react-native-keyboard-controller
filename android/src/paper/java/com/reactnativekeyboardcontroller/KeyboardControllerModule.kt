@@ -1,6 +1,5 @@
 package com.reactnativekeyboardcontroller
 
-import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
@@ -39,14 +38,6 @@ class KeyboardControllerModule(
   @ReactMethod
   fun setFocusTo(direction: String) {
     module.setFocusTo(direction)
-  }
-
-  @ReactMethod
-  fun synchronizeFocusedInputLayout(
-    viewTag: Double,
-    promise: Promise,
-  ) {
-    module.synchronizeFocusedInputLayout(viewTag.toInt(), promise)
   }
 
   @Suppress("detekt:UnusedParameter")

@@ -33,7 +33,7 @@ describe("AwareScrollView with StickyView test cases", () => {
     });
   });
 
-  it("should react on `bottomOffset` change even if input is nopt visible", async () => {
+  it("should react on `bottomOffset` change even if input is not visible", async () => {
     await scrollDownUntilElementIsVisible(
       "aware_scroll_sticky_view_scroll_container",
       "TextInput#9",

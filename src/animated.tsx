@@ -13,7 +13,11 @@ import {
 } from "react-native-is-edge-to-edge";
 import Reanimated, { useSharedValue } from "react-native-reanimated";
 
-import { KeyboardControllerNative, KeyboardControllerView } from "./bindings";
+import {
+  FocusedInputEvents,
+  KeyboardControllerView,
+  KeyboardControllerViewCommands,
+} from "./bindings";
 import { KeyboardContext } from "./context";
 import { useAnimatedValue, useEventHandlerRegistration } from "./internal";
 import { KeyboardController } from "./module";
@@ -21,7 +25,6 @@ import {
   useAnimatedKeyboardHandler,
   useFocusedInputLayoutHandler,
 } from "./reanimated";
-import { findNodeHandle } from "./utils/findNodeHandle";
 
 import type { KeyboardAnimationContext } from "./context";
 import type {
@@ -124,7 +127,7 @@ export const KeyboardProvider = (props: KeyboardProviderProps) => {
     preload = true,
   } = props;
   // ref
-  const viewTagRef = useRef<React.Component<KeyboardControllerProps>>(null);
+  const viewRef = useRef<React.Component<KeyboardControllerProps>>(null);
   // state
   const [enabled, setEnabled] = useState(initiallyEnabled);
   // animated values
@@ -134,16 +137,16 @@ export const KeyboardProvider = (props: KeyboardProviderProps) => {
   const progressSV = useSharedValue(0);
   const heightSV = useSharedValue(0);
   const layout = useSharedValue<FocusedInputLayoutChangedEvent | null>(null);
-  const setKeyboardHandlers = useEventHandlerRegistration(viewTagRef);
-  const setInputHandlers = useEventHandlerRegistration(viewTagRef);
+  const setKeyboardHandlers = useEventHandlerRegistration(viewRef);
+  const setInputHandlers = useEventHandlerRegistration(viewRef);
   const update = useCallback(async () => {
-    const viewTag = findNodeHandle(viewTagRef.current);
+    KeyboardControllerViewCommands.synchronizeFocusedInputLayout(viewRef);
 
-    if (!viewTag) {
-      return;
-    }
-
-    await KeyboardControllerNative.synchronizeFocusedInputLayout(viewTag);
+    await new Promise((resolve) =>
+      FocusedInputEvents.addListener("layoutDidSynchronize", () => {
+        resolve(null);
+      }),
+    );
   }, []);
   // memo
   const context = useMemo<KeyboardAnimationContext>(
@@ -249,7 +252,7 @@ export const KeyboardProvider = (props: KeyboardProviderProps) => {
   return (
     <KeyboardContext.Provider value={context}>
       <KeyboardControllerViewAnimated
-        ref={viewTagRef}
+        ref={viewRef}
         enabled={enabled}
         navigationBarTranslucent={IS_EDGE_TO_EDGE || navigationBarTranslucent}
         statusBarTranslucent={IS_EDGE_TO_EDGE || statusBarTranslucent}
