@@ -1,6 +1,5 @@
 package com.reactnativekeyboardcontroller
 
-import com.facebook.react.bridge.Arguments
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.ViewManagerDelegate
 import com.facebook.react.uimanager.annotations.ReactProp
@@ -8,7 +7,6 @@ import com.facebook.react.viewmanagers.KeyboardControllerViewManagerDelegate
 import com.facebook.react.viewmanagers.KeyboardControllerViewManagerInterface
 import com.facebook.react.views.view.ReactViewGroup
 import com.facebook.react.views.view.ReactViewManager
-import com.reactnativekeyboardcontroller.extensions.emitEvent
 import com.reactnativekeyboardcontroller.managers.KeyboardControllerViewManagerImpl
 import com.reactnativekeyboardcontroller.views.EdgeToEdgeReactViewGroup
 
@@ -59,9 +57,8 @@ class KeyboardControllerViewManager :
   // endregion
 
   // region Commands
-  override fun synchronizeFocusedInputLayout(view: ReactViewGroup?) {
-    (view as EdgeToEdgeReactViewGroup).callback?.layoutObserver?.syncUpLayout()
-    view.reactContext.emitEvent("KeyboardController::layoutDidSynchronize", Arguments.createMap())
+  override fun synchronizeFocusedInputLayout(view: ReactViewGroup) {
+    manager.synchronizeFocusedInputLayout(view as EdgeToEdgeReactViewGroup)
   }
   // endregion
 

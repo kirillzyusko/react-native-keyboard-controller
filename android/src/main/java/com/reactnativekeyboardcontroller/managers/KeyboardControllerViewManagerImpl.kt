@@ -1,11 +1,13 @@
 package com.reactnativekeyboardcontroller.managers
 
+import com.facebook.react.bridge.Arguments
 import com.facebook.react.common.MapBuilder
 import com.facebook.react.uimanager.ThemedReactContext
 import com.reactnativekeyboardcontroller.events.FocusedInputLayoutChangedEvent
 import com.reactnativekeyboardcontroller.events.FocusedInputSelectionChangedEvent
 import com.reactnativekeyboardcontroller.events.FocusedInputTextChangedEvent
 import com.reactnativekeyboardcontroller.events.KeyboardTransitionEvent
+import com.reactnativekeyboardcontroller.extensions.emitEvent
 import com.reactnativekeyboardcontroller.listeners.WindowDimensionListener
 import com.reactnativekeyboardcontroller.views.EdgeToEdgeReactViewGroup
 
@@ -23,6 +25,11 @@ class KeyboardControllerViewManagerImpl {
   fun invalidate() {
     listener?.detachListener()
     listener = null
+  }
+
+  fun synchronizeFocusedInputLayout(view: EdgeToEdgeReactViewGroup) {
+    view.callback?.layoutObserver?.syncUpLayout()
+    view.reactContext.emitEvent("KeyboardController::layoutDidSynchronize", Arguments.createMap())
   }
 
   fun setEnabled(
