@@ -35,7 +35,7 @@ export type KeyboardAnimationContext = {
   reanimated: ReanimatedContext;
   /** Layout of the focused `TextInput` represented as `SharedValue`. */
   layout: SharedValue<FocusedInputLayoutChangedEvent | null>;
-  /** Method for updating focused input. */
+  /** Method for updating info about focused input layout. */
   update: () => Promise<void>;
   /** Method for setting workletized keyboard handlers. */
   setKeyboardHandlers: (

@@ -397,7 +397,7 @@ const KeyboardAwareScrollView = forwardRef<
 
       runOnUI(() => {
         "worklet";
-        // TODO: why I get valid values if add console.log in the beginning? Because I lock threads somehow?
+
         scrollFromCurrentPosition();
       })();
     }, [update, scrollFromCurrentPosition]);
