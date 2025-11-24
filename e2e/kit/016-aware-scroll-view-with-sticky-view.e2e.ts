@@ -1,11 +1,17 @@
 import { expectBitmapsToBeEqual } from "./asserts";
 import {
   scrollDownUntilElementIsVisible,
+  tap,
   waitAndTap,
   waitForExpect,
 } from "./helpers";
 
 const BLINKING_CURSOR = 0.35;
+
+const closeKeyboard = async () => {
+  // tap outside to close a keyboard
+  await tap("aware_scroll_sticky_view_scroll_container", { x: 0, y: 100 });
+};
 
 describe("AwareScrollView with StickyView test cases", () => {
   it("should push input above keyboard on focus", async () => {
@@ -37,6 +43,7 @@ describe("AwareScrollView with StickyView test cases", () => {
     await scrollDownUntilElementIsVisible(
       "aware_scroll_sticky_view_scroll_container",
       "TextInput#9",
+      0.2,
     );
     await waitAndTap("toggle_height");
     await waitForExpect(async () => {
@@ -47,5 +54,19 @@ describe("AwareScrollView with StickyView test cases", () => {
     });
   });
 
-  // TODO: add test that focusing input inside sticky view shouldn't scroll a scroll view
+  it("shouldn't scroll a scroll view when focusing input inside sticky view", async () => {
+    await closeKeyboard();
+    await element(by.id("aware_scroll_sticky_view_scroll_container")).swipe(
+      "down",
+      "fast",
+      1,
+    );
+    await waitAndTap("Amount");
+    await waitForExpect(async () => {
+      await expectBitmapsToBeEqual(
+        "AwareScrollViewWithStickyViewStickyInputFocused",
+        BLINKING_CURSOR,
+      );
+    });
+  });
 });
