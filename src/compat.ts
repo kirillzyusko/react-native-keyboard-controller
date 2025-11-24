@@ -10,6 +10,22 @@ export const KeyboardState = {
   CLOSED: 4,
 };
 
+/**
+ * A compatibility layer for migration from https://docs.swmansion.com/react-native-reanimated/docs/device/useAnimatedKeyboard.
+ *
+ * @returns An object containing `height` and `state` properties represented as `SharedValue<number>`.
+ * @example
+ * ```ts
+ * import { useAnimatedKeyboard, useAnimatedStyle } from 'react-native-reanimated';
+ *
+ * export default function App() {
+ *   const keyboard = useAnimatedKeyboard();
+ *
+ *   const animatedStyles = useAnimatedStyle(() => ({
+ *     transform: [{ translateY: -keyboard.height.value }],
+ *   }));
+ * }
+ */
 export const useAnimatedKeyboard = () => {
   const height = useSharedValue(0);
   const state = useSharedValue(KeyboardState.UNKNOWN);
