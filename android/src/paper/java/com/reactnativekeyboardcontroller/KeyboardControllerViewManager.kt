@@ -60,7 +60,11 @@ class KeyboardControllerViewManager : ReactViewManager() {
   // endregion
 
   // region Commands
-  override fun receiveCommand(root: ReactViewGroup, commandId: String, args: ReadableArray?) {
+  override fun receiveCommand(
+    root: ReactViewGroup,
+    commandId: String,
+    args: ReadableArray?,
+  ) {
     super.receiveCommand(root, commandId, args)
 
     when (commandId) {

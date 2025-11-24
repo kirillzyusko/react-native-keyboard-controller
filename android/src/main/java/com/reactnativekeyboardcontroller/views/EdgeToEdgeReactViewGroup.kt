@@ -38,7 +38,7 @@ object EdgeToEdgeViewRegistry {
 @Suppress("detekt:TooManyFunctions")
 @SuppressLint("ViewConstructor")
 class EdgeToEdgeReactViewGroup(
-   val reactContext: ThemedReactContext,
+  val reactContext: ThemedReactContext,
 ) : ReactViewGroup(reactContext) {
   // props
   private var isStatusBarTranslucent = false
