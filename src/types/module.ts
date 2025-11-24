@@ -23,7 +23,7 @@ export type KeyboardEventData = {
 /**
  * An object that represent current keyboard state.
  */
-export type KeyboardState = {
+export type IKeyboardState = {
   /** Whether the keyboard is currently visible. */
   isVisible: boolean;
 } & KeyboardEventData;

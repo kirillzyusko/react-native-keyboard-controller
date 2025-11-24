@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { KeyboardEvents } from "../../bindings";
 import { KeyboardController } from "../../module";
 
-import type { KeyboardState } from "../../types";
+import type { IKeyboardState } from "../../types";
 
 const EVENTS = ["keyboardDidShow", "keyboardDidHide"] as const;
 
@@ -12,9 +12,9 @@ const getLatestState = () => ({
   isVisible: KeyboardController.isVisible(),
 });
 
-type KeyboardStateSelector<T> = (state: KeyboardState) => T;
+type KeyboardStateSelector<T> = (state: IKeyboardState) => T;
 
-const defaultSelector: KeyboardStateSelector<KeyboardState> = (state) => state;
+const defaultSelector: KeyboardStateSelector<IKeyboardState> = (state) => state;
 
 /**
  * React Hook that represents the current keyboard state on iOS and Android.
@@ -40,7 +40,7 @@ const defaultSelector: KeyboardStateSelector<KeyboardState> = (state) => state;
  * }
  * ```
  */
-function useKeyboardState<T = KeyboardState>(
+function useKeyboardState<T = IKeyboardState>(
   selector: KeyboardStateSelector<T> = defaultSelector as KeyboardStateSelector<T>,
 ): T {
   const [state, setState] = useState<T>(() => selector(getLatestState()));
