@@ -43,7 +43,7 @@ describe("AwareScrollView with StickyView test cases", () => {
     await scrollDownUntilElementIsVisible(
       "aware_scroll_sticky_view_scroll_container",
       "TextInput#9",
-      0.2,
+      { x: 0, y: 0.2, checkScrollViewVisibility: false },
     );
     await waitAndTap("toggle_height");
     await waitForExpect(async () => {
