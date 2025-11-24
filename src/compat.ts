@@ -16,7 +16,7 @@ export const KeyboardState = {
  * @returns An object containing `height` and `state` properties represented as `SharedValue<number>`.
  * @example
  * ```ts
- * import { useAnimatedKeyboard, useAnimatedStyle } from 'react-native-reanimated';
+ * import { useAnimatedKeyboard, useAnimatedStyle } from 'react-native-keyboard-controller';
  *
  * export default function App() {
  *   const keyboard = useAnimatedKeyboard();
