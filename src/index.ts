@@ -5,6 +5,7 @@ export * from "./hooks";
 export * from "./constants";
 export * from "./module";
 export * from "./types";
+export * from "./compat";
 
 export {
   KeyboardAvoidingView,
