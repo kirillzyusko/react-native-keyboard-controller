@@ -18,6 +18,7 @@ export type {
   KeyboardAvoidingViewProps,
   KeyboardStickyViewProps,
   KeyboardAwareScrollViewProps,
+  KeyboardAwareScrollViewRef,
   KeyboardToolbarProps,
 } from "./components";
 export { OverKeyboardView, KeyboardExtender } from "./views";

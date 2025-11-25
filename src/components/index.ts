@@ -7,5 +7,8 @@ export {
 } from "./KeyboardToolbar";
 export type { KeyboardAvoidingViewProps } from "./KeyboardAvoidingView";
 export type { KeyboardStickyViewProps } from "./KeyboardStickyView";
-export type { KeyboardAwareScrollViewProps } from "./KeyboardAwareScrollView";
+export type {
+  KeyboardAwareScrollViewProps,
+  KeyboardAwareScrollViewRef,
+} from "./KeyboardAwareScrollView";
 export type { KeyboardToolbarProps } from "./KeyboardToolbar";
