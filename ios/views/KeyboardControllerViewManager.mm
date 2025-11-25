@@ -16,4 +16,7 @@ RCT_EXPORT_VIEW_PROPERTY(onFocusedInputLayoutChanged, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onFocusedInputTextChanged, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onFocusedInputSelectionChanged, RCTDirectEventBlock);
 
+// commands
+RCT_EXTERN_METHOD(synchronizeFocusedInputLayout : (nonnull NSNumber *)reactTag);
+
 @end

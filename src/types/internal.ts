@@ -1,6 +1,8 @@
 import type { EmitterSubscription } from "react-native";
 
-export type FocusedInputAvailableEvents = "focusDidSet";
+export type FocusedInputAvailableEvents =
+  | "focusDidSet"
+  | "layoutDidSynchronize";
 export type FocusedInputEventData = {
   current: number;
   count: number;

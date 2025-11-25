@@ -38,7 +38,7 @@ object EdgeToEdgeViewRegistry {
 @Suppress("detekt:TooManyFunctions")
 @SuppressLint("ViewConstructor")
 class EdgeToEdgeReactViewGroup(
-  private val reactContext: ThemedReactContext,
+  val reactContext: ThemedReactContext,
 ) : ReactViewGroup(reactContext) {
   // props
   private var isStatusBarTranslucent = false
@@ -58,7 +58,7 @@ class EdgeToEdgeReactViewGroup(
   // internal class members
   private var eventView: ReactViewGroup? = null
   private var wasMounted = false
-  private var callback: KeyboardAnimationCallback? = null
+  internal var callback: KeyboardAnimationCallback? = null
   private val config =
     KeyboardAnimationCallbackConfig(
       persistentInsetTypes = WindowInsetsCompat.Type.systemBars(),

@@ -53,6 +53,11 @@ export const WindowDimensionsEvents: WindowDimensionsEventsModule = {
  */
 export const KeyboardControllerView =
   View as unknown as React.FC<KeyboardControllerProps>;
+export const KeyboardControllerViewCommands = {
+  synchronizeFocusedInputLayout: (
+    _ref: React.Component<KeyboardControllerProps> | null,
+  ) => {},
+};
 /**
  * A view that defines a region on the screen, where gestures will control the keyboard position.
  *

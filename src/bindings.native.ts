@@ -18,6 +18,7 @@ const LINKING_ERROR =
   "- You rebuilt the app after installing the package\n" +
   "- You are not using Expo Go\n";
 
+const KeyboardControllerViewNativeComponentModule = require("./specs/KeyboardControllerViewNativeComponent");
 const RCTKeyboardController =
   require("./specs/NativeKeyboardController").default;
 
@@ -55,7 +56,9 @@ export const WindowDimensionsEvents: WindowDimensionsEventsModule = {
     eventEmitter.addListener(KEYBOARD_CONTROLLER_NAMESPACE + name, cb),
 };
 export const KeyboardControllerView: React.FC<KeyboardControllerProps> =
-  require("./specs/KeyboardControllerViewNativeComponent").default;
+  KeyboardControllerViewNativeComponentModule.default;
+export const KeyboardControllerViewCommands =
+  KeyboardControllerViewNativeComponentModule.Commands;
 export const KeyboardGestureArea: React.FC<KeyboardGestureAreaProps> =
   (Platform.OS === "android" && Platform.Version >= 30) || Platform.OS === "ios"
     ? require("./specs/KeyboardGestureAreaNativeComponent").default

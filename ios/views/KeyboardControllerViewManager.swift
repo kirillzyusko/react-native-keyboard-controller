@@ -7,12 +7,24 @@ class KeyboardControllerViewManager: RCTViewManager {
   override func view() -> (KeyboardControllerView) {
     return KeyboardControllerView(frame: CGRect.zero, bridge: bridge)
   }
+
+  @objc(synchronizeFocusedInputLayout:)
+  func synchronizeFocusedInputLayout(_ reactTag: NSNumber) {
+    bridge.uiManager.addUIBlock { _, viewRegistry in
+      guard let view = viewRegistry?[reactTag] as? KeyboardControllerView else {
+        return
+      }
+
+      view.inputObserver?.syncUpLayout()
+      KeyboardController.shared()?.sendEvent("KeyboardController::layoutDidSynchronize", body: nil)
+    }
+  }
 }
 
 class KeyboardControllerView: UIView {
   // internal variables
   private var keyboardObserver: KeyboardMovementObserver?
-  private var inputObserver: FocusedInputObserver?
+  var inputObserver: FocusedInputObserver?
   private var eventDispatcher: RCTEventDispatcherProtocol
   private var bridge: RCTBridge
   // internal state

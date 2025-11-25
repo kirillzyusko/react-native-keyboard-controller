@@ -121,12 +121,23 @@ export const switchToEmojiKeyboard = async () => {
 export const scrollDownUntilElementIsVisible = async (
   scrollViewId: string,
   elementId: string,
+  {
+    x,
+    y,
+    checkScrollViewVisibility,
+  }: { x: number; y: number; checkScrollViewVisibility: boolean } = {
+    x: NaN,
+    y: 0.5,
+    checkScrollViewVisibility: true,
+  },
 ): Promise<void> => {
-  await waitForElementById(scrollViewId, TIMEOUT_FOR_LONG_OPERATIONS);
+  if (checkScrollViewVisibility) {
+    await waitForElementById(scrollViewId, TIMEOUT_FOR_LONG_OPERATIONS);
+  }
   await waitFor(element(by.id(elementId)))
     .toBeVisible()
     .whileElement(by.id(scrollViewId))
-    .scroll(100, "down", NaN, 0.5);
+    .scroll(100, "down", x, y);
 };
 
 export const scrollUpUntilElementIsBarelyVisible = async (

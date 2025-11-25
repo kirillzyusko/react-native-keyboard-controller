@@ -236,7 +236,10 @@ export function useKeyboardController() {
 export function useReanimatedFocusedInput() {
   const context = useKeyboardContext();
 
-  return { input: context.layout };
+  return {
+    input: context.layout,
+    update: context.update,
+  };
 }
 
 /**

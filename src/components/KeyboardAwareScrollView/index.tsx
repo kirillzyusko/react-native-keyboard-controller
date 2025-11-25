@@ -1,4 +1,10 @@
-import React, { forwardRef, useCallback, useEffect, useMemo } from "react";
+import React, {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+} from "react";
 import Reanimated, {
   clamp,
   interpolate,
@@ -44,6 +50,9 @@ export type KeyboardAwareScrollViewProps = {
   /** Custom component for `ScrollView`. Default is `ScrollView`. */
   ScrollViewComponent?: React.ComponentType<ScrollViewProps>;
 } & ScrollViewProps;
+export type KeyboardAwareScrollViewRef = {
+  assureFocusedInputVisible: () => void;
+} & ScrollView;
 
 // Everything begins from `onStart` handler. This handler is called every time,
 // when keyboard changes its size or when focused `TextInput` was changed. In
@@ -99,7 +108,7 @@ export type KeyboardAwareScrollViewProps = {
  * ```
  */
 const KeyboardAwareScrollView = forwardRef<
-  ScrollView,
+  KeyboardAwareScrollViewRef,
   React.PropsWithChildren<KeyboardAwareScrollViewProps>
 >(
   (
@@ -117,6 +126,7 @@ const KeyboardAwareScrollView = forwardRef<
     ref,
   ) => {
     const scrollViewAnimatedRef = useAnimatedRef<Reanimated.ScrollView>();
+    const scrollViewRef = React.useRef<ScrollView>(null);
     const scrollViewTarget = useSharedValue<number | null>(null);
     const scrollPosition = useSharedValue(0);
     const position = useScrollViewOffset(scrollViewAnimatedRef);
@@ -126,7 +136,7 @@ const KeyboardAwareScrollView = forwardRef<
     const tag = useSharedValue(-1);
     const initialKeyboardSize = useSharedValue(0);
     const scrollBeforeKeyboardMovement = useSharedValue(0);
-    const { input } = useReanimatedFocusedInput();
+    const { input, update } = useReanimatedFocusedInput();
     const layout = useSharedValue<FocusedInputLayoutChangedEvent | null>(null);
     const lastSelection =
       useSharedValue<FocusedInputSelectionChangedEvent | null>(null);
@@ -134,11 +144,7 @@ const KeyboardAwareScrollView = forwardRef<
     const { height } = useWindowDimensions();
 
     const onRef = useCallback((assignedRef: Reanimated.ScrollView) => {
-      if (typeof ref === "function") {
-        ref(assignedRef);
-      } else if (ref) {
-        ref.current = assignedRef;
-      }
+      scrollViewRef.current = assignedRef;
 
       scrollViewAnimatedRef(assignedRef);
     }, []);
@@ -392,10 +398,36 @@ const KeyboardAwareScrollView = forwardRef<
       [maybeScroll, disableScrollOnKeyboardHide, syncKeyboardFrame],
     );
 
+    const synchronize = useCallback(async () => {
+      await update();
+
+      runOnUI(() => {
+        "worklet";
+
+        scrollFromCurrentPosition();
+      })();
+    }, [update, scrollFromCurrentPosition]);
+
+    useImperativeHandle(
+      ref,
+      () => {
+        const scrollView = scrollViewRef.current;
+
+        const existingMethods = scrollView ? { ...scrollView } : {};
+
+        return {
+          ...existingMethods,
+
+          assureFocusedInputVisible: () => {
+            synchronize();
+          },
+        } as KeyboardAwareScrollViewRef;
+      },
+      [synchronize],
+    );
+
     useEffect(() => {
-      runOnUI(performScrollWithPositionRestoration)(
-        scrollBeforeKeyboardMovement.value,
-      );
+      synchronize();
     }, [bottomOffset]);
 
     useAnimatedReaction(
