@@ -65,12 +65,11 @@ class KeyboardControllerViewManager : ReactViewManager() {
     commandId: String,
     args: ReadableArray?,
   ) {
-    super.receiveCommand(root, commandId, args)
-
     when (commandId) {
       "synchronizeFocusedInputLayout" -> {
         manager.synchronizeFocusedInputLayout(root as EdgeToEdgeReactViewGroup)
       }
+      else -> super.receiveCommand(root, commandId, args)
     }
   }
   //endregion
