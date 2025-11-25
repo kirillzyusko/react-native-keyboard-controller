@@ -1836,7 +1836,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - SocketRocket
     - Yoga
-  - react-native-keyboard-controller (1.19.6):
+  - react-native-keyboard-controller (1.20.0):
     - boost
     - DoubleConversion
     - fast_float
@@ -1854,7 +1854,7 @@ PODS:
     - React-graphics
     - React-ImageManager
     - React-jsi
-    - react-native-keyboard-controller/common (= 1.19.6)
+    - react-native-keyboard-controller/common (= 1.20.0)
     - React-NativeModulesApple
     - React-RCTFabric
     - React-renderercss
@@ -1865,7 +1865,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - SocketRocket
     - Yoga
-  - react-native-keyboard-controller/common (1.19.6):
+  - react-native-keyboard-controller/common (1.20.0):
     - boost
     - DoubleConversion
     - fast_float
@@ -3117,7 +3117,7 @@ SPEC CHECKSUMS:
   React-microtasksnativemodule: 44b44a4d3cd6ffb85d928abf741acdc26722de2e
   react-native-advanced-input-mask: 7e8cb58287774c4447485387661abe946d0e0bb2
   react-native-blur: ba0e9ad6274783c8d45f42da82acae02e25784ad
-  react-native-keyboard-controller: a7a0de5469fa3d7e4d9be0a81d08bcb72719b1f6
+  react-native-keyboard-controller: dbf3e80b4493c376d7bfb59779395b117e4c8698
   react-native-safe-area-context: 6d8a7b750e496e37bda47c938320bf2c734d441f
   React-NativeModulesApple: b5d18bc109c45c9a1c6b71664991b5cc3adc4e48
   React-oscompat: 93b5535ea7f7dff46aaee4f78309a70979bdde9d
