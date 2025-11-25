@@ -144,11 +144,15 @@ export const KeyboardProvider = (props: KeyboardProviderProps) => {
       viewRef.current,
     );
 
-    await new Promise((resolve) =>
-      FocusedInputEvents.addListener("layoutDidSynchronize", () => {
-        resolve(null);
-      }),
-    );
+    await new Promise((resolve) => {
+      const subscription = FocusedInputEvents.addListener(
+        "layoutDidSynchronize",
+        () => {
+          subscription.remove();
+          resolve(null);
+        },
+      );
+    });
   }, []);
   // memo
   const context = useMemo<KeyboardAnimationContext>(
