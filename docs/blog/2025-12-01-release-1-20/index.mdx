@@ -1,0 +1,103 @@
+---
+slug: expo-snacks
+title: Version 1.20 — Expo snack support, deprecated `useAnimatedKeyboard`, and more! 🎉
+authors: [kirill]
+tags: [react-native, keyboard, expo]
+keywords: [react-native-keyboard-controller, expo snack, useAnimatedKeyboard]
+---
+
+<!-- truncate -->
+
+import Head from "@docusaurus/Head";
+
+## Expo Snack support
+
+In Expo SDK 54 the `react-native-keyboard-controller` lib was added to the **Expo Go**, which mean you could use this lib in all projects powered by Expo. Nonetheless the lib was not fully compatible with Expo snacks and if you tried to use it in Expo Snack you would get an error.
+
+In version `1.20.0` I fixed that problem and now lib is compatible with Expo snacks as well! 🎉 It means that you can share code, prepare reproduction repos and test the code inside the browser. The `react-native-keyboard-controller` will also benefit from this integration, because now I can re-work documentation and make all example code interactive.
+
+For example below you can see an embedded Snack with a code that I used for [AppJS conf](https://appjs.co) demo this year:
+
+<div
+  data-snack-id="@kirylziusko/chatkeyboardavoidingview"
+  data-snack-platform="ios"
+  data-snack-preview="true"
+  data-snack-theme="light"
+  style={{
+    overflow: "hidden",
+    background: "#fbfcfd",
+    border: "1px solid var(--color-border)",
+    borderRadius: 4,
+    height: 505,
+    width: "100%",
+  }}
+></div>
+
+<Head>
+  <script src="https://snack.expo.dev/embed.js" async />
+</Head>
+
+<br />
+
+Over time I'm going to migrate all code samples from documentation into interactive sandboxes so you can test those examples directly in the browser.
+
+## Deprecated `useAnimatedKeyboard` hook from `react-native-reanimated`
+
+The `react-native-reanimated` had own hook for tracking keyboard movement which was called `useAnimatedKeyboard`.
+
+Starting from `react-native-reanimated@4.2.0` the reanimated team decided to stop supporting this hook and eventually deprecates it and now they recommend to migrate to `react-native-keyboard-controller` instead.
+
+We've been working closely together to prepare a migration guide and assure the smoothest possible experience, so I added `useAnimatedKeyboard` compat hook into the codebase.
+
+If you migrate from `react-native-reanimated` to `react-native-keyboard-controller` and don't want to re-write your whole codebase to a new API you can use compat layer that has been added in this lib:
+
+```diff
+-import {useAnimatedKeyboard, KeyboardState} from "react-native-reanimated";
++import {useAnimatedKeyboard, KeyboardState} from "react-native-keyboard-controller";
+```
+
+And that's it. If you encounter any bugs or issues don't hesitate to report them in `react-native-keyboard-controller` repository.
+
+## New `assureFocusedInputVisible` method for `KeyboardAwareScrollView`
+
+The `KeyboardAwareScrollView` was already tracking many events, such as keyboard movements, changes in layout of the focused input, changes in cursor position etc. But sometimes the layout in `KeyboardAwareScrollView` can be shifted (due to validation errors, for example) and such changes are hard to track from the native side.
+
+To make sure the input is still visible you had to write your own code that roughly estimates the amount of scroll distance and perform that scroll, but it had many downsides:
+
+- you need to add a lot of custom code;
+- the estimation may be not correct, especially if users are using increased font size in accessibility settings;
+
+import ComparisonTable from "@site/src/components/ComparisonTable";
+import Video from "@site/src/components/Video";
+
+<ComparisonTable
+  left={<Video src="/video/validation-without-scroll.mov" width={65} />}
+  right={<Video src="/video/validation-with-scroll.mov" width={65} />}
+  leftText={<i>Focused input gets hidden after validation</i>}
+  rightText={
+    <i>Focused input remains visible after validation and gets auto-scrolled</i>
+  }
+/>
+
+Starting from `react-native-keyboard-controller@1.20.0` I added a new method for `KeyboardAwareScrollView` that is called `assureFocusedInputVisible`:
+
+```tsx
+import {
+  KeyboardAwareScrollView,
+  KeyboardAwareScrollViewRef,
+} from "react-native-keyboard-controller";
+
+function LongForm() {
+  const ref = useRef<KeyboardAwareScrollViewRef>(null);
+
+  useEffect(() => {
+    ref.current?.assureFocusedInputVisible();
+  }, [errors]);
+
+  return (
+    <KeyboardAwareScrollView ref={ref} bottomOffset={50}>
+      {/*...*/}
+    </KeyboardAwareScrollView>
+  );
+}
+```
