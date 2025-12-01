@@ -14,7 +14,9 @@ Events order
 
 The value from `useReanimatedFocusedInput` will be always updated before keyboard events, so you can safely read values in `onStart` handler and be sure they are up-to-date.
 
-## `input`[​](/react-native-keyboard-controller/pr-preview/pr-1227/docs/api/hooks/input/use-reanimated-focused-input.md#input "Direct link to input")
+## Returned values[​](/react-native-keyboard-controller/pr-preview/pr-1227/docs/api/hooks/input/use-reanimated-focused-input.md#returned-values "Direct link to Returned values")
+
+### `input`[​](/react-native-keyboard-controller/pr-preview/pr-1227/docs/api/hooks/input/use-reanimated-focused-input.md#input "Direct link to input")
 
 The `input` property from this hook is returned as `SharedValue`. The returned data has next structure:
 
