@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[27693],{87888:e=>{e.exports=JSON.parse('{"metadata":{"permalink":"/react-native-keyboard-controller/blog","page":1,"postsPerPage":10,"totalPages":2,"totalCount":20,"nextPage":"/react-native-keyboard-controller/blog/page/2","blogDescription":"Blog","blogTitle":"Blog"}}')}}]);

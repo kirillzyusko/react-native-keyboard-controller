@@ -214,6 +214,14 @@ export function Example() {
 }
 ```
 
+## Methods[​](/react-native-keyboard-controller/docs/api/components/keyboard-aware-scroll-view.md#methods "Direct link to Methods")
+
+### `assureFocusedInputVisible`[​](/react-native-keyboard-controller/docs/api/components/keyboard-aware-scroll-view.md#assurefocusedinputvisible "Direct link to assurefocusedinputvisible")
+
+A method that assures that focused input is visible and not obscured by keyboard or other elements.
+
+You may want to call it, when layout inside `ScrollView` changes (for example validation message appears or disappears and it shifts position of focused input).
+
 ## Example[​](/react-native-keyboard-controller/docs/api/components/keyboard-aware-scroll-view.md#example "Direct link to Example")
 
 ```

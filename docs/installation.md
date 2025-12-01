@@ -20,10 +20,6 @@ npm install react-native-keyboard-controller --save
 npx expo install react-native-keyboard-controller
 ```
 
-Only Expo Dev client compatible
-
-This library has native code, so it **does not work** with *Expo Go* but it's fully compatible with [custom dev client](https://docs.expo.dev/development/getting-started/).
-
 Mandatory `react-native-reanimated` dependency
 
 This library requires `react-native-reanimated` to work properly. If you don't have it in your project, you need to follow [installation guide](https://docs.swmansion.com/react-native-reanimated/docs/fundamentals/getting-started/#installation) and install it in your project before using this library.

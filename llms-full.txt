@@ -470,6 +470,14 @@ export function Example() {
 }
 ```
 
+## Methods[​](/react-native-keyboard-controller/docs/api/components/keyboard-aware-scroll-view.md#methods "Direct link to Methods")
+
+### `assureFocusedInputVisible`[​](/react-native-keyboard-controller/docs/api/components/keyboard-aware-scroll-view.md#assurefocusedinputvisible "Direct link to assurefocusedinputvisible")
+
+A method that assures that focused input is visible and not obscured by keyboard or other elements.
+
+You may want to call it, when layout inside `ScrollView` changes (for example validation message appears or disappears and it shifts position of focused input).
+
 ## Example[​](/react-native-keyboard-controller/docs/api/components/keyboard-aware-scroll-view.md#example "Direct link to Example")
 
 ```
@@ -1269,7 +1277,9 @@ Events order
 
 The value from `useReanimatedFocusedInput` will be always updated before keyboard events, so you can safely read values in `onStart` handler and be sure they are up-to-date.
 
-## Event structure[​](/react-native-keyboard-controller/docs/api/hooks/input/use-reanimated-focused-input.md#event-structure "Direct link to Event structure")
+## Returned values[​](/react-native-keyboard-controller/docs/api/hooks/input/use-reanimated-focused-input.md#returned-values "Direct link to Returned values")
+
+### `input`[​](/react-native-keyboard-controller/docs/api/hooks/input/use-reanimated-focused-input.md#input "Direct link to input")
 
 The `input` property from this hook is returned as `SharedValue`. The returned data has next structure:
 
@@ -1290,10 +1300,14 @@ type FocusedInputLayoutChangedEvent = {
 };
 ```
 
+### `update`[​](/react-native-keyboard-controller/docs/api/hooks/input/use-reanimated-focused-input.md#update "Direct link to update")
+
+To update the focused input, use `update` function. Thus you can query the position on demand from JS thread.
+
 ## Example[​](/react-native-keyboard-controller/docs/api/hooks/input/use-reanimated-focused-input.md#example "Direct link to Example")
 
 ```
-const { input } = useReanimatedFocusedInput();
+const { input, update } = useReanimatedFocusedInput();
 ```
 
 Also have a look on [example](https://github.com/kirillzyusko/react-native-keyboard-controller/tree/main/example) app for more comprehensive usage.
@@ -2974,10 +2988,6 @@ npm install react-native-keyboard-controller --save
 ```
 npx expo install react-native-keyboard-controller
 ```
-
-Only Expo Dev client compatible
-
-This library has native code, so it **does not work** with *Expo Go* but it's fully compatible with [custom dev client](https://docs.expo.dev/development/getting-started/).
 
 Mandatory `react-native-reanimated` dependency
 
