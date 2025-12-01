@@ -85,10 +85,11 @@ export type KeyboardControllerModule = {
   // all platforms
   /**
    * Dismisses the active keyboard. Removes a focus by default, but allows to pass `{keepFocus: true}` to keep focus.
+   * If you want to close keyboard immediately pass `{animated: false}`.
    *
    * @see {@link https://kirillzyusko.github.io/react-native-keyboard-controller/docs/api/keyboard-controller#dismiss|docs} page for more details.
    */
-  dismiss: (options?: DismissOptions) => Promise<void>;
+  dismiss: (options?: Partial<DismissOptions>) => Promise<void>;
   /**
    * Moves focus to the specified direction (`next`, `prev` or `current` to restore a focus).
    *
