@@ -1,10 +1,14 @@
 ---
 slug: expo-snacks
-title: Version 1.20 — Expo snack support, deprecated `useAnimatedKeyboard`, and more! 🎉
+title: Version 1.20 — Expo snack support, ??deprecation notice??, and more! 🎉
 authors: [kirill]
 tags: [react-native, keyboard, expo]
 keywords: [react-native-keyboard-controller, expo snack, useAnimatedKeyboard]
 ---
+
+Meet the `1.20.0` release of `react-native-keyboard-controller`. This is **small** (only 500 lines of code were added comparing to the previous release), but a very **important** release as it improves compatibility within `react-native` ecosystem.
+
+Keen to learn more? Keep reading!
 
 <!-- truncate -->
 
@@ -41,6 +45,12 @@ For example below you can see an embedded Snack with a code that I used for [App
 
 Over time I'm going to migrate all code samples from documentation into interactive sandboxes so you can test those examples directly in the browser.
 
+:::info 1.13.x Flashbacks
+To support **Expo Snacks** I had to re-work mechanism how events are propagated to worklet handlers. Last time I did it in `1.13.x` release and in the beginning of this release I've received many bug reports that something wasn't working in various setups.
+
+The new approach shouldn't cause any issues, **but** I can not assure it, because each project has a unique setup and it's hard to assure, that new release will not break something accidentally in your project. If you discover various incompatibility between `1.19.x` and `1.20.x` please bare with me and report a bug. I promise I'll try to fix everything and provide even wider compatibility than lib had before!
+:::
+
 ## Deprecated `useAnimatedKeyboard` hook from `react-native-reanimated`
 
 The `react-native-reanimated` had own hook for tracking keyboard movement which was called `useAnimatedKeyboard`.
@@ -60,7 +70,7 @@ And that's it. If you encounter any bugs or issues don't hesitate to report them
 
 ## New `assureFocusedInputVisible` method for `KeyboardAwareScrollView`
 
-The `KeyboardAwareScrollView` was already tracking many events, such as keyboard movements, changes in layout of the focused input, changes in cursor position etc. But sometimes the layout in `KeyboardAwareScrollView` can be shifted (due to validation errors, for example) and such changes are hard to track from the native side.
+The `KeyboardAwareScrollView` was already tracking many events, such as **keyboard movements**, changes in **layout** of the focused input, changes in **cursor position** etc. But sometimes the layout in `KeyboardAwareScrollView` can be shifted (due to validation errors, for example) and such changes are hard to track from the native side.
 
 To make sure the input is still visible you had to write your own code that roughly estimates the amount of scroll distance and perform that scroll, but it had many downsides:
 
@@ -101,3 +111,36 @@ function LongForm() {
   );
 }
 ```
+
+Now you can just call this method to make sure that input still remains visible satisfying to the specified constraints and be sure that it scrolls with pixel-perfect precision in all configurations (i. e. even with accessibility setting turned on).
+
+## Achieved milestones
+
+I think this is the last **minor** release in this year (but I'll keep publishing new **patch** releases), so I think it's fair to look back at what we've all together achieved. As 2026 is coming soon, I decided to make a small retrospective that I did [back in 2023](./new-features-achieved-milestones#achieved-milestones)
+
+### 5 releases per year
+
+We're moving at very fast pace and as in previous years we've delivered over 5 releases this year, each of them was delivering new features.
+
+### 3100 stars on GitHub
+
+Just in two years this lib gathered **2000+** stars on GitHub. This is really incredible, **2 years ago** this library had only **1000** stars and it was a mind blowing number for me. Now library has more than **3100+** stars! I just wanted to say thank you for all developers who used this library and starred it :heart:
+
+### 450k weekly downloads on npm
+
+2 years ago we had **~8000** downloads on a weekly basis. Now we have **450.000** downloads. Just in 2 years the downloading rate grew in **56x** times.
+
+### Impact on open source community
+
+BlueSky, Expensify, V0
+
+### Sponsors support
+
+## 🤔 What's next?
+
+As always, my top focus is **resolving open issues** and keeping the library stable for everyone:
+
+- Issues with more 👍 reactions are prioritized first — that’s how I track what matters most to the community.
+- Issues labeled “sponsor 💖” receive **highest priority** as part of dedicated sponsor support.
+
+As always stay tuned and follow me on [Twitter](https://twitter.com/ziusko) and [GitHub](https://github.com/kirillzyusko) for updates. Thank you for your support! 😊
