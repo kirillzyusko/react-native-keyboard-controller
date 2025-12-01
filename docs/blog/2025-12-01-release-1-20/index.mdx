@@ -1,0 +1,160 @@
+---
+slug: expo-snacks
+title: Version 1.20 — Expo Snack Support, Reanimated Deprecation Path, and New Features 🧬
+authors: [kirill]
+tags: [react-native, keyboard, expo]
+keywords: [react-native-keyboard-controller, expo snack, useAnimatedKeyboard]
+---
+
+Meet the `1.20.0` release of `react-native-keyboard-controller`. It’s a **small** (only 500 lines of code added compared to the previous release), but a very **important** one - it significantly improves compatibility across the `react-native` ecosystem.
+
+Curious about what’s new? Let’s dive in!
+
+<!-- truncate -->
+
+import Head from "@docusaurus/Head";
+
+## Expo Snack support
+
+In Expo SDK 54, `react-native-keyboard-controller` lib was added to the **Expo Go**, which meant you could use the library in any project powered by Expo. However, it still was not fully compatible with Expo Snacks - trying to use it there resulted in errors.
+
+With version `1.20.0`, that limitation is finally gone. The library now works seamlessly in Expo Snacks as well! 🎉 This means you can easily share code, create reproduction examples, and test everything directly in the browser. It’s also a big win for the library itself - I can now rework the documentation and turn all the example code into fully interactive sandboxes.
+
+Below is an embedded Snack that includes the code I used for my [AppJS Conf](https://appjs.co) demo this year:
+
+<div
+  data-snack-id="@kirylziusko/chat-keyboard-avoiding-view"
+  data-snack-platform="ios"
+  data-snack-preview="true"
+  data-snack-theme="light"
+  style={{
+    overflow: "hidden",
+    background: "#fbfcfd",
+    border: "1px solid var(--color-border)",
+    borderRadius: 4,
+    height: 505,
+    width: "100%",
+  }}
+></div>
+
+<Head>
+  <script src="https://snack.expo.dev/embed.js" async />
+</Head>
+
+<br />
+
+:::info 1.13.x Flashbacks
+To support **Expo Snacks** I had to rewrite the mechanism that propagates events to worklet handlers. The last time I made a change like this was in the `1.13.x` release, and in the beginning of this release I've received many bug reports that something wasn't working in various setups.
+
+The new approach _shouldn't_ cause issues, **but** I can not guarantee that nothing will break - every React Native project is unique, and unexpected edge cases do happen. If you notice any incompatibilities between `1.19.x` and `1.20.x`, please bare with me and report a bug. I promise to address everything and ensure even wider compatibility than before!
+:::
+
+## Deprecated `useAnimatedKeyboard` hook from `react-native-reanimated`
+
+The `react-native-reanimated` used to provide its own hook for tracking keyboard movement: `useAnimatedKeyboard`.
+
+Starting from `react-native-reanimated@4.2.0`, the Reanimated team decided to stop supporting this hook and officially deprecated it and now they recommend to migrate to `react-native-keyboard-controller` instead.
+
+We’ve worked closely together to prepare a migration guide and ensure the transition is as smooth as possible. To help with that, I added a compatibility version of `useAnimatedKeyboard` directly into this library.
+
+If you're migrating from `react-native-reanimated` to `react-native-keyboard-controller` and don't want to re-write your entire codebase right away, you can simply switch your imports to the compat layer:
+
+```diff
+-import {useAnimatedKeyboard, KeyboardState} from "react-native-reanimated";
++import {useAnimatedKeyboard, KeyboardState} from "react-native-keyboard-controller";
+```
+
+That’s all you need to do. If you encounter any bugs or issues, please report them in the `react-native-keyboard-controller` repository.
+
+## New `assureFocusedInputVisible` method for `KeyboardAwareScrollView`
+
+The `KeyboardAwareScrollView` already tracks a lot of things - **keyboard movements**, **layout changes** of the focused input, **cursor position** updates, and more. However, in some cases the layout inside the `KeyboardAwareScrollView` can shift unexpectedly (for example, after showing validation errors), and these changes are difficult to track natively.
+
+Previously, ensuring the focused input stayed visible required writing custom logic to _estimate_ how far the view should scroll. This approach came with several drawbacks:
+
+- you had to write and maintain quite a bit of custom code;
+- the scroll estimation was often inaccurate, especially when users had increased font sizes or other accessibility settings enabled;
+
+import ComparisonTable from "@site/src/components/ComparisonTable";
+import Video from "@site/src/components/Video";
+
+<ComparisonTable
+  left={<Video src="/video/validation-without-scroll.mov" width={65} />}
+  right={<Video src="/video/validation-with-scroll.mov" width={65} />}
+  leftText={<i>Focused input gets hidden after validation</i>}
+  rightText={
+    <i>Focused input remains visible after validation and gets auto-scrolled</i>
+  }
+/>
+
+Starting from `react-native-keyboard-controller@1.20.0`, there’s now a built-in solution: a new method on `KeyboardAwareScrollView` called `assureFocusedInputVisible`.
+
+```tsx
+import {
+  KeyboardAwareScrollView,
+  KeyboardAwareScrollViewRef,
+} from "react-native-keyboard-controller";
+
+function LongForm() {
+  const ref = useRef<KeyboardAwareScrollViewRef>(null);
+
+  useEffect(() => {
+    ref.current?.assureFocusedInputVisible();
+  }, [errors]);
+
+  return (
+    <KeyboardAwareScrollView ref={ref} bottomOffset={50}>
+      {/*...*/}
+    </KeyboardAwareScrollView>
+  );
+}
+```
+
+With this method, you can ensure that the focused input always remains visible — even after layout changes — with **pixel-perfect accuracy across all configurations**, including when accessibility settings like larger fonts are enabled.
+
+## Achieved milestones
+
+I expect this to be the last **minor** release of the year (though I’ll continue shipping **patch** releases), so it feels like the right moment to look back at what we’ve all accomplished together. With 2026 around the corner, here’s a small retrospective — similar to the one I did [back in 2023](./new-features-achieved-milestones#achieved-milestones).
+
+### 📦 5 releases per year
+
+We’re moving at a fast pace: just like in previous years, we shipped **over five releases** in 2025 — each one bringing new features, improvements, and community-requested enhancements.
+
+### 🌟 3100 stars on GitHub
+
+In just two years, the library gained **2000+ new GitHub stars**. That number still blows my mind. Two years ago we crossed the **1000-star** mark — something that already felt surreal — and now we’re at **3100+**.
+
+Thank you to every developer who uses the library, reports issues, contributes ideas, or simply stars the repo. It truly means a lot ❤️
+
+### 📈 450k weekly downloads on npm
+
+Two years ago, the library had around **8,000 weekly downloads**. Today, it’s at **450,000+** — a **56× growth** in just **24 months**.
+
+This incredible adoption is a clear sign of how essential smooth keyboard handling is in the React Native ecosystem.
+
+### 🤝 Impact on open source community
+
+`react-native-keyboard-controller` is now widely used across the ecosystem - from individual developers to large-scale production apps. Some well-known adopters include:
+
+- **Bluesky** - powering polished keyboard interactions in a high-traffic social app
+- **Expensify** - used in a massive cross-platform codebase with millions of users
+- **V0 (Vercel)** - helping elevate UX in modern React Native experiences
+
+Seeing the library become part of the toolchain for such impactful products is incredibly motivating — and a reminder of why maintaining open source is worth the effort.
+
+### ❤️ Sponsors support
+
+I want to take a moment to express my deepest gratitude to all the sponsors who support this project. Your contributions genuinely make a difference - without you, it simply wouldn’t be possible to maintain the library at this level of quality, release new features, fix issues quickly, and keep pushing the ecosystem forward.
+
+Open source takes time, energy, and consistency, and your support is what makes that effort sustainable. Thank you for believing in the project, for investing in its future, and for helping thousands of developers build better products every day. ❤️
+
+A huge thank you to all my sponsors: [Hirbod](https://github.com/hirbod), [MarceloPrado](https://github.com/MarceloPrado), [mrtawil](https://github.com/mrtawil), [ksugaevskaya](https://github.com/ksugaevskaya). [VladyslavMartynov10](https://github.com/VladyslavMartynov10), [devoren](https://github.com/devoren), [bousouninjin](https://github.com/bousouninjin), [pouyaemami](https://github.com/pouyaemami), [matinzd](https://github.com/matinzd), [floydkim](https://github.com/floydkim), [Stafox](https://github.com/Stafox), [wise-danya](https://github.com/wise-danya), [ronintechnologies](https://github.com/ronintechnologies), [Kasendwa](https://github.com/Kasendwa), [KingDoxik](https://github.com/KingDoxik), [plantrail](https://github.com/plantrail), [flexbox](https://github.com/flexbox), [Mako-L](https://github.com/Mako-L), [mk-nickyang](https://github.com/mk-nickyang), [jerrickhakim](https://github.com/jerrickhakim), [GNUGradyn](https://github.com/GNUGradyn), [Toby56](https://github.com/Toby56) and [xoyseau](https://github.com/xoyseau).
+
+## 🤔 What's next?
+
+As always, my top focus is **resolving open issues** and keeping the library stable for everyone:
+
+- Issues with more 👍 reactions are prioritized first — that’s how I track what matters most to the community.
+- Issues labeled “sponsor 💖” receive **highest priority** as part of dedicated sponsor support.
+
+As always stay tuned and follow me on [Twitter](https://twitter.com/ziusko) and [GitHub](https://github.com/kirillzyusko) for updates. Thank you for your support! 😊
