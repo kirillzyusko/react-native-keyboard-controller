@@ -21,7 +21,7 @@
 <p>In Expo SDK 54, <code>react-native-keyboard-controller</code> lib was added to the <strong>Expo Go</strong>, which meant you could use the library in any project powered by Expo. However, it still was not fully compatible with Expo Snacks - trying to use it there resulted in errors.</p>
 <p>With version <code>1.20.0</code>, that limitation is finally gone. The library now works seamlessly in Expo Snacks as well! 🎉 This means you can easily share code, create reproduction examples, and test everything directly in the browser. It’s also a big win for the library itself - I can now rework the documentation and turn all the example code into fully interactive sandboxes.</p>
 <p>Below is an embedded Snack that includes the code I used for my <a href="https://appjs.co/" target="_blank" rel="noopener noreferrer">AppJS Conf</a> demo this year:</p>
-<div data-snack-id="@kirylziusko/chatkeyboardavoidingview" data-snack-platform="ios" data-snack-preview="true" data-snack-theme="light" style="overflow:hidden;background:#fbfcfd;border:1px solid var(--color-border);border-radius:4px;height:505px;width:100%"></div>
+<div data-snack-id="@kirylziusko/chat-keyboard-avoiding-view" data-snack-platform="ios" data-snack-preview="true" data-snack-theme="light" style="overflow:hidden;background:#fbfcfd;border:1px solid var(--color-border);border-radius:4px;height:505px;width:100%"></div>
 <!-- -->
 <br>
 <p>Over time, I’m planning to migrate all documentation code samples into interactive sandboxes, so you can try everything out directly in your browser.</p>
