@@ -1,6 +1,6 @@
 ---
 slug: expo-snacks
-title: Version 1.20 — Expo Snack Support, Reanimated Deprecation Path, and New Features
+title: Version 1.20 — Expo Snack Support, Reanimated Deprecation Path, and New Features 🧬
 authors: [kirill]
 tags: [react-native, keyboard, expo]
 keywords: [react-native-keyboard-controller, expo snack, useAnimatedKeyboard]
@@ -43,8 +43,6 @@ Below is an embedded Snack that includes the code I used for my [AppJS Conf](htt
 
 <br />
 
-Over time, I’m planning to migrate all documentation code samples into interactive sandboxes, so you can try everything out directly in your browser.
-
 :::info 1.13.x Flashbacks
 To support **Expo Snacks** I had to rewrite the mechanism that propagates events to worklet handlers. The last time I made a change like this was in the `1.13.x` release, and in the beginning of this release I've received many bug reports that something wasn't working in various setups.
 
@@ -70,7 +68,7 @@ That’s all you need to do. If you encounter any bugs or issues, please report 
 
 ## New `assureFocusedInputVisible` method for `KeyboardAwareScrollView`
 
-The `KeyboardAwareScrollView` already tracks a lot of things - **keyboard movements**, **layout changes** of the focused input, **cursor position** updates, and more. However,in some cases the layout inside the `KeyboardAwareScrollView` can shift unexpectedly (for example, after showing validation errors), and these changes are difficult to track natively.
+The `KeyboardAwareScrollView` already tracks a lot of things - **keyboard movements**, **layout changes** of the focused input, **cursor position** updates, and more. However, in some cases the layout inside the `KeyboardAwareScrollView` can shift unexpectedly (for example, after showing validation errors), and these changes are difficult to track natively.
 
 Previously, ensuring the focused input stayed visible required writing custom logic to _estimate_ how far the view should scroll. This approach came with several drawbacks:
 
@@ -118,23 +116,23 @@ With this method, you can ensure that the focused input always remains visible �
 
 I expect this to be the last **minor** release of the year (though I’ll continue shipping **patch** releases), so it feels like the right moment to look back at what we’ve all accomplished together. With 2026 around the corner, here’s a small retrospective — similar to the one I did [back in 2023](./new-features-achieved-milestones#achieved-milestones).
 
-### 5 releases per year
+### 📦 5 releases per year
 
 We’re moving at a fast pace: just like in previous years, we shipped **over five releases** in 2025 — each one bringing new features, improvements, and community-requested enhancements.
 
-### 3100 stars on GitHub
+### 🌟 3100 stars on GitHub
 
 In just two years, the library gained **2000+ new GitHub stars**. That number still blows my mind. Two years ago we crossed the **1000-star** mark — something that already felt surreal — and now we’re at **3100+**.
 
 Thank you to every developer who uses the library, reports issues, contributes ideas, or simply stars the repo. It truly means a lot ❤️
 
-### 450k weekly downloads on npm
+### 📈 450k weekly downloads on npm
 
 Two years ago, the library had around **8,000 weekly downloads**. Today, it’s at **450,000+** — a **56× growth** in just **24 months**.
 
 This incredible adoption is a clear sign of how essential smooth keyboard handling is in the React Native ecosystem.
 
-### Impact on open source community
+### 🤝 Impact on open source community
 
 `react-native-keyboard-controller` is now widely used across the ecosystem - from individual developers to large-scale production apps. Some well-known adopters include:
 
@@ -144,7 +142,7 @@ This incredible adoption is a clear sign of how essential smooth keyboard handli
 
 Seeing the library become part of the toolchain for such impactful products is incredibly motivating — and a reminder of why maintaining open source is worth the effort.
 
-### Sponsors support
+### ❤️ Sponsors support
 
 I want to take a moment to express my deepest gratitude to all the sponsors who support this project. Your contributions genuinely make a difference - without you, it simply wouldn’t be possible to maintain the library at this level of quality, release new features, fix issues quickly, and keep pushing the ecosystem forward.
 
