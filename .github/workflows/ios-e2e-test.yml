@@ -98,6 +98,7 @@ jobs:
     timeout-minutes: 90
     env:
       WORKING_DIRECTORY: example
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     concurrency:
       group: ios-e2e-${{ matrix.devices.ios }}-${{ github.ref }}
       cancel-in-progress: true
@@ -124,6 +125,9 @@ jobs:
           xcode-version: ${{ matrix.devices.xcode }}
       - name: Get Xcode version
         run: xcodebuild -version
+      - name: GitHub auth for Homebrew
+        run: |
+          git config --global url."https://${GITHUB_TOKEN}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
       # needed for additional runtime installation
       - name: Install Xcodes
         run: brew tap xcodesorg/made
@@ -140,7 +144,7 @@ jobs:
       - name: Update shared cache
         run: xcrun simctl runtime dyld_shared_cache update --all
       - name: Install AppleSimulatorUtils
-        run: brew tap wix/brew --force && brew install applesimutils
+        run: brew tap wix/brew && brew install applesimutils
       - name: Save yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
