@@ -86,8 +86,8 @@ export const useSmoothKeyboardHandler: typeof useKeyboardHandler = (
         persistedHeight.value = height.value;
       }
     },
-    // REA uses own version of `DependencyList` and it's not compatible with the same type from React
-    deps as unknown[],
+    // create shallow copy (if deps specified) since `useAnimatedReaction` modifies them
+    deps ? [...deps] : deps,
   );
 
   useKeyboardHandler(
