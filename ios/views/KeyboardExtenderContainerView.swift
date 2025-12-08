@@ -54,7 +54,7 @@ private class BaseContainerView: UIInputView {
 
     let desiredHeight = calculateDesiredHeight()
 
-    if frame.height != desiredHeight {
+    if abs(frame.height - desiredHeight) > 0.001 {
       frame.size.height = desiredHeight
 
       updateContentFrame(desiredHeight: desiredHeight)
@@ -104,6 +104,8 @@ private class ModernContainerView: BaseContainerView {
         visualEffectView.contentView.addSubview(contentView)
         addSubview(visualEffectView)
       }
+
+      updateContentFrame(desiredHeight: calculateDesiredHeight())
     #endif
   }
 
