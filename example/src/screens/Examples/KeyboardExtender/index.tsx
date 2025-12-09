@@ -48,7 +48,10 @@ export default function KeyboardExtendExample() {
   return (
     <>
       <Image source={require("./background.jpg")} style={styles.background} />
-      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <TouchableWithoutFeedback
+        testID="keyboard_extender.dismiss"
+        onPress={() => Keyboard.dismiss()}
+      >
         <SafeAreaView edges={["top"]} style={styles.container}>
           <TextInput
             keyboardType="numeric"

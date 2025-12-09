@@ -41,7 +41,7 @@ private class BaseContainerView: UIInputView {
   }
 
   func setupContainerSpecifics() {
-    // Override in subclasses
+    updateContentFrame(desiredHeight: calculateDesiredHeight())
   }
 
   func calculateDesiredHeight() -> CGFloat {
@@ -54,7 +54,7 @@ private class BaseContainerView: UIInputView {
 
     let desiredHeight = calculateDesiredHeight()
 
-    if frame.height != desiredHeight {
+    if abs(frame.height - desiredHeight) > 0.001 {
       frame.size.height = desiredHeight
 
       updateContentFrame(desiredHeight: desiredHeight)
@@ -85,6 +85,7 @@ private class ModernContainerView: BaseContainerView {
 
   override func setupContainerSpecifics() {
     setupVisualEffect()
+    super.setupContainerSpecifics()
   }
 
   private func setupVisualEffect() {
@@ -128,6 +129,7 @@ private class ModernContainerView: BaseContainerView {
 private class LegacyContainerView: BaseContainerView {
   override func setupContainerSpecifics() {
     addSubview(contentView)
+    super.setupContainerSpecifics()
   }
 
   override func updateContentFrame(desiredHeight _: CGFloat) {
