@@ -153,6 +153,13 @@ jobs:
               iphone: "iPhone 17 Pro",
               os: "26.1",
             },
+            {
+              ios: "26-non-pro",
+              xcode: "26.1",
+              macos: 26,
+              iphone: "iPhone 16",
+              os: "26.1",
+            },
           ]
     needs: build
     steps:

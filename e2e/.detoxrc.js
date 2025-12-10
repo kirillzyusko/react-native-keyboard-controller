@@ -76,6 +76,13 @@ module.exports = {
         os: "iOS 26.0",
       },
     },
+    "simulator26-non-pro": {
+      type: "ios.simulator",
+      device: {
+        type: "iPhone 16",
+        os: "iOS 26.1",
+      },
+    },
     attached: {
       type: "android.attached",
       device: {
@@ -135,6 +142,14 @@ module.exports = {
     },
     "example.ios.sim-26.release": {
       device: "simulator26",
+      app: "example.ios.release",
+    },
+    "example.ios.sim-26-non-pro.debug": {
+      device: "simulator26-non-pro",
+      app: "example.ios.debug",
+    },
+    "example.ios.sim-26-non-pro.release": {
+      device: "simulator26-non-pro",
       app: "example.ios.release",
     },
     "example.android.att.debug": {
