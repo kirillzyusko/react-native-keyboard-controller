@@ -105,11 +105,44 @@ jobs:
       matrix:
         devices:
           [
-            { ios: 15, xcode: "16.4", macos: 15, runtime: "15.5" },
-            { ios: 16, xcode: "16.4", macos: 15, runtime: "16.4" },
-            { ios: 17, xcode: "16.4", macos: 15, runtime: "17.5" },
-            { ios: 18, xcode: "16.4", macos: 15 },
-            { ios: 26, xcode: "16.4", macos: 26 },
+            {
+              ios: 15,
+              xcode: "16.4",
+              macos: 15,
+              runtime: "15.5",
+              iphone: "iPhone 13 Pro",
+              os: "15.5",
+            },
+            {
+              ios: 16,
+              xcode: "16.4",
+              macos: 15,
+              runtime: "16.4",
+              iphone: "iPhone 14 Pro",
+              os: "16.4",
+            },
+            {
+              ios: 17,
+              xcode: "16.4",
+              macos: 15,
+              runtime: "17.5",
+              iphone: "iPhone 15 Pro",
+              os: "17.5",
+            },
+            {
+              ios: 18,
+              xcode: "16.4",
+              macos: 15,
+              iphone: "iPhone 16 Pro",
+              os: "18.5",
+            },
+            {
+              ios: 26,
+              xcode: "16.4",
+              macos: 26,
+              iphone: "iPhone 17 Pro",
+              os: "26.0",
+            },
           ]
     needs: build
     steps:
@@ -137,8 +170,11 @@ jobs:
           retry_interval: 60
       - name: List all available simulators
         run: xcrun simctl list
-      - name: Update shared cache
-        run: xcrun simctl runtime dyld_shared_cache update --all
+      - name: Boot simulator
+        uses: ./.github/actions/boot-simulator
+        with:
+          simulator-name: ${{ matrix.devices.iphone }}
+          simulator-version: ${{ matrix.devices.os }}
       - name: Install AppleSimulatorUtils
         run: brew tap wix/brew && brew install applesimutils
       - name: Save yarn cache directory path
