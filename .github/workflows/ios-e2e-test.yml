@@ -170,6 +170,16 @@ jobs:
           retry_interval: 60
       - name: List all available simulators
         run: xcrun simctl list
+      # https://bitrise.io/blog/post/xcode-15-performance-regressions
+      - name: Install yeetd
+        run: |
+          defaults write dev.biscuit.yeetd killapsd true
+          wget https://github.com/biscuitehh/yeetd/releases/download/1.0/yeetd-normal.pkg
+          sudo installer -pkg yeetd-normal.pkg -target /
+          yeetd &
+      # needed for simulator pre-booting
+      - name: Install CoreUtils
+        run: brew install coreutils
       - name: Boot simulator
         uses: ./.github/actions/boot-simulator
         with:
@@ -194,13 +204,6 @@ jobs:
         run: yarn install --cwd e2e
       - name: Use software keyboard
         run: defaults write com.apple.iphonesimulator ConnectHardwareKeyboard -bool NO
-      # https://bitrise.io/blog/post/xcode-15-performance-regressions
-      - name: Install yeetd
-        run: |
-          defaults write dev.biscuit.yeetd killapsd true
-          wget https://github.com/biscuitehh/yeetd/releases/download/1.0/yeetd-normal.pkg
-          sudo installer -pkg yeetd-normal.pkg -target /
-          yeetd &
       - name: Test app
         working-directory: e2e
         run: SOFT_CHECK=false yarn test-example:ios-${{ matrix.devices.ios }}
