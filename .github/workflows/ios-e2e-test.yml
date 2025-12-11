@@ -154,10 +154,10 @@ jobs:
               os: "26.1",
             },
             {
-              ios: "26-non-pro",
+              ios: "26e",
               xcode: "26.1",
               macos: 26,
-              iphone: "iPhone 16",
+              iphone: "iPhone 16e",
               os: "26.1",
             },
           ]

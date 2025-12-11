@@ -30,7 +30,8 @@ describe("`KeyboardExtender` specification", () => {
     await waitForElementByText("20 dollars");
     await tapItemAtIndex("OK");
     await waitForExpect(async () => {
-      await expectBitmapsToBeEqual("KeyboardExtenderIsAttached");
+      // round corners in the bottom keyboard on iOS 26 when taking second screenshot
+      await expectBitmapsToBeEqual("KeyboardExtenderIsAttached", 0.29);
     });
   });
 
@@ -44,7 +45,8 @@ describe("`KeyboardExtender` specification", () => {
   it("should appear again when enabled", async () => {
     await waitAndTap("donation_amount");
     await waitForExpect(async () => {
-      await expectBitmapsToBeEqual("KeyboardExtenderIsAttached");
+      // round corners in the bottom keyboard on iOS 26 when taking second screenshot
+      await expectBitmapsToBeEqual("KeyboardExtenderIsAttached", 0.29);
     });
   });
 });

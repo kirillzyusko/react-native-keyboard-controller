@@ -13,7 +13,7 @@
     "test-example:ios-17": "detox test --configuration example.ios.sim-17.release --loglevel verbose --take-screenshots failing --record-videos failing --retries 2",
     "test-example:ios-18": "detox test --configuration example.ios.sim-18.release --loglevel verbose --take-screenshots failing --record-videos failing --retries 2",
     "test-example:ios-26": "detox test --configuration example.ios.sim-26.release --loglevel verbose --take-screenshots failing --record-videos failing --retries 2",
-    "test-example:ios-26-non-pro": "detox test --configuration example.ios.sim-26-non-pro.release --loglevel verbose --take-screenshots failing --record-videos failing --retries 2",
+    "test-example:ios-26e": "detox test --configuration example.ios.sim-26e.release --loglevel verbose --take-screenshots failing --record-videos failing --retries 2",
     "test": "echo \"Error: no test specified\" && exit 1",
     "detox-clean": "detox clean-framework-cache && detox build-framework-cache",
     "postinstall": "patch-package"
