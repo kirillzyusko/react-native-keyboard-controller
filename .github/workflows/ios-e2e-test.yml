@@ -102,7 +102,6 @@ jobs:
     timeout-minutes: 90
     env:
       WORKING_DIRECTORY: example
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main' || matrix.devices.main_only != true
     strategy:
       matrix:
         devices:
@@ -115,7 +114,6 @@ jobs:
               runtime: "15.5",
               iphone: "iPhone 13 Pro",
               os: "15.5",
-              main_only: false,
             },
             {
               ios: 16,
@@ -153,7 +151,6 @@ jobs:
               macos: 26,
               iphone: "iPhone 17 Pro",
               os: "26.0",
-              main_only: false,
             },
             {
               ios: "26e",
@@ -162,11 +159,15 @@ jobs:
               macos: 26,
               iphone: "iPhone 16e",
               os: "26.1",
-              main_only: false,
             },
           ]
     needs: build
     steps:
+      - name: Skip this device on PRs
+        if: github.event_name == 'pull_request' && matrix.devices.main_only == true
+        run: |
+          echo "Skipping this device on PR"
+          exit 0
       - uses: actions/checkout@v4
       - name: Download a single artifact
         uses: actions/download-artifact@v4
