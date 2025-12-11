@@ -21,16 +21,20 @@ on:
       - "e2e/**"
       - "src/**"
 
+concurrency:
+  group: ios-e2e-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
-    name: 🏗️ Build E2E ipa
-    runs-on: macos-15
+    name: 🏗️ Build E2E ipa (Xcode ${{ matrix.config.xcode }})
+    runs-on: macos-${{ matrix.config.macos }}
     timeout-minutes: 60
     env:
       WORKING_DIRECTORY: example
-    concurrency:
-      group: ios-e2e-${{ github.ref }}
-      cancel-in-progress: true
+    strategy:
+      matrix:
+        config: [{ xcode: "16.4", macos: 15 }, { xcode: "26.1", macos: 26 }]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -39,7 +43,7 @@ jobs:
           cache: "yarn"
       - uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: "16.4"
+          xcode-version: ${{ matrix.config.xcode }}
       - name: Get Xcode version
         run: xcodebuild -version
       - name: Save yarn cache directory path
@@ -64,7 +68,7 @@ jobs:
         uses: hendrikmuhs/ccache-action@v1.2
         with:
           max-size: 1.5G
-          key: ${{ runner.os }}-ccache-e2e-ios
+          key: ${{ runner.os }}-xcode-${{ matrix.config.xcode }}-ccache-e2e-ios
           create-symlink: true
       - name: Setup ccache behavior
         run: |
@@ -79,9 +83,9 @@ jobs:
             example/ios/Pods
             ~/Library/Caches/CocoaPods
             ~/.cocoapods
-          key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
+          key: ${{ runner.os }}-xcode-${{ matrix.config.xcode }}-pods-${{ hashFiles('**/Podfile.lock') }}
           restore-keys: |
-            ${{ runner.os }}-pods-
+            ${{ runner.os }}-xcode-${{ matrix.config.xcode }}-pods-
       - name: Install pods
         working-directory: ${{ env.WORKING_DIRECTORY }}/ios
         run: export USE_CCACHE=1 && pod install || pod update --repo-update
@@ -90,17 +94,14 @@ jobs:
         run: yarn build-example:ios
       - uses: actions/upload-artifact@v4
         with:
-          name: ios-e2e-ipa
+          name: ios-e2e-ipa-xcode${{ matrix.config.xcode }}
           path: example/ios/build/Build/Products/Release-iphonesimulator/KeyboardControllerExample.app/**
   e2e-test:
-    name: ⚙️ Automated test cases (iOS-${{ matrix.devices.ios }})
+    name: ⚙️ Automated test cases (iOS-${{ matrix.devices.ios }}, XCode-${{ matrix.devices.xcode }})
     runs-on: macos-${{ matrix.devices.macos }}
     timeout-minutes: 90
     env:
       WORKING_DIRECTORY: example
-    concurrency:
-      group: ios-e2e-${{ matrix.devices.ios }}-${{ github.ref }}
-      cancel-in-progress: true
     strategy:
       matrix:
         devices:
@@ -143,6 +144,13 @@ jobs:
               iphone: "iPhone 17 Pro",
               os: "26.0",
             },
+            {
+              ios: "26e",
+              xcode: "26.1",
+              macos: 26,
+              iphone: "iPhone 16e",
+              os: "26.1",
+            },
           ]
     needs: build
     steps:
@@ -150,7 +158,7 @@ jobs:
       - name: Download a single artifact
         uses: actions/download-artifact@v4
         with:
-          name: ios-e2e-ipa
+          name: ios-e2e-ipa-xcode${{ matrix.devices.xcode }}
           path: example/ios/build/Build/Products/Release-iphonesimulator/KeyboardControllerExample.app/
       - uses: maxim-lobanov/setup-xcode@v1
         with:
