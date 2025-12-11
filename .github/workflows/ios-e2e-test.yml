@@ -21,6 +21,10 @@ on:
       - "e2e/**"
       - "src/**"
 
+concurrency:
+  group: ios-e2e-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     name: 🏗️ Build E2E ipa (Xcode ${{ matrix.config.xcode }})
@@ -28,9 +32,6 @@ jobs:
     timeout-minutes: 60
     env:
       WORKING_DIRECTORY: example
-    concurrency:
-      group: ios-e2e-${{ matrix.config.xcode }}-${{ github.ref }}
-      cancel-in-progress: true
     strategy:
       matrix:
         config: [{ xcode: "16.4", macos: 15 }, { xcode: "26.1", macos: 26 }]
@@ -101,9 +102,6 @@ jobs:
     timeout-minutes: 90
     env:
       WORKING_DIRECTORY: example
-    concurrency:
-      group: ios-e2e-${{ matrix.devices.ios }}-${{ matrix.devices.xcode }}-${{ github.ref }}
-      cancel-in-progress: true
     strategy:
       matrix:
         devices:
