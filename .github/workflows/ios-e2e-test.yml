@@ -102,6 +102,7 @@ jobs:
     timeout-minutes: 90
     env:
       WORKING_DIRECTORY: example
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' || matrix.devices.main_only != true
     strategy:
       matrix:
         devices:
@@ -114,6 +115,7 @@ jobs:
               runtime: "15.5",
               iphone: "iPhone 13 Pro",
               os: "15.5",
+              main_only: false,
             },
             {
               ios: 16,
@@ -123,6 +125,7 @@ jobs:
               runtime: "16.4",
               iphone: "iPhone 14 Pro",
               os: "16.4",
+              main_only: true,
             },
             {
               ios: 17,
@@ -132,6 +135,7 @@ jobs:
               runtime: "17.5",
               iphone: "iPhone 15 Pro",
               os: "17.5",
+              main_only: true,
             },
             {
               ios: 18,
@@ -140,6 +144,7 @@ jobs:
               macos: 15,
               iphone: "iPhone 16 Pro",
               os: "18.5",
+              main_only: true,
             },
             {
               ios: 26,
@@ -148,6 +153,7 @@ jobs:
               macos: 26,
               iphone: "iPhone 17 Pro",
               os: "26.0",
+              main_only: false,
             },
             {
               ios: "26e",
@@ -156,6 +162,7 @@ jobs:
               macos: 26,
               iphone: "iPhone 16e",
               os: "26.1",
+              main_only: false,
             },
           ]
     needs: build
