@@ -147,13 +147,6 @@ jobs:
               os: "26.0",
             },
             {
-              ios: 26,
-              xcode: "26.1",
-              macos: 26,
-              iphone: "iPhone 17 Pro",
-              os: "26.1",
-            },
-            {
               ios: "26e",
               xcode: "26.1",
               macos: 26,
