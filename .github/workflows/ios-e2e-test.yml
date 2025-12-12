@@ -108,6 +108,7 @@ jobs:
           [
             {
               ios: 15,
+              artifact: "16.4",
               xcode: "16.4",
               macos: 15,
               runtime: "15.5",
@@ -116,6 +117,7 @@ jobs:
             },
             {
               ios: 16,
+              artifact: "16.4",
               xcode: "16.4",
               macos: 15,
               runtime: "16.4",
@@ -124,6 +126,7 @@ jobs:
             },
             {
               ios: 17,
+              artifact: "16.4",
               xcode: "16.4",
               macos: 15,
               runtime: "17.5",
@@ -132,6 +135,7 @@ jobs:
             },
             {
               ios: 18,
+              artifact: "16.4",
               xcode: "16.4",
               macos: 15,
               iphone: "iPhone 16 Pro",
@@ -139,13 +143,15 @@ jobs:
             },
             {
               ios: 26,
-              xcode: "16.4",
+              artifact: "16.4",
+              xcode: "26.1",
               macos: 26,
               iphone: "iPhone 17 Pro",
               os: "26.0",
             },
             {
               ios: "26e",
+              artifact: "26.1",
               xcode: "26.1",
               macos: 26,
               iphone: "iPhone 16e",
@@ -158,7 +164,7 @@ jobs:
       - name: Download a single artifact
         uses: actions/download-artifact@v4
         with:
-          name: ios-e2e-ipa-xcode${{ matrix.devices.xcode }}
+          name: ios-e2e-ipa-xcode${{ matrix.devices.artifact }}
           path: example/ios/build/Build/Products/Release-iphonesimulator/KeyboardControllerExample.app/
       - uses: maxim-lobanov/setup-xcode@v1
         with:
