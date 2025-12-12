@@ -14,6 +14,7 @@ import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.UIManagerHelper
 import com.facebook.react.views.view.ReactViewGroup
 import com.reactnativekeyboardcontroller.constants.Keyboard
+import com.reactnativekeyboardcontroller.constants.UIThread
 import com.reactnativekeyboardcontroller.events.KeyboardTransitionEvent
 import com.reactnativekeyboardcontroller.extensions.appearance
 import com.reactnativekeyboardcontroller.extensions.dispatchEvent
@@ -334,8 +335,8 @@ class KeyboardAnimationCallback(
 
     if (isKeyboardInteractive) {
       // in case of interactive keyboard we can not read keyboard frame straight away
-      // (because we'll always read `0`), so we are posting runnable to the main thread
-      view.post(runnable)
+      // (because we'll always read `0`), so we are posting runnable to the next frame on the main thread
+      view.postDelayed(runnable, UIThread.NEXT_FRAME)
     } else {
       runnable.run()
     }

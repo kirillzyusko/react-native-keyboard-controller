@@ -23,21 +23,30 @@ const useKeyboardAnimation = () => {
   const progress = useSharedValue(0);
   const height = useSharedValue(0);
 
-  useKeyboardHandler({
-    onMove: (e) => {
-      "worklet";
+  useKeyboardHandler(
+    {
+      onMove: (e) => {
+        "worklet";
 
-      // eslint-disable-next-line react-compiler/react-compiler
-      progress.value = e.progress;
-      height.value = e.height;
-    },
-    onInteractive: (e) => {
-      "worklet";
+        // eslint-disable-next-line react-compiler/react-compiler
+        progress.value = e.progress;
+        height.value = e.height;
+      },
+      onInteractive: (e) => {
+        "worklet";
 
-      progress.value = e.progress;
-      height.value = e.height;
+        progress.value = e.progress;
+        height.value = e.height;
+      },
+      onEnd: (e) => {
+        "worklet";
+
+        progress.value = e.progress;
+        height.value = e.height;
+      },
     },
-  });
+    [],
+  );
 
   return { height, progress };
 };
