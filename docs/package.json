@@ -34,10 +34,10 @@
     "@docusaurus/module-type-aliases": "3.4.0",
     "@docusaurus/tsconfig": "3.4.0",
     "@docusaurus/types": "3.4.0",
-    "@playwright/test": "^1.46.0",
+    "@playwright/test": "^1.55.1",
     "cheerio": "^1.0.0-rc.12",
-    "markdownlint-cli2": "^0.12.1",
-    "patch-package": "^8.0.0",
+    "markdownlint-cli2": "^0.14.0",
+    "patch-package": "^8.0.1",
     "typescript": "^5.8.3"
   },
   "browserslist": {
