@@ -81,6 +81,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
+    "react-freeze": "^1.0.4",
     "react-native-is-edge-to-edge": "^1.2.1"
   },
   "devDependencies": {
