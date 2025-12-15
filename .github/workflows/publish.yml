@@ -3,9 +3,6 @@ name: 🌐 Publish Package to npmjs
 on:
   release:
     types: [created]
-  pull_request:
-    paths:
-      - ".github/workflows/publish.yml"
   workflow_dispatch:
 jobs:
   publish:
