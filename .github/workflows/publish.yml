@@ -3,6 +3,9 @@ name: 🌐 Publish Package to npmjs
 on:
   release:
     types: [created]
+  pull_request:
+    paths:
+      - ".github/workflows/publish.yml"
   workflow_dispatch:
 jobs:
   publish:
@@ -15,10 +18,8 @@ jobs:
       # Setup .npmrc file to publish to npm
       - uses: actions/setup-node@v4
         with:
-          node-version: "20.x"
+          node-version: "24.x"
           registry-url: "https://registry.npmjs.org"
           cache: yarn
       - run: yarn install --frozen-lockfile
       - run: npm publish --provenance
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
