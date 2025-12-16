@@ -33,10 +33,13 @@ jobs:
       - name: Move to shorter path
         shell: pwsh
         run: |
+          # First, change to the parent directory to avoid locking the directory
+          cd D:\a
+
           # Move the entire project to a much shorter path
           # Original: D:\a\react-native-keyboard-controller\react-native-keyboard-controller
           # New: D:\project
-          Move-Item "D:\a\react-native-keyboard-controller\react-native-keyboard-controller" "D:\project"
+          Move-Item "react-native-keyboard-controller\react-native-keyboard-controller" "D:\project"
 
           # Verify the move
           Write-Host "Contents of D:\project:"
