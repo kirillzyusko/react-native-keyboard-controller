@@ -29,6 +29,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          path: repo
 
       - name: Setup JDK 17
         uses: actions/setup-java@v4
