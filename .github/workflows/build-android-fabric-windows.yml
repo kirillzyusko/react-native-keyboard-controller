@@ -29,8 +29,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-        with:
-          path: react-native-keyboard-controller
 
       - name: Move to shorter path
         shell: pwsh
