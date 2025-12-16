@@ -29,21 +29,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
-      - name: Move to shorter path
-        shell: pwsh
-        run: |
-          # First, change to the parent directory to avoid locking the directory
-          cd D:\a
-
-          # Move the entire project to a much shorter path
-          # Original: D:\a\react-native-keyboard-controller\react-native-keyboard-controller
-          # New: D:\project
-          Move-Item "react-native-keyboard-controller\react-native-keyboard-controller" "D:\project"
-
-          # Verify the move
-          Write-Host "Contents of D:\project:"
-          Get-ChildItem "D:\project" | ForEach-Object { Write-Host $_.Name }
+        with:
+          path: D:/project
 
       - name: Setup JDK 17
         uses: actions/setup-java@v4
