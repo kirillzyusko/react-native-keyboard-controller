@@ -172,7 +172,7 @@
     ]
   },
   "codegenConfig": {
-    "name": "reactnativekeyboardcontroller",
+    "name": "rnkc",
     "type": "all",
     "jsSrcsDir": "./src/specs",
     "android": {
