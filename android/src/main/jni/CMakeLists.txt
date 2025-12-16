@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.13)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
-set(LIB_LITERAL rnkc)
+set(LIB_LITERAL reactnativekeyboardcontroller)
 set(LIB_TARGET_NAME react_codegen_${LIB_LITERAL})
 
 set(LIB_ANDROID_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../../..)

@@ -2,8 +2,8 @@
 
 #include "RNKCKeyboardGestureAreaState.h"
 
-#include <react/renderer/components/rnkc/EventEmitters.h>
-#include <react/renderer/components/rnkc/Props.h>
+#include <react/renderer/components/reactnativekeyboardcontroller/EventEmitters.h>
+#include <react/renderer/components/reactnativekeyboardcontroller/Props.h>
 #include <react/renderer/components/view/ConcreteViewShadowNode.h>
 #include <jsi/jsi.h>
 
