@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - ".github/workflows/build-android-fabric.yml"
+      - ".github/workflows/build-android-fabric-windows.yml"
       - "android/**"
       - "FabricExample/android/**"
       - "yarn.lock"
@@ -14,7 +14,7 @@ on:
       - "src/specs/**"
   pull_request:
     paths:
-      - ".github/workflows/build-android-fabric.yml"
+      - ".github/workflows/build-android-fabric-windows.yml"
       - "android/**"
       - "FabricExample/android/**"
       - "yarn.lock"
@@ -24,8 +24,9 @@ on:
 
 jobs:
   build:
-    name: 🖥️ Build Android Fabric Example App
-    runs-on: ubuntu-latest
+    name: 💠 Build Android Fabric Example App
+    runs-on: windows-latest
+
     steps:
       - uses: actions/checkout@v4
 
@@ -37,7 +38,11 @@ jobs:
 
       - name: Get yarn cache directory path
         id: fabric-yarn-cache-dir-path
-        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
+        shell: pwsh
+        run: |
+          $dir = yarn cache dir
+          echo "dir=$dir" >> $env:GITHUB_OUTPUT
+
       - name: Restore node_modules from cache
         uses: actions/cache@v4
         id: yarn-cache
@@ -45,18 +50,25 @@ jobs:
           path: ${{ steps.fabric-yarn-cache-dir-path.outputs.dir }}
           key: ${{ runner.os }}-fabric-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-yarn-
+            ${{ runner.os }}-fabric-yarn-
+
       - name: Install node_modules for FabricExample/
-        run: yarn install --frozen-lockfile --cwd FabricExample
+        shell: pwsh
+        run: |
+          yarn install --frozen-lockfile --cwd FabricExample
 
       - name: Restore Gradle cache
         uses: actions/cache@v4
         with:
           path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
+            C:\Users\runneradmin\.gradle\caches
+            C:\Users\runneradmin\.gradle\wrapper
           key: ${{ runner.os }}-fabric-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-fabric-gradle-
+
       - name: Run Gradle Build for FabricExample/android/
-        run: cd FabricExample/android && ./gradlew assembleDebug --build-cache -PreactNativeArchitectures=arm64-v8a && cd ../..
+        shell: pwsh
+        run: |
+          cd FabricExample\android
+          .\gradlew.bat assembleDebug --build-cache -PreactNativeArchitectures=arm64-v8a
