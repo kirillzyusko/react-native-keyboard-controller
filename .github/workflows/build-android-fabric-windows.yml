@@ -29,50 +29,46 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-        with:
-          path: D:/project
-
+      - name: Map workspace to short drive letter
+        shell: pwsh
+        run: |
+          subst Z: $env:GITHUB_WORKSPACE
+          if ($LASTEXITCODE -ne 0) { throw "subst failed" }
+          Set-Location Z:\
       - name: Setup JDK 17
         uses: actions/setup-java@v4
         with:
           distribution: "microsoft"
           java-version: "17"
-
       - name: Get yarn cache directory path
         id: fabric-yarn-cache-dir-path
         shell: pwsh
         run: |
-          cd D:\project
           $dir = yarn cache dir
           echo "dir=$dir" >> $env:GITHUB_OUTPUT
-
       - name: Restore node_modules from cache
         uses: actions/cache@v4
         id: yarn-cache
         with:
           path: ${{ steps.fabric-yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-fabric-yarn-${{ hashFiles('D:/project/**/yarn.lock') }}
+          key: ${{ runner.os }}-fabric-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-fabric-yarn-
-
       - name: Install node_modules for FabricExample/
         shell: pwsh
         run: |
-          cd D:\project\FabricExample
-          yarn install --frozen-lockfile
-
+          yarn install --frozen-lockfile --cwd FabricExample
       - name: Restore Gradle cache
         uses: actions/cache@v4
         with:
           path: |
             C:\Users\runneradmin\.gradle\caches
             C:\Users\runneradmin\.gradle\wrapper
-          key: ${{ runner.os }}-fabric-gradle-${{ hashFiles('D:/project/FabricExample/android/**/*.gradle*', 'D:/project/FabricExample/android/**/gradle-wrapper.properties') }}
+          key: ${{ runner.os }}-fabric-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-fabric-gradle-
-
       - name: Run Gradle Build for FabricExample/android/
         shell: pwsh
         run: |
-          cd D:\project\FabricExample\android
+          cd FabricExample\android
           .\gradlew.bat assembleDebug --build-cache -PreactNativeArchitectures=arm64-v8a
