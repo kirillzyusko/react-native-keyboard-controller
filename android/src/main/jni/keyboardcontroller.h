@@ -18,8 +18,7 @@
 #include <memory>
 #include <string>
 
-namespace facebook::react
-{
+namespace facebook::react {
   JSI_EXPORT
   std::shared_ptr<TurboModule> keyboardcontroller_ModuleProvider(const std::string &moduleName, const JavaTurboModule::InitParams &params);
 } // namespace facebook::react
