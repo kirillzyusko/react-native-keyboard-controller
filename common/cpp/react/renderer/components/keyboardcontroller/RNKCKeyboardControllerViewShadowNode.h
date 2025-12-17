@@ -2,8 +2,8 @@
 
 #include "RNKCKeyboardControllerViewState.h"
 
-#include <react/renderer/components/reactnativekeyboardcontroller/EventEmitters.h>
-#include <react/renderer/components/reactnativekeyboardcontroller/Props.h>
+#include <react/renderer/components/keyboardcontroller/EventEmitters.h>
+#include <react/renderer/components/keyboardcontroller/Props.h>
 #include <react/renderer/components/view/ConcreteViewShadowNode.h>
 #include <jsi/jsi.h>
 

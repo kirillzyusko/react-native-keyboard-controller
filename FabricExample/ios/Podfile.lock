@@ -3117,7 +3117,7 @@ SPEC CHECKSUMS:
   React-microtasksnativemodule: 44b44a4d3cd6ffb85d928abf741acdc26722de2e
   react-native-advanced-input-mask: 7e8cb58287774c4447485387661abe946d0e0bb2
   react-native-blur: ba0e9ad6274783c8d45f42da82acae02e25784ad
-  react-native-keyboard-controller: 81aa9e5784da51c8855759b6d17d5d897ccaa0e4
+  react-native-keyboard-controller: 59e99eb52537287dfc11621263d75b0645120264
   react-native-safe-area-context: 6d8a7b750e496e37bda47c938320bf2c734d441f
   React-NativeModulesApple: b5d18bc109c45c9a1c6b71664991b5cc3adc4e48
   React-oscompat: 93b5535ea7f7dff46aaee4f78309a70979bdde9d
