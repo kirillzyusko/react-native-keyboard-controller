@@ -142,17 +142,8 @@ public class FocusedInputObserver: NSObject {
     setupObservers()
     // dispatch onSelectionChange on focus
     if let textInput = responder as? UITextInput {
-      if #available(iOS 16.0, *),
-         let textView = textInput as? UITextView,
-         textView.textLayoutManager != nil
-      {
-        // Using TextKit 2: layout may not be ready, so defer
-        DispatchQueue.main.async {
-          updateSelectionPosition(textInput: textInput, sendEvent: self.onSelectionChange)
-        }
-      } else {
-        // TextKit 1 (or pre-iOS 16): coords are ready synchronously
-        updateSelectionPosition(textInput: textInput, sendEvent: onSelectionChange)
+      DispatchQueue.main.async {
+        updateSelectionPosition(textInput: textInput, sendEvent: self.onSelectionChange)
       }
     }
 

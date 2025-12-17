@@ -323,6 +323,8 @@ const KeyboardAwareScrollView = forwardRef<
 
         lastSelection.value = e;
 
+        updateLayoutFromSelection();
+
         if (e.target !== lastTarget) {
           // ignore this event, because "focus changed" event handled in `useSmoothKeyboardHandler`
           return;
