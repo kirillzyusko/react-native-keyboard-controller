@@ -191,7 +191,9 @@
     "jerrickhakim",
     "Gradyn",
     "xoyseau",
-    "kirylziusko"
+    "kirylziusko",
+    "lottiefiles",
+    "dotlottie"
   ],
   "ignorePaths": [
     "node_modules",
