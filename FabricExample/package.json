@@ -5,21 +5,24 @@
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
+    "web": "webpack serve --mode=development --config webpack.config.js",
     "start": "react-native start",
     "test": "jest",
     "postinstall": "patch-package"
   },
   "dependencies": {
     "@gorhom/bottom-sheet": "5.2.6",
+    "@lottiefiles/dotlottie-react": "^0.17.10",
     "@react-native-community/blur": "^4.4.1",
     "@react-native-masked-view/masked-view": "^0.3.2",
-    "@react-navigation/bottom-tabs": "^6.6.1",
-    "@react-navigation/elements": "^2.2.5",
-    "@react-navigation/native": "^6.1.18",
-    "@react-navigation/native-stack": "^6.11.0",
-    "@react-navigation/stack": "^6.4.1",
+    "@react-navigation/bottom-tabs": "^7.9.0",
+    "@react-navigation/elements": "2.6.4",
+    "@react-navigation/native": "7.1.17",
+    "@react-navigation/native-stack": "7.3.26",
+    "@react-navigation/stack": "7.3.6",
     "lottie-react-native": "^7.3.4",
     "react": "19.1.0",
+    "react-dom": "19.1.0",
     "react-native": "0.81.4",
     "react-native-advanced-input-mask": "^1.4.6",
     "react-native-gesture-handler": "2.28.0",
@@ -29,6 +32,7 @@
     "react-native-safe-area-context": "5.6.1",
     "react-native-screens": "4.16.0",
     "react-native-toast-message": "^2.3.0",
+    "react-native-web": "^0.21.2",
     "react-native-worklets": "^0.6.0"
   },
   "devDependencies": {
@@ -47,9 +51,16 @@
     "@types/jest": "^29.5.13",
     "@types/react": "^19.1.0",
     "@types/react-test-renderer": "^19.1.0",
+    "babel-loader": "^10.0.0",
+    "babel-plugin-react-native-web": "^0.21.2",
+    "html-webpack-plugin": "^5.6.5",
     "jest": "^29.6.3",
     "patch-package": "^6.4.7",
-    "react-test-renderer": "19.1.0"
+    "react-test-renderer": "19.1.0",
+    "url-loader": "^4.1.1",
+    "webpack": "^5.104.1",
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.2.2"
   },
   "jest": {
     "preset": "react-native",

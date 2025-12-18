@@ -1,4 +1,4 @@
-import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
+// import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Button, Platform, Text, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
@@ -32,11 +32,11 @@ Where does it come from?
 Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old. Richard, a Latin professor at Hampden-Sydney College in Virginia, looked up one of the more obscure Latin words, consectetur, from a Lorem Ipsum passage, and going through the cites of the word in classical literature, discovered the certain source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of The Extremes of Good and Evil by Cicero, written in 45 BC. This book is a treatise on the theory of ethics, very popular during the Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit..", comes from a line in section 1.10.32.`;
 
 export default function AwareScrollView({ navigation }: Props) {
-  const bottomSheetModalRef = useRef<BottomSheet>(null);
+  // const bottomSheetModalRef = useRef<BottomSheet>(null);
   const [_, setText] = useState("");
 
   const handlePresentModalPress = useCallback(() => {
-    bottomSheetModalRef.current?.expand();
+    // bottomSheetModalRef.current?.expand();
   }, []);
 
   const [disableScrollOnKeyboardHide, setDisableScrollOnKeyboardHide] =
@@ -106,7 +106,7 @@ export default function AwareScrollView({ navigation }: Props) {
           onChangeText={setText}
         />
       </KeyboardAwareScrollView>
-      <BottomSheet ref={bottomSheetModalRef} index={-1} snapPoints={["40%"]}>
+      {/*<BottomSheet ref={bottomSheetModalRef} index={-1} snapPoints={["40%"]}>
         <BottomSheetView style={styles.bottomSheetContent}>
           <Button
             testID="bottom_sheet_close_modal"
@@ -145,7 +145,7 @@ export default function AwareScrollView({ navigation }: Props) {
             />
           </View>
         </BottomSheetView>
-      </BottomSheet>
+      </BottomSheet>*/}
     </>
   );
 }

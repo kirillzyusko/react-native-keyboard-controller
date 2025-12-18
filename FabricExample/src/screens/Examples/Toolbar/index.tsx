@@ -1,13 +1,13 @@
-import { BlurView } from "@react-native-community/blur";
 import React, { useCallback, useEffect, useState } from "react";
 import { Modal, Platform, StyleSheet, Text, View } from "react-native";
-import { trigger } from "react-native-haptic-feedback";
+// import { trigger } from "react-native-haptic-feedback";
 import {
   KeyboardAwareScrollView,
   KeyboardToolbar,
 } from "react-native-keyboard-controller";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import BlurView from "../../../components/BlurView";
 import TextInput from "../../../components/TextInput";
 
 import AutoFillContacts from "./Contacts";
@@ -21,8 +21,7 @@ const options = {
   enableVibrateFallback: true,
   ignoreAndroidSystemSettings: false,
 };
-const haptic = () =>
-  trigger(Platform.OS === "ios" ? "impactLight" : "keyboardTap", options);
+const haptic = () => {};
 
 function Form() {
   const [showAutoFill, setShowAutoFill] = useState(false);
