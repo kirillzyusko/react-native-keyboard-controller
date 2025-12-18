@@ -323,7 +323,10 @@ const KeyboardAwareScrollView = forwardRef<
 
         lastSelection.value = e;
 
-        updateLayoutFromSelection();
+        // pre iOS 16 case, when selection event delivered between `onStart` and `onMove` events
+        if (keyboardWillAppear.value) {
+          updateLayoutFromSelection();
+        }
 
         if (e.target !== lastTarget) {
           // ignore this event, because "focus changed" event handled in `useSmoothKeyboardHandler`
