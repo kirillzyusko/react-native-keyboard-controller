@@ -47,6 +47,8 @@ export type KeyboardAwareScrollViewProps = {
   enabled?: boolean;
   /** Adjusting the bottom spacing of KeyboardAwareScrollView. Default is `0`. */
   extraKeyboardSpace?: number;
+  /** Specifies whether to add padding equal to the keyboard height. This is useful when working with components like a bottom sheet, where the bottom sheet manages the position of the modal above the keyboard. In such cases, adding extra padding for the keyboard is unnecessary. */
+  withKeyboardHeightPadding?: boolean;
   /** Custom component for `ScrollView`. Default is `ScrollView`. */
   ScrollViewComponent?: React.ComponentType<ScrollViewProps>;
 } & ScrollViewProps;
@@ -121,6 +123,7 @@ const KeyboardAwareScrollView = forwardRef<
       extraKeyboardSpace = 0,
       ScrollViewComponent = Reanimated.ScrollView,
       snapToOffsets,
+      withKeyboardHeightPadding = true,
       ...rest
     },
     ref,
@@ -470,7 +473,7 @@ const KeyboardAwareScrollView = forwardRef<
         onLayout={onScrollViewLayout}
       >
         {children}
-        {enabled && <Reanimated.View style={view} />}
+        {withKeyboardHeightPadding && <Reanimated.View style={view} />}
       </ScrollViewComponent>
     );
   },
