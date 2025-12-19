@@ -145,7 +145,7 @@ export const scrollUpUntilElementIsBarelyVisible = async (
   elementId: string,
 ): Promise<void> => {
   for (;;) {
-    await element(by.id(scrollViewId)).scroll(50, "up", 0.01, 0.5);
+    await element(by.id(scrollViewId)).scroll(80, "up", 0.02, 0.4);
 
     try {
       // verify that we can interact with element
