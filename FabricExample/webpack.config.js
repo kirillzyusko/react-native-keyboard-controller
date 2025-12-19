@@ -39,6 +39,7 @@ const compileNodeModules = [
   "react-native-screens",
   "react-native-safe-area-context",
   "@lottiefiles/dotlottie-react",
+  "@gorhom/bottom-sheet",
 
   // Navigation
   "@react-navigation/native",
