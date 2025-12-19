@@ -150,7 +150,11 @@ const SharedTransition = ({
 
         {!!image.img && (
           <GestureDetector gesture={gesture}>
-            <Reanimated.Image fadeDuration={0} src={image.img} style={style} />
+            <Reanimated.Image
+              fadeDuration={0}
+              source={{ uri: image.img }}
+              style={style}
+            />
           </GestureDetector>
         )}
       </GestureHandlerRootView>
@@ -193,7 +197,12 @@ const ImagePreview = ({
       {modal === src && isModalFullyVisible ? (
         <View style={styles.image} />
       ) : (
-        <Image ref={ref} fadeDuration={0} src={src} style={styles.image} />
+        <Image
+          ref={ref}
+          fadeDuration={0}
+          source={{ uri: src }}
+          style={styles.image}
+        />
       )}
     </TouchableOpacity>
   );
