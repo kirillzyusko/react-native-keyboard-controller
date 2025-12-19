@@ -39,9 +39,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-fabric-yarn-
       - name: Install node_modules for FabricExample/
-        run: yarn install --frozen-lockfile --cwd ..
+        run: yarn install --frozen-lockfile
       - name: Install root dependencies
-        run: yarn install --frozen-lockfile --cwd ../..
+        run: yarn install --frozen-lockfile --cwd ..
 
       - name: Build web
         run: yarn build:web
