@@ -1,0 +1,98 @@
+name: 🌐 Test Web
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/web-e2e-test.yml"
+      - "package.json"
+      - "yarn.lock"
+      - "FabricExample/**"
+      - "src/**"
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/web-e2e-test.yml"
+      - "package.json"
+      - "yarn.lock"
+      - "FabricExample/**"
+      - "src/**"
+
+jobs:
+  build-web:
+    name: 🏗️ Build web
+    defaults:
+      run:
+        working-directory: FabricExample
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get yarn cache directory path
+        id: fabric-yarn-cache-dir-path
+        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
+      - name: Restore node_modules from cache
+        uses: actions/cache@v4
+        id: yarn-cache
+        with:
+          path: ${{ steps.fabric-yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-fabric-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-fabric-yarn-
+      - name: Install node_modules for FabricExample/
+        run: yarn install --frozen-lockfile
+      - name: Install root dependencies
+        run: yarn install --frozen-lockfile --cwd ..
+
+      - name: Build web
+        run: yarn build:web
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: web-e2e-app
+          path: FabricExample/dist/**
+
+  test-web:
+    name: ⚙️ Automated test cases
+    runs-on: macos-15
+    timeout-minutes: 60
+    needs: build-web
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download a single artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: web-e2e-app
+          path: FabricExample/dist/
+      - name: Start static server
+        run: |
+          cd FabricExample
+          npx http-server dist -p 8080 --silent --gzip --brotli --hostname 127.0.0.1 >/dev/null 2>&1 &
+          echo $! > .server-pid
+      - name: Install Maestro
+        run: |
+          curl -fsSL "https://get.maestro.mobile.dev" | bash
+          echo "$HOME/.maestro/bin" >> $GITHUB_PATH
+          export MAESTRO_DRIVER_STARTUP_TIMEOUT=600000
+      - name: Specify web env
+        run: |
+          find e2e/flows -name "*.yml" -exec sh -c '
+            for file; do
+              printf "url: http://localhost:8080\n" | cat - "$file" > temp && mv temp "$file"
+            done
+          ' sh {} +
+        shell: bash
+      - name: Run tests
+        run: |
+          export MAESTRO_CLI_NO_ANALYTICS="true"
+          export MAESTRO_CHROME_FLAGS="--no-sandbox --user-data-dir=/tmp/chrome-profile-$GITHUB_RUN_ID"
+          maestro --platform web test -e DEVICE="Chrome" --headless e2e/flows/* --format html ./e2e/reports/debug --debug-output ./e2e/reports/debug --flatten-debug-output
+      - name: Stop server
+        if: always()
+        run: |
+          kill $(cat .server-pid) || true
+      - name: Upload test report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          path: ./e2e/reports
+          name: e2e-report-web
