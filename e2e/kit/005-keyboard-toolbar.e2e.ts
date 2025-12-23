@@ -66,16 +66,24 @@ describe("`KeyboardToolbar` specification", () => {
 
   it("should handle multiple clicks in row", async () => {
     await tap("keyboard.toolbar.next");
-    await expect(element(by.id("TextInput#6"))).toBeFocused();
+    await waitForExpect(
+      async () => await expect(element(by.id("TextInput#6"))).toBeFocused(),
+    );
     await tap("keyboard.toolbar.next");
-    await expect(element(by.id("TextInput#7"))).toBeFocused();
+    await waitForExpect(
+      async () => await expect(element(by.id("TextInput#7"))).toBeFocused(),
+    );
     await tap("keyboard.toolbar.next");
-    await expect(element(by.id("TextInput#8"))).toBeFocused();
+    await waitForExpect(
+      async () => await expect(element(by.id("TextInput#8"))).toBeFocused(),
+    );
   });
 
   it("should handle `previous` clicks correctly", async () => {
     await tap("keyboard.toolbar.previous");
-    await expect(element(by.id("TextInput#7"))).toBeFocused();
+    await waitForExpect(
+      async () => await expect(element(by.id("TextInput#7"))).toBeFocused(),
+    );
   });
 
   it("should have expected UI state when end of form reached", async () => {

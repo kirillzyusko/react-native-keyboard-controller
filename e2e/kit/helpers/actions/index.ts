@@ -144,8 +144,15 @@ export const scrollUpUntilElementIsBarelyVisible = async (
   scrollViewId: string,
   elementId: string,
 ): Promise<void> => {
+  const distanceToScroll = device.getPlatform() === "ios" ? 80 : 50;
+
   for (;;) {
-    await element(by.id(scrollViewId)).scroll(50, "up", 0.01, 0.5);
+    await element(by.id(scrollViewId)).scroll(
+      distanceToScroll,
+      "up",
+      0.02,
+      0.4,
+    );
 
     try {
       // verify that we can interact with element
