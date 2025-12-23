@@ -88,7 +88,7 @@ export const useTranslateAnimation = () => {
       onMove: (e) => {
         "worklet";
 
-        if (OS === "android") {
+        if (OS !== "ios") {
           translate.value = e.progress;
         }
       },
@@ -104,7 +104,7 @@ export const useTranslateAnimation = () => {
 
         padding.value = e.progress;
 
-        if (OS === "android") {
+        if (OS !== "ios") {
           translate.value = e.progress;
         }
       },
