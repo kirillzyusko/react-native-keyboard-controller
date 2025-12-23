@@ -1,5 +1,5 @@
 import React, { forwardRef, useCallback, useMemo } from "react";
-import { View } from "react-native";
+import { Platform, View } from "react-native";
 import Reanimated, {
   interpolate,
   runOnUI,
@@ -54,6 +54,7 @@ export type KeyboardAvoidingViewProps = KeyboardAvoidingViewBaseProps &
       }
   );
 
+const OS = Platform.OS;
 const defaultLayout: LayoutRectangle = {
   x: 0,
   y: 0,
@@ -122,7 +123,8 @@ const KeyboardAvoidingView = forwardRef<
         if (
           keyboard.isClosed.value ||
           initialFrame.value === null ||
-          behavior !== "height"
+          // only applicable yo yoga layout engine, browser works differently
+          (behavior !== "height" && OS !== "web")
         ) {
           // eslint-disable-next-line react-compiler/react-compiler
           initialFrame.value = layout;

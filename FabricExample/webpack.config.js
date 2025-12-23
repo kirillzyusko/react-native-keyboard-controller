@@ -150,4 +150,11 @@ module.exports = {
     new webpack.EnvironmentPlugin({ JEST_WORKER_ID: null }),
     new webpack.DefinePlugin({ process: { env: {} } }),
   ],
+  devServer: {
+    server: "https",
+    host: "0.0.0.0",
+    port: 8080,
+    hot: true,
+    historyApiFallback: true,
+  },
 };

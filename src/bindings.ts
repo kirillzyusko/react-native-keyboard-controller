@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { DeviceEventEmitter, View } from "react-native";
 
 import type {
   FocusedInputEventsModule,
@@ -34,7 +34,8 @@ export const KeyboardControllerNative: KeyboardControllerNativeModule = {
  * Use `addListener` function to add your event listener for a specific keyboard event.
  */
 export const KeyboardEvents: KeyboardEventsModule = {
-  addListener: () => ({ remove: NOOP } as EmitterSubscription),
+  addListener: (name, callback) =>
+    DeviceEventEmitter.addListener(`KeyboardController::${name}`, callback),
 };
 /**
  * This API is not documented, it's for internal usage only (for now), and is a subject to potential breaking changes in future.

@@ -1,9 +1,13 @@
-import { useRef } from "react";
+import { useCallback, useRef } from "react";
 import { Animated } from "react-native";
+import {
+  type EventHandlerProcessed,
+  useSharedValue,
+} from "react-native-reanimated";
 
 import { findNodeHandle } from "./utils/findNodeHandle";
 
-import type { EventHandlerProcessed } from "react-native-reanimated";
+import type { Handlers } from "./types";
 
 type ComponentOrHandle = Parameters<typeof findNodeHandle>[0];
 
@@ -76,6 +80,97 @@ export function useEventHandlerRegistration(
   };
 
   return onRegisterHandler;
+}
+
+type UntypedHandler = Record<string, (event: never) => void>;
+type SharedHandlersReturnType<T extends UntypedHandler> = [
+  (handler: EventHandlerProcessed<never, never>) => () => void,
+  <K extends keyof T>(type: K, event: Parameters<T[K]>[0]) => void,
+];
+
+/**
+ * Hook for storing worklet handlers (objects with keys, where values are worklets).
+ * Returns methods for setting handlers and broadcasting events in them.
+ *
+ * @template T - Handlers object, like `{ onStart: (e) => {}, onMove: (e) => {} }`.
+ * @returns A tuple of `setHandlers` and `broadcast` methods.
+ * @example
+ * ```ts
+ * const [setHandlers, broadcast] = useSharedHandlers<KeyboardHandler>();
+ *
+ * setHandlers({
+ *   onStart: (e) => {
+ *     "worklet";
+ *
+ *     // your handler for keyboard start
+ *   },
+ *   onMove: (e) => {
+ *     "worklet";
+ *
+ *     // your handler for keyboard movement
+ *   },
+ * });
+ * ```
+ */
+export function useSharedHandlers<
+  T extends UntypedHandler,
+>(): SharedHandlersReturnType<T> {
+  const handlers = useSharedValue<
+    Record<string, EventHandlerProcessed<never, never>>
+  >({});
+  const jsHandlers = useRef<
+    Record<string, EventHandlerProcessed<never, never>>
+  >({});
+
+  // since js -> worklet -> js call is asynchronous, we can not write handlers
+  // straight into shared variable (using current shared value as a previous result),
+  // since there may be a race condition in a call, and closure may have out-of-dated
+  // values. As a result, some of handlers may be not written to "all handlers" object.
+  // Below we are writing all handlers to `ref` and afterwards synchronize them with
+  // shared value (since `refs` are not referring to actual value in worklets).
+  // This approach allow us to update synchronously handlers in js thread (and it assures,
+  // that it will have all of them) and then update them in worklet thread (calls are
+  // happening in FIFO order, so we will always have actual value).
+  const updateSharedHandlers = useCallback(() => {
+    // eslint-disable-next-line react-compiler/react-compiler
+    handlers.value = jsHandlers.current;
+  }, [handlers]);
+  const setHandlers = useCallback(
+    (handler: EventHandlerProcessed<never, never>) => {
+      const uuid = Math.random().toString(36).slice(-6);
+
+      jsHandlers.current = {
+        ...jsHandlers.current,
+        [uuid]: handler,
+      };
+      updateSharedHandlers();
+
+      return () => {
+        delete jsHandlers.current[uuid];
+        updateSharedHandlers();
+      };
+    },
+    [updateSharedHandlers],
+  );
+  const broadcast = <K extends keyof T>(
+    type: K,
+    event: Parameters<T[K]>[0],
+  ) => {
+    "worklet";
+
+    console.log(handlers.value, type, event);
+
+    Object.keys(handlers.value).forEach((key) => {
+      // TODO: fix TS errors and cleanup unused code (like async write?)
+      // TODO: can be also handlers.value[key].worklet?
+      handlers.value[key].workletEventHandler?.worklet?.({
+        eventName: type,
+        ...event,
+      });
+    });
+  };
+
+  return [setHandlers, broadcast];
 }
 
 /**

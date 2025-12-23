@@ -32,7 +32,7 @@ export default function UseKeyboardState() {
       <Text style={styles.text}>height: {state.height}</Text>
       <Text style={styles.text}>duration: {state.duration}</Text>
       <Text style={styles.text}>timestamp: {state.timestamp}</Text>
-      <Text style={styles.text}>target: {state.target}</Text>
+      <Text style={styles.text}>target: {state.target.toString()}</Text>
       <Text style={styles.text}>type: {state.type}</Text>
       <Text style={styles.text}>appearance: {state.appearance}</Text>
     </>
