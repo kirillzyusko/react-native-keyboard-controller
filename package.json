@@ -84,7 +84,7 @@
     "react-native-is-edge-to-edge": "^1.2.1"
   },
   "devDependencies": {
-    "@commitlint/config-conventional": "^11.0.0",
+    "@commitlint/config-conventional": "^11.1.0",
     "@react-native/babel-preset": "0.81.4",
     "@react-native/eslint-config": "0.81.4",
     "@release-it/conventional-changelog": "^2.0.0",
