@@ -84,7 +84,7 @@
     "react-native-is-edge-to-edge": "^1.2.1"
   },
   "devDependencies": {
-    "@commitlint/config-conventional": "^11.0.0",
+    "@commitlint/config-conventional": "^11.1.0",
     "@react-native/babel-preset": "0.81.4",
     "@react-native/eslint-config": "0.81.4",
     "@release-it/conventional-changelog": "^2.0.0",
@@ -113,10 +113,10 @@
     "prettier": "^2.8.8",
     "react": "19.1.0",
     "react-native": "0.81.4",
-    "react-native-builder-bob": "^0.18.0",
+    "react-native-builder-bob": "^0.40.16",
     "react-native-reanimated": "3.19.2",
     "react-test-renderer": "19.0.0",
-    "release-it": "^14.2.2",
+    "release-it": "^15.1.0",
     "typescript": "5.8.3"
   },
   "peerDependencies": {
