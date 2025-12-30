@@ -113,7 +113,7 @@
     "prettier": "^2.8.8",
     "react": "19.1.0",
     "react-native": "0.81.4",
-    "react-native-builder-bob": "^0.18.0",
+    "react-native-builder-bob": "^0.40.16",
     "react-native-reanimated": "3.19.2",
     "react-test-renderer": "19.0.0",
     "release-it": "^14.2.2",
