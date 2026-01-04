@@ -24,6 +24,9 @@ jobs:
     runs-on: windows-latest
 
     steps:
+      - uses: actions/checkout@v4
+        with:
+          path: "rnkc"
       - name: Setup JDK 17
         uses: actions/setup-java@v4
         with:
@@ -49,9 +52,9 @@ jobs:
         shell: pwsh
         run: |
           yarn install --frozen-lockfile --cwd windows
-      - name: Link keyboard controller
-        shell: pwsh
-        run: yarn add react-native-keyboard-controller@link:../
+      # - name: Link keyboard controller
+      #   shell: pwsh
+      #   run: yarn add react-native-keyboard-controller@link:../
       - name: Restore Gradle cache
         uses: actions/cache@v4
         with:
