@@ -50,9 +50,9 @@ jobs:
         shell: pwsh
         run: |
           cd ..\..\ && yarn install --frozen-lockfile --cwd windows
-      # - name: Link keyboard controller
-      #   shell: pwsh
-      #   run: yarn add react-native-keyboard-controller@link:../
+      - name: Link keyboard controller
+        shell: pwsh
+        run: yarn add react-native-keyboard-controller@link:../react-native-keyboard-controller/react-native-keyboard-controller
       - name: Restore Gradle cache
         uses: actions/cache@v4
         with:
