@@ -8,6 +8,7 @@ export * from "./types";
 export * from "./compat";
 
 export {
+  KeyboardLayout,
   KeyboardAvoidingView,
   KeyboardStickyView,
   KeyboardAwareScrollView,
