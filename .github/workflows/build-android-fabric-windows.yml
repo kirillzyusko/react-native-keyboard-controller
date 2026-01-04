@@ -29,12 +29,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - name: Map workspace to short drive letter
-        shell: pwsh
-        run: |
-          subst Z: $env:GITHUB_WORKSPACE
-          if ($LASTEXITCODE -ne 0) { throw "subst failed" }
-          Set-Location Z:\
+      - name: Create sample app
+        run: npx react-native init windows
       - name: Setup JDK 17
         uses: actions/setup-java@v4
         with:
