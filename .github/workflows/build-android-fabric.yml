@@ -12,6 +12,7 @@ on:
       - "FabricExample/yarn.lock"
       - "FabricExample/patches/**"
       - "src/specs/**"
+      - "common/**"
   pull_request:
     paths:
       - ".github/workflows/build-android-fabric.yml"
@@ -21,6 +22,7 @@ on:
       - "FabricExample/yarn.lock"
       - "FabricExample/patches/**"
       - "src/specs/**"
+      - "common/**"
 
 jobs:
   build:
