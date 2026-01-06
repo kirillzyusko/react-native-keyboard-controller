@@ -68,9 +68,9 @@ public final class KeyboardTrackingView: UIView {
   @objc public func attachToTopmostView(toWindow window: UIWindow? = nil) {
     var topViewController = window?.rootViewController
     if let rootVC = topViewController, let topView = rootVC.view, topView.window != nil {
-        // ok, attach
+      // ok, attach
     } else {
-        topViewController = UIApplication.topViewController()
+      topViewController = UIApplication.topViewController()
     }
 
     guard let topView = topViewController?.view else { return }
