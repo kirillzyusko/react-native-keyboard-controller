@@ -31,8 +31,10 @@ extension KeyboardMovementObserver {
     let (duration, _) = notification.keyboardMetaData()
     tag = UIResponder.current.reactViewTag
     self.notification = notification
-    // when keyboard disappears i
-    self.notification?.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] = NSValue(cgRect: CGRect(x: 0, y: 0, width: 0, height: 0))
+    // when keyboard disappears immediately replace the keyboard frame with .zero
+    // since this will be the final frame of the keyboard after animation
+    self.notification?.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] =
+      NSValue(cgRect: CGRect(x: 0, y: 0, width: 0, height: 0))
     self.duration = duration
 
     onRequestAnimation()
