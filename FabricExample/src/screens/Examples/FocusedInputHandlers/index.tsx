@@ -33,7 +33,7 @@ const TextInputWithMicSelection = (props: TextInputProps) => {
 
   useEffect(() => {
     // eslint-disable-next-line react-compiler/react-compiler
-    tag.value = findNodeHandle(ref.current) ?? -1;
+    // tag.value = findNodeHandle(ref.current) ?? -1;
   }, []);
 
   useFocusedInputHandler(
@@ -211,7 +211,7 @@ export default function TextInputMaskExample() {
         {workletSelection.selection.end.position}
       </Text>
       <Text style={style.text} testID="selection_text_target">
-        target: {workletSelection.target}
+        target: {workletSelection.target.toString()}
       </Text>
       <Text style={style.text} testID="selection_text_coordinates_start">
         startX: {Math.round(workletSelection.selection.start.x)}, startY:{" "}
@@ -229,7 +229,7 @@ export default function TextInputMaskExample() {
         {originalSelection?.selection.end}
       </Text>
       <Text style={style.text} testID="original_selection_text_target">
-        target: {originalSelection?.target}
+        target: {originalSelection?.target.toString()}
       </Text>
     </View>
   );

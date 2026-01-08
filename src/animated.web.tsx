@@ -31,11 +31,14 @@ const REANIMATED_EASING = ReanimatedEasing.bezier(...BEZIER);
 // TODO: (x) event emitter
 // TODO: (x) set enabled
 // TODO: (-) animated keyboard handler
+// TODO: (-) focused input tracking (selection)
 // TODO: (?) interactive keyboard dismissal
-// TODO: focused input tracking
+// TODO: focused input tracking (layout)
+// TODO: focused input tracking (text)
 // TODO: KeyboardController module
 // TODO: VIEWS implementation
 // TODO: view commands
+// TODO: create `KeyboardControllerView` on web?
 
 /**
  * A component that wrap your app. Under the hood it works with {@link https://kirillzyusko.github.io/react-native-keyboard-controller/docs/api/keyboard-controller-view|KeyboardControllerView} to receive events during keyboard movements,
@@ -149,6 +152,143 @@ export const KeyboardProvider = (props: KeyboardProviderProps) => {
       }).start();
     });
   }, []);
+  useEffect(() => {
+    const getCaretCoordinates = (
+      element: HTMLInputElement | HTMLTextAreaElement,
+      position: number,
+    ) => {
+      const rect = element.getBoundingClientRect();
+      const style = getComputedStyle(element);
+
+      // Create a hidden div to measure text dimensions
+      const div = document.createElement("div");
+
+      // Copy element styles to the div
+      div.style.font = style.font;
+      div.style.fontSize = style.fontSize;
+      div.style.fontFamily = style.fontFamily;
+      div.style.fontWeight = style.fontWeight;
+      div.style.letterSpacing = style.letterSpacing;
+      div.style.textTransform = style.textTransform;
+      div.style.direction = style.direction;
+      div.style.position = "absolute";
+      div.style.left = "-9999px";
+      div.style.top = "-9999px";
+      div.style.whiteSpace = "nowrap"; // For input elements (single line)
+
+      // For textarea, we need to handle wrapping
+      if (element.tagName === "TEXTAREA") {
+        div.style.lineHeight = style.lineHeight;
+        div.style.padding = style.padding;
+        div.style.border = style.border;
+        div.style.width = `${(element as HTMLTextAreaElement).clientWidth}px`;
+        div.style.whiteSpace = "pre-wrap";
+        div.style.wordWrap = "break-word";
+        div.style.overflowWrap = "break-word";
+      } else {
+        // For input, we need to copy padding and border for accurate measurement
+        div.style.paddingLeft = style.paddingLeft;
+        div.style.paddingRight = style.paddingRight;
+        div.style.borderLeftWidth = style.borderLeftWidth;
+        div.style.borderRightWidth = style.borderRightWidth;
+      }
+
+      // Set the div's content to match element up to cursor position
+      const content = element.value.substring(0, position);
+
+      div.textContent = content;
+
+      // Add a span to mark the end for measurement
+      const span = document.createElement("span");
+
+      span.textContent = element.value.substring(position) || ".";
+      div.appendChild(span);
+
+      document.body.appendChild(div);
+
+      // Get the span's position relative to the div
+      const spanRect = span.getBoundingClientRect();
+      const divRect = div.getBoundingClientRect();
+
+      // Calculate position relative to viewport
+      let x, y;
+
+      if (element.tagName === "INPUT") {
+        // For input, span is at the end of the single line
+        x = spanRect.left;
+        y = rect.top;
+      } else {
+        // For textarea, calculate relative position
+        x = rect.left + (spanRect.left - divRect.left);
+        y = rect.top + (spanRect.top - divRect.top);
+      }
+
+      document.body.removeChild(div);
+
+      // Adjust for element scroll
+      const scrollX = element.scrollLeft || 0;
+      const scrollY = element.scrollTop || 0;
+
+      return {
+        x: x - scrollX,
+        y: y - scrollY,
+      };
+    };
+
+    const emitSelectionEvent = (
+      element: HTMLInputElement | HTMLTextAreaElement,
+    ) => {
+      const startPos = element.selectionStart ?? 0;
+      const endPos = element.selectionEnd ?? 0;
+      const startCoords = getCaretCoordinates(element, startPos);
+      const endCoords = getCaretCoordinates(element, endPos);
+
+      const event = {
+        target: element,
+        selection: {
+          start: {
+            x: Math.round(startCoords.x),
+            y: Math.round(startCoords.y),
+            position: startPos,
+          },
+          end: {
+            x: Math.round(endCoords.x),
+            y: Math.round(endCoords.y),
+            position: endPos,
+          },
+        },
+      };
+
+      sendInputEvent("onFocusedInputSelectionChanged", event);
+    };
+
+    const handleFocusIn = (e: FocusEvent) => {
+      const el = e.target as HTMLElement;
+
+      if (el.tagName === "INPUT" || el.tagName === "TEXTAREA") {
+        emitSelectionEvent(el as HTMLInputElement | HTMLTextAreaElement);
+      }
+    };
+
+    const handleSelectionChange = () => {
+      const active = document.activeElement as HTMLElement;
+
+      if (
+        active &&
+        (active.tagName === "INPUT" || active.tagName === "TEXTAREA")
+      ) {
+        emitSelectionEvent(active as HTMLInputElement | HTMLTextAreaElement);
+      }
+    };
+
+    document.addEventListener("focusin", handleFocusIn);
+    document.addEventListener("selectionchange", handleSelectionChange);
+
+    return () => {
+      document.removeEventListener("focusin", handleFocusIn);
+      document.removeEventListener("selectionchange", handleSelectionChange);
+    };
+  }, [sendInputEvent]);
 
   useAnimatedReaction(
     () => progressSV.value,
