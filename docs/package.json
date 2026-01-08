@@ -17,8 +17,8 @@
     "postinstall": "patch-package"
   },
   "dependencies": {
-    "@docusaurus/core": "3.4.0",
-    "@docusaurus/preset-classic": "3.4.0",
+    "@docusaurus/core": "3.9.0",
+    "@docusaurus/preset-classic": "3.9.0",
     "@mdx-js/react": "^3.0.0",
     "@signalwire/docusaurus-plugin-llms-txt": "^1.1.0",
     "clsx": "^2.0.0",
@@ -34,10 +34,10 @@
     "@docusaurus/module-type-aliases": "3.4.0",
     "@docusaurus/tsconfig": "3.4.0",
     "@docusaurus/types": "3.4.0",
-    "@playwright/test": "^1.46.0",
+    "@playwright/test": "^1.56.0",
     "cheerio": "^1.0.0-rc.12",
-    "markdownlint-cli2": "^0.12.1",
-    "patch-package": "^8.0.0",
+    "markdownlint-cli2": "^0.14.0",
+    "patch-package": "^8.0.1",
     "typescript": "^5.8.3"
   },
   "browserslist": {
