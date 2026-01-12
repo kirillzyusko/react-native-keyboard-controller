@@ -46,10 +46,6 @@ jobs:
           key: ${{ runner.os }}-fabric-windows-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ runner.os }}-fabric-windows-yarn-
-      - name: Install node_modules
-        shell: pwsh
-        run: |
-          yarn install --frozen-lockfile
       - name: Install node_modules for windows/
         shell: pwsh
         run: |
