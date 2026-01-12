@@ -44,7 +44,7 @@ function ReanimatedChat({ navigation }: Props) {
 
   const scrollViewStyle = useAnimatedStyle(
     () => ({
-      transform: [{ translateY: height.value }, ...styles.inverted.transform],
+      transform: [{ translateY: height.value }],
     }),
     [],
   );
@@ -68,14 +68,14 @@ function ReanimatedChat({ navigation }: Props) {
     <View style={styles.container}>
       <Reanimated.ScrollView
         showsVerticalScrollIndicator={false}
-        style={scrollViewStyle}
+        // style={scrollViewStyle}
       >
-        <View style={styles.inverted}>
+        <Reanimated.View style={scrollViewStyle}>
           <Reanimated.View style={fakeView} />
           {history.map((message, index) => (
             <Message key={index} {...message} />
           ))}
-        </View>
+        </Reanimated.View>
       </Reanimated.ScrollView>
       <AnimatedTextInput style={textInputStyle} />
     </View>
