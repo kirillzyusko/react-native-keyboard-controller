@@ -14,10 +14,10 @@
 #endif
 
 #ifdef RCT_NEW_ARCH_ENABLED
-#import <react/renderer/components/keyboardcontroller/EventEmitters.h>
-#import <react/renderer/components/keyboardcontroller/Props.h>
-#import <react/renderer/components/keyboardcontroller/RCTComponentViewHelpers.h>
-#import <react/renderer/components/keyboardcontroller/RNKCKeyboardGestureAreaComponentDescriptor.h>
+#import <react/renderer/components/RNKC/EventEmitters.h>
+#import <react/renderer/components/RNKC/Props.h>
+#import <react/renderer/components/RNKC/RCTComponentViewHelpers.h>
+#import <react/renderer/components/RNKC/RNKCKeyboardGestureAreaComponentDescriptor.h>
 
 #import "RCTFabricComponentsPlugins.h"
 #endif

@@ -172,7 +172,7 @@
     ]
   },
   "codegenConfig": {
-    "name": "keyboardcontroller",
+    "name": "RNKC",
     "type": "all",
     "jsSrcsDir": "./src/specs",
     "android": {

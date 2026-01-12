@@ -9,8 +9,8 @@
 
 #include "RNKCKeyboardExtenderState.h"
 
-#include <react/renderer/components/keyboardcontroller/EventEmitters.h>
-#include <react/renderer/components/keyboardcontroller/Props.h>
+#include <react/renderer/components/RNKC/EventEmitters.h>
+#include <react/renderer/components/RNKC/Props.h>
 #include <react/renderer/components/view/ConcreteViewShadowNode.h>
 #include <jsi/jsi.h>
 

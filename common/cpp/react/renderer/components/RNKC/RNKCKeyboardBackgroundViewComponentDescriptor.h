@@ -10,7 +10,7 @@
 #include "RNKCKeyboardBackgroundViewShadowNode.h"
 
 #include <react/debug/react_native_assert.h>
-#include <react/renderer/components/keyboardcontroller/Props.h>
+#include <react/renderer/components/RNKC/Props.h>
 #include <react/renderer/core/ConcreteComponentDescriptor.h>
 
 namespace facebook::react {
