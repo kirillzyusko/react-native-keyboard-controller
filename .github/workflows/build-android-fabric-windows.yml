@@ -31,7 +31,7 @@ jobs:
           distribution: "microsoft"
           java-version: "17"
       - name: Create sample app
-        run: cd ..\..\ && npx @react-native-community/cli@latest init WindowsLongName --version 0.83.1
+        run: cd ..\..\ && npx @react-native-community/cli@latest init WindowsWithUnbelievablyHugeAndReallyLongPathName --version 0.83.1
       - name: Get yarn cache directory path
         id: fabric-windows-yarn-cache-dir-path
         shell: pwsh
@@ -53,10 +53,10 @@ jobs:
       - name: Install node_modules for windows/
         shell: pwsh
         run: |
-          cd ..\..\ && yarn install --frozen-lockfile --cwd WindowsLongName
+          cd ..\..\ && yarn install --frozen-lockfile --cwd WindowsWithUnbelievablyHugeAndReallyLongPathName
       - name: Link keyboard controller
         shell: pwsh
-        run: cd ..\..\WindowsLongName && yarn add react-native-keyboard-controller@link:../react-native-keyboard-controller/react-native-keyboard-controller
+        run: cd ..\..\WindowsWithUnbelievablyHugeAndReallyLongPathName && yarn add react-native-keyboard-controller@link:../react-native-keyboard-controller/react-native-keyboard-controller
       - name: Restore Gradle cache
         uses: actions/cache@v4
         with:
@@ -69,5 +69,5 @@ jobs:
       - name: Run Gradle Build for windows/android/
         shell: pwsh
         run: |
-          cd ..\..\WindowsLongName\android
+          cd ..\..\WindowsWithUnbelievablyHugeAndReallyLongPathName\android
           .\gradlew.bat assembleDebug --build-cache -PreactNativeArchitectures=arm64-v8a
