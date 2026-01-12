@@ -12,7 +12,7 @@ export default StyleSheet.create({
   inverted: {
     transform: [
       {
-        rotate: "180deg",
+        rotate: "0deg",
       },
     ],
   },
