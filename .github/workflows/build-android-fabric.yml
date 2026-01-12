@@ -26,7 +26,7 @@ on:
 
 jobs:
   build:
-    name: Build Android Fabric Example App
+    name: 🖥️ Build Android Fabric Example App
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

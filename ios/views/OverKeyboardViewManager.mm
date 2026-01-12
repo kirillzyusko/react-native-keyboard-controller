@@ -16,10 +16,10 @@
 #ifdef RCT_NEW_ARCH_ENABLED
 #import <React/RCTSurfaceTouchHandler.h>
 
-#import <react/renderer/components/keyboardcontroller/EventEmitters.h>
-#import <react/renderer/components/keyboardcontroller/Props.h>
-#import <react/renderer/components/keyboardcontroller/RCTComponentViewHelpers.h>
-#import <react/renderer/components/keyboardcontroller/RNKCOverKeyboardViewComponentDescriptor.h>
+#import <react/renderer/components/RNKC/EventEmitters.h>
+#import <react/renderer/components/RNKC/Props.h>
+#import <react/renderer/components/RNKC/RCTComponentViewHelpers.h>
+#import <react/renderer/components/RNKC/RNKCOverKeyboardViewComponentDescriptor.h>
 
 #import "RCTFabricComponentsPlugins.h"
 #endif
