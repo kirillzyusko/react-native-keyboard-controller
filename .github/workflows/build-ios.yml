@@ -37,6 +37,8 @@ jobs:
       - uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: "16.4"
+      - name: List all available simulators
+        run: xcrun simctl list
 
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
