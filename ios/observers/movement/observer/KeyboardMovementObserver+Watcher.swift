@@ -40,6 +40,9 @@ extension KeyboardMovementObserver {
     prevKeyboardPosition = keyboardPosition
 
     if let animation = animation {
+      if animation.isFinished {
+        return
+      }
       let baseDuration = animation.timingAt(value: keyboardPosition)
 
       #if targetEnvironment(simulator)
@@ -59,6 +62,7 @@ extension KeyboardMovementObserver {
       // but CASpringAnimation can never get to this final destination
       let race: (CGFloat, CGFloat) -> CGFloat = animation.isIncreasing ? max : min
       keyboardPosition = race(position, keyboardPosition)
+      animation.lastValue = keyboardPosition
     }
 
     onEvent(
