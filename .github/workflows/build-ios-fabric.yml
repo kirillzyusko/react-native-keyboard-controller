@@ -35,12 +35,14 @@ jobs:
     defaults:
       run:
         working-directory: FabricExample/ios
+    env:
+      XCODE_VERSION: "16.4"
     steps:
       - uses: actions/checkout@v4
 
       - uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: "16.4"
+          xcode-version: ${{ env.XCODE_VERSION }}
       - name: List all available simulators
         run: xcrun simctl list
 
@@ -92,6 +94,13 @@ jobs:
             ${{ runner.os }}-fabric-pods-
       - name: Install Pods
         run: export USE_CCACHE=1 && pod install || pod update --repo-update
+      - name: Restore DerivedData cache
+        uses: actions/cache@v5
+        with:
+          path: FabricExample/ios/build
+          key: ${{ runner.os }}-fabric-derived-data-${{ hashFiles('**/Podfile.lock', '**/Gemfile.lock', '**/package.json', '**/yarn.lock') }}-xcode-${{ env.XCODE_VERSION }}
+          restore-keys: |
+            ${{ runner.os }}-fabric-derived-data
       - name: Install xcpretty
         run: gem install xcpretty
       - name: Build App
