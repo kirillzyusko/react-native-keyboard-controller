@@ -34,7 +34,7 @@ public class KeyboardAnimation: KeyboardAnimationProtocol {
     self.toValue = toValue
     self.animation = animation
     self.duration = duration
-    self.lastValue = fromValue
+    lastValue = fromValue
     speed = Double(animation.speed)
     timestamp = CACurrentMediaTime()
   }
