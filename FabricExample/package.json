@@ -30,13 +30,13 @@
     "react-native-gesture-handler": "2.28.0",
     "react-native-haptic-feedback": "2.3.3",
     "react-native-keyboard-controller": "link:../",
-    "react-native-reanimated": "4.1.2",
+    "react-native-reanimated": "4.2.1",
     "react-native-safe-area-context": "5.6.1",
     "react-native-screens": "4.16.0",
     "react-native-toast-message": "^2.3.0",
     "react-native-web": "^0.21.2",
     "react-native-webview": "^13.16.0",
-    "react-native-worklets": "^0.6.0"
+    "react-native-worklets": "^0.7.1"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
