@@ -89,6 +89,13 @@ jobs:
       - name: Install pods
         working-directory: ${{ env.WORKING_DIRECTORY }}/ios
         run: export USE_CCACHE=1 && pod install || pod update --repo-update
+      - name: Restore DerivedData cache
+        uses: actions/cache@v5
+        with:
+          path: example/ios/build
+          key: ${{ runner.os }}-e2e-derived-data-${{ hashFiles('**/Podfile.lock', '**/Gemfile.lock', '**/package.json', '**/yarn.lock') }}-xcode-${{ matrix.config.xcode }}
+          restore-keys: |
+            ${{ runner.os }}-e2e-derived-data-
       - name: Build app
         working-directory: e2e
         run: yarn build-example:ios
