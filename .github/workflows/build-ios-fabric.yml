@@ -100,7 +100,7 @@ jobs:
           path: FabricExample/ios/build
           key: ${{ runner.os }}-fabric-derived-data-${{ hashFiles('**/Podfile.lock', '**/Gemfile.lock', '**/package.json', '**/yarn.lock') }}-xcode-${{ env.XCODE_VERSION }}
           restore-keys: |
-            ${{ runner.os }}-dd-
+            ${{ runner.os }}-fabric-derived-data
       - name: Install xcpretty
         run: gem install xcpretty
       - name: Build App

@@ -31,12 +31,14 @@ jobs:
     defaults:
       run:
         working-directory: example/ios
+    env:
+      XCODE_VERSION: "16.4"
     steps:
       - uses: actions/checkout@v4
 
       - uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: "16.4"
+          xcode-version: ${{ env.XCODE_VERSION }}
       - name: List all available simulators
         run: xcrun simctl list
 
@@ -90,6 +92,13 @@ jobs:
         run: export USE_CCACHE=1 && pod install || pod update --repo-update
       - name: Install xcpretty
         run: gem install xcpretty
+      - name: Restore DerivedData cache
+        uses: actions/cache@v5
+        with:
+          path: example/ios/build
+          key: ${{ runner.os }}-derived-data-${{ hashFiles('**/Podfile.lock', '**/Gemfile.lock', '**/package.json', '**/yarn.lock') }}-xcode-${{ env.XCODE_VERSION }}
+          restore-keys: |
+            ${{ runner.os }}-derived-data-
       - name: Build App
         run: "set -o pipefail && xcodebuild \
           CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ \
