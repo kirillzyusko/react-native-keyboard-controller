@@ -18,4 +18,5 @@ extension Notification {
 
 extension Notification.Name {
   static let shouldIgnoreKeyboardEvents = Notification.Name("shouldIgnoreKeyboardEvents")
+  static let keyboardDidAppear = Notification.Name("keyboardDidAppear")
 }

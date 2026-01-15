@@ -23,13 +23,18 @@ public class KeyboardAnimation: KeyboardAnimationProtocol {
   // constructor variables
   let fromValue: Double
   let toValue: Double
+  let duration: Double
   let speed: Double
   let timestamp: CFTimeInterval
+  // internal state
+  var lastValue: Double
 
-  init(fromValue: Double, toValue: Double, animation: CAMediaTiming) {
+  init(fromValue: Double, toValue: Double, animation: CAMediaTiming, duration: Double) {
     self.fromValue = fromValue
     self.toValue = toValue
     self.animation = animation
+    self.duration = duration
+    lastValue = fromValue
     speed = Double(animation.speed)
     timestamp = CACurrentMediaTime()
   }
@@ -46,6 +51,10 @@ public class KeyboardAnimation: KeyboardAnimationProtocol {
 
   var isIncreasing: Bool {
     return fromValue < toValue
+  }
+
+  var isFinished: Bool {
+    return lastValue == toValue
   }
 
   func valueAt(time _: Double) -> Double {

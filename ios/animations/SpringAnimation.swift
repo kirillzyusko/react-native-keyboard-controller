@@ -57,7 +57,7 @@ public final class SpringAnimation: KeyboardAnimation {
       bUnder = 0
     }
 
-    super.init(fromValue: fromValue, toValue: toValue, animation: animation)
+    super.init(fromValue: fromValue, toValue: toValue, animation: animation, duration: animation.settlingDuration)
   }
 
   // public functions

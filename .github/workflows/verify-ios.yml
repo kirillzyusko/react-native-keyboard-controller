@@ -77,5 +77,5 @@ jobs:
           test \
           -scheme KeyboardControllerNative \
           -only-testing KeyboardControllerNativeTests \
-          -destination 'platform=iOS Simulator,name=iPhone 16 Pro,OS=18.4' \
+          -destination 'platform=iOS Simulator,name=iPhone 16 Pro,OS=18.5' \
           CODE_SIGNING_ALLOWED=NO | xcpretty"

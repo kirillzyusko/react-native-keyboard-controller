@@ -14,8 +14,8 @@ extension KeyboardMovementObserver {
       tag = UIResponder.current.reactViewTag
       let keyboardHeight = keyboardFrame.cgRectValue.size.height
       self.keyboardHeight = keyboardHeight
+      self.notification = notification
       self.duration = duration
-      didShowDeadline = Date.currentTimeStamp + Int64(duration)
 
       onRequestAnimation()
       onEvent("onKeyboardMoveStart", Float(self.keyboardHeight) as NSNumber, 1, duration as NSNumber, tag)
@@ -30,6 +30,11 @@ extension KeyboardMovementObserver {
     guard !UIResponder.isKeyboardPreloading else { return }
     let (duration, _) = notification.keyboardMetaData()
     tag = UIResponder.current.reactViewTag
+    self.notification = notification
+    // when keyboard disappears immediately replace the keyboard frame with .zero
+    // since this will be the final frame of the keyboard after animation
+    self.notification?.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] =
+      NSValue(cgRect: CGRect(x: 0, y: 0, width: 0, height: 0))
     self.duration = duration
 
     onRequestAnimation()
@@ -44,10 +49,8 @@ extension KeyboardMovementObserver {
   @objc func keyboardDidAppear(_ notification: Notification) {
     guard !UIResponder.isKeyboardPreloading else { return }
 
-    let timestamp = Date.currentTimeStamp
     let (duration, frame) = notification.keyboardMetaData()
     if let keyboardFrame = frame {
-      let (position, _) = keyboardTrackingView.view.frameTransitionInWindow
       let keyboardHeight = keyboardFrame.cgRectValue.size.height
       tag = UIResponder.current.reactViewTag
       self.keyboardHeight = keyboardHeight
@@ -57,9 +60,7 @@ extension KeyboardMovementObserver {
         return
       }
 
-      // if the event is caught in between it's highly likely that it could be a "resize" event
-      // so we just read actual keyboard frame value in this case
-      let height = timestamp >= didShowDeadline ? self.keyboardHeight : position - KeyboardAreaExtender.shared.offset
+      let height = self.keyboardHeight - KeyboardAreaExtender.shared.offset
       // always limit progress to the maximum possible value
       let progress = min(height / self.keyboardHeight, 1.0)
 
@@ -70,6 +71,10 @@ extension KeyboardMovementObserver {
       removeKeyboardWatcher()
       setupKVObserver()
       animation = nil
+
+      NotificationCenter.default.post(
+        name: .keyboardDidAppear, object: notification, userInfo: nil
+      )
     }
   }
 

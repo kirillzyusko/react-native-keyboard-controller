@@ -30,7 +30,7 @@ public final class TimingAnimation: KeyboardAnimation {
     self.p1 = p1
     self.p2 = p2
 
-    super.init(fromValue: fromValue, toValue: toValue, animation: animation)
+    super.init(fromValue: fromValue, toValue: toValue, animation: animation, duration: animation.duration)
   }
 
   // MARK: public functions

@@ -25,18 +25,6 @@ public extension KeyboardMovementObserver {
       name: UIResponder.keyboardWillShowNotification,
       object: nil
     )
-    NotificationCenter.default.addObserver(
-      self,
-      selector: #selector(keyboardDidAppear),
-      name: UIResponder.keyboardDidShowNotification,
-      object: nil
-    )
-    NotificationCenter.default.addObserver(
-      self,
-      selector: #selector(keyboardDidDisappear),
-      name: UIResponder.keyboardDidHideNotification,
-      object: nil
-    )
   }
 
   @objc func unmount() {
