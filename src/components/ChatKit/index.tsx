@@ -16,7 +16,7 @@ const ChatScrollView = forwardRef<
   Reanimated.ScrollView,
   React.PropsWithChildren<ChatKitScrollViewProps>
 >(({ children, ...rest }, ref) => {
-  const { animatedRef, translateY, padding } = useKeyboardAnimation();
+  const { animatedRef, translateY, padding, offset } = useKeyboardAnimation();
 
   const onRef = useCallback(
     (assignedRef: Reanimated.ScrollView) => {
@@ -45,7 +45,7 @@ const ChatScrollView = forwardRef<
     () => ({
       contentOffset: {
         x: 0,
-        y: padding.value,
+        y: offset.value,
       },
     }),
     [],
