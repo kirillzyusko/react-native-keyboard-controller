@@ -1,4 +1,4 @@
-import React, { forwardRef, useCallback, useMemo } from "react";
+import React, { forwardRef, useCallback } from "react";
 import Reanimated, {
   useAnimatedProps,
   useAnimatedStyle,
@@ -15,7 +15,7 @@ export type ChatKitScrollViewProps = {
 const ChatScrollView = forwardRef<
   Reanimated.ScrollView,
   React.PropsWithChildren<ChatKitScrollViewProps>
->(({ children, style, ...rest }, ref) => {
+>(({ children, ...rest }, ref) => {
   const { animatedRef, translateY, padding } = useKeyboardAnimation();
 
   const onRef = useCallback(
@@ -35,11 +35,6 @@ const ChatScrollView = forwardRef<
     () => ({
       // it'll deliver stable FPS on all devices
       transform: [{ translateY: -translateY.value }],
-    }),
-    [],
-  );
-  const scrollViewStyle = useAnimatedStyle(
-    () => ({
       // do a resize only once per animation cycle, not on every animation frame
       paddingTop: padding.value,
     }),
@@ -56,18 +51,8 @@ const ChatScrollView = forwardRef<
     [],
   );
 
-  const scrollViewStyles = useMemo(
-    () => [scrollViewStyle, style],
-    [scrollViewStyle, style],
-  );
-
   return (
-    <Reanimated.ScrollView
-      ref={onRef}
-      {...rest}
-      animatedProps={animatedProps}
-      style={scrollViewStyles}
-    >
+    <Reanimated.ScrollView ref={onRef} {...rest} animatedProps={animatedProps}>
       <Reanimated.View style={s}>{children}</Reanimated.View>
     </Reanimated.ScrollView>
   );
