@@ -1,5 +1,5 @@
 ---
-sidebar_position: 5
+sidebar_position: 6
 description: Compatibility of library with different react-native versions and architectures
 keywords:
   [react-native-keyboard-controller, compatibility, react-native versions]
