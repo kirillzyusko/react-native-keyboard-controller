@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { TextInput, View } from "react-native";
 import {
   ChatKit,
@@ -11,9 +11,10 @@ import { history } from "../../../components/Message/data";
 
 import styles, { TEXT_INPUT_HEIGHT, contentContainerStyle } from "./styles";
 
-import type { LayoutChangeEvent } from "react-native";
+import type { LayoutChangeEvent, ScrollView } from "react-native";
 
 function InteractiveKeyboard() {
+  const ref = useRef<ScrollView>(null);
   const [inputHeight, setInputHeight] = useState(TEXT_INPUT_HEIGHT);
   const [text, setText] = useState("");
 
@@ -22,11 +23,16 @@ function InteractiveKeyboard() {
   }, []);
 
   const scrollToBottom = useCallback(() => {
-    // animatedRef.current?.scrollToEnd({ animated: false }); // Измени ref
+    ref.current?.scrollToEnd({ animated: false });
   }, []);
 
   return (
-    <View style={styles.container}>
+    <View
+      offset={inputHeight}
+      style={styles.container}
+      
+      textInputNativeID="chat-input"
+    >
       <ChatKit.ScrollView
         automaticallyAdjustContentInsets={false}
         contentContainerStyle={contentContainerStyle}

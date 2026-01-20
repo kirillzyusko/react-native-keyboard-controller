@@ -11,11 +11,14 @@ import type Reanimated from "react-native-reanimated";
 
 const OS = Platform.OS;
 
+// TODO:
+// - we need to manage offset somehow more smartly, for example - you scrolled to up, open keyboard, close keyboard - we don't animate content (though we should?) also check how it works on Android
 const useKeyboardAnimation = () => {
   const animatedRef = useAnimatedRef<Reanimated.ScrollView>();
   const translateY = useSharedValue(0);
   const padding = useSharedValue(0);
-  const offset = useScrollViewOffset(animatedRef);
+  const offset = useSharedValue(0);
+  const scroll = useScrollViewOffset(animatedRef);
 
   useKeyboardHandler(
     {
@@ -24,11 +27,14 @@ const useKeyboardAnimation = () => {
 
         console.log("onStart", e, offset.value);
 
-        // eslint-disable-next-line react-compiler/react-compiler
-        translateY.value = e.height;
+        if (OS === "ios") {
+          // eslint-disable-next-line react-compiler/react-compiler
+          translateY.value = e.height;
+        }
 
         if (e.height === 0) {
-          padding.value = e.height;
+          padding.value = 0;
+          offset.value = 0;
         }
       },
       onInteractive: (e) => {
@@ -48,10 +54,13 @@ const useKeyboardAnimation = () => {
       onEnd: (e) => {
         "worklet";
 
-        console.log("onEnd", e);
+        console.log("onEnd", e, "offset", offset.value, "scroll", scroll.value);
 
         if (e.height > 0) {
+          console.log(scroll.value);
+          // offset.value -> 1889
           padding.value = e.height;
+          offset.value = e.height;
         }
       },
     },
@@ -61,6 +70,7 @@ const useKeyboardAnimation = () => {
   return {
     translateY,
     padding,
+    offset,
     animatedRef,
   };
 };
