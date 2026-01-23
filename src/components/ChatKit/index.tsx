@@ -1,8 +1,10 @@
-import React, { forwardRef, useCallback } from "react";
+import React, { forwardRef } from "react";
 import Reanimated, {
   useAnimatedProps,
   useAnimatedStyle,
 } from "react-native-reanimated";
+
+import useCombinedRef from "../hooks/useCombinedRef";
 
 import { useKeyboardAnimation } from "./hooks";
 
@@ -16,27 +18,17 @@ const ChatScrollView = forwardRef<
   Reanimated.ScrollView,
   React.PropsWithChildren<ChatKitScrollViewProps>
 >(({ children, ...rest }, ref) => {
-  const { animatedRef, translateY, padding, offset } = useKeyboardAnimation();
+  const { animatedRef, translateY, padding, offset, scroll } =
+    useKeyboardAnimation();
 
-  const onRef = useCallback(
-    (assignedRef: Reanimated.ScrollView) => {
-      if (typeof ref === "function") {
-        ref(assignedRef);
-      } else if (ref) {
-        ref.current = assignedRef;
-      }
-
-      animatedRef(assignedRef);
-    },
-    [animatedRef, ref],
-  );
+  const onRef = useCombinedRef(ref, animatedRef);
 
   const s = useAnimatedStyle(
     () => ({
       // it'll deliver stable FPS on all devices
-      transform: [{ translateY: -translateY.value }],
+      // transform: [{ translateY: translateY.value }],
       // do a resize only once per animation cycle, not on every animation frame
-      paddingTop: padding.value,
+      // paddingTop: padding.value,
     }),
     [],
   );
@@ -45,16 +37,49 @@ const ChatScrollView = forwardRef<
     () => ({
       contentOffset: {
         x: 0,
-        y: offset.value,
+        y: offset.value + translateY.value,
       },
     }),
     [],
   );
 
+  const s1 = useAnimatedStyle(
+    () => ({
+      transform: [{ translateY: -translateY.value }],
+      maxHeight: 600 - padding.value,
+    }),
+    [],
+  );
+
+  const s2 = useAnimatedStyle(
+    () => ({
+      maxHeight: 800 - padding.value,
+    }),
+    [],
+  );
+
+  const scrollViewStyle = useAnimatedStyle(
+    () => ({
+      transform: [{ translateY: -translateY.value * 1 }],
+    }),
+    [],
+  );
+  const fakeView = useAnimatedStyle(
+    () => ({
+      height: translateY.value,
+    }),
+    [],
+  );
+
   return (
-    <Reanimated.ScrollView ref={onRef} {...rest} animatedProps={animatedProps}>
-      <Reanimated.View style={s}>{children}</Reanimated.View>
-    </Reanimated.ScrollView>
+    <Reanimated.View style={}>
+      <Reanimated.ScrollView ref={onRef} {...rest}>
+        <Reanimated.View style={scrollViewStyle}>
+          <Reanimated.View style={fakeView} />
+          {children}
+        </Reanimated.View>
+      </Reanimated.ScrollView>
+    </Reanimated.View>
   );
 });
 

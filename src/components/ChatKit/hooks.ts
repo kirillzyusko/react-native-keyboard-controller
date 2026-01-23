@@ -34,7 +34,7 @@ const useKeyboardAnimation = () => {
 
         if (e.height === 0) {
           padding.value = 0;
-          offset.value = 0;
+          offset.value = scroll.value;
         }
       },
       onInteractive: (e) => {
@@ -72,6 +72,7 @@ const useKeyboardAnimation = () => {
     padding,
     offset,
     animatedRef,
+    scroll,
   };
 };
 
