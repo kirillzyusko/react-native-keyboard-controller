@@ -6,11 +6,14 @@ const isAndroid = Platform.OS === "android";
 
 export const useTelegramTransitions = () => {
   const height = useSharedValue(0);
+  const padding = useSharedValue(0);
 
   useKeyboardHandler(
     {
       onStart: (e) => {
         "worklet";
+
+        padding.value = e.height;
 
         if (isAndroid) {
           // on Android Telegram is not using androidx.core values and uses custom interpolation
@@ -38,5 +41,5 @@ export const useTelegramTransitions = () => {
     [],
   );
 
-  return { height };
+  return { height, padding };
 };
