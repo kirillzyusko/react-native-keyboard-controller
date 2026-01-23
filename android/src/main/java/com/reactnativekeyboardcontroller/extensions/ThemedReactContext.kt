@@ -47,7 +47,7 @@ fun ThemedReactContext?.keepShadowNodesInSync(viewId: Int) {
   val onAnimationEndedData = Arguments.createMap()
   onAnimationEndedData.putArray("tags", tagsArray)
 
-  this?.reactApplicationContext?.emitDeviceEvent("onUserDrivenAnimationEnded", onAnimationEndedData)
+  this.emitEvent("onUserDrivenAnimationEnded", onAnimationEndedData)
 }
 
 val ThemedReactContext?.appearance: String
