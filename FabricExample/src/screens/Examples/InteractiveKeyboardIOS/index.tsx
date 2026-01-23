@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useState } from "react";
-import { TextInput, View } from "react-native";
+import { FlatList, TextInput, View } from "react-native";
 import {
   ChatKit,
   KeyboardGestureArea,
@@ -12,6 +12,8 @@ import { history } from "../../../components/Message/data";
 import styles, { TEXT_INPUT_HEIGHT, contentContainerStyle } from "./styles";
 
 import type { LayoutChangeEvent, ScrollView } from "react-native";
+import { FlashList } from "@shopify/flash-list";
+import { LegendList } from "@legendapp/list";
 
 function InteractiveKeyboard() {
   const ref = useRef<ScrollView>(null);
@@ -30,21 +32,23 @@ function InteractiveKeyboard() {
     <View
       offset={inputHeight}
       style={styles.container}
-      
       textInputNativeID="chat-input"
     >
-      <ChatKit.ScrollView
-        automaticallyAdjustContentInsets={false}
-        contentContainerStyle={contentContainerStyle}
-        contentInsetAdjustmentBehavior="never"
-        keyboardDismissMode="interactive"
-        testID="chat.scroll"
-        // onContentSizeChange={scrollToBottom}
-      >
-        {history.map((message, index) => (
-          <Message key={index} {...message} />
-        ))}
-      </ChatKit.ScrollView>
+      <FlatList
+        data={history}
+        keyExtractor={(item) => item.text}
+        renderItem={({ item }) => <Message {...item} />}
+        renderScrollComponent={(props) => (
+          <ChatKit.ScrollView
+            automaticallyAdjustContentInsets={false}
+            contentContainerStyle={contentContainerStyle}
+            contentInsetAdjustmentBehavior="never"
+            keyboardDismissMode="interactive"
+            testID="chat.scroll"
+            {...props}
+          />
+        )}
+      />
       <KeyboardStickyView style={styles.composer}>
         <TextInput
           multiline
