@@ -5,17 +5,20 @@ import React, {
   useImperativeHandle,
   useMemo,
 } from "react";
+import { Platform } from "react-native";
 import Reanimated, {
   clamp,
   interpolate,
   runOnUI,
   scrollTo,
+  useAnimatedProps,
   useAnimatedReaction,
   useAnimatedRef,
   useDerivedValue,
   useSharedValue,
 } from "react-native-reanimated";
 
+import { ClippingScrollView } from "../../bindings";
 import {
   useFocusedInputHandler,
   useReanimatedFocusedInput,
@@ -25,6 +28,10 @@ import { findNodeHandle } from "../../utils/findNodeHandle";
 import useCombinedRef from "../hooks/useCombinedRef";
 import useScrollState from "../hooks/useScrollState";
 import ScrollViewWithBottomPadding from "../ScrollViewWithBottomPadding";
+
+const OS = Platform.OS;
+const ReanimatedClippingScrollView =
+  Reanimated.createAnimatedComponent(ClippingScrollView);
 
 import { useSmoothKeyboardHandler } from "./useSmoothKeyboardHandler";
 import { debounce, scrollDistanceWithRespectToSnapPoints } from "./utils";

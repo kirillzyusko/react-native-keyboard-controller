@@ -1,3 +1,5 @@
+import { LegendList } from "@legendapp/list";
+import { FlashList } from "@shopify/flash-list";
 import React, { useCallback, useRef, useState } from "react";
 import { FlatList, TextInput, View } from "react-native";
 import {
@@ -12,8 +14,6 @@ import { history } from "../../../components/Message/data";
 import styles, { TEXT_INPUT_HEIGHT, contentContainerStyle } from "./styles";
 
 import type { LayoutChangeEvent, ScrollView } from "react-native";
-import { FlashList } from "@shopify/flash-list";
-import { LegendList } from "@legendapp/list";
 
 function InteractiveKeyboard() {
   const ref = useRef<ScrollView>(null);
@@ -34,7 +34,7 @@ function InteractiveKeyboard() {
       style={styles.container}
       textInputNativeID="chat-input"
     >
-      <FlatList
+      {/*<FlashList
         data={history}
         keyExtractor={(item) => item.text}
         renderItem={({ item }) => <Message {...item} />}
@@ -48,7 +48,18 @@ function InteractiveKeyboard() {
             {...props}
           />
         )}
-      />
+      />*/}
+      <ChatKit.ScrollView
+        automaticallyAdjustContentInsets={false}
+        contentContainerStyle={contentContainerStyle}
+        contentInsetAdjustmentBehavior="never"
+        keyboardDismissMode="interactive"
+        testID="chat.scroll"
+      >
+        {history.map((message, index) => (
+          <Message key={index} {...message} />
+        ))}
+      </ChatKit.ScrollView>
       <KeyboardStickyView style={styles.composer}>
         <TextInput
           multiline
