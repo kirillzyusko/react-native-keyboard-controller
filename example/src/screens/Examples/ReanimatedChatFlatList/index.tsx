@@ -30,7 +30,7 @@ function ReanimatedChatFlatList() {
   return (
     <>
       <KeyboardAvoidingView
-        behavior="translate-with-padding"
+        behavior="padding"
         keyboardVerticalOffset={headerHeight}
         style={styles.container}
         testID="flat-list.container"
