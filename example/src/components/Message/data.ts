@@ -25,10 +25,34 @@ export const history: MessageProps[] = [
     sender: true,
   },
   { text: "I'm glad you like it! 😎", sender: true },
-  { text: "1. It's really fast", sender: true },
-  { text: "2. It's really smooth", sender: true },
-  { text: "3. It's really stable", sender: true },
-  { text: "4. It's really fast", sender: true },
-  { text: "5. It's really smooth", sender: true },
-  { text: "6. It's really stable", sender: true },
+  // continue dialog further
+  { text: "Do you any other questions?", sender: true },
+  { text: "Yes, I have a question about teleport library" },
+  { text: "Do you know anything about it?", sender: true },
+  {
+    text: "I have seen some techno demos, but haven't tried it uet",
+    sender: true,
+  },
+  { text: "Yes, I already tried it in my project" },
+  {
+    text: "It's pretty cool. We were able to built gallery with share element transitions without any flickering or any other issues",
+  },
+  { text: "So far it looks cool!" },
+  { text: "And seems to be pretty stable" },
+  {
+    text: "This is a literally missing 'move' operation in react/react-native. Before we could only create/delete elements, but now you get power of zero-overhead 'move' operation and it can bring your app performance on the next level and also significantly boost your app UI cause it unlocks the power that we didn't have before",
+  },
+  // continue dialog further
+  { text: "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" },
+  {
+    text: "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+    sender: true,
+  },
+  { text: "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" },
+  {
+    text: "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
+    sender: true,
+  },
+  { text: "Wow! That's awesome!" },
+  { text: "Yes! Totally agree!" },
 ];

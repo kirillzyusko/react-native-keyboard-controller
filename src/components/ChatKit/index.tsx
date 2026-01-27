@@ -1,24 +1,26 @@
-import React, { forwardRef, useEffect, useRef, useState } from "react";
-import {
-  Animated,
-  Button,
-  ScrollView,
-  type ScrollViewProps,
-  View,
-} from "react-native";
-import { useAnimatedProps, useAnimatedStyle } from "react-native-reanimated";
+import React, { forwardRef } from "react";
+import Reanimated, {
+  scrollTo,
+  useAnimatedProps,
+  useAnimatedRef,
+  useScrollViewOffset,
+  useSharedValue,
+} from "react-native-reanimated";
 
-import { KeyboardEvents } from "../../bindings";
-import { useKeyboardAnimation, useKeyboardState } from "../../hooks";
+import { ClippingScrollView } from "../../bindings";
+import { useKeyboardHandler } from "../../hooks";
 import useCombinedRef from "../hooks/useCombinedRef";
 
-// import { useKeyboardAnimation } from "./hooks";
+import type { ScrollViewProps } from "react-native";
 
-import type Reanimated from "react-native-reanimated";
+// import { useKeyboardAnimation } from "./hooks";
 
 export type ChatKitScrollViewProps = {
   //
 } & ScrollViewProps;
+
+const ReanimatedClippingScrollView =
+  Reanimated.createAnimatedComponent(ClippingScrollView);
 
 const ChatScrollView = forwardRef<
   Reanimated.ScrollView,
@@ -26,8 +28,6 @@ const ChatScrollView = forwardRef<
 >(({ children, ...rest }, ref) => {
   /*const { animatedRef, translateY, padding, offset, scroll } =
     useKeyboardAnimation();
-
-  const onRef = useCombinedRef(ref, animatedRef);
 
   const s = useAnimatedStyle(
     () => ({
@@ -77,50 +77,50 @@ const ChatScrollView = forwardRef<
     [],
   );*/
 
-  const scrollViewRef = useRef(null);
-  const { height } = useKeyboardAnimation();
+  const scrollViewRef = useAnimatedRef<Reanimated.ScrollView>();
+  const offsetBeforeScroll = useSharedValue(0);
+  const scroll = useScrollViewOffset(scrollViewRef);
+  const onRef = useCombinedRef(ref, scrollViewRef);
 
-  const [padding, setPadding] = useState(0);
-  const [padding2, setPadding2] = useState(0);
-  const [offset, setOffset] = useState(0);
-  const keyboardHeightRef = useRef(0);
+  const spacer = useSharedValue(0);
 
-  useEffect(() => {
-    const s1 = KeyboardEvents.addListener("keyboardDidShow", (e) => {
-      setPadding2(0);
-      setPadding(e.height);
-      keyboardHeightRef.current = e.height;
-    });
-    const s2 = KeyboardEvents.addListener("keyboardDidHide", () => {
-      setPadding2(keyboardHeightRef.current);
-      setPadding(0);
-      setTimeout(() => {
-        setPadding2(0);
-        setPadding(0);
-      }, 16);
-    });
+  useKeyboardHandler(
+    {
+      onStart: (e) => {
+        "worklet";
 
-    return () => {
-      s1.remove();
-      s2.remove();
+        if (e.height > 0) {
+          // eslint-disable-next-line react-compiler/react-compiler
+          offsetBeforeScroll.value = scroll.value;
+          spacer.value = e.height;
+        }
+      },
+      onMove: (e) => {
+        "worklet";
+
+        scrollTo(scrollViewRef, 0, offsetBeforeScroll.value + e.height, false);
+      },
+      onEnd: (e) => {
+        "worklet";
+
+        spacer.value = e.height;
+      },
+    },
+    [],
+  );
+
+  const spacerStyle = useAnimatedProps(() => {
+    return {
+      contentInsetBottom: spacer.value,
     };
   }, []);
 
   return (
-    <Animated.View style={{ flex: 1, transform: [{ translateY: height }] }}>
-      <Animated.ScrollView
-        ref={scrollViewRef}
-        // ref={onRef}
-        maintainVisibleContentPosition={{
-          minIndexForVisible: 0,
-          autoscrollToTopThreshold: 0,
-        }}
-        {...rest}
-      >
-        <View style={{ height: padding }} />
+    <ReanimatedClippingScrollView animatedProps={spacerStyle}>
+      <Reanimated.ScrollView ref={onRef} {...rest} style={{ paddingTop: 20 }}>
         {children}
-      </Animated.ScrollView>
-    </Animated.View>
+      </Reanimated.ScrollView>
+    </ReanimatedClippingScrollView>
   );
 });
 
