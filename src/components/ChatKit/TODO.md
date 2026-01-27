@@ -10,9 +10,9 @@
 ## To Do
 
 - [x] check how `ClippingScrollView` works in `KeyboardAwareScrollView` on Android (seems to be working well)
+- [x] introduce `useCombinedRef` hook in separate PR
 - [] `ClippingScrollView` + `KeyboardAwareScrollView` check by e2e tests
 - [] create a polyfill-version of ScrollView `that` can add scrollable padding in the bottom of the content? How to wrap custom `ScrollView` with it (cause we may pass one from RNGH)? Should just adjust `contentInset` (scroll management should belong to `KeyboardAwareScrollView`)
 - [] make sure, that style property doesn't affect the behavior with/without `ClippingScrollView` (test on a ScrollView that doesn't tke full screen?)
-- [] introduce `useCombinedRef` hook in separate PR
 - [] introduce `ClippingScrollView` in separate PR + use `ClippingScrollView` in `KeyboardAwareScrollView`
 - [] introduce `ChatKit`
