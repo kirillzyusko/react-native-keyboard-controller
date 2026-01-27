@@ -1,14 +1,20 @@
-import React, { forwardRef } from "react";
-import Reanimated, {
-  useAnimatedProps,
-  useAnimatedStyle,
-} from "react-native-reanimated";
+import React, { forwardRef, useEffect, useRef, useState } from "react";
+import {
+  Animated,
+  Button,
+  ScrollView,
+  type ScrollViewProps,
+  View,
+} from "react-native";
+import { useAnimatedProps, useAnimatedStyle } from "react-native-reanimated";
 
+import { KeyboardEvents } from "../../bindings";
+import { useKeyboardAnimation, useKeyboardState } from "../../hooks";
 import useCombinedRef from "../hooks/useCombinedRef";
 
-import { useKeyboardAnimation } from "./hooks";
+// import { useKeyboardAnimation } from "./hooks";
 
-import type { ScrollViewProps } from "react-native";
+import type Reanimated from "react-native-reanimated";
 
 export type ChatKitScrollViewProps = {
   //
@@ -18,7 +24,7 @@ const ChatScrollView = forwardRef<
   Reanimated.ScrollView,
   React.PropsWithChildren<ChatKitScrollViewProps>
 >(({ children, ...rest }, ref) => {
-  const { animatedRef, translateY, padding, offset, scroll } =
+  /*const { animatedRef, translateY, padding, offset, scroll } =
     useKeyboardAnimation();
 
   const onRef = useCombinedRef(ref, animatedRef);
@@ -66,20 +72,55 @@ const ChatScrollView = forwardRef<
   );
   const fakeView = useAnimatedStyle(
     () => ({
-      height: translateY.value,
+      height: padding.value,
     }),
     [],
-  );
+  );*/
+
+  const scrollViewRef = useRef(null);
+  const { height } = useKeyboardAnimation();
+
+  const [padding, setPadding] = useState(0);
+  const [padding2, setPadding2] = useState(0);
+  const [offset, setOffset] = useState(0);
+  const keyboardHeightRef = useRef(0);
+
+  useEffect(() => {
+    const s1 = KeyboardEvents.addListener("keyboardDidShow", (e) => {
+      setPadding2(0);
+      setPadding(e.height);
+      keyboardHeightRef.current = e.height;
+    });
+    const s2 = KeyboardEvents.addListener("keyboardDidHide", () => {
+      setPadding2(keyboardHeightRef.current);
+      setPadding(0);
+      setTimeout(() => {
+        setPadding2(0);
+        setPadding(0);
+      }, 16);
+    });
+
+    return () => {
+      s1.remove();
+      s2.remove();
+    };
+  }, []);
 
   return (
-    <Reanimated.View style={}>
-      <Reanimated.ScrollView ref={onRef} {...rest}>
-        <Reanimated.View style={scrollViewStyle}>
-          <Reanimated.View style={fakeView} />
-          {children}
-        </Reanimated.View>
-      </Reanimated.ScrollView>
-    </Reanimated.View>
+    <Animated.View style={{ flex: 1, transform: [{ translateY: height }] }}>
+      <Animated.ScrollView
+        ref={scrollViewRef}
+        // ref={onRef}
+        maintainVisibleContentPosition={{
+          minIndexForVisible: 0,
+          autoscrollToTopThreshold: 0,
+        }}
+        {...rest}
+      >
+        <View style={{ height: padding }} />
+        {children}
+      </Animated.ScrollView>
+    </Animated.View>
   );
 });
 
