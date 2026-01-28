@@ -21,7 +21,10 @@ class ClippingScrollViewDecoratorViewManager :
   override fun createViewInstance(context: ThemedReactContext): ClippingScrollViewDecoratorView =
     manager.createViewInstance(context)
 
-  override fun setContentInsetBottom(view: ClippingScrollViewDecoratorView?, value: Double) {
+  override fun setContentInsetBottom(
+    view: ClippingScrollViewDecoratorView?,
+    value: Double,
+  ) {
     view?.setContentInsetBottom(value)
   }
 }
