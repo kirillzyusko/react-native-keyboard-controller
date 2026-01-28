@@ -5,20 +5,18 @@ import React, {
   useImperativeHandle,
   useMemo,
 } from "react";
-import { Platform } from "react-native";
 import Reanimated, {
   clamp,
   interpolate,
   runOnUI,
   scrollTo,
-  useAnimatedProps,
   useAnimatedReaction,
   useAnimatedRef,
+  useDerivedValue,
   useScrollViewOffset,
   useSharedValue,
 } from "react-native-reanimated";
 
-import { ClippingScrollView } from "../../bindings";
 import {
   useFocusedInputHandler,
   useReanimatedFocusedInput,
@@ -26,12 +24,8 @@ import {
 } from "../../hooks";
 import { findNodeHandle } from "../../utils/findNodeHandle";
 import useCombinedRef from "../hooks/useCombinedRef";
+import ScrollViewWithBottomPadding from "../ScrollViewWithBottomPadding";
 
-const OS = Platform.OS;
-const ReanimatedClippingScrollView =
-  Reanimated.createAnimatedComponent(ClippingScrollView);
-
-import styles from "./styles";
 import { useSmoothKeyboardHandler } from "./useSmoothKeyboardHandler";
 import { debounce, scrollDistanceWithRespectToSnapPoints } from "./utils";
 
@@ -450,48 +444,28 @@ const KeyboardAwareScrollView = forwardRef<
       [],
     );
 
-    // TODO: move this hook + markup in a separate (reusable) component
-    const animatedProps = useAnimatedProps(
-      () =>
-        // @ts-expect-error this code is for testing, I'll fix all TS inconsistences later
-        // eslint-disable-next-line no-nested-ternary
-        enabled
-          ? OS === "ios"
-            ? {
-                contentInset: {
-                  // animations become choppy when scrolling to the end of the `ScrollView` (when the last input is focused)
-                  // this happens because the layout recalculates on every frame. To avoid this we slightly increase padding
-                  // by `+1`. In this way we assure, that `scrollTo` will never scroll to the end, because it uses interpolation
-                  // from 0 to `keyboardHeight`, and here our padding is `keyboardHeight + 1`. It allows us not to re-run layout
-                  // re-calculation on every animation frame and it helps to achieve smooth animation.
-                  // see: https://github.com/kirillzyusko/react-native-keyboard-controller/pull/342
-                  bottom: currentKeyboardFrameHeight.value + 1,
-                },
-              }
-            : {
-                contentInsetBottom: currentKeyboardFrameHeight.value + 1,
-              }
-          : {},
+    // animations become choppy when scrolling to the end of the `ScrollView` (when the last input is focused)
+    // this happens because the layout recalculates on every frame. To avoid this we slightly increase padding
+    // by `+1`. In this way we assure, that `scrollTo` will never scroll to the end, because it uses interpolation
+    // from 0 to `keyboardHeight`, and here our padding is `keyboardHeight + 1`. It allows us not to re-run layout
+    // re-calculation on every animation frame and it helps to achieve smooth animation.
+    // see: https://github.com/kirillzyusko/react-native-keyboard-controller/pull/342
+    const padding = useDerivedValue(
+      () => (enabled ? currentKeyboardFrameHeight.value + 1 : 0),
       [enabled],
     );
 
     return (
-      <ReanimatedClippingScrollView
-        // @ts-expect-error if we pass undefined it will crash paper arch
-        animatedProps={OS === "android" && animatedProps}
-        style={styles.container}
+      <ScrollViewWithBottomPadding
+        ref={onRef}
+        {...rest}
+        bottomPadding={padding}
+        scrollEventThrottle={16}
+        ScrollViewComponent={ScrollViewComponent}
+        onLayout={onScrollViewLayout}
       >
-        <ScrollViewComponent
-          ref={onRef}
-          {...rest}
-          // @ts-expect-error if we pass undefined it will crash paper arch
-          animatedProps={OS === "ios" && animatedProps}
-          scrollEventThrottle={16}
-          onLayout={onScrollViewLayout}
-        >
-          {children}
-        </ScrollViewComponent>
-      </ReanimatedClippingScrollView>
+        {children}
+      </ScrollViewWithBottomPadding>
     );
   },
 );
