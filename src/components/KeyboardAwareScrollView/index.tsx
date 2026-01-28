@@ -5,6 +5,7 @@ import React, {
   useImperativeHandle,
   useMemo,
 } from "react";
+import { Platform } from "react-native";
 import Reanimated, {
   clamp,
   interpolate,
@@ -17,6 +18,7 @@ import Reanimated, {
   useSharedValue,
 } from "react-native-reanimated";
 
+import { ClippingScrollView } from "../../bindings";
 import {
   useFocusedInputHandler,
   useReanimatedFocusedInput,
@@ -25,6 +27,11 @@ import {
 import { findNodeHandle } from "../../utils/findNodeHandle";
 import useCombinedRef from "../hooks/useCombinedRef";
 
+const OS = Platform.OS;
+const ReanimatedClippingScrollView =
+  Reanimated.createAnimatedComponent(ClippingScrollView);
+
+import styles from "./styles";
 import { useSmoothKeyboardHandler } from "./useSmoothKeyboardHandler";
 import { debounce, scrollDistanceWithRespectToSnapPoints } from "./utils";
 
@@ -443,34 +450,48 @@ const KeyboardAwareScrollView = forwardRef<
       [],
     );
 
-    const view = useAnimatedProps(
+    // TODO: move this hook + markup in a separate (reusable) component
+    const animatedProps = useAnimatedProps(
       () =>
+        // @ts-expect-error this code is for testing, I'll fix all TS inconsistences later
+        // eslint-disable-next-line no-nested-ternary
         enabled
-          ? {
-              contentInset: {
-                // animations become choppy when scrolling to the end of the `ScrollView` (when the last input is focused)
-                // this happens because the layout recalculates on every frame. To avoid this we slightly increase padding
-                // by `+1`. In this way we assure, that `scrollTo` will never scroll to the end, because it uses interpolation
-                // from 0 to `keyboardHeight`, and here our padding is `keyboardHeight + 1`. It allows us not to re-run layout
-                // re-calculation on every animation frame and it helps to achieve smooth animation.
-                // see: https://github.com/kirillzyusko/react-native-keyboard-controller/pull/342
-                bottom: currentKeyboardFrameHeight.value + 1,
-              },
-            }
+          ? OS === "ios"
+            ? {
+                contentInset: {
+                  // animations become choppy when scrolling to the end of the `ScrollView` (when the last input is focused)
+                  // this happens because the layout recalculates on every frame. To avoid this we slightly increase padding
+                  // by `+1`. In this way we assure, that `scrollTo` will never scroll to the end, because it uses interpolation
+                  // from 0 to `keyboardHeight`, and here our padding is `keyboardHeight + 1`. It allows us not to re-run layout
+                  // re-calculation on every animation frame and it helps to achieve smooth animation.
+                  // see: https://github.com/kirillzyusko/react-native-keyboard-controller/pull/342
+                  bottom: currentKeyboardFrameHeight.value + 1,
+                },
+              }
+            : {
+                contentInsetBottom: currentKeyboardFrameHeight.value + 1,
+              }
           : {},
       [enabled],
     );
 
     return (
-      <ScrollViewComponent
-        ref={onRef}
-        {...rest}
-        animatedProps={view}
-        scrollEventThrottle={16}
-        onLayout={onScrollViewLayout}
+      <ReanimatedClippingScrollView
+        // @ts-expect-error if we pass undefined it will crash paper arch
+        animatedProps={OS === "android" && animatedProps}
+        style={styles.container}
       >
-        {children}
-      </ScrollViewComponent>
+        <ScrollViewComponent
+          ref={onRef}
+          {...rest}
+          // @ts-expect-error if we pass undefined it will crash paper arch
+          animatedProps={OS === "ios" && animatedProps}
+          scrollEventThrottle={16}
+          onLayout={onScrollViewLayout}
+        >
+          {children}
+        </ScrollViewComponent>
+      </ReanimatedClippingScrollView>
     );
   },
 );
