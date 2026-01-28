@@ -47,6 +47,7 @@ import type {
   FocusedInputSelectionChangedEvent,
   NativeEvent,
 } from "react-native-keyboard-controller";
+import styles from "./styles";
 
 export type KeyboardAwareScrollViewProps = {
   /** The distance between the keyboard and the caret inside a focused `TextInput` when the keyboard is shown. Default is `0`. */
