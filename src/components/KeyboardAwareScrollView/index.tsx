@@ -29,6 +29,7 @@ import ScrollViewWithBottomPadding from "../ScrollViewWithBottomPadding";
 import { useSmoothKeyboardHandler } from "./useSmoothKeyboardHandler";
 import { debounce, scrollDistanceWithRespectToSnapPoints } from "./utils";
 
+import type { AnimatedScrollViewComponent } from "../ScrollViewWithBottomPadding";
 import type {
   LayoutChangeEvent,
   ScrollView,
@@ -50,7 +51,7 @@ export type KeyboardAwareScrollViewProps = {
   /** Adjusting the bottom spacing of KeyboardAwareScrollView. Default is `0`. */
   extraKeyboardSpace?: number;
   /** Custom component for `ScrollView`. Default is `ScrollView`. */
-  ScrollViewComponent?: React.ComponentType<ScrollViewProps>;
+  ScrollViewComponent?: AnimatedScrollViewComponent;
 } & ScrollViewProps;
 export type KeyboardAwareScrollViewRef = {
   assureFocusedInputVisible: () => void;
