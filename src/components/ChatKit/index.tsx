@@ -18,6 +18,7 @@ import type { ScrollViewProps } from "react-native";
 
 export type ChatKitScrollViewProps = {
   ScrollViewComponent: AnimatedScrollViewComponent;
+  inverted?: boolean;
 } & ScrollViewProps;
 
 const ChatScrollView = forwardRef<
