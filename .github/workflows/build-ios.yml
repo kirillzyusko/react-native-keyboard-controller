@@ -96,9 +96,9 @@ jobs:
         uses: actions/cache@v5
         with:
           path: example/ios/build
-          key: ${{ runner.os }}-derived-data-${{ hashFiles('**/Podfile.lock', '**/Gemfile.lock', '**/package.json', '**/yarn.lock') }}-xcode-${{ env.XCODE_VERSION }}
+          key: ${{ runner.os }}-derived-data-xcode-${{ env.XCODE_VERSION }}-${{ hashFiles('**/Podfile.lock', '**/Gemfile.lock', '**/package.json', '**/yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-derived-data-
+            ${{ runner.os }}-derived-data-xcode-${{ env.XCODE_VERSION }}-
       - name: Build App
         run: "set -o pipefail && xcodebuild \
           CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ \
