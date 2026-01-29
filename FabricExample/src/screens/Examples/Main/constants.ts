@@ -153,4 +153,10 @@ export const examples: Example[] = [
     info: ScreenNames.KEYBOARD_EXTENDER,
     icons: "🧩",
   },
+  {
+    title: "Chat Kit",
+    testID: "chat_kit",
+    info: ScreenNames.CHAT_KIT,
+    icons: "🛠 💬",
+  },
 ];
