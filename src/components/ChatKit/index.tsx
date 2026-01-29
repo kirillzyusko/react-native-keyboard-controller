@@ -1,31 +1,29 @@
 import React, { forwardRef } from "react";
-import Reanimated, {
+import {
   scrollTo,
-  useAnimatedProps,
   useAnimatedRef,
   useScrollViewOffset,
   useSharedValue,
 } from "react-native-reanimated";
+import Reanimated from "react-native-reanimated";
 
-import { ClippingScrollView } from "../../bindings";
 import { useKeyboardHandler } from "../../hooks";
 import useCombinedRef from "../hooks/useCombinedRef";
+import ScrollViewWithBottomPadding from "../ScrollViewWithBottomPadding";
 
+import type { AnimatedScrollViewComponent } from "../ScrollViewWithBottomPadding";
 import type { ScrollViewProps } from "react-native";
 
 // import { useKeyboardAnimation } from "./hooks";
 
 export type ChatKitScrollViewProps = {
-  //
+  ScrollViewComponent: AnimatedScrollViewComponent;
 } & ScrollViewProps;
-
-const ReanimatedClippingScrollView =
-  Reanimated.createAnimatedComponent(ClippingScrollView);
 
 const ChatScrollView = forwardRef<
   Reanimated.ScrollView,
   React.PropsWithChildren<ChatKitScrollViewProps>
->(({ children, ...rest }, ref) => {
+>(({ children, ScrollViewComponent = Reanimated.ScrollView, ...rest }, ref) => {
   /*const { animatedRef, translateY, padding, offset, scroll } =
     useKeyboardAnimation();
 
@@ -109,18 +107,15 @@ const ChatScrollView = forwardRef<
     [],
   );
 
-  const spacerStyle = useAnimatedProps(() => {
-    return {
-      contentInsetBottom: spacer.value,
-    };
-  }, []);
-
   return (
-    <ReanimatedClippingScrollView animatedProps={spacerStyle}>
-      <Reanimated.ScrollView ref={onRef} {...rest} style={{ paddingTop: 20 }}>
-        {children}
-      </Reanimated.ScrollView>
-    </ReanimatedClippingScrollView>
+    <ScrollViewWithBottomPadding
+      ref={onRef}
+      {...rest}
+      bottomPadding={spacer}
+      ScrollViewComponent={ScrollViewComponent}
+    >
+      {children}
+    </ScrollViewWithBottomPadding>
   );
 });
 
