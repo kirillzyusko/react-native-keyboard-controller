@@ -13,7 +13,6 @@ import Reanimated, {
   useAnimatedReaction,
   useAnimatedRef,
   useDerivedValue,
-  useScrollViewOffset,
   useSharedValue,
 } from "react-native-reanimated";
 
@@ -24,6 +23,7 @@ import {
 } from "../../hooks";
 import { findNodeHandle } from "../../utils/findNodeHandle";
 import useCombinedRef from "../hooks/useCombinedRef";
+import useScrollState from "../hooks/useScrollState";
 import ScrollViewWithBottomPadding from "../ScrollViewWithBottomPadding";
 
 import { useSmoothKeyboardHandler } from "./useSmoothKeyboardHandler";
@@ -133,7 +133,11 @@ const KeyboardAwareScrollView = forwardRef<
     const onRef = useCombinedRef(scrollViewAnimatedRef, scrollViewRef);
     const scrollViewTarget = useSharedValue<number | null>(null);
     const scrollPosition = useSharedValue(0);
-    const position = useScrollViewOffset(scrollViewAnimatedRef);
+    const {
+      offset: position,
+      layout: scrollViewLayout,
+      size: scrollViewContentSize,
+    } = useScrollState(scrollViewAnimatedRef);
     const currentKeyboardFrameHeight = useSharedValue(0);
     const keyboardHeight = useSharedValue(0);
     const keyboardWillAppear = useSharedValue(false);
@@ -380,8 +384,23 @@ const KeyboardAwareScrollView = forwardRef<
 
           syncKeyboardFrame(e);
 
-          // if the user has set disableScrollOnKeyboardHide, only auto-scroll when the keyboard opens
-          if (!disableScrollOnKeyboardHide || keyboardWillAppear.value) {
+          // TODO: not so smooth on iOS?
+          const isAtTheEnd =
+            position.value + scrollViewLayout.value.height >
+            scrollViewContentSize.value.height + e.height;
+
+          // new `ScrollViewWithBottomPadding` behavior: if we hide keyboard and we are in the end of `ScrollView`
+          // then we always need to scroll back, because we apply a padding that doesn't change layout, so we will
+          // not have auto scroll back in this case
+          if (!keyboardWillAppear.value && isAtTheEnd) {
+            scrollTo(
+              scrollViewAnimatedRef,
+              0,
+              scrollPosition.value - (keyboardHeight.value - e.height),
+              false,
+            );
+          } else if (!disableScrollOnKeyboardHide || keyboardWillAppear.value) {
+            // if the user has set disableScrollOnKeyboardHide, only auto-scroll when the keyboard opens
             maybeScroll(e.height);
           }
         },
