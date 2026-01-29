@@ -93,9 +93,9 @@ jobs:
         uses: actions/cache@v5
         with:
           path: example/ios/build
-          key: ${{ runner.os }}-e2e-derived-data-${{ hashFiles('**/Podfile.lock', '**/Gemfile.lock', '**/package.json', '**/yarn.lock') }}-xcode-${{ matrix.config.xcode }}
+          key: ${{ runner.os }}-e2e-derived-data-xcode-${{ matrix.config.xcode }}-${{ hashFiles('**/Podfile.lock', '**/Gemfile.lock', '**/package.json', '**/yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-e2e-derived-data-
+            ${{ runner.os }}-e2e-derived-data-xcode-${{ matrix.config.xcode }}-
       - name: Build app
         working-directory: e2e
         run: yarn build-example:ios
