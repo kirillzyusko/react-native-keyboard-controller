@@ -148,6 +148,7 @@ const KeyboardAwareScrollView = forwardRef<
     const layout = useSharedValue<FocusedInputLayoutChangedEvent | null>(null);
     const lastSelection =
       useSharedValue<FocusedInputSelectionChangedEvent | null>(null);
+    const isAtTheEnd = useSharedValue(false);
 
     const { height } = useWindowDimensions();
 
@@ -378,24 +379,38 @@ const KeyboardAwareScrollView = forwardRef<
             // will pick up correct values
             position.value += maybeScroll(e.height, true);
           }
+
+          isAtTheEnd.value =
+            position.value + scrollViewLayout.value.height >
+            scrollViewContentSize.value.height;
+
+          if (isAtTheEnd.value) {
+            scrollPosition.value = position.value;
+          }
+
+          console.log(
+            "isAtTheEnd",
+            isAtTheEnd.value,
+            position.value,
+            scrollViewLayout.value.height,
+            scrollViewContentSize.value.height,
+            keyboardHeight.value,
+          );
         },
         onMove: (e) => {
           "worklet";
 
           syncKeyboardFrame(e);
 
-          // TODO: not so smooth on iOS?
-          const isAtTheEnd =
-            position.value + scrollViewLayout.value.height >
-            scrollViewContentSize.value.height + e.height;
-
           // new `ScrollViewWithBottomPadding` behavior: if we hide keyboard and we are in the end of `ScrollView`
           // then we always need to scroll back, because we apply a padding that doesn't change layout, so we will
           // not have auto scroll back in this case
-          if (!keyboardWillAppear.value && isAtTheEnd) {
+          if (!keyboardWillAppear.value && isAtTheEnd.value) {
             scrollTo(
               scrollViewAnimatedRef,
               0,
+              // TODO: we need to interpolate it? If last input has been scrolled only a little bit we don't need to move it by keyboard height back
+              // do we need to capture scroll diff between full scroll (content + scroll) and current position?
               scrollPosition.value - (keyboardHeight.value - e.height),
               false,
             );

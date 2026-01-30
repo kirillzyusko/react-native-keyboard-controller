@@ -33,7 +33,9 @@ const useScrollState = (ref: AnimatedRef<Reanimated.ScrollView>) => {
   const offset = useSharedValue(0);
   const layout = useSharedValue({ width: 0, height: 0 });
   const size = useSharedValue({ width: 0, height: 0 });
+
   const register = useEventHandlerRegistration(ref);
+
   const eventHandler = useEvent((event: ScrollEvent) => {
     "worklet";
 
