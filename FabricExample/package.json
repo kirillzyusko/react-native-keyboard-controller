@@ -37,7 +37,8 @@
     "react-native-toast-message": "^2.3.0",
     "react-native-web": "^0.21.2",
     "react-native-webview": "^13.16.0",
-    "react-native-worklets": "^0.7.1"
+    "react-native-worklets": "^0.7.1",
+    "zustand": "^5.0.10"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
