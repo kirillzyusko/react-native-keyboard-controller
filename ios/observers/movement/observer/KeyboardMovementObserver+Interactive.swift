@@ -30,6 +30,10 @@ extension KeyboardMovementObserver {
       return
     }
 
+    if KeyboardEventsIgnorer.shared.shouldIgnore {
+      return
+    }
+
     let position = keyboardTrackingView.interactive(point: changeValue)
 
     if position == KeyboardTrackingView.invalidPosition {
