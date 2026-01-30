@@ -7,6 +7,9 @@ const MARGIN = 16;
 export const contentContainerStyle = {
   paddingBottom: TEXT_INPUT_HEIGHT + MARGIN,
 };
+export const invertedContentContainerStyle = {
+  paddingTop: TEXT_INPUT_HEIGHT + MARGIN,
+};
 
 export default StyleSheet.create({
   container: {
@@ -40,19 +43,5 @@ export default StyleSheet.create({
   icon: {
     width: 20,
     height: 20,
-  },
-  // bottom sheet
-  header: {
-    color: "black",
-    paddingRight: 12,
-  },
-  bottomSheetContent: {
-    flex: 1,
-  },
-  switchContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    margin: 16,
   },
 });
