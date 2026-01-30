@@ -115,6 +115,10 @@ If you have _**sticky elements**_ above the keyboard and want to extend the keyb
 This property acts as [extraScrollHeight](https://github.com/APSL/react-native-keyboard-aware-scroll-view/tree/9eee405f7b3e261faf86a0fc8e495288d91c853e?tab=readme-ov-file#props) from original [react-native-keyboard-aware-scroll-view](https://github.com/APSL/react-native-keyboard-aware-scroll-view) package.
 :::
 
+### `withKeyboardHeightPadding`
+
+Specifies whether to add padding equal to the keyboard height. This is useful when working with components like a bottom sheet, where the bottom sheet manages the position of the modal above the keyboard. In such cases, adding extra padding for the keyboard is unnecessary.
+
 ## Integration with 3rd party components
 
 ### `FlatList`/`FlashList`/`SectionList` etc.
