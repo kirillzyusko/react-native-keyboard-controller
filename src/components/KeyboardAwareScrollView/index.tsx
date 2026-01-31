@@ -220,6 +220,30 @@ const KeyboardAwareScrollView = forwardRef<
       },
       [bottomOffset, enabled, height, snapToOffsets],
     );
+    const removeGhostPadding = useCallback((e: number) => {
+      "worklet";
+
+      // new `ScrollViewWithBottomPadding` behavior: if we hide keyboard and we are in the end of `ScrollView`
+      // then we always need to scroll back, because we apply a padding that doesn't change layout, so we will
+      // not have auto scroll back in this case
+      if (!keyboardWillAppear.value && ghostViewSpace.value > 0) {
+        scrollTo(
+          scrollViewAnimatedRef,
+          0,
+          scrollPosition.value -
+            interpolate(
+              e,
+              [initialKeyboardSize.value, keyboardHeight.value],
+              [ghostViewSpace.value, 0],
+            ),
+          false,
+        );
+
+        return true;
+      }
+
+      return false;
+    }, []);
     const performScrollWithPositionRestoration = useCallback(
       (newPosition: number) => {
         "worklet";
@@ -388,43 +412,25 @@ const KeyboardAwareScrollView = forwardRef<
           if (ghostViewSpace.value > 0) {
             scrollPosition.value = position.value;
           }
-
-          console.log(
-            "isAtTheEnd",
-            ghostViewSpace.value,
-            position.value,
-            scrollViewLayout.value.height,
-            scrollViewContentSize.value.height,
-            keyboardHeight.value,
-          );
         },
         onMove: (e) => {
           "worklet";
 
           syncKeyboardFrame(e);
 
-          // new `ScrollViewWithBottomPadding` behavior: if we hide keyboard and we are in the end of `ScrollView`
-          // then we always need to scroll back, because we apply a padding that doesn't change layout, so we will
-          // not have auto scroll back in this case
-          if (!keyboardWillAppear.value && ghostViewSpace.value > 0) {
-            scrollTo(
-              scrollViewAnimatedRef,
-              0,
-              scrollPosition.value -
-                interpolate(
-                  e.height,
-                  [initialKeyboardSize.value, keyboardHeight.value],
-                  [ghostViewSpace.value, 0],
-                ),
-              false,
-            );
-          } else if (!disableScrollOnKeyboardHide || keyboardWillAppear.value) {
-            // if the user has set disableScrollOnKeyboardHide, only auto-scroll when the keyboard opens
+          if (removeGhostPadding(e.height)) {
+            return;
+          }
+
+          // if the user has set disableScrollOnKeyboardHide, only auto-scroll when the keyboard opens
+          if (!disableScrollOnKeyboardHide || keyboardWillAppear.value) {
             maybeScroll(e.height);
           }
         },
         onEnd: (e) => {
           "worklet";
+
+          removeGhostPadding(e.height);
 
           keyboardHeight.value = e.height;
           scrollPosition.value = position.value;
@@ -432,7 +438,12 @@ const KeyboardAwareScrollView = forwardRef<
           syncKeyboardFrame(e);
         },
       },
-      [maybeScroll, disableScrollOnKeyboardHide, syncKeyboardFrame],
+      [
+        maybeScroll,
+        removeGhostPadding,
+        disableScrollOnKeyboardHide,
+        syncKeyboardFrame,
+      ],
     );
 
     const synchronize = useCallback(async () => {
