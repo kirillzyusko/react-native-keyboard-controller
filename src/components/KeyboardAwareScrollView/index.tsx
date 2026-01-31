@@ -148,7 +148,7 @@ const KeyboardAwareScrollView = forwardRef<
     const layout = useSharedValue<FocusedInputLayoutChangedEvent | null>(null);
     const lastSelection =
       useSharedValue<FocusedInputSelectionChangedEvent | null>(null);
-    const isAtTheEnd = useSharedValue(false);
+    const ghostViewSpace = useSharedValue(-1);
 
     const { height } = useWindowDimensions();
 
@@ -380,17 +380,18 @@ const KeyboardAwareScrollView = forwardRef<
             position.value += maybeScroll(e.height, true);
           }
 
-          isAtTheEnd.value =
-            position.value + scrollViewLayout.value.height >
+          ghostViewSpace.value =
+            position.value +
+            scrollViewLayout.value.height -
             scrollViewContentSize.value.height;
 
-          if (isAtTheEnd.value) {
+          if (ghostViewSpace.value > 0) {
             scrollPosition.value = position.value;
           }
 
           console.log(
             "isAtTheEnd",
-            isAtTheEnd.value,
+            ghostViewSpace.value,
             position.value,
             scrollViewLayout.value.height,
             scrollViewContentSize.value.height,
@@ -405,13 +406,16 @@ const KeyboardAwareScrollView = forwardRef<
           // new `ScrollViewWithBottomPadding` behavior: if we hide keyboard and we are in the end of `ScrollView`
           // then we always need to scroll back, because we apply a padding that doesn't change layout, so we will
           // not have auto scroll back in this case
-          if (!keyboardWillAppear.value && isAtTheEnd.value) {
+          if (!keyboardWillAppear.value && ghostViewSpace.value > 0) {
             scrollTo(
               scrollViewAnimatedRef,
               0,
-              // TODO: we need to interpolate it? If last input has been scrolled only a little bit we don't need to move it by keyboard height back
-              // do we need to capture scroll diff between full scroll (content + scroll) and current position?
-              scrollPosition.value - (keyboardHeight.value - e.height),
+              scrollPosition.value -
+                interpolate(
+                  e.height,
+                  [initialKeyboardSize.value, keyboardHeight.value],
+                  [ghostViewSpace.value, 0],
+                ),
               false,
             );
           } else if (!disableScrollOnKeyboardHide || keyboardWillAppear.value) {
