@@ -24,10 +24,10 @@ class ClippingScrollViewDecoratorView(
   }
 
   private fun decorateScrollView() {
-    val scrollView = getChildAt(0) as? ScrollView
+    val scrollView = getChildAt(0) as? ScrollView ?: return
 
-    scrollView?.clipToPadding = false
-    scrollView?.setPadding(
+    scrollView.clipToPadding = false
+    scrollView.setPadding(
       scrollView.paddingLeft,
       scrollView.paddingTop,
       scrollView.paddingRight,

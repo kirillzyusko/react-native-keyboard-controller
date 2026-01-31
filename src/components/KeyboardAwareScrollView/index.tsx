@@ -12,8 +12,7 @@ import Reanimated, {
   scrollTo,
   useAnimatedReaction,
   useAnimatedRef,
-  useAnimatedStyle,
-  useScrollViewOffset,
+  useDerivedValue,
   useSharedValue,
 } from "react-native-reanimated";
 
@@ -24,10 +23,13 @@ import {
 } from "../../hooks";
 import { findNodeHandle } from "../../utils/findNodeHandle";
 import useCombinedRef from "../hooks/useCombinedRef";
+import useScrollState from "../hooks/useScrollState";
+import ScrollViewWithBottomPadding from "../ScrollViewWithBottomPadding";
 
 import { useSmoothKeyboardHandler } from "./useSmoothKeyboardHandler";
 import { debounce, scrollDistanceWithRespectToSnapPoints } from "./utils";
 
+import type { AnimatedScrollViewComponent } from "../ScrollViewWithBottomPadding";
 import type {
   LayoutChangeEvent,
   ScrollView,
@@ -49,7 +51,7 @@ export type KeyboardAwareScrollViewProps = {
   /** Adjusting the bottom spacing of KeyboardAwareScrollView. Default is `0`. */
   extraKeyboardSpace?: number;
   /** Custom component for `ScrollView`. Default is `ScrollView`. */
-  ScrollViewComponent?: React.ComponentType<ScrollViewProps>;
+  ScrollViewComponent?: AnimatedScrollViewComponent;
 } & ScrollViewProps;
 export type KeyboardAwareScrollViewRef = {
   assureFocusedInputVisible: () => void;
@@ -131,7 +133,11 @@ const KeyboardAwareScrollView = forwardRef<
     const onRef = useCombinedRef(scrollViewAnimatedRef, scrollViewRef);
     const scrollViewTarget = useSharedValue<number | null>(null);
     const scrollPosition = useSharedValue(0);
-    const position = useScrollViewOffset(scrollViewAnimatedRef);
+    const {
+      offset: position,
+      layout: scrollViewLayout,
+      size: scrollViewContentSize,
+    } = useScrollState(scrollViewAnimatedRef);
     const currentKeyboardFrameHeight = useSharedValue(0);
     const keyboardHeight = useSharedValue(0);
     const keyboardWillAppear = useSharedValue(false);
@@ -142,6 +148,7 @@ const KeyboardAwareScrollView = forwardRef<
     const layout = useSharedValue<FocusedInputLayoutChangedEvent | null>(null);
     const lastSelection =
       useSharedValue<FocusedInputSelectionChangedEvent | null>(null);
+    const ghostViewSpace = useSharedValue(-1);
 
     const { height } = useWindowDimensions();
 
@@ -213,6 +220,30 @@ const KeyboardAwareScrollView = forwardRef<
       },
       [bottomOffset, enabled, height, snapToOffsets],
     );
+    const removeGhostPadding = useCallback((e: number) => {
+      "worklet";
+
+      // new `ScrollViewWithBottomPadding` behavior: if we hide keyboard and we are in the end of `ScrollView`
+      // then we always need to scroll back, because we apply a padding that doesn't change layout, so we will
+      // not have auto scroll back in this case
+      if (!keyboardWillAppear.value && ghostViewSpace.value > 0) {
+        scrollTo(
+          scrollViewAnimatedRef,
+          0,
+          scrollPosition.value -
+            interpolate(
+              e,
+              [initialKeyboardSize.value, keyboardHeight.value],
+              [ghostViewSpace.value, 0],
+            ),
+          false,
+        );
+
+        return true;
+      }
+
+      return false;
+    }, []);
     const performScrollWithPositionRestoration = useCallback(
       (newPosition: number) => {
         "worklet";
@@ -372,11 +403,24 @@ const KeyboardAwareScrollView = forwardRef<
             // will pick up correct values
             position.value += maybeScroll(e.height, true);
           }
+
+          ghostViewSpace.value =
+            position.value +
+            scrollViewLayout.value.height -
+            scrollViewContentSize.value.height;
+
+          if (ghostViewSpace.value > 0) {
+            scrollPosition.value = position.value;
+          }
         },
         onMove: (e) => {
           "worklet";
 
           syncKeyboardFrame(e);
+
+          if (removeGhostPadding(e.height)) {
+            return;
+          }
 
           // if the user has set disableScrollOnKeyboardHide, only auto-scroll when the keyboard opens
           if (!disableScrollOnKeyboardHide || keyboardWillAppear.value) {
@@ -386,13 +430,20 @@ const KeyboardAwareScrollView = forwardRef<
         onEnd: (e) => {
           "worklet";
 
+          removeGhostPadding(e.height);
+
           keyboardHeight.value = e.height;
           scrollPosition.value = position.value;
 
           syncKeyboardFrame(e);
         },
       },
-      [maybeScroll, disableScrollOnKeyboardHide, syncKeyboardFrame],
+      [
+        maybeScroll,
+        removeGhostPadding,
+        disableScrollOnKeyboardHide,
+        syncKeyboardFrame,
+      ],
     );
 
     const synchronize = useCallback(async () => {
@@ -443,32 +494,28 @@ const KeyboardAwareScrollView = forwardRef<
       [],
     );
 
-    const view = useAnimatedStyle(
-      () =>
-        enabled
-          ? {
-              // animations become choppy when scrolling to the end of the `ScrollView` (when the last input is focused)
-              // this happens because the layout recalculates on every frame. To avoid this we slightly increase padding
-              // by `+1`. In this way we assure, that `scrollTo` will never scroll to the end, because it uses interpolation
-              // from 0 to `keyboardHeight`, and here our padding is `keyboardHeight + 1`. It allows us not to re-run layout
-              // re-calculation on every animation frame and it helps to achieve smooth animation.
-              // see: https://github.com/kirillzyusko/react-native-keyboard-controller/pull/342
-              paddingBottom: currentKeyboardFrameHeight.value + 1,
-            }
-          : {},
+    // animations become choppy when scrolling to the end of the `ScrollView` (when the last input is focused)
+    // this happens because the layout recalculates on every frame. To avoid this we slightly increase padding
+    // by `+1`. In this way we assure, that `scrollTo` will never scroll to the end, because it uses interpolation
+    // from 0 to `keyboardHeight`, and here our padding is `keyboardHeight + 1`. It allows us not to re-run layout
+    // re-calculation on every animation frame and it helps to achieve smooth animation.
+    // see: https://github.com/kirillzyusko/react-native-keyboard-controller/pull/342
+    const padding = useDerivedValue(
+      () => (enabled ? currentKeyboardFrameHeight.value + 1 : 0),
       [enabled],
     );
 
     return (
-      <ScrollViewComponent
+      <ScrollViewWithBottomPadding
         ref={onRef}
         {...rest}
+        bottomPadding={padding}
         scrollEventThrottle={16}
+        ScrollViewComponent={ScrollViewComponent}
         onLayout={onScrollViewLayout}
       >
         {children}
-        {enabled && <Reanimated.View style={view} />}
-      </ScrollViewComponent>
+      </ScrollViewWithBottomPadding>
     );
   },
 );
