@@ -20,8 +20,6 @@ interface ChatConfigStore {
   resetMessages: () => void;
 }
 
-// TODO: why do we need to use reversedMessages always?
-
 export const useChatConfigStore = create<ChatConfigStore>((set, get) => ({
   inverted: false,
   setInverted: (inverted) => set({ inverted }),
@@ -35,7 +33,7 @@ export const useChatConfigStore = create<ChatConfigStore>((set, get) => ({
   },
   messages: initialMessages,
   get reversedMessages() {
-    return get().messages.slice().reverse();
+    return [...get().messages].reverse();
   },
   setMessages: (messages) => set({ messages }),
   addMessage: (message) =>

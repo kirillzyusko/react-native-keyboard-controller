@@ -63,7 +63,7 @@ function ChatKitPlayground() {
       >
         {mode === "flat" && (
           <FlatList
-            data={inverted ? messages : reversedMessages}
+            data={inverted ? reversedMessages : messages}
             inverted={inverted}
             keyExtractor={(item) => item.text}
             renderItem={({ item }) => <Message {...item} />}
