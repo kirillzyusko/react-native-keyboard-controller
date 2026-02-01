@@ -73,7 +73,7 @@ module.exports = {
       type: "ios.simulator",
       device: {
         type: "iPhone 17 Pro",
-        os: "iOS 26.0",
+        os: "iOS 26.2",
       },
     },
     simulator26e: {
