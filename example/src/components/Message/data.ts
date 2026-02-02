@@ -24,5 +24,4 @@ export const history: MessageProps[] = [
     text: "Wow! I've been looking for it for a while. It's awesome!",
     sender: true,
   },
-  { text: "I'm glad you like it! 😎", sender: true },
 ];
