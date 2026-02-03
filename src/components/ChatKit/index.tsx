@@ -11,21 +11,24 @@ import { useKeyboardHandler } from "../../hooks";
 import useCombinedRef from "../hooks/useCombinedRef";
 import ScrollViewWithBottomPadding from "../ScrollViewWithBottomPadding";
 
-import type { AnimatedScrollViewComponent } from "../ScrollViewWithBottomPadding";
-import type { ScrollViewProps } from "react-native";
+import type { ChatKitScrollViewProps } from "./types";
 
 // import { useKeyboardAnimation } from "./hooks";
-
-export type ChatKitScrollViewProps = {
-  ScrollViewComponent: AnimatedScrollViewComponent;
-  inverted?: boolean;
-} & ScrollViewProps;
 
 const ChatScrollView = forwardRef<
   Reanimated.ScrollView,
   React.PropsWithChildren<ChatKitScrollViewProps>
->(({ children, ScrollViewComponent = Reanimated.ScrollView, ...rest }, ref) => {
-  /*const { animatedRef, translateY, padding, offset, scroll } =
+>(
+  (
+    {
+      children,
+      ScrollViewComponent = Reanimated.ScrollView,
+      keyboardLiftBehavior = "always",
+      ...rest
+    },
+    ref,
+  ) => {
+    /*const { animatedRef, translateY, padding, offset, scroll } =
     useKeyboardAnimation();
 
   const s = useAnimatedStyle(
@@ -76,49 +79,55 @@ const ChatScrollView = forwardRef<
     [],
   );*/
 
-  const scrollViewRef = useAnimatedRef<Reanimated.ScrollView>();
-  const offsetBeforeScroll = useSharedValue(0);
-  const scroll = useScrollViewOffset(scrollViewRef);
-  const onRef = useCombinedRef(ref, scrollViewRef);
+    const scrollViewRef = useAnimatedRef<Reanimated.ScrollView>();
+    const offsetBeforeScroll = useSharedValue(0);
+    const scroll = useScrollViewOffset(scrollViewRef);
+    const onRef = useCombinedRef(ref, scrollViewRef);
 
-  const spacer = useSharedValue(0);
+    const spacer = useSharedValue(0);
 
-  useKeyboardHandler(
-    {
-      onStart: (e) => {
-        "worklet";
+    useKeyboardHandler(
+      {
+        onStart: (e) => {
+          "worklet";
 
-        if (e.height > 0) {
-          // eslint-disable-next-line react-compiler/react-compiler
-          offsetBeforeScroll.value = scroll.value;
+          if (e.height > 0) {
+            // eslint-disable-next-line react-compiler/react-compiler
+            offsetBeforeScroll.value = scroll.value;
+            spacer.value = e.height;
+          }
+        },
+        onMove: (e) => {
+          "worklet";
+
+          scrollTo(
+            scrollViewRef,
+            0,
+            offsetBeforeScroll.value + e.height,
+            false,
+          );
+        },
+        onEnd: (e) => {
+          "worklet";
+
           spacer.value = e.height;
-        }
+        },
       },
-      onMove: (e) => {
-        "worklet";
+      [],
+    );
 
-        scrollTo(scrollViewRef, 0, offsetBeforeScroll.value + e.height, false);
-      },
-      onEnd: (e) => {
-        "worklet";
-
-        spacer.value = e.height;
-      },
-    },
-    [],
-  );
-
-  return (
-    <ScrollViewWithBottomPadding
-      ref={onRef}
-      {...rest}
-      bottomPadding={spacer}
-      ScrollViewComponent={ScrollViewComponent}
-    >
-      {children}
-    </ScrollViewWithBottomPadding>
-  );
-});
+    return (
+      <ScrollViewWithBottomPadding
+        ref={onRef}
+        {...rest}
+        bottomPadding={spacer}
+        ScrollViewComponent={ScrollViewComponent}
+      >
+        {children}
+      </ScrollViewWithBottomPadding>
+    );
+  },
+);
 
 const ChatKit = {
   ScrollView: ChatScrollView,
