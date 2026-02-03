@@ -142,6 +142,10 @@ const options = {
   },
   [ScreenNames.CHAT_KIT]: {
     title: "Chat Kit",
+    headerTintColor: "#fff",
+    headerStyle: {
+      backgroundColor: "#3A3A3C",
+    },
   },
 };
 

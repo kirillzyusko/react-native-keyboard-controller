@@ -15,13 +15,16 @@ export default StyleSheet.create({
   container: {
     justifyContent: "flex-end",
     flex: 1,
+    backgroundColor: "#3A3A3C",
   },
   input: {
     flex: 1,
     margin: MARGIN,
     padding: MARGIN,
     borderRadius: 99,
-    backgroundColor: "#BCBCBC",
+    borderWidth: 1,
+    borderColor: "#BCBCBC",
+    backgroundColor: "#3A3A3C66",
   },
   composer: {
     position: "absolute",

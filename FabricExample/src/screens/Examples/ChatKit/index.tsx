@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   FlatList,
   Image,
+  StyleSheet,
   TextInput,
   TouchableOpacity,
   View,
@@ -14,8 +15,9 @@ import {
   KeyboardStickyView,
 } from "react-native-keyboard-controller";
 
-import Message from "../../../components/Message";
+import BlurView from "../../../components/BlurView";
 
+import Message from "./components/Message";
 import ConfigSheet from "./config";
 import { useChatConfigStore } from "./store";
 import styles, {
@@ -100,6 +102,20 @@ function ChatKitPlayground() {
           </ChatKit.ScrollView>
         )}
         <KeyboardStickyView style={styles.composer}>
+          <View
+            style={[
+              StyleSheet.absoluteFillObject,
+              { overflow: "hidden" },
+              styles.input,
+            ]}
+          >
+            <BlurView
+              blurAmount={32}
+              blurType="light"
+              reducedTransparencyFallbackColor="white"
+              style={StyleSheet.absoluteFillObject}
+            />
+          </View>
           <TextInput
             ref={textInputRef}
             multiline
