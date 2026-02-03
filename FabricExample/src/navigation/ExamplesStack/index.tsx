@@ -146,6 +146,7 @@ const options = {
     headerStyle: {
       backgroundColor: "#3A3A3C",
     },
+    headerBackTitle: "Back",
   },
 };
 
