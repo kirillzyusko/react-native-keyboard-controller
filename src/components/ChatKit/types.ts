@@ -14,10 +14,15 @@ export type ChatKitScrollViewProps = {
    *
    * Possible values:
    * - `'always'`: The content always lifts along with the keyboard, ensuring the messages from the bottom part of screen
-   * remain visible regardless of the current scroll position. This is the default behavior for most chat applications.
+   * remain visible regardless of the current scroll position. This is the default behavior for most chat applications (used in Telegram).
    * - `'whenAtEnd'`: The content lifts only if the scroll view is at the end (i.e., the last message
    * is visible or near the bottom). This prevents unnecessary adjustments when the user is scrolling
-   * through older messages.
+   * through older messages (ChatGPT mobile app behavior).
+   * - `'persistent'`: The content always lifts when the keyboard appears (similar to `'always'`), but
+   * does not reset (lower) when the keyboard hides. This mimics behaviors where the view remains adjusted
+   * after keyboard dismissal to maintain focus on the latest content without shifting back (Claude mobile app behavior).
+   * - `'never'`: The content does not lift at all when the keyboard appears. Use this for scenarios
+   * when you don't want to disturb user attention with animations (Perplexity mobile app behavior).
    *
    * Default is `'always'`.
    */
