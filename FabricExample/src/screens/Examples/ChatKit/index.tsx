@@ -63,6 +63,24 @@ function ChatKitPlayground() {
         style={styles.container}
         textInputNativeID="chat-input"
       >
+        {mode === "legend" && (
+          <LegendList
+            data={messages}
+            keyExtractor={(item) => item.text}
+            renderItem={({ item }) => <Message {...item} />}
+            renderScrollComponent={(props) => (
+              <ChatKit.ScrollView
+                ref={ref}
+                automaticallyAdjustContentInsets={false}
+                contentContainerStyle={contentContainerStyle}
+                contentInsetAdjustmentBehavior="never"
+                keyboardDismissMode="interactive"
+                testID="chat.scroll"
+                {...props}
+              />
+            )}
+          />
+        )}
         {mode === "flat" && (
           <FlatList
             data={inverted ? reversedMessages : messages}
