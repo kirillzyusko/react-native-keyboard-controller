@@ -105,7 +105,7 @@ const ChatScrollView = forwardRef<
             scrollTo(
               scrollViewRef,
               0,
-              offsetBeforeScroll.value + e.height,
+              offsetBeforeScroll.value + (inverted ? -1 : 1) * e.height,
               false,
             );
           }
@@ -116,7 +116,7 @@ const ChatScrollView = forwardRef<
           spacer.value = e.height;
         },
       },
-      [],
+      [inverted],
     );
 
     return (

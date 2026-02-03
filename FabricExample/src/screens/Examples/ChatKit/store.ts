@@ -20,7 +20,7 @@ interface ChatConfigStore {
   resetMessages: () => void;
 }
 
-export const useChatConfigStore = create<ChatConfigStore>((set, get) => ({
+export const useChatConfigStore = create<ChatConfigStore>((set) => ({
   inverted: false,
   setInverted: (inverted) => set({ inverted }),
   beginning: false,
@@ -28,17 +28,31 @@ export const useChatConfigStore = create<ChatConfigStore>((set, get) => ({
     set(() => {
       const newMessages = beginning ? [initialMessages[0]] : initialMessages;
 
-      return { beginning, messages: newMessages };
+      return {
+        beginning,
+        messages: newMessages,
+        reversedMessages: [...newMessages].reverse(),
+      };
     });
   },
   messages: initialMessages,
-  get reversedMessages() {
-    return [...get().messages].reverse();
-  },
-  setMessages: (messages) => set({ messages }),
+  reversedMessages: [],
+  setMessages: (messages) =>
+    set({ messages, reversedMessages: [...messages].reverse() }),
   addMessage: (message) =>
-    set((state) => ({ messages: [...state.messages, message] })),
+    set((state) => {
+      const newMessages = [...state.messages, message];
+
+      return {
+        messages: newMessages,
+        reversedMessages: [...newMessages].reverse(),
+      };
+    }),
   mode: "scroll",
   setMode: (mode) => set({ mode }),
-  resetMessages: () => set({ messages: initialMessages }),
+  resetMessages: () =>
+    set({
+      messages: initialMessages,
+      reversedMessages: [...initialMessages].reverse(),
+    }),
 }));
