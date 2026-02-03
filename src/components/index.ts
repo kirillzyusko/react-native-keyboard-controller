@@ -13,4 +13,4 @@ export type {
   KeyboardAwareScrollViewRef,
 } from "./KeyboardAwareScrollView";
 export type { KeyboardToolbarProps } from "./KeyboardToolbar";
-export type { ChatKitScrollViewProps } from "./ChatKit";
+export type { ChatKitScrollViewProps } from "./ChatKit/types";
