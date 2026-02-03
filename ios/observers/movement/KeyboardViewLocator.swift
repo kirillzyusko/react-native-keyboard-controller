@@ -5,6 +5,7 @@
 //  Created by Kiryl Ziusko on 25/07/2025.
 //
 
+@MainActor
 final class KeyboardViewLocator {
   static let shared = KeyboardViewLocator()
   private var cachedKeyboardView: UIView?

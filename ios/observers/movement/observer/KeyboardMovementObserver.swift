@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 
+@MainActor
 @objc(KeyboardMovementObserver)
 public class KeyboardMovementObserver: NSObject {
   // class members
