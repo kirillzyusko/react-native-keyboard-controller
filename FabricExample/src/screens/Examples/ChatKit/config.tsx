@@ -84,7 +84,7 @@ function ConfigSheet() {
           />
         </View>
         <View style={styles.switchContainer}>
-          <Text>Use Flash List</Text>
+          <Text>Use Flash List 🚧</Text>
           <Switch
             testID="bottom_sheet_toggle_flash_list_state"
             value={mode === "flash"}
@@ -94,7 +94,7 @@ function ConfigSheet() {
           />
         </View>
         <View style={styles.switchContainer}>
-          <Text>Use Legend List</Text>
+          <Text>Use Legend List 🚧</Text>
           <Switch
             testID="bottom_sheet_toggle_legend_list_state"
             value={mode === "legend"}

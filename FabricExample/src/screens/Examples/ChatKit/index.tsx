@@ -43,7 +43,13 @@ function ChatKitPlayground() {
     textRef.current = text;
   }, []);
   const onSend = useCallback(() => {
-    addMessage({ text: textRef.current, sender: true });
+    const message = textRef.current.trim();
+
+    if (message === "") {
+      return;
+    }
+
+    addMessage({ text: message, sender: true });
     textInputRef.current?.clear();
     textRef.current = "";
   }, [addMessage]);
