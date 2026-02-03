@@ -23,6 +23,7 @@ const ChatScrollView = forwardRef<
     {
       children,
       ScrollViewComponent = Reanimated.ScrollView,
+      inverted = false,
       keyboardLiftBehavior = "always",
       ...rest
     },
@@ -100,12 +101,14 @@ const ChatScrollView = forwardRef<
         onMove: (e) => {
           "worklet";
 
-          scrollTo(
-            scrollViewRef,
-            0,
-            offsetBeforeScroll.value + e.height,
-            false,
-          );
+          if (keyboardLiftBehavior !== "never") {
+            scrollTo(
+              scrollViewRef,
+              0,
+              offsetBeforeScroll.value + e.height,
+              false,
+            );
+          }
         },
         onEnd: (e) => {
           "worklet";
@@ -121,6 +124,7 @@ const ChatScrollView = forwardRef<
         ref={onRef}
         {...rest}
         bottomPadding={spacer}
+        inverted={inverted}
         ScrollViewComponent={ScrollViewComponent}
       >
         {children}

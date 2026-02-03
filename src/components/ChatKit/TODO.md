@@ -15,6 +15,6 @@
 - [x] `ClippingScrollView` + `KeyboardAwareScrollView` check by e2e tests (seems to be working, though on Android emulator + e2e tests sometimes when keyboard disappear we still have keyboard space)
 - [x] introduce `ClippingScrollView` in separate PR
 - [x] create a polyfill-version of ScrollView `that` can add scrollable padding in the bottom of the content? How to wrap custom `ScrollView` with it (cause we may pass one from RNGH)? Should just adjust `contentInset` (scroll management should belong to `KeyboardAwareScrollView`) (ScrollViewWithKeyboardPadding/ScrollViewWithKeyboardSpace)
-- [-] use `ClippingScrollView` in `KeyboardAwareScrollView` in separate PR
+- [x] use `ClippingScrollView` in `KeyboardAwareScrollView` in separate PR
 - [-] introduce `ChatKit`
 - [] create issue in reanimated repo about `scrollTo` performance regression
