@@ -110,7 +110,7 @@ function ConfigSheet() {
 
 const styles = StyleSheet.create({
   header: {
-    color: "black",
+    color: "white",
     paddingRight: 12,
   },
   bottomSheetContent: {
