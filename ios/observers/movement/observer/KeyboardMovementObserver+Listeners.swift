@@ -7,7 +7,7 @@
 
 extension KeyboardMovementObserver {
   @objc func keyboardWillAppear(_ notification: Notification) {
-    guard !KeyboardEventsIgnorer.shared.shouldIgnore, !UIResponder.isKeyboardPreloading else { return }
+    guard !UIResponder.isKeyboardPreloading else { return }
 
     let (duration, frame) = notification.keyboardMetaData()
     if let keyboardFrame = frame {
@@ -15,6 +15,12 @@ extension KeyboardMovementObserver {
       let keyboardHeight = keyboardFrame.cgRectValue.size.height
       self.keyboardHeight = keyboardHeight
       self.notification = notification
+      
+      guard !KeyboardEventsIgnorer.shared.shouldIgnore else {
+        KeyboardEventsIgnorer.shared.shouldIgnoreKeyboardEvents = false
+        return
+      }
+      
       self.duration = duration
 
       onRequestAnimation()
@@ -55,12 +61,7 @@ extension KeyboardMovementObserver {
       tag = UIResponder.current.reactViewTag
       self.keyboardHeight = keyboardHeight
 
-      guard !KeyboardEventsIgnorer.shared.shouldIgnore else {
-        KeyboardEventsIgnorer.shared.shouldIgnoreKeyboardEvents = false
-        return
-      }
-
-      let height = self.keyboardHeight - KeyboardAreaExtender.shared.offset
+      let height = self.keyboardHeight
       // always limit progress to the maximum possible value
       let progress = min(height / self.keyboardHeight, 1.0)
 
