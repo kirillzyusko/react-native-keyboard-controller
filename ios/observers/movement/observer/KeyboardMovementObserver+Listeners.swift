@@ -15,12 +15,12 @@ extension KeyboardMovementObserver {
       let keyboardHeight = keyboardFrame.cgRectValue.size.height
       self.keyboardHeight = keyboardHeight
       self.notification = notification
-      
+
       guard !KeyboardEventsIgnorer.shared.shouldIgnore else {
         KeyboardEventsIgnorer.shared.shouldIgnoreKeyboardEvents = false
         return
       }
-      
+
       self.duration = duration
 
       onRequestAnimation()
