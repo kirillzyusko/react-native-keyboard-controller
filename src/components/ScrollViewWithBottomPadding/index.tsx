@@ -1,6 +1,9 @@
 import React, { forwardRef } from "react";
 import { Platform } from "react-native";
-import Reanimated, { useAnimatedProps } from "react-native-reanimated";
+import Reanimated, {
+  useAnimatedProps,
+  useAnimatedStyle,
+} from "react-native-reanimated";
 
 import { ClippingScrollView } from "../../bindings";
 
@@ -9,8 +12,9 @@ import styles from "./styles";
 import type { ScrollViewProps } from "react-native";
 import type { SharedValue } from "react-native-reanimated";
 
+const OS = Platform.OS;
 const ReanimatedClippingScrollView =
-  Platform.OS === "android"
+  OS === "android"
     ? Reanimated.createAnimatedComponent(ClippingScrollView)
     : ClippingScrollView;
 
@@ -69,7 +73,7 @@ const ScrollViewWithBottomPadding = forwardRef<
           left: scrollIndicatorInsets?.left,
         },
         // Android prop
-        contentInsetBottom: inverted ? 0 : bottomPadding.value,
+        contentInsetBottom: bottomPadding.value,
       };
     }, [
       contentInset?.bottom,
@@ -82,6 +86,12 @@ const ScrollViewWithBottomPadding = forwardRef<
       scrollIndicatorInsets?.left,
       inverted,
     ]);
+    const scrollViewStyle = useAnimatedStyle(
+      () => ({
+        // paddingTop: inverted && OS === "android" ? bottomPadding.value : 0,
+      }),
+      [],
+    );
 
     return (
       <ReanimatedClippingScrollView
@@ -91,7 +101,7 @@ const ScrollViewWithBottomPadding = forwardRef<
         <ScrollViewComponent
           ref={ref}
           animatedProps={animatedProps}
-          style={style}
+          style={[style, scrollViewStyle]}
           {...rest}
         >
           {children}
