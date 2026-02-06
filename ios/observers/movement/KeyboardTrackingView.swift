@@ -12,7 +12,10 @@ import UIKit
  * and uses `keyboardLayoutGuide` on iOS 26+.
  */
 public final class KeyboardTrackingView: UIView {
-  private var keyboardView: UIView? { KeyboardViewLocator.shared.resolve() }
+  private var keyboardView: UIView? {
+    KeyboardViewLocator.shared.resolve()
+  }
+
   private var keyboardHeight = 0.0
   private weak var currentAttachedView: UIView?
   private var isAttaching = false

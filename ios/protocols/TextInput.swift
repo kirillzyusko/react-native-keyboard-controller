@@ -15,7 +15,7 @@ public protocol TextInput: UIView {
   var inputView: UIView? { get set }
   var keyboardType: UIKeyboardType { get }
   var keyboardAppearance: UIKeyboardAppearance { get }
-  // custom methods/properties
+  /// custom methods/properties
   func focus()
 }
 

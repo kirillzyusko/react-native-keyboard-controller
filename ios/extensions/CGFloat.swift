@@ -16,8 +16,6 @@ public extension CGFloat {
     let outputMax = outputRange.max() ?? 1
 
     let normalizedValue = (currentValue - inputMin) / (inputMax - inputMin)
-    let interpolatedValue = outputMin + (outputMax - outputMin) * normalizedValue
-
-    return interpolatedValue
+    return outputMin + (outputMax - outputMin) * normalizedValue
   }
 }

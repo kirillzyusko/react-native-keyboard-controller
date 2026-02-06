@@ -51,7 +51,7 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
   weak var textViewDelegate: UITextViewDelegate?
   weak var textFieldDelegate: UITextFieldDelegate?
 
-  // Keep track of which textField we’re observing (iOS < 13 only)
+  /// Keep track of which textField we’re observing (iOS < 13 only)
   private weak var observedTextFieldForSelection: UITextField?
 
   init(
@@ -111,7 +111,7 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
     return true
   }
 
-  // Getter for the active delegate
+  /// Getter for the active delegate
   var activeDelegate: AnyObject? {
     return textViewDelegate ?? textFieldDelegate
   }

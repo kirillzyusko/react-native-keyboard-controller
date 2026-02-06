@@ -94,7 +94,7 @@ final class KeyboardControllerNativeTests: XCTestCase {
     // Put teardown code here. This method is called after the invocation of each test method in the class.
   }
 
-  func testSetFocusToNextShouldSetFocusToNextField() throws {
+  func testSetFocusToNextShouldSetFocusToNextField() {
     let textInput1 = textFields[0]
     FocusedInputHolder.shared.set(textInput1)
 
@@ -103,7 +103,7 @@ final class KeyboardControllerNativeTests: XCTestCase {
     waitForFocusChange(to: textFields[1])
   }
 
-  func testSetFocusToPrevShouldSetFocusToPreviousField() throws {
+  func testSetFocusToPrevShouldSetFocusToPreviousField() {
     let textInput2 = textFields[1]
     FocusedInputHolder.shared.set(textInput2)
 
@@ -112,7 +112,7 @@ final class KeyboardControllerNativeTests: XCTestCase {
     waitForFocusChange(to: textFields[0])
   }
 
-  func testSetFocusToNextShouldSkipNonEditableFields() throws {
+  func testSetFocusToNextShouldSkipNonEditableFields() {
     let textInput2 = textFields[1]
     FocusedInputHolder.shared.set(textInput2)
 
@@ -121,7 +121,7 @@ final class KeyboardControllerNativeTests: XCTestCase {
     waitForFocusChange(to: textFields[4])
   }
 
-  func testSetFocusToPrevShouldSkipNonEditableFields() throws {
+  func testSetFocusToPrevShouldSkipNonEditableFields() {
     let textInput5 = textFields[4]
     FocusedInputHolder.shared.set(textInput5)
 
@@ -130,7 +130,7 @@ final class KeyboardControllerNativeTests: XCTestCase {
     waitForFocusChange(to: textFields[1])
   }
 
-  func testSetFocusToNextWithinGroup() throws {
+  func testSetFocusToNextWithinGroup() {
     let textInput5 = textFields[4]
     FocusedInputHolder.shared.set(textInput5)
 
@@ -139,7 +139,7 @@ final class KeyboardControllerNativeTests: XCTestCase {
     waitForFocusChange(to: textFields[5])
   }
 
-  func testSetFocusToPrevWithinGroup() throws {
+  func testSetFocusToPrevWithinGroup() {
     let textInput6 = textFields[5]
     FocusedInputHolder.shared.set(textInput6)
 
@@ -148,7 +148,7 @@ final class KeyboardControllerNativeTests: XCTestCase {
     waitForFocusChange(to: textFields[4])
   }
 
-  func testSetFocusToNextExitsGroup() throws {
+  func testSetFocusToNextExitsGroup() {
     let textInput7 = textFields[6]
     FocusedInputHolder.shared.set(textInput7)
 
@@ -157,7 +157,7 @@ final class KeyboardControllerNativeTests: XCTestCase {
     waitForFocusChange(to: textFields[7])
   }
 
-  func testSetFocusToPrevEntersGroupAtLastElement() throws {
+  func testSetFocusToPrevEntersGroupAtLastElement() {
     let textInput8 = textFields[7]
     FocusedInputHolder.shared.set(textInput8)
 

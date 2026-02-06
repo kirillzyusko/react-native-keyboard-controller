@@ -26,7 +26,7 @@ public class KeyboardAnimation: KeyboardAnimationProtocol {
   let duration: Double
   let speed: Double
   let timestamp: CFTimeInterval
-  // internal state
+  /// internal state
   var lastValue: Double
 
   init(fromValue: Double, toValue: Double, animation: CAMediaTiming, duration: Double) {
@@ -39,7 +39,7 @@ public class KeyboardAnimation: KeyboardAnimationProtocol {
     timestamp = CACurrentMediaTime()
   }
 
-  // public getters
+  /// public getters
   var startTime: CFTimeInterval {
     // when concurrent animation happens, then `.beginTime` remains the same
     return max(animation?.beginTime ?? timestamp, timestamp)
