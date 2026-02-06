@@ -29,6 +29,7 @@ extension KeyboardMovementObserver {
 
       setupKeyboardWatcher()
       initializeAnimation(fromValue: prevKeyboardPosition, toValue: self.keyboardHeight)
+      scheduleEndEvent(height: self.keyboardHeight, duration: animation?.duration ?? CGFloat(duration / 1000))
     }
   }
 
@@ -50,6 +51,7 @@ extension KeyboardMovementObserver {
     setupKeyboardWatcher()
     removeKVObserver()
     initializeAnimation(fromValue: prevKeyboardPosition, toValue: 0)
+    scheduleEndEvent(height: 0, duration: animation?.duration ?? CGFloat(duration / 1000))
   }
 
   @objc func keyboardDidAppear(_ notification: Notification) {
@@ -90,5 +92,25 @@ extension KeyboardMovementObserver {
 
     removeKeyboardWatcher()
     animation = nil
+  }
+
+  @objc func scheduleEndEvent(height: CGFloat, duration: CGFloat) {
+    keyboardDidTask?.cancel()
+
+    guard let notification = notification else {
+      return
+    }
+
+    let task = DispatchWorkItem { [weak self] in
+      guard let self = self else { return }
+      if height > 0 {
+        self.keyboardDidAppear(notification)
+      } else {
+        self.keyboardDidDisappear(notification)
+      }
+    }
+
+    keyboardDidTask = task
+    DispatchQueue.main.asyncAfter(deadline: .now() + duration, execute: task)
   }
 }
