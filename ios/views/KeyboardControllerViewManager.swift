@@ -27,7 +27,7 @@ class KeyboardControllerView: UIView {
   var inputObserver: FocusedInputObserver?
   private var eventDispatcher: RCTEventDispatcherProtocol
   private var bridge: RCTBridge
-  // internal state
+  /// internal state
   private var lastScreenSize: CGSize = .zero
   // react callbacks
   /// keyboard
@@ -39,7 +39,7 @@ class KeyboardControllerView: UIView {
   @objc var onFocusedInputLayoutChanged: RCTDirectEventBlock?
   @objc var onFocusedInputTextChanged: RCTDirectEventBlock?
   @objc var onFocusedInputSelectionChanged: RCTDirectEventBlock?
-  // react props
+  /// react props
   @objc var enabled: ObjCBool = true {
     didSet {
       if enabled.boolValue {
@@ -83,9 +83,9 @@ class KeyboardControllerView: UIView {
     fatalError("init(coder:) has not been implemented")
   }
 
-  // for mounting/unmounting observers for lifecycle events we're using willMove(toSuperview) method
-  // not willMove(toWindow)
-  // see https://github.com/kirillzyusko/react-native-keyboard-controller/issues/271
+  /// for mounting/unmounting observers for lifecycle events we're using willMove(toSuperview) method
+  /// not willMove(toWindow)
+  /// see https://github.com/kirillzyusko/react-native-keyboard-controller/issues/271
   override func willMove(toSuperview newSuperview: UIView?) {
     super.willMove(toSuperview: newSuperview)
 

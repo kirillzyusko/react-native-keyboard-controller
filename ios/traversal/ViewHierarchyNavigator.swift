@@ -36,7 +36,7 @@ public class ViewHierarchyNavigator: NSObject {
       return []
     }
 
-    // Helper function to recursively search for TextInput views
+    /// Helper function to recursively search for TextInput views
     func findTextInputs(in view: UIView?) {
       guard let view = view else { return }
 
@@ -104,7 +104,7 @@ public class ViewHierarchyNavigator: NSObject {
     return nil // No valid UITextField or UITextView found
   }
 
-  // Function to check if the view is a valid text field or text view
+  /// Function to check if the view is a valid text field or text view
   private static func isValidTextInput(_ view: UIView) -> TextInput? {
     if let textField = view as? UITextField, textField.isEnabled {
       return textField

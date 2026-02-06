@@ -56,9 +56,7 @@ public final class TimingAnimation: KeyboardAnimation {
     let x = bezierX(t: t)
 
     let duration = animation?.duration ?? 0.0
-    let time = x * duration / speed
-
-    return time
+    return x * duration / speed
   }
 
   // private functions

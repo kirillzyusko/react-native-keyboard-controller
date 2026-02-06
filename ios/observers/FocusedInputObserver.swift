@@ -32,7 +32,7 @@ public class FocusedInputObserver: NSObject {
   var onFocusDidSet: (NSDictionary) -> Void
   /// delegates
   var delegate: KCTextInputCompositeDelegate
-  // state variables
+  /// state variables
   private var isMounted = false
   // input tracking
   private var currentInput: UIView?

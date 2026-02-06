@@ -35,7 +35,7 @@ final class TimingAnimationPerformanceTest: XCTestCase {
     )
   }
 
-  func testTimingAnimationValueAt() throws {
+  func testTimingAnimationValueAt() {
     XCTAssertEqual(animation.valueAt(time: 0.01), 123.56118966540286)
     XCTAssertEqual(animation.valueAt(time: 0.05), 163.8067164607386)
     XCTAssertEqual(animation.valueAt(time: 0.0), 122.0)
@@ -43,7 +43,7 @@ final class TimingAnimationPerformanceTest: XCTestCase {
     XCTAssertEqual(animation.valueAt(time: 0.143954), 290.97699741147824)
   }
 
-  func testTimingAnimationTimingAt() throws {
+  func testTimingAnimationTimingAt() {
     XCTAssertEqual(animation.timingAt(value: 123.56118966540286), 0.010046876612582212)
     XCTAssertEqual(animation.timingAt(value: 163.8067164607386), 0.050004940820975737)
     XCTAssertEqual(animation.timingAt(value: 122.0), 0.0008425121366836072)
@@ -52,7 +52,7 @@ final class TimingAnimationPerformanceTest: XCTestCase {
     XCTAssertEqual(animation.timingAt(value: 291.0), 0.14434649124006554)
   }
 
-  func testValueAtPerformance() throws {
+  func testValueAtPerformance() {
     measure(metrics: [XCTCPUMetric(), XCTClockMetric()], options: options) {
       for time in stride(from: 0.0, through: TimingAnimationPerformanceTest.duration, by: 0.000002) {
         _ = animation.valueAt(time: time)
@@ -60,7 +60,7 @@ final class TimingAnimationPerformanceTest: XCTestCase {
     }
   }
 
-  func testTimingAtPerformance() throws {
+  func testTimingAtPerformance() {
     measure(metrics: [XCTCPUMetric(), XCTClockMetric()], options: options) {
       for value in stride(
         from: TimingAnimationPerformanceTest.fromValue,

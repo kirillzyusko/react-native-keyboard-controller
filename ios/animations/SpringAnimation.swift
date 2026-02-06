@@ -60,7 +60,7 @@ public final class SpringAnimation: KeyboardAnimation {
     super.init(fromValue: fromValue, toValue: toValue, animation: animation, duration: animation.settlingDuration)
   }
 
-  // public functions
+  /// public functions
   override func valueAt(time: Double) -> Double {
     let t = time * speed
 

@@ -94,8 +94,7 @@ extension UIResponder {
     let castOriginalResignFirstResponder = unsafeBitCast(
       originalResignFirstResponder, to: Function.self
     )
-    let result = castOriginalResignFirstResponder(self, selector)
-    return result
+    return castOriginalResignFirstResponder(self, selector)
   }
 
   private func callOriginalBecomeFirstResponder(_ selector: Selector) -> Bool {
@@ -104,7 +103,6 @@ extension UIResponder {
     let castOriginalBecomeFirstResponder = unsafeBitCast(
       originalBecomeFirstResponder, to: Function.self
     )
-    let result = castOriginalBecomeFirstResponder(self, selector)
-    return result
+    return castOriginalBecomeFirstResponder(self, selector)
   }
 }

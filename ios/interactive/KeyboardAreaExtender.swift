@@ -55,7 +55,8 @@ class KeyboardAreaExtender: NSObject {
     let responder = UIResponder.current
     if let activeTextInput = responder as? TextInput,
        let offset = KeyboardOffsetProvider.shared.getOffset(
-         forTextInputNativeID: responder.nativeID),
+         forTextInputNativeID: responder.nativeID
+       ),
        responder?.inputAccessoryView == nil
     {
       currentInputAccessoryView = InvisibleInputAccessoryView(height: CGFloat(truncating: offset))
