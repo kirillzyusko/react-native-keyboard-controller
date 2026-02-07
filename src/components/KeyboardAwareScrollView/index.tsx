@@ -326,11 +326,11 @@ const KeyboardAwareScrollView = forwardRef<
 
         if (e.target !== lastTarget) {
           if (pendingSelectionForFocus.value) {
-            // Selection arrived after onStart - complete the deferred setup
+            // selection arrived after onStart - complete the deferred setup
             pendingSelectionForFocus.value = false;
             updateLayoutFromSelection();
 
-            // If keyboard was already visible (focus change, no onMove expected),
+            // if keyboard was already visible (focus change, no onMove expected),
             // perform the deferred scroll now
             if (!keyboardWillAppear.value && keyboardHeight.value > 0) {
               position.value += maybeScroll(keyboardHeight.value, true);
@@ -411,12 +411,12 @@ const KeyboardAwareScrollView = forwardRef<
             tag.value = e.target;
 
             if (lastSelection.value?.target === e.target) {
-              // Selection arrived before onStart - use it to update layout
+              // selection arrived before onStart - use it to update layout
               updateLayoutFromSelection();
               pendingSelectionForFocus.value = false;
             } else {
-              // Selection hasn't arrived yet for the new target.
-              // Use input layout as-is; will be refined when selection arrives.
+              // selection hasn't arrived yet for the new target.
+              // use input layout as-is; will be refined when selection arrives.
               if (input.value) {
                 layout.value = input.value;
               }
