@@ -48,7 +48,7 @@ extension KeyboardMovementObserver {
     }
 
     prevKeyboardPosition = position
-    
+
     keyboardDidTask?.cancel()
 
     onEvent(
