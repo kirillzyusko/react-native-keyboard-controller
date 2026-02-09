@@ -467,6 +467,10 @@ const KeyboardAwareScrollView = forwardRef<
           keyboardHeight.value = e.height;
           scrollPosition.value = position.value;
 
+          if (e.height === 0) {
+            lastSelection.value = null;
+          }
+
           syncKeyboardFrame(e);
         },
       },
