@@ -142,7 +142,9 @@ public class FocusedInputObserver: NSObject {
     setupObservers()
     // dispatch onSelectionChange on focus
     if let textInput = responder as? UITextInput {
-      updateSelectionPosition(textInput: textInput, sendEvent: onSelectionChange)
+      DispatchQueue.main.async {
+        updateSelectionPosition(textInput: textInput, sendEvent: self.onSelectionChange)
+      }
     }
 
     syncUpLayout()

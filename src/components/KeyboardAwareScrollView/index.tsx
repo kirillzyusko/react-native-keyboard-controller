@@ -149,6 +149,7 @@ const KeyboardAwareScrollView = forwardRef<
     const lastSelection =
       useSharedValue<FocusedInputSelectionChangedEvent | null>(null);
     const ghostViewSpace = useSharedValue(-1);
+    const pendingSelectionForFocus = useSharedValue(false);
 
     const { height } = useWindowDimensions();
 
@@ -324,7 +325,18 @@ const KeyboardAwareScrollView = forwardRef<
         lastSelection.value = e;
 
         if (e.target !== lastTarget) {
-          // ignore this event, because "focus changed" event handled in `useSmoothKeyboardHandler`
+          if (pendingSelectionForFocus.value) {
+            // selection arrived after onStart - complete the deferred setup
+            pendingSelectionForFocus.value = false;
+            updateLayoutFromSelection();
+
+            // if keyboard was already visible (focus change, no onMove expected),
+            // perform the deferred scroll now
+            if (!keyboardWillAppear.value && keyboardHeight.value > 0) {
+              position.value += maybeScroll(keyboardHeight.value, true);
+            }
+          }
+
           return;
         }
         // caret in the end + end coordinates has been changed -> we moved to a new line
@@ -342,7 +354,12 @@ const KeyboardAwareScrollView = forwardRef<
 
         onChangeTextHandler();
       },
-      [scrollFromCurrentPosition, onChangeTextHandler],
+      [
+        scrollFromCurrentPosition,
+        onChangeTextHandler,
+        updateLayoutFromSelection,
+        maybeScroll,
+      ],
     );
 
     useFocusedInputHandler(
@@ -375,6 +392,7 @@ const KeyboardAwareScrollView = forwardRef<
             // on back transition need to interpolate as [0, keyboardHeight]
             initialKeyboardSize.value = 0;
             scrollPosition.value = scrollBeforeKeyboardMovement.value;
+            pendingSelectionForFocus.value = false;
           }
 
           if (
@@ -391,17 +409,31 @@ const KeyboardAwareScrollView = forwardRef<
           // focus was changed
           if (focusWasChanged) {
             tag.value = e.target;
-            // save position of focused text input when keyboard starts to move
-            updateLayoutFromSelection();
+
+            if (lastSelection.value?.target === e.target) {
+              // selection arrived before onStart - use it to update layout
+              updateLayoutFromSelection();
+              pendingSelectionForFocus.value = false;
+            } else {
+              // selection hasn't arrived yet for the new target.
+              // use input layout as-is; will be refined when selection arrives.
+              if (input.value) {
+                layout.value = input.value;
+              }
+              pendingSelectionForFocus.value = true;
+            }
+
             // save current scroll position - when keyboard will hide we'll reuse
             // this value to achieve smooth hide effect
             scrollBeforeKeyboardMovement.value = position.value;
           }
 
           if (focusWasChanged && !keyboardWillAppear.value) {
-            // update position on scroll value, so `onEnd` handler
-            // will pick up correct values
-            position.value += maybeScroll(e.height, true);
+            if (!pendingSelectionForFocus.value) {
+              // update position on scroll value, so `onEnd` handler
+              // will pick up correct values
+              position.value += maybeScroll(e.height, true);
+            }
           }
 
           ghostViewSpace.value =
@@ -434,6 +466,10 @@ const KeyboardAwareScrollView = forwardRef<
 
           keyboardHeight.value = e.height;
           scrollPosition.value = position.value;
+
+          if (e.height === 0) {
+            lastSelection.value = null;
+          }
 
           syncKeyboardFrame(e);
         },
