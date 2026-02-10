@@ -7,7 +7,7 @@
 
 extension KeyboardMovementObserver {
   @objc func keyboardWillAppear(_ notification: Notification) {
-    guard !KeyboardEventsIgnorer.shared.shouldIgnore, !UIResponder.isKeyboardPreloading else { return }
+    guard !UIResponder.isKeyboardPreloading else { return }
 
     let (duration, frame) = notification.keyboardMetaData()
     if let keyboardFrame = frame {
@@ -15,6 +15,12 @@ extension KeyboardMovementObserver {
       let keyboardHeight = keyboardFrame.cgRectValue.size.height
       self.keyboardHeight = keyboardHeight
       self.notification = notification
+
+      guard !KeyboardEventsIgnorer.shared.shouldIgnore else {
+        KeyboardEventsIgnorer.shared.shouldIgnoreKeyboardEvents = false
+        return
+      }
+
       self.duration = duration
 
       onRequestAnimation()
@@ -23,6 +29,7 @@ extension KeyboardMovementObserver {
 
       setupKeyboardWatcher()
       initializeAnimation(fromValue: prevKeyboardPosition, toValue: self.keyboardHeight)
+      scheduleDidEvent(height: self.keyboardHeight, duration: animation?.duration ?? CGFloat(duration) / 1000)
     }
   }
 
@@ -44,6 +51,7 @@ extension KeyboardMovementObserver {
     setupKeyboardWatcher()
     removeKVObserver()
     initializeAnimation(fromValue: prevKeyboardPosition, toValue: 0)
+    scheduleDidEvent(height: 0, duration: animation?.duration ?? CGFloat(duration) / 1000)
   }
 
   @objc func keyboardDidAppear(_ notification: Notification) {
@@ -55,12 +63,7 @@ extension KeyboardMovementObserver {
       tag = UIResponder.current.reactViewTag
       self.keyboardHeight = keyboardHeight
 
-      guard !KeyboardEventsIgnorer.shared.shouldIgnore else {
-        KeyboardEventsIgnorer.shared.shouldIgnoreKeyboardEvents = false
-        return
-      }
-
-      let height = self.keyboardHeight - KeyboardAreaExtender.shared.offset
+      let height = self.keyboardHeight
       // always limit progress to the maximum possible value
       let progress = min(height / self.keyboardHeight, 1.0)
 
@@ -89,5 +92,25 @@ extension KeyboardMovementObserver {
 
     removeKeyboardWatcher()
     animation = nil
+  }
+
+  @objc func scheduleDidEvent(height: CGFloat, duration: CGFloat) {
+    keyboardDidTask?.cancel()
+
+    guard let notification = notification else {
+      return
+    }
+
+    let task = DispatchWorkItem { [weak self] in
+      guard let self = self else { return }
+      if height > 0 {
+        self.keyboardDidAppear(notification)
+      } else {
+        self.keyboardDidDisappear(notification)
+      }
+    }
+
+    keyboardDidTask = task
+    DispatchQueue.main.asyncAfter(deadline: .now() + duration, execute: task)
   }
 }

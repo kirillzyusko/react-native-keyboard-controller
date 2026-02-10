@@ -49,6 +49,8 @@ extension KeyboardMovementObserver {
 
     prevKeyboardPosition = position
 
+    keyboardDidTask?.cancel()
+
     onEvent(
       "onKeyboardMoveInteractive",
       position as NSNumber,
