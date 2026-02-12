@@ -1,0 +1,188 @@
+import { Platform } from "react-native";
+import {
+  scrollTo,
+  useScrollViewOffset,
+  useSharedValue,
+} from "react-native-reanimated";
+
+import { useKeyboardHandler } from "../../../hooks";
+import useScrollState from "../../hooks/useScrollState";
+
+import {
+  clampedScrollTarget,
+  computeIOSContentOffset,
+  isScrollAtEnd,
+  shouldShiftContent,
+} from "./helpers";
+
+import type { AnimatedRef, SharedValue } from "react-native-reanimated";
+import type Reanimated from "react-native-reanimated";
+
+const OS = Platform.OS;
+
+type KeyboardLiftBehavior = "always" | "whenAtEnd" | "persistent" | "never";
+
+type UseChatKeyboardOptions = {
+  inverted: boolean;
+  keyboardLiftBehavior: KeyboardLiftBehavior;
+};
+
+type UseChatKeyboardReturn = {
+  /** Extra scrollable space (= keyboard height). Used as contentInset on iOS, contentInsetBottom on Android. */
+  padding: SharedValue<number>;
+  /** Absolute Y content offset for iOS (set once in onStart). `undefined` on Android. */
+  contentOffsetY: SharedValue<number> | undefined;
+  /** TranslateY for the container wrapper on Android inverted lists. 0 otherwise. */
+  containerTranslateY: SharedValue<number>;
+};
+
+/**
+ * Hook that manages keyboard-driven scrolling for chat-style scroll views.
+ * Calculates padding (extra scrollable space) and content shift values,
+ * using the optimal strategy per platform.
+ *
+ * @param scrollViewRef - Animated ref to the scroll view.
+ * @param options - Configuration for inverted and keyboardLiftBehavior.
+ * @returns Shared values for padding, contentOffsetY (iOS), and containerTranslateY (Android inverted).
+ * @example
+ * ```tsx
+ * const { padding, contentOffsetY, containerTranslateY } = useChatKeyboard(ref, {
+ *   inverted: false,
+ *   keyboardLiftBehavior: "always",
+ * });
+ * ```
+ */
+function useChatKeyboard(
+  scrollViewRef: AnimatedRef<Reanimated.ScrollView>,
+  options: UseChatKeyboardOptions,
+): UseChatKeyboardReturn {
+  const { inverted, keyboardLiftBehavior } = options;
+
+  const padding = useSharedValue(0);
+  const contentOffsetY = useSharedValue(0);
+  const containerTranslateY = useSharedValue(0);
+  const offsetBeforeScroll = useSharedValue(0);
+
+  const rawScroll = useScrollViewOffset(scrollViewRef);
+  const { layout, size } = useScrollState(scrollViewRef);
+
+  useKeyboardHandler(
+    {
+      onStart: (e) => {
+        "worklet";
+
+        const atEnd = isScrollAtEnd(
+          rawScroll.value,
+          layout.value.height,
+          size.value.height,
+        );
+
+        if (OS === "ios") {
+          // iOS: set padding + contentOffset once in onStart
+          const relativeScroll = rawScroll.value - padding.value;
+
+          // eslint-disable-next-line react-compiler/react-compiler
+          padding.value = e.height;
+
+          if (!shouldShiftContent(keyboardLiftBehavior, atEnd)) {
+            return;
+          }
+
+          if (
+            keyboardLiftBehavior === "persistent" &&
+            e.height < padding.value
+          ) {
+            return;
+          }
+
+          contentOffsetY.value = computeIOSContentOffset(
+            relativeScroll,
+            e.height,
+            size.value.height,
+            layout.value.height,
+            inverted,
+          );
+        } else if (e.height > 0) {
+          // Android: set padding + capture scroll position
+          padding.value = e.height;
+          offsetBeforeScroll.value = rawScroll.value;
+
+          if (keyboardLiftBehavior === "whenAtEnd" && !atEnd) {
+            // Sentinel: don't scroll in onMove
+            offsetBeforeScroll.value = -1;
+          }
+        }
+      },
+      onMove: (e) => {
+        "worklet";
+
+        // iOS doesn't need per-frame updates (contentOffset handles it)
+        if (OS === "ios") {
+          return;
+        }
+
+        if (!shouldShiftContent(keyboardLiftBehavior, true)) {
+          return;
+        }
+
+        // "whenAtEnd" sentinel check
+        if (offsetBeforeScroll.value === -1) {
+          return;
+        }
+
+        if (inverted) {
+          // Android inverted: translateY on container
+          if (
+            keyboardLiftBehavior === "persistent" &&
+            e.height < Math.abs(containerTranslateY.value)
+          ) {
+            return;
+          }
+
+          containerTranslateY.value = -e.height;
+        } else {
+          // Android non-inverted: scrollTo per-frame
+          if (
+            keyboardLiftBehavior === "persistent" &&
+            e.height < rawScroll.value - offsetBeforeScroll.value
+          ) {
+            return;
+          }
+
+          const target = clampedScrollTarget(
+            offsetBeforeScroll.value,
+            e.height,
+            size.value.height,
+            layout.value.height,
+          );
+
+          scrollTo(scrollViewRef, 0, target, false);
+        }
+      },
+      onEnd: (e) => {
+        "worklet";
+
+        padding.value = e.height;
+
+        if (
+          OS !== "ios" &&
+          inverted &&
+          e.height === 0 &&
+          keyboardLiftBehavior !== "persistent"
+        ) {
+          containerTranslateY.value = 0;
+        }
+      },
+    },
+    [inverted, keyboardLiftBehavior],
+  );
+
+  return {
+    padding,
+    contentOffsetY: OS === "ios" ? contentOffsetY : undefined,
+    containerTranslateY,
+  };
+}
+
+export { useChatKeyboard };
+export type { KeyboardLiftBehavior };
