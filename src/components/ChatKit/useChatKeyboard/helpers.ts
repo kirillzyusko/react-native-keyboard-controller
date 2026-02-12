@@ -1,0 +1,113 @@
+type KeyboardLiftBehavior = "always" | "whenAtEnd" | "persistent" | "never";
+
+const AT_END_THRESHOLD = 20;
+
+/**
+ * Check whether the scroll view is at the end of its content.
+ *
+ * @param scrollOffset - Current vertical scroll offset.
+ * @param layoutHeight - Visible height of the scroll view.
+ * @param contentHeight - Total height of the scrollable content.
+ * @returns `true` if the scroll position is within the threshold of the content end.
+ * @example
+ * ```ts
+ * const atEnd = isScrollAtEnd(100, 800, 920); // true (100 + 800 >= 920 - 20)
+ * ```
+ */
+export function isScrollAtEnd(
+  scrollOffset: number,
+  layoutHeight: number,
+  contentHeight: number,
+): boolean {
+  "worklet";
+
+  return scrollOffset + layoutHeight >= contentHeight - AT_END_THRESHOLD;
+}
+
+/**
+ * Decide whether content should be shifted based on the keyboard lift behavior.
+ *
+ * @param behavior - The configured keyboard lift behavior.
+ * @param isAtEnd - Whether the scroll view is currently at the end.
+ * @returns `true` if content should be shifted.
+ * @example
+ * ```ts
+ * shouldShiftContent("always", false); // true
+ * shouldShiftContent("whenAtEnd", false); // false
+ * ```
+ */
+export function shouldShiftContent(
+  behavior: KeyboardLiftBehavior,
+  isAtEnd: boolean,
+): boolean {
+  "worklet";
+
+  switch (behavior) {
+    case "always":
+      return true;
+    case "never":
+      return false;
+    case "whenAtEnd":
+      return isAtEnd;
+    case "persistent":
+      return true;
+  }
+}
+
+/**
+ * Compute the clamped scroll target for non-inverted lists.
+ *
+ * @param offsetBeforeScroll - Scroll position before keyboard appeared.
+ * @param keyboardHeight - Current keyboard height.
+ * @param contentHeight - Total height of the scrollable content.
+ * @param layoutHeight - Visible height of the scroll view.
+ * @returns Clamped scroll target between 0 and maxScroll.
+ * @example
+ * ```ts
+ * clampedScrollTarget(100, 300, 1000, 800); // 400
+ * ```
+ */
+export function clampedScrollTarget(
+  offsetBeforeScroll: number,
+  keyboardHeight: number,
+  contentHeight: number,
+  layoutHeight: number,
+): number {
+  "worklet";
+
+  const maxScroll = Math.max(contentHeight - layoutHeight + keyboardHeight, 0);
+
+  return Math.min(Math.max(offsetBeforeScroll + keyboardHeight, 0), maxScroll);
+}
+
+/**
+ * Compute contentOffset.y for iOS lists.
+ *
+ * @param relativeScroll - Scroll position relative to current inset.
+ * @param keyboardHeight - Target keyboard height.
+ * @param contentHeight - Total height of the scrollable content.
+ * @param layoutHeight - Visible height of the scroll view.
+ * @param inverted - Whether the list is inverted.
+ * @returns The absolute contentOffset.y to set.
+ * @example
+ * ```ts
+ * computeIOSContentOffset(100, 300, 1000, 800, false); // 400
+ * ```
+ */
+export function computeIOSContentOffset(
+  relativeScroll: number,
+  keyboardHeight: number,
+  contentHeight: number,
+  layoutHeight: number,
+  inverted: boolean,
+): number {
+  "worklet";
+
+  if (inverted) {
+    return relativeScroll - keyboardHeight;
+  }
+
+  const maxScroll = Math.max(contentHeight - layoutHeight + keyboardHeight, 0);
+
+  return Math.min(Math.max(keyboardHeight + relativeScroll, 0), maxScroll);
+}

@@ -1,15 +1,12 @@
 import React, { forwardRef } from "react";
 import { Platform } from "react-native";
-import Reanimated, {
-  useAnimatedProps,
-  useAnimatedStyle,
-} from "react-native-reanimated";
+import Reanimated, { useAnimatedProps } from "react-native-reanimated";
 
 import { ClippingScrollView } from "../../bindings";
 
 import styles from "./styles";
 
-import type { ScrollViewProps } from "react-native";
+import type { ScrollViewProps, StyleProp, ViewStyle } from "react-native";
 import type { SharedValue } from "react-native-reanimated";
 
 const OS = Platform.OS;
@@ -31,6 +28,10 @@ type ScrollViewWithBottomPaddingProps = {
   children?: React.ReactNode;
   inverted?: boolean;
   bottomPadding: SharedValue<number>;
+  /** Absolute Y content offset (iOS only, for ChatKit). */
+  contentOffsetY?: SharedValue<number>;
+  /** Style applied to the container wrapper (Android only, for ChatKit translateY). */
+  containerStyle?: StyleProp<ViewStyle>;
 } & ScrollViewProps;
 
 const ScrollViewWithBottomPadding = forwardRef<
@@ -44,6 +45,8 @@ const ScrollViewWithBottomPadding = forwardRef<
       contentInset,
       scrollIndicatorInsets,
       inverted,
+      contentOffsetY,
+      containerStyle,
       children,
       style,
       ...rest
@@ -58,7 +61,7 @@ const ScrollViewWithBottomPadding = forwardRef<
         ? 0
         : bottomPadding.value + (contentInset?.top || 0);
 
-      return {
+      const result: Record<string, unknown> = {
         // iOS prop
         contentInset: {
           bottom: bottom,
@@ -75,6 +78,12 @@ const ScrollViewWithBottomPadding = forwardRef<
         // Android prop
         contentInsetBottom: bottomPadding.value,
       };
+
+      if (contentOffsetY) {
+        result.contentOffset = { x: 0, y: contentOffsetY.value };
+      }
+
+      return result;
     }, [
       contentInset?.bottom,
       contentInset?.top,
@@ -85,23 +94,21 @@ const ScrollViewWithBottomPadding = forwardRef<
       scrollIndicatorInsets?.right,
       scrollIndicatorInsets?.left,
       inverted,
+      contentOffsetY,
     ]);
-    const scrollViewStyle = useAnimatedStyle(
-      () => ({
-        // paddingTop: inverted && OS === "android" ? bottomPadding.value : 0,
-      }),
-      [],
-    );
 
     return (
       <ReanimatedClippingScrollView
         animatedProps={animatedProps}
-        style={styles.container}
+        style={[
+          styles.container,
+          OS === "android" ? containerStyle : undefined,
+        ]}
       >
         <ScrollViewComponent
           ref={ref}
           animatedProps={animatedProps}
-          style={[style, scrollViewStyle]}
+          style={style}
           {...rest}
         >
           {children}
