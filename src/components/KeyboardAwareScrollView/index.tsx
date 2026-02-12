@@ -462,7 +462,10 @@ const KeyboardAwareScrollView = forwardRef<
         onEnd: (e) => {
           "worklet";
 
-          maybeScroll(e.height);
+          // if the user has set disableScrollOnKeyboardHide, only auto-scroll when the keyboard opens
+          if (!disableScrollOnKeyboardHide || keyboardWillAppear.value) {
+            maybeScroll(e.height);
+          }
 
           removeGhostPadding(e.height);
 
