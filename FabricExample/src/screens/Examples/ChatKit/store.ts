@@ -36,7 +36,7 @@ export const useChatConfigStore = create<ChatConfigStore>((set) => ({
     });
   },
   messages: initialMessages,
-  reversedMessages: [],
+  reversedMessages: [...initialMessages].reverse(),
   setMessages: (messages) =>
     set({ messages, reversedMessages: [...messages].reverse() }),
   addMessage: (message) =>
