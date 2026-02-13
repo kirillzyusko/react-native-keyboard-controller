@@ -1,9 +1,5 @@
 import { Platform } from "react-native";
-import {
-  scrollTo,
-  useScrollViewOffset,
-  useSharedValue,
-} from "react-native-reanimated";
+import { scrollTo, useSharedValue } from "react-native-reanimated";
 
 import { useKeyboardHandler } from "../../../hooks";
 import useScrollState from "../../hooks/useScrollState";
@@ -63,8 +59,7 @@ function useChatKeyboard(
   const containerTranslateY = useSharedValue(0);
   const offsetBeforeScroll = useSharedValue(0);
 
-  const rawScroll = useScrollViewOffset(scrollViewRef);
-  const { layout, size } = useScrollState(scrollViewRef);
+  const { layout, size, offset: scroll } = useScrollState(scrollViewRef);
 
   useKeyboardHandler(
     {
@@ -72,14 +67,16 @@ function useChatKeyboard(
         "worklet";
 
         const atEnd = isScrollAtEnd(
-          rawScroll.value,
+          scroll.value,
           layout.value.height,
           size.value.height,
         );
 
         if (OS === "ios") {
           // iOS: set padding + contentOffset once in onStart
-          const relativeScroll = rawScroll.value - padding.value;
+          const relativeScroll = inverted
+            ? scroll.value + padding.value
+            : scroll.value - padding.value;
 
           // eslint-disable-next-line react-compiler/react-compiler
           padding.value = e.height;
@@ -105,7 +102,7 @@ function useChatKeyboard(
         } else if (e.height > 0) {
           // Android: set padding + capture scroll position
           padding.value = e.height;
-          offsetBeforeScroll.value = rawScroll.value;
+          offsetBeforeScroll.value = scroll.value;
 
           if (keyboardLiftBehavior === "whenAtEnd" && !atEnd) {
             // Sentinel: don't scroll in onMove
@@ -144,7 +141,7 @@ function useChatKeyboard(
           // Android non-inverted: scrollTo per-frame
           if (
             keyboardLiftBehavior === "persistent" &&
-            e.height < rawScroll.value - offsetBeforeScroll.value
+            e.height < scroll.value - offsetBeforeScroll.value
           ) {
             return;
           }
