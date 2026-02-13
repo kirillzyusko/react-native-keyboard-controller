@@ -100,7 +100,7 @@ function useChatKeyboard(
             inverted,
           );
         } else if (e.height > 0) {
-          // Android: set padding + capture scroll position
+          // Android: keyboard opening — set padding + capture scroll position
           padding.value = e.height;
           offsetBeforeScroll.value = scroll.value;
 
@@ -108,6 +108,10 @@ function useChatKeyboard(
             // Sentinel: don't scroll in onMove
             offsetBeforeScroll.value = -1;
           }
+        } else {
+          // Android: keyboard closing — re-capture from current position
+          // so onMove smoothly scrolls back from where the user is now
+          offsetBeforeScroll.value = scroll.value - padding.value;
         }
       },
       onMove: (e) => {

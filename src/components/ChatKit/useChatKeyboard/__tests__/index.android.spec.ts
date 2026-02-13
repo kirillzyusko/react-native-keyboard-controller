@@ -127,6 +127,62 @@ describe("`useChatKeyboard` — Android non-inverted + always", () => {
     expect(result.current.contentOffsetY).toBeUndefined();
   });
 
+  it("should scroll back from current position on keyboard close", () => {
+    mockOffset.value = 100;
+    render({ inverted: false, keyboardLiftBehavior: "always" });
+
+    // keyboard opens: offsetBeforeScroll = 100
+    handlers.onStart!({ height: KEYBOARD });
+    handlers.onMove!({ height: KEYBOARD });
+    mockScrollTo.mockClear();
+
+    // user scrolls up to 200 while keyboard is open
+    mockOffset.value = 200;
+
+    // keyboard starts closing: re-captures offsetBeforeScroll = 200 - 300 = -100
+    handlers.onStart!({ height: 0 });
+
+    // dismiss frame: target = clamp(-100 + 150, 0, ...) = 50
+    handlers.onMove!({ height: 150 });
+    expect(mockScrollTo).toHaveBeenLastCalledWith(
+      expect.anything(),
+      0,
+      50,
+      false,
+    );
+
+    // final frame: target = clamp(-100 + 0, 0, ...) = 0
+    handlers.onMove!({ height: 0 });
+    expect(mockScrollTo).toHaveBeenLastCalledWith(
+      expect.anything(),
+      0,
+      0,
+      false,
+    );
+  });
+
+  it("should not regress when user did not scroll during keyboard open", () => {
+    mockOffset.value = 100;
+    render({ inverted: false, keyboardLiftBehavior: "always" });
+
+    handlers.onStart!({ height: KEYBOARD });
+    // user did NOT scroll — offset stays at what scrollTo set (100 + 300 = 400)
+    mockOffset.value = 400;
+    mockScrollTo.mockClear();
+
+    // keyboard closes: re-captures offsetBeforeScroll = 400 - 300 = 100 (same as original)
+    handlers.onStart!({ height: 0 });
+
+    handlers.onMove!({ height: 150 });
+    // target = clamp(100 + 150, 0, ...) = 250
+    expect(mockScrollTo).toHaveBeenLastCalledWith(
+      expect.anything(),
+      0,
+      250,
+      false,
+    );
+  });
+
   it("should finalize padding in onEnd", () => {
     const { result } = render({
       inverted: false,
