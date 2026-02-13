@@ -89,6 +89,7 @@
     "@react-native/eslint-config": "0.81.4",
     "@release-it/conventional-changelog": "^2.0.0",
     "@testing-library/react-hooks": "^8.0.1",
+    "@testing-library/react-native": "^13.3.3",
     "@types/jest": "^29.5.13",
     "@types/react": "^19.0.0",
     "@types/react-test-renderer": "^19.0.0",
@@ -115,7 +116,7 @@
     "react-native": "0.81.4",
     "react-native-builder-bob": "^0.18.0",
     "react-native-reanimated": "3.19.2",
-    "react-test-renderer": "19.0.0",
+    "react-test-renderer": "19.1.0",
     "release-it": "^14.2.2",
     "typescript": "5.8.3"
   },
@@ -129,6 +130,12 @@
     "modulePathIgnorePatterns": [
       "<rootDir>/example/node_modules",
       "<rootDir>/lib/"
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!((jest-)?react-native|@react-native(-community)?|react-native-reanimated)/)"
+    ],
+    "setupFiles": [
+      "./jestSetup.js"
     ]
   },
   "commitlint": {
@@ -187,5 +194,6 @@
         "KeyboardExtender": "KeyboardExtender"
       }
     }
-  }
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }
