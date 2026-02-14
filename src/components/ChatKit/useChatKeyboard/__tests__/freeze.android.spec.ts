@@ -1,16 +1,15 @@
-import { renderHook } from "@testing-library/react-native";
 import { Platform } from "react-native";
-import { useAnimatedRef } from "react-native-reanimated";
 
-import type { useChatKeyboard } from "..";
-import type Reanimated from "react-native-reanimated";
-
-type KeyboardEvent = { height: number };
-type Handlers = {
-  onStart?: (e: KeyboardEvent) => void;
-  onMove?: (e: KeyboardEvent) => void;
-  onEnd?: (e: KeyboardEvent) => void;
-};
+import {
+  type Handlers,
+  KEYBOARD,
+  mockLayout,
+  mockOffset,
+  mockScrollTo,
+  mockSize,
+  render,
+  setupBeforeEach,
+} from "../__fixtures__/testUtils";
 
 let handlers: Handlers = {};
 
@@ -21,10 +20,6 @@ jest.mock("../../../../hooks", () => ({
   useResizeMode: jest.fn(),
 }));
 
-const mockOffset = { value: 0 };
-const mockLayout = { value: { width: 390, height: 800 } };
-const mockSize = { value: { width: 390, height: 2000 } };
-
 jest.mock("../../../hooks/useScrollState", () => ({
   __esModule: true,
   default: jest.fn(() => ({
@@ -34,51 +29,9 @@ jest.mock("../../../hooks/useScrollState", () => ({
   })),
 }));
 
-const KEYBOARD = 300;
-const mockScrollTo = jest.fn();
-
-/** Reset mock scroll state to defaults. */
-function reset() {
-  mockOffset.value = 0;
-  mockLayout.value = { width: 390, height: 800 };
-  mockSize.value = { width: 390, height: 2000 };
-}
-
-/**
- * Render the hook with Platform.OS = "android" and freeze enabled.
- *
- * @param options - Hook configuration.
- * @returns renderHook result.
- */
-function render(
-  options: Omit<Parameters<typeof useChatKeyboard>[1], "freeze"> & {
-    freeze?: boolean;
-  },
-) {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const mod = require("..") as { useChatKeyboard: typeof useChatKeyboard };
-
-  return renderHook(() => {
-    const ref = useAnimatedRef<Reanimated.ScrollView>();
-
-    return mod.useChatKeyboard(ref, {
-      ...options,
-      freeze: options.freeze ?? true,
-    });
-  });
-}
-
 beforeEach(() => {
-  jest.resetModules();
+  setupBeforeEach();
   Object.defineProperty(Platform, "OS", { value: "android" });
-
-  jest.doMock("react-native-reanimated", () => ({
-    ...require("react-native-reanimated/mock"),
-    scrollTo: mockScrollTo,
-  }));
-
-  reset();
-  mockScrollTo.mockClear();
 });
 
 afterAll(() => {
@@ -91,6 +44,7 @@ describe("`useChatKeyboard` — Android freeze", () => {
     render({
       inverted: false,
       keyboardLiftBehavior: "always",
+      freeze: true,
     });
 
     handlers.onStart!({ height: KEYBOARD });
@@ -103,6 +57,7 @@ describe("`useChatKeyboard` — Android freeze", () => {
     const { result } = render({
       inverted: true,
       keyboardLiftBehavior: "always",
+      freeze: true,
     });
 
     handlers.onStart!({ height: KEYBOARD });
@@ -115,6 +70,7 @@ describe("`useChatKeyboard` — Android freeze", () => {
     const { result } = render({
       inverted: false,
       keyboardLiftBehavior: "always",
+      freeze: true,
     });
 
     handlers.onEnd!({ height: KEYBOARD });
