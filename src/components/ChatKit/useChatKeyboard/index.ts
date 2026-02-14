@@ -21,6 +21,7 @@ type KeyboardLiftBehavior = "always" | "whenAtEnd" | "persistent" | "never";
 type UseChatKeyboardOptions = {
   inverted: boolean;
   keyboardLiftBehavior: KeyboardLiftBehavior;
+  freeze: boolean;
 };
 
 type UseChatKeyboardReturn = {
@@ -52,7 +53,7 @@ function useChatKeyboard(
   scrollViewRef: AnimatedRef<Reanimated.ScrollView>,
   options: UseChatKeyboardOptions,
 ): UseChatKeyboardReturn {
-  const { inverted, keyboardLiftBehavior } = options;
+  const { inverted, keyboardLiftBehavior, freeze } = options;
 
   const padding = useSharedValue(0);
   const contentOffsetY = useSharedValue(0);
@@ -65,6 +66,10 @@ function useChatKeyboard(
     {
       onStart: (e) => {
         "worklet";
+
+        if (freeze) {
+          return;
+        }
 
         const atEnd = isScrollAtEnd(
           scroll.value,
@@ -117,6 +122,10 @@ function useChatKeyboard(
       onMove: (e) => {
         "worklet";
 
+        if (freeze) {
+          return;
+        }
+
         // iOS doesn't need per-frame updates (contentOffset handles it)
         if (OS === "ios") {
           return;
@@ -163,6 +172,10 @@ function useChatKeyboard(
       onEnd: (e) => {
         "worklet";
 
+        if (freeze) {
+          return;
+        }
+
         padding.value = e.height;
 
         if (
@@ -175,7 +188,7 @@ function useChatKeyboard(
         }
       },
     },
-    [inverted, keyboardLiftBehavior],
+    [inverted, keyboardLiftBehavior, freeze],
   );
 
   return {

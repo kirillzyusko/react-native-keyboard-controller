@@ -33,7 +33,7 @@ function ChatKitPlayground() {
   const textInputRef = useRef<TextInput>(null);
   const textRef = useRef("");
   const [inputHeight, setInputHeight] = useState(TEXT_INPUT_HEIGHT);
-  const { inverted, messages, reversedMessages, addMessage, mode } =
+  const { inverted, messages, reversedMessages, addMessage, mode, freeze } =
     useChatConfigStore();
 
   const onInputLayoutChanged = useCallback((e: LayoutChangeEvent) => {
@@ -80,6 +80,7 @@ function ChatKitPlayground() {
                 automaticallyAdjustContentInsets={false}
                 contentContainerStyle={contentContainerStyle}
                 contentInsetAdjustmentBehavior="never"
+                freeze={freeze}
                 keyboardDismissMode="interactive"
                 testID="chat.scroll"
                 {...props}
@@ -103,6 +104,7 @@ function ChatKitPlayground() {
                     : contentContainerStyle
                 }
                 contentInsetAdjustmentBehavior="never"
+                freeze={freeze}
                 inverted={inverted}
                 keyboardDismissMode="interactive"
                 testID="chat.scroll"
@@ -117,6 +119,7 @@ function ChatKitPlayground() {
             automaticallyAdjustContentInsets={false}
             contentContainerStyle={contentContainerStyle}
             contentInsetAdjustmentBehavior="never"
+            freeze={freeze}
             keyboardDismissMode="interactive"
             testID="chat.scroll"
           >

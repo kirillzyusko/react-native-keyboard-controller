@@ -19,6 +19,7 @@ const ChatScrollView = forwardRef<
       ScrollViewComponent = Reanimated.ScrollView,
       inverted = false,
       keyboardLiftBehavior = "always",
+      freeze = false,
       ...rest
     },
     ref,
@@ -28,7 +29,7 @@ const ChatScrollView = forwardRef<
 
     const { padding, contentOffsetY, containerTranslateY } = useChatKeyboard(
       scrollViewRef,
-      { inverted, keyboardLiftBehavior },
+      { inverted, keyboardLiftBehavior, freeze },
     );
 
     const containerStyle = useAnimatedStyle(

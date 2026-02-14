@@ -49,16 +49,18 @@ function reset() {
  *
  * @param options - Hook configuration.
  * @returns renderHook result.
- * @example
+ * @example render({ inverted: false, keyboardLiftBehavior: "always" })
  */
-function render(options: Parameters<typeof useChatKeyboard>[1]) {
+function render(
+  options: Omit<Parameters<typeof useChatKeyboard>[1], "freeze">,
+) {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const mod = require("..") as { useChatKeyboard: typeof useChatKeyboard };
 
   return renderHook(() => {
     const ref = useAnimatedRef<Reanimated.ScrollView>();
 
-    return mod.useChatKeyboard(ref, options);
+    return mod.useChatKeyboard(ref, { ...options, freeze: false });
   });
 }
 

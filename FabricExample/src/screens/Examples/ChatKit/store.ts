@@ -11,6 +11,8 @@ interface ChatConfigStore {
   setInverted: (inverted: boolean) => void;
   beginning: boolean;
   setBeginning: (beginning: boolean) => void;
+  freeze: boolean;
+  setFreeze: (freeze: boolean) => void;
   messages: MessageProps[];
   reversedMessages: MessageProps[];
   setMessages: (messages: MessageProps[]) => void;
@@ -23,6 +25,8 @@ interface ChatConfigStore {
 export const useChatConfigStore = create<ChatConfigStore>((set) => ({
   inverted: false,
   setInverted: (inverted) => set({ inverted }),
+  freeze: false,
+  setFreeze: (freeze) => set({ freeze }),
   beginning: false,
   setBeginning: (beginning) => {
     set(() => {

@@ -27,4 +27,12 @@ export type ChatKitScrollViewProps = {
    * Default is `'always'`.
    */
   keyboardLiftBehavior?: KeyboardLiftBehavior;
+  /**
+   * When `true`, freezes all keyboard-driven layout changes (padding, content offset, scroll position).
+   * Useful when dismissing the keyboard to open a bottom sheet — prevents visual disruption
+   * while the sheet is visible.
+   *
+   * Default is `false`.
+   */
+  freeze?: boolean;
 } & ScrollViewProps;
