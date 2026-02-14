@@ -49,14 +49,21 @@ function reset() {
  * @param options - Hook configuration.
  * @returns renderHook result.
  */
-function render(options: Parameters<typeof useChatKeyboard>[1]) {
+function render(
+  options: Omit<Parameters<typeof useChatKeyboard>[1], "freeze"> & {
+    freeze?: boolean;
+  },
+) {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const mod = require("..") as { useChatKeyboard: typeof useChatKeyboard };
 
   return renderHook(() => {
     const ref = useAnimatedRef<Reanimated.ScrollView>();
 
-    return mod.useChatKeyboard(ref, options);
+    return mod.useChatKeyboard(ref, {
+      ...options,
+      freeze: options.freeze ?? false,
+    });
   });
 }
 
@@ -240,6 +247,46 @@ describe("`useChatKeyboard` — iOS behaviors", () => {
     expect(result.current.padding.value).toBe(KEYBOARD);
 
     handlers.onEnd!({ height: 0 });
+    expect(result.current.padding.value).toBe(0);
+  });
+});
+
+describe("`useChatKeyboard` — iOS freeze", () => {
+  it("should not change padding on keyboard open", () => {
+    mockOffset.value = 100;
+    const { result } = render({
+      inverted: false,
+      keyboardLiftBehavior: "always",
+      freeze: true,
+    });
+
+    handlers.onStart!({ height: KEYBOARD });
+
+    expect(result.current.padding.value).toBe(0);
+  });
+
+  it("should not change contentOffsetY on keyboard open", () => {
+    mockOffset.value = 100;
+    const { result } = render({
+      inverted: false,
+      keyboardLiftBehavior: "always",
+      freeze: true,
+    });
+
+    handlers.onStart!({ height: KEYBOARD });
+
+    expect(result.current.contentOffsetY!.value).toBe(0);
+  });
+
+  it("should not change padding in onEnd", () => {
+    const { result } = render({
+      inverted: false,
+      keyboardLiftBehavior: "always",
+      freeze: true,
+    });
+
+    handlers.onEnd!({ height: KEYBOARD });
+
     expect(result.current.padding.value).toBe(0);
   });
 });

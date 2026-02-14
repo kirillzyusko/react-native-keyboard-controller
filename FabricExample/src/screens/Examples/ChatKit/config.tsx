@@ -1,7 +1,8 @@
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import { useNavigation } from "@react-navigation/native";
 import React, { useCallback, useEffect, useRef } from "react";
-import { Button, StyleSheet, Text, View } from "react-native";
+import { Button, Keyboard, StyleSheet, Text, View } from "react-native";
+import { KeyboardController } from "react-native-keyboard-controller";
 
 import Switch from "../../../components/Switch";
 
@@ -14,12 +15,27 @@ function ConfigSheet() {
   const setInverted = useChatConfigStore((state) => state.setInverted);
   const beginning = useChatConfigStore((state) => state.beginning);
   const setBeginning = useChatConfigStore((state) => state.setBeginning);
+  const setFreeze = useChatConfigStore((state) => state.setFreeze);
   const mode = useChatConfigStore((state) => state.mode);
   const setMode = useChatConfigStore((state) => state.setMode);
 
-  const handlePresentModalPress = useCallback(() => {
-    bottomSheetModalRef.current?.expand();
-  }, []);
+  const handlePresentModalPress = useCallback(async () => {
+    setFreeze(true);
+    requestAnimationFrame(async () => {
+      await KeyboardController.dismiss({ keepFocus: true });
+      bottomSheetModalRef.current?.expand();
+    });
+  }, [setFreeze]);
+
+  const handleSheetChange = useCallback(
+    (index: number) => {
+      if (index < 0) {
+        setFreeze(false);
+        KeyboardController.setFocusTo("current");
+      }
+    },
+    [setFreeze],
+  );
 
   useEffect(() => {
     navigation.setOptions({
@@ -36,7 +52,12 @@ function ConfigSheet() {
   }, [navigation]);
 
   return (
-    <BottomSheet ref={bottomSheetModalRef} index={-1} snapPoints={["50%"]}>
+    <BottomSheet
+      ref={bottomSheetModalRef}
+      index={-1}
+      snapPoints={["50%"]}
+      onChange={handleSheetChange}
+    >
       <BottomSheetView style={styles.bottomSheetContent}>
         <Button
           testID="bottom_sheet_close_modal"
