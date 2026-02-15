@@ -1,7 +1,8 @@
-import React, { forwardRef, useMemo } from "react";
+import React, { forwardRef, useMemo, useRef } from "react";
 import { Animated } from "react-native";
 
 import { useKeyboardAnimation } from "../../hooks";
+import { KeyboardController } from "../../module";
 
 import type { View, ViewProps } from "react-native";
 
@@ -22,6 +23,13 @@ export type KeyboardStickyViewProps = {
 
   /** Controls whether this `KeyboardStickyView` instance should take effect. Default is `true`. */
   enabled?: boolean;
+  /**
+   * When `true`, freezes the view at its current position and stops reacting to keyboard changes.
+   * Useful when dismissing the keyboard should keep the sticky view in its current position.
+   *
+   * Default is `false`.
+   */
+  freeze?: boolean;
 } & ViewProps;
 
 /**
@@ -47,11 +55,14 @@ const KeyboardStickyView = forwardRef<
       offset: { closed = 0, opened = 0 } = {},
       style,
       enabled = true,
+      freeze = false,
       ...props
     },
     ref,
   ) => {
     const { height, progress } = useKeyboardAnimation();
+    const frozenTranslateY = useRef(0);
+    const prevFreeze = useRef(freeze);
 
     const offset = progress.interpolate({
       inputRange: [0, 1],
