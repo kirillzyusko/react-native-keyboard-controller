@@ -9,7 +9,11 @@ import {
   setupBeforeEach,
 } from "../__fixtures__/testUtils";
 
-let handlers: Handlers = {};
+let handlers: Handlers = {
+  onStart: jest.fn(),
+  onMove: jest.fn(),
+  onEnd: jest.fn(),
+};
 
 jest.mock("../../../../hooks", () => ({
   useKeyboardHandler: jest.fn((h: Handlers) => {
@@ -39,7 +43,7 @@ describe("`useChatKeyboard` — iOS non-inverted + always", () => {
       keyboardLiftBehavior: "always",
     });
 
-    handlers.onStart!({ height: KEYBOARD });
+    handlers.onStart({ height: KEYBOARD });
 
     expect(result.current.padding.value).toBe(KEYBOARD);
     expect(result.current.contentOffsetY!.value).toBe(400);
@@ -52,9 +56,9 @@ describe("`useChatKeyboard` — iOS non-inverted + always", () => {
       keyboardLiftBehavior: "always",
     });
 
-    handlers.onStart!({ height: KEYBOARD });
+    handlers.onStart({ height: KEYBOARD });
     mockOffset.value = 400;
-    handlers.onStart!({ height: 0 });
+    handlers.onStart({ height: 0 });
 
     expect(result.current.padding.value).toBe(0);
     expect(result.current.contentOffsetY!.value).toBe(100);
@@ -67,9 +71,9 @@ describe("`useChatKeyboard` — iOS non-inverted + always", () => {
       keyboardLiftBehavior: "always",
     });
 
-    handlers.onStart!({ height: 300 });
+    handlers.onStart({ height: 300 });
     mockOffset.value = 400;
-    handlers.onStart!({ height: 350 });
+    handlers.onStart({ height: 350 });
 
     expect(result.current.padding.value).toBe(350);
     expect(result.current.contentOffsetY!.value).toBe(450);
@@ -83,7 +87,7 @@ describe("`useChatKeyboard` — iOS non-inverted + always", () => {
       keyboardLiftBehavior: "always",
     });
 
-    handlers.onStart!({ height: KEYBOARD });
+    handlers.onStart({ height: KEYBOARD });
 
     expect(result.current.contentOffsetY!.value).toBe(0);
   });
@@ -91,8 +95,8 @@ describe("`useChatKeyboard` — iOS non-inverted + always", () => {
   it("should not call scrollTo on iOS", () => {
     render({ inverted: false, keyboardLiftBehavior: "always" });
 
-    handlers.onStart!({ height: KEYBOARD });
-    handlers.onMove!({ height: 150 });
+    handlers.onStart({ height: KEYBOARD });
+    handlers.onMove({ height: 150 });
 
     expect(mockScrollTo).not.toHaveBeenCalled();
   });
@@ -105,7 +109,7 @@ describe("`useChatKeyboard` — iOS inverted + always", () => {
       keyboardLiftBehavior: "always",
     });
 
-    handlers.onStart!({ height: KEYBOARD });
+    handlers.onStart({ height: KEYBOARD });
 
     expect(result.current.contentOffsetY!.value).toBe(-KEYBOARD);
   });
@@ -116,9 +120,9 @@ describe("`useChatKeyboard` — iOS inverted + always", () => {
       keyboardLiftBehavior: "always",
     });
 
-    handlers.onStart!({ height: KEYBOARD });
+    handlers.onStart({ height: KEYBOARD });
     mockOffset.value = -300;
-    handlers.onStart!({ height: 0 });
+    handlers.onStart({ height: 0 });
 
     expect(result.current.contentOffsetY!.value).toBe(0);
   });
@@ -129,9 +133,9 @@ describe("`useChatKeyboard` — iOS inverted + always", () => {
       keyboardLiftBehavior: "always",
     });
 
-    handlers.onStart!({ height: KEYBOARD });
+    handlers.onStart({ height: KEYBOARD });
     mockOffset.value = -250;
-    handlers.onStart!({ height: 0 });
+    handlers.onStart({ height: 0 });
 
     expect(result.current.contentOffsetY!.value).toBe(50);
   });
@@ -142,9 +146,9 @@ describe("`useChatKeyboard` — iOS inverted + always", () => {
       keyboardLiftBehavior: "always",
     });
 
-    handlers.onStart!({ height: 300 });
+    handlers.onStart({ height: 300 });
     mockOffset.value = -300;
-    handlers.onStart!({ height: 350 });
+    handlers.onStart({ height: 350 });
 
     expect(result.current.contentOffsetY!.value).toBe(-350);
   });
@@ -158,7 +162,7 @@ describe("`useChatKeyboard` — iOS behaviors", () => {
       keyboardLiftBehavior: "never",
     });
 
-    handlers.onStart!({ height: KEYBOARD });
+    handlers.onStart({ height: KEYBOARD });
 
     expect(result.current.padding.value).toBe(KEYBOARD);
     expect(result.current.contentOffsetY!.value).toBe(0);
@@ -171,7 +175,7 @@ describe("`useChatKeyboard` — iOS behaviors", () => {
       keyboardLiftBehavior: "whenAtEnd",
     });
 
-    handlers.onStart!({ height: KEYBOARD });
+    handlers.onStart({ height: KEYBOARD });
 
     expect(result.current.contentOffsetY!.value).toBe(1480);
   });
@@ -183,7 +187,7 @@ describe("`useChatKeyboard` — iOS behaviors", () => {
       keyboardLiftBehavior: "whenAtEnd",
     });
 
-    handlers.onStart!({ height: KEYBOARD });
+    handlers.onStart({ height: KEYBOARD });
 
     expect(result.current.contentOffsetY!.value).toBe(0);
   });
@@ -194,10 +198,10 @@ describe("`useChatKeyboard` — iOS behaviors", () => {
       keyboardLiftBehavior: "always",
     });
 
-    handlers.onEnd!({ height: KEYBOARD });
+    handlers.onEnd({ height: KEYBOARD });
     expect(result.current.padding.value).toBe(KEYBOARD);
 
-    handlers.onEnd!({ height: 0 });
+    handlers.onEnd({ height: 0 });
     expect(result.current.padding.value).toBe(0);
   });
 });
@@ -211,7 +215,7 @@ describe("`useChatKeyboard` — iOS freeze", () => {
       freeze: true,
     });
 
-    handlers.onStart!({ height: KEYBOARD });
+    handlers.onStart({ height: KEYBOARD });
 
     expect(result.current.padding.value).toBe(0);
   });
@@ -224,7 +228,7 @@ describe("`useChatKeyboard` — iOS freeze", () => {
       freeze: true,
     });
 
-    handlers.onStart!({ height: KEYBOARD });
+    handlers.onStart({ height: KEYBOARD });
 
     expect(result.current.contentOffsetY!.value).toBe(0);
   });
@@ -236,7 +240,7 @@ describe("`useChatKeyboard` — iOS freeze", () => {
       freeze: true,
     });
 
-    handlers.onEnd!({ height: KEYBOARD });
+    handlers.onEnd({ height: KEYBOARD });
 
     expect(result.current.padding.value).toBe(0);
   });

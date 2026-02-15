@@ -6,9 +6,9 @@ import type Reanimated from "react-native-reanimated";
 
 export type KeyboardEvent = { height: number };
 export type Handlers = {
-  onStart?: (e: KeyboardEvent) => void;
-  onMove?: (e: KeyboardEvent) => void;
-  onEnd?: (e: KeyboardEvent) => void;
+  onStart: (e: KeyboardEvent) => void;
+  onMove: (e: KeyboardEvent) => void;
+  onEnd: (e: KeyboardEvent) => void;
 };
 
 export const mockOffset = { value: 0 };

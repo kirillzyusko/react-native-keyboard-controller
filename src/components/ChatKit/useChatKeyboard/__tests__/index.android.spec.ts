@@ -11,7 +11,11 @@ import {
   setupBeforeEach,
 } from "../__fixtures__/testUtils";
 
-let handlers: Handlers = {};
+let handlers: Handlers = {
+  onStart: jest.fn(),
+  onMove: jest.fn(),
+  onEnd: jest.fn(),
+};
 
 jest.mock("../../../../hooks", () => ({
   useKeyboardHandler: jest.fn((h: Handlers) => {
@@ -46,10 +50,10 @@ describe("`useChatKeyboard` — Android non-inverted + always", () => {
       keyboardLiftBehavior: "always",
     });
 
-    handlers.onStart!({ height: KEYBOARD });
+    handlers.onStart({ height: KEYBOARD });
     expect(result.current.padding.value).toBe(KEYBOARD);
 
-    handlers.onMove!({ height: 200 });
+    handlers.onMove({ height: 200 });
     expect(mockScrollTo).toHaveBeenCalledWith(expect.anything(), 0, 300, false);
   });
 
@@ -57,9 +61,9 @@ describe("`useChatKeyboard` — Android non-inverted + always", () => {
     mockOffset.value = 100;
     render({ inverted: false, keyboardLiftBehavior: "always" });
 
-    handlers.onStart!({ height: KEYBOARD });
+    handlers.onStart({ height: KEYBOARD });
 
-    handlers.onMove!({ height: 150 });
+    handlers.onMove({ height: 150 });
     expect(mockScrollTo).toHaveBeenLastCalledWith(
       expect.anything(),
       0,
@@ -67,7 +71,7 @@ describe("`useChatKeyboard` — Android non-inverted + always", () => {
       false,
     );
 
-    handlers.onMove!({ height: KEYBOARD });
+    handlers.onMove({ height: KEYBOARD });
     expect(mockScrollTo).toHaveBeenLastCalledWith(
       expect.anything(),
       0,
@@ -90,18 +94,18 @@ describe("`useChatKeyboard` — Android non-inverted + always", () => {
     render({ inverted: false, keyboardLiftBehavior: "always" });
 
     // keyboard opens: offsetBeforeScroll = 100
-    handlers.onStart!({ height: KEYBOARD });
-    handlers.onMove!({ height: KEYBOARD });
+    handlers.onStart({ height: KEYBOARD });
+    handlers.onMove({ height: KEYBOARD });
     mockScrollTo.mockClear();
 
     // user scrolls up to 200 while keyboard is open
     mockOffset.value = 200;
 
     // keyboard starts closing: re-captures offsetBeforeScroll = 200 - 300 = -100
-    handlers.onStart!({ height: 0 });
+    handlers.onStart({ height: 0 });
 
     // dismiss frame: target = clamp(-100 + 150, 0, ...) = 50
-    handlers.onMove!({ height: 150 });
+    handlers.onMove({ height: 150 });
     expect(mockScrollTo).toHaveBeenLastCalledWith(
       expect.anything(),
       0,
@@ -110,7 +114,7 @@ describe("`useChatKeyboard` — Android non-inverted + always", () => {
     );
 
     // final frame: target = clamp(-100 + 0, 0, ...) = 0
-    handlers.onMove!({ height: 0 });
+    handlers.onMove({ height: 0 });
     expect(mockScrollTo).toHaveBeenLastCalledWith(
       expect.anything(),
       0,
@@ -123,15 +127,15 @@ describe("`useChatKeyboard` — Android non-inverted + always", () => {
     mockOffset.value = 100;
     render({ inverted: false, keyboardLiftBehavior: "always" });
 
-    handlers.onStart!({ height: KEYBOARD });
+    handlers.onStart({ height: KEYBOARD });
     // user did NOT scroll — offset stays at what scrollTo set (100 + 300 = 400)
     mockOffset.value = 400;
     mockScrollTo.mockClear();
 
     // keyboard closes: re-captures offsetBeforeScroll = 400 - 300 = 100 (same as original)
-    handlers.onStart!({ height: 0 });
+    handlers.onStart({ height: 0 });
 
-    handlers.onMove!({ height: 150 });
+    handlers.onMove({ height: 150 });
     // target = clamp(100 + 150, 0, ...) = 250
     expect(mockScrollTo).toHaveBeenLastCalledWith(
       expect.anything(),
@@ -147,11 +151,11 @@ describe("`useChatKeyboard` — Android non-inverted + always", () => {
       keyboardLiftBehavior: "always",
     });
 
-    handlers.onStart!({ height: KEYBOARD });
-    handlers.onEnd!({ height: KEYBOARD });
+    handlers.onStart({ height: KEYBOARD });
+    handlers.onEnd({ height: KEYBOARD });
     expect(result.current.padding.value).toBe(KEYBOARD);
 
-    handlers.onEnd!({ height: 0 });
+    handlers.onEnd({ height: 0 });
     expect(result.current.padding.value).toBe(0);
   });
 });
@@ -163,8 +167,8 @@ describe("`useChatKeyboard` — Android inverted + always", () => {
       keyboardLiftBehavior: "always",
     });
 
-    handlers.onStart!({ height: KEYBOARD });
-    handlers.onMove!({ height: 200 });
+    handlers.onStart({ height: KEYBOARD });
+    handlers.onMove({ height: 200 });
 
     expect(result.current.containerTranslateY.value).toBe(-200);
   });
@@ -175,20 +179,20 @@ describe("`useChatKeyboard` — Android inverted + always", () => {
       keyboardLiftBehavior: "always",
     });
 
-    handlers.onStart!({ height: KEYBOARD });
+    handlers.onStart({ height: KEYBOARD });
 
-    handlers.onMove!({ height: 100 });
+    handlers.onMove({ height: 100 });
     expect(result.current.containerTranslateY.value).toBe(-100);
 
-    handlers.onMove!({ height: 250 });
+    handlers.onMove({ height: 250 });
     expect(result.current.containerTranslateY.value).toBe(-250);
   });
 
   it("should NOT call scrollTo for inverted lists", () => {
     render({ inverted: true, keyboardLiftBehavior: "always" });
 
-    handlers.onStart!({ height: KEYBOARD });
-    handlers.onMove!({ height: 200 });
+    handlers.onStart({ height: KEYBOARD });
+    handlers.onMove({ height: 200 });
 
     expect(mockScrollTo).not.toHaveBeenCalled();
   });
@@ -199,9 +203,9 @@ describe("`useChatKeyboard` — Android inverted + always", () => {
       keyboardLiftBehavior: "always",
     });
 
-    handlers.onStart!({ height: KEYBOARD });
-    handlers.onMove!({ height: KEYBOARD });
-    handlers.onEnd!({ height: 0 });
+    handlers.onStart({ height: KEYBOARD });
+    handlers.onMove({ height: KEYBOARD });
+    handlers.onEnd({ height: 0 });
 
     expect(result.current.containerTranslateY.value).toBe(0);
     expect(result.current.padding.value).toBe(0);
@@ -215,9 +219,9 @@ describe("`useChatKeyboard` — Android behaviors", () => {
       keyboardLiftBehavior: "persistent",
     });
 
-    handlers.onStart!({ height: KEYBOARD });
-    handlers.onMove!({ height: KEYBOARD });
-    handlers.onEnd!({ height: 0 });
+    handlers.onStart({ height: KEYBOARD });
+    handlers.onMove({ height: KEYBOARD });
+    handlers.onEnd({ height: 0 });
 
     expect(result.current.containerTranslateY.value).toBe(-KEYBOARD);
   });
@@ -228,9 +232,9 @@ describe("`useChatKeyboard` — Android behaviors", () => {
       keyboardLiftBehavior: "persistent",
     });
 
-    handlers.onStart!({ height: KEYBOARD });
-    handlers.onMove!({ height: KEYBOARD });
-    handlers.onMove!({ height: 200 });
+    handlers.onStart({ height: KEYBOARD });
+    handlers.onMove({ height: KEYBOARD });
+    handlers.onMove({ height: 200 });
 
     expect(result.current.containerTranslateY.value).toBe(-KEYBOARD);
   });
@@ -242,8 +246,8 @@ describe("`useChatKeyboard` — Android behaviors", () => {
       keyboardLiftBehavior: "never",
     });
 
-    handlers.onStart!({ height: KEYBOARD });
-    handlers.onMove!({ height: 200 });
+    handlers.onStart({ height: KEYBOARD });
+    handlers.onMove({ height: 200 });
 
     expect(mockScrollTo).not.toHaveBeenCalled();
     expect(result.current.containerTranslateY.value).toBe(0);
@@ -253,8 +257,8 @@ describe("`useChatKeyboard` — Android behaviors", () => {
     mockOffset.value = 1180;
     render({ inverted: false, keyboardLiftBehavior: "whenAtEnd" });
 
-    handlers.onStart!({ height: KEYBOARD });
-    handlers.onMove!({ height: 200 });
+    handlers.onStart({ height: KEYBOARD });
+    handlers.onMove({ height: 200 });
 
     expect(mockScrollTo).toHaveBeenCalled();
   });
@@ -263,8 +267,8 @@ describe("`useChatKeyboard` — Android behaviors", () => {
     mockOffset.value = 100;
     render({ inverted: false, keyboardLiftBehavior: "whenAtEnd" });
 
-    handlers.onStart!({ height: KEYBOARD });
-    handlers.onMove!({ height: 200 });
+    handlers.onStart({ height: KEYBOARD });
+    handlers.onMove({ height: 200 });
 
     expect(mockScrollTo).not.toHaveBeenCalled();
   });
@@ -273,13 +277,13 @@ describe("`useChatKeyboard` — Android behaviors", () => {
     mockOffset.value = 100;
     render({ inverted: false, keyboardLiftBehavior: "persistent" });
 
-    handlers.onStart!({ height: KEYBOARD });
-    handlers.onMove!({ height: 200 });
+    handlers.onStart({ height: KEYBOARD });
+    handlers.onMove({ height: 200 });
     expect(mockScrollTo).toHaveBeenCalled();
     mockScrollTo.mockClear();
 
     mockOffset.value = 300;
-    handlers.onMove!({ height: 100 });
+    handlers.onMove({ height: 100 });
 
     expect(mockScrollTo).not.toHaveBeenCalled();
   });

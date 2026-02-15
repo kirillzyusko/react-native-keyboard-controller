@@ -11,7 +11,11 @@ import {
   setupBeforeEach,
 } from "../__fixtures__/testUtils";
 
-let handlers: Handlers = {};
+let handlers: Handlers = {
+  onStart: jest.fn(),
+  onMove: jest.fn(),
+  onEnd: jest.fn(),
+};
 
 jest.mock("../../../../hooks", () => ({
   useKeyboardHandler: jest.fn((h: Handlers) => {
@@ -47,8 +51,8 @@ describe("`useChatKeyboard` — Android freeze", () => {
       freeze: true,
     });
 
-    handlers.onStart!({ height: KEYBOARD });
-    handlers.onMove!({ height: 200 });
+    handlers.onStart({ height: KEYBOARD });
+    handlers.onMove({ height: 200 });
 
     expect(mockScrollTo).not.toHaveBeenCalled();
   });
@@ -60,8 +64,8 @@ describe("`useChatKeyboard` — Android freeze", () => {
       freeze: true,
     });
 
-    handlers.onStart!({ height: KEYBOARD });
-    handlers.onMove!({ height: 200 });
+    handlers.onStart({ height: KEYBOARD });
+    handlers.onMove({ height: 200 });
 
     expect(result.current.containerTranslateY.value).toBe(0);
   });
@@ -73,7 +77,7 @@ describe("`useChatKeyboard` — Android freeze", () => {
       freeze: true,
     });
 
-    handlers.onEnd!({ height: KEYBOARD });
+    handlers.onEnd({ height: KEYBOARD });
 
     expect(result.current.padding.value).toBe(0);
   });
