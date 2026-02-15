@@ -58,17 +58,21 @@ const KeyboardStickyView = forwardRef<
       outputRange: [closed, opened],
     });
 
-    const styles = useMemo(
-      () => [
+    const styles = useMemo(() => {
+      const disabled = Animated.add(Animated.multiply(height, 0), closed);
+      const active = Animated.add(height, offset);
+
+      return [
         {
           transform: [
-            { translateY: enabled ? Animated.add(height, offset) : closed },
+            {
+              translateY: enabled ? active : disabled,
+            },
           ],
         },
         style,
-      ],
-      [closed, enabled, height, offset, style],
-    );
+      ];
+    }, [closed, enabled, height, offset, style]);
 
     return (
       <Animated.View ref={ref} style={styles} {...props}>
