@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Text, TextInput, View } from "react-native";
 import { useReanimatedKeyboardAnimation } from "react-native-keyboard-controller";
 import Reanimated, {
-  useAnimatedProps,
   useAnimatedStyle,
   useDerivedValue,
 } from "react-native-reanimated";
@@ -36,7 +35,7 @@ function ReanimatedChat({ navigation }: Props) {
     });
   }, [isTGTransition]);
 
-  const { height: telegram, padding } = useTelegramTransitions();
+  const { height: telegram } = useTelegramTransitions();
   const { height: platform } = useReanimatedKeyboardAnimation();
   const height = useDerivedValue(
     () => (isTGTransition ? telegram.value : platform.value),
@@ -45,7 +44,7 @@ function ReanimatedChat({ navigation }: Props) {
 
   const scrollViewStyle = useAnimatedStyle(
     () => ({
-      transform: [{ translateY: height.value * 2 }],
+      transform: [{ translateY: height.value }, ...styles.inverted.transform],
     }),
     [],
   );
@@ -64,23 +63,19 @@ function ReanimatedChat({ navigation }: Props) {
     }),
     [],
   );
-  const animatedProps = useAnimatedProps(() => ({
-    contentOffset: {},
-  }), []);
 
   return (
     <View style={styles.container}>
       <Reanimated.ScrollView
         showsVerticalScrollIndicator={false}
-        contentOffset={null}
-        // style={scrollViewStyle}
+        style={scrollViewStyle}
       >
-        <Reanimated.View style={scrollViewStyle}>
+        <View style={styles.inverted}>
           <Reanimated.View style={fakeView} />
           {history.map((message, index) => (
             <Message key={index} {...message} />
           ))}
-        </Reanimated.View>
+        </View>
       </Reanimated.ScrollView>
       <AnimatedTextInput style={textInputStyle} />
     </View>
