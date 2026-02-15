@@ -4,6 +4,7 @@ import React from "react";
 import { ScreenNames } from "../../constants/screenNames";
 import AwareScrollView from "../../screens/Examples/AwareScrollView";
 import AwareScrollViewStickyFooter from "../../screens/Examples/AwareScrollViewStickyFooter";
+import ChatKitPlayground from "../../screens/Examples/ChatKit";
 import CloseScreen from "../../screens/Examples/Close";
 import EnabledDisabled from "../../screens/Examples/EnabledDisabled";
 import Events from "../../screens/Examples/Events";
@@ -54,6 +55,7 @@ export type ExamplesStackParamList = {
   [ScreenNames.LIQUID_KEYBOARD]: undefined;
   [ScreenNames.KEYBOARD_SHARED_TRANSITIONS]: undefined;
   [ScreenNames.KEYBOARD_EXTENDER]: undefined;
+  [ScreenNames.CHAT_KIT]: undefined;
 };
 
 const Stack = createStackNavigator<ExamplesStackParamList>();
@@ -137,6 +139,14 @@ const options = {
   [ScreenNames.KEYBOARD_EXTENDER]: {
     title: "Keyboard Extender",
     headerShown: false,
+  },
+  [ScreenNames.CHAT_KIT]: {
+    title: "Chat Kit",
+    headerTintColor: "#fff",
+    headerStyle: {
+      backgroundColor: "#3A3A3C",
+    },
+    headerBackTitle: "Back",
   },
 };
 
@@ -266,6 +276,11 @@ const ExamplesStack = () => (
       component={KeyboardExtender}
       name={ScreenNames.KEYBOARD_EXTENDER}
       options={options[ScreenNames.KEYBOARD_EXTENDER]}
+    />
+    <Stack.Screen
+      component={ChatKitPlayground}
+      name={ScreenNames.CHAT_KIT}
+      options={options[ScreenNames.CHAT_KIT]}
     />
   </Stack.Navigator>
 );

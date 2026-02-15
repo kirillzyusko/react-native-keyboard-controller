@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@gorhom/bottom-sheet": "5.2.6",
+    "@legendapp/list": "^2.0.19",
     "@react-native-community/blur": "^4.4.1",
     "@react-native-masked-view/masked-view": "^0.3.2",
     "@react-navigation/bottom-tabs": "^7.9.0",
@@ -31,7 +32,8 @@
     "react-native-screens": "4.16.0",
     "react-native-text-input-mask": "3.1.5",
     "react-native-toast-message": "^2.3.0",
-    "react-native-webview": "^13.16.0"
+    "react-native-webview": "^13.16.0",
+    "zustand": "^5.0.11"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
