@@ -5,6 +5,7 @@
 // TODO: (x) don't scroll when only few messages visible
 // TODO: (x) add `freeze` property
 // TODO: (x) cover by unit tests
+// TODO: (x) add offset property
 // TODO: render first message from bottom from top
 // TODO: interactive dismissal
 // TODO: customizable behavior when to scroll (i. e. "always", "when bottom reached", "never")

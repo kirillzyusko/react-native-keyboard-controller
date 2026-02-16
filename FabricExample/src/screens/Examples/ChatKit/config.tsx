@@ -1,7 +1,7 @@
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import { useNavigation } from "@react-navigation/native";
 import React, { useCallback, useEffect, useRef } from "react";
-import { Button, Keyboard, StyleSheet, Text, View } from "react-native";
+import { Button, StyleSheet, Text, View } from "react-native";
 import { KeyboardController } from "react-native-keyboard-controller";
 
 import Switch from "../../../components/Switch";
@@ -65,7 +65,7 @@ function ConfigSheet() {
           onPress={() => bottomSheetModalRef.current?.close()}
         />
         <View style={styles.switchContainer}>
-          <Text>Toggle inverted</Text>
+          <Text style={styles.text}>Toggle inverted</Text>
           <Switch
             testID="bottom_sheet_toggle_inverted_state"
             value={inverted}
@@ -75,7 +75,7 @@ function ConfigSheet() {
           />
         </View>
         <View style={styles.switchContainer}>
-          <Text>Toggle beginning</Text>
+          <Text style={styles.text}>Toggle beginning</Text>
           <Switch
             testID="bottom_sheet_toggle_beginning_state"
             value={beginning}
@@ -85,7 +85,7 @@ function ConfigSheet() {
           />
         </View>
         <View style={styles.switchContainer}>
-          <Text>Use Scroll View</Text>
+          <Text style={styles.text}>Use Scroll View</Text>
           <Switch
             testID="bottom_sheet_toggle_scroll_view_list_state"
             value={mode === "scroll"}
@@ -95,7 +95,7 @@ function ConfigSheet() {
           />
         </View>
         <View style={styles.switchContainer}>
-          <Text>Use Flat List</Text>
+          <Text style={styles.text}>Use Flat List</Text>
           <Switch
             testID="bottom_sheet_toggle_flat_list_state"
             value={mode === "flat"}
@@ -105,7 +105,7 @@ function ConfigSheet() {
           />
         </View>
         <View style={styles.switchContainer}>
-          <Text>Use Flash List 🚧</Text>
+          <Text style={styles.text}>Use Flash List 🚧</Text>
           <Switch
             testID="bottom_sheet_toggle_flash_list_state"
             value={mode === "flash"}
@@ -115,7 +115,7 @@ function ConfigSheet() {
           />
         </View>
         <View style={styles.switchContainer}>
-          <Text>Use Legend List 🚧</Text>
+          <Text style={styles.text}>Use Legend List 🚧</Text>
           <Switch
             testID="bottom_sheet_toggle_legend_list_state"
             value={mode === "legend"}
@@ -142,6 +142,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     margin: 16,
+  },
+  text: {
+    color: "black",
   },
 });
 

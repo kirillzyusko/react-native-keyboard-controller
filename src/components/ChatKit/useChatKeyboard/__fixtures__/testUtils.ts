@@ -36,6 +36,17 @@ export function setupBeforeEach() {
   jest.doMock("react-native-reanimated", () => ({
     ...require("react-native-reanimated/mock"),
     scrollTo: mockScrollTo,
+    interpolate: (value: number, input: number[], output: number[]) => {
+      "worklet";
+
+      if (input[1] === 0) {
+        return 0;
+      }
+
+      const progress = (value - input[0]) / (input[1] - input[0]);
+
+      return output[0] + progress * (output[1] - output[0]);
+    },
   }));
 
   reset();
@@ -50,8 +61,9 @@ export function setupBeforeEach() {
  * @example render({ inverted: false, keyboardLiftBehavior: "always" })
  */
 export function render(
-  options: Omit<Parameters<typeof useChatKeyboard>[1], "freeze"> & {
+  options: Omit<Parameters<typeof useChatKeyboard>[1], "freeze" | "offset"> & {
     freeze?: boolean;
+    offset?: number;
   },
 ) {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -63,6 +75,7 @@ export function render(
     return mod.useChatKeyboard(ref, {
       ...options,
       freeze: options.freeze ?? false,
+      offset: options.offset ?? 0,
     });
   });
 }

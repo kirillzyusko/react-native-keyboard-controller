@@ -20,6 +20,7 @@ const ChatScrollView = forwardRef<
       inverted = false,
       keyboardLiftBehavior = "always",
       freeze = false,
+      offset = 0,
       ...rest
     },
     ref,
@@ -29,7 +30,7 @@ const ChatScrollView = forwardRef<
 
     const { padding, contentOffsetY, containerTranslateY } = useChatKeyboard(
       scrollViewRef,
-      { inverted, keyboardLiftBehavior, freeze },
+      { inverted, keyboardLiftBehavior, freeze, offset },
     );
 
     const containerStyle = useAnimatedStyle(

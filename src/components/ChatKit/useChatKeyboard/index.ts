@@ -1,5 +1,5 @@
 import { Platform } from "react-native";
-import { scrollTo, useSharedValue } from "react-native-reanimated";
+import { interpolate, scrollTo, useSharedValue } from "react-native-reanimated";
 
 import { useKeyboardHandler } from "../../../hooks";
 import useScrollState from "../../hooks/useScrollState";
@@ -22,6 +22,7 @@ type UseChatKeyboardOptions = {
   inverted: boolean;
   keyboardLiftBehavior: KeyboardLiftBehavior;
   freeze: boolean;
+  offset: number;
 };
 
 type UseChatKeyboardReturn = {
@@ -53,14 +54,29 @@ function useChatKeyboard(
   scrollViewRef: AnimatedRef<Reanimated.ScrollView>,
   options: UseChatKeyboardOptions,
 ): UseChatKeyboardReturn {
-  const { inverted, keyboardLiftBehavior, freeze } = options;
+  const { inverted, keyboardLiftBehavior, freeze, offset } = options;
 
   const padding = useSharedValue(0);
   const contentOffsetY = useSharedValue(0);
   const containerTranslateY = useSharedValue(0);
   const offsetBeforeScroll = useSharedValue(0);
+  const targetKeyboardHeight = useSharedValue(0);
 
   const { layout, size, offset: scroll } = useScrollState(scrollViewRef);
+
+  const getEffectiveHeight = (height: number): number => {
+    "worklet";
+
+    if (offset === 0 || targetKeyboardHeight.value === 0) {
+      return height;
+    }
+
+    return interpolate(
+      height,
+      [0, targetKeyboardHeight.value],
+      [0, Math.max(targetKeyboardHeight.value - offset, 0)],
+    );
+  };
 
   useKeyboardHandler(
     {
@@ -70,6 +86,13 @@ function useChatKeyboard(
         if (freeze) {
           return;
         }
+
+        if (e.height > 0) {
+          // eslint-disable-next-line react-compiler/react-compiler
+          targetKeyboardHeight.value = e.height;
+        }
+
+        const effective = getEffectiveHeight(e.height);
 
         const atEnd = isScrollAtEnd(
           scroll.value,
@@ -83,8 +106,7 @@ function useChatKeyboard(
             ? scroll.value + padding.value
             : scroll.value - padding.value;
 
-          // eslint-disable-next-line react-compiler/react-compiler
-          padding.value = e.height;
+          padding.value = effective;
 
           if (!shouldShiftContent(keyboardLiftBehavior, atEnd)) {
             return;
@@ -92,21 +114,21 @@ function useChatKeyboard(
 
           if (
             keyboardLiftBehavior === "persistent" &&
-            e.height < padding.value
+            effective < padding.value
           ) {
             return;
           }
 
           contentOffsetY.value = computeIOSContentOffset(
             relativeScroll,
-            e.height,
+            effective,
             size.value.height,
             layout.value.height,
             inverted,
           );
         } else if (e.height > 0) {
           // Android: keyboard opening — set padding + capture scroll position
-          padding.value = e.height;
+          padding.value = effective;
           offsetBeforeScroll.value = scroll.value;
 
           if (keyboardLiftBehavior === "whenAtEnd" && !atEnd) {
@@ -140,28 +162,30 @@ function useChatKeyboard(
           return;
         }
 
+        const effective = getEffectiveHeight(e.height);
+
         if (inverted) {
           // Android inverted: translateY on container
           if (
             keyboardLiftBehavior === "persistent" &&
-            e.height < Math.abs(containerTranslateY.value)
+            effective < Math.abs(containerTranslateY.value)
           ) {
             return;
           }
 
-          containerTranslateY.value = -e.height;
+          containerTranslateY.value = -effective;
         } else {
           // Android non-inverted: scrollTo per-frame
           if (
             keyboardLiftBehavior === "persistent" &&
-            e.height < scroll.value - offsetBeforeScroll.value
+            effective < scroll.value - offsetBeforeScroll.value
           ) {
             return;
           }
 
           const target = clampedScrollTarget(
             offsetBeforeScroll.value,
-            e.height,
+            effective,
             size.value.height,
             layout.value.height,
           );
@@ -176,7 +200,9 @@ function useChatKeyboard(
           return;
         }
 
-        padding.value = e.height;
+        const effective = getEffectiveHeight(e.height);
+
+        padding.value = effective;
 
         if (
           OS !== "ios" &&
@@ -188,7 +214,7 @@ function useChatKeyboard(
         }
       },
     },
-    [inverted, keyboardLiftBehavior, freeze],
+    [inverted, keyboardLiftBehavior, freeze, offset],
   );
 
   return {

@@ -9,6 +9,18 @@ export type ChatKitScrollViewProps = {
   /** Whether list are using `inverted` prop. Default is `false`. */
   inverted?: boolean;
   /**
+   * The distance (in pixels) between the bottom of the screen and the `ScrollView`.
+   * When the keyboard appears, the scroll view will only push content by the effective
+   * distance (`keyboardHeight - offset`) instead of the full keyboard height.
+   *
+   * Useful when the input is not at the very bottom of the screen (e.g., above safe area, above
+   * bottom tabs, etc. - in this case offset should be equal to the height of the elements between
+   * `ScrollView` and bottom of the screen).
+   *
+   * Default is `0`.
+   */
+  offset?: number;
+  /**
    * Determines how the chat content should behave when the keyboard appears, specifically whether
    * the scroll view should automatically lift its content to keep it visible above the keyboard.
    *

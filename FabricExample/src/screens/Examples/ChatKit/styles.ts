@@ -2,14 +2,7 @@ import { StyleSheet } from "react-native";
 
 export const TEXT_INPUT_HEIGHT = 50;
 
-const MARGIN = 16;
-
-export const contentContainerStyle = {
-  paddingBottom: TEXT_INPUT_HEIGHT + MARGIN,
-};
-export const invertedContentContainerStyle = {
-  paddingTop: TEXT_INPUT_HEIGHT + MARGIN,
-};
+export const MARGIN = 16;
 
 export default StyleSheet.create({
   container: {
@@ -20,6 +13,7 @@ export default StyleSheet.create({
   input: {
     flex: 1,
     margin: MARGIN,
+    marginBottom: 0,
     padding: MARGIN,
     borderRadius: 99,
     borderWidth: 1,

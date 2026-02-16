@@ -1,6 +1,12 @@
 import { LegendList } from "@legendapp/list";
 import { FlashList } from "@shopify/flash-list";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   FlatList,
   Image,
@@ -14,17 +20,17 @@ import {
   KeyboardGestureArea,
   KeyboardStickyView,
 } from "react-native-keyboard-controller";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
 
 import BlurView from "../../../components/BlurView";
 
 import Message from "./components/Message";
 import ConfigSheet from "./config";
 import { useChatConfigStore } from "./store";
-import styles, {
-  TEXT_INPUT_HEIGHT,
-  contentContainerStyle,
-  invertedContentContainerStyle,
-} from "./styles";
+import styles, { MARGIN, TEXT_INPUT_HEIGHT } from "./styles";
 
 import type { LayoutChangeEvent, ScrollView } from "react-native";
 
@@ -35,6 +41,21 @@ function ChatKitPlayground() {
   const [inputHeight, setInputHeight] = useState(TEXT_INPUT_HEIGHT);
   const { inverted, messages, reversedMessages, addMessage, mode, freeze } =
     useChatConfigStore();
+  const { bottom } = useSafeAreaInsets();
+
+  const contentContainerStyle = useMemo(
+    () => ({ paddingBottom: TEXT_INPUT_HEIGHT + MARGIN }),
+    [],
+  );
+  const invertedContentContainerStyle = useMemo(
+    () => ({ paddingTop: TEXT_INPUT_HEIGHT + MARGIN }),
+    [],
+  );
+  const stickyViewOffset = useMemo(
+    () => ({ opened: bottom - MARGIN }),
+    [bottom],
+  );
+  const chatKitOffset = bottom - MARGIN;
 
   const onInputLayoutChanged = useCallback((e: LayoutChangeEvent) => {
     setInputHeight(e.nativeEvent.layout.height);
@@ -63,7 +84,7 @@ function ChatKitPlayground() {
   }, []);
 
   return (
-    <>
+    <SafeAreaView edges={["bottom"]} style={styles.container}>
       <View
         offset={inputHeight}
         style={styles.container}
@@ -82,6 +103,31 @@ function ChatKitPlayground() {
                 contentInsetAdjustmentBehavior="never"
                 freeze={freeze}
                 keyboardDismissMode="interactive"
+                offset={chatKitOffset}
+                testID="chat.scroll"
+                {...props}
+              />
+            )}
+          />
+        )}
+        {mode === "flash" && (
+          <FlashList
+            data={inverted ? reversedMessages : messages}
+            keyExtractor={(item) => item.text}
+            renderItem={({ item }) => <Message {...item} />}
+            renderScrollComponent={(props) => (
+              <ChatKit.ScrollView
+                ref={ref}
+                automaticallyAdjustContentInsets={false}
+                contentContainerStyle={
+                  inverted
+                    ? invertedContentContainerStyle
+                    : contentContainerStyle
+                }
+                contentInsetAdjustmentBehavior="never"
+                freeze={freeze}
+                keyboardDismissMode="interactive"
+                offset={chatKitOffset}
                 testID="chat.scroll"
                 {...props}
               />
@@ -107,6 +153,7 @@ function ChatKitPlayground() {
                 freeze={freeze}
                 inverted={inverted}
                 keyboardDismissMode="interactive"
+                offset={chatKitOffset}
                 testID="chat.scroll"
                 {...props}
               />
@@ -121,6 +168,7 @@ function ChatKitPlayground() {
             contentInsetAdjustmentBehavior="never"
             freeze={freeze}
             keyboardDismissMode="interactive"
+            offset={chatKitOffset}
             testID="chat.scroll"
           >
             {messages.map((message, index) => (
@@ -128,7 +176,11 @@ function ChatKitPlayground() {
             ))}
           </ChatKit.ScrollView>
         )}
-        <KeyboardStickyView freeze={freeze} style={styles.composer}>
+        <KeyboardStickyView
+          freeze={freeze}
+          offset={stickyViewOffset}
+          style={styles.composer}
+        >
           <View
             style={[
               StyleSheet.absoluteFillObject,
@@ -158,7 +210,7 @@ function ChatKitPlayground() {
         </KeyboardStickyView>
       </View>
       <ConfigSheet />
-    </>
+    </SafeAreaView>
   );
 }
 
