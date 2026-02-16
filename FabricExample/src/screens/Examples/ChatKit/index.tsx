@@ -16,7 +16,6 @@ import {
   View,
 } from "react-native";
 import {
-  ChatKit,
   KeyboardGestureArea,
   KeyboardStickyView,
 } from "react-native-keyboard-controller";
@@ -31,8 +30,13 @@ import Message from "./components/Message";
 import ConfigSheet from "./config";
 import { useChatConfigStore } from "./store";
 import styles, { MARGIN, TEXT_INPUT_HEIGHT } from "./styles";
+import VirtualizedListScrollView from "./VirtualizedListScrollView";
 
-import type { LayoutChangeEvent, ScrollView } from "react-native";
+import type {
+  LayoutChangeEvent,
+  ScrollView,
+  ScrollViewProps,
+} from "react-native";
 
 function ChatKitPlayground() {
   const ref = useRef<ScrollView>(null);
@@ -43,19 +47,10 @@ function ChatKitPlayground() {
     useChatConfigStore();
   const { bottom } = useSafeAreaInsets();
 
-  const contentContainerStyle = useMemo(
-    () => ({ paddingBottom: TEXT_INPUT_HEIGHT + MARGIN }),
-    [],
-  );
-  const invertedContentContainerStyle = useMemo(
-    () => ({ paddingTop: TEXT_INPUT_HEIGHT + MARGIN }),
-    [],
-  );
   const stickyViewOffset = useMemo(
     () => ({ opened: bottom - MARGIN }),
     [bottom],
   );
-  const chatKitOffset = bottom - MARGIN;
 
   const onInputLayoutChanged = useCallback((e: LayoutChangeEvent) => {
     setInputHeight(e.nativeEvent.layout.height);
@@ -76,12 +71,17 @@ function ChatKitPlayground() {
   }, [addMessage]);
 
   useEffect(() => {
+    // TODO: we loose ref somewhere
     ref.current?.scrollToEnd({ animated: true });
   }, [messages]);
 
   const scrollToBottom = useCallback(() => {
     ref.current?.scrollToEnd({ animated: false });
   }, []);
+  const memoList = useCallback(
+    (props: ScrollViewProps) => <VirtualizedListScrollView {...props} />,
+    [],
+  );
 
   return (
     <SafeAreaView edges={["bottom"]} style={styles.container}>
@@ -92,89 +92,38 @@ function ChatKitPlayground() {
       >
         {mode === "legend" && (
           <LegendList
+            ref={ref}
             data={messages}
             keyExtractor={(item) => item.text}
             renderItem={({ item }) => <Message {...item} />}
-            renderScrollComponent={(props) => (
-              <ChatKit.ScrollView
-                ref={ref}
-                automaticallyAdjustContentInsets={false}
-                contentContainerStyle={contentContainerStyle}
-                contentInsetAdjustmentBehavior="never"
-                freeze={freeze}
-                keyboardDismissMode="interactive"
-                offset={chatKitOffset}
-                testID="chat.scroll"
-                {...props}
-              />
-            )}
+            renderScrollComponent={memoList}
           />
         )}
         {mode === "flash" && (
           <FlashList
+            ref={ref}
             data={inverted ? reversedMessages : messages}
             keyExtractor={(item) => item.text}
             renderItem={({ item }) => <Message {...item} />}
-            renderScrollComponent={(props) => (
-              <ChatKit.ScrollView
-                ref={ref}
-                automaticallyAdjustContentInsets={false}
-                contentContainerStyle={
-                  inverted
-                    ? invertedContentContainerStyle
-                    : contentContainerStyle
-                }
-                contentInsetAdjustmentBehavior="never"
-                freeze={freeze}
-                keyboardDismissMode="interactive"
-                offset={chatKitOffset}
-                testID="chat.scroll"
-                {...props}
-              />
-            )}
+            renderScrollComponent={VirtualizedListScrollView}
           />
         )}
         {mode === "flat" && (
           <FlatList
+            ref={ref}
             data={inverted ? reversedMessages : messages}
             inverted={inverted}
             keyExtractor={(item) => item.text}
             renderItem={({ item }) => <Message {...item} />}
-            renderScrollComponent={(props) => (
-              <ChatKit.ScrollView
-                ref={ref}
-                automaticallyAdjustContentInsets={false}
-                contentContainerStyle={
-                  inverted
-                    ? invertedContentContainerStyle
-                    : contentContainerStyle
-                }
-                contentInsetAdjustmentBehavior="never"
-                freeze={freeze}
-                inverted={inverted}
-                keyboardDismissMode="interactive"
-                offset={chatKitOffset}
-                testID="chat.scroll"
-                {...props}
-              />
-            )}
+            renderScrollComponent={memoList}
           />
         )}
         {mode === "scroll" && (
-          <ChatKit.ScrollView
-            ref={ref}
-            automaticallyAdjustContentInsets={false}
-            contentContainerStyle={contentContainerStyle}
-            contentInsetAdjustmentBehavior="never"
-            freeze={freeze}
-            keyboardDismissMode="interactive"
-            offset={chatKitOffset}
-            testID="chat.scroll"
-          >
+          <VirtualizedListScrollView ref={ref}>
             {messages.map((message, index) => (
               <Message key={index} {...message} />
             ))}
-          </ChatKit.ScrollView>
+          </VirtualizedListScrollView>
         )}
         <KeyboardStickyView
           freeze={freeze}
