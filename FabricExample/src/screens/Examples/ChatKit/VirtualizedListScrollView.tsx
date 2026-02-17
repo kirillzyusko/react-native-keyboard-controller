@@ -11,7 +11,7 @@ const VirtualizedListScrollView = forwardRef((props: ScrollViewProps, ref) => {
   const { bottom } = useSafeAreaInsets();
   const chatKitOffset = bottom - MARGIN;
 
-  const { inverted, freeze, mode } = useChatConfigStore();
+  const { inverted, freeze, mode, keyboardLiftBehavior } = useChatConfigStore();
 
   const contentContainerStyle = useMemo(
     () => ({ paddingBottom: TEXT_INPUT_HEIGHT + MARGIN }),
@@ -36,6 +36,7 @@ const VirtualizedListScrollView = forwardRef((props: ScrollViewProps, ref) => {
       freeze={freeze}
       inverted={isInvertedSupported}
       keyboardDismissMode="interactive"
+      keyboardLiftBehavior={keyboardLiftBehavior}
       offset={chatKitOffset}
       testID="chat.scroll"
       {...props}

@@ -1,7 +1,7 @@
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import { useNavigation } from "@react-navigation/native";
 import React, { useCallback, useEffect, useRef } from "react";
-import { Button, StyleSheet, Text, View } from "react-native";
+import { Button, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { KeyboardController } from "react-native-keyboard-controller";
 
 import Switch from "../../../components/Switch";
@@ -18,6 +18,12 @@ function ConfigSheet() {
   const setFreeze = useChatConfigStore((state) => state.setFreeze);
   const mode = useChatConfigStore((state) => state.mode);
   const setMode = useChatConfigStore((state) => state.setMode);
+  const keyboardLiftBehavior = useChatConfigStore(
+    (state) => state.keyboardLiftBehavior,
+  );
+  const nextLiftBehavior = useChatConfigStore(
+    (state) => state.nextLiftBehavior,
+  );
 
   const handlePresentModalPress = useCallback(async () => {
     setFreeze(true);
@@ -105,7 +111,7 @@ function ConfigSheet() {
           />
         </View>
         <View style={styles.switchContainer}>
-          <Text style={styles.text}>Use Flash List 🚧</Text>
+          <Text style={styles.text}>Use Flash List</Text>
           <Switch
             testID="bottom_sheet_toggle_flash_list_state"
             value={mode === "flash"}
@@ -115,7 +121,7 @@ function ConfigSheet() {
           />
         </View>
         <View style={styles.switchContainer}>
-          <Text style={styles.text}>Use Legend List 🚧</Text>
+          <Text style={styles.text}>Use Legend List</Text>
           <Switch
             testID="bottom_sheet_toggle_legend_list_state"
             value={mode === "legend"}
@@ -123,6 +129,15 @@ function ConfigSheet() {
               setMode("legend");
             }}
           />
+        </View>
+        <View style={styles.switchContainer}>
+          <Text style={styles.text}>Lifring mode</Text>
+          <TouchableOpacity
+            testID="bottom_sheet_next_keyboard_lift_behavior"
+            onPress={nextLiftBehavior}
+          >
+            <Text>{keyboardLiftBehavior}</Text>
+          </TouchableOpacity>
         </View>
       </BottomSheetView>
     </BottomSheet>
