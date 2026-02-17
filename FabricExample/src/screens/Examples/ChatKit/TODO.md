@@ -10,6 +10,7 @@
 // TODO: (x) optimized approach for iOS/Android (contentOffset on iOS without changes in every frame)
 // TODO: (x) inverted support
 // TODO: (-) fix FlatList/LegendList scrolling to the last message
+// TODO: (-) inverted list, scroll to top, close keyboard - position must be unchanged
 // TODO: render first message from bottom from top (not only inverted prop!)
 // TODO: interactive dismissal
 // TODO: customizable behavior when to scroll (i. e. "always", "when bottom reached", "never")

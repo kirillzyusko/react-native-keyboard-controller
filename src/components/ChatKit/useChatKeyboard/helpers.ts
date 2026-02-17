@@ -104,7 +104,12 @@ export function computeIOSContentOffset(
   "worklet";
 
   if (inverted) {
-    return relativeScroll - keyboardHeight;
+    const maxScroll = Math.max(contentHeight - layoutHeight, 0);
+
+    return Math.max(
+      Math.min(relativeScroll - keyboardHeight, maxScroll),
+      -keyboardHeight,
+    );
   }
 
   const maxScroll = Math.max(contentHeight - layoutHeight + keyboardHeight, 0);

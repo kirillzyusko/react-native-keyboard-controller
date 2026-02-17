@@ -109,5 +109,22 @@ describe("`computeIOSContentOffset` specification", () => {
     it("should return negative keyboard height when scroll is at 0", () => {
       expect(computeIOSContentOffset(0, 300, 1000, 800, true)).toBe(-300);
     });
+
+    it("should clamp to maxScroll when relativeScroll exceeds content", () => {
+      // relativeScroll=1500, keyboardHeight=0 → 1500 exceeds maxScroll=200
+      expect(computeIOSContentOffset(1500, 0, 1000, 800, true)).toBe(200);
+    });
+
+    it("should clamp to -keyboardHeight at minimum", () => {
+      // relativeScroll=-500, keyboardHeight=300 → -500-300=-800, clamped to -300
+      expect(computeIOSContentOffset(-500, 300, 1000, 800, true)).toBe(-300);
+    });
+
+    it("should handle single-message case (content smaller than layout)", () => {
+      // maxScroll = max(200 - 800, 0) = 0
+      // relativeScroll=100, keyboardHeight=300 → 100-300=-200, clamped to -300 min, but -200 > -300
+      // max(min(-200, 0), -300) = max(-200, -300) = -200
+      expect(computeIOSContentOffset(100, 300, 200, 800, true)).toBe(-200);
+    });
   });
 });

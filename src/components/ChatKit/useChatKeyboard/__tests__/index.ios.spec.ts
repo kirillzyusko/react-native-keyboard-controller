@@ -152,6 +152,25 @@ describe("`useChatKeyboard` — iOS inverted + always", () => {
 
     expect(result.current.contentOffsetY!.value).toBe(-350);
   });
+
+  it("should clamp contentOffsetY when at max scroll on keyboard close", () => {
+    const { result } = render({
+      inverted: true,
+      keyboardLiftBehavior: "always",
+    });
+
+    // keyboard opens
+    handlers.onStart({ height: KEYBOARD });
+
+    // user scrolls to visual top (max scroll offset)
+    // maxScroll = contentHeight(2000) - layoutHeight(800) = 1200
+    mockOffset.value = 1200;
+    handlers.onStart({ height: 0 });
+
+    // relativeScroll = 1200 + 300 = 1500, but maxScroll without keyboard = 1200
+    // should be clamped to 1200, not 1500
+    expect(result.current.contentOffsetY!.value).toBe(1200);
+  });
 });
 
 describe("`useChatKeyboard` — iOS behaviors", () => {
