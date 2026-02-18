@@ -2,7 +2,7 @@
 
 `ChatKit` is a specialized component designed to simplify the process of building chat application layouts that handle keyboard interactions seamlessly. It addresses common challenges faced when developing chat apps, such as managing keyboard appearance, interactive dismissal, and ensuring smooth animations.
 
-TODO: add tutorial integartion with Flat/Flash/LegendList
+import Video from "@site/src/components/Video";
 
 ## Props
 
@@ -29,15 +29,31 @@ import { ScrollView } from "react-native-gesture-handler";
 
 ### `inverted`
 
+:::danger Android interop with `keyboardLiftBehavior`
+On Android if you pass `inverted={true}` then the only supported mode for `keyboardLiftBehavior` will be `always`
+:::
+
 ### `keyboardLiftBehavior`
 
 #### `always`
 
+The content always lifts along with the keyboard, ensuring the messages from the bottom part of screen remain visible **regardless** of the current scroll position. This is the default behavior for most chat applications (used in **Telegram**, **WhatsApp**, etc.).
+
+<Video src="/video/chat-kit/always.mov" width={35} />
+
 #### `whenAtEnd`
+
+The content lifts only if the scroll view is **at the end** (i. e. the last message is visible or near the bottom). This prevents unnecessary adjustments when the user is scrolling through older messages (**ChatGPT** mobile app behavior).
+
+<Video src="/video/chat-kit/when-at-end.mov" width={35} />
 
 #### `persistent`
 
 #### `never`
+
+<Video src="/video/chat-kit/never.mov" width={35} />
+
+## Usage with Virtualized lists
 
 ## Example
 
