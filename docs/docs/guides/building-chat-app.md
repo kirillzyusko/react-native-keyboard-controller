@@ -28,6 +28,16 @@ That being said that you always had to go to compromises and workarounds to make
 
 ## What is `ChatKit`?
 
+`ChatKit` is a component that designed to solve all the issues listed above:
+
+- it should be very performant
+- support all modern features for work with keyboard, such as ineractive dismissal
+- cover scenarios that all modern chat apps have (such as freezing content position while switching keyboard or showing a bottom sheet)
+- be highly customizable
+- easy to integrate
+
+## Example
+
 ## API reference
 
 An API reference for `ChatKit` can be found [in `ChatKit` section](../api/components/chat-kit).

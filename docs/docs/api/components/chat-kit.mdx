@@ -55,7 +55,70 @@ The content lifts only if the scroll view is **at the end** (i. e. the last mess
 
 ## Usage with Virtualized lists
 
+This library doesn't expose direct integration with virtualized list third party libraries. But since all these libs are based on `ScrollView` usage you can easily build this integration yourself:
+
+```tsx title="VirtualizedListScrollView.tsx"
+import { forwardRef, useMemo } from "react";
+import { ChatKit } from "react-native-keyboard-controller";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+
+import { useChatConfigStore } from "./store";
+import { MARGIN, TEXT_INPUT_HEIGHT } from "./styles";
+
+import type { ScrollViewProps } from "react-native";
+
+const VirtualizedListScrollView = forwardRef((props: ScrollViewProps, ref) => {
+  return (
+    <ChatKit.ScrollView
+      ref={ref}
+      automaticallyAdjustContentInsets={false}
+      contentInsetAdjustmentBehavior="never"
+      {...props}
+    />
+  );
+});
+
+export default VirtualizedListScrollView;
+```
+
+And then use it:
+
+```tsx title="FlashList"
+<FlashList
+  ref={ref}
+  data={messages}
+  keyExtractor={(item) => item.text}
+  renderItem={({ item }) => <Message {...item} />}
+  renderScrollComponent={VirtualizedListScrollView}
+/>
+```
+
+```tsx title="FlatList/LegendList"
+const memoList = useCallback(
+  (props: ScrollViewProps) => <VirtualizedListScrollView {...props} />,
+  [],
+);
+
+<FlatList
+  ref={ref}
+  data={messages}
+  keyExtractor={(item) => item.text}
+  renderItem={({ item }) => <Message {...item} />}
+  renderScrollComponent={memoList}
+/>
+
+<LegendList
+  ref={ref}
+  data={messages}
+  keyExtractor={(item) => item.text}
+  renderItem={({ item }) => <Message {...item} />}
+  renderScrollComponent={memoList}
+/>
+```
+
 ## Example
+
+TODO: put a snack here?
 
 ```tsx
 
