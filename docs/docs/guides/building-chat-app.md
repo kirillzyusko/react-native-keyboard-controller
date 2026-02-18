@@ -30,4 +30,4 @@ That being said that you always had to go to compromises and workarounds to make
 
 ## API reference
 
-An API reference for `ChatKit` can be found [in `ChatKit` section](./api/components/chat-kit).
+An API reference for `ChatKit` can be found [in `ChatKit` section](../api/components/chat-kit).
