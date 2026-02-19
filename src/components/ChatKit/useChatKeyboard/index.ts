@@ -102,6 +102,28 @@ function useChatKeyboard(
 
         if (OS === "ios") {
           // iOS: set padding + contentOffset once in onStart
+          // persistent mode: when keyboard shrinks, snap to end or hold position
+          if (
+            keyboardLiftBehavior === "persistent" &&
+            effective < padding.value
+          ) {
+            padding.value = effective;
+
+            if (atEnd) {
+              // Snap to the end of content instead of reverting to pre-keyboard position
+              if (inverted) {
+                contentOffsetY.value = -effective;
+              } else {
+                contentOffsetY.value = Math.max(
+                  size.value.height - layout.value.height + effective,
+                  0,
+                );
+              }
+            }
+
+            return;
+          }
+
           const relativeScroll = inverted
             ? scroll.value + padding.value
             : scroll.value - padding.value;
@@ -109,13 +131,6 @@ function useChatKeyboard(
           padding.value = effective;
 
           if (!shouldShiftContent(keyboardLiftBehavior, atEnd)) {
-            return;
-          }
-
-          if (
-            keyboardLiftBehavior === "persistent" &&
-            effective < padding.value
-          ) {
             return;
           }
 
