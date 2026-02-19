@@ -75,9 +75,6 @@ function ChatKitPlayground() {
     ref.current?.scrollToEnd({ animated: true });
   }, [messages]);
 
-  const scrollToBottom = useCallback(() => {
-    ref.current?.scrollToEnd({ animated: false });
-  }, []);
   const memoList = useCallback(
     (props: ScrollViewProps) => <VirtualizedListScrollView {...props} />,
     [],
@@ -85,10 +82,11 @@ function ChatKitPlayground() {
 
   return (
     <SafeAreaView edges={["bottom"]} style={styles.container}>
-      <View
+      <KeyboardGestureArea
+        interpolator="ios"
         offset={inputHeight}
         style={styles.container}
-        textInputNativeID="chat-input"
+        // textInputNativeID="chat-input"
       >
         {mode === "legend" && (
           <LegendList
@@ -157,7 +155,7 @@ function ChatKitPlayground() {
             <Image source={require("./send.png")} style={styles.icon} />
           </TouchableOpacity>
         </KeyboardStickyView>
-      </View>
+      </KeyboardGestureArea>
       <ConfigSheet />
     </SafeAreaView>
   );
