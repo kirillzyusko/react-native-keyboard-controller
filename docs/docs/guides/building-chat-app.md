@@ -1,6 +1,6 @@
 ---
 sidebar_position: 5
-description: A guide that explores pitfalls of building chat app layout and shows how to solve them using ChatKit component
+description: A guide that explores the challenges of building chat app layouts and shows how to solve them using the ChatKit component
 keywords:
   [
     react-native-keyboard-controller,
@@ -14,30 +14,40 @@ keywords:
 
 # Building a chat app
 
-Handling keyboard in chat applications was always a challenge, even on native platforms. The main issue is that chat apps almost fully utilize advanced functionality of the keyboard, such as interactive dismissal etc. This makes it hard to handle keyboard events in a simple way. And it makes it even hard to build a chat app layout that will work well on all platforms and delivers a great user experience along with 60/120FPS animations even on low-end devices.
+Keyboard handling in chat applications has always been one of the trickiest problems in mobile development — even on native platforms. Chat apps push keyboard interactions to their limits: interactive dismissal, content repositioning, smooth transitions between the keyboard and custom input views, and all of it at 120 FPS. Getting this right requires deep integration between the keyboard, scroll views, and layout systems — far more than a general-purpose component can offer.
 
-If you tried to use components from [components overview](./components-overview) guide to handle keyboard events in a chat app, you may have noticed that there is no good solutions for your use case:
+## Why general-purpose components fall short
 
-- if you use `KeyboardAvoidingView` with `behavior="padding"` or `behavior="height"` you may see [frame junks](https://github.com/software-mansion/react-native-reanimated/issues/6854), especially if your layout is very complex.
-- if you use `KeyboardAvoidingView` with `behavior="translate-with-padding"` you may see that it's [impossible](https://github.com/kirillzyusko/react-native-keyboard-controller/issues/951) to render first message in chat from the top of the screen.
-- if you use `KeyboardAvoidingView` and use interactive dismissal on iOS you could observe [double scroll](https://github.com/kirillzyusko/react-native-keyboard-controller/issues/594#issuecomment-2406860730) problem.
+You might be tempted to reach for `KeyboardAvoidingView` or `KeyboardAwareScrollView` to handle keyboard interactions in a chat app. While these components work well for forms, settings screens, and other straightforward layouts, they weren't designed for the unique demands of a chat interface.
 
-All these problems stems from the fact that these components were designed before chat-apps became a trend. And using generic-purpose components for specific functionality will always result in a poor user experience.
+Here's what you'll run into:
 
-That being said that you always had to go to compromises and workarounds to make it work. And that's why we created a separate `ChatKit` component that aims to solve all these problems and provide a solid foundation for building a chat app.
+- **Frame drops with complex layouts** — `KeyboardAvoidingView` with `behavior="padding"` or `behavior="height"` can cause [frame drops](https://github.com/software-mansion/react-native-reanimated/issues/6854), particularly when the layout is complex.
+- **First-message rendering issues** — using `behavior="translate-with-padding"` makes it [impossible](https://github.com/kirillzyusko/react-native-keyboard-controller/issues/951) to render the first message at the top of the screen.
+- **Double scroll on interactive dismissal** — combining `KeyboardAvoidingView` with interactive keyboard dismissal on iOS leads to a [double-scroll problem](https://github.com/kirillzyusko/react-native-keyboard-controller/issues/594#issuecomment-2406860730).
+
+These aren't edge cases — they're fundamental mismatches between what generic components were designed to do and what chat apps actually need. You can work around them, but you'll end up writing a lot of platform-specific code to get a polished result.
+
+## What chat apps actually need
+
+Despite the complexity, most chat apps share the same set of keyboard-related requirements:
+
+- **Content repositioning** — push messages up when the keyboard appears (with the option to disable this in certain cases).
+- **Interactive dismissal** — let users swipe the keyboard away with a drag gesture.
+- **Content freezing** — hold the chat in place when switching from the keyboard to a custom input view like an emoji picker or bottom sheet.
+- **Virtualized list support** — work seamlessly with `FlatList`, `FlashList`, `LegendList`, and other virtualized list implementations.
+- **Smooth animations** — maintain 60/120 FPS during keyboard transitions, even on low-end devices.
+- **Keyboard padding** — extend the scrollable area to account for keyboard height.
+- **Custom offsets** — support layouts where the chat isn't flush against the bottom of the screen.
+
+Implementing all of this from scratch is a significant undertaking. That's why we built `ChatKit` — a dedicated component that handles all of these behaviors out of the box, so you can focus on building your chat experience rather than fighting the keyboard.
 
 ## What is `ChatKit`?
 
-`ChatKit` is a component that designed to solve all the issues listed above:
-
-- it should be very performant
-- support all modern features for work with keyboard, such as interactive dismissal
-- cover scenarios that all modern chat apps have (such as freezing content position while switching keyboard or showing a bottom sheet)
-- be highly customizable
-- easy to integrate
+`ChatKit` is a purpose-built component for chat app layouts. It provides all the requirements listed above.
 
 ## Example
 
 ## API reference
 
-An API reference for `ChatKit` can be found [in `ChatKit` section](../api/components/chat-kit).
+For the full list of props and usage examples, see the [`ChatKit` API reference](../api/components/chat-kit).
