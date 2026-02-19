@@ -65,6 +65,10 @@ Content never moves in response to the keyboard. The keyboard simply overlaps th
 
 ### `offset`
 
+The distance between the bottom of the screen and the `ScrollView`. When the keyboard appears, the `ScrollView` will only push content by the effective distance (`keyboardHeight - offset`) instead of the full keyboard height. Defaults to `0`.
+
+This is useful when the input is not at the very bottom of the screen — for example, when the `ScrollView` sits above a safe area inset, bottom tabs, or any other fixed-height element. In that case, set `offset` to the height of the elements between the `ScrollView` and the bottom of the screen.
+
 ## Usage with virtualized lists
 
 `ChatKit` doesn't ship with built-in wrappers for third-party virtualized list libraries, but since all of them (`FlatList`, `FlashList`, `LegendList`) accept a custom scroll component, integration is straightforward.
