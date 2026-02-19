@@ -31,7 +31,7 @@ That being said that you always had to go to compromises and workarounds to make
 `ChatKit` is a component that designed to solve all the issues listed above:
 
 - it should be very performant
-- support all modern features for work with keyboard, such as ineractive dismissal
+- support all modern features for work with keyboard, such as interactive dismissal
 - cover scenarios that all modern chat apps have (such as freezing content position while switching keyboard or showing a bottom sheet)
 - be highly customizable
 - easy to integrate
