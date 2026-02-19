@@ -123,11 +123,7 @@ function ChatKitPlayground() {
             ))}
           </VirtualizedListScrollView>
         )}
-        <KeyboardStickyView
-          freeze={freeze}
-          offset={stickyViewOffset}
-          style={styles.composer}
-        >
+        <KeyboardStickyView offset={stickyViewOffset} style={styles.composer}>
           <View
             style={[
               StyleSheet.absoluteFillObject,
