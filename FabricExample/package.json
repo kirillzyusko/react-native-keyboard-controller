@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@gorhom/bottom-sheet": "5.2.6",
-    "@legendapp/list": "^3.0.0-beta.33",
+    "@legendapp/list": "3.0.0-beta.32",
     "@lottiefiles/dotlottie-react": "^0.17.10",
     "@react-native-community/blur": "^4.4.1",
     "@react-native-masked-view/masked-view": "^0.3.2",

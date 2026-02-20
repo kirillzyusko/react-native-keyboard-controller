@@ -1,4 +1,4 @@
-import { LegendList } from "@legendapp/list";
+import { LegendList, type LegendListRef } from "@legendapp/list";
 import { FlashList } from "@shopify/flash-list";
 import React, {
   useCallback,
@@ -30,16 +30,18 @@ import Message from "./components/Message";
 import ConfigSheet from "./config";
 import { useChatConfigStore } from "./store";
 import styles, { MARGIN, TEXT_INPUT_HEIGHT } from "./styles";
-import VirtualizedListScrollView from "./VirtualizedListScrollView";
+import VirtualizedListScrollView, {
+  type VirtualizedListScrollViewRef,
+} from "./VirtualizedListScrollView";
 
-import type {
-  LayoutChangeEvent,
-  ScrollView,
-  ScrollViewProps,
-} from "react-native";
+import type { MessageProps } from "../../../components/Message/types";
+import type { LayoutChangeEvent, ScrollViewProps } from "react-native";
 
 function KeyboardChatScrollViewPlayground() {
-  const ref = useRef<ScrollView>(null);
+  const legendRef = useRef<LegendListRef>(null);
+  const flashRef = useRef<FlashList<MessageProps>>(null);
+  const flatRef = useRef<FlatList<MessageProps>>(null);
+  const scrollRef = useRef<VirtualizedListScrollViewRef>(null);
   const textInputRef = useRef<TextInput>(null);
   const textRef = useRef("");
   const [inputHeight, setInputHeight] = useState(TEXT_INPUT_HEIGHT);
@@ -72,7 +74,10 @@ function KeyboardChatScrollViewPlayground() {
 
   useEffect(() => {
     // TODO: we loose ref somewhere
-    ref.current?.scrollToEnd({ animated: true });
+    legendRef.current?.scrollToEnd({ animated: true });
+    flashRef.current?.scrollToEnd({ animated: true });
+    flatRef.current?.scrollToEnd({ animated: true });
+    scrollRef.current?.scrollToEnd({ animated: true });
   }, [messages]);
 
   const memoList = useCallback(
@@ -86,11 +91,11 @@ function KeyboardChatScrollViewPlayground() {
         interpolator="ios"
         offset={inputHeight}
         style={styles.container}
-        // textInputNativeID="chat-input"
+        textInputNativeID="chat-input"
       >
         {mode === "legend" && (
           <LegendList
-            ref={ref}
+            ref={legendRef}
             data={messages}
             keyExtractor={(item) => item.text}
             renderItem={({ item }) => <Message {...item} />}
@@ -99,7 +104,7 @@ function KeyboardChatScrollViewPlayground() {
         )}
         {mode === "flash" && (
           <FlashList
-            ref={ref}
+            ref={flashRef}
             data={inverted ? reversedMessages : messages}
             keyExtractor={(item) => item.text}
             renderItem={({ item }) => <Message {...item} />}
@@ -108,7 +113,7 @@ function KeyboardChatScrollViewPlayground() {
         )}
         {mode === "flat" && (
           <FlatList
-            ref={ref}
+            ref={flatRef}
             data={inverted ? reversedMessages : messages}
             inverted={inverted}
             keyExtractor={(item) => item.text}
@@ -117,7 +122,7 @@ function KeyboardChatScrollViewPlayground() {
           />
         )}
         {mode === "scroll" && (
-          <VirtualizedListScrollView ref={ref}>
+          <VirtualizedListScrollView ref={scrollRef}>
             {messages.map((message, index) => (
               <Message key={index} {...message} />
             ))}

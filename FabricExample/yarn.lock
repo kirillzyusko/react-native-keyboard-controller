@@ -1462,10 +1462,10 @@
     "@jsonjoy.com/buffers" "^1.0.0"
     "@jsonjoy.com/codegen" "^1.0.0"
 
-"@legendapp/list@^3.0.0-beta.33":
-  version "3.0.0-beta.33"
-  resolved "https://registry.yarnpkg.com/@legendapp/list/-/list-3.0.0-beta.33.tgz#7b69b31c9d12d9d52d733d426d9bd48270cbdbf1"
-  integrity sha512-TlFOkqDCmXk15jcyYyOt3aR5oUFEHQJo3l/uQN2ya29ggusU5DK0GbnIzHlSh0caBFuTZEec7ALxJnyvs9AuCw==
+"@legendapp/list@3.0.0-beta.32":
+  version "3.0.0-beta.32"
+  resolved "https://registry.yarnpkg.com/@legendapp/list/-/list-3.0.0-beta.32.tgz#33a08df134d103e7ae1920ca8385cb59323cd42b"
+  integrity sha512-lWIdQ1Z3IrR5Iv7I3qOLDYk9Uh/gc03wITNEObTpR2tIYNvgDibOL/3yAznyvkQMuwl3TLquan46Zo0t/XdmIA==
   dependencies:
     use-sync-external-store "^1.5.0"
 

@@ -5,7 +5,7 @@ type KeyboardLiftBehavior = "always" | "whenAtEnd" | "persistent" | "never";
 
 export type KeyboardChatScrollViewProps = {
   /** Custom component for `ScrollView`. Default is `ScrollView`. */
-  ScrollViewComponent: AnimatedScrollViewComponent;
+  ScrollViewComponent?: AnimatedScrollViewComponent;
   /** Whether list are using `inverted` prop. Default is `false`. */
   inverted?: boolean;
   /**
