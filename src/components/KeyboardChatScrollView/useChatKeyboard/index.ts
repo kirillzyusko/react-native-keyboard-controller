@@ -61,6 +61,8 @@ function useChatKeyboard(
   const containerTranslateY = useSharedValue(0);
   const offsetBeforeScroll = useSharedValue(0);
   const targetKeyboardHeight = useSharedValue(0);
+  const lockedScrollPosition = useSharedValue(-1);
+  const prevInteractiveHeight = useSharedValue(-1);
 
   const { layout, size, offset: scroll } = useScrollState(scrollViewRef);
 
@@ -209,6 +211,47 @@ function useChatKeyboard(
           scrollTo(scrollViewRef, 0, target, false);
         }
       },
+      onInteractive: (e) => {
+        "worklet";
+
+        if (freeze || OS === "ios") {
+          return;
+        }
+
+        const effective = getEffectiveHeight(e.height);
+
+        if (inverted) {
+          const maxEffective = getEffectiveHeight(targetKeyboardHeight.value);
+          const prevEffective = prevInteractiveHeight.value;
+          const isFirstInteractive = prevEffective === -1;
+
+          prevInteractiveHeight.value = effective;
+
+          if (isFirstInteractive) {
+            // first interactive event of a gesture session — lock scroll
+            lockedScrollPosition.value = scroll.value;
+          } else if (
+            (prevEffective === maxEffective && effective === maxEffective) ||
+            (prevEffective === 0 && effective === 0)
+          ) {
+            // keyboard stayed at rest position for consecutive frames — unlock
+            // so the user can scroll freely while keyboard is fully visible/hidden
+            lockedScrollPosition.value = -1;
+          } else if (
+            (prevEffective === 0 && effective > 0) ||
+            (prevEffective === maxEffective && effective < maxEffective)
+          ) {
+            // keyboard left a rest position — re-lock at current scroll
+            lockedScrollPosition.value = scroll.value;
+          }
+
+          if (lockedScrollPosition.value !== -1) {
+            scrollTo(scrollViewRef, 0, lockedScrollPosition.value, false);
+          }
+
+          containerTranslateY.value = -effective;
+        }
+      },
       onEnd: (e) => {
         "worklet";
 
@@ -219,6 +262,8 @@ function useChatKeyboard(
         const effective = getEffectiveHeight(e.height);
 
         padding.value = effective;
+        lockedScrollPosition.value = -1;
+        prevInteractiveHeight.value = -1;
 
         if (
           OS !== "ios" &&

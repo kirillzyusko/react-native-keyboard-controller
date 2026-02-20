@@ -14,6 +14,7 @@ import {
 let handlers: Handlers = {
   onStart: jest.fn(),
   onMove: jest.fn(),
+  onInteractive: jest.fn(),
   onEnd: jest.fn(),
 };
 

@@ -8,6 +8,7 @@ export type KeyboardEvent = { height: number };
 export type Handlers = {
   onStart: (e: KeyboardEvent) => void;
   onMove: (e: KeyboardEvent) => void;
+  onInteractive: (e: KeyboardEvent) => void;
   onEnd: (e: KeyboardEvent) => void;
 };
 
