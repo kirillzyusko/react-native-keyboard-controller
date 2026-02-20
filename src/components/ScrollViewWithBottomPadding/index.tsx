@@ -28,9 +28,9 @@ type ScrollViewWithBottomPaddingProps = {
   children?: React.ReactNode;
   inverted?: boolean;
   bottomPadding: SharedValue<number>;
-  /** Absolute Y content offset (iOS only, for ChatKit). */
+  /** Absolute Y content offset (iOS only, for KeyboardChatScrollView). */
   contentOffsetY?: SharedValue<number>;
-  /** Style applied to the container wrapper (Android only, for ChatKit translateY). */
+  /** Style applied to the container wrapper (Android only, for KeyboardChatScrollView translateY). */
   containerStyle?: StyleProp<ViewStyle>;
 } & ScrollViewProps;
 

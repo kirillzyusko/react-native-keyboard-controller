@@ -1,14 +1,13 @@
 ---
 sidebar_position: 5
-description: A guide that explores the challenges of building chat app layouts and shows how to solve them using the ChatKit component
+description: A guide that explores the challenges of building chat app layouts and shows how to solve them using the KeyboardChatScrollView component
 keywords:
   [
     react-native-keyboard-controller,
     react-native,
     keyboard,
     chat,
-    ChatKit,
-    chat-kit,
+    KeyboardChatScrollView,
   ]
 ---
 
@@ -40,14 +39,14 @@ Despite the complexity, most chat apps share the same set of keyboard-related re
 - **Keyboard padding** — extend the scrollable area to account for keyboard height.
 - **Custom offsets** — support layouts where the chat isn't flush against the bottom of the screen.
 
-Implementing all of this from scratch is a significant undertaking. That's why we built `ChatKit` — a dedicated component that handles all of these behaviors out of the box, so you can focus on building your chat experience rather than fighting the keyboard.
+Implementing all of this from scratch is a significant undertaking. That's why we built `KeyboardChatScrollView` — a dedicated component that handles all of these behaviors out of the box, so you can focus on building your chat experience rather than fighting the keyboard.
 
-## What is `ChatKit`?
+## What is `KeyboardChatScrollView`?
 
-`ChatKit` is a purpose-built component for chat app layouts. It provides all the requirements listed above.
+`KeyboardChatScrollView` is a purpose-built component for chat app layouts. It provides all the requirements listed above.
 
 ## Example
 
 ## API reference
 
-For the full list of props and usage examples, see the [`ChatKit` API reference](../api/components/chat-kit).
+For the full list of props and usage examples, see the [`KeyboardChatScrollView` API reference](../api/components/chat-kit).

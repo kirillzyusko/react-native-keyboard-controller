@@ -1,5 +1,5 @@
 import { forwardRef, useMemo } from "react";
-import { ChatKit } from "react-native-keyboard-controller";
+import { KeyboardChatScrollView } from "react-native-keyboard-controller";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useChatConfigStore } from "./store";
@@ -25,7 +25,7 @@ const VirtualizedListScrollView = forwardRef((props: ScrollViewProps, ref) => {
   const isInvertedSupported = inverted && mode === "flat" ? inverted : false;
 
   return (
-    <ChatKit.ScrollView
+    <KeyboardChatScrollView
       // TODO: fix types
       ref={ref}
       automaticallyAdjustContentInsets={false}

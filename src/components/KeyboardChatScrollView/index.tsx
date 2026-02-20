@@ -7,11 +7,11 @@ import ScrollViewWithBottomPadding from "../ScrollViewWithBottomPadding";
 
 import { useChatKeyboard } from "./useChatKeyboard";
 
-import type { ChatKitScrollViewProps } from "./types";
+import type { KeyboardChatScrollViewProps } from "./types";
 
-const ChatScrollView = forwardRef<
+const KeyboardChatScrollView = forwardRef<
   Reanimated.ScrollView,
-  React.PropsWithChildren<ChatKitScrollViewProps>
+  React.PropsWithChildren<KeyboardChatScrollViewProps>
 >(
   (
     {
@@ -56,8 +56,4 @@ const ChatScrollView = forwardRef<
   },
 );
 
-const ChatKit = {
-  ScrollView: ChatScrollView,
-};
-
-export default ChatKit;
+export default KeyboardChatScrollView;

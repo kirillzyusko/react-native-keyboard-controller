@@ -38,7 +38,7 @@ import type {
   ScrollViewProps,
 } from "react-native";
 
-function ChatKitPlayground() {
+function KeyboardChatScrollViewPlayground() {
   const ref = useRef<ScrollView>(null);
   const textInputRef = useRef<TextInput>(null);
   const textRef = useRef("");
@@ -157,4 +157,4 @@ function ChatKitPlayground() {
   );
 }
 
-export default ChatKitPlayground;
+export default KeyboardChatScrollViewPlayground;

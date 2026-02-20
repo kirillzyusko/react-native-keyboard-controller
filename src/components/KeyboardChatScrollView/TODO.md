@@ -16,5 +16,5 @@
 - [x] introduce `ClippingScrollView` in separate PR
 - [x] create a polyfill-version of ScrollView `that` can add scrollable padding in the bottom of the content? How to wrap custom `ScrollView` with it (cause we may pass one from react-native-gesture-handler)? Should just adjust `contentInset` (scroll management should belong to `KeyboardAwareScrollView`) (ScrollViewWithKeyboardPadding/ScrollViewWithKeyboardSpace)
 - [x] use `ClippingScrollView` in `KeyboardAwareScrollView` in separate PR
-- [-] introduce `ChatKit`
+- [-] introduce `KeyboardChatScrollViewProps`
 - [] create issue in reanimated repo about `scrollTo` performance regression

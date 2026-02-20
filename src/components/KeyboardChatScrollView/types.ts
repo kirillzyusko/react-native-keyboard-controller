@@ -3,7 +3,7 @@ import type { ScrollViewProps } from "react-native";
 
 type KeyboardLiftBehavior = "always" | "whenAtEnd" | "persistent" | "never";
 
-export type ChatKitScrollViewProps = {
+export type KeyboardChatScrollViewProps = {
   /** Custom component for `ScrollView`. Default is `ScrollView`. */
   ScrollViewComponent: AnimatedScrollViewComponent;
   /** Whether list are using `inverted` prop. Default is `false`. */

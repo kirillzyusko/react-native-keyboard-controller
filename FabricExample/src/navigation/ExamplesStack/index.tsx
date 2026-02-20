@@ -4,7 +4,7 @@ import React from "react";
 import { ScreenNames } from "../../constants/screenNames";
 import AwareScrollView from "../../screens/Examples/AwareScrollView";
 import AwareScrollViewStickyFooter from "../../screens/Examples/AwareScrollViewStickyFooter";
-import ChatKitPlayground from "../../screens/Examples/ChatKit";
+import KeyboardChatScrollViewPlayground from "../../screens/Examples/KeyboardChatScrollView";
 import CloseScreen from "../../screens/Examples/Close";
 import EnabledDisabled from "../../screens/Examples/EnabledDisabled";
 import Events from "../../screens/Examples/Events";
@@ -278,7 +278,7 @@ const ExamplesStack = () => (
       options={options[ScreenNames.KEYBOARD_EXTENDER]}
     />
     <Stack.Screen
-      component={ChatKitPlayground}
+      component={KeyboardChatScrollViewPlayground}
       name={ScreenNames.CHAT_KIT}
       options={options[ScreenNames.CHAT_KIT]}
     />

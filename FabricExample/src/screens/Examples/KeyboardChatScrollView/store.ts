@@ -3,11 +3,11 @@ import { create } from "zustand";
 import { messages as initialMessages } from "./data";
 
 import type { MessageProps } from "../../../components/Message/types";
-import type { ChatKitScrollViewProps } from "react-native-keyboard-controller";
+import type { KeyboardChatScrollViewProps } from "react-native-keyboard-controller";
 
 type ListMode = "scroll" | "flat" | "flash" | "legend";
 
-const liftModes: ChatKitScrollViewProps["keyboardLiftBehavior"][] = [
+const liftModes: KeyboardChatScrollViewProps["keyboardLiftBehavior"][] = [
   "always",
   "whenAtEnd",
   "persistent",
@@ -28,7 +28,7 @@ interface ChatConfigStore {
   mode: ListMode;
   setMode: (mode: ListMode) => void;
   resetMessages: () => void;
-  keyboardLiftBehavior: ChatKitScrollViewProps["keyboardLiftBehavior"];
+  keyboardLiftBehavior: KeyboardChatScrollViewProps["keyboardLiftBehavior"];
   nextLiftBehavior: () => void;
 }
 

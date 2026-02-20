@@ -1,6 +1,6 @@
-# ChatKit
+# KeyboardChatScrollView
 
-`ChatKit` is a purpose-built component for chat application layouts. It handles keyboard appearance, interactive dismissal, and content repositioning with smooth 60/120 FPS animations — all the keyboard behaviors that chat apps need but general-purpose components struggle to deliver.
+`KeyboardChatScrollView` is a purpose-built component for chat application layouts. It handles keyboard appearance, interactive dismissal, and content repositioning with smooth 60/120 FPS animations — all the keyboard behaviors that chat apps need but general-purpose components struggle to deliver.
 
 import Video from "@site/src/components/Video";
 
@@ -20,7 +20,7 @@ If you want to use `ScrollView` from `react-native-gesture-handler` you can pass
 ```tsx
 import { ScrollView } from "react-native-gesture-handler";
 
-<ChatKit.ScrollView ScrollViewComponent={ScrollView} />;
+<KeyboardChatScrollView ScrollViewComponent={ScrollView} />;
 ```
 
 :::
@@ -73,19 +73,19 @@ This is useful when the input is not at the very bottom of the screen — for ex
 
 ## Usage with virtualized lists
 
-`ChatKit` doesn't ship with built-in wrappers for third-party virtualized list libraries, but since all of them (`FlatList`, `FlashList`, `LegendList`) accept a custom scroll component, integration is straightforward.
+`KeyboardChatScrollView` doesn't ship with built-in wrappers for third-party virtualized list libraries, but since all of them (`FlatList`, `FlashList`, `LegendList`) accept a custom scroll component, integration is straightforward.
 
 First, create a wrapper component:
 
 ```tsx title="VirtualizedListScrollView.tsx"
 import { forwardRef } from "react";
-import { ChatKit } from "react-native-keyboard-controller";
+import { KeyboardChatScrollView } from "react-native-keyboard-controller";
 
 import type { ScrollViewProps } from "react-native";
 
 const VirtualizedListScrollView = forwardRef((props: ScrollViewProps, ref) => {
   return (
-    <ChatKit.ScrollView
+    <KeyboardChatScrollView
       ref={ref}
       automaticallyAdjustContentInsets={false}
       contentInsetAdjustmentBehavior="never"

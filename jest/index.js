@@ -120,9 +120,7 @@ const mock = {
   KeyboardAvoidingView: View,
   KeyboardAwareScrollView: ScrollView,
   KeyboardToolbar: View,
-  ChatKit: {
-    ScrollView: ScrollView,
-  },
+  KeyboardChatScrollView: ScrollView,
   // themes
   DefaultKeyboardToolbarTheme,
 };

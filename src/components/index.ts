@@ -5,7 +5,7 @@ export {
   default as KeyboardToolbar,
   DefaultKeyboardToolbarTheme,
 } from "./KeyboardToolbar";
-export { default as ChatKit } from "./ChatKit";
+export { default as KeyboardChatScrollView } from "./KeyboardChatScrollView";
 export type { KeyboardAvoidingViewProps } from "./KeyboardAvoidingView";
 export type { KeyboardStickyViewProps } from "./KeyboardStickyView";
 export type {
@@ -13,4 +13,4 @@ export type {
   KeyboardAwareScrollViewRef,
 } from "./KeyboardAwareScrollView";
 export type { KeyboardToolbarProps } from "./KeyboardToolbar";
-export type { ChatKitScrollViewProps } from "./ChatKit/types";
+export type { KeyboardChatScrollViewProps } from "./KeyboardChatScrollView/types";
