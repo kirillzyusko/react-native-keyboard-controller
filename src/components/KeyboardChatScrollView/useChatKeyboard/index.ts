@@ -98,6 +98,7 @@ function useChatKeyboard(
           scroll.value,
           layout.value.height,
           size.value.height,
+          inverted,
         );
 
         if (OS === "ios") {

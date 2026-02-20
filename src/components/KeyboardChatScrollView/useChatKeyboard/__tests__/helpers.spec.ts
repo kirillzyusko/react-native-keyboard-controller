@@ -27,6 +27,29 @@ describe("`isScrollAtEnd` specification", () => {
   it("should return true when at scroll position 0 with matching content", () => {
     expect(isScrollAtEnd(0, 800, 800)).toBe(true);
   });
+
+  describe("inverted", () => {
+    it("should return true when scroll offset is 0 (latest messages)", () => {
+      expect(isScrollAtEnd(0, 800, 2000, true)).toBe(true);
+    });
+
+    it("should return true when within threshold of 0", () => {
+      expect(isScrollAtEnd(15, 800, 2000, true)).toBe(true);
+    });
+
+    it("should return false when scrolled away from latest messages", () => {
+      expect(isScrollAtEnd(100, 800, 2000, true)).toBe(false);
+    });
+
+    it("should return true for negative offsets (keyboard inset)", () => {
+      expect(isScrollAtEnd(-300, 800, 2000, true)).toBe(true);
+    });
+
+    it("should return false at traditional scroll end (oldest messages)", () => {
+      // offset 1200 = contentHeight(2000) - layoutHeight(800) → oldest messages
+      expect(isScrollAtEnd(1200, 800, 2000, true)).toBe(false);
+    });
+  });
 });
 
 describe("`shouldShiftContent` specification", () => {

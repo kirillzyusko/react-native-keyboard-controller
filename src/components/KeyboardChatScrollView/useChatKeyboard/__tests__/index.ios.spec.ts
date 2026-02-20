@@ -211,6 +211,30 @@ describe("`useChatKeyboard` — iOS behaviors", () => {
     expect(result.current.contentOffsetY!.value).toBe(0);
   });
 
+  it("whenAtEnd + inverted: should shift when at latest messages (offset near 0)", () => {
+    mockOffset.value = 0;
+    const { result } = render({
+      inverted: true,
+      keyboardLiftBehavior: "whenAtEnd",
+    });
+
+    handlers.onStart({ height: KEYBOARD });
+
+    expect(result.current.contentOffsetY!.value).toBe(-KEYBOARD);
+  });
+
+  it("whenAtEnd + inverted: should NOT shift when scrolled to older messages", () => {
+    mockOffset.value = 500;
+    const { result } = render({
+      inverted: true,
+      keyboardLiftBehavior: "whenAtEnd",
+    });
+
+    handlers.onStart({ height: KEYBOARD });
+
+    expect(result.current.contentOffsetY!.value).toBe(0);
+  });
+
   it("onEnd: should finalize padding", () => {
     const { result } = render({
       inverted: false,

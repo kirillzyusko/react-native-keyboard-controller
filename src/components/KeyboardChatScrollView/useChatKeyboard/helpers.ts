@@ -5,21 +5,32 @@ const AT_END_THRESHOLD = 20;
 /**
  * Check whether the scroll view is at the end of its content.
  *
+ * For non-inverted lists the "end" is the bottom of the content.
+ * For inverted lists the "end" is the top (scroll offset near 0),
+ * because that is where the latest messages are displayed.
+ *
  * @param scrollOffset - Current vertical scroll offset.
  * @param layoutHeight - Visible height of the scroll view.
  * @param contentHeight - Total height of the scrollable content.
+ * @param inverted - Whether the list is inverted.
  * @returns `true` if the scroll position is within the threshold of the content end.
  * @example
  * ```ts
  * const atEnd = isScrollAtEnd(100, 800, 920); // true (100 + 800 >= 920 - 20)
+ * const atEndInverted = isScrollAtEnd(5, 800, 2000, true); // true (5 <= 20)
  * ```
  */
 export function isScrollAtEnd(
   scrollOffset: number,
   layoutHeight: number,
   contentHeight: number,
+  inverted: boolean = false,
 ): boolean {
   "worklet";
+
+  if (inverted) {
+    return scrollOffset <= AT_END_THRESHOLD;
+  }
 
   return scrollOffset + layoutHeight >= contentHeight - AT_END_THRESHOLD;
 }

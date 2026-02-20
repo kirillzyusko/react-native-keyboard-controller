@@ -137,6 +137,26 @@ describe("`useChatKeyboard` — iOS persistent inverted", () => {
   });
 
   it("should NOT adjust contentOffsetY on close when NOT at end", () => {
+    // scrolled to older messages (not at end for inverted)
+    mockOffset.value = 500;
+    const { result } = render({
+      inverted: true,
+      keyboardLiftBehavior: "persistent",
+    });
+
+    handlers.onStart({ height: KEYBOARD });
+    const contentOffsetAfterOpen = result.current.contentOffsetY!.value;
+
+    // user stays at old messages while keyboard is open
+    mockOffset.value = 200;
+    handlers.onStart({ height: 0 });
+
+    expect(result.current.padding.value).toBe(0);
+    expect(result.current.contentOffsetY!.value).toBe(contentOffsetAfterOpen);
+  });
+
+  it("should snap to end on keyboard close when at end", () => {
+    // at newest messages (at end for inverted = offset near 0)
     mockOffset.value = 0;
     const { result } = render({
       inverted: true,
@@ -144,23 +164,8 @@ describe("`useChatKeyboard` — iOS persistent inverted", () => {
     });
 
     handlers.onStart({ height: KEYBOARD });
+    // user stays at newest messages with keyboard inset
     mockOffset.value = -300;
-    handlers.onStart({ height: 0 });
-
-    expect(result.current.padding.value).toBe(0);
-    expect(result.current.contentOffsetY!.value).toBe(-KEYBOARD);
-  });
-
-  it("should snap to end on keyboard close when at end", () => {
-    // scroll to oldest messages (at end for inverted)
-    mockOffset.value = 1200;
-    const { result } = render({
-      inverted: true,
-      keyboardLiftBehavior: "persistent",
-    });
-
-    handlers.onStart({ height: KEYBOARD });
-    mockOffset.value = 1200;
     handlers.onStart({ height: 0 });
 
     expect(result.current.padding.value).toBe(0);
