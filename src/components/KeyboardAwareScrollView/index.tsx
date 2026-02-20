@@ -497,11 +497,18 @@ const KeyboardAwareScrollView = forwardRef<
       () => {
         const scrollView = scrollViewRef.current;
 
-        const existingMethods = scrollView ? { ...scrollView } : {};
+        if (scrollView) {
+          const scrollViewWithMethods =
+            scrollView as KeyboardAwareScrollViewRef;
+
+          scrollViewWithMethods.assureFocusedInputVisible = () => {
+            synchronize();
+          };
+
+          return scrollViewWithMethods;
+        }
 
         return {
-          ...existingMethods,
-
           assureFocusedInputVisible: () => {
             synchronize();
           },
