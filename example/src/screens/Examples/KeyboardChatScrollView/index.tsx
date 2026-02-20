@@ -43,7 +43,7 @@ function KeyboardChatScrollViewPlayground() {
   const textInputRef = useRef<TextInput>(null);
   const textRef = useRef("");
   const [inputHeight, setInputHeight] = useState(TEXT_INPUT_HEIGHT);
-  const { inverted, messages, reversedMessages, addMessage, mode, freeze } =
+  const { inverted, messages, reversedMessages, addMessage, mode } =
     useChatConfigStore();
   const { bottom } = useSafeAreaInsets();
 

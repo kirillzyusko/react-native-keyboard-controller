@@ -49,4 +49,4 @@ Implementing all of this from scratch is a significant undertaking. That's why w
 
 ## API reference
 
-For the full list of props and usage examples, see the [`KeyboardChatScrollView` API reference](../api/components/chat-kit).
+For the full list of props and usage examples, see the [`KeyboardChatScrollView` API reference](../api/components/keyboard-chat-scroll-view).
