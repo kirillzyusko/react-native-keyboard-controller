@@ -58,7 +58,7 @@ describe("`useChatKeyboard` — Android freeze", () => {
     expect(mockScrollTo).not.toHaveBeenCalled();
   });
 
-  it("should not change containerTranslateY on keyboard open", () => {
+  it("should not change padding on inverted keyboard open", () => {
     const { result } = render({
       inverted: true,
       keyboardLiftBehavior: "always",
@@ -68,7 +68,7 @@ describe("`useChatKeyboard` — Android freeze", () => {
     handlers.onStart({ height: KEYBOARD });
     handlers.onMove({ height: 200 });
 
-    expect(result.current.containerTranslateY.value).toBe(0);
+    expect(result.current.padding.value).toBe(0);
   });
 
   it("should not change padding in onEnd", () => {

@@ -133,22 +133,30 @@ describe("`useChatKeyboard` — Android non-inverted + offset", () => {
 });
 
 describe("`useChatKeyboard` — Android inverted + offset", () => {
-  it("should set containerTranslateY to negative effective height", () => {
-    const { result } = render({
+  it("should call scrollTo with effective height per-frame", () => {
+    render({
       inverted: true,
       keyboardLiftBehavior: "always",
       offset: OFFSET,
     });
 
     handlers.onStart({ height: KEYBOARD });
+    // padding = effective = interpolate(300, [0, 300], [0, 250]) = 250
+
     handlers.onMove({ height: 200 });
     // effective = interpolate(200, [0, 300], [0, 250]) = 166.67
+    // target = offsetBeforeScroll(0) + padding(250) - effective(166.67) = 83.33
     const effective = 200 * ((KEYBOARD - OFFSET) / KEYBOARD);
 
-    expect(result.current.containerTranslateY.value).toBeCloseTo(-effective);
+    expect(mockScrollTo).toHaveBeenLastCalledWith(
+      expect.anything(),
+      0,
+      expect.closeTo(KEYBOARD - OFFSET - effective),
+      false,
+    );
   });
 
-  it("should reset containerTranslateY on keyboard close", () => {
+  it("should reset padding on keyboard close", () => {
     const { result } = render({
       inverted: true,
       keyboardLiftBehavior: "always",
@@ -159,7 +167,6 @@ describe("`useChatKeyboard` — Android inverted + offset", () => {
     handlers.onMove({ height: KEYBOARD });
     handlers.onEnd({ height: 0 });
 
-    expect(result.current.containerTranslateY.value).toBe(0);
     expect(result.current.padding.value).toBe(0);
   });
 });

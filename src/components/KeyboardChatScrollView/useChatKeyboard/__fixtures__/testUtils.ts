@@ -4,7 +4,7 @@ import { useAnimatedRef } from "react-native-reanimated";
 import type { useChatKeyboard } from "..";
 import type Reanimated from "react-native-reanimated";
 
-export type KeyboardEvent = { height: number };
+export type KeyboardEvent = { height: number; duration?: number };
 export type Handlers = {
   onStart: (e: KeyboardEvent) => void;
   onMove: (e: KeyboardEvent) => void;

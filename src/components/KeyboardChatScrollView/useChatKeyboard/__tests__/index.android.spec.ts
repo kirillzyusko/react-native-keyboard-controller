@@ -162,130 +162,114 @@ describe("`useChatKeyboard` — Android non-inverted + always", () => {
 });
 
 describe("`useChatKeyboard` — Android inverted + always", () => {
-  it("should set containerTranslateY in onMove", () => {
+  it("should set padding in onStart and call scrollTo in onMove", () => {
     const { result } = render({
       inverted: true,
       keyboardLiftBehavior: "always",
     });
 
     handlers.onStart({ height: KEYBOARD });
+    expect(result.current.padding.value).toBe(KEYBOARD);
+
     handlers.onMove({ height: 200 });
-
-    expect(result.current.containerTranslateY.value).toBe(-200);
+    // target = offsetBeforeScroll(0) + padding(300) - effective(200) = 100
+    expect(mockScrollTo).toHaveBeenCalledWith(expect.anything(), 0, 100, false);
   });
 
-  it("should update containerTranslateY per-frame", () => {
-    const { result } = render({
-      inverted: true,
-      keyboardLiftBehavior: "always",
-    });
-
-    handlers.onStart({ height: KEYBOARD });
-
-    handlers.onMove({ height: 100 });
-    expect(result.current.containerTranslateY.value).toBe(-100);
-
-    handlers.onMove({ height: 250 });
-    expect(result.current.containerTranslateY.value).toBe(-250);
-  });
-
-  it("should NOT call scrollTo for inverted lists", () => {
+  it("should call scrollTo per-frame with correct targets", () => {
     render({ inverted: true, keyboardLiftBehavior: "always" });
 
     handlers.onStart({ height: KEYBOARD });
-    handlers.onMove({ height: 200 });
 
-    expect(mockScrollTo).not.toHaveBeenCalled();
+    handlers.onMove({ height: 100 });
+    // target = 0 + 300 - 100 = 200
+    expect(mockScrollTo).toHaveBeenLastCalledWith(
+      expect.anything(),
+      0,
+      200,
+      false,
+    );
+
+    handlers.onMove({ height: 250 });
+    // target = 0 + 300 - 250 = 50
+    expect(mockScrollTo).toHaveBeenLastCalledWith(
+      expect.anything(),
+      0,
+      50,
+      false,
+    );
   });
 
-  it("should reset containerTranslateY on keyboard close", () => {
+  it("should return undefined for contentOffsetY", () => {
+    const { result } = render({
+      inverted: true,
+      keyboardLiftBehavior: "always",
+    });
+
+    expect(result.current.contentOffsetY).toBeUndefined();
+  });
+
+  it("should scroll back on keyboard close", () => {
+    render({ inverted: true, keyboardLiftBehavior: "always" });
+
+    handlers.onStart({ height: KEYBOARD });
+    handlers.onMove({ height: KEYBOARD });
+    mockScrollTo.mockClear();
+
+    // keyboard closes: offsetBeforeScroll = scroll.value = 0
+    handlers.onStart({ height: 0 });
+
+    handlers.onMove({ height: 150 });
+    // target = 0 + 300 - 150 = 150
+    expect(mockScrollTo).toHaveBeenLastCalledWith(
+      expect.anything(),
+      0,
+      150,
+      false,
+    );
+
+    handlers.onMove({ height: 0 });
+    // target = 0 + 300 - 0 = 300
+    expect(mockScrollTo).toHaveBeenLastCalledWith(
+      expect.anything(),
+      0,
+      300,
+      false,
+    );
+  });
+
+  it("should preserve user scroll position on close", () => {
+    render({ inverted: true, keyboardLiftBehavior: "always" });
+
+    handlers.onStart({ height: KEYBOARD });
+    handlers.onMove({ height: KEYBOARD });
+    mockScrollTo.mockClear();
+
+    // user scrolled to 50 while keyboard open
+    mockOffset.value = 50;
+    handlers.onStart({ height: 0 });
+
+    handlers.onMove({ height: 150 });
+    // target = 50 + 300 - 150 = 200
+    expect(mockScrollTo).toHaveBeenLastCalledWith(
+      expect.anything(),
+      0,
+      200,
+      false,
+    );
+  });
+
+  it("should finalize padding in onEnd", () => {
     const { result } = render({
       inverted: true,
       keyboardLiftBehavior: "always",
     });
 
     handlers.onStart({ height: KEYBOARD });
-    handlers.onMove({ height: KEYBOARD });
-    handlers.onEnd({ height: 0 });
+    handlers.onEnd({ height: KEYBOARD });
+    expect(result.current.padding.value).toBe(KEYBOARD);
 
-    expect(result.current.containerTranslateY.value).toBe(0);
+    handlers.onEnd({ height: 0 });
     expect(result.current.padding.value).toBe(0);
-  });
-});
-
-describe("`useChatKeyboard` — Android behaviors", () => {
-  it("persistent inverted: should NOT reset translateY on close", () => {
-    const { result } = render({
-      inverted: true,
-      keyboardLiftBehavior: "persistent",
-    });
-
-    handlers.onStart({ height: KEYBOARD });
-    handlers.onMove({ height: KEYBOARD });
-    handlers.onEnd({ height: 0 });
-
-    expect(result.current.containerTranslateY.value).toBe(-KEYBOARD);
-  });
-
-  it("persistent inverted: should not shrink translateY", () => {
-    const { result } = render({
-      inverted: true,
-      keyboardLiftBehavior: "persistent",
-    });
-
-    handlers.onStart({ height: KEYBOARD });
-    handlers.onMove({ height: KEYBOARD });
-    handlers.onMove({ height: 200 });
-
-    expect(result.current.containerTranslateY.value).toBe(-KEYBOARD);
-  });
-
-  it("never: should not scroll or translate", () => {
-    mockOffset.value = 100;
-    const { result } = render({
-      inverted: false,
-      keyboardLiftBehavior: "never",
-    });
-
-    handlers.onStart({ height: KEYBOARD });
-    handlers.onMove({ height: 200 });
-
-    expect(mockScrollTo).not.toHaveBeenCalled();
-    expect(result.current.containerTranslateY.value).toBe(0);
-  });
-
-  it("whenAtEnd: should scroll when at end", () => {
-    mockOffset.value = 1180;
-    render({ inverted: false, keyboardLiftBehavior: "whenAtEnd" });
-
-    handlers.onStart({ height: KEYBOARD });
-    handlers.onMove({ height: 200 });
-
-    expect(mockScrollTo).toHaveBeenCalled();
-  });
-
-  it("whenAtEnd: should NOT scroll when NOT at end", () => {
-    mockOffset.value = 100;
-    render({ inverted: false, keyboardLiftBehavior: "whenAtEnd" });
-
-    handlers.onStart({ height: KEYBOARD });
-    handlers.onMove({ height: 200 });
-
-    expect(mockScrollTo).not.toHaveBeenCalled();
-  });
-
-  it("persistent non-inverted: should not scroll back on shrink", () => {
-    mockOffset.value = 100;
-    render({ inverted: false, keyboardLiftBehavior: "persistent" });
-
-    handlers.onStart({ height: KEYBOARD });
-    handlers.onMove({ height: 200 });
-    expect(mockScrollTo).toHaveBeenCalled();
-    mockScrollTo.mockClear();
-
-    mockOffset.value = 300;
-    handlers.onMove({ height: 100 });
-
-    expect(mockScrollTo).not.toHaveBeenCalled();
   });
 });

@@ -30,8 +30,6 @@ type UseChatKeyboardReturn = {
   padding: SharedValue<number>;
   /** Absolute Y content offset for iOS (set once in onStart). `undefined` on Android. */
   contentOffsetY: SharedValue<number> | undefined;
-  /** TranslateY for the container wrapper on Android inverted lists. 0 otherwise. */
-  containerTranslateY: SharedValue<number>;
 };
 
 /**
@@ -41,10 +39,10 @@ type UseChatKeyboardReturn = {
  *
  * @param scrollViewRef - Animated ref to the scroll view.
  * @param options - Configuration for inverted and keyboardLiftBehavior.
- * @returns Shared values for padding, contentOffsetY (iOS), and containerTranslateY (Android inverted).
+ * @returns Shared values for padding and contentOffsetY (iOS).
  * @example
  * ```tsx
- * const { padding, contentOffsetY, containerTranslateY } = useChatKeyboard(ref, {
+ * const { padding, contentOffsetY } = useChatKeyboard(ref, {
  *   inverted: false,
  *   keyboardLiftBehavior: "always",
  * });
@@ -58,11 +56,8 @@ function useChatKeyboard(
 
   const padding = useSharedValue(0);
   const contentOffsetY = useSharedValue(0);
-  const containerTranslateY = useSharedValue(0);
   const offsetBeforeScroll = useSharedValue(0);
   const targetKeyboardHeight = useSharedValue(0);
-  const lockedScrollPosition = useSharedValue(-1);
-  const prevInteractiveHeight = useSharedValue(-1);
 
   const { layout, size, offset: scroll } = useScrollState(scrollViewRef);
 
@@ -144,19 +139,29 @@ function useChatKeyboard(
             layout.value.height,
             inverted,
           );
+        } else if (inverted && e.duration === -1) {
+          // Android inverted: skip post-interactive snap-back events
+          // (duration === -1 means the keyboard is re-establishing its
+          // position after an interactive gesture, not a real animation)
+          return;
         } else if (e.height > 0) {
           // Android: keyboard opening — set padding + capture scroll position
           padding.value = effective;
           offsetBeforeScroll.value = scroll.value;
 
-          if (keyboardLiftBehavior === "whenAtEnd" && !atEnd) {
-            // Sentinel: don't scroll in onMove
+          if (!inverted && keyboardLiftBehavior === "whenAtEnd" && !atEnd) {
+            // Sentinel: don't scroll in onMove (non-inverted only)
             offsetBeforeScroll.value = -1;
           }
         } else {
-          // Android: keyboard closing — re-capture from current position
-          // so onMove smoothly scrolls back from where the user is now
-          offsetBeforeScroll.value = scroll.value - padding.value;
+          // Android: keyboard closing — re-capture scroll position
+          if (inverted) {
+            offsetBeforeScroll.value = scroll.value;
+          } else {
+            // Non-inverted: subtract padding to get the "natural" position
+            // so onMove smoothly scrolls back from where the user is now
+            offsetBeforeScroll.value = scroll.value - padding.value;
+          }
         }
       },
       onMove: (e) => {
@@ -171,29 +176,51 @@ function useChatKeyboard(
           return;
         }
 
-        if (!shouldShiftContent(keyboardLiftBehavior, true)) {
-          return;
-        }
-
-        // "whenAtEnd" sentinel check
-        if (offsetBeforeScroll.value === -1) {
-          return;
-        }
-
-        const effective = getEffectiveHeight(e.height);
-
         if (inverted) {
-          // Android inverted: translateY on container
-          if (
-            keyboardLiftBehavior === "persistent" &&
-            effective < Math.abs(containerTranslateY.value)
-          ) {
+          // Skip post-interactive snap-back (duration === -1)
+          if (e.duration === -1) {
             return;
           }
 
-          containerTranslateY.value = -effective;
+          const effective = getEffectiveHeight(e.height);
+
+          // Check if we should shift content based on position when keyboard started
+          const wasAtEnd = isScrollAtEnd(
+            offsetBeforeScroll.value,
+            layout.value.height,
+            size.value.height,
+            inverted,
+          );
+
+          if (!shouldShiftContent(keyboardLiftBehavior, wasAtEnd)) {
+            return;
+          }
+
+          // Persistent: don't let shift decrease
+          if (keyboardLiftBehavior === "persistent") {
+            const currentShift =
+              offsetBeforeScroll.value + padding.value - scroll.value;
+
+            if (effective < currentShift) {
+              return;
+            }
+          }
+
+          const target = offsetBeforeScroll.value + padding.value - effective;
+
+          scrollTo(scrollViewRef, 0, target, false);
         } else {
-          // Android non-inverted: scrollTo per-frame
+          if (!shouldShiftContent(keyboardLiftBehavior, true)) {
+            return;
+          }
+
+          // "whenAtEnd" sentinel check
+          if (offsetBeforeScroll.value === -1) {
+            return;
+          }
+
+          const effective = getEffectiveHeight(e.height);
+
           if (
             keyboardLiftBehavior === "persistent" &&
             effective < scroll.value - offsetBeforeScroll.value
@@ -211,47 +238,6 @@ function useChatKeyboard(
           scrollTo(scrollViewRef, 0, target, false);
         }
       },
-      onInteractive: (e) => {
-        "worklet";
-
-        if (freeze || OS === "ios") {
-          return;
-        }
-
-        const effective = getEffectiveHeight(e.height);
-
-        if (inverted) {
-          const maxEffective = getEffectiveHeight(targetKeyboardHeight.value);
-          const prevEffective = prevInteractiveHeight.value;
-          const isFirstInteractive = prevEffective === -1;
-
-          prevInteractiveHeight.value = effective;
-
-          if (isFirstInteractive) {
-            // first interactive event of a gesture session — lock scroll
-            lockedScrollPosition.value = scroll.value;
-          } else if (
-            (prevEffective === maxEffective && effective === maxEffective) ||
-            (prevEffective === 0 && effective === 0)
-          ) {
-            // keyboard stayed at rest position for consecutive frames — unlock
-            // so the user can scroll freely while keyboard is fully visible/hidden
-            lockedScrollPosition.value = -1;
-          } else if (
-            (prevEffective === 0 && effective > 0) ||
-            (prevEffective === maxEffective && effective < maxEffective)
-          ) {
-            // keyboard left a rest position — re-lock at current scroll
-            lockedScrollPosition.value = scroll.value;
-          }
-
-          if (lockedScrollPosition.value !== -1) {
-            scrollTo(scrollViewRef, 0, lockedScrollPosition.value, false);
-          }
-
-          containerTranslateY.value = -effective;
-        }
-      },
       onEnd: (e) => {
         "worklet";
 
@@ -261,18 +247,17 @@ function useChatKeyboard(
 
         const effective = getEffectiveHeight(e.height);
 
-        padding.value = effective;
-        lockedScrollPosition.value = -1;
-        prevInteractiveHeight.value = -1;
-
+        // Android inverted persistent: keep padding to maintain the shift
         if (
           OS !== "ios" &&
           inverted &&
-          e.height === 0 &&
-          keyboardLiftBehavior !== "persistent"
+          keyboardLiftBehavior === "persistent" &&
+          e.height === 0
         ) {
-          containerTranslateY.value = 0;
+          return;
         }
+
+        padding.value = effective;
       },
     },
     [inverted, keyboardLiftBehavior, freeze, offset],
@@ -281,7 +266,6 @@ function useChatKeyboard(
   return {
     padding,
     contentOffsetY: OS === "ios" ? contentOffsetY : undefined,
-    containerTranslateY,
   };
 }
 
