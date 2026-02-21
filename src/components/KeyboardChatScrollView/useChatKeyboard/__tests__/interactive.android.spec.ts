@@ -1,13 +1,13 @@
-import { Platform } from "react-native";
-
 import {
   type Handlers,
   KEYBOARD,
+  createRender,
   mockOffset,
   mockScrollTo,
-  render,
   setupBeforeEach,
 } from "../__fixtures__/testUtils";
+
+const render = createRender("../index.ts");
 
 let handlers: Handlers = {
   onStart: jest.fn(),
@@ -34,11 +34,6 @@ jest.mock("../../../hooks/useScrollState", () => ({
 
 beforeEach(() => {
   setupBeforeEach();
-  Object.defineProperty(Platform, "OS", { value: "android" });
-});
-
-afterAll(() => {
-  Object.defineProperty(Platform, "OS", { value: "ios" });
 });
 
 describe("`useChatKeyboard` — Android post-interactive snap-back (inverted)", () => {

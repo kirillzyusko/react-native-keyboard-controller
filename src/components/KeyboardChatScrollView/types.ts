@@ -1,7 +1,6 @@
 import type { AnimatedScrollViewComponent } from "../ScrollViewWithBottomPadding";
+import type { KeyboardLiftBehavior } from "./useChatKeyboard/types";
 import type { ScrollViewProps } from "react-native";
-
-type KeyboardLiftBehavior = "always" | "whenAtEnd" | "persistent" | "never";
 
 export type KeyboardChatScrollViewProps = {
   /** Custom component for `ScrollView`. Default is `ScrollView`. */

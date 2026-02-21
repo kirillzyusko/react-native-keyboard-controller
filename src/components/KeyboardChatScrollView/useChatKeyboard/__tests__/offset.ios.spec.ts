@@ -1,13 +1,15 @@
 import {
   type Handlers,
   KEYBOARD,
+  createRender,
   mockLayout,
   mockOffset,
   mockScrollTo,
   mockSize,
-  render,
   setupBeforeEach,
 } from "../__fixtures__/testUtils";
+
+const render = createRender("../index.ios");
 
 let handlers: Handlers = {
   onStart: jest.fn(),

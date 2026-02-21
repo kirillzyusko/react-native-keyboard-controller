@@ -19,6 +19,31 @@ export const mockSize = { value: { width: 390, height: 2000 } };
 export const KEYBOARD = 300;
 export const mockScrollTo = jest.fn();
 
+/**
+ * Linear interpolate mock matching Reanimated's `interpolate` signature.
+ *
+ * @param value - The input value to interpolate.
+ * @param input - Input range `[min, max]`.
+ * @param output - Output range `[min, max]`.
+ * @returns The interpolated value.
+ * @example mockInterpolate(150, [0, 300], [0, 250]); // 125
+ */
+export function mockInterpolate(
+  value: number,
+  input: number[],
+  output: number[],
+): number {
+  "worklet";
+
+  if (input[1] === 0) {
+    return 0;
+  }
+
+  const progress = (value - input[0]) / (input[1] - input[0]);
+
+  return output[0] + progress * (output[1] - output[0]);
+}
+
 /** Reset mock scroll state to defaults. */
 export function reset() {
   mockOffset.value = 0;
@@ -37,46 +62,43 @@ export function setupBeforeEach() {
   jest.doMock("react-native-reanimated", () => ({
     ...require("react-native-reanimated/mock"),
     scrollTo: mockScrollTo,
-    interpolate: (value: number, input: number[], output: number[]) => {
-      "worklet";
-
-      if (input[1] === 0) {
-        return 0;
-      }
-
-      const progress = (value - input[0]) / (input[1] - input[0]);
-
-      return output[0] + progress * (output[1] - output[0]);
-    },
+    interpolate: mockInterpolate,
   }));
 
   reset();
   mockScrollTo.mockClear();
 }
 
+type RenderOptions = Omit<
+  Parameters<typeof useChatKeyboard>[1],
+  "freeze" | "offset"
+> & {
+  freeze?: boolean;
+  offset?: number;
+};
+
 /**
- * Render the hook with optional freeze (defaults to `false`).
+ * Create a render function that loads the hook from the given module path.
  *
- * @param options - Hook configuration (freeze is optional, defaults to false).
- * @returns renderHook result.
- * @example render({ inverted: false, keyboardLiftBehavior: "always" })
+ * @param modulePath - Relative path to the hook module (e.g. `"../index.ios"` or `"../index"`).
+ * @returns A render function bound to that module.
+ * @example const render = createRender("../index.ios");
  */
-export function render(
-  options: Omit<Parameters<typeof useChatKeyboard>[1], "freeze" | "offset"> & {
-    freeze?: boolean;
-    offset?: number;
-  },
-) {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const mod = require("..") as { useChatKeyboard: typeof useChatKeyboard };
+export function createRender(modulePath: string) {
+  return function render(options: RenderOptions) {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const mod = require(modulePath) as {
+      useChatKeyboard: typeof useChatKeyboard;
+    };
 
-  return renderHook(() => {
-    const ref = useAnimatedRef<Reanimated.ScrollView>();
+    return renderHook(() => {
+      const ref = useAnimatedRef<Reanimated.ScrollView>();
 
-    return mod.useChatKeyboard(ref, {
-      ...options,
-      freeze: options.freeze ?? false,
-      offset: options.offset ?? 0,
+      return mod.useChatKeyboard(ref, {
+        ...options,
+        freeze: options.freeze ?? false,
+        offset: options.offset ?? 0,
+      });
     });
-  });
+  };
 }

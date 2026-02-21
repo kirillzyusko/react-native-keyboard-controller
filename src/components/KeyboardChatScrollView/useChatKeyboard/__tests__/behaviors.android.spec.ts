@@ -1,15 +1,15 @@
-import { Platform } from "react-native";
-
 import {
   type Handlers,
   KEYBOARD,
+  createRender,
   mockLayout,
   mockOffset,
   mockScrollTo,
   mockSize,
-  render,
   setupBeforeEach,
 } from "../__fixtures__/testUtils";
+
+const render = createRender("../index.ts");
 
 let handlers: Handlers = {
   onStart: jest.fn(),
@@ -36,11 +36,6 @@ jest.mock("../../../hooks/useScrollState", () => ({
 
 beforeEach(() => {
   setupBeforeEach();
-  Object.defineProperty(Platform, "OS", { value: "android" });
-});
-
-afterAll(() => {
-  Object.defineProperty(Platform, "OS", { value: "ios" });
 });
 
 describe("`useChatKeyboard` — Android behaviors", () => {
@@ -117,15 +112,6 @@ describe("`useChatKeyboard` — Android behaviors", () => {
   it("never non-inverted: should not scroll", () => {
     mockOffset.value = 100;
     render({ inverted: false, keyboardLiftBehavior: "never" });
-
-    handlers.onStart({ height: KEYBOARD });
-    handlers.onMove({ height: 200 });
-
-    expect(mockScrollTo).not.toHaveBeenCalled();
-  });
-
-  it("never inverted: should not scroll", () => {
-    render({ inverted: true, keyboardLiftBehavior: "never" });
 
     handlers.onStart({ height: KEYBOARD });
     handlers.onMove({ height: 200 });

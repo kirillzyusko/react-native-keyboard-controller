@@ -1,45 +1,27 @@
-import { Platform } from "react-native";
-import { interpolate, scrollTo, useSharedValue } from "react-native-reanimated";
+import { scrollTo, useSharedValue } from "react-native-reanimated";
 
 import { useKeyboardHandler } from "../../../hooks";
 import useScrollState from "../../hooks/useScrollState";
 
 import {
   clampedScrollTarget,
-  computeIOSContentOffset,
+  getEffectiveHeight,
   isScrollAtEnd,
   shouldShiftContent,
 } from "./helpers";
 
-import type { AnimatedRef, SharedValue } from "react-native-reanimated";
+import type { UseChatKeyboardOptions, UseChatKeyboardReturn } from "./types";
+import type { AnimatedRef } from "react-native-reanimated";
 import type Reanimated from "react-native-reanimated";
-
-const OS = Platform.OS;
-
-type KeyboardLiftBehavior = "always" | "whenAtEnd" | "persistent" | "never";
-
-type UseChatKeyboardOptions = {
-  inverted: boolean;
-  keyboardLiftBehavior: KeyboardLiftBehavior;
-  freeze: boolean;
-  offset: number;
-};
-
-type UseChatKeyboardReturn = {
-  /** Extra scrollable space (= keyboard height). Used as contentInset on iOS, contentInsetBottom/contentInsetTop on Android. */
-  padding: SharedValue<number>;
-  /** Absolute Y content offset for iOS (set once in onStart). `undefined` on Android. */
-  contentOffsetY: SharedValue<number> | undefined;
-};
 
 /**
  * Hook that manages keyboard-driven scrolling for chat-style scroll views.
  * Calculates padding (extra scrollable space) and content shift values,
- * using the optimal strategy per platform.
+ * using per-frame scrollTo updates (Android and other platforms).
  *
  * @param scrollViewRef - Animated ref to the scroll view.
  * @param options - Configuration for inverted and keyboardLiftBehavior.
- * @returns Shared values for padding and contentOffsetY (iOS).
+ * @returns Shared values for padding and contentOffsetY (always `undefined`).
  * @example
  * ```tsx
  * const { padding, contentOffsetY } = useChatKeyboard(ref, {
@@ -55,25 +37,10 @@ function useChatKeyboard(
   const { inverted, keyboardLiftBehavior, freeze, offset } = options;
 
   const padding = useSharedValue(0);
-  const contentOffsetY = useSharedValue(0);
   const offsetBeforeScroll = useSharedValue(0);
   const targetKeyboardHeight = useSharedValue(0);
 
   const { layout, size, offset: scroll } = useScrollState(scrollViewRef);
-
-  const getEffectiveHeight = (height: number): number => {
-    "worklet";
-
-    if (offset === 0 || targetKeyboardHeight.value === 0) {
-      return height;
-    }
-
-    return interpolate(
-      height,
-      [0, targetKeyboardHeight.value],
-      [0, Math.max(targetKeyboardHeight.value - offset, 0)],
-    );
-  };
 
   useKeyboardHandler(
     {
@@ -89,7 +56,11 @@ function useChatKeyboard(
           targetKeyboardHeight.value = e.height;
         }
 
-        const effective = getEffectiveHeight(e.height);
+        const effective = getEffectiveHeight(
+          e.height,
+          targetKeyboardHeight.value,
+          offset,
+        );
 
         const atEnd = isScrollAtEnd(
           scroll.value,
@@ -98,48 +69,7 @@ function useChatKeyboard(
           inverted,
         );
 
-        if (OS === "ios") {
-          // iOS: set padding + contentOffset once in onStart
-          // persistent mode: when keyboard shrinks, snap to end or hold position
-          if (
-            keyboardLiftBehavior === "persistent" &&
-            effective < padding.value
-          ) {
-            padding.value = effective;
-
-            if (atEnd) {
-              // Snap to the end of content instead of reverting to pre-keyboard position
-              if (inverted) {
-                contentOffsetY.value = -effective;
-              } else {
-                contentOffsetY.value = Math.max(
-                  size.value.height - layout.value.height + effective,
-                  0,
-                );
-              }
-            }
-
-            return;
-          }
-
-          const relativeScroll = inverted
-            ? scroll.value + padding.value
-            : scroll.value - padding.value;
-
-          padding.value = effective;
-
-          if (!shouldShiftContent(keyboardLiftBehavior, atEnd)) {
-            return;
-          }
-
-          contentOffsetY.value = computeIOSContentOffset(
-            relativeScroll,
-            effective,
-            size.value.height,
-            layout.value.height,
-            inverted,
-          );
-        } else if (inverted && e.duration === -1) {
+        if (inverted && e.duration === -1) {
           // Android inverted: skip post-interactive snap-back events
           // (duration === -1 means the keyboard is re-establishing its
           // position after an interactive gesture, not a real animation)
@@ -171,18 +101,17 @@ function useChatKeyboard(
           return;
         }
 
-        // iOS doesn't need per-frame updates (contentOffset handles it)
-        if (OS === "ios") {
-          return;
-        }
-
         if (inverted) {
           // Skip post-interactive snap-back (duration === -1)
           if (e.duration === -1) {
             return;
           }
 
-          const effective = getEffectiveHeight(e.height);
+          const effective = getEffectiveHeight(
+            e.height,
+            targetKeyboardHeight.value,
+            offset,
+          );
 
           // Check if we should shift content based on position when keyboard started
           const wasAtEnd = isScrollAtEnd(
@@ -228,7 +157,11 @@ function useChatKeyboard(
 
           scrollTo(scrollViewRef, 0, target, false);
         } else {
-          const effective = getEffectiveHeight(e.height);
+          const effective = getEffectiveHeight(
+            e.height,
+            targetKeyboardHeight.value,
+            offset,
+          );
 
           // "never" at end: scroll along when keyboard closes to avoid jump
           if (keyboardLiftBehavior === "never" && effective < padding.value) {
@@ -296,7 +229,11 @@ function useChatKeyboard(
           return;
         }
 
-        const effective = getEffectiveHeight(e.height);
+        const effective = getEffectiveHeight(
+          e.height,
+          targetKeyboardHeight.value,
+          offset,
+        );
 
         padding.value = effective;
       },
@@ -306,9 +243,8 @@ function useChatKeyboard(
 
   return {
     padding,
-    contentOffsetY: OS === "ios" ? contentOffsetY : undefined,
+    contentOffsetY: undefined,
   };
 }
 
 export { useChatKeyboard };
-export type { KeyboardLiftBehavior };

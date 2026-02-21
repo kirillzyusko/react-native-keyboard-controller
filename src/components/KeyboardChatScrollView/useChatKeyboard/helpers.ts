@@ -1,6 +1,40 @@
-type KeyboardLiftBehavior = "always" | "whenAtEnd" | "persistent" | "never";
+import { interpolate } from "react-native-reanimated";
+
+import type { KeyboardLiftBehavior } from "./types";
 
 const AT_END_THRESHOLD = 20;
+
+/**
+ * Map the current keyboard height to an effective height that accounts for a
+ * fixed offset (e.g. bottom safe-area or tab-bar height).
+ *
+ * @param height - Current keyboard height.
+ * @param targetKeyboardHeight - Full target keyboard height (captured on keyboard open).
+ * @param offset - Fixed distance between the scroll-view bottom and the screen bottom.
+ * @returns Effective height after subtracting the offset proportionally.
+ * @example
+ * ```ts
+ * getEffectiveHeight(300, 300, 50); // 250
+ * getEffectiveHeight(150, 300, 50); // 125
+ * ```
+ */
+export function getEffectiveHeight(
+  height: number,
+  targetKeyboardHeight: number,
+  offset: number,
+): number {
+  "worklet";
+
+  if (offset === 0 || targetKeyboardHeight === 0) {
+    return height;
+  }
+
+  return interpolate(
+    height,
+    [0, targetKeyboardHeight],
+    [0, Math.max(targetKeyboardHeight - offset, 0)],
+  );
+}
 
 /**
  * Check whether the scroll view is at the end of its content.

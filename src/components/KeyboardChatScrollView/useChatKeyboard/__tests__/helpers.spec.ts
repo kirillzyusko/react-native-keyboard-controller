@@ -1,6 +1,13 @@
+jest.mock("react-native-reanimated", () => ({
+  ...require("react-native-reanimated/mock"),
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  interpolate: require("../__fixtures__/testUtils").mockInterpolate,
+}));
+
 import {
   clampedScrollTarget,
   computeIOSContentOffset,
+  getEffectiveHeight,
   isScrollAtEnd,
   shouldShiftContent,
 } from "../helpers";
@@ -96,6 +103,36 @@ describe("`clampedScrollTarget` specification", () => {
 
   it("should return 0 when keyboard height is 0 and scroll is at top", () => {
     expect(clampedScrollTarget(0, 0, 1000, 800)).toBe(0);
+  });
+});
+
+describe("`getEffectiveHeight` specification", () => {
+  it("should return height as-is when offset is 0", () => {
+    expect(getEffectiveHeight(300, 300, 0)).toBe(300);
+    expect(getEffectiveHeight(150, 300, 0)).toBe(150);
+  });
+
+  it("should return height as-is when targetKeyboardHeight is 0", () => {
+    expect(getEffectiveHeight(0, 0, 50)).toBe(0);
+  });
+
+  it("should subtract offset proportionally at full keyboard height", () => {
+    // interpolate(300, [0, 300], [0, 250]) = 250
+    expect(getEffectiveHeight(300, 300, 50)).toBe(250);
+  });
+
+  it("should interpolate proportionally at intermediate heights", () => {
+    // interpolate(150, [0, 300], [0, 250]) = 125
+    expect(getEffectiveHeight(150, 300, 50)).toBe(125);
+  });
+
+  it("should return 0 when height is 0", () => {
+    expect(getEffectiveHeight(0, 300, 50)).toBe(0);
+  });
+
+  it("should clamp effective target to 0 when offset exceeds keyboard height", () => {
+    // interpolate(300, [0, 300], [0, max(300 - 400, 0)]) = interpolate(300, [0, 300], [0, 0]) = 0
+    expect(getEffectiveHeight(300, 300, 400)).toBe(0);
   });
 });
 
