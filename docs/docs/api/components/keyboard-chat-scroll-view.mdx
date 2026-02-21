@@ -35,10 +35,6 @@ When `true`, freezes all keyboard-driven layout changes. This is useful when dis
 
 Set to `true` if your list uses the `inverted` prop (the standard pattern for chat-style lists where the newest messages appear at the bottom).
 
-:::danger Android limitation
-On Android, inverted lists only support `keyboardLiftBehavior="always"`. Other modes are not available when `inverted={true}`.
-:::
-
 ### `keyboardLiftBehavior`
 
 Controls how the chat content responds when the keyboard appears. Defaults to `"always"`.
@@ -71,7 +67,7 @@ Content never moves in response to the keyboard. The keyboard simply overlaps th
 
 The distance between the bottom of the screen and the `ScrollView`. When the keyboard appears, the `ScrollView` will only push content by the effective distance (`keyboardHeight - offset`) instead of the full keyboard height. Defaults to `0`.
 
-This is useful when the input is not at the very bottom of the screen — for example, when the `ScrollView` sits above a safe area inset, bottom tabs, or any other fixed-height element. In that case, set `offset` to the height of the elements between the `ScrollView` and the bottom of the screen.
+This is useful when the input is not at the very bottom of the screen — for example, when the `ScrollView` sits above a **safe area** inset, **bottom tabs**, or **any other fixed-height element**. In that case, set `offset` to the height of the elements between the `ScrollView` and the bottom of the screen.
 
 ## Usage with virtualized lists
 
@@ -154,6 +150,36 @@ const memoList = useCallback(
 <Head>
   <script src="https://snack.expo.dev/embed.js" async />
 </Head>
+
+## Design principles
+
+The key idea behind this component is that the `ScrollView` layout **never** changes. Instead of adjusting the **layout** or the `ScrollView` **position**, it changes the content position. To implement a chat interface we need to do two things: extend the scrollable range and adjust the scroll position.
+
+### Extending scroll range
+
+When the keyboard appears we need to extend the scrollable range. On iOS this is achievable via `contentInset`. On Android it's less straightforward because there is no such property.
+
+To bring support on Android, the `ScrollView` is wrapped with [`ClippingScrollViewDecorator`](https://github.com/kirillzyusko/react-native-keyboard-controller/blob/main/android/src/main/java/com/reactnativekeyboardcontroller/views/ClippingScrollViewDecoratorView.kt) — a custom view built in `react-native-keyboard-controller` that simulates `contentInset` behavior on Android by exposing two additional properties: `contentInsetBottom` and `contentInsetTop`. The usage looks like:
+
+```tsx
+<ClippingScrollViewDecorator contentInsetTop={0} contentInsetBottom={0}>
+  <ScrollView style={{ flex: 1 }}>{/* ...content... */}</ScrollView>
+</ClippingScrollViewDecorator>
+```
+
+The `ClippingScrollViewDecorator` should wrap the `ScrollView`. Whenever you change the `contentInsetBottom` or `contentInsetTop` properties, the `contentInset` will be automatically applied to the underlying `ScrollView`.
+
+### Adjusting scroll position
+
+The second step is to adjust the scroll position. This is handled differently on iOS and Android.
+
+#### iOS
+
+On iOS we change the [`contentOffset`](https://reactnative.dev/docs/scrollview#contentoffset) property. It works well and without bugs, unlike on Android, so for Android we use a different approach.
+
+#### Android
+
+On Android we adjust the scroll position inside the [`onMove`](../hooks/keyboard/use-keyboard-handler#onmove) handler via the [`scrollTo`](https://docs.swmansion.com/react-native-reanimated/docs/scroll/scrollTo/) method on the UI thread from a worklet.
 
 ## Known issues
 
