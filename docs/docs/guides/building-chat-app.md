@@ -23,7 +23,7 @@ Here's what you'll run into:
 
 - **Frame drops with complex layouts** — `KeyboardAvoidingView` with `behavior="padding"` or `behavior="height"` can cause [frame drops](https://github.com/software-mansion/react-native-reanimated/issues/6854), particularly when the layout is complex.
 - **First-message rendering issues** — using `behavior="translate-with-padding"` makes it [impossible](https://github.com/kirillzyusko/react-native-keyboard-controller/issues/951) to render the first message at the top of the screen.
-- **Double scroll on interactive dismissal** — combining `KeyboardAvoidingView` with interactive keyboard dismissal on iOS leads to a [double-scroll problem](https://github.com/kirillzyusko/react-native-keyboard-controller/issues/594#issuecomment-2406860730)
+- **Double scroll on interactive dismissal** — combining `KeyboardAvoidingView` with interactive keyboard dismissal on iOS leads to a [double-scroll problem](https://github.com/kirillzyusko/react-native-keyboard-controller/issues/594#issuecomment-2406860730).
 - **Unnecessary animation** — when you are at the beginning of the list and keyboard closes, `KeyboardAvoidingView` still animates the content even though no scrolling adjustment is needed.
 
 These aren't edge cases — they're fundamental mismatches between what generic components were designed to do and what chat apps actually need. You can work around them, but you'll end up writing a lot of platform-specific code to get a polished result.
