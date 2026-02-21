@@ -101,6 +101,10 @@ function useChatKeyboard(
         padding.value = effective;
 
         if (!shouldShiftContent(keyboardLiftBehavior, atEnd)) {
+          // Preserve current scroll position so animated props
+          // don't re-apply a stale contentOffset when padding changes
+          contentOffsetY.value = scroll.value;
+
           return;
         }
 

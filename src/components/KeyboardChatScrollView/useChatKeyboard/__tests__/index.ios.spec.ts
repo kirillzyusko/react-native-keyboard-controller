@@ -177,7 +177,7 @@ describe("`useChatKeyboard` — iOS inverted + always", () => {
 });
 
 describe("`useChatKeyboard` — iOS behaviors", () => {
-  it("never: should set padding but not shift content", () => {
+  it("never: should set padding but preserve current scroll position", () => {
     mockOffset.value = 100;
     const { result } = render({
       inverted: false,
@@ -187,7 +187,9 @@ describe("`useChatKeyboard` — iOS behaviors", () => {
     handlers.onStart({ height: KEYBOARD });
 
     expect(result.current.padding.value).toBe(KEYBOARD);
-    expect(result.current.contentOffsetY!.value).toBe(0);
+    // contentOffsetY must match current scroll position so animated props
+    // don't re-apply a stale contentOffset when padding changes
+    expect(result.current.contentOffsetY!.value).toBe(100);
   });
 
   it("whenAtEnd: should shift when at the end", () => {
@@ -202,7 +204,7 @@ describe("`useChatKeyboard` — iOS behaviors", () => {
     expect(result.current.contentOffsetY!.value).toBe(1480);
   });
 
-  it("whenAtEnd: should NOT shift when far from the end", () => {
+  it("whenAtEnd: should preserve scroll position when far from the end", () => {
     mockOffset.value = 100;
     const { result } = render({
       inverted: false,
@@ -211,7 +213,9 @@ describe("`useChatKeyboard` — iOS behaviors", () => {
 
     handlers.onStart({ height: KEYBOARD });
 
-    expect(result.current.contentOffsetY!.value).toBe(0);
+    // contentOffsetY must match current scroll position so animated props
+    // don't re-apply a stale contentOffset when padding changes
+    expect(result.current.contentOffsetY!.value).toBe(100);
   });
 
   it("whenAtEnd + inverted: should shift when at latest messages (offset near 0)", () => {
@@ -226,7 +230,7 @@ describe("`useChatKeyboard` — iOS behaviors", () => {
     expect(result.current.contentOffsetY!.value).toBe(-KEYBOARD);
   });
 
-  it("whenAtEnd + inverted: should NOT shift when scrolled to older messages", () => {
+  it("whenAtEnd + inverted: should preserve scroll position when scrolled to older messages", () => {
     mockOffset.value = 500;
     const { result } = render({
       inverted: true,
@@ -235,7 +239,9 @@ describe("`useChatKeyboard` — iOS behaviors", () => {
 
     handlers.onStart({ height: KEYBOARD });
 
-    expect(result.current.contentOffsetY!.value).toBe(0);
+    // contentOffsetY must match current scroll position so animated props
+    // don't re-apply a stale contentOffset when padding changes
+    expect(result.current.contentOffsetY!.value).toBe(500);
   });
 
   it("onEnd: should finalize padding", () => {
