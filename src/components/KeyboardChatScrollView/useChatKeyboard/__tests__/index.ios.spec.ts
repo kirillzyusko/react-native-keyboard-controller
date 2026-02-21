@@ -192,6 +192,61 @@ describe("`useChatKeyboard` — iOS behaviors", () => {
     expect(result.current.contentOffsetY!.value).toBe(100);
   });
 
+  it("never: should snap to end on close when at end to avoid ghost padding", () => {
+    mockOffset.value = 100;
+    const { result } = render({
+      inverted: false,
+      keyboardLiftBehavior: "never",
+    });
+
+    // open keyboard
+    handlers.onStart({ height: KEYBOARD });
+
+    // user scrolls to end while keyboard is open
+    // end with padding: contentHeight(2000) - layoutHeight(800) + padding(300) = 1500
+    mockOffset.value = 1500;
+    handlers.onStart({ height: 0 });
+
+    expect(result.current.padding.value).toBe(0);
+    // should snap to natural end (2000 - 800 = 1200), not stay at 1500
+    expect(result.current.contentOffsetY!.value).toBe(1200);
+  });
+
+  it("never: should preserve position on close when NOT at end", () => {
+    mockOffset.value = 100;
+    const { result } = render({
+      inverted: false,
+      keyboardLiftBehavior: "never",
+    });
+
+    handlers.onStart({ height: KEYBOARD });
+
+    // user stays in the middle
+    mockOffset.value = 500;
+    handlers.onStart({ height: 0 });
+
+    expect(result.current.padding.value).toBe(0);
+    expect(result.current.contentOffsetY!.value).toBe(500);
+  });
+
+  it("never + inverted: should snap to end on close when at end", () => {
+    mockOffset.value = 500;
+    const { result } = render({
+      inverted: true,
+      keyboardLiftBehavior: "never",
+    });
+
+    // open keyboard
+    handlers.onStart({ height: KEYBOARD });
+
+    // user scrolls to end (offset near 0 for inverted)
+    mockOffset.value = 0;
+    handlers.onStart({ height: 0 });
+
+    expect(result.current.padding.value).toBe(0);
+    expect(result.current.contentOffsetY!.value).toBe(-0);
+  });
+
   it("whenAtEnd: should shift when at the end", () => {
     mockOffset.value = 1180;
     const { result } = render({

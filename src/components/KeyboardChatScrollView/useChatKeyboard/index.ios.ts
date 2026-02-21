@@ -94,6 +94,27 @@ function useChatKeyboard(
           return;
         }
 
+        // never mode: when keyboard shrinks and at end, snap to end
+        // to avoid ghost padding
+        if (
+          keyboardLiftBehavior === "never" &&
+          effective < padding.value &&
+          atEnd
+        ) {
+          padding.value = effective;
+
+          if (inverted) {
+            contentOffsetY.value = -effective;
+          } else {
+            contentOffsetY.value = Math.max(
+              size.value.height - layout.value.height + effective,
+              0,
+            );
+          }
+
+          return;
+        }
+
         const relativeScroll = inverted
           ? scroll.value + padding.value
           : scroll.value - padding.value;
