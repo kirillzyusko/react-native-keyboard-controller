@@ -192,6 +192,18 @@ function useChatKeyboard(
             inverted,
           );
 
+          // "never" at end: scroll along when keyboard closes to avoid jump
+          if (
+            keyboardLiftBehavior === "never" &&
+            wasAtEnd &&
+            effective < padding.value
+          ) {
+            padding.value = effective;
+            scrollTo(scrollViewRef, 0, 0, false);
+
+            return;
+          }
+
           if (!shouldShiftContent(keyboardLiftBehavior, wasAtEnd)) {
             return;
           }
@@ -216,6 +228,31 @@ function useChatKeyboard(
 
           scrollTo(scrollViewRef, 0, target, false);
         } else {
+          const effective = getEffectiveHeight(e.height);
+
+          // "never" at end: scroll along when keyboard closes to avoid jump
+          if (keyboardLiftBehavior === "never" && effective < padding.value) {
+            const wasAtEnd = isScrollAtEnd(
+              offsetBeforeScroll.value + padding.value,
+              layout.value.height,
+              size.value.height,
+              false,
+            );
+
+            if (wasAtEnd) {
+              const target = clampedScrollTarget(
+                offsetBeforeScroll.value,
+                effective,
+                size.value.height,
+                layout.value.height,
+              );
+
+              scrollTo(scrollViewRef, 0, target, false);
+            }
+
+            return;
+          }
+
           if (!shouldShiftContent(keyboardLiftBehavior, true)) {
             return;
           }
@@ -224,8 +261,6 @@ function useChatKeyboard(
           if (offsetBeforeScroll.value === -1) {
             return;
           }
-
-          const effective = getEffectiveHeight(e.height);
 
           if (
             keyboardLiftBehavior === "persistent" &&
