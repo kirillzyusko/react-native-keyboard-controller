@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://www.googletagmanager.com">
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-4JH9YK1X2Q"></script>
 <script>function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("js",new Date),gtag("config","G-4JH9YK1X2Q",{anonymize_ip:!0})</script><link rel="stylesheet" href="/react-native-keyboard-controller/pr-preview/pr-1314/assets/css/styles.120a151b.css">
-<script src="/react-native-keyboard-controller/pr-preview/pr-1314/assets/js/runtime~main.98d01cb1.js" defer="defer"></script>
+<script src="/react-native-keyboard-controller/pr-preview/pr-1314/assets/js/runtime~main.b85c0563.js" defer="defer"></script>
 <script src="/react-native-keyboard-controller/pr-preview/pr-1314/assets/js/main.4709875d.js" defer="defer"></script>
 </head>
 <body class="navigation-with-keyboard">
@@ -23,6 +23,7 @@
 <li><strong>Frame drops with complex layouts</strong> — <code>KeyboardAvoidingView</code> with <code>behavior=&quot;padding&quot;</code> or <code>behavior=&quot;height&quot;</code> can cause <a href="https://github.com/software-mansion/react-native-reanimated/issues/6854" target="_blank" rel="noopener noreferrer">frame drops</a>, particularly when the layout is complex.</li>
 <li><strong>First-message rendering issues</strong> — using <code>behavior=&quot;translate-with-padding&quot;</code> makes it <a href="https://github.com/kirillzyusko/react-native-keyboard-controller/issues/951" target="_blank" rel="noopener noreferrer">impossible</a> to render the first message at the top of the screen.</li>
 <li><strong>Double scroll on interactive dismissal</strong> — combining <code>KeyboardAvoidingView</code> with interactive keyboard dismissal on iOS leads to a <a href="https://github.com/kirillzyusko/react-native-keyboard-controller/issues/594#issuecomment-2406860730" target="_blank" rel="noopener noreferrer">double-scroll problem</a>.</li>
+<li><strong>Unnecessary animation</strong> — when you are at the beginning of the list and keyboard closes, <code>KeyboardAvoidingView</code> still animates the content even though no scrolling adjustment is needed.</li>
 </ul>
 <p>These aren&#x27;t edge cases — they&#x27;re fundamental mismatches between what generic components were designed to do and what chat apps actually need. You can work around them, but you&#x27;ll end up writing a lot of platform-specific code to get a polished result.</p>
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="what-chat-apps-actually-need">What chat apps actually need<a class="hash-link" aria-label="Direct link to What chat apps actually need" title="Direct link to What chat apps actually need" href="/react-native-keyboard-controller/pr-preview/pr-1314/docs/next/guides/building-chat-app#what-chat-apps-actually-need">​</a></h2>
