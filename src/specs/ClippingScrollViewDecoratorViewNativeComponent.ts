@@ -6,6 +6,7 @@ import type { Double } from "react-native/Libraries/Types/CodegenTypes";
 
 export interface NativeProps extends ViewProps {
   contentInsetBottom: Double;
+  contentInsetTop: Double;
 }
 
 export default codegenNativeComponent<NativeProps>(

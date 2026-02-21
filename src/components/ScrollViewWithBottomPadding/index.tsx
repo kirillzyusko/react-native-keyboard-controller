@@ -6,7 +6,7 @@ import { ClippingScrollView } from "../../bindings";
 
 import styles from "./styles";
 
-import type { ScrollViewProps, StyleProp, ViewStyle } from "react-native";
+import type { ScrollViewProps } from "react-native";
 import type { SharedValue } from "react-native-reanimated";
 
 const OS = Platform.OS;
@@ -30,8 +30,6 @@ type ScrollViewWithBottomPaddingProps = {
   bottomPadding: SharedValue<number>;
   /** Absolute Y content offset (iOS only, for KeyboardChatScrollView). */
   contentOffsetY?: SharedValue<number>;
-  /** Style applied to the container wrapper (Android only, for KeyboardChatScrollView translateY). */
-  containerStyle?: StyleProp<ViewStyle>;
 } & ScrollViewProps;
 
 const ScrollViewWithBottomPadding = forwardRef<
@@ -46,9 +44,7 @@ const ScrollViewWithBottomPadding = forwardRef<
       scrollIndicatorInsets,
       inverted,
       contentOffsetY,
-      containerStyle,
       children,
-      style,
       ...rest
     },
     ref,
@@ -75,8 +71,10 @@ const ScrollViewWithBottomPadding = forwardRef<
           right: scrollIndicatorInsets?.right,
           left: scrollIndicatorInsets?.left,
         },
+        // TODO: now it duplicates the logic with content insets
         // Android prop
-        contentInsetBottom: bottomPadding.value,
+        contentInsetBottom: !inverted ? bottomPadding.value : 0,
+        contentInsetTop: inverted ? bottomPadding.value : 0,
       };
 
       if (contentOffsetY) {
@@ -100,17 +98,9 @@ const ScrollViewWithBottomPadding = forwardRef<
     return (
       <ReanimatedClippingScrollView
         animatedProps={animatedProps}
-        style={[
-          styles.container,
-          OS === "android" ? containerStyle : undefined,
-        ]}
+        style={styles.container}
       >
-        <ScrollViewComponent
-          ref={ref}
-          animatedProps={animatedProps}
-          style={style}
-          {...rest}
-        >
+        <ScrollViewComponent ref={ref} animatedProps={animatedProps} {...rest}>
           {children}
         </ScrollViewComponent>
       </ReanimatedClippingScrollView>

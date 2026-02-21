@@ -136,7 +136,7 @@ function ConfigSheet() {
             testID="bottom_sheet_next_keyboard_lift_behavior"
             onPress={nextLiftBehavior}
           >
-            <Text>{keyboardLiftBehavior}</Text>
+            <Text style={styles.text}>{keyboardLiftBehavior}</Text>
           </TouchableOpacity>
         </View>
       </BottomSheetView>

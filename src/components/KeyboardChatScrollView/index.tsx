@@ -1,5 +1,6 @@
 import React, { forwardRef } from "react";
-import { useAnimatedRef, useAnimatedStyle } from "react-native-reanimated";
+import { View } from "react-native";
+import { useAnimatedRef } from "react-native-reanimated";
 import Reanimated from "react-native-reanimated";
 
 import useCombinedRef from "../hooks/useCombinedRef";
@@ -28,29 +29,33 @@ const KeyboardChatScrollView = forwardRef<
     const scrollViewRef = useAnimatedRef<Reanimated.ScrollView>();
     const onRef = useCombinedRef(ref, scrollViewRef);
 
-    const { padding, contentOffsetY, containerTranslateY } = useChatKeyboard(
-      scrollViewRef,
-      { inverted, keyboardLiftBehavior, freeze, offset },
-    );
-
-    const containerStyle = useAnimatedStyle(
-      () => ({
-        transform: [{ translateY: containerTranslateY.value }],
-      }),
-      [],
-    );
+    const { padding, contentOffsetY } = useChatKeyboard(scrollViewRef, {
+      inverted,
+      keyboardLiftBehavior,
+      freeze,
+      offset,
+    });
 
     return (
       <ScrollViewWithBottomPadding
         ref={onRef}
         {...rest}
         bottomPadding={padding}
-        containerStyle={containerStyle}
         contentOffsetY={contentOffsetY}
         inverted={inverted}
         ScrollViewComponent={ScrollViewComponent}
       >
-        {children}
+        {inverted ? (
+          // The only thing it can break is `StickyHeader`, but it's already broken in FlatList and other lists
+          // don't support this functionality, so we can add additional view here
+          // The correct fix would be to add a new prop in ScrollView that allows
+          // to customize children extraction logic and skip custom view
+          <View collapsable={false} nativeID="container">
+            {children}
+          </View>
+        ) : (
+          children
+        )}
       </ScrollViewWithBottomPadding>
     );
   },
