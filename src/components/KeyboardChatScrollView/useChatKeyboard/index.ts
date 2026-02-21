@@ -202,6 +202,12 @@ function useChatKeyboard(
               offsetBeforeScroll.value + padding.value - scroll.value;
 
             if (effective < currentShift) {
+              // When at end, allow scrolling back (snap to end + reduce padding)
+              if (wasAtEnd) {
+                padding.value = effective;
+                scrollTo(scrollViewRef, 0, 0, false);
+              }
+
               return;
             }
           }
@@ -225,7 +231,17 @@ function useChatKeyboard(
             keyboardLiftBehavior === "persistent" &&
             effective < scroll.value - offsetBeforeScroll.value
           ) {
-            return;
+            // When at end, allow scrolling back to natural end position
+            const wasAtEnd = isScrollAtEnd(
+              offsetBeforeScroll.value + padding.value,
+              layout.value.height,
+              size.value.height,
+              false,
+            );
+
+            if (!wasAtEnd) {
+              return;
+            }
           }
 
           const target = clampedScrollTarget(
@@ -246,16 +262,6 @@ function useChatKeyboard(
         }
 
         const effective = getEffectiveHeight(e.height);
-
-        // Android inverted persistent: keep padding to maintain the shift
-        if (
-          OS !== "ios" &&
-          inverted &&
-          keyboardLiftBehavior === "persistent" &&
-          e.height === 0
-        ) {
-          return;
-        }
 
         padding.value = effective;
       },

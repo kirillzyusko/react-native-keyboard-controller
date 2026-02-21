@@ -44,7 +44,8 @@ afterAll(() => {
 });
 
 describe("`useChatKeyboard` — Android behaviors", () => {
-  it("persistent inverted: should NOT reset padding on close", () => {
+  it("persistent inverted: should always reset padding on close", () => {
+    mockOffset.value = 500;
     const { result } = render({
       inverted: true,
       keyboardLiftBehavior: "persistent",
@@ -54,10 +55,11 @@ describe("`useChatKeyboard` — Android behaviors", () => {
     handlers.onMove({ height: KEYBOARD });
     handlers.onEnd({ height: 0 });
 
-    expect(result.current.padding.value).toBe(KEYBOARD);
+    expect(result.current.padding.value).toBe(0);
   });
 
-  it("persistent inverted: should not decrease shift", () => {
+  it("persistent inverted: should not decrease shift when NOT at end", () => {
+    mockOffset.value = 500;
     render({
       inverted: true,
       keyboardLiftBehavior: "persistent",
@@ -68,10 +70,48 @@ describe("`useChatKeyboard` — Android behaviors", () => {
     expect(mockScrollTo).toHaveBeenCalled();
     mockScrollTo.mockClear();
 
-    // currentShift = offsetBeforeScroll(0) + padding(300) - scroll(0) = 300
-    // effective = 200 < 300 → return
+    // currentShift = offsetBeforeScroll(500) + padding(300) - scroll(500) = 300
+    // effective = 200 < 300 → return (not at end, so persistent holds)
     handlers.onMove({ height: 200 });
     expect(mockScrollTo).not.toHaveBeenCalled();
+  });
+
+  it("persistent inverted: should scrollTo on close when at end", () => {
+    mockOffset.value = 0;
+    render({
+      inverted: true,
+      keyboardLiftBehavior: "persistent",
+    });
+
+    handlers.onStart({ height: KEYBOARD });
+    handlers.onMove({ height: KEYBOARD });
+    mockScrollTo.mockClear();
+
+    // Simulate keyboard closing
+    handlers.onStart({ height: 0 });
+    // currentShift = 0 + 300 - 0 = 300, effective = 200 < 300
+    // but at end → scrollTo called with snap to end
+    handlers.onMove({ height: 200 });
+    expect(mockScrollTo).toHaveBeenCalled();
+  });
+
+  it("persistent non-inverted: should scroll back on close when at end", () => {
+    // Position at end: offset + layout >= content - threshold → 1200 + 800 >= 2000 - 20
+    mockOffset.value = 1200;
+    render({ inverted: false, keyboardLiftBehavior: "persistent" });
+
+    handlers.onStart({ height: KEYBOARD });
+    handlers.onMove({ height: KEYBOARD });
+    mockScrollTo.mockClear();
+
+    // Simulate keyboard closing (re-capture in onStart)
+    // offsetBeforeScroll = scroll(1200) - padding(300) = 900
+    // But wasAtEnd check uses offsetBeforeScroll + padding = 900 + 300 = 1200
+    // isScrollAtEnd(1200, 800, 2000) = 1200 + 800 >= 1980 → true
+    mockOffset.value = 1500;
+    handlers.onStart({ height: 0 });
+    handlers.onMove({ height: 200 });
+    expect(mockScrollTo).toHaveBeenCalled();
   });
 
   it("never non-inverted: should not scroll", () => {
