@@ -67,7 +67,7 @@ describe("`useChatKeyboard` — iOS persistent non-inverted", () => {
     expect(result.current.contentOffsetY!.value).toBe(1200);
   });
 
-  it("should NOT adjust contentOffsetY on close when NOT at end", () => {
+  it("should preserve current scroll position on close when NOT at end", () => {
     mockOffset.value = 1180;
     const { result } = render({
       inverted: false,
@@ -75,14 +75,15 @@ describe("`useChatKeyboard` — iOS persistent non-inverted", () => {
     });
 
     handlers.onStart({ height: KEYBOARD });
-    const contentOffsetAfterOpen = result.current.contentOffsetY!.value;
 
     // user scrolls away from end while keyboard is open
     mockOffset.value = 500;
     handlers.onStart({ height: 0 });
 
     expect(result.current.padding.value).toBe(0);
-    expect(result.current.contentOffsetY!.value).toBe(contentOffsetAfterOpen);
+    // contentOffsetY must match current scroll position so animated props
+    // don't re-apply the stale offset from keyboard open
+    expect(result.current.contentOffsetY!.value).toBe(500);
   });
 
   it("should push content up again after close + re-open", () => {
@@ -139,7 +140,7 @@ describe("`useChatKeyboard` — iOS persistent inverted", () => {
     expect(result.current.contentOffsetY!.value).toBe(-KEYBOARD);
   });
 
-  it("should NOT adjust contentOffsetY on close when NOT at end", () => {
+  it("should preserve current scroll position on close when NOT at end", () => {
     // scrolled to older messages (not at end for inverted)
     mockOffset.value = 500;
     const { result } = render({
@@ -148,14 +149,15 @@ describe("`useChatKeyboard` — iOS persistent inverted", () => {
     });
 
     handlers.onStart({ height: KEYBOARD });
-    const contentOffsetAfterOpen = result.current.contentOffsetY!.value;
 
-    // user stays at old messages while keyboard is open
-    mockOffset.value = 200;
+    // user scrolls further while keyboard is open
+    mockOffset.value = 400;
     handlers.onStart({ height: 0 });
 
     expect(result.current.padding.value).toBe(0);
-    expect(result.current.contentOffsetY!.value).toBe(contentOffsetAfterOpen);
+    // contentOffsetY must match current scroll position so animated props
+    // don't re-apply the stale offset from keyboard open
+    expect(result.current.contentOffsetY!.value).toBe(400);
   });
 
   it("should snap to end on keyboard close when at end", () => {

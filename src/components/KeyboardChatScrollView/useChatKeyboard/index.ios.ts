@@ -85,6 +85,10 @@ function useChatKeyboard(
                 0,
               );
             }
+          } else {
+            // Preserve current scroll position so the animated props
+            // don't re-apply the stale contentOffset from keyboard open
+            contentOffsetY.value = scroll.value;
           }
 
           return;
