@@ -50,12 +50,10 @@ const ScrollViewWithBottomPadding = forwardRef<
     ref,
   ) => {
     const animatedProps = useAnimatedProps(() => {
-      const bottom = inverted
-        ? 0
-        : bottomPadding.value + (contentInset?.bottom || 0);
-      const top = !inverted
-        ? 0
-        : bottomPadding.value + (contentInset?.top || 0);
+      const insetTop = inverted ? bottomPadding.value : 0;
+      const insetBottom = !inverted ? bottomPadding.value : 0;
+      const bottom = insetBottom + (contentInset?.bottom || 0);
+      const top = insetTop + (contentInset?.top || 0);
 
       const result: Record<string, unknown> = {
         // iOS prop
@@ -71,10 +69,9 @@ const ScrollViewWithBottomPadding = forwardRef<
           right: scrollIndicatorInsets?.right,
           left: scrollIndicatorInsets?.left,
         },
-        // TODO: now it duplicates the logic with content insets
         // Android prop
-        contentInsetBottom: !inverted ? bottomPadding.value : 0,
-        contentInsetTop: inverted ? bottomPadding.value : 0,
+        contentInsetBottom: insetBottom,
+        contentInsetTop: insetTop,
       };
 
       if (contentOffsetY) {
