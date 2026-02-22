@@ -39,6 +39,7 @@ function useChatKeyboard(
   const padding = useSharedValue(0);
   const offsetBeforeScroll = useSharedValue(0);
   const targetKeyboardHeight = useSharedValue(0);
+  const closing = useSharedValue(false);
 
   const { layout, size, offset: scroll } = useScrollState(scrollViewRef);
 
@@ -54,6 +55,9 @@ function useChatKeyboard(
         if (e.height > 0) {
           // eslint-disable-next-line react-compiler/react-compiler
           targetKeyboardHeight.value = e.height;
+          closing.value = false;
+        } else {
+          closing.value = true;
         }
 
         const effective = getEffectiveHeight(
@@ -88,9 +92,12 @@ function useChatKeyboard(
           if (inverted) {
             offsetBeforeScroll.value = scroll.value;
           } else {
-            // Non-inverted: subtract padding to get the "natural" position
-            // so onMove smoothly scrolls back from where the user is now
-            offsetBeforeScroll.value = scroll.value - padding.value;
+            // Preserve "whenAtEnd" sentinel: if open didn't shift, close shouldn't either
+            if (offsetBeforeScroll.value !== -1) {
+              // Non-inverted: subtract padding to get the "natural" position
+              // so onMove smoothly scrolls back from where the user is now
+              offsetBeforeScroll.value = scroll.value - padding.value;
+            }
           }
         }
       },
@@ -163,8 +170,12 @@ function useChatKeyboard(
             offset,
           );
 
-          // "never" at end: scroll along when keyboard closes to avoid jump
-          if (keyboardLiftBehavior === "never" && effective < padding.value) {
+          // "never" closing: scroll along when at end to avoid jump
+          if (
+            keyboardLiftBehavior === "never" &&
+            closing.value &&
+            effective < padding.value
+          ) {
             const wasAtEnd = isScrollAtEnd(
               offsetBeforeScroll.value + padding.value,
               layout.value.height,
@@ -181,6 +192,16 @@ function useChatKeyboard(
               );
 
               scrollTo(scrollViewRef, 0, target, false);
+            } else {
+              // Clamp to valid range as padding shrinks
+              const maxScroll = Math.max(
+                size.value.height - layout.value.height + effective,
+                0,
+              );
+
+              if (scroll.value > maxScroll) {
+                scrollTo(scrollViewRef, 0, maxScroll, false);
+              }
             }
 
             return;
@@ -192,24 +213,32 @@ function useChatKeyboard(
 
           // "whenAtEnd" sentinel check
           if (offsetBeforeScroll.value === -1) {
+            if (closing.value) {
+              // Keyboard didn't shift on open; ensure valid position on close
+              const maxScroll = Math.max(
+                size.value.height - layout.value.height + effective,
+                0,
+              );
+
+              if (scroll.value > maxScroll) {
+                scrollTo(scrollViewRef, 0, maxScroll, false);
+              }
+            }
+
             return;
           }
 
-          if (
-            keyboardLiftBehavior === "persistent" &&
-            effective < scroll.value - offsetBeforeScroll.value
-          ) {
-            // When at end, allow scrolling back to natural end position
-            const wasAtEnd = isScrollAtEnd(
-              offsetBeforeScroll.value + padding.value,
-              layout.value.height,
-              size.value.height,
-              false,
+          // "persistent" closing: maintain position, clamped to valid range
+          if (keyboardLiftBehavior === "persistent" && closing.value) {
+            const keepAt = offsetBeforeScroll.value + padding.value;
+            const maxScroll = Math.max(
+              size.value.height - layout.value.height + effective,
+              0,
             );
 
-            if (!wasAtEnd) {
-              return;
-            }
+            scrollTo(scrollViewRef, 0, Math.min(keepAt, maxScroll), false);
+
+            return;
           }
 
           const target = clampedScrollTarget(
