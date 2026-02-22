@@ -43,6 +43,19 @@ function useChatKeyboard(
 
   const { layout, size, offset: scroll } = useScrollState(scrollViewRef);
 
+  const clampScrollIfNeeded = (effective: number) => {
+    "worklet";
+
+    const maxScroll = Math.max(
+      size.value.height - layout.value.height + effective,
+      0,
+    );
+
+    if (scroll.value > maxScroll) {
+      scrollTo(scrollViewRef, 0, maxScroll, false);
+    }
+  };
+
   useKeyboardHandler(
     {
       onStart: (e) => {
@@ -141,6 +154,12 @@ function useChatKeyboard(
           }
 
           if (!shouldShiftContent(keyboardLiftBehavior, wasAtEnd)) {
+            // Closing, not shifting: reduce padding to avoid gap
+            if (closing.value && effective < padding.value) {
+              padding.value = effective;
+              clampScrollIfNeeded(effective);
+            }
+
             return;
           }
 
@@ -154,6 +173,10 @@ function useChatKeyboard(
               if (wasAtEnd) {
                 padding.value = effective;
                 scrollTo(scrollViewRef, 0, 0, false);
+              } else if (closing.value) {
+                // Not at end: reduce padding to avoid gap
+                padding.value = effective;
+                clampScrollIfNeeded(effective);
               }
 
               return;
@@ -194,14 +217,7 @@ function useChatKeyboard(
               scrollTo(scrollViewRef, 0, target, false);
             } else {
               // Clamp to valid range as padding shrinks
-              const maxScroll = Math.max(
-                size.value.height - layout.value.height + effective,
-                0,
-              );
-
-              if (scroll.value > maxScroll) {
-                scrollTo(scrollViewRef, 0, maxScroll, false);
-              }
+              clampScrollIfNeeded(effective);
             }
 
             return;
@@ -215,14 +231,7 @@ function useChatKeyboard(
           if (offsetBeforeScroll.value === -1) {
             if (closing.value) {
               // Keyboard didn't shift on open; ensure valid position on close
-              const maxScroll = Math.max(
-                size.value.height - layout.value.height + effective,
-                0,
-              );
-
-              if (scroll.value > maxScroll) {
-                scrollTo(scrollViewRef, 0, maxScroll, false);
-              }
+              clampScrollIfNeeded(effective);
             }
 
             return;
