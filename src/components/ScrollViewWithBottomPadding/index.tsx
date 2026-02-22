@@ -1,5 +1,5 @@
 import React, { forwardRef } from "react";
-import { Platform } from "react-native";
+import { Platform, View } from "react-native";
 import Reanimated, { useAnimatedProps } from "react-native-reanimated";
 
 import { ClippingScrollView } from "../../bindings";
@@ -98,7 +98,17 @@ const ScrollViewWithBottomPadding = forwardRef<
         style={styles.container}
       >
         <ScrollViewComponent ref={ref} animatedProps={animatedProps} {...rest}>
-          {children}
+          {inverted ? (
+            // The only thing it can break is `StickyHeader`, but it's already broken in FlatList and other lists
+            // don't support this functionality, so we can add additional view here
+            // The correct fix would be to add a new prop in ScrollView that allows
+            // to customize children extraction logic and skip custom view
+            <View collapsable={false} nativeID="container">
+              {children}
+            </View>
+          ) : (
+            children
+          )}
         </ScrollViewComponent>
       </ReanimatedClippingScrollView>
     );
