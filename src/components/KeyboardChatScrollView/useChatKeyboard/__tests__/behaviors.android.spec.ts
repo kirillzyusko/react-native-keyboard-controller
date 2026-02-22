@@ -159,7 +159,7 @@ describe("`useChatKeyboard` — Android behaviors", () => {
     expect(mockScrollTo).not.toHaveBeenCalled();
   });
 
-  it("persistent non-inverted: should not scroll back on shrink", () => {
+  it("persistent non-inverted: should track effective during opening", () => {
     mockOffset.value = 100;
     render({ inverted: false, keyboardLiftBehavior: "persistent" });
 
@@ -171,6 +171,13 @@ describe("`useChatKeyboard` — Android behaviors", () => {
     mockOffset.value = 300;
     handlers.onMove({ height: 100 });
 
-    expect(mockScrollTo).not.toHaveBeenCalled();
+    // effective=100: target = clampedScrollTarget(100, 100, 2000, 800)
+    // = min(200, 1300) = 200
+    expect(mockScrollTo).toHaveBeenLastCalledWith(
+      expect.anything(),
+      0,
+      200,
+      false,
+    );
   });
 });
