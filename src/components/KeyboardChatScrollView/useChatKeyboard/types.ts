@@ -12,6 +12,8 @@ type UseChatKeyboardOptions = {
 type UseChatKeyboardReturn = {
   /** Extra scrollable space (= keyboard height). Used as contentInset on iOS, contentInsetBottom/contentInsetTop on Android. */
   padding: SharedValue<number>;
+  /** Raw keyboard height updated every frame in onMove. Used to force Reanimated commits on Fabric. */
+  currentHeight: SharedValue<number>;
   /** Absolute Y content offset for iOS (set once in onStart). `undefined` on Android. */
   contentOffsetY: SharedValue<number> | undefined;
 };

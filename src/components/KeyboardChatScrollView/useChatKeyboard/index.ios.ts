@@ -37,6 +37,7 @@ function useChatKeyboard(
   const { inverted, keyboardLiftBehavior, freeze, offset } = options;
 
   const padding = useSharedValue(0);
+  const currentHeight = useSharedValue(0);
   const contentOffsetY = useSharedValue(0);
   const targetKeyboardHeight = useSharedValue(0);
 
@@ -163,6 +164,7 @@ function useChatKeyboard(
 
   return {
     padding,
+    currentHeight,
     contentOffsetY,
   };
 }

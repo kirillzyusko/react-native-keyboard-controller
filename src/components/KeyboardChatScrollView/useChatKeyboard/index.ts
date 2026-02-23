@@ -37,6 +37,7 @@ function useChatKeyboard(
   const { inverted, keyboardLiftBehavior, freeze, offset } = options;
 
   const padding = useSharedValue(0);
+  const currentHeight = useSharedValue(0);
   const offsetBeforeScroll = useSharedValue(0);
   const targetKeyboardHeight = useSharedValue(0);
   const closing = useSharedValue(false);
@@ -120,6 +121,8 @@ function useChatKeyboard(
         if (freeze) {
           return;
         }
+
+        currentHeight.value = e.height;
 
         if (inverted) {
           // Skip post-interactive snap-back (duration === -1)
@@ -281,6 +284,7 @@ function useChatKeyboard(
 
   return {
     padding,
+    currentHeight,
     contentOffsetY: undefined,
   };
 }

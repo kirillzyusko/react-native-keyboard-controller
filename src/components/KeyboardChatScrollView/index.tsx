@@ -1,5 +1,6 @@
-import React, { forwardRef } from "react";
-import { useAnimatedRef } from "react-native-reanimated";
+import React, { forwardRef, useMemo } from "react";
+import { StyleSheet } from "react-native";
+import { useAnimatedRef, useAnimatedStyle } from "react-native-reanimated";
 import Reanimated from "react-native-reanimated";
 
 import useCombinedRef from "../hooks/useCombinedRef";
@@ -28,26 +29,54 @@ const KeyboardChatScrollView = forwardRef<
     const scrollViewRef = useAnimatedRef<Reanimated.ScrollView>();
     const onRef = useCombinedRef(ref, scrollViewRef);
 
-    const { padding, contentOffsetY } = useChatKeyboard(scrollViewRef, {
-      inverted,
-      keyboardLiftBehavior,
-      freeze,
-      offset,
-    });
+    const { padding, currentHeight, contentOffsetY } = useChatKeyboard(
+      scrollViewRef,
+      {
+        inverted,
+        keyboardLiftBehavior,
+        freeze,
+        offset,
+      },
+    );
+
+    // Invisible view whose animated style changes every frame during keyboard
+    // animation. On Fabric, this forces Reanimated to schedule a commit,
+    // which flushes the scrollTo call in the same frame (fixing desync).
+    // see https://github.com/software-mansion/react-native-reanimated/issues/9000
+    const commitStyle = useAnimatedStyle(
+      () => ({
+        transform: [{ translateY: -currentHeight.value }],
+      }),
+      [],
+    );
+    const commit = useMemo(
+      () => [styles.commitView, commitStyle],
+      [commitStyle],
+    );
 
     return (
-      <ScrollViewWithBottomPadding
-        ref={onRef}
-        {...rest}
-        bottomPadding={padding}
-        contentOffsetY={contentOffsetY}
-        inverted={inverted}
-        ScrollViewComponent={ScrollViewComponent}
-      >
-        {children}
-      </ScrollViewWithBottomPadding>
+      <>
+        <ScrollViewWithBottomPadding
+          ref={onRef}
+          {...rest}
+          bottomPadding={padding}
+          contentOffsetY={contentOffsetY}
+          inverted={inverted}
+          ScrollViewComponent={ScrollViewComponent}
+        >
+          {children}
+        </ScrollViewWithBottomPadding>
+        <Reanimated.View style={commit} />
+      </>
     );
   },
 );
+
+const styles = StyleSheet.create({
+  commitView: {
+    display: "none",
+    position: "absolute",
+  },
+});
 
 export default KeyboardChatScrollView;
