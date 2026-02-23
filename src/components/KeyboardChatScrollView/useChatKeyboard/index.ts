@@ -42,7 +42,13 @@ function useChatKeyboard(
   const targetKeyboardHeight = useSharedValue(0);
   const closing = useSharedValue(false);
 
-  const { layout, size, offset: scroll } = useScrollState(scrollViewRef);
+  const {
+    layout,
+    size,
+    offset: scroll,
+    onLayout,
+    onContentSizeChange,
+  } = useScrollState(scrollViewRef);
 
   const clampScrollIfNeeded = (effective: number) => {
     "worklet";
@@ -286,6 +292,8 @@ function useChatKeyboard(
     padding,
     currentHeight,
     contentOffsetY: undefined,
+    onLayout,
+    onContentSizeChange,
   };
 }
 

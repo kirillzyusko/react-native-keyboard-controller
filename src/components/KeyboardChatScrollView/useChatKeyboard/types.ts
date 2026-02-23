@@ -1,3 +1,4 @@
+import type { LayoutChangeEvent } from "react-native";
 import type { SharedValue } from "react-native-reanimated";
 
 type KeyboardLiftBehavior = "always" | "whenAtEnd" | "persistent" | "never";
@@ -16,6 +17,10 @@ type UseChatKeyboardReturn = {
   currentHeight: SharedValue<number>;
   /** Absolute Y content offset for iOS (set once in onStart). `undefined` on Android. */
   contentOffsetY: SharedValue<number> | undefined;
+  /** Callback to attach to ScrollView's onLayout prop to capture initial viewport dimensions. */
+  onLayout: (e: LayoutChangeEvent) => void;
+  /** Callback to attach to ScrollView's onContentSizeChange prop to capture initial content dimensions. */
+  onContentSizeChange: (w: number, h: number) => void;
 };
 
 export type {

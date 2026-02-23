@@ -41,7 +41,13 @@ function useChatKeyboard(
   const contentOffsetY = useSharedValue(0);
   const targetKeyboardHeight = useSharedValue(0);
 
-  const { layout, size, offset: scroll } = useScrollState(scrollViewRef);
+  const {
+    layout,
+    size,
+    offset: scroll,
+    onLayout,
+    onContentSizeChange,
+  } = useScrollState(scrollViewRef);
 
   useKeyboardHandler(
     {
@@ -166,6 +172,8 @@ function useChatKeyboard(
     padding,
     currentHeight,
     contentOffsetY,
+    onLayout,
+    onContentSizeChange,
   };
 }
 
