@@ -73,10 +73,15 @@ function KeyboardChatScrollViewPlayground() {
   }, [addMessage]);
 
   useEffect(() => {
-    // TODO: we loose ref somewhere
-    legendRef.current?.scrollToEnd({ animated: true });
+    legendRef.current?.scrollToOffset({
+      animated: true,
+      offset: Number.MAX_SAFE_INTEGER,
+    });
     flashRef.current?.scrollToEnd({ animated: true });
-    flatRef.current?.scrollToEnd({ animated: true });
+    flatRef.current?.scrollToOffset({
+      animated: true,
+      offset: Number.MAX_SAFE_INTEGER,
+    });
     scrollRef.current?.scrollToEnd({ animated: true });
   }, [messages]);
 
