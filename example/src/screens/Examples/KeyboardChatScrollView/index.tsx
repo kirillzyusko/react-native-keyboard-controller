@@ -101,6 +101,7 @@ function KeyboardChatScrollViewPlayground() {
         {mode === "legend" && (
           <LegendList
             ref={legendRef}
+            alignItemsAtEnd={inverted}
             data={messages}
             keyExtractor={(item) => item.text}
             renderItem={({ item }) => <Message {...item} />}
@@ -111,6 +112,7 @@ function KeyboardChatScrollViewPlayground() {
           <FlashList
             ref={flashRef}
             data={inverted ? reversedMessages : messages}
+            inverted={inverted}
             keyExtractor={(item) => item.text}
             renderItem={({ item }) => <Message {...item} />}
             renderScrollComponent={VirtualizedListScrollView}

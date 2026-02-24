@@ -49,7 +49,9 @@ const VirtualizedListScrollView = forwardRef<
         ref={ref}
         automaticallyAdjustContentInsets={false}
         contentContainerStyle={
-          inverted ? invertedContentContainerStyle : contentContainerStyle
+          isInvertedSupported
+            ? invertedContentContainerStyle
+            : contentContainerStyle
         }
         contentInsetAdjustmentBehavior="never"
         freeze={freeze}
