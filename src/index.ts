@@ -8,6 +8,7 @@ export * from "./types";
 export * from "./compat";
 
 export {
+  KeyboardChatScrollView,
   KeyboardAvoidingView,
   KeyboardStickyView,
   KeyboardAwareScrollView,
@@ -16,6 +17,7 @@ export {
   DefaultKeyboardToolbarTheme,
 } from "./components";
 export type {
+  KeyboardChatScrollViewProps,
   KeyboardAvoidingViewProps,
   KeyboardStickyViewProps,
   KeyboardAwareScrollViewProps,

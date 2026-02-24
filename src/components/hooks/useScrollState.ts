@@ -1,8 +1,9 @@
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useEvent, useSharedValue } from "react-native-reanimated";
 
 import { useEventHandlerRegistration } from "../../internal";
 
+import type { LayoutChangeEvent } from "react-native";
 import type { AnimatedRef } from "react-native-reanimated";
 import type Reanimated from "react-native-reanimated";
 
@@ -53,7 +54,28 @@ const useScrollState = (ref: AnimatedRef<Reanimated.ScrollView>) => {
     };
   }, []);
 
-  return { offset, layout, size };
+  // `onContentSizeChange` is synthesized in JS (from the content container's
+  // onLayout) and `onLayout` has a different payload shape than scroll events,
+  // so neither can be reliably captured via native event registration.
+  // Instead we expose callbacks for the consumer to attach as props.
+  const onLayout = useCallback(
+    (e: LayoutChangeEvent) => {
+      layout.value = {
+        width: e.nativeEvent.layout.width,
+        height: e.nativeEvent.layout.height,
+      };
+    },
+    [layout],
+  );
+
+  const onContentSizeChange = useCallback(
+    (w: number, h: number) => {
+      size.value = { width: w, height: h };
+    },
+    [size],
+  );
+
+  return { offset, layout, size, onLayout, onContentSizeChange };
 };
 
 export default useScrollState;

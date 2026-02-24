@@ -13,6 +13,7 @@ import InteractiveKeyboard from "../../screens/Examples/InteractiveKeyboard";
 import InteractiveKeyboardIOS from "../../screens/Examples/InteractiveKeyboardIOS";
 import KeyboardAnimation from "../../screens/Examples/KeyboardAnimation";
 import KeyboardAvoidingViewExample from "../../screens/Examples/KeyboardAvoidingView";
+import KeyboardChatScrollViewPlayground from "../../screens/Examples/KeyboardChatScrollView";
 import KeyboardExtender from "../../screens/Examples/KeyboardExtender";
 import KeyboardSharedTransitionExample from "../../screens/Examples/KeyboardSharedTransitions";
 import UseKeyboardState from "../../screens/Examples/KeyboardStateHook";
@@ -54,6 +55,7 @@ export type ExamplesStackParamList = {
   [ScreenNames.LIQUID_KEYBOARD]: undefined;
   [ScreenNames.KEYBOARD_SHARED_TRANSITIONS]: undefined;
   [ScreenNames.KEYBOARD_EXTENDER]: undefined;
+  [ScreenNames.CHAT_KIT]: undefined;
 };
 
 const Stack = createStackNavigator<ExamplesStackParamList>();
@@ -137,6 +139,14 @@ const options = {
   [ScreenNames.KEYBOARD_EXTENDER]: {
     title: "Keyboard Extender",
     headerShown: false,
+  },
+  [ScreenNames.CHAT_KIT]: {
+    title: "Chat Kit",
+    headerTintColor: "#fff",
+    headerStyle: {
+      backgroundColor: "#3A3A3C",
+    },
+    headerBackTitle: "Back",
   },
 };
 
@@ -266,6 +276,11 @@ const ExamplesStack = () => (
       component={KeyboardExtender}
       name={ScreenNames.KEYBOARD_EXTENDER}
       options={options[ScreenNames.KEYBOARD_EXTENDER]}
+    />
+    <Stack.Screen
+      component={KeyboardChatScrollViewPlayground}
+      name={ScreenNames.CHAT_KIT}
+      options={options[ScreenNames.CHAT_KIT]}
     />
   </Stack.Navigator>
 );

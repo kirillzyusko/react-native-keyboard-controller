@@ -1,5 +1,5 @@
 import React, { forwardRef } from "react";
-import { Platform } from "react-native";
+import { Platform, View } from "react-native";
 import Reanimated, { useAnimatedProps } from "react-native-reanimated";
 
 import { ClippingScrollView } from "../../bindings";
@@ -9,8 +9,9 @@ import styles from "./styles";
 import type { ScrollViewProps } from "react-native";
 import type { SharedValue } from "react-native-reanimated";
 
+const OS = Platform.OS;
 const ReanimatedClippingScrollView =
-  Platform.OS === "android"
+  OS === "android"
     ? Reanimated.createAnimatedComponent(ClippingScrollView)
     : ClippingScrollView;
 
@@ -25,7 +26,10 @@ export type AnimatedScrollViewComponent = React.ForwardRefExoticComponent<
 type ScrollViewWithBottomPaddingProps = {
   ScrollViewComponent: AnimatedScrollViewComponent;
   children?: React.ReactNode;
+  inverted?: boolean;
   bottomPadding: SharedValue<number>;
+  /** Absolute Y content offset (iOS only, for KeyboardChatScrollView). */
+  contentOffsetY?: SharedValue<number>;
 } & ScrollViewProps;
 
 const ScrollViewWithBottomPadding = forwardRef<
@@ -33,28 +37,60 @@ const ScrollViewWithBottomPadding = forwardRef<
   ScrollViewWithBottomPaddingProps
 >(
   (
-    { ScrollViewComponent, bottomPadding, contentInset, children, ...rest },
+    {
+      ScrollViewComponent,
+      bottomPadding,
+      contentInset,
+      scrollIndicatorInsets,
+      inverted,
+      contentOffsetY,
+      children,
+      ...rest
+    },
     ref,
   ) => {
-    const animatedProps = useAnimatedProps(
-      () => ({
+    const animatedProps = useAnimatedProps(() => {
+      const insetTop = inverted ? bottomPadding.value : 0;
+      const insetBottom = !inverted ? bottomPadding.value : 0;
+      const bottom = insetBottom + (contentInset?.bottom || 0);
+      const top = insetTop + (contentInset?.top || 0);
+
+      const result: Record<string, unknown> = {
         // iOS prop
         contentInset: {
-          bottom: bottomPadding.value + (contentInset?.bottom || 0),
-          top: contentInset?.top,
+          bottom: bottom,
+          top: top,
           right: contentInset?.right,
           left: contentInset?.left,
         },
+        scrollIndicatorInsets: {
+          bottom: bottom,
+          top: top,
+          right: scrollIndicatorInsets?.right,
+          left: scrollIndicatorInsets?.left,
+        },
         // Android prop
-        contentInsetBottom: bottomPadding.value,
-      }),
-      [
-        contentInset?.bottom,
-        contentInset?.top,
-        contentInset?.right,
-        contentInset?.left,
-      ],
-    );
+        contentInsetBottom: insetBottom,
+        contentInsetTop: insetTop,
+      };
+
+      if (contentOffsetY) {
+        result.contentOffset = { x: 0, y: contentOffsetY.value };
+      }
+
+      return result;
+    }, [
+      contentInset?.bottom,
+      contentInset?.top,
+      contentInset?.right,
+      contentInset?.left,
+      scrollIndicatorInsets?.bottom,
+      scrollIndicatorInsets?.top,
+      scrollIndicatorInsets?.right,
+      scrollIndicatorInsets?.left,
+      inverted,
+      contentOffsetY,
+    ]);
 
     return (
       <ReanimatedClippingScrollView
@@ -62,7 +98,17 @@ const ScrollViewWithBottomPadding = forwardRef<
         style={styles.container}
       >
         <ScrollViewComponent ref={ref} animatedProps={animatedProps} {...rest}>
-          {children}
+          {inverted ? (
+            // The only thing it can break is `StickyHeader`, but it's already broken in FlatList and other lists
+            // don't support this functionality, so we can add additional view here
+            // The correct fix would be to add a new prop in ScrollView that allows
+            // to customize children extraction logic and skip custom view
+            <View collapsable={false} nativeID="container">
+              {children}
+            </View>
+          ) : (
+            children
+          )}
         </ScrollViewComponent>
       </ReanimatedClippingScrollView>
     );

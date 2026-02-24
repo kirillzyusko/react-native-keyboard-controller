@@ -193,7 +193,8 @@
     "xoyseau",
     "kirylziusko",
     "lottiefiles",
-    "dotlottie"
+    "dotlottie",
+    "legendapp"
   ],
   "ignorePaths": [
     "node_modules",

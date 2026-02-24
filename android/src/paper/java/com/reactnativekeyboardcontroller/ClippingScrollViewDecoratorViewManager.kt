@@ -21,4 +21,12 @@ class ClippingScrollViewDecoratorViewManager : ViewGroupManager<ClippingScrollVi
   ) {
     view.setContentInsetBottom(value)
   }
+
+  @ReactProp(name = "contentInsetTop")
+  fun setContentInsetTop(
+    view: ClippingScrollViewDecoratorView,
+    value: Double,
+  ) {
+    view.setContentInsetTop(value)
+  }
 }

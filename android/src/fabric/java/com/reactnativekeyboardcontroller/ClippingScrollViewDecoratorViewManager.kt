@@ -27,4 +27,11 @@ class ClippingScrollViewDecoratorViewManager :
   ) {
     view?.setContentInsetBottom(value)
   }
+
+  override fun setContentInsetTop(
+    view: ClippingScrollViewDecoratorView?,
+    value: Double,
+  ) {
+    view?.setContentInsetTop(value)
+  }
 }

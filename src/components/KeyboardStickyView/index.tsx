@@ -64,11 +64,7 @@ const KeyboardStickyView = forwardRef<
 
       return [
         {
-          transform: [
-            {
-              translateY: enabled ? active : disabled,
-            },
-          ],
+          transform: [{ translateY: enabled ? active : disabled }],
         },
         style,
       ];
