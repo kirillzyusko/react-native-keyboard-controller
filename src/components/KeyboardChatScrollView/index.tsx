@@ -63,7 +63,7 @@ const KeyboardChatScrollView = forwardRef<
 
     // Invisible view whose animated style changes every frame during keyboard
     // animation. On Fabric, this forces Reanimated to schedule a commit,
-    // which flushes the scrollTo call in the same frame (fixing desynchronization).
+    // which flushes the scrollTo call in the same frame (fixing de-synchronization).
     // see https://github.com/software-mansion/react-native-reanimated/issues/9000
     const commitStyle = useAnimatedStyle(
       () => ({
