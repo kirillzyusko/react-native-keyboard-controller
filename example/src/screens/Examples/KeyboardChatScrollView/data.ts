@@ -20,16 +20,6 @@ export const messages = [
   {
     text: "This is a literally missing 'move' operation in react/react-native. Before we could only create/delete elements, but now you get power of zero-overhead 'move' operation and it can bring your app performance on the next level and also significantly boost your app UI cause it unlocks the power that we didn't have before",
   },
-  /*{ text: "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" },
-  {
-    text: "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-    sender: true,
-  },
-  { text: "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" },
-  {
-    text: "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n",
-    sender: true,
-  },*/
   { text: "Wow! That's awesome!" },
   { text: "Yes! Totally agree!", sender: true },
 ];
