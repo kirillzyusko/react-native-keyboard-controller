@@ -1,0 +1,413 @@
+---
+sidebar_position: 5
+description: A guide that explores the challenges of building chat app layouts and shows how to solve them using the KeyboardChatScrollView component
+keywords:
+  [
+    react-native-keyboard-controller,
+    react-native,
+    keyboard,
+    chat,
+    KeyboardChatScrollView,
+  ]
+---
+
+# Building a chat app
+
+Keyboard handling in chat applications has always been one of the trickiest problems in mobile development — even on native platforms. Chat apps push keyboard interactions to their limits: interactive dismissal, content repositioning, smooth transitions between the keyboard and custom input views, and all of it at 120 FPS. Getting this right requires deep integration between the keyboard, scroll views, and layout systems — far more than a general-purpose component can offer.
+
+## Why general-purpose components fall short
+
+You might be tempted to reach for `KeyboardAvoidingView` or `KeyboardAwareScrollView` to handle keyboard interactions in a chat app. While these components work well for forms, settings screens, and other straightforward layouts, they weren't designed for the unique demands of a chat interface.
+
+Here's what you'll run into:
+
+- **Frame drops with complex layouts** — `KeyboardAvoidingView` with `behavior="padding"` or `behavior="height"` can cause [frame drops](https://github.com/software-mansion/react-native-reanimated/issues/6854), particularly when the layout is complex.
+- **First-message rendering issues** — using `behavior="translate-with-padding"` makes it [impossible](https://github.com/kirillzyusko/react-native-keyboard-controller/issues/951) to render the first message at the top of the screen.
+- **Double scroll on interactive dismissal** — combining `KeyboardAvoidingView` with interactive keyboard dismissal on iOS leads to a [double-scroll problem](https://github.com/kirillzyusko/react-native-keyboard-controller/issues/594#issuecomment-2406860730).
+- **Unnecessary animation** — when you are at the beginning of the list and keyboard closes, `KeyboardAvoidingView` still animates the content even though no scrolling adjustment is needed.
+
+These aren't edge cases — they're fundamental mismatches between what generic components were designed to do and what chat apps actually need. You can work around them, but you'll end up writing a lot of platform-specific code to get a polished result.
+
+## What chat apps actually need
+
+Despite the complexity, most chat apps share the same set of keyboard-related requirements:
+
+- **Content repositioning** — push messages up when the keyboard appears (with the option to disable this in certain cases).
+- **Interactive dismissal** — let users swipe the keyboard away with a drag gesture.
+- **Content freezing** — hold the chat in place when switching from the keyboard to a custom input view like an emoji picker or bottom sheet.
+- **Virtualized list support** — work seamlessly with `FlatList`, `FlashList`, `LegendList`, and other virtualized list implementations.
+- **Smooth animations** — maintain 60/120 FPS during keyboard transitions, even on low-end devices.
+- **Keyboard padding** — extend the scrollable area to account for keyboard height.
+- **Custom offsets** — support layouts where the chat isn't flush against the bottom of the screen.
+
+Implementing all of this from scratch is a significant undertaking. That's why we built `KeyboardChatScrollView` — a dedicated component that handles all of these behaviors out of the box, so you can focus on building your chat experience rather than fighting the keyboard.
+
+## What is `KeyboardChatScrollView`?
+
+`KeyboardChatScrollView` is a purpose-built component for chat app layouts. It provides all the requirements listed above — content repositioning, interactive dismissal, content freezing, virtualized list support, smooth animations, keyboard padding, and custom offsets — with zero configuration needed for the common case.
+
+## Step-by-step integration
+
+This section walks through building a chat screen from scratch using `KeyboardChatScrollView`. We'll start with the simplest possible setup and progressively layer on features.
+
+### Basic setup with `ScrollView`
+
+The simplest way to use `KeyboardChatScrollView` is as a drop-in replacement for `ScrollView`:
+
+```tsx
+import { TextInput, View } from "react-native";
+import {
+  KeyboardChatScrollView,
+  KeyboardStickyView,
+} from "react-native-keyboard-controller";
+
+function ChatScreen() {
+  return (
+    <View style={{ flex: 1 }}>
+      <KeyboardChatScrollView>
+        {messages.map((msg) => (
+          <Message key={msg.id} {...msg} />
+        ))}
+      </KeyboardChatScrollView>
+      <KeyboardStickyView>
+        <TextInput placeholder="Type a message..." />
+      </KeyboardStickyView>
+    </View>
+  );
+}
+```
+
+That's it — the keyboard will push messages up when it appears, and pull them back when it hides.
+
+### Adding interactive dismissal
+
+To let users swipe the keyboard away with a drag gesture, wrap the chat area in a `KeyboardGestureArea` and set `keyboardDismissMode="interactive"` on the scroll view:
+
+```tsx
+import { TextInput, View } from "react-native";
+import {
+  KeyboardChatScrollView,
+  KeyboardGestureArea,
+  KeyboardStickyView,
+} from "react-native-keyboard-controller";
+
+function ChatScreen() {
+  return (
+    <View style={{ flex: 1 }}>
+      // add-new-code
+      <KeyboardGestureArea
+        // add-new-code
+        interpolator="ios"
+        // add-new-code
+        style={{ flex: 1 }}
+        // add-new-code
+        textInputNativeID="chat-input"
+        // add-new-code
+      >
+        <KeyboardChatScrollView
+          // add-new-code
+          keyboardDismissMode="interactive"
+        >
+          {messages.map((msg) => (
+            <Message key={msg.id} {...msg} />
+          ))}
+        </KeyboardChatScrollView>
+        <KeyboardStickyView>
+          // add-new-code
+          <TextInput nativeID="chat-input" placeholder="Type a message..." />
+        </KeyboardStickyView>
+      </KeyboardGestureArea>
+    </View>
+  );
+}
+```
+
+Note the matching `textInputNativeID` on `KeyboardGestureArea` and `nativeID` on `TextInput` — this links the gesture area to the correct input.
+
+### Accounting for bottom safe area
+
+If your chat sits above the bottom safe area (or a tab bar), set the `offset` prop so the component only pushes content by the effective distance (`keyboardHeight - offset`):
+
+```tsx
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+
+function ChatScreen() {
+  const { bottom } = useSafeAreaInsets();
+
+  return (
+    <KeyboardChatScrollView offset={bottom}>
+      {/* ...messages... */}
+    </KeyboardChatScrollView>
+  );
+}
+```
+
+Without this, the content would overshoot by the height of the safe area every time the keyboard appears.
+
+### Choosing a `keyboardLiftBehavior`
+
+The `keyboardLiftBehavior` prop controls how messages react when the keyboard opens. Different chat apps use different strategies — pick the one that fits your product:
+
+| Value                | Behavior                                                   | Used by            |
+| -------------------- | ---------------------------------------------------------- | ------------------ |
+| `"always"` (default) | Content always lifts with the keyboard                     | Telegram, WhatsApp |
+| `"whenAtEnd"`        | Content lifts only if the user is scrolled to the bottom   | ChatGPT            |
+| `"persistent"`       | Content lifts when keyboard opens, but stays when it hides | Claude             |
+| `"never"`            | Content never moves; the keyboard overlaps the chat        | Perplexity         |
+
+```tsx
+<KeyboardChatScrollView keyboardLiftBehavior="whenAtEnd">
+  {/* ...messages... */}
+</KeyboardChatScrollView>
+```
+
+### Freezing content for custom input views
+
+When transitioning from the keyboard to a custom input view (like an emoji picker), you don't want the chat to jump. Set `freeze={true}` to hold the scroll position in place during the transition:
+
+```tsx
+const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+const [freeze, setFreeze] = useState(false);
+
+const onEmojiPress = () => {
+  setFreeze(true); // freeze before dismissing keyboard
+  Keyboard.dismiss();
+  setShowEmojiPicker(true);
+};
+
+const onKeyboardPress = () => {
+  setFreeze(false);
+  setShowEmojiPicker(false);
+  textInputRef.current?.focus();
+};
+
+// ...
+
+<KeyboardChatScrollView freeze={freeze}>
+  {/* ...messages... */}
+</KeyboardChatScrollView>;
+```
+
+When `freeze` is `true`, all keyboard-driven layout changes (padding, content offset, scroll position) are paused.
+
+## Using with virtualized lists
+
+For production chat apps you'll likely use a virtualized list (`FlatList`, `FlashList`, or `LegendList`) instead of a plain `ScrollView`. All of these accept a custom scroll component, making integration straightforward.
+
+### Creating a scroll wrapper
+
+Create a wrapper that passes `KeyboardChatScrollView` props down:
+
+```tsx title="VirtualizedListScrollView.tsx"
+import { forwardRef } from "react";
+import { KeyboardChatScrollView } from "react-native-keyboard-controller";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+
+import type { ScrollViewProps } from "react-native";
+
+const BOTTOM_OFFSET = 8; // distance from safe area to input
+
+const VirtualizedListScrollView = forwardRef((props: ScrollViewProps, ref) => {
+  const { bottom } = useSafeAreaInsets();
+
+  return (
+    <KeyboardChatScrollView
+      ref={ref}
+      automaticallyAdjustContentInsets={false}
+      contentInsetAdjustmentBehavior="never"
+      keyboardDismissMode="interactive"
+      offset={bottom - BOTTOM_OFFSET}
+      {...props}
+    />
+  );
+});
+
+export default VirtualizedListScrollView;
+```
+
+:::tip
+Always set `automaticallyAdjustContentInsets={false}` and `contentInsetAdjustmentBehavior="never"` when using `KeyboardChatScrollView` inside virtualized lists. This prevents iOS from applying its own content inset adjustments, which would conflict with the component's inset management.
+:::
+
+### Plugging into `FlashList`
+
+`FlashList` accepts `renderScrollComponent` directly as a component reference:
+
+```tsx
+import { FlashList } from "@shopify/flash-list";
+
+<FlashList
+  data={messages}
+  inverted
+  keyExtractor={(item) => item.id}
+  renderItem={({ item }) => <Message {...item} />}
+  renderScrollComponent={VirtualizedListScrollView}
+/>;
+```
+
+### Plugging into `FlatList` / `LegendList`
+
+`FlatList` and `LegendList` require a stable function reference — wrap the component in `useCallback`:
+
+```tsx
+import { useCallback } from "react";
+import { FlatList, type ScrollViewProps } from "react-native";
+
+const renderScrollComponent = useCallback(
+  (props: ScrollViewProps) => <VirtualizedListScrollView {...props} />,
+  [],
+);
+
+<FlatList
+  data={messages}
+  inverted
+  keyExtractor={(item) => item.id}
+  renderItem={({ item }) => <Message {...item} />}
+  renderScrollComponent={renderScrollComponent}
+/>;
+```
+
+### Handling the `inverted` prop
+
+If your list uses the `inverted` prop (the standard pattern for chat lists where newest messages appear at the bottom), make sure to pass `inverted` to `KeyboardChatScrollView` as well:
+
+```tsx title="VirtualizedListScrollView.tsx"
+const VirtualizedListScrollView = forwardRef(
+  ({ inverted, ...props }: ScrollViewProps & { inverted?: boolean }, ref) => {
+    return (
+      <KeyboardChatScrollView
+        ref={ref}
+        // add-new-code
+        inverted={inverted}
+        {...props}
+      />
+    );
+  },
+);
+```
+
+## Complete example
+
+Here is a complete chat screen that ties together all the pieces — `KeyboardChatScrollView` with a `FlatList`, interactive dismissal, sticky input, and safe area handling:
+
+```tsx
+import { useCallback, useRef, useState } from "react";
+import {
+  FlatList,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View,
+  type ScrollViewProps,
+} from "react-native";
+import {
+  KeyboardChatScrollView,
+  KeyboardGestureArea,
+  KeyboardStickyView,
+} from "react-native-keyboard-controller";
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
+
+const MARGIN = 8;
+const INPUT_HEIGHT = 42;
+
+// Wrapper for virtualized lists
+const ChatScrollView = forwardRef((props: ScrollViewProps, ref) => {
+  const { bottom } = useSafeAreaInsets();
+
+  return (
+    <KeyboardChatScrollView
+      ref={ref}
+      automaticallyAdjustContentInsets={false}
+      contentInsetAdjustmentBehavior="never"
+      keyboardDismissMode="interactive"
+      offset={bottom - MARGIN}
+      {...props}
+    />
+  );
+});
+
+function ChatScreen() {
+  const textInputRef = useRef<TextInput>(null);
+  const textRef = useRef("");
+  const [messages, setMessages] = useState(INITIAL_MESSAGES);
+  const { bottom } = useSafeAreaInsets();
+
+  const renderScrollComponent = useCallback(
+    (props: ScrollViewProps) => <ChatScrollView {...props} />,
+    [],
+  );
+
+  const onSend = useCallback(() => {
+    const text = textRef.current.trim();
+    if (!text) return;
+
+    setMessages((prev) => [...prev, { id: String(Date.now()), text }]);
+    textInputRef.current?.clear();
+    textRef.current = "";
+  }, []);
+
+  return (
+    <SafeAreaView edges={["bottom"]} style={styles.container}>
+      <KeyboardGestureArea
+        interpolator="ios"
+        offset={INPUT_HEIGHT}
+        style={styles.container}
+        textInputNativeID="chat-input"
+      >
+        <FlatList
+          data={messages}
+          inverted
+          contentContainerStyle={{ paddingTop: INPUT_HEIGHT + MARGIN }}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => <Message {...item} />}
+          renderScrollComponent={renderScrollComponent}
+        />
+        <KeyboardStickyView
+          offset={{ opened: bottom - MARGIN }}
+          style={styles.composer}
+        >
+          <TextInput
+            ref={textInputRef}
+            multiline
+            nativeID="chat-input"
+            placeholder="Type a message..."
+            style={styles.input}
+            onChangeText={(text) => (textRef.current = text)}
+          />
+          <TouchableOpacity onPress={onSend}>
+            <Text>Send</Text>
+          </TouchableOpacity>
+        </KeyboardStickyView>
+      </KeyboardGestureArea>
+    </SafeAreaView>
+  );
+}
+```
+
+Or play with the code in live mode directly in the broswer:
+
+<div
+  data-snack-id="@kirylziusko/c0b7f0"
+  data-snack-platform="ios"
+  data-snack-preview="true"
+  data-snack-theme="light"
+  style={{
+    overflow: "hidden",
+    background: "#fbfcfd",
+    border: "1px solid var(--color-border)",
+    borderRadius: 4,
+    height: 505,
+    width: "100%",
+  }}
+></div>
+
+<Head>
+  <script src="https://snack.expo.dev/embed.js" async />
+</Head>
+
+## API reference
+
+For the full list of props and design principles, see the [`KeyboardChatScrollView` API reference](../api/components/keyboard-chat-scroll-view).
