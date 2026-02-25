@@ -4,7 +4,10 @@
 
 import Video from "@site/src/components/Video";
 
-<Video src="/video/keyboard-chat-scroll-view/always.mov" width={35} />
+<Video
+  src="/video/keyboard-chat-scroll-view/always.mov"
+  style={{ height: "40vh" }}
+/>
 
 ## Props
 
@@ -43,25 +46,37 @@ Controls how the chat content responds when the keyboard appears. Defaults to `"
 
 Content always lifts with the keyboard, keeping the bottom messages visible **regardless** of the current scroll position. This is the most common chat app behavior, used by **Telegram**, **WhatsApp**, and others.
 
-<Video src="/video/keyboard-chat-scroll-view/always.mov" width={25} />
+<Video
+  src="/video/keyboard-chat-scroll-view/always.mov"
+  style={{ height: "40vh" }}
+/>
 
 #### `whenAtEnd`
 
 Content lifts only when the scroll view is **at the end** (i.e., the last message is visible or near the bottom). If the user has scrolled up to read older messages, the keyboard won't push the content around. This matches the **ChatGPT** mobile app behavior.
 
-<Video src="/video/keyboard-chat-scroll-view/when-at-end.mov" width={25} />
+<Video
+  src="/video/keyboard-chat-scroll-view/when-at-end.mov"
+  style={{ height: "40vh" }}
+/>
 
 #### `persistent`
 
 Content lifts when the keyboard appears, but **does not drop back** when the keyboard hides. The scroll position stays where it was pushed to. This matches the **Claude** mobile app behavior.
 
-<Video src="/video/keyboard-chat-scroll-view/persistent.mp4" width={25} />
+<Video
+  src="/video/keyboard-chat-scroll-view/persistent.mp4"
+  style={{ height: "40vh" }}
+/>
 
 #### `never`
 
 Content never moves in response to the keyboard. The keyboard simply overlaps the chat. This matches the **Perplexity** app behavior.
 
-<Video src="/video/keyboard-chat-scroll-view/never.mov" width={25} />
+<Video
+  src="/video/keyboard-chat-scroll-view/never.mov"
+  style={{ height: "40vh" }}
+/>
 
 ### `offset`
 
@@ -76,12 +91,18 @@ This is useful when the input is not at the very bottom of the screen — for ex
 First, create a wrapper component:
 
 ```tsx title="VirtualizedListScrollView.tsx"
-import { forwardRef } from "react";
+import React, { forwardRef } from "react";
 import { KeyboardChatScrollView } from "react-native-keyboard-controller";
 
 import type { ScrollViewProps } from "react-native";
+import type { KeyboardChatScrollViewProps } from "react-native-keyboard-controller";
 
-const VirtualizedListScrollView = forwardRef((props: ScrollViewProps, ref) => {
+type Ref = React.ElementRef<typeof KeyboardChatScrollView>;
+
+const VirtualizedListScrollView = forwardRef<
+  Ref,
+  ScrollViewProps & KeyboardChatScrollViewProps
+>((props, ref) => {
   return (
     <KeyboardChatScrollView
       ref={ref}
@@ -180,3 +201,29 @@ On iOS we change the [`contentOffset`](https://reactnative.dev/docs/scrollview#c
 #### Android
 
 On Android we adjust the scroll position inside the [`onMove`](../hooks/keyboard/use-keyboard-handler#onmove) handler via the [`scrollTo`](https://docs.swmansion.com/react-native-reanimated/docs/scroll/scrollTo/) method on the UI thread from a worklet.
+
+## Troubleshooting
+
+### Reanimated feature flag
+
+`KeyboardChatScrollView` relies on a Reanimated commit hook internally. If you're using **Reanimated < 4.3.0**, you need to enable the [`USE_COMMIT_HOOK_ONLY_FOR_REACT_COMMITS`](https://docs.swmansion.com/react-native-reanimated/docs/guides/feature-flags/#use_commit_hook_only_for_react_commits) feature flag in your `package.json`:
+
+```json
+{
+  "reanimated": {
+    "staticFeatureFlags": {
+      "USE_COMMIT_HOOK_ONLY_FOR_REACT_COMMITS": true
+    }
+  }
+}
+```
+
+After adding this, run `pod install` (iOS) and rebuild the app.
+
+:::tip Reanimated 4.3.0+ relevance
+If you're on **Reanimated 4.3.0+**, this flag is enabled by default — no extra configuration needed.
+:::
+
+:::info What it affects?
+If you don't enable this flag you'll see desynchronised keyboard animation on Android/Fabric arhitecture.
+:::

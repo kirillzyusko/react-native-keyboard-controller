@@ -15,6 +15,13 @@ keywords:
 
 Keyboard handling in chat applications has always been one of the trickiest problems in mobile development — even on native platforms. Chat apps push keyboard interactions to their limits: interactive dismissal, content repositioning, smooth transitions between the keyboard and custom input views, and all of it at 120 FPS. Getting this right requires deep integration between the keyboard, scroll views, and layout systems — far more than a general-purpose component can offer.
 
+import Video from "@site/src/components/Video";
+
+<Video
+  src="/video/keyboard-chat-scroll-view/always.mov"
+  style={{ height: "40vh", marginBottom: 20 }}
+/>
+
 ## Why general-purpose components fall short
 
 You might be tempted to reach for `KeyboardAvoidingView` or `KeyboardAwareScrollView` to handle keyboard interactions in a chat app. While these components work well for forms, settings screens, and other straightforward layouts, they weren't designed for the unique demands of a chat interface.
@@ -199,15 +206,21 @@ For production chat apps you'll likely use a virtualized list (`FlatList`, `Flas
 Create a wrapper that passes `KeyboardChatScrollView` props down:
 
 ```tsx title="VirtualizedListScrollView.tsx"
-import { forwardRef } from "react";
+import React, { forwardRef } from "react";
 import { KeyboardChatScrollView } from "react-native-keyboard-controller";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import type { ScrollViewProps } from "react-native";
+import type { KeyboardChatScrollViewProps } from "react-native-keyboard-controller";
+
+type Ref = React.ElementRef<typeof KeyboardChatScrollView>;
 
 const BOTTOM_OFFSET = 8; // distance from safe area to input
 
-const VirtualizedListScrollView = forwardRef((props: ScrollViewProps, ref) => {
+const VirtualizedListScrollView = forwardRef<
+  Ref,
+  ScrollViewProps & KeyboardChatScrollViewProps
+>((props, ref) => {
   const { bottom } = useSafeAreaInsets();
 
   return (
@@ -272,18 +285,19 @@ const renderScrollComponent = useCallback(
 If your list uses the `inverted` prop (the standard pattern for chat lists where newest messages appear at the bottom), make sure to pass `inverted` to `KeyboardChatScrollView` as well:
 
 ```tsx title="VirtualizedListScrollView.tsx"
-const VirtualizedListScrollView = forwardRef(
-  ({ inverted, ...props }: ScrollViewProps & { inverted?: boolean }, ref) => {
-    return (
-      <KeyboardChatScrollView
-        ref={ref}
-        // add-new-code
-        inverted={inverted}
-        {...props}
-      />
-    );
-  },
-);
+const VirtualizedListScrollView = forwardRef<
+  Ref,
+  ScrollViewProps & KeyboardChatScrollViewProps
+>(({ inverted, ...props }, ref) => {
+  return (
+    <KeyboardChatScrollView
+      ref={ref}
+      // add-new-code
+      inverted={inverted}
+      {...props}
+    />
+  );
+});
 ```
 
 ## Complete example
@@ -291,7 +305,7 @@ const VirtualizedListScrollView = forwardRef(
 Here is a complete chat screen that ties together all the pieces — `KeyboardChatScrollView` with a `FlatList`, interactive dismissal, sticky input, and safe area handling:
 
 ```tsx
-import { useCallback, useRef, useState } from "react";
+import React, { forwardRef, useCallback, useRef, useState } from "react";
 import {
   FlatList,
   StyleSheet,
@@ -310,11 +324,18 @@ import {
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
 
+import type { KeyboardChatScrollViewProps } from "react-native-keyboard-controller";
+
+type Ref = React.ElementRef<typeof KeyboardChatScrollView>;
+
 const MARGIN = 8;
 const INPUT_HEIGHT = 42;
 
 // Wrapper for virtualized lists
-const ChatScrollView = forwardRef((props: ScrollViewProps, ref) => {
+const ChatScrollView = forwardRef<
+  Ref,
+  ScrollViewProps & KeyboardChatScrollViewProps
+>((props, ref) => {
   const { bottom } = useSafeAreaInsets();
 
   return (
@@ -411,3 +432,9 @@ Or play with the code in live mode directly in the browser:
 ## API reference
 
 For the full list of props and design principles, see the [`KeyboardChatScrollView` API reference](../api/components/keyboard-chat-scroll-view).
+
+## Troubleshooting
+
+:::danger Check troubleshooting section first
+If you encounter any issues with `KeyboardChatScrollView`, please check the [Troubleshooting section](../api/components/keyboard-chat-scroll-view#troubleshooting) first before reporting a bug. If you're still having trouble, feel free to [open an issue](https://github.com/kirillzyusko/react-native-keyboard-controller/issues/new) on GitHub.
+:::
