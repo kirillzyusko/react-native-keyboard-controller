@@ -1,4 +1,4 @@
-import React, { forwardRef, useCallback, useMemo, useState } from "react";
+import React, { forwardRef, useCallback, useState } from "react";
 import {
   type LayoutChangeEvent,
   type ScrollViewProps,
@@ -9,7 +9,11 @@ import { KeyboardChatScrollView } from "react-native-keyboard-controller";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useChatConfigStore } from "./store";
-import { MARGIN, TEXT_INPUT_HEIGHT } from "./styles";
+import {
+  MARGIN,
+  contentContainerStyle,
+  invertedContentContainerStyle,
+} from "./styles";
 
 export type VirtualizedListScrollViewRef = React.ElementRef<
   typeof KeyboardChatScrollView
@@ -25,14 +29,6 @@ const VirtualizedListScrollView = forwardRef<
 
   const { inverted, freeze, mode, keyboardLiftBehavior } = useChatConfigStore();
 
-  const contentContainerStyle = useMemo(
-    () => ({ paddingBottom: TEXT_INPUT_HEIGHT + MARGIN }),
-    [],
-  );
-  const invertedContentContainerStyle = useMemo(
-    () => ({ paddingTop: TEXT_INPUT_HEIGHT + MARGIN }),
-    [],
-  );
   // on new arch only FlatList supports `inverted` prop
   const isInvertedSupported = inverted && mode === "flat" ? inverted : false;
   const onLayout = useCallback(

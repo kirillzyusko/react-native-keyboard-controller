@@ -42,3 +42,9 @@ export default StyleSheet.create({
     height: 20,
   },
 });
+export const contentContainerStyle = {
+  paddingBottom: TEXT_INPUT_HEIGHT + MARGIN,
+};
+export const invertedContentContainerStyle = {
+  paddingTop: TEXT_INPUT_HEIGHT + MARGIN,
+};
