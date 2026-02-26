@@ -172,6 +172,9 @@ function useChatKeyboard(
     padding,
     currentHeight,
     contentOffsetY,
+    scroll,
+    layout,
+    size,
     onLayout,
     onContentSizeChange,
   };

@@ -15,14 +15,20 @@ import {
   invertedContentContainerStyle,
 } from "./styles";
 
+import type { SharedValue } from "react-native-reanimated";
+
+type VirtualizedListScrollViewProps = ScrollViewProps & {
+  extraContentPadding?: SharedValue<number>;
+};
+
 export type VirtualizedListScrollViewRef = React.ElementRef<
   typeof KeyboardChatScrollView
 >;
 
 const VirtualizedListScrollView = forwardRef<
   VirtualizedListScrollViewRef,
-  ScrollViewProps
->(({ onLayout: onLayoutProp, ...props }, ref) => {
+  VirtualizedListScrollViewProps
+>(({ onLayout: onLayoutProp, extraContentPadding, ...props }, ref) => {
   const [layoutPass, setLayoutPass] = useState(0);
   const { bottom } = useSafeAreaInsets();
   const chatKitOffset = bottom - MARGIN;
@@ -50,6 +56,7 @@ const VirtualizedListScrollView = forwardRef<
             : contentContainerStyle
         }
         contentInsetAdjustmentBehavior="never"
+        extraContentPadding={extraContentPadding}
         freeze={freeze}
         inverted={isInvertedSupported}
         keyboardDismissMode="interactive"

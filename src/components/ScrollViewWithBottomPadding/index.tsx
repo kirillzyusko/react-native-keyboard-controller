@@ -1,6 +1,9 @@
 import React, { forwardRef } from "react";
 import { Platform, View } from "react-native";
-import Reanimated, { useAnimatedProps } from "react-native-reanimated";
+import Reanimated, {
+  useAnimatedProps,
+  useSharedValue,
+} from "react-native-reanimated";
 
 import { ClippingScrollView } from "../../bindings";
 
@@ -49,6 +52,8 @@ const ScrollViewWithBottomPadding = forwardRef<
     },
     ref,
   ) => {
+    const prevContentOffsetY = useSharedValue<number | null>(null);
+
     const animatedProps = useAnimatedProps(() => {
       const insetTop = inverted ? bottomPadding.value : 0;
       const insetBottom = !inverted ? bottomPadding.value : 0;
@@ -75,7 +80,13 @@ const ScrollViewWithBottomPadding = forwardRef<
       };
 
       if (contentOffsetY) {
-        result.contentOffset = { x: 0, y: contentOffsetY.value };
+        const curr = contentOffsetY.value;
+
+        if (curr !== prevContentOffsetY.value) {
+          // eslint-disable-next-line react-compiler/react-compiler
+          prevContentOffsetY.value = curr;
+          result.contentOffset = { x: 0, y: curr };
+        }
       }
 
       return result;
