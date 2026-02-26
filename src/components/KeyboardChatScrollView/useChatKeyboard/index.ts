@@ -24,10 +24,7 @@ import type Reanimated from "react-native-reanimated";
  * @returns Shared values for padding and contentOffsetY (always `undefined`).
  * @example
  * ```tsx
- * const { padding, contentOffsetY } = useChatKeyboard(ref, {
- *   inverted: false,
- *   keyboardLiftBehavior: "always",
- * });
+ * const { padding } = useChatKeyboard(ref, { inverted: false, keyboardLiftBehavior: "always" });
  * ```
  */
 function useChatKeyboard(
@@ -41,7 +38,6 @@ function useChatKeyboard(
   const offsetBeforeScroll = useSharedValue(0);
   const targetKeyboardHeight = useSharedValue(0);
   const closing = useSharedValue(false);
-
   const {
     layout,
     size,
@@ -49,7 +45,6 @@ function useChatKeyboard(
     onLayout,
     onContentSizeChange,
   } = useScrollState(scrollViewRef);
-
   const clampScrollIfNeeded = (effective: number) => {
     "worklet";
 
@@ -292,6 +287,9 @@ function useChatKeyboard(
     padding,
     currentHeight,
     contentOffsetY: undefined,
+    scroll,
+    layout,
+    size,
     onLayout,
     onContentSizeChange,
   };

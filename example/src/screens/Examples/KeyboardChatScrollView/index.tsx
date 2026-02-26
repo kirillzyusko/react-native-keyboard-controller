@@ -19,6 +19,7 @@ import {
   KeyboardGestureArea,
   KeyboardStickyView,
 } from "react-native-keyboard-controller";
+import { useSharedValue, withTiming } from "react-native-reanimated";
 import {
   SafeAreaView,
   useSafeAreaInsets,
@@ -45,6 +46,7 @@ function KeyboardChatScrollViewPlayground() {
   const textInputRef = useRef<TextInput>(null);
   const textRef = useRef("");
   const [inputHeight, setInputHeight] = useState(TEXT_INPUT_HEIGHT);
+  const extraContentPadding = useSharedValue(0);
   const { inverted, messages, reversedMessages, addMessage, mode } =
     useChatConfigStore();
   const { bottom } = useSafeAreaInsets();
@@ -54,9 +56,16 @@ function KeyboardChatScrollViewPlayground() {
     [bottom],
   );
 
-  const onInputLayoutChanged = useCallback((e: LayoutChangeEvent) => {
-    setInputHeight(e.nativeEvent.layout.height);
-  }, []);
+  const onInputLayoutChanged = useCallback(
+    (e: LayoutChangeEvent) => {
+      const height = e.nativeEvent.layout.height;
+
+      // eslint-disable-next-line react-compiler/react-compiler
+      extraContentPadding.value = withTiming(Math.max(height - TEXT_INPUT_HEIGHT, 0), {duration: 250});
+      setInputHeight(height);
+    },
+    [extraContentPadding],
+  );
   const onInput = useCallback((text: string) => {
     textRef.current = text;
   }, []);
@@ -86,8 +95,13 @@ function KeyboardChatScrollViewPlayground() {
   }, [messages]);
 
   const memoList = useCallback(
-    (props: ScrollViewProps) => <VirtualizedListScrollView {...props} />,
-    [],
+    (props: ScrollViewProps) => (
+      <VirtualizedListScrollView
+        {...props}
+        extraContentPadding={extraContentPadding}
+      />
+    ),
+    [extraContentPadding],
   );
 
   return (
@@ -115,7 +129,7 @@ function KeyboardChatScrollViewPlayground() {
             inverted={inverted}
             keyExtractor={(item) => item.text}
             renderItem={({ item }) => <Message {...item} />}
-            renderScrollComponent={VirtualizedListScrollView}
+            renderScrollComponent={memoList}
           />
         )}
         {mode === "flat" && (
@@ -129,7 +143,10 @@ function KeyboardChatScrollViewPlayground() {
           />
         )}
         {mode === "scroll" && (
-          <VirtualizedListScrollView ref={scrollRef}>
+          <VirtualizedListScrollView
+            ref={scrollRef}
+            extraContentPadding={extraContentPadding}
+          >
             {messages.map((message, index) => (
               <Message key={index} {...message} />
             ))}

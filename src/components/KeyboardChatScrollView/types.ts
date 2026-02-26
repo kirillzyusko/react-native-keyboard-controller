@@ -1,6 +1,7 @@
 import type { AnimatedScrollViewComponent } from "../ScrollViewWithBottomPadding";
 import type { KeyboardLiftBehavior } from "./useChatKeyboard/types";
 import type { ScrollViewProps } from "react-native";
+import type { SharedValue } from "react-native-reanimated";
 
 export type KeyboardChatScrollViewProps = {
   /** Custom component for `ScrollView`. Default is `ScrollView`. */
@@ -46,4 +47,15 @@ export type KeyboardChatScrollViewProps = {
    * Default is `false`.
    */
   freeze?: boolean;
+  /**
+   * A shared value representing additional padding from external elements
+   * (e.g., a growing multiline `TextInput` in a `KeyboardStickyView`).
+   *
+   * When this value changes:
+   * - The scrollable range is always extended/contracted (via `contentInset`).
+   * - The scroll position is conditionally adjusted based on `keyboardLiftBehavior`.
+   *
+   * Default is `undefined` (no extra padding).
+   */
+  extraContentPadding?: SharedValue<number>;
 } & ScrollViewProps;
