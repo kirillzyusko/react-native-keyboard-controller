@@ -29,7 +29,11 @@ import BlurView from "../../../components/BlurView";
 import Message from "./components/Message";
 import ConfigSheet from "./config";
 import { useChatConfigStore } from "./store";
-import styles, { MARGIN, TEXT_INPUT_HEIGHT } from "./styles";
+import styles, {
+  MARGIN,
+  TEXT_INPUT_HEIGHT,
+  contentContainerStyle,
+} from "./styles";
 import VirtualizedListScrollView, {
   type VirtualizedListScrollViewRef,
 } from "./VirtualizedListScrollView";
@@ -102,6 +106,7 @@ function KeyboardChatScrollViewPlayground() {
           <LegendList
             ref={legendRef}
             alignItemsAtEnd={inverted}
+            contentContainerStyle={contentContainerStyle}
             data={messages}
             initialScrollAtEnd={inverted}
             keyExtractor={(item) => item.text}
@@ -112,6 +117,7 @@ function KeyboardChatScrollViewPlayground() {
         {mode === "flash" && (
           <FlashList
             ref={flashRef}
+            contentContainerStyle={contentContainerStyle}
             data={messages}
             keyExtractor={(item) => item.text}
             maintainVisibleContentPosition={{
