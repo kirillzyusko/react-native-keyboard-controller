@@ -65,6 +65,7 @@ const ButtonAndroid = ({
   theme,
 }: PropsWithChildren<ButtonProps>) => {
   const colorScheme = useKeyboardState((state) => state.appearance);
+
   const accessibilityState = useMemo(() => ({ disabled }), [disabled]);
   const ripple = useMemo(
     () =>
