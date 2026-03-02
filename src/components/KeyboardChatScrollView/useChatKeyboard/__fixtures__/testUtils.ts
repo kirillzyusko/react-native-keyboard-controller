@@ -72,14 +72,16 @@ export function setupBeforeEach() {
 
 type RenderOptions = Omit<
   Parameters<typeof useChatKeyboard>[1],
-  "freeze" | "offset" | "extraContentPadding"
+  "freeze" | "offset" | "blankSize" | "extraContentPadding"
 > & {
   freeze?: boolean;
   offset?: number;
+  blankSize?: SharedValue<number>;
   extraContentPadding?: SharedValue<number>;
 };
 
-const ZERO_CONTENT_PADDING = { value: 0 } as SharedValue<number>;
+const sv = <T>(initial: T): SharedValue<T> =>
+  ({ value: initial } as SharedValue<T>);
 
 /**
  * Create a render function that loads the hook from the given module path.
@@ -102,9 +104,11 @@ export function createRender(modulePath: string) {
         ...options,
         freeze: options.freeze ?? false,
         offset: options.offset ?? 0,
-        extraContentPadding:
-          options.extraContentPadding ?? ZERO_CONTENT_PADDING,
+        blankSize: options.blankSize ?? sv(0),
+        extraContentPadding: options.extraContentPadding ?? sv(0),
       });
     });
   };
 }
+
+export { sv };

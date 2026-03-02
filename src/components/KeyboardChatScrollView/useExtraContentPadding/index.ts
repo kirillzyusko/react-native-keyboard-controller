@@ -11,6 +11,8 @@ type UseExtraContentPaddingOptions = {
   extraContentPadding: SharedValue<number>;
   /** Keyboard-only padding from useChatKeyboard — used to compute total padding for clamping. */
   keyboardPadding: SharedValue<number>;
+  /** Minimum inset floor — used to absorb keyboard and extraContentPadding changes. */
+  blankSize: SharedValue<number>;
   /** Current vertical scroll offset. */
   scroll: SharedValue<number>;
   /** Visible viewport dimensions. */
@@ -41,6 +43,7 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
     scrollViewRef,
     extraContentPadding,
     keyboardPadding,
+    blankSize,
     scroll,
     layout,
     size,
@@ -56,13 +59,27 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
         return;
       }
 
-      const delta = current - previous;
+      const rawDelta = current - previous;
 
-      if (delta === 0) {
+      if (rawDelta === 0) {
         return;
       }
 
-      const totalPadding = keyboardPadding.value + current;
+      // Compute effective delta considering blankSize floor
+      const previousTotal = Math.max(
+        blankSize.value,
+        keyboardPadding.value + previous,
+      );
+      const currentTotal = Math.max(
+        blankSize.value,
+        keyboardPadding.value + current,
+      );
+      const effectiveDelta = currentTotal - previousTotal;
+
+      if (effectiveDelta === 0) {
+        // blankSize absorbed the change
+        return;
+      }
 
       const atEnd = isScrollAtEnd(
         scroll.value,
@@ -72,7 +89,11 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
       );
 
       // "persistent": scroll on grow, hold position on shrink (unless at end)
-      if (keyboardLiftBehavior === "persistent" && delta < 0 && !atEnd) {
+      if (
+        keyboardLiftBehavior === "persistent" &&
+        effectiveDelta < 0 &&
+        !atEnd
+      ) {
         return;
       }
 
@@ -81,15 +102,15 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
       }
 
       if (inverted) {
-        const target = Math.max(scroll.value - delta, -totalPadding);
+        const target = Math.max(scroll.value - effectiveDelta, -currentTotal);
 
         scrollTo(scrollViewRef, 0, target, false);
       } else {
         const maxScroll = Math.max(
-          size.value.height - layout.value.height + totalPadding,
+          size.value.height - layout.value.height + currentTotal,
           0,
         );
-        const target = Math.min(scroll.value + delta, maxScroll);
+        const target = Math.min(scroll.value + effectiveDelta, maxScroll);
 
         scrollTo(scrollViewRef, 0, target, false);
       }

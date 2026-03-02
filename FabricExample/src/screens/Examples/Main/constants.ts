@@ -159,4 +159,10 @@ export const examples: Example[] = [
     info: ScreenNames.CHAT_KIT,
     icons: "🛠 💬",
   },
+  {
+    title: "AI LegendList Chat",
+    testID: "ai_legend_list_chat",
+    info: ScreenNames.AI_LEGEND_LIST_CHAT,
+    icons: "🤖 💬",
+  },
 ];
