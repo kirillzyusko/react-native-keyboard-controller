@@ -61,7 +61,10 @@ function KeyboardChatScrollViewPlayground() {
       const height = e.nativeEvent.layout.height;
 
       // eslint-disable-next-line react-compiler/react-compiler
-      extraContentPadding.value = withTiming(Math.max(height - TEXT_INPUT_HEIGHT, 0), {duration: 250});
+      extraContentPadding.value = withTiming(
+        Math.max(height - TEXT_INPUT_HEIGHT, 0),
+        { duration: 250 },
+      );
       setInputHeight(height);
     },
     [extraContentPadding],

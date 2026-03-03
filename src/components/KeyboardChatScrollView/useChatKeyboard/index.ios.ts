@@ -5,7 +5,10 @@ import useScrollState from "../../hooks/useScrollState";
 
 import {
   computeIOSContentOffset,
+  getBlankAbsorbed,
   getEffectiveHeight,
+  getScrollEffective,
+  getVisibleBlankFraction,
   isScrollAtEnd,
   shouldShiftContent,
 } from "./helpers";
@@ -34,7 +37,14 @@ function useChatKeyboard(
   scrollViewRef: AnimatedRef<Reanimated.ScrollView>,
   options: UseChatKeyboardOptions,
 ): UseChatKeyboardReturn {
-  const { inverted, keyboardLiftBehavior, freeze, offset } = options;
+  const {
+    inverted,
+    keyboardLiftBehavior,
+    freeze,
+    offset,
+    blankSize,
+    extraContentPadding,
+  } = options;
 
   const padding = useSharedValue(0);
   const currentHeight = useSharedValue(0);
@@ -76,6 +86,24 @@ function useChatKeyboard(
           inverted,
         );
 
+        // Scale blank absorption by how much of the blank is visible.
+        // Fully visible → full absorption; fully off-screen → no absorption.
+        const visibleFraction = getVisibleBlankFraction(
+          scroll.value,
+          layout.value.height,
+          size.value.height,
+          blankSize.value,
+          inverted,
+        );
+        const blankAbsorbed =
+          getBlankAbsorbed(blankSize.value, extraContentPadding.value) *
+          visibleFraction;
+        const scrollEff = getScrollEffective(effective, blankAbsorbed);
+        const actualTotalPadding = Math.max(
+          blankSize.value,
+          effective + extraContentPadding.value,
+        );
+
         // persistent mode: when keyboard shrinks, snap to end or hold position
         if (
           keyboardLiftBehavior === "persistent" &&
@@ -85,10 +113,10 @@ function useChatKeyboard(
 
           if (atEnd) {
             if (inverted) {
-              contentOffsetY.value = -effective;
+              contentOffsetY.value = -actualTotalPadding;
             } else {
               contentOffsetY.value = Math.max(
-                size.value.height - layout.value.height + effective,
+                size.value.height - layout.value.height + actualTotalPadding,
                 0,
               );
             }
@@ -111,10 +139,10 @@ function useChatKeyboard(
           padding.value = effective;
 
           if (inverted) {
-            contentOffsetY.value = -effective;
+            contentOffsetY.value = -actualTotalPadding;
           } else {
             contentOffsetY.value = Math.max(
-              size.value.height - layout.value.height + effective,
+              size.value.height - layout.value.height + actualTotalPadding,
               0,
             );
           }
@@ -122,9 +150,12 @@ function useChatKeyboard(
           return;
         }
 
+        // Undo only the scroll displacement that was actually applied
+        // (not the full padding, which includes blank-absorbed portion)
+        const prevScrollEff = getScrollEffective(padding.value, blankAbsorbed);
         const relativeScroll = inverted
-          ? scroll.value + padding.value
-          : scroll.value - padding.value;
+          ? scroll.value + prevScrollEff
+          : scroll.value - prevScrollEff;
 
         padding.value = effective;
 
@@ -136,12 +167,21 @@ function useChatKeyboard(
           return;
         }
 
+        // When blankSize fully absorbs the keyboard opening, preserve current scroll position
+        // (only when keyboard is open — effective > 0 — not when closing)
+        if (scrollEff === 0 && blankAbsorbed > 0 && effective > 0) {
+          contentOffsetY.value = scroll.value;
+
+          return;
+        }
+
         contentOffsetY.value = computeIOSContentOffset(
           relativeScroll,
-          effective,
+          scrollEff,
           size.value.height,
           layout.value.height,
           inverted,
+          actualTotalPadding,
         );
       },
       onMove: () => {

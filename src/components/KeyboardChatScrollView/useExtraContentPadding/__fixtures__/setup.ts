@@ -25,8 +25,10 @@ export const sv = <T>(initial: T): SharedValue<T> => {
 
 type RenderOptions = Omit<
   Parameters<typeof useExtraContentPadding>[0],
-  "scrollViewRef"
->;
+  "scrollViewRef" | "blankSize"
+> & {
+  blankSize?: SharedValue<number>;
+};
 
 export const createRender = () => {
   return function render(options: RenderOptions) {
@@ -38,7 +40,11 @@ export const createRender = () => {
     return renderHook(() => {
       const ref = useAnimatedRef<Reanimated.ScrollView>();
 
-      mod.useExtraContentPadding({ scrollViewRef: ref, ...options });
+      mod.useExtraContentPadding({
+        scrollViewRef: ref,
+        blankSize: options.blankSize ?? sv(0),
+        ...options,
+      });
     });
   };
 };

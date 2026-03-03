@@ -2,6 +2,7 @@ import { renderHook } from "@testing-library/react-native";
 import { useAnimatedRef } from "react-native-reanimated";
 
 import type { useChatKeyboard } from "..";
+import type { SharedValue } from "react-native-reanimated";
 import type Reanimated from "react-native-reanimated";
 
 export type KeyboardEvent = { height: number; duration?: number };
@@ -71,11 +72,16 @@ export function setupBeforeEach() {
 
 type RenderOptions = Omit<
   Parameters<typeof useChatKeyboard>[1],
-  "freeze" | "offset"
+  "freeze" | "offset" | "blankSize" | "extraContentPadding"
 > & {
   freeze?: boolean;
   offset?: number;
+  blankSize?: SharedValue<number>;
+  extraContentPadding?: SharedValue<number>;
 };
+
+const sv = <T>(initial: T): SharedValue<T> =>
+  ({ value: initial } as SharedValue<T>);
 
 /**
  * Create a render function that loads the hook from the given module path.
@@ -98,7 +104,11 @@ export function createRender(modulePath: string) {
         ...options,
         freeze: options.freeze ?? false,
         offset: options.offset ?? 0,
+        blankSize: options.blankSize ?? sv(0),
+        extraContentPadding: options.extraContentPadding ?? sv(0),
       });
     });
   };
 }
+
+export { sv };

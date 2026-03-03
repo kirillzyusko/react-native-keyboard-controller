@@ -1,4 +1,12 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
 import {
   Button,
   Keyboard,
@@ -10,14 +18,14 @@ import {
 } from "react-native";
 import {
   KeyboardGestureArea,
-  KeyboardProvider,
   KeyboardStickyView,
 } from "react-native-keyboard-controller";
-import Animated, { FadeIn } from "react-native-reanimated";
+import Animated, { FadeIn, useSharedValue } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import type { LegendListRef } from "@legendapp/list";
 
 import { KeyboardChatLegendList } from "./KeyboardChatLegendList.tsx";
+
+import type { LegendListRef } from "@legendapp/list";
 
 type Message = {
   id: string;
@@ -26,44 +34,100 @@ type Message = {
   timeStamp: number;
   isPlaceholder?: boolean;
   isNew?: boolean;
-  streamingSpeed?: number;
+  stream?: boolean;
 };
 
+const StreamingContext = createContext<{
+  setIsStreaming: (value: boolean) => void;
+}>({ setIsStreaming: () => {} });
+
 const createId = () => String(Date.now());
+
+const INITIAL_AI_TEXT = `Tip: Type 'a' for a short reply, 'b' for medium, 'c' for long, or 'd' for extra long. Any other text picks a random length.
+
+React Native virtualization is a performance optimization technique that's crucial for handling large lists efficiently. Here's how it works:
+
+1. **Rendering Only Visible Items**: Instead of rendering all items in a list at once, virtualization only renders the items that are currently visible on screen, plus a small buffer of items just outside the visible area.
+
+2. **Dynamic Item Creation/Destruction**: As you scroll, items that move out of view are removed from the DOM/native view hierarchy, and new items that come into view are created. This keeps memory usage constant regardless of list size.
+
+3. **View Recycling**: Advanced virtualization systems reuse view components rather than creating new ones, which reduces garbage collection and improves performance.
+
+4. **Estimated vs Actual Sizing**: The system uses estimated item sizes to calculate scroll positions and total content size, then adjusts as actual sizes are measured.
+
+5. **Legend List Implementation**: Legend List enhances this by providing better handling of dynamic item sizes, bidirectional scrolling, and maintains scroll position more accurately than FlatList.
+
+The key benefits are:
+- Constant memory usage regardless of data size
+- Smooth scrolling performance
+- Better handling of dynamic content
+- Reduced time to interactive
+
+This makes it possible to scroll through thousands of items without performance degradation, which is essential for modern mobile apps dealing with large datasets like social media feeds, chat histories, or product catalogs.
+
+Tip: Type 'a' for a short reply, 'b' for medium, 'c' for long, or 'd' for extra long. Any other text picks a random length.`;
+
+const INITIAL_MESSAGES: Message[] = [
+  {
+    id: "initial-user",
+    sender: "user",
+    text: "Hey, can you help me understand how React Native virtualization works?",
+    timeStamp: Date.now(),
+  },
+  {
+    id: "initial-ai",
+    sender: "system",
+    text: INITIAL_AI_TEXT,
+    timeStamp: Date.now(),
+  },
+];
 
 const AIResponse = ({
   text,
   isPlaceholder,
   timeStamp,
-  streamingSpeed = 15,
+  stream,
 }: {
   text: string;
   isPlaceholder: boolean;
   timeStamp: number;
-  streamingSpeed?: number;
+  stream?: boolean;
 }) => {
-  const [displayedText, setDisplayedText] = useState("");
+  const [displayedText, setDisplayedText] = useState(stream ? "" : text);
+  const { setIsStreaming } = useContext(StreamingContext);
 
   useEffect(() => {
-    if (isPlaceholder || !text) {
-      setDisplayedText("");
+    if (!stream || isPlaceholder || !text) {
       return;
     }
 
     const words = text.split(" ");
     let currentWordIndex = 0;
 
+    setIsStreaming(true);
+
     const intervalId = setInterval(() => {
       currentWordIndex++;
+
       if (currentWordIndex <= words.length) {
         setDisplayedText(words.slice(0, currentWordIndex).join(" "));
       } else {
         clearInterval(intervalId);
+        setIsStreaming(false);
       }
-    }, streamingSpeed);
+    }, 15);
 
-    return () => clearInterval(intervalId);
-  }, [text, isPlaceholder, streamingSpeed]);
+    return () => {
+      clearInterval(intervalId);
+      setIsStreaming(false);
+    };
+  }, [text, isPlaceholder, stream, setIsStreaming]);
+
+  useEffect(() => {
+    if (!stream) {
+      setDisplayedText(text);
+    }
+  }, [text, stream]);
 
   if (isPlaceholder) {
     return (
@@ -104,21 +168,72 @@ const AIResponse = ({
   );
 };
 
+const LIFT_BEHAVIORS = ["always", "whenAtEnd", "persistent", "never"] as const;
+
+type LiftBehavior = (typeof LIFT_BEHAVIORS)[number];
+
+const REPLIES = [
+  (msg: string) => `Got it! "${msg}" - let me know if you need more help.`,
+  (msg: string) =>
+    `I understand you said: "${msg}". That's a great point! Here are a few thoughts:\n\n1. First consideration\n2. Second aspect\n\nAnything else? First point about your question - this is important to consider when thinking about the broader context of your inquiry.\n\n2. Second important consideration - there are multiple angles to approach this from, and each has its own merits.`,
+  (msg: string) =>
+    `I understand you said: "${msg}". This is a simulated AI response that demonstrates the streaming text functionality.\n\nLet me provide you with more details:\n\n1. First point about your question - this is important to consider when thinking about the broader context of your inquiry.\n\n2. Second important consideration - there are multiple angles to approach this from, and each has its own merits.\n\n3. Third aspect to keep in mind - don't forget about the practical implications and how they might affect your decision.\n\n4. Fourth element worth exploring - sometimes the less obvious factors turn out to be the most significant.\n\nIn conclusion, I hope this helps clarify things. Is there anything else you'd like to know?`,
+  (msg: string) =>
+    `I understand you said: "${msg}". This is a simulated AI response that demonstrates the streaming text functionality.\n\nLet me provide you with more details:\n\n1. First point about your question - this is important to consider when thinking about the broader context of your inquiry.\n\n2. Second important consideration - there are multiple angles to approach this from, and each has its own merits.\n\n3. Third aspect to keep in mind - don't forget about the practical implications and how they might affect your decision.\n\n4. Fourth element worth exploring - sometimes the less obvious factors turn out to be the most significant.\n\nIn conclusion, I hope this helps clarify things. Is there anything else you'd like to know? I understand you said: "${msg}". This is a simulated AI response that demonstrates the streaming text functionality.\n\nLet me provide you with more details:\n\n1. First point about your question - this is important to consider when thinking about the broader context of your inquiry.\n\n2. Second important consideration - there are multiple angles to approach this from, and each has its own merits.\n\n3. Third aspect to keep in mind - don't forget about the practical implications and how they might affect your decision.\n\n4. Fourth element worth exploring - sometimes the less obvious factors turn out to be the most significant.\n\nIn conclusion, I hope this helps clarify things. Is there anything else you'd like to know? I understand you said: "${msg}". This is a simulated AI response that demonstrates the streaming text functionality.\n\nLet me provide you with more details:\n\n1. First point about your question - this is important to consider when thinking about the broader context of your inquiry.\n\n2. Second important consideration - there are multiple angles to approach this from, and each has its own merits.\n\n3. Third aspect to keep in mind - don't forget about the practical implications and how they might affect your decision.\n\n4. Fourth element worth exploring - sometimes the less obvious factors turn out to be the most significant.\n\nIn conclusion, I hope this helps clarify things. Is there anything else you'd like to know?`,
+];
+
+function pickReply(input: string, userMessage: string): string {
+  const letter = input.trim().toLowerCase().charAt(0);
+  const index = letter.charCodeAt(0) - "a".charCodeAt(0);
+
+  if (index >= 0 && index < REPLIES.length) {
+    return REPLIES[index](userMessage);
+  }
+
+  return REPLIES[Math.floor(Math.random() * REPLIES.length)](userMessage);
+}
+
 const AIChat = () => {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Message[]>(INITIAL_MESSAGES);
   const [inputText, setInputText] = useState("");
-  const [extraContentPaddingIndex, setExtraContentPaddingIndex] = useState<
-    number | undefined
-  >(undefined);
+  const [isStreaming, setIsStreaming] = useState(false);
+  const [liftBehavior, setLiftBehavior] = useState<LiftBehavior>("whenAtEnd");
+  const [blankSizeIndex, setBlankSizeIndex] = useState<number | undefined>(
+    undefined,
+  );
   const listRef = useRef<LegendListRef>(null);
   const inputRef = useRef<TextInput>(null);
-  const hasInitialized = useRef(false);
+  const composerRef = useRef<View>(null);
   const activeTimers = useRef<ReturnType<typeof setTimeout>[]>([]);
   const insets = useSafeAreaInsets();
+  // have to set an initial value higher than it will actually end up,
+  // because reportContentInset doesn't work on android to ensure
+  // initialScrollAtEnd works with extraContentPadding
+  const composerHeight = useSharedValue(100);
+
+  useLayoutEffect(() => {
+    composerRef.current?.measure((_x, _y, _width, height) => {
+      // eslint-disable-next-line react-compiler/react-compiler -- Reanimated shared values are designed to be mutated via .value
+      composerHeight.value = height;
+      listRef.current?.reportContentInset({ bottom: height });
+    });
+  }, []);
+
+  const onComposerLayout = useCallback(
+    (event: { nativeEvent: { layout: { height: number } } }) => {
+      const { height } = event.nativeEvent.layout;
+
+      composerHeight.value = height;
+      listRef.current?.reportContentInset({ bottom: height });
+    },
+    [],
+  );
 
   const schedule = useCallback((fn: () => void, ms: number) => {
     const id = setTimeout(fn, ms);
+
     activeTimers.current.push(id);
+
     return id;
   }, []);
 
@@ -127,8 +242,8 @@ const AIChat = () => {
     activeTimers.current = [];
   }, []);
 
-  const doSendMessage = (text: string) => {
-    setExtraContentPaddingIndex(messages.length);
+  const doSendMessage = (text: string, rawInput: string) => {
+    setBlankSizeIndex(messages.length);
 
     setMessages((prevMessages) => [
       ...prevMessages,
@@ -143,13 +258,18 @@ const AIChat = () => {
 
     schedule(() => {
       listRef.current?.scrollToEnd({ animated: true });
-      schedule(() => simulateAIResponse(text), 800);
+      schedule(() => simulateAIResponse(text, rawInput), 800);
     }, 200);
   };
 
   const sendMessage = () => {
     const text = inputText.trim();
-    if (!text) return;
+
+    if (!text) {
+      return;
+    }
+
+    const rawInput = inputText;
 
     setInputText("");
 
@@ -160,14 +280,14 @@ const AIChat = () => {
 
       const subscription = Keyboard.addListener("keyboardDidHide", () => {
         subscription.remove();
-        doSendMessage(text);
+        doSendMessage(text, rawInput);
       });
     } else {
-      doSendMessage(text);
+      doSendMessage(text, rawInput);
     }
   };
 
-  const simulateAIResponse = (userMessage: string) => {
+  const simulateAIResponse = (userMessage: string, rawInput: string) => {
     const aiMessageId = createId();
 
     setMessages((prevMessages) => [
@@ -182,18 +302,12 @@ const AIChat = () => {
     ]);
 
     schedule(() => {
-      const replies = [
-        `Got it! "${userMessage}" - let me know if you need more help.`,
-        `I understand you said: "${userMessage}". That's a great point! Here are a few thoughts:\n\n1. First consideration\n2. Second aspect\n\nAnything else? First point about your question - this is important to consider when thinking about the broader context of your inquiry.\n\n2. Second important consideration - there are multiple angles to approach this from, and each has its own merits.`,
-        `I understand you said: "${userMessage}". This is a simulated AI response that demonstrates the streaming text functionality.\n\nLet me provide you with more details:\n\n1. First point about your question - this is important to consider when thinking about the broader context of your inquiry.\n\n2. Second important consideration - there are multiple angles to approach this from, and each has its own merits.\n\n3. Third aspect to keep in mind - don't forget about the practical implications and how they might affect your decision.\n\n4. Fourth element worth exploring - sometimes the less obvious factors turn out to be the most significant.\n\nIn conclusion, I hope this helps clarify things. Is there anything else you'd like to know?`,
-        `I understand you said: "${userMessage}". This is a simulated AI response that demonstrates the streaming text functionality.\n\nLet me provide you with more details:\n\n1. First point about your question - this is important to consider when thinking about the broader context of your inquiry.\n\n2. Second important consideration - there are multiple angles to approach this from, and each has its own merits.\n\n3. Third aspect to keep in mind - don't forget about the practical implications and how they might affect your decision.\n\n4. Fourth element worth exploring - sometimes the less obvious factors turn out to be the most significant.\n\nIn conclusion, I hope this helps clarify things. Is there anything else you'd like to know? I understand you said: "${userMessage}". This is a simulated AI response that demonstrates the streaming text functionality.\n\nLet me provide you with more details:\n\n1. First point about your question - this is important to consider when thinking about the broader context of your inquiry.\n\n2. Second important consideration - there are multiple angles to approach this from, and each has its own merits.\n\n3. Third aspect to keep in mind - don't forget about the practical implications and how they might affect your decision.\n\n4. Fourth element worth exploring - sometimes the less obvious factors turn out to be the most significant.\n\nIn conclusion, I hope this helps clarify things. Is there anything else you'd like to know? I understand you said: "${userMessage}". This is a simulated AI response that demonstrates the streaming text functionality.\n\nLet me provide you with more details:\n\n1. First point about your question - this is important to consider when thinking about the broader context of your inquiry.\n\n2. Second important consideration - there are multiple angles to approach this from, and each has its own merits.\n\n3. Third aspect to keep in mind - don't forget about the practical implications and how they might affect your decision.\n\n4. Fourth element worth exploring - sometimes the less obvious factors turn out to be the most significant.\n\nIn conclusion, I hope this helps clarify things. Is there anything else you'd like to know?`,
-      ];
-      const responseText = replies[Math.floor(Math.random() * replies.length)];
+      const responseText = pickReply(rawInput, userMessage);
 
       setMessages((prevMessages) =>
         prevMessages.map((msg) =>
           msg.id === aiMessageId
-            ? { ...msg, isPlaceholder: false, text: responseText }
+            ? { ...msg, isPlaceholder: false, text: responseText, stream: true }
             : msg,
         ),
       );
@@ -201,138 +315,135 @@ const AIChat = () => {
   };
 
   useEffect(() => {
-    if (hasInitialized.current) return;
-    hasInitialized.current = true;
-
-    const initialAiMessageId = createId();
-
-    const fullText = `React Native virtualization is a performance optimization technique that's crucial for handling large lists efficiently. Here's how it works:
-
-1. **Rendering Only Visible Items**: Instead of rendering all items in a list at once, virtualization only renders the items that are currently visible on screen, plus a small buffer of items just outside the visible area.
-
-2. **Dynamic Item Creation/Destruction**: As you scroll, items that move out of view are removed from the DOM/native view hierarchy, and new items that come into view are created. This keeps memory usage constant regardless of list size.
-
-3. **View Recycling**: Advanced virtualization systems reuse view components rather than creating new ones, which reduces garbage collection and improves performance.
-
-4. **Estimated vs Actual Sizing**: The system uses estimated item sizes to calculate scroll positions and total content size, then adjusts as actual sizes are measured.
-
-5. **Legend List Implementation**: Legend List enhances this by providing better handling of dynamic item sizes, bidirectional scrolling, and maintains scroll position more accurately than FlatList.
-
-The key benefits are:
-- Constant memory usage regardless of data size
-- Smooth scrolling performance
-- Better handling of dynamic content
-- Reduced time to interactive
-
-This makes it possible to scroll through thousands of items without performance degradation, which is essential for modern mobile apps dealing with large datasets like social media feeds, chat histories, or product catalogs.`;
-
-    schedule(() => {
-      setMessages([
-        {
-          id: createId(),
-          sender: "user",
-          text: "Hey, can you help me understand how React Native virtualization works?",
-          timeStamp: Date.now(),
-        },
-        {
-          id: initialAiMessageId,
-          isPlaceholder: true,
-          sender: "system",
-          text: "",
-          timeStamp: Date.now(),
-        },
-      ]);
-    }, 500);
-
-    schedule(() => {
-      setMessages((prevMessages) =>
-        prevMessages.map((msg) =>
-          msg.id === initialAiMessageId
-            ? {
-                ...msg,
-                isPlaceholder: false,
-                text: fullText,
-                streamingSpeed: 1,
-              }
-            : msg,
-        ),
-      );
-    }, 1500);
-
     return clearAllTimers;
-  }, [clearAllTimers, schedule]);
+  }, [clearAllTimers]);
 
   return (
-    <View style={styles.container}>
-      <KeyboardGestureArea
-        interpolator="ios"
-        offset={60}
-        style={styles.container}
-      >
-        <KeyboardChatLegendList
-          extraContentPaddingIndex={extraContentPaddingIndex}
-          contentContainerStyle={styles.contentContainer}
-          data={messages}
-          initialScrollAtEnd
-          keyExtractor={(_item, index) => `item-${index}`}
-          maintainScrollAtEnd={Platform.OS === "web"}
-          maintainVisibleContentPosition
-          keyboardLiftBehavior="never"
-          offset={insets.bottom}
-          ref={listRef}
-          renderItem={({ item }) => (
-            <View>
-              {item.sender === "user" ? (
-                <Animated.View
-                  entering={item.isNew ? FadeIn.duration(1000) : undefined}
-                  style={[
-                    styles.messageContainer,
-                    styles.userMessageContainer,
-                    styles.userStyle,
-                  ]}
-                >
-                  <Text style={[styles.messageText, styles.userMessageText]}>
-                    {item.text}
-                  </Text>
-                  <View style={[styles.timeStamp, styles.userStyle]}>
-                    <Text style={styles.timeStampText}>
-                      {new Date(item.timeStamp).toLocaleTimeString()}
-                    </Text>
-                  </View>
-                </Animated.View>
-              ) : (
-                <AIResponse
-                  isPlaceholder={!!item.isPlaceholder}
-                  streamingSpeed={item.streamingSpeed}
-                  text={item.text}
-                  timeStamp={item.timeStamp}
-                />
-              )}
-            </View>
-          )}
-          style={styles.list}
-        />
-      </KeyboardGestureArea>
-      <KeyboardStickyView offset={{ closed: 0, opened: insets.bottom }}>
-        <View
-          style={[styles.inputContainer, { paddingBottom: insets.bottom + 10 }]}
-        >
-          <TextInput
-            multiline
-            onChangeText={setInputText}
-            placeholder="Type a message"
-            ref={inputRef}
-            style={styles.input}
-            value={inputText}
-          />
-          <Button onPress={sendMessage} title="Send" />
+    <StreamingContext.Provider value={{ setIsStreaming }}>
+      <View style={styles.container}>
+        <View style={styles.behaviorBar}>
+          {LIFT_BEHAVIORS.map((b) => (
+            <Text
+              key={b}
+              style={[
+                styles.behaviorButton,
+                b === liftBehavior && styles.behaviorButtonActive,
+              ]}
+              onPress={() => setLiftBehavior(b)}
+            >
+              {b}
+            </Text>
+          ))}
         </View>
-      </KeyboardStickyView>
-    </View>
+        <KeyboardGestureArea
+          interpolator="ios"
+          offset={60}
+          style={styles.container}
+        >
+          <KeyboardChatLegendList
+            ref={listRef}
+            initialScrollAtEnd
+            maintainVisibleContentPosition
+            blankSizeIndex={blankSizeIndex}
+            contentContainerStyle={styles.contentContainer}
+            data={messages}
+            extraContentPadding={composerHeight}
+            keyboardLiftBehavior={liftBehavior}
+            keyExtractor={(_item, index) => `item-${index}`}
+            maintainScrollAtEnd={Platform.OS === "web"}
+            offset={insets.bottom}
+            renderItem={({ item }) => (
+              <View>
+                {item.sender === "user" ? (
+                  <Animated.View
+                    entering={item.isNew ? FadeIn.duration(1000) : undefined}
+                    style={[
+                      styles.messageContainer,
+                      styles.userMessageContainer,
+                      styles.userStyle,
+                    ]}
+                  >
+                    <Text style={[styles.messageText, styles.userMessageText]}>
+                      {item.text}
+                    </Text>
+                    <View style={[styles.timeStamp, styles.userStyle]}>
+                      <Text style={styles.timeStampText}>
+                        {new Date(item.timeStamp).toLocaleTimeString()}
+                      </Text>
+                    </View>
+                  </Animated.View>
+                ) : (
+                  <AIResponse
+                    isPlaceholder={!!item.isPlaceholder}
+                    stream={item.stream}
+                    text={item.text}
+                    timeStamp={item.timeStamp}
+                  />
+                )}
+              </View>
+            )}
+            style={styles.list}
+          />
+        </KeyboardGestureArea>
+        <KeyboardStickyView
+          offset={{ closed: 0, opened: insets.bottom }}
+          style={styles.composerWrapper}
+        >
+          <View
+            ref={composerRef}
+            style={[
+              styles.inputContainer,
+              { paddingBottom: insets.bottom + 10 },
+            ]}
+            onLayout={onComposerLayout}
+          >
+            <TextInput
+              ref={inputRef}
+              multiline
+              editable={!isStreaming}
+              focusable={!isStreaming}
+              placeholder="Type a message"
+              style={styles.input}
+              value={inputText}
+              onChangeText={setInputText}
+            />
+            <Button disabled={isStreaming} title="Send" onPress={sendMessage} />
+          </View>
+        </KeyboardStickyView>
+      </View>
+    </StreamingContext.Provider>
   );
 };
 
 const styles = StyleSheet.create({
+  behaviorBar: {
+    flexDirection: "row",
+    justifyContent: "center",
+    gap: 6,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    backgroundColor: "#ffffff",
+    zIndex: 1000,
+  },
+  behaviorButton: {
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 12,
+    fontSize: 13,
+    color: "#666",
+    backgroundColor: "#ddd",
+    overflow: "hidden",
+  },
+  behaviorButtonActive: {
+    backgroundColor: "#007AFF",
+    color: "#fff",
+  },
+  composerWrapper: {
+    bottom: 0,
+    left: 0,
+    position: "absolute",
+    right: 0,
+  },
   container: {
     backgroundColor: "#fff",
     flex: 1,
@@ -358,7 +469,7 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     alignItems: "center",
-    backgroundColor: "transparent",
+    backgroundColor: "#ffffffa0",
     borderColor: "#ccc",
     borderTopWidth: 1,
     flexDirection: "row",
@@ -366,7 +477,6 @@ const styles = StyleSheet.create({
   },
   list: {
     flex: 1,
-    overflow: "visible",
   },
   messageContainer: {
     borderRadius: 16,

@@ -7,7 +7,9 @@ jest.mock("react-native-reanimated", () => ({
 import {
   clampedScrollTarget,
   computeIOSContentOffset,
+  getBlankAbsorbed,
   getEffectiveHeight,
+  getScrollEffective,
   isScrollAtEnd,
   shouldShiftContent,
 } from "../helpers";
@@ -186,5 +188,104 @@ describe("`computeIOSContentOffset` specification", () => {
       // max(min(-200, 0), -300) = max(-200, -300) = -200
       expect(computeIOSContentOffset(100, 300, 200, 800, true)).toBe(-200);
     });
+  });
+
+  describe("with totalPaddingForMaxScroll", () => {
+    it("should use totalPaddingForMaxScroll for maxScroll (non-inverted)", () => {
+      // scrollEff=100, totalPaddingForMaxScroll=500
+      // maxScroll = 1000 - 800 + 500 = 700
+      // target = min(max(100 + 100, 0), 700) = 200
+      expect(computeIOSContentOffset(100, 100, 1000, 800, false, 500)).toBe(
+        200,
+      );
+    });
+
+    it("should use totalPaddingForMaxScroll for min clamp (inverted)", () => {
+      // relativeScroll=0, keyboardHeight=200, totalPaddingForMaxScroll=500
+      // result = max(min(0-200, 1200), -500) = max(-200, -500) = -200
+      expect(computeIOSContentOffset(0, 200, 2000, 800, true, 500)).toBe(-200);
+    });
+
+    it("should clamp to -totalPaddingForMaxScroll (inverted)", () => {
+      // relativeScroll=-600, keyboardHeight=200, totalPaddingForMaxScroll=500
+      // result = max(min(-600-200, 1200), -500) = max(-800, -500) = -500
+      expect(computeIOSContentOffset(-600, 200, 2000, 800, true, 500)).toBe(
+        -500,
+      );
+    });
+
+    it("should fall back to keyboardHeight when undefined", () => {
+      expect(computeIOSContentOffset(100, 300, 1000, 800, false)).toBe(
+        computeIOSContentOffset(100, 300, 1000, 800, false, undefined),
+      );
+    });
+  });
+});
+
+describe("`getBlankAbsorbed` specification", () => {
+  it("should return 0 when blankSize is 0", () => {
+    expect(getBlankAbsorbed(0, 0)).toBe(0);
+    expect(getBlankAbsorbed(0, 20)).toBe(0);
+  });
+
+  it("should return blankSize minus extraContentPadding", () => {
+    expect(getBlankAbsorbed(500, 20)).toBe(480);
+  });
+
+  it("should return full blankSize when extraContentPadding is 0", () => {
+    expect(getBlankAbsorbed(500, 0)).toBe(500);
+  });
+
+  it("should return 0 when extraContentPadding exceeds blankSize", () => {
+    expect(getBlankAbsorbed(100, 200)).toBe(0);
+  });
+
+  it("should return 0 when they are equal", () => {
+    expect(getBlankAbsorbed(100, 100)).toBe(0);
+  });
+});
+
+describe("`getScrollEffective` specification", () => {
+  it("should return rawEffective when blankAbsorbed is 0", () => {
+    expect(getScrollEffective(300, 0)).toBe(300);
+  });
+
+  it("should subtract blankAbsorbed from rawEffective", () => {
+    expect(getScrollEffective(300, 200)).toBe(100);
+  });
+
+  it("should return 0 when blankAbsorbed equals rawEffective", () => {
+    expect(getScrollEffective(300, 300)).toBe(0);
+  });
+
+  it("should return 0 when blankAbsorbed exceeds rawEffective", () => {
+    expect(getScrollEffective(300, 500)).toBe(0);
+  });
+
+  it("should return 0 when rawEffective is 0", () => {
+    expect(getScrollEffective(0, 0)).toBe(0);
+    expect(getScrollEffective(0, 100)).toBe(0);
+  });
+});
+
+describe("`clampedScrollTarget` with totalPaddingForMaxScroll", () => {
+  it("should use totalPaddingForMaxScroll for maxScroll when provided", () => {
+    // scrollEff=100, totalPaddingForMaxScroll=500
+    // maxScroll = 1000 - 800 + 500 = 700
+    // target = min(max(100 + 100, 0), 700) = 200
+    expect(clampedScrollTarget(100, 100, 1000, 800, 500)).toBe(200);
+  });
+
+  it("should allow larger maxScroll with bigger totalPaddingForMaxScroll", () => {
+    // Without: maxScroll = 1000 - 800 + 100 = 300, target = min(400+100, 300) = 300
+    expect(clampedScrollTarget(400, 100, 1000, 800)).toBe(300);
+    // With: maxScroll = 1000 - 800 + 500 = 700, target = min(400+100, 700) = 500
+    expect(clampedScrollTarget(400, 100, 1000, 800, 500)).toBe(500);
+  });
+
+  it("should fall back to keyboardHeight when undefined", () => {
+    expect(clampedScrollTarget(100, 300, 1000, 800)).toBe(
+      clampedScrollTarget(100, 300, 1000, 800, undefined),
+    );
   });
 });

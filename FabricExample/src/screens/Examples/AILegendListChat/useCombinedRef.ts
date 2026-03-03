@@ -1,3 +1,5 @@
+"use no memo";
+
 import { type MutableRefObject, useCallback } from "react";
 
 type RefItem<T> =

@@ -2,6 +2,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
 
 import { ScreenNames } from "../../constants/screenNames";
+import AILegendListChat from "../../screens/Examples/AILegendListChat";
 import AwareScrollView from "../../screens/Examples/AwareScrollView";
 import AwareScrollViewStickyFooter from "../../screens/Examples/AwareScrollViewStickyFooter";
 import CloseScreen from "../../screens/Examples/Close";
@@ -13,7 +14,6 @@ import InteractiveKeyboard from "../../screens/Examples/InteractiveKeyboard";
 import InteractiveKeyboardIOS from "../../screens/Examples/InteractiveKeyboardIOS";
 import KeyboardAnimation from "../../screens/Examples/KeyboardAnimation";
 import KeyboardAvoidingViewExample from "../../screens/Examples/KeyboardAvoidingView";
-import AILegendListChat from "../../screens/Examples/AILegendListChat";
 import KeyboardChatScrollViewPlayground from "../../screens/Examples/KeyboardChatScrollView";
 import KeyboardExtender from "../../screens/Examples/KeyboardExtender";
 import KeyboardSharedTransitionExample from "../../screens/Examples/KeyboardSharedTransitions";

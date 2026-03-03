@@ -5,7 +5,10 @@ import useScrollState from "../../hooks/useScrollState";
 
 import {
   clampedScrollTarget,
+  getBlankAbsorbed,
   getEffectiveHeight,
+  getScrollEffective,
+  getVisibleBlankFraction,
   isScrollAtEnd,
   shouldShiftContent,
 } from "./helpers";
@@ -31,13 +34,21 @@ function useChatKeyboard(
   scrollViewRef: AnimatedRef<Reanimated.ScrollView>,
   options: UseChatKeyboardOptions,
 ): UseChatKeyboardReturn {
-  const { inverted, keyboardLiftBehavior, freeze, offset } = options;
+  const {
+    inverted,
+    keyboardLiftBehavior,
+    freeze,
+    offset,
+    blankSize,
+    extraContentPadding,
+  } = options;
 
   const padding = useSharedValue(0);
   const currentHeight = useSharedValue(0);
   const offsetBeforeScroll = useSharedValue(0);
   const targetKeyboardHeight = useSharedValue(0);
   const closing = useSharedValue(false);
+  const blankFractionOnOpen = useSharedValue(0);
   const {
     layout,
     size,
@@ -45,11 +56,18 @@ function useChatKeyboard(
     onLayout,
     onContentSizeChange,
   } = useScrollState(scrollViewRef);
-  const clampScrollIfNeeded = (effective: number) => {
+  const clampScrollIfNeeded = (
+    effective: number,
+    totalPaddingForMaxScroll?: number,
+  ) => {
     "worklet";
 
+    const paddingForMax =
+      totalPaddingForMaxScroll !== undefined
+        ? totalPaddingForMaxScroll
+        : effective;
     const maxScroll = Math.max(
-      size.value.height - layout.value.height + effective,
+      size.value.height - layout.value.height + paddingForMax,
       0,
     );
 
@@ -88,6 +106,20 @@ function useChatKeyboard(
           inverted,
         );
 
+        // Scale blank absorption by how much of the blank is visible.
+        // Fully visible → full absorption; fully off-screen → no absorption.
+        const visibleFraction = getVisibleBlankFraction(
+          scroll.value,
+          layout.value.height,
+          size.value.height,
+          blankSize.value,
+          inverted,
+        );
+        const blankAbsorbed =
+          getBlankAbsorbed(blankSize.value, extraContentPadding.value) *
+          visibleFraction;
+        const scrollEff = getScrollEffective(effective, blankAbsorbed);
+
         if (inverted && e.duration === -1) {
           // Android inverted: skip post-interactive snap-back events
           // (duration === -1 means the keyboard is re-establishing its
@@ -95,12 +127,19 @@ function useChatKeyboard(
           return;
         } else if (e.height > 0) {
           // Android: keyboard opening — set padding + capture scroll position
+          blankFractionOnOpen.value = visibleFraction;
           padding.value = effective;
           offsetBeforeScroll.value = scroll.value;
 
           if (!inverted && keyboardLiftBehavior === "whenAtEnd" && !atEnd) {
             // Sentinel: don't scroll in onMove (non-inverted only)
             offsetBeforeScroll.value = -1;
+          } else if (!inverted && scrollEff === 0) {
+            // blankSize fully absorbs the keyboard — prevent scroll
+            offsetBeforeScroll.value = -1;
+          } else if (inverted && scrollEff === 0) {
+            // blankSize fully absorbs the keyboard — guard for inverted
+            offsetBeforeScroll.value = scroll.value;
           }
         } else {
           // Android: keyboard closing — re-capture scroll position
@@ -109,9 +148,17 @@ function useChatKeyboard(
           } else {
             // Preserve "whenAtEnd" sentinel: if open didn't shift, close shouldn't either
             if (offsetBeforeScroll.value !== -1) {
-              // Non-inverted: subtract padding to get the "natural" position
-              // so onMove smoothly scrolls back from where the user is now
-              offsetBeforeScroll.value = scroll.value - padding.value;
+              // Non-inverted: undo only the actual scroll displacement
+              // (accounting for blank absorption at open time)
+              const prevBlankAbsorbed =
+                getBlankAbsorbed(blankSize.value, extraContentPadding.value) *
+                blankFractionOnOpen.value;
+              const prevScrollEff = getScrollEffective(
+                padding.value,
+                prevBlankAbsorbed,
+              );
+
+              offsetBeforeScroll.value = scroll.value - prevScrollEff;
             }
           }
         }
@@ -137,6 +184,15 @@ function useChatKeyboard(
             offset,
           );
 
+          const blankAbsorbed =
+            getBlankAbsorbed(blankSize.value, extraContentPadding.value) *
+            blankFractionOnOpen.value;
+          const scrollEff = getScrollEffective(effective, blankAbsorbed);
+          const actualTotalPadding = Math.max(
+            blankSize.value,
+            effective + extraContentPadding.value,
+          );
+
           // Check if we should shift content based on position when keyboard started
           const wasAtEnd = isScrollAtEnd(
             offsetBeforeScroll.value,
@@ -152,6 +208,11 @@ function useChatKeyboard(
             effective < padding.value
           ) {
             padding.value = effective;
+
+            if (scrollEff === 0 && blankAbsorbed > 0) {
+              return;
+            }
+
             scrollTo(scrollViewRef, 0, 0, false);
 
             return;
@@ -161,9 +222,14 @@ function useChatKeyboard(
             // Closing, not shifting: reduce padding to avoid gap
             if (closing.value && effective < padding.value) {
               padding.value = effective;
-              clampScrollIfNeeded(effective);
+              clampScrollIfNeeded(effective, actualTotalPadding);
             }
 
+            return;
+          }
+
+          // When blankSize fully absorbs the keyboard, skip scroll
+          if (scrollEff === 0 && blankAbsorbed > 0) {
             return;
           }
 
@@ -180,14 +246,14 @@ function useChatKeyboard(
               } else if (closing.value) {
                 // Not at end: reduce padding to avoid gap
                 padding.value = effective;
-                clampScrollIfNeeded(effective);
+                clampScrollIfNeeded(effective, actualTotalPadding);
               }
 
               return;
             }
           }
 
-          const target = offsetBeforeScroll.value + padding.value - effective;
+          const target = offsetBeforeScroll.value + padding.value - scrollEff;
 
           scrollTo(scrollViewRef, 0, target, false);
         } else {
@@ -197,32 +263,22 @@ function useChatKeyboard(
             offset,
           );
 
-          // "never" closing: scroll along when at end to avoid jump
+          const blankAbsorbed =
+            getBlankAbsorbed(blankSize.value, extraContentPadding.value) *
+            blankFractionOnOpen.value;
+          const scrollEff = getScrollEffective(effective, blankAbsorbed);
+          const actualTotalPadding = Math.max(
+            blankSize.value,
+            effective + extraContentPadding.value,
+          );
+
+          // "never" closing: clamp scroll to valid range as inset shrinks
           if (
             keyboardLiftBehavior === "never" &&
             closing.value &&
             effective < padding.value
           ) {
-            const wasAtEnd = isScrollAtEnd(
-              offsetBeforeScroll.value + padding.value,
-              layout.value.height,
-              size.value.height,
-              false,
-            );
-
-            if (wasAtEnd) {
-              const target = clampedScrollTarget(
-                offsetBeforeScroll.value,
-                effective,
-                size.value.height,
-                layout.value.height,
-              );
-
-              scrollTo(scrollViewRef, 0, target, false);
-            } else {
-              // Clamp to valid range as padding shrinks
-              clampScrollIfNeeded(effective);
-            }
+            clampScrollIfNeeded(effective, actualTotalPadding);
 
             return;
           }
@@ -231,11 +287,11 @@ function useChatKeyboard(
             return;
           }
 
-          // "whenAtEnd" sentinel check
+          // "whenAtEnd" sentinel check (also used for blankSize full absorption)
           if (offsetBeforeScroll.value === -1) {
             if (closing.value) {
               // Keyboard didn't shift on open; ensure valid position on close
-              clampScrollIfNeeded(effective);
+              clampScrollIfNeeded(effective, actualTotalPadding);
             }
 
             return;
@@ -245,7 +301,7 @@ function useChatKeyboard(
           if (keyboardLiftBehavior === "persistent" && closing.value) {
             const keepAt = offsetBeforeScroll.value + padding.value;
             const maxScroll = Math.max(
-              size.value.height - layout.value.height + effective,
+              size.value.height - layout.value.height + actualTotalPadding,
               0,
             );
 
@@ -256,9 +312,10 @@ function useChatKeyboard(
 
           const target = clampedScrollTarget(
             offsetBeforeScroll.value,
-            effective,
+            scrollEff,
             size.value.height,
             layout.value.height,
+            actualTotalPadding,
           );
 
           scrollTo(scrollViewRef, 0, target, false);

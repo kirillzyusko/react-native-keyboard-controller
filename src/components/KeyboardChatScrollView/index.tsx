@@ -30,6 +30,7 @@ const KeyboardChatScrollView = forwardRef<
       freeze = false,
       offset = 0,
       extraContentPadding,
+      blankSize,
       onLayout: onLayoutProp,
       onContentSizeChange: onContentSizeChangeProp,
       ...rest
@@ -41,6 +42,8 @@ const KeyboardChatScrollView = forwardRef<
     const defaultExtraContentPadding = useSharedValue(0);
     const effectiveExtraContentPadding =
       extraContentPadding ?? defaultExtraContentPadding;
+    const defaultBlankSize = useSharedValue(0);
+    const effectiveBlankSize = blankSize ?? defaultBlankSize;
 
     const {
       padding,
@@ -56,12 +59,15 @@ const KeyboardChatScrollView = forwardRef<
       keyboardLiftBehavior,
       freeze,
       offset,
+      blankSize: effectiveBlankSize,
+      extraContentPadding: effectiveExtraContentPadding,
     });
 
     useExtraContentPadding({
       scrollViewRef,
       extraContentPadding: effectiveExtraContentPadding,
       keyboardPadding: padding,
+      blankSize: effectiveBlankSize,
       scroll,
       layout,
       size,
@@ -70,8 +76,11 @@ const KeyboardChatScrollView = forwardRef<
       freeze,
     });
 
-    const totalPadding = useDerivedValue(
-      () => padding.value + effectiveExtraContentPadding.value,
+    const totalPadding = useDerivedValue(() =>
+      Math.max(
+        effectiveBlankSize.value,
+        padding.value + effectiveExtraContentPadding.value,
+      ),
     );
 
     const onLayout = useCallback(
