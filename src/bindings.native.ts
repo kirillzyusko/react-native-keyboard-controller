@@ -1,7 +1,6 @@
 import { NativeEventEmitter, Platform } from "react-native";
 
 import type {
-  ClippingScrollViewProps,
   FocusedInputEventsModule,
   KeyboardBackgroundViewProps,
   KeyboardControllerNativeModule,
