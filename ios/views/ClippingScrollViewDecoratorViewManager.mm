@@ -54,27 +54,27 @@ static void KCApplyNoopScrollRectToVisible(UIScrollView *scrollView)
     return;
   }
 
-  NSString *subclassName =
-      [@"KC_NoScrollRect_" stringByAppendingString:originalClassName];
+  NSString *subclassName = [@"KC_NoScrollRect_" stringByAppendingString:originalClassName];
   Class subclass = NSClassFromString(subclassName);
 
   if (!subclass) {
-    subclass =
-        objc_allocateClassPair(originalClass, subclassName.UTF8String, 0);
+    subclass = objc_allocateClassPair(originalClass, subclassName.UTF8String, 0);
     if (!subclass) {
       return;
     }
 
-    Method original = class_getInstanceMethod(originalClass,
-                                              @selector(scrollRectToVisible:animated:));
+    Method original =
+        class_getInstanceMethod(originalClass, @selector(scrollRectToVisible:animated:));
     if (original) {
       IMP noopImp = imp_implementationWithBlock(
-          ^(__unused UIScrollView *self, __unused CGRect rect,
-            __unused BOOL animated){
+          ^(__unused UIScrollView *self, __unused CGRect rect, __unused BOOL animated){
               // no-op
           });
-      class_addMethod(subclass, @selector(scrollRectToVisible:animated:),
-                      noopImp, method_getTypeEncoding(original));
+      class_addMethod(
+          subclass,
+          @selector(scrollRectToVisible:animated:),
+          noopImp,
+          method_getTypeEncoding(original));
     }
 
     objc_registerClassPair(subclass);
@@ -117,8 +117,7 @@ RCT_EXPORT_MODULE(ClippingScrollViewDecoratorViewManager)
 #ifdef RCT_NEW_ARCH_ENABLED
 + (ComponentDescriptorProvider)componentDescriptorProvider
 {
-  return concreteComponentDescriptorProvider<
-      ClippingScrollViewDecoratorViewComponentDescriptor>();
+  return concreteComponentDescriptorProvider<ClippingScrollViewDecoratorViewComponentDescriptor>();
 }
 #endif
 
