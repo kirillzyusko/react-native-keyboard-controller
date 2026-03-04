@@ -1,6 +1,7 @@
 import React, { forwardRef, useCallback, useMemo } from "react";
 import { StyleSheet } from "react-native";
 import {
+  makeMutable,
   useAnimatedRef,
   useAnimatedStyle,
   useDerivedValue,
@@ -17,6 +18,8 @@ import { useExtraContentPadding } from "./useExtraContentPadding";
 import type { KeyboardChatScrollViewProps } from "./types";
 import type { LayoutChangeEvent } from "react-native";
 
+const ZERO_CONTENT_PADDING = makeMutable(0);
+
 const KeyboardChatScrollView = forwardRef<
   Reanimated.ScrollView,
   React.PropsWithChildren<KeyboardChatScrollViewProps>
@@ -29,7 +32,7 @@ const KeyboardChatScrollView = forwardRef<
       keyboardLiftBehavior = "always",
       freeze = false,
       offset = 0,
-      extraContentPadding,
+      extraContentPadding = ZERO_CONTENT_PADDING,
       onLayout: onLayoutProp,
       onContentSizeChange: onContentSizeChangeProp,
       ...rest
@@ -56,6 +59,7 @@ const KeyboardChatScrollView = forwardRef<
       keyboardLiftBehavior,
       freeze,
       offset,
+      extraContentPadding: effectiveExtraContentPadding,
     });
 
     useExtraContentPadding({

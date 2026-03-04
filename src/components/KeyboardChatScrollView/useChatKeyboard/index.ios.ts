@@ -34,7 +34,13 @@ function useChatKeyboard(
   scrollViewRef: AnimatedRef<Reanimated.ScrollView>,
   options: UseChatKeyboardOptions,
 ): UseChatKeyboardReturn {
-  const { inverted, keyboardLiftBehavior, freeze, offset } = options;
+  const {
+    inverted,
+    keyboardLiftBehavior,
+    freeze,
+    offset,
+    extraContentPadding,
+  } = options;
 
   const padding = useSharedValue(0);
   const currentHeight = useSharedValue(0);
@@ -85,10 +91,13 @@ function useChatKeyboard(
 
           if (atEnd) {
             if (inverted) {
-              contentOffsetY.value = -effective;
+              contentOffsetY.value = -(effective + extraContentPadding.value);
             } else {
               contentOffsetY.value = Math.max(
-                size.value.height - layout.value.height + effective,
+                size.value.height -
+                  layout.value.height +
+                  effective +
+                  extraContentPadding.value,
                 0,
               );
             }
@@ -111,10 +120,13 @@ function useChatKeyboard(
           padding.value = effective;
 
           if (inverted) {
-            contentOffsetY.value = -effective;
+            contentOffsetY.value = -(effective + extraContentPadding.value);
           } else {
             contentOffsetY.value = Math.max(
-              size.value.height - layout.value.height + effective,
+              size.value.height -
+                layout.value.height +
+                effective +
+                extraContentPadding.value,
               0,
             );
           }
@@ -142,6 +154,7 @@ function useChatKeyboard(
           size.value.height,
           layout.value.height,
           inverted,
+          extraContentPadding.value,
         );
       },
       onMove: () => {
@@ -165,7 +178,7 @@ function useChatKeyboard(
         padding.value = effective;
       },
     },
-    [inverted, keyboardLiftBehavior, freeze, offset],
+    [inverted, keyboardLiftBehavior, freeze, offset, extraContentPadding],
   );
 
   return {

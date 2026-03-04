@@ -8,6 +8,8 @@ type UseChatKeyboardOptions = {
   keyboardLiftBehavior: KeyboardLiftBehavior;
   freeze: boolean;
   offset: number;
+  /** Extra content padding shared value — needed on iOS to correctly clamp contentOffset. */
+  extraContentPadding: SharedValue<number>;
 };
 
 type UseChatKeyboardReturn = {
