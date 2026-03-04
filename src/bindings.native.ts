@@ -1,7 +1,6 @@
 import { NativeEventEmitter, Platform } from "react-native";
 
 import type {
-  ClippingScrollViewProps,
   FocusedInputEventsModule,
   KeyboardBackgroundViewProps,
   KeyboardControllerNativeModule,
@@ -73,6 +72,4 @@ export const RCTKeyboardExtender: React.FC<KeyboardExtenderProps> =
     ? require("./specs/KeyboardExtenderNativeComponent").default
     : ({ children }: KeyboardExtenderProps) => children;
 export const ClippingScrollView: React.FC<KeyboardBackgroundViewProps> =
-  Platform.OS === "android"
-    ? require("./specs/ClippingScrollViewDecoratorViewNativeComponent").default
-    : ({ children }: ClippingScrollViewProps) => children;
+  require("./specs/ClippingScrollViewDecoratorViewNativeComponent").default;

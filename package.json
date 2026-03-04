@@ -191,7 +191,8 @@
         "KeyboardGestureArea": "KeyboardGestureArea",
         "OverKeyboardView": "OverKeyboardView",
         "KeyboardBackgroundView": "KeyboardBackgroundView",
-        "KeyboardExtender": "KeyboardExtender"
+        "KeyboardExtender": "KeyboardExtender",
+        "ClippingScrollViewDecoratorView": "ClippingScrollViewDecoratorView"
       }
     }
   },

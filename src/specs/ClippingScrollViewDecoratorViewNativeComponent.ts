@@ -13,6 +13,5 @@ export default codegenNativeComponent<NativeProps>(
   "ClippingScrollViewDecoratorView",
   {
     interfaceOnly: true,
-    excludedPlatforms: ["iOS"],
   },
 ) as HostComponent<NativeProps>;
