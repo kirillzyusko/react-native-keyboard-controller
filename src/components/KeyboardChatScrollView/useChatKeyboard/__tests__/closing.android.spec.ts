@@ -205,4 +205,71 @@ describe("`useChatKeyboard` — Android closing behaviors", () => {
     // persistent block: effective(200) < currentShift(300), !wasAtEnd, closing → true
     expect(result.current.padding.value).toBe(200);
   });
+
+  it("never inverted: should scroll to 0 on close when WAS at end", () => {
+    // At end for inverted means offset near 0
+    mockOffset.value = 0;
+    const { result } = render({
+      inverted: true,
+      keyboardLiftBehavior: "never",
+    });
+
+    handlers.onStart({ height: KEYBOARD });
+    handlers.onMove({ height: KEYBOARD });
+
+    // Keyboard closes — offsetBeforeScroll re-captured as current scroll (0)
+    handlers.onStart({ height: 0 });
+    // effective=200 < padding=300, wasAtEnd=isScrollAtEnd(0, 800, 2000, true)=true
+    handlers.onMove({ height: 200 });
+
+    expect(result.current.padding.value).toBe(200);
+    expect(mockScrollTo).toHaveBeenLastCalledWith(
+      expect.anything(),
+      0,
+      0,
+      false,
+    );
+  });
+
+  it("never non-inverted: should clamp position on close when NOT at end", () => {
+    // Not at end: 100 + 800 = 900 < 2000 - 20
+    mockOffset.value = 100;
+    render({ inverted: false, keyboardLiftBehavior: "never" });
+
+    handlers.onStart({ height: KEYBOARD });
+
+    // Keyboard closes; offsetBeforeScroll = 100 - 300 = -200
+    handlers.onStart({ height: 0 });
+    // effective=200 < padding=300, wasAtEnd=isScrollAtEnd(-200+300=100, 800, 2000)=false
+    // → else branch → clampScrollIfNeeded(200); scroll=100 < maxScroll=1400 → no scrollTo
+    handlers.onMove({ height: 200 });
+
+    expect(mockScrollTo).not.toHaveBeenCalled();
+  });
+
+  it("whenAtEnd inverted: should clamp scroll to maxScroll on close when position exceeds new range", () => {
+    // Small content so that old scroll (900) exceeds maxScroll after keyboard shrinks
+    mockSize.value = { width: 390, height: 1500 };
+    // Not at end: isScrollAtEnd(900, 800, 1500, true) = (900 <= 20) = false
+    mockOffset.value = 900;
+    render({ inverted: true, keyboardLiftBehavior: "whenAtEnd" });
+
+    handlers.onStart({ height: KEYBOARD });
+    handlers.onMove({ height: KEYBOARD });
+    mockScrollTo.mockClear();
+
+    // Keyboard closes — offsetBeforeScroll re-captured as 900
+    handlers.onStart({ height: 0 });
+    // effective=50 < padding=300, !shouldShift(whenAtEnd, false)=true
+    // closing && 50<300 → clampScrollIfNeeded(50)
+    // maxScroll = 1500-800+50 = 750; scroll(900) > 750 → scrollTo(750)
+    handlers.onMove({ height: 50 });
+
+    expect(mockScrollTo).toHaveBeenLastCalledWith(
+      expect.anything(),
+      0,
+      750,
+      false,
+    );
+  });
 });

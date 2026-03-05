@@ -12,9 +12,10 @@ jest.mock("react-native-reanimated", () => ({
   ...require("react-native-reanimated/mock"),
   scrollTo: (...args: unknown[]) => mockScrollTo(...args),
   useAnimatedReaction: (
-    _producer: () => number,
+    producer: () => number,
     effect: (current: number, previous: number | null) => void,
   ) => {
+    producer();
     reactionEffect = effect;
   },
 }));
