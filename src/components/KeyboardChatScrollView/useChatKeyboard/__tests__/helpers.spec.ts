@@ -7,7 +7,7 @@ jest.mock("react-native-reanimated", () => ({
 import {
   clampedScrollTarget,
   computeIOSContentOffset,
-  getBlankAbsorbed,
+  getMinimumPaddingAbsorbed,
   getEffectiveHeight,
   getScrollEffective,
   isScrollAtEnd,
@@ -273,43 +273,43 @@ describe("`computeIOSContentOffset` specification", () => {
   });
 });
 
-describe("`getBlankAbsorbed` specification", () => {
-  it("should return 0 when blankSize is 0", () => {
-    expect(getBlankAbsorbed(0, 0)).toBe(0);
-    expect(getBlankAbsorbed(0, 20)).toBe(0);
+describe("`getMinimumPaddingAbsorbed` specification", () => {
+  it("should return 0 when minimumContentPadding is 0", () => {
+    expect(getMinimumPaddingAbsorbed(0, 0)).toBe(0);
+    expect(getMinimumPaddingAbsorbed(0, 20)).toBe(0);
   });
 
-  it("should return blankSize minus extraContentPadding", () => {
-    expect(getBlankAbsorbed(500, 20)).toBe(480);
+  it("should return minimumContentPadding minus extraContentPadding", () => {
+    expect(getMinimumPaddingAbsorbed(500, 20)).toBe(480);
   });
 
-  it("should return full blankSize when extraContentPadding is 0", () => {
-    expect(getBlankAbsorbed(500, 0)).toBe(500);
+  it("should return full minimumContentPadding when extraContentPadding is 0", () => {
+    expect(getMinimumPaddingAbsorbed(500, 0)).toBe(500);
   });
 
-  it("should return 0 when extraContentPadding exceeds blankSize", () => {
-    expect(getBlankAbsorbed(100, 200)).toBe(0);
+  it("should return 0 when extraContentPadding exceeds minimumContentPadding", () => {
+    expect(getMinimumPaddingAbsorbed(100, 200)).toBe(0);
   });
 
   it("should return 0 when they are equal", () => {
-    expect(getBlankAbsorbed(100, 100)).toBe(0);
+    expect(getMinimumPaddingAbsorbed(100, 100)).toBe(0);
   });
 });
 
 describe("`getScrollEffective` specification", () => {
-  it("should return rawEffective when blankAbsorbed is 0", () => {
+  it("should return rawEffective when minimumPaddingAbsorbed is 0", () => {
     expect(getScrollEffective(300, 0)).toBe(300);
   });
 
-  it("should subtract blankAbsorbed from rawEffective", () => {
+  it("should subtract minimumPaddingAbsorbed from rawEffective", () => {
     expect(getScrollEffective(300, 200)).toBe(100);
   });
 
-  it("should return 0 when blankAbsorbed equals rawEffective", () => {
+  it("should return 0 when minimumPaddingAbsorbed equals rawEffective", () => {
     expect(getScrollEffective(300, 300)).toBe(0);
   });
 
-  it("should return 0 when blankAbsorbed exceeds rawEffective", () => {
+  it("should return 0 when minimumPaddingAbsorbed exceeds rawEffective", () => {
     expect(getScrollEffective(300, 500)).toBe(0);
   });
 
