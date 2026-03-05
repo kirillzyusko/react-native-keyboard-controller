@@ -8,6 +8,8 @@ type UseChatKeyboardOptions = {
   keyboardLiftBehavior: KeyboardLiftBehavior;
   freeze: boolean;
   offset: number;
+  /** Extra content padding shared value — needed on iOS to correctly clamp contentOffset. */
+  extraContentPadding: SharedValue<number>;
 };
 
 type UseChatKeyboardReturn = {
@@ -17,6 +19,12 @@ type UseChatKeyboardReturn = {
   currentHeight: SharedValue<number>;
   /** Absolute Y content offset for iOS (set once in onStart). `undefined` on Android. */
   contentOffsetY: SharedValue<number> | undefined;
+  /** Current vertical scroll offset. */
+  scroll: SharedValue<number>;
+  /** Visible viewport dimensions. */
+  layout: SharedValue<{ width: number; height: number }>;
+  /** Total content dimensions. */
+  size: SharedValue<{ width: number; height: number }>;
   /** Callback to attach to ScrollView's onLayout prop to capture initial viewport dimensions. */
   onLayout: (e: LayoutChangeEvent) => void;
   /** Callback to attach to ScrollView's onContentSizeChange prop to capture initial content dimensions. */

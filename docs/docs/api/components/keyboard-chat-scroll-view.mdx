@@ -84,6 +84,23 @@ The distance between the bottom of the screen and the `ScrollView`. When the key
 
 This is useful when the input is not at the very bottom of the screen — for example, when the `ScrollView` sits above a **safe area** inset, **bottom tabs**, or **any other fixed-height element**. In that case, set `offset` to the height of the elements between the `ScrollView` and the bottom of the screen.
 
+### `extraContentPadding`
+
+A [Reanimated `SharedValue<number>`](https://docs.swmansion.com/react-native-reanimated/docs/core/useSharedValue/) representing additional padding introduced by an element **outside** the keyboard — for example, a growing multiline `TextInput` inside a `KeyboardStickyView`.
+
+When this value changes, `KeyboardChatScrollView` does two things:
+
+1. **Extends the scrollable range** — the extra amount is added to `contentInset`, keeping all content reachable.
+2. **Adjusts the scroll position** — conditionally, based on `keyboardLiftBehavior`, so the bottom messages stay visible as the input grows.
+
+:::tip When to use it?
+Use `extraContentPadding` whenever an element that is **not** the keyboard changes the amount of space the chat list has to work with. The most common case is a multiline text input that grows as the user types.
+:::
+
+:::note
+The value must be a `SharedValue` (from `useSharedValue`) — not a plain number — so that changes are tracked on the UI thread without triggering a React re-render.
+:::
+
 ## Usage with virtualized lists
 
 `KeyboardChatScrollView` doesn't ship with built-in wrappers for third-party virtualized list libraries, but since all of them (`FlatList`, `FlashList`, `LegendList`) accept a custom scroll component, integration is straightforward.

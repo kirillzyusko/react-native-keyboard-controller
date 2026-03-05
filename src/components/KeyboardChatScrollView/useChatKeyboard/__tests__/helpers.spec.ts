@@ -187,4 +187,49 @@ describe("`computeIOSContentOffset` specification", () => {
       expect(computeIOSContentOffset(100, 300, 200, 800, true)).toBe(-200);
     });
   });
+
+  describe("with extraContentPadding", () => {
+    describe("non-inverted", () => {
+      it("should not clamp a scroll position that is valid within the extended range", () => {
+        // The key regression: scroll pushed to 1550 by extraContentPadding=50
+        // relativeScroll = 1550 - 300 = 1250
+        // Without ecp: maxScroll = 2000-800+300 = 1500 → result = 1500 (wrong)
+        // With ecp=50: maxScroll = 2000-800+300+50 = 1550 → result = 1550 (correct)
+        expect(computeIOSContentOffset(1250, 300, 2000, 800, false, 50)).toBe(
+          1550,
+        );
+      });
+
+      it("should not affect result when scroll is below maxScroll", () => {
+        // 300 + 100 = 400, still below maxScroll of 1550
+        expect(computeIOSContentOffset(100, 300, 2000, 800, false, 50)).toBe(
+          400,
+        );
+      });
+
+      it("should clamp to the extended maxScroll", () => {
+        // maxScroll = 1000-800+300+50 = 550; 300+400=700 → clamped to 550
+        expect(computeIOSContentOffset(400, 300, 1000, 800, false, 50)).toBe(
+          550,
+        );
+      });
+    });
+
+    describe("inverted", () => {
+      it("should extend the minimum bound by extraContentPadding", () => {
+        // relativeScroll=-100 → min(-100-300, maxScroll)=-400, clamped to -(300+50)=-350
+        // Without ecp: clamped to -300; with ecp=50: clamped to -350
+        expect(computeIOSContentOffset(-100, 300, 1000, 800, true, 50)).toBe(
+          -350,
+        );
+      });
+
+      it("should clamp to extended minimum when relativeScroll is very negative", () => {
+        // relativeScroll=-500, keyboard=300, ecp=50 → -500-300=-800, clamped to -350
+        expect(computeIOSContentOffset(-500, 300, 1000, 800, true, 50)).toBe(
+          -350,
+        );
+      });
+    });
+  });
 });

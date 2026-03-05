@@ -197,6 +197,69 @@ const onKeyboardPress = () => {
 
 When `freeze` is `true`, all keyboard-driven layout changes (padding, content offset, scroll position) are paused.
 
+### Handling a growing multiline input
+
+If your composer has a `multiline` `TextInput` that grows as the user types, you need to tell `KeyboardChatScrollView` about the extra space it takes up — otherwise the component doesn't know the scrollable range has changed and the bottom messages can get clipped under the input.
+
+Pass a `SharedValue<number>` via the `extraContentPadding` prop. Update it in the `TextInput`'s `onLayout` callback whenever the height changes:
+
+```tsx
+import { useCallback } from "react";
+import { TextInput, type LayoutChangeEvent } from "react-native";
+import { useSharedValue, withTiming } from "react-native-reanimated";
+
+const MIN_INPUT_HEIGHT = 36;
+
+function ChatScreen() {
+  const extraContentPadding = useSharedValue(0);
+
+  const onInputLayout = useCallback(
+    (e: LayoutChangeEvent) => {
+      const height = e.nativeEvent.layout.height;
+
+      extraContentPadding.value = withTiming(
+        Math.max(height - MIN_INPUT_HEIGHT, 0),
+        { duration: 250 },
+      );
+    },
+    [extraContentPadding],
+  );
+
+  return (
+    <>
+      <KeyboardChatScrollView extraContentPadding={extraContentPadding}>
+        {/* ...messages... */}
+      </KeyboardChatScrollView>
+      <KeyboardStickyView>
+        <TextInput multiline onLayout={onInputLayout} />
+      </KeyboardStickyView>
+    </>
+  );
+}
+```
+
+The value represents the **delta** above the baseline input height. When the input is at its minimum height the value is `0`; each line of growth adds to it. The component uses this value to:
+
+1. Extend the scrollable range so the last messages aren't hidden under the taller input.
+2. Scroll the list down (based on `keyboardLiftBehavior`) so the bottom messages stay visible.
+
+:::note Using with virtualized lists
+When using `extraContentPadding` with `FlatList`, `FlashList`, or `LegendList`, pass the shared value through your wrapper component — both to `KeyboardChatScrollView` and to `useCallback` dependencies so the reference is stable:
+
+```tsx
+const renderScrollComponent = useCallback(
+  (props: ScrollViewProps) => (
+    <VirtualizedListScrollView
+      {...props}
+      extraContentPadding={extraContentPadding}
+    />
+  ),
+  [extraContentPadding],
+);
+```
+
+:::
+
 ## Using with virtualized lists
 
 For production chat apps you'll likely use a virtualized list (`FlatList`, `FlashList`, or `LegendList`) instead of a plain `ScrollView`. All of these accept a custom scroll component, making integration straightforward.
@@ -312,6 +375,7 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  type LayoutChangeEvent,
   type ScrollViewProps,
 } from "react-native";
 import {
@@ -319,6 +383,7 @@ import {
   KeyboardGestureArea,
   KeyboardStickyView,
 } from "react-native-keyboard-controller";
+import { useSharedValue, withTiming } from "react-native-reanimated";
 import {
   SafeAreaView,
   useSafeAreaInsets,
@@ -355,10 +420,13 @@ function ChatScreen() {
   const textRef = useRef("");
   const [messages, setMessages] = useState(INITIAL_MESSAGES);
   const { bottom } = useSafeAreaInsets();
+  const extraContentPadding = useSharedValue(0);
 
   const renderScrollComponent = useCallback(
-    (props: ScrollViewProps) => <ChatScrollView {...props} />,
-    [],
+    (props: ScrollViewProps) => (
+      <ChatScrollView {...props} extraContentPadding={extraContentPadding} />
+    ),
+    [extraContentPadding],
   );
 
   const onSend = useCallback(() => {
@@ -369,6 +437,16 @@ function ChatScreen() {
     textInputRef.current?.clear();
     textRef.current = "";
   }, []);
+
+  const onInputLayout = useCallback(
+    (e: LayoutChangeEvent) => {
+      extraContentPadding.value = withTiming(
+        Math.max(e.nativeEvent.layout.height - INPUT_HEIGHT, 0),
+        { duration: 250 },
+      );
+    },
+    [extraContentPadding],
+  );
 
   return (
     <SafeAreaView edges={["bottom"]} style={styles.container}>
@@ -397,6 +475,7 @@ function ChatScreen() {
             placeholder="Type a message..."
             style={styles.input}
             onChangeText={(text) => (textRef.current = text)}
+            onLayout={onInputLayout}
           />
           <TouchableOpacity onPress={onSend}>
             <Text>Send</Text>

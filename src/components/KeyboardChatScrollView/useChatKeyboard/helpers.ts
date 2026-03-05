@@ -6,7 +6,7 @@ const AT_END_THRESHOLD = 20;
 
 /**
  * Map the current keyboard height to an effective height that accounts for a
- * fixed offset (e.g. bottom safe-area or tab-bar height).
+ * fixed offset (e.g. Bottom safe-area or tab-bar height)..
  *
  * @param height - Current keyboard height.
  * @param targetKeyboardHeight - Full target keyboard height (captured on keyboard open).
@@ -133,6 +133,7 @@ export function clampedScrollTarget(
  * @param contentHeight - Total height of the scrollable content.
  * @param layoutHeight - Visible height of the scroll view.
  * @param inverted - Whether the list is inverted.
+ * @param extraContentPadding - Additional content padding beyond keyboard height, such as extra space from a growing text input.
  * @returns The absolute contentOffset.y to set.
  * @example
  * ```ts
@@ -145,6 +146,7 @@ export function computeIOSContentOffset(
   contentHeight: number,
   layoutHeight: number,
   inverted: boolean,
+  extraContentPadding: number = 0,
 ): number {
   "worklet";
 
@@ -153,11 +155,14 @@ export function computeIOSContentOffset(
 
     return Math.max(
       Math.min(relativeScroll - keyboardHeight, maxScroll),
-      -keyboardHeight,
+      -(keyboardHeight + extraContentPadding),
     );
   }
 
-  const maxScroll = Math.max(contentHeight - layoutHeight + keyboardHeight, 0);
+  const maxScroll = Math.max(
+    contentHeight - layoutHeight + keyboardHeight + extraContentPadding,
+    0,
+  );
 
   return Math.min(Math.max(keyboardHeight + relativeScroll, 0), maxScroll);
 }

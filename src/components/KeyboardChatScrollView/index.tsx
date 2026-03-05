@@ -1,15 +1,24 @@
 import React, { forwardRef, useCallback, useMemo } from "react";
 import { StyleSheet } from "react-native";
-import { useAnimatedRef, useAnimatedStyle } from "react-native-reanimated";
+import {
+  makeMutable,
+  useAnimatedRef,
+  useAnimatedStyle,
+  useDerivedValue,
+  useSharedValue,
+} from "react-native-reanimated";
 import Reanimated from "react-native-reanimated";
 
 import useCombinedRef from "../hooks/useCombinedRef";
 import ScrollViewWithBottomPadding from "../ScrollViewWithBottomPadding";
 
 import { useChatKeyboard } from "./useChatKeyboard";
+import { useExtraContentPadding } from "./useExtraContentPadding";
 
 import type { KeyboardChatScrollViewProps } from "./types";
 import type { LayoutChangeEvent } from "react-native";
+
+const ZERO_CONTENT_PADDING = makeMutable(0);
 
 const KeyboardChatScrollView = forwardRef<
   Reanimated.ScrollView,
@@ -23,6 +32,7 @@ const KeyboardChatScrollView = forwardRef<
       keyboardLiftBehavior = "always",
       freeze = false,
       offset = 0,
+      extraContentPadding = ZERO_CONTENT_PADDING,
       onLayout: onLayoutProp,
       onContentSizeChange: onContentSizeChangeProp,
       ...rest
@@ -31,11 +41,17 @@ const KeyboardChatScrollView = forwardRef<
   ) => {
     const scrollViewRef = useAnimatedRef<Reanimated.ScrollView>();
     const onRef = useCombinedRef(ref, scrollViewRef);
+    const defaultExtraContentPadding = useSharedValue(0);
+    const effectiveExtraContentPadding =
+      extraContentPadding ?? defaultExtraContentPadding;
 
     const {
       padding,
       currentHeight,
       contentOffsetY,
+      scroll,
+      layout,
+      size,
       onLayout: onLayoutInternal,
       onContentSizeChange: onContentSizeChangeInternal,
     } = useChatKeyboard(scrollViewRef, {
@@ -43,7 +59,24 @@ const KeyboardChatScrollView = forwardRef<
       keyboardLiftBehavior,
       freeze,
       offset,
+      extraContentPadding: effectiveExtraContentPadding,
     });
+
+    useExtraContentPadding({
+      scrollViewRef,
+      extraContentPadding: effectiveExtraContentPadding,
+      keyboardPadding: padding,
+      scroll,
+      layout,
+      size,
+      inverted,
+      keyboardLiftBehavior,
+      freeze,
+    });
+
+    const totalPadding = useDerivedValue(
+      () => padding.value + effectiveExtraContentPadding.value,
+    );
 
     const onLayout = useCallback(
       (e: LayoutChangeEvent) => {
@@ -81,7 +114,7 @@ const KeyboardChatScrollView = forwardRef<
         <ScrollViewWithBottomPadding
           ref={onRef}
           {...rest}
-          bottomPadding={padding}
+          bottomPadding={totalPadding}
           contentOffsetY={contentOffsetY}
           inverted={inverted}
           ScrollViewComponent={ScrollViewComponent}
