@@ -96,8 +96,9 @@ function useChatKeyboard(
           inverted,
         );
         const blankAbsorbed =
-          getBlankAbsorbed(blankSize.value, extraContentPadding.value) *
-          visibleFraction;
+          visibleFraction >= 1
+            ? getBlankAbsorbed(blankSize.value, extraContentPadding.value)
+            : 0;
         const scrollEff = getScrollEffective(effective, blankAbsorbed);
         const actualTotalPadding = Math.max(
           blankSize.value,

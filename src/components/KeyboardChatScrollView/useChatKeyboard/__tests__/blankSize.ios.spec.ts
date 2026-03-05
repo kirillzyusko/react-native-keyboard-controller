@@ -133,10 +133,10 @@ describe("blankSize — iOS inverted + always", () => {
 });
 
 describe("blankSize — iOS persistent behavior", () => {
-  it("full absorption on close: uses actualTotalPadding for snap", () => {
+  it("partial visibility on close: uses actualTotalPadding for snap", () => {
     // Scroll near end so blank is partially visible
     // (pastContentEnd = 1000+800-1500 = 300, fraction = 300/500 = 0.6)
-    // blankAbsorbed = 500*0.6 = 300, scrollEff = max(0, 300-300) = 0 → full absorption
+    // Partial visibility → no absorption → content shifts normally
     mockSize.value = { width: 390, height: 1500 };
     mockOffset.value = 1000;
     const { result } = render({
@@ -145,9 +145,11 @@ describe("blankSize — iOS persistent behavior", () => {
       blankSize: sv(500),
     });
 
-    // Open keyboard — fully absorbed, position preserved
+    // Open keyboard — partial visibility, no absorption, content shifts
+    // computeIOSContentOffset(1000, 300, 1500, 800, false, 500)
+    //   maxScroll = max(1500-800+500, 0) = 1200 → min(1300, 1200) = 1200
     handlers.onStart({ height: KEYBOARD });
-    expect(result.current.contentOffsetY!.value).toBe(1000);
+    expect(result.current.contentOffsetY!.value).toBe(1200);
 
     // Close keyboard — persistent + at end → snap using actualTotalPadding
     handlers.onStart({ height: 0 });
@@ -189,10 +191,10 @@ describe("blankSize — iOS never behavior", () => {
 });
 
 describe("blankSize — iOS whenAtEnd behavior", () => {
-  it("full absorption prevents shift even when at end", () => {
+  it("partial visibility shifts content normally when at end", () => {
     // Scroll near end so blank is partially visible
     // (pastContentEnd = 1000+800-1500 = 300, fraction = 300/500 = 0.6)
-    // blankAbsorbed = 500*0.6 = 300, scrollEff = max(0, 300-300) = 0 → full absorption
+    // Partial visibility → no absorption → content shifts normally
     mockSize.value = { width: 390, height: 1500 };
     mockOffset.value = 1000;
     const { result } = render({
@@ -204,7 +206,9 @@ describe("blankSize — iOS whenAtEnd behavior", () => {
     handlers.onStart({ height: KEYBOARD });
 
     expect(result.current.padding.value).toBe(KEYBOARD);
-    // blankAbsorbed=300, scrollEff=0 → contentOffsetY = scroll.value
-    expect(result.current.contentOffsetY!.value).toBe(1000);
+    // blankAbsorbed=0 (partial visibility), scrollEff=300
+    // computeIOSContentOffset(1000, 300, 1500, 800, false, 500)
+    //   maxScroll = 1200 → min(1300, 1200) = 1200
+    expect(result.current.contentOffsetY!.value).toBe(1200);
   });
 });

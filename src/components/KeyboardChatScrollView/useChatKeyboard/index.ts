@@ -49,6 +49,7 @@ function useChatKeyboard(
   const targetKeyboardHeight = useSharedValue(0);
   const closing = useSharedValue(false);
   const blankFractionOnOpen = useSharedValue(0);
+  const actualOpenShift = useSharedValue(0);
   const {
     layout,
     size,
@@ -116,8 +117,9 @@ function useChatKeyboard(
           inverted,
         );
         const blankAbsorbed =
-          getBlankAbsorbed(blankSize.value, extraContentPadding.value) *
-          visibleFraction;
+          visibleFraction >= 1
+            ? getBlankAbsorbed(blankSize.value, extraContentPadding.value)
+            : 0;
         const scrollEff = getScrollEffective(effective, blankAbsorbed);
 
         if (inverted && e.duration === -1) {
@@ -127,7 +129,7 @@ function useChatKeyboard(
           return;
         } else if (e.height > 0) {
           // Android: keyboard opening — set padding + capture scroll position
-          blankFractionOnOpen.value = visibleFraction;
+          blankFractionOnOpen.value = visibleFraction >= 1 ? 1 : 0;
           padding.value = effective;
           offsetBeforeScroll.value = scroll.value;
 
@@ -148,17 +150,9 @@ function useChatKeyboard(
           } else {
             // Preserve "whenAtEnd" sentinel: if open didn't shift, close shouldn't either
             if (offsetBeforeScroll.value !== -1) {
-              // Non-inverted: undo only the actual scroll displacement
-              // (accounting for blank absorption at open time)
-              const prevBlankAbsorbed =
-                getBlankAbsorbed(blankSize.value, extraContentPadding.value) *
-                blankFractionOnOpen.value;
-              const prevScrollEff = getScrollEffective(
-                padding.value,
-                prevBlankAbsorbed,
-              );
-
-              offsetBeforeScroll.value = scroll.value - prevScrollEff;
+              // Use the actual displacement recorded at end of open animation
+              // (not the theoretical value) so close is symmetric with open
+              offsetBeforeScroll.value = scroll.value - actualOpenShift.value;
             }
           }
         }
@@ -319,6 +313,11 @@ function useChatKeyboard(
           );
 
           scrollTo(scrollViewRef, 0, target, false);
+
+          // Track actual (clamped) displacement during open for symmetric close
+          if (!closing.value) {
+            actualOpenShift.value = target - offsetBeforeScroll.value;
+          }
         }
       },
       onEnd: (e) => {
@@ -335,6 +334,11 @@ function useChatKeyboard(
         );
 
         padding.value = effective;
+
+        // Record actual scroll displacement so close can be symmetric
+        if (effective > 0 && offsetBeforeScroll.value !== -1) {
+          actualOpenShift.value = scroll.value - offsetBeforeScroll.value;
+        }
       },
     },
     [inverted, keyboardLiftBehavior, freeze, offset],
