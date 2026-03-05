@@ -83,6 +83,71 @@ static void KCApplyNoopScrollRectToVisible(UIScrollView *scrollView)
   object_setClass(scrollView, subclass);
 }
 
+static void KCApplyFixedHitTest(UIScrollView *scrollView)
+{
+  if (!scrollView || !scrollView.superview) {
+    return;
+  }
+
+  UIView *container = scrollView.superview;
+  Class originalClass = object_getClass(container);
+  NSString *originalClassName = NSStringFromClass(originalClass);
+
+  // Already patched — nothing to do
+  if ([originalClassName hasPrefix:@"KC_FixedHitTest_"]) {
+    return;
+  }
+
+  NSString *subclassName = [@"KC_FixedHitTest_" stringByAppendingString:originalClassName];
+  Class subclass = NSClassFromString(subclassName);
+
+  if (!subclass) {
+    subclass = objc_allocateClassPair(originalClass, subclassName.UTF8String, 0);
+    if (!subclass) {
+      return;
+    }
+
+    Method original = class_getInstanceMethod(originalClass, @selector(hitTest:withEvent:));
+    if (original) {
+      // Get the original implementation to call it
+      IMP originalImp = method_getImplementation(original);
+      UIView *(*originalHitTest)(id, SEL, CGPoint, UIEvent *) =
+          (UIView *(*)(id, SEL, CGPoint, UIEvent *))originalImp;
+
+      IMP fixedHitTestImp = imp_implementationWithBlock(
+          ^UIView *(__unsafe_unretained UIView *self, CGPoint point, UIEvent *event) {
+              // Call the original implementation
+              UIView *result = originalHitTest(self, @selector(hitTest:withEvent:), point, event);
+
+              // This is the fix: when RN's betterHitTest returns self (the container),
+              // return the scrollView instead so touches can reach it
+              if (result == self) {
+                // Dynamically find the scrollView at hit-test time to handle RN refreshes
+                // where the scrollView instance is recreated but the swizzled class persists
+                for (UIView *subview in self.subviews) {
+                  if ([subview isKindOfClass:[UIScrollView class]] &&
+                      ![subview isKindOfClass:[UITextView class]]) {
+                    return subview;
+                  }
+                }
+              }
+
+              return result;
+          });
+
+      class_addMethod(
+          subclass,
+          @selector(hitTest:withEvent:),
+          fixedHitTestImp,
+          method_getTypeEncoding(original));
+    }
+
+    objc_registerClassPair(subclass);
+  }
+
+  object_setClass(container, subclass);
+}
+
 #pragma mark - Manager
 
 @implementation ClippingScrollViewDecoratorViewManager
@@ -133,6 +198,7 @@ RCT_EXPORT_MODULE(ClippingScrollViewDecoratorViewManager)
   if (self.window) {
     UIScrollView *scrollView = KCFindFirstScrollView(self);
     KCApplyNoopScrollRectToVisible(scrollView);
+    KCApplyFixedHitTest(scrollView);
   }
 }
 
