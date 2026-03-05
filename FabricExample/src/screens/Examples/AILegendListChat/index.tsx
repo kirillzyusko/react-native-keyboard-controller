@@ -352,6 +352,7 @@ const AIChat = () => {
             keyExtractor={(_item, index) => `item-${index}`}
             maintainScrollAtEnd={Platform.OS === "web"}
             offset={insets.bottom}
+            scrollIndicatorInsets={{ bottom: -insets.bottom }}
             renderItem={({ item }) => (
               <View>
                 {item.sender === "user" ? (
