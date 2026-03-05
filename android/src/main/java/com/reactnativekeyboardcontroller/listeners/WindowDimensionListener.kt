@@ -18,6 +18,7 @@ class WindowDimensionListener(
 ) {
   private var lastDispatchedDimensions = Dimensions(0.0, 0.0)
   private var layoutListener: ViewTreeObserver.OnGlobalLayoutListener? = null
+  private var attachedContent: ViewGroup? = null
 
   public fun attachListener() {
     // attach to content view only once per app instance
@@ -25,6 +26,7 @@ class WindowDimensionListener(
       listenerID = context.hashCode()
 
       val content = context.content
+      attachedContent = content
 
       updateWindowDimensions(content)
 
@@ -38,7 +40,9 @@ class WindowDimensionListener(
   }
 
   public fun detachListener() {
-    context?.content?.viewTreeObserver?.removeOnGlobalLayoutListener(layoutListener)
+    attachedContent?.viewTreeObserver?.removeOnGlobalLayoutListener(layoutListener)
+    attachedContent = null
+    layoutListener = null
   }
 
   private fun updateWindowDimensions(content: ViewGroup?) {
