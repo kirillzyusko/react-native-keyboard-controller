@@ -71,20 +71,20 @@ export type KeyboardChatScrollViewProps = {
    */
   applyWorkaroundForContentInsetHitTestBug?: boolean;
   /**
-   * A shared value representing a minimum inset floor.
+   * A shared value representing a minimum inset floor (in pixels).
    *
    * When set, the total bottom padding is computed as:
-   * `max(blankSize, keyboardPadding + extraContentPadding)`
+   * `max(minimumContentPadding, keyboardPadding + extraContentPadding)`
    *
-   * This means the keyboard "absorbs" into the blank space rather than adding to it:
-   * - When `blankSize >= keyboard + extraContentPadding`: content does NOT move on keyboard open/close.
-   * - When `blankSize < keyboard + extraContentPadding`: content moves, but only by the excess amount.
+   * This means the keyboard "absorbs" into the minimum padding rather than adding to it:
+   * - When `minimumContentPadding >= keyboard + extraContentPadding`: content does NOT move on keyboard open/close.
+   * - When `minimumContentPadding < keyboard + extraContentPadding`: content moves, but only by the excess amount.
    *
-   * Useful in AI chat apps where a sent message needs blank space below it (to push it to the top
+   * Useful in AI chat apps where a sent message needs space below it (to push it to the top
    * of the viewport) while the AI response streams in, without that space causing extra movement
    * when the keyboard opens.
    *
    * Default is `undefined` (equivalent to `0` — no minimum floor).
    */
-  blankSize?: SharedValue<number>;
+  minimumContentPadding?: SharedValue<number>;
 } & ScrollViewProps;

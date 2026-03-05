@@ -25,7 +25,7 @@ type KeyboardChatLegendListProps<ItemT> = Omit<
   "renderScrollComponent"
 > &
   KeyboardChatScrollViewPropsUnique & {
-    blankSizeIndex?: number;
+    anchorToTopIndex?: number;
   };
 
 export const KeyboardChatLegendList = typedForwardRef(
@@ -34,7 +34,7 @@ export const KeyboardChatLegendList = typedForwardRef(
     forwardedRef: ForwardedRef<LegendListRef>,
   ) {
     const {
-      blankSizeIndex,
+      anchorToTopIndex,
       onItemSizeChanged: onItemSizeChangedProp,
       onMetricsChange: onMetricsChangeProp,
       extraContentPadding,
@@ -44,11 +44,11 @@ export const KeyboardChatLegendList = typedForwardRef(
     const refLegendList = useRef<LegendListRef | null>(null);
     const combinedRef = useCombinedRef(forwardedRef, refLegendList);
 
-    const blankSize = useSharedValue<number>(0);
+    const minimumContentPadding = useSharedValue<number>(0);
 
     const calculateTopItemInset = useCallback(() => {
-      if (blankSizeIndex === undefined || blankSizeIndex < 0) {
-        blankSize.value = 0;
+      if (anchorToTopIndex === undefined || anchorToTopIndex < 0) {
+        minimumContentPadding.value = 0;
         refLegendList.current?.reportContentInset(null);
 
         return;
@@ -58,7 +58,7 @@ export const KeyboardChatLegendList = typedForwardRef(
 
       if (
         !state ||
-        blankSizeIndex >= state.data.length ||
+        anchorToTopIndex >= state.data.length ||
         state.scrollLength <= 0
       ) {
         return;
@@ -66,7 +66,7 @@ export const KeyboardChatLegendList = typedForwardRef(
 
       let contentBelowTopItem = 0;
 
-      for (let i = blankSizeIndex; i < state.data.length; i++) {
+      for (let i = anchorToTopIndex; i < state.data.length; i++) {
         const size = state.sizeAtIndex(i);
 
         if (size !== null && size > 0) {
@@ -79,9 +79,9 @@ export const KeyboardChatLegendList = typedForwardRef(
         state.scrollLength - contentBelowTopItem,
       );
 
-      blankSize.value = calculatedInset;
+      minimumContentPadding.value = calculatedInset;
       refLegendList.current?.reportContentInset({ bottom: calculatedInset });
-    }, [blankSizeIndex]);
+    }, [anchorToTopIndex]);
 
     const handleMetricsChange = useCallback(
       (
@@ -103,30 +103,30 @@ export const KeyboardChatLegendList = typedForwardRef(
         itemKey: string;
         itemData: ItemT;
       }) => {
-        if (blankSizeIndex !== undefined && info.index >= blankSizeIndex) {
+        if (anchorToTopIndex !== undefined && info.index >= anchorToTopIndex) {
           calculateTopItemInset();
         }
         onItemSizeChangedProp?.(info);
       },
-      [blankSizeIndex, calculateTopItemInset, onItemSizeChangedProp],
+      [anchorToTopIndex, calculateTopItemInset, onItemSizeChangedProp],
     );
 
     useEffect(() => {
       calculateTopItemInset();
-    }, [blankSizeIndex, calculateTopItemInset]);
+    }, [anchorToTopIndex, calculateTopItemInset]);
 
     const memoList = useCallback(
       (scrollProps: ScrollViewProps) => {
         return (
           <KeyboardChatScrollView
             {...scrollProps}
-            blankSize={blankSize}
+            minimumContentPadding={minimumContentPadding}
             extraContentPadding={extraContentPadding}
             applyWorkaroundForContentInsetHitTestBug
           />
         );
       },
-      [blankSize, extraContentPadding],
+      [minimumContentPadding, extraContentPadding],
     );
 
     return (

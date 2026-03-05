@@ -153,7 +153,7 @@ const AIChat = () => {
   const [inputText, setInputText] = useState("");
   const [isStreaming, setIsStreaming] = useState(false);
   const [liftBehavior, setLiftBehavior] = useState<LiftBehavior>("whenAtEnd");
-  const [blankSizeIndex, setBlankSizeIndex] = useState<number | undefined>(
+  const [anchorToTopIndex, setBlankSizeIndex] = useState<number | undefined>(
     undefined,
   );
   const listRef = useRef<LegendListRef>(null);
@@ -300,7 +300,7 @@ const AIChat = () => {
           ref={listRef}
           initialScrollAtEnd
           maintainVisibleContentPosition
-          blankSizeIndex={blankSizeIndex}
+          anchorToTopIndex={anchorToTopIndex}
           contentContainerStyle={styles.contentContainer}
           data={messages}
           extraContentPadding={composerHeight}

@@ -74,11 +74,11 @@ export function setupBeforeEach() {
 
 type RenderOptions = Omit<
   Parameters<typeof useChatKeyboard>[1],
-  "freeze" | "offset" | "blankSize" | "extraContentPadding"
+  "freeze" | "offset" | "minimumContentPadding" | "extraContentPadding"
 > & {
   freeze?: boolean;
   offset?: number;
-  blankSize?: SharedValue<number>;
+  minimumContentPadding?: SharedValue<number>;
   extraContentPadding?: SharedValue<number>;
 };
 
@@ -103,7 +103,7 @@ export function createRender(modulePath: string) {
         ...options,
         freeze: options.freeze ?? false,
         offset: options.offset ?? 0,
-        blankSize: options.blankSize ?? sv(0),
+        minimumContentPadding: options.minimumContentPadding ?? sv(0),
         extraContentPadding: options.extraContentPadding ?? sv(0),
       });
     });

@@ -26,9 +26,9 @@ export const sv = <T>(initial: T): SharedValue<T> => {
 
 type RenderOptions = Omit<
   Parameters<typeof useExtraContentPadding>[0],
-  "scrollViewRef" | "blankSize"
+  "scrollViewRef" | "minimumContentPadding"
 > & {
-  blankSize?: SharedValue<number>;
+  minimumContentPadding?: SharedValue<number>;
 };
 
 export const createRender = () => {
@@ -43,7 +43,7 @@ export const createRender = () => {
 
       mod.useExtraContentPadding({
         scrollViewRef: ref,
-        blankSize: options.blankSize ?? sv(0),
+        minimumContentPadding: options.minimumContentPadding ?? sv(0),
         ...options,
       });
     });
