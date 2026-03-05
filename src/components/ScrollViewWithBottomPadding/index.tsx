@@ -31,6 +31,8 @@ type ScrollViewWithBottomPaddingProps = {
   children?: React.ReactNode;
   inverted?: boolean;
   bottomPadding: SharedValue<number>;
+  /** Padding for scroll indicator insets (excludes blankSize). Falls back to bottomPadding when not provided. */
+  scrollIndicatorPadding?: SharedValue<number>;
   /** Absolute Y content offset (iOS only, for KeyboardChatScrollView). */
   contentOffsetY?: SharedValue<number>;
 } & ScrollViewProps;
@@ -43,6 +45,7 @@ const ScrollViewWithBottomPadding = forwardRef<
     {
       ScrollViewComponent,
       bottomPadding,
+      scrollIndicatorPadding,
       contentInset,
       scrollIndicatorInsets,
       inverted,
@@ -60,6 +63,14 @@ const ScrollViewWithBottomPadding = forwardRef<
       const bottom = insetBottom + (contentInset?.bottom || 0);
       const top = insetTop + (contentInset?.top || 0);
 
+      const indicatorPad = scrollIndicatorPadding ?? bottomPadding;
+      const indicatorTop =
+        (inverted ? indicatorPad.value : 0) +
+        (scrollIndicatorInsets?.top || 0);
+      const indicatorBottom =
+        (!inverted ? indicatorPad.value : 0) +
+        (scrollIndicatorInsets?.bottom || 0);
+
       const result: Record<string, unknown> = {
         // iOS prop
         contentInset: {
@@ -69,8 +80,8 @@ const ScrollViewWithBottomPadding = forwardRef<
           left: contentInset?.left,
         },
         scrollIndicatorInsets: {
-          bottom: bottom,
-          top: top,
+          bottom: indicatorBottom,
+          top: indicatorTop,
           right: scrollIndicatorInsets?.right,
           left: scrollIndicatorInsets?.left,
         },

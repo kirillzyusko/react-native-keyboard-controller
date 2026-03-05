@@ -87,6 +87,13 @@ const KeyboardChatScrollView = forwardRef<
       ),
     );
 
+    // Scroll indicator inset = keyboard + ecp (excludes blankSize).
+    // Apps that render into the unsafe area can supply a negative
+    // scrollIndicatorInsets adjustment at the application layer.
+    const indicatorPadding = useDerivedValue(
+      () => padding.value + effectiveExtraContentPadding.value,
+    );
+
     const onLayout = useCallback(
       (e: LayoutChangeEvent) => {
         onLayoutInternal(e);
@@ -124,6 +131,7 @@ const KeyboardChatScrollView = forwardRef<
           ref={onRef}
           {...rest}
           bottomPadding={totalPadding}
+          scrollIndicatorPadding={indicatorPadding}
           contentOffsetY={contentOffsetY}
           inverted={inverted}
           ScrollViewComponent={ScrollViewComponent}
