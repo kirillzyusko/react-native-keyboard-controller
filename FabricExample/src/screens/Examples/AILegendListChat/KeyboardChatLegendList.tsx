@@ -122,6 +122,7 @@ export const KeyboardChatLegendList = typedForwardRef(
             {...scrollProps}
             blankSize={blankSize}
             extraContentPadding={extraContentPadding}
+            applyWorkaroundForContentInsetHitTestBug
           />
         );
       },
