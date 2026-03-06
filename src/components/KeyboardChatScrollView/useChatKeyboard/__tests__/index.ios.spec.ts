@@ -244,7 +244,7 @@ describe("`useChatKeyboard` — iOS behaviors", () => {
     handlers.onStart({ height: 0 });
 
     expect(result.current.padding.value).toBe(0);
-    expect(result.current.contentOffsetY!.value).toBe(-0);
+    expect(result.current.contentOffsetY!.value).toBe(0);
   });
 
   it("whenAtEnd: should shift when at the end", () => {
