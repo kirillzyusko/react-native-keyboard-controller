@@ -7,13 +7,13 @@ import {
 } from "react";
 import {
   Button,
-  Keyboard,
   Platform,
   Text,
   TextInput,
   View,
 } from "react-native";
 import {
+  KeyboardController,
   KeyboardGestureArea,
   KeyboardStickyView,
 } from "react-native-keyboard-controller";
@@ -218,7 +218,7 @@ const AIChat = () => {
     }, 200);
   };
 
-  const sendMessage = () => {
+  const sendMessage = async () => {
     const text = inputText.trim();
 
     if (!text) {
@@ -229,18 +229,8 @@ const AIChat = () => {
 
     setInputText("");
 
-    const isFocused = inputRef.current?.isFocused();
-
-    if (isFocused) {
-      inputRef.current?.blur();
-
-      const subscription = Keyboard.addListener("keyboardDidHide", () => {
-        subscription.remove();
-        doSendMessage(text, rawInput);
-      });
-    } else {
-      doSendMessage(text, rawInput);
-    }
+    await KeyboardController.dismiss();
+    doSendMessage(text, rawInput);
   };
 
   const simulateAIResponse = (userMessage: string, rawInput: string) => {
