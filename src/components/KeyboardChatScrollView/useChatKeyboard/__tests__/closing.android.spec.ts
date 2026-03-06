@@ -85,7 +85,7 @@ describe("`useChatKeyboard` — Android closing behaviors", () => {
     expect(mockScrollTo).not.toHaveBeenCalled();
   });
 
-  it("never non-inverted: should clamp scroll on close when position exceeds shrinking range", () => {
+  it("never non-inverted: should scroll back on close when at end", () => {
     mockOffset.value = 1200;
     render({ inverted: false, keyboardLiftBehavior: "never" });
 
