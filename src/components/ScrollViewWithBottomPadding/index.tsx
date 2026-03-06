@@ -63,12 +63,12 @@ const ScrollViewWithBottomPadding = forwardRef<
       const bottom = insetBottom + (contentInset?.bottom || 0);
       const top = insetTop + (contentInset?.top || 0);
 
-      const indicatorPad = scrollIndicatorPadding ?? bottomPadding;
+      const indicatorPadding = scrollIndicatorPadding ?? bottomPadding;
       const indicatorTop =
-        (inverted ? indicatorPad.value : 0) +
+        (inverted ? indicatorPadding.value : 0) +
         (scrollIndicatorInsets?.top || 0);
       const indicatorBottom =
-        (!inverted ? indicatorPad.value : 0) +
+        (!inverted ? indicatorPadding.value : 0) +
         (scrollIndicatorInsets?.bottom || 0);
 
       const result: Record<string, unknown> = {
