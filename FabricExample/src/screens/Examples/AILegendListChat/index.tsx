@@ -1,7 +1,5 @@
 import {
-  createContext,
   useCallback,
-  useContext,
   useEffect,
   useLayoutEffect,
   useRef,
@@ -34,12 +32,7 @@ type Message = {
   timeStamp: number;
   isPlaceholder?: boolean;
   isNew?: boolean;
-  stream?: boolean;
 };
-
-const StreamingContext = createContext<{
-  setIsStreaming: (value: boolean) => void;
-}>({ setIsStreaming: () => {} });
 
 const createId = () => String(Date.now());
 
@@ -86,49 +79,11 @@ const AIResponse = ({
   text,
   isPlaceholder,
   timeStamp,
-  stream,
 }: {
   text: string;
   isPlaceholder: boolean;
   timeStamp: number;
-  stream?: boolean;
 }) => {
-  const [displayedText, setDisplayedText] = useState(stream ? "" : text);
-  const { setIsStreaming } = useContext(StreamingContext);
-
-  useEffect(() => {
-    if (!stream || isPlaceholder || !text) {
-      return;
-    }
-
-    const words = text.split(" ");
-    let currentWordIndex = 0;
-
-    setIsStreaming(true);
-
-    const intervalId = setInterval(() => {
-      currentWordIndex++;
-
-      if (currentWordIndex <= words.length) {
-        setDisplayedText(words.slice(0, currentWordIndex).join(" "));
-      } else {
-        clearInterval(intervalId);
-        setIsStreaming(false);
-      }
-    }, 15);
-
-    return () => {
-      clearInterval(intervalId);
-      setIsStreaming(false);
-    };
-  }, [text, isPlaceholder, stream, setIsStreaming]);
-
-  useEffect(() => {
-    if (!stream) {
-      setDisplayedText(text);
-    }
-  }, [text, stream]);
-
   if (isPlaceholder) {
     return (
       <View
@@ -158,7 +113,7 @@ const AIResponse = ({
         styles.systemStyle,
       ]}
     >
-      <Text style={styles.messageText}>{displayedText}</Text>
+      <Text style={styles.messageText}>{text}</Text>
       <View style={[styles.timeStamp, styles.systemStyle]}>
         <Text style={styles.timeStampText}>
           {new Date(timeStamp).toLocaleTimeString()}
@@ -240,6 +195,7 @@ const AIChat = () => {
   const clearAllTimers = useCallback(() => {
     activeTimers.current.forEach(clearTimeout);
     activeTimers.current = [];
+    setIsStreaming(false);
   }, []);
 
   const doSendMessage = (text: string, rawInput: string) => {
@@ -303,14 +259,37 @@ const AIChat = () => {
 
     schedule(() => {
       const responseText = pickReply(rawInput, userMessage);
+      const words = responseText.split(" ");
+      let currentWordIndex = 0;
 
       setMessages((prevMessages) =>
         prevMessages.map((msg) =>
           msg.id === aiMessageId
-            ? { ...msg, isPlaceholder: false, text: responseText, stream: true }
+            ? { ...msg, isPlaceholder: false, text: "" }
             : msg,
         ),
       );
+
+      setIsStreaming(true);
+
+      const intervalId = setInterval(() => {
+        currentWordIndex++;
+
+        if (currentWordIndex <= words.length) {
+          const currentText = words.slice(0, currentWordIndex).join(" ");
+
+          setMessages((prevMessages) =>
+            prevMessages.map((msg) =>
+              msg.id === aiMessageId ? { ...msg, text: currentText } : msg,
+            ),
+          );
+        } else {
+          clearInterval(intervalId);
+          setIsStreaming(false);
+        }
+      }, 15);
+
+      activeTimers.current.push(intervalId);
     }, 600);
   };
 
@@ -319,100 +298,94 @@ const AIChat = () => {
   }, [clearAllTimers]);
 
   return (
-    <StreamingContext.Provider value={{ setIsStreaming }}>
-      <View style={styles.container}>
-        <View style={styles.behaviorBar}>
-          {LIFT_BEHAVIORS.map((b) => (
-            <Text
-              key={b}
-              style={[
-                styles.behaviorButton,
-                b === liftBehavior && styles.behaviorButtonActive,
-              ]}
-              onPress={() => setLiftBehavior(b)}
-            >
-              {b}
-            </Text>
-          ))}
-        </View>
-        <KeyboardGestureArea
-          interpolator="ios"
-          offset={60}
-          style={styles.container}
-        >
-          <KeyboardChatLegendList
-            ref={listRef}
-            initialScrollAtEnd
-            maintainVisibleContentPosition
-            blankSizeIndex={blankSizeIndex}
-            contentContainerStyle={styles.contentContainer}
-            data={messages}
-            extraContentPadding={composerHeight}
-            keyboardLiftBehavior={liftBehavior}
-            keyExtractor={(_item, index) => `item-${index}`}
-            maintainScrollAtEnd={Platform.OS === "web"}
-            offset={insets.bottom}
-            scrollIndicatorInsets={{ bottom: -insets.bottom }}
-            renderItem={({ item }) => (
-              <View>
-                {item.sender === "user" ? (
-                  <Animated.View
-                    entering={item.isNew ? FadeIn.duration(1000) : undefined}
-                    style={[
-                      styles.messageContainer,
-                      styles.userMessageContainer,
-                      styles.userStyle,
-                    ]}
-                  >
-                    <Text style={[styles.messageText, styles.userMessageText]}>
-                      {item.text}
-                    </Text>
-                    <View style={[styles.timeStamp, styles.userStyle]}>
-                      <Text style={styles.timeStampText}>
-                        {new Date(item.timeStamp).toLocaleTimeString()}
-                      </Text>
-                    </View>
-                  </Animated.View>
-                ) : (
-                  <AIResponse
-                    isPlaceholder={!!item.isPlaceholder}
-                    stream={item.stream}
-                    text={item.text}
-                    timeStamp={item.timeStamp}
-                  />
-                )}
-              </View>
-            )}
-            style={styles.list}
-          />
-        </KeyboardGestureArea>
-        <KeyboardStickyView
-          offset={{ closed: 0, opened: insets.bottom }}
-          style={styles.composerWrapper}
-        >
-          <View
-            ref={composerRef}
+    <View style={styles.container}>
+      <View style={styles.behaviorBar}>
+        {LIFT_BEHAVIORS.map((b) => (
+          <Text
+            key={b}
             style={[
-              styles.inputContainer,
-              { paddingBottom: insets.bottom + 10 },
+              styles.behaviorButton,
+              b === liftBehavior && styles.behaviorButtonActive,
             ]}
-            onLayout={onComposerLayout}
+            onPress={() => setLiftBehavior(b)}
           >
-            <TextInput
-              ref={inputRef}
-              multiline
-              editable={!isStreaming}
-              focusable={!isStreaming}
-              placeholder="Type a message"
-              style={styles.input}
-              value={inputText}
-              onChangeText={setInputText}
-            />
-            <Button disabled={isStreaming} title="Send" onPress={sendMessage} />
-          </View>
-        </KeyboardStickyView>
+            {b}
+          </Text>
+        ))}
       </View>
-    </StreamingContext.Provider>
+      <KeyboardGestureArea
+        interpolator="ios"
+        offset={60}
+        style={styles.container}
+      >
+        <KeyboardChatLegendList
+          ref={listRef}
+          initialScrollAtEnd
+          maintainVisibleContentPosition
+          blankSizeIndex={blankSizeIndex}
+          contentContainerStyle={styles.contentContainer}
+          data={messages}
+          extraContentPadding={composerHeight}
+          keyboardLiftBehavior={liftBehavior}
+          keyExtractor={(_item, index) => `item-${index}`}
+          maintainScrollAtEnd={Platform.OS === "web"}
+          offset={insets.bottom}
+          scrollIndicatorInsets={{ bottom: -insets.bottom }}
+          renderItem={({ item }) => (
+            <View>
+              {item.sender === "user" ? (
+                <Animated.View
+                  entering={item.isNew ? FadeIn.duration(1000) : undefined}
+                  style={[
+                    styles.messageContainer,
+                    styles.userMessageContainer,
+                    styles.userStyle,
+                  ]}
+                >
+                  <Text style={[styles.messageText, styles.userMessageText]}>
+                    {item.text}
+                  </Text>
+                  <View style={[styles.timeStamp, styles.userStyle]}>
+                    <Text style={styles.timeStampText}>
+                      {new Date(item.timeStamp).toLocaleTimeString()}
+                    </Text>
+                  </View>
+                </Animated.View>
+              ) : (
+                <AIResponse
+                  isPlaceholder={!!item.isPlaceholder}
+                  text={item.text}
+                  timeStamp={item.timeStamp}
+                />
+              )}
+            </View>
+          )}
+          style={styles.list}
+        />
+      </KeyboardGestureArea>
+      <KeyboardStickyView
+        offset={{ closed: 0, opened: insets.bottom }}
+        style={styles.composerWrapper}
+      >
+        <View
+          ref={composerRef}
+          style={[styles.inputContainer, { paddingBottom: insets.bottom + 10 }]}
+          onLayout={onComposerLayout}
+        >
+          <TextInput
+            ref={inputRef}
+            multiline
+            editable={!isStreaming}
+            focusable={!isStreaming}
+            placeholder="Type a message"
+            style={styles.input}
+            value={inputText}
+            onChangeText={setInputText}
+          />
+          <Button disabled={isStreaming} title="Send" onPress={sendMessage} />
+        </View>
+      </KeyboardStickyView>
+    </View>
   );
 };
 
