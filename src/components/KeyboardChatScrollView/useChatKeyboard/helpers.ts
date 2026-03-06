@@ -18,11 +18,11 @@ const AT_END_THRESHOLD = 20;
  * getEffectiveHeight(150, 300, 50); // 125
  * ```
  */
-export function getEffectiveHeight(
+export const getEffectiveHeight = (
   height: number,
   targetKeyboardHeight: number,
   offset: number,
-): number {
+): number => {
   "worklet";
 
   if (offset === 0 || targetKeyboardHeight === 0) {
@@ -34,7 +34,7 @@ export function getEffectiveHeight(
     [0, targetKeyboardHeight],
     [0, Math.max(targetKeyboardHeight - offset, 0)],
   );
-}
+};
 
 /**
  * Check whether the scroll view is at the end of its content.
@@ -54,12 +54,12 @@ export function getEffectiveHeight(
  * const atEndInverted = isScrollAtEnd(5, 800, 2000, true); // true (5 <= 20)
  * ```
  */
-export function isScrollAtEnd(
+export const isScrollAtEnd = (
   scrollOffset: number,
   layoutHeight: number,
   contentHeight: number,
   inverted: boolean = false,
-): boolean {
+): boolean => {
   "worklet";
 
   if (inverted) {
@@ -67,7 +67,7 @@ export function isScrollAtEnd(
   }
 
   return scrollOffset + layoutHeight >= contentHeight - AT_END_THRESHOLD;
-}
+};
 
 /**
  * Decide whether content should be shifted based on the keyboard lift behavior.
@@ -81,10 +81,10 @@ export function isScrollAtEnd(
  * shouldShiftContent("whenAtEnd", false); // false
  * ```
  */
-export function shouldShiftContent(
+export const shouldShiftContent = (
   behavior: KeyboardLiftBehavior,
   isAtEnd: boolean,
-): boolean {
+): boolean => {
   "worklet";
 
   switch (behavior) {
@@ -97,7 +97,7 @@ export function shouldShiftContent(
     case "persistent":
       return true;
   }
-}
+};
 
 /**
  * Compute the clamped scroll target for non-inverted lists.
@@ -112,18 +112,18 @@ export function shouldShiftContent(
  * clampedScrollTarget(100, 300, 1000, 800); // 400
  * ```
  */
-export function clampedScrollTarget(
+export const clampedScrollTarget = (
   offsetBeforeScroll: number,
   keyboardHeight: number,
   contentHeight: number,
   layoutHeight: number,
-): number {
+): number => {
   "worklet";
 
   const maxScroll = Math.max(contentHeight - layoutHeight + keyboardHeight, 0);
 
   return Math.min(Math.max(offsetBeforeScroll + keyboardHeight, 0), maxScroll);
-}
+};
 
 /**
  * Compute contentOffset.y for iOS lists.
@@ -140,14 +140,14 @@ export function clampedScrollTarget(
  * computeIOSContentOffset(100, 300, 1000, 800, false); // 400
  * ```
  */
-export function computeIOSContentOffset(
+export const computeIOSContentOffset = (
   relativeScroll: number,
   keyboardHeight: number,
   contentHeight: number,
   layoutHeight: number,
   inverted: boolean,
   extraContentPadding: number = 0,
-): number {
+): number => {
   "worklet";
 
   if (inverted) {
@@ -165,4 +165,4 @@ export function computeIOSContentOffset(
   );
 
   return Math.min(Math.max(keyboardHeight + relativeScroll, 0), maxScroll);
-}
+};
