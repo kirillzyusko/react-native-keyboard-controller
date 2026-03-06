@@ -95,13 +95,13 @@ describe("blankSize — Android non-inverted + always", () => {
     // Small content so blank fills viewport (pastContentEnd = 0+800-300 = 500, fraction = 1)
     mockSize.value = { width: 390, height: 300 };
     mockOffset.value = 0;
-    const ecp = sv(50);
+    const extraContentPadding = sv(50);
 
     render({
       inverted: false,
       keyboardLiftBehavior: "always",
       blankSize: sv(500),
-      extraContentPadding: ecp,
+      extraContentPadding,
     });
 
     handlers.onStart({ height: KEYBOARD });
