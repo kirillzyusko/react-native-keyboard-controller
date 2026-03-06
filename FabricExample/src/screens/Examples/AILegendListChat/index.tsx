@@ -245,52 +245,40 @@ const AIChat = () => {
 
   const simulateAIResponse = (userMessage: string, rawInput: string) => {
     const aiMessageId = createId();
+    const responseText = pickReply(rawInput, userMessage);
+    const words = responseText.split(" ");
+    let currentWordIndex = 1;
 
     setMessages((prevMessages) => [
       ...prevMessages,
       {
         id: aiMessageId,
-        isPlaceholder: true,
         sender: "system",
-        text: "",
+        text: words[0],
         timeStamp: Date.now(),
       },
     ]);
 
-    schedule(() => {
-      const responseText = pickReply(rawInput, userMessage);
-      const words = responseText.split(" ");
-      let currentWordIndex = 0;
+    setIsStreaming(true);
 
-      setMessages((prevMessages) =>
-        prevMessages.map((msg) =>
-          msg.id === aiMessageId
-            ? { ...msg, isPlaceholder: false, text: "" }
-            : msg,
-        ),
-      );
+    const intervalId = setInterval(() => {
+      currentWordIndex++;
 
-      setIsStreaming(true);
+      if (currentWordIndex <= words.length) {
+        const currentText = words.slice(0, currentWordIndex).join(" ");
 
-      const intervalId = setInterval(() => {
-        currentWordIndex++;
+        setMessages((prevMessages) =>
+          prevMessages.map((msg) =>
+            msg.id === aiMessageId ? { ...msg, text: currentText } : msg,
+          ),
+        );
+      } else {
+        clearInterval(intervalId);
+        setIsStreaming(false);
+      }
+    }, 16);
 
-        if (currentWordIndex <= words.length) {
-          const currentText = words.slice(0, currentWordIndex).join(" ");
-
-          setMessages((prevMessages) =>
-            prevMessages.map((msg) =>
-              msg.id === aiMessageId ? { ...msg, text: currentText } : msg,
-            ),
-          );
-        } else {
-          clearInterval(intervalId);
-          setIsStreaming(false);
-        }
-      }, 15);
-
-      activeTimers.current.push(intervalId);
-    }, 600);
+    activeTimers.current.push(intervalId);
   };
 
   useEffect(() => {
