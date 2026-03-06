@@ -1,6 +1,8 @@
 import { renderHook } from "@testing-library/react-native";
 import { useAnimatedRef } from "react-native-reanimated";
 
+import { sv } from "../../useExtraContentPadding/__fixtures__/setup";
+
 import type { useChatKeyboard } from "..";
 import type { SharedValue } from "react-native-reanimated";
 import type Reanimated from "react-native-reanimated";
@@ -79,9 +81,6 @@ type RenderOptions = Omit<
   blankSize?: SharedValue<number>;
   extraContentPadding?: SharedValue<number>;
 };
-
-const sv = <T>(initial: T): SharedValue<T> =>
-  ({ value: initial } as SharedValue<T>);
 
 /**
  * Create a render function that loads the hook from the given module path.
