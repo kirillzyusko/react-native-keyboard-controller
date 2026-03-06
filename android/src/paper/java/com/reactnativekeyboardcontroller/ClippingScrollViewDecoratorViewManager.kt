@@ -29,4 +29,12 @@ class ClippingScrollViewDecoratorViewManager : ViewGroupManager<ClippingScrollVi
   ) {
     view.setContentInsetTop(value)
   }
+
+  @ReactProp(name = "applyWorkaroundForContentInsetHitTestBug")
+  fun setApplyWorkaroundForContentInsetHitTestBug(
+    view: ClippingScrollViewDecoratorView,
+    value: Boolean,
+  ) {
+    view.setApplyWorkaroundForContentInsetHitTestBug(value)
+  }
 }

@@ -59,6 +59,18 @@ export type KeyboardChatScrollViewProps = {
    */
   extraContentPadding?: SharedValue<number>;
   /**
+   * When `true`, applies a runtime workaround for a React Native 0.81+ bug
+   * where the ScrollView's `contentInset` area does not respond to touch/scroll
+   * gestures (facebook/react-native#54123).
+   *
+   * This uses Objective-C runtime method swizzling on the ScrollView's container
+   * view, which is inherently fragile. Only enable if you are affected by the
+   * upstream bug and understand the risks.
+   *
+   * iOS only. Default is `false`.
+   */
+  applyWorkaroundForContentInsetHitTestBug?: boolean;
+  /**
    * A shared value representing a minimum inset floor.
    *
    * When set, the total bottom padding is computed as:

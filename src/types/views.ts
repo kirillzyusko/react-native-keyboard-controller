@@ -55,5 +55,6 @@ export type ClippingScrollViewProps = PropsWithChildren<
     contentInsetBottom?: number;
     /** An additional space that gets applied to the top of the `ScrollView` (inside a scrollable content). Default is `0`. */
     contentInsetTop?: number;
+    applyWorkaroundForContentInsetHitTestBug?: boolean;
   }
 >;

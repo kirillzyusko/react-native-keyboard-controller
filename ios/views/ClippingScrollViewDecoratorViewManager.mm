@@ -157,6 +157,8 @@ static void KCApplyFixedHitTest(UIScrollView *scrollView)
 
 RCT_EXPORT_MODULE(ClippingScrollViewDecoratorViewManager)
 
+RCT_EXPORT_VIEW_PROPERTY(applyWorkaroundForContentInsetHitTestBug, BOOL)
+
 + (BOOL)requiresMainQueueSetup
 {
   return NO;
@@ -187,6 +189,18 @@ RCT_EXPORT_MODULE(ClippingScrollViewDecoratorViewManager)
 {
   return concreteComponentDescriptorProvider<ClippingScrollViewDecoratorViewComponentDescriptor>();
 }
+
+- (void)updateProps:(const facebook::react::Props::Shared &)props
+           oldProps:(const facebook::react::Props::Shared &)oldProps
+{
+  const auto &newViewProps =
+      *std::static_pointer_cast<const ClippingScrollViewDecoratorViewProps>(props);
+
+  self.applyWorkaroundForContentInsetHitTestBug =
+      newViewProps.applyWorkaroundForContentInsetHitTestBug;
+
+  [super updateProps:props oldProps:oldProps];
+}
 #endif
 
 // Needed because of this: https://github.com/facebook/react-native/pull/37274
@@ -201,7 +215,9 @@ RCT_EXPORT_MODULE(ClippingScrollViewDecoratorViewManager)
   if (self.window) {
     UIScrollView *scrollView = KCFindFirstScrollView(self);
     KCApplyNoopScrollRectToVisible(scrollView);
-    KCApplyFixedHitTest(scrollView);
+    if (self.applyWorkaroundForContentInsetHitTestBug) {
+      KCApplyFixedHitTest(scrollView);
+    }
   }
 }
 
