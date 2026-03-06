@@ -214,7 +214,7 @@ describe("`computeIOSContentOffset` specification", () => {
       });
 
       it("should clamp to the extended maxScroll", () => {
-        // totalPaddingForMaxScroll = 350 (keyboard=300 + ecp=50)
+        // totalPaddingForMaxScroll = 350 (keyboard=300 + extraContentPadding=50)
         // maxScroll = 1000 - 800 + 350 = 550; 300 + 400 = 700 → clamped to 550
         expect(computeIOSContentOffset(400, 300, 1000, 800, false, 350)).toBe(
           550,
@@ -224,7 +224,7 @@ describe("`computeIOSContentOffset` specification", () => {
 
     describe("inverted", () => {
       it("should extend the minimum bound by extraContentPadding", () => {
-        // totalPaddingForMaxScroll = 350 (keyboard=300 + ecp=50)
+        // totalPaddingForMaxScroll = 350 (keyboard=300 + extraContentPadding=50)
         // relativeScroll=-100 → min(-100-300, maxScroll)=-400, clamped to -350
         expect(computeIOSContentOffset(-100, 300, 1000, 800, true, 350)).toBe(
           -350,
@@ -232,7 +232,7 @@ describe("`computeIOSContentOffset` specification", () => {
       });
 
       it("should clamp to extended minimum when relativeScroll is very negative", () => {
-        // totalPaddingForMaxScroll = 350 (keyboard=300 + ecp=50)
+        // totalPaddingForMaxScroll = 350 (keyboard=300 + extraContentPadding=50)
         // relativeScroll=-500, keyboard=300 → -500-300=-800, clamped to -350
         expect(computeIOSContentOffset(-500, 300, 1000, 800, true, 350)).toBe(
           -350,
