@@ -5,7 +5,6 @@ import {
   useAnimatedRef,
   useAnimatedStyle,
   useDerivedValue,
-  useSharedValue,
 } from "react-native-reanimated";
 import Reanimated from "react-native-reanimated";
 
@@ -43,12 +42,6 @@ const KeyboardChatScrollView = forwardRef<
   ) => {
     const scrollViewRef = useAnimatedRef<Reanimated.ScrollView>();
     const onRef = useCombinedRef(ref, scrollViewRef);
-    const defaultExtraContentPadding = useSharedValue(0);
-    const effectiveExtraContentPadding =
-      extraContentPadding ?? defaultExtraContentPadding;
-    const defaultBlankSize = useSharedValue(0);
-    const effectiveBlankSize = blankSize ?? defaultBlankSize;
-
     const {
       padding,
       currentHeight,
@@ -63,15 +56,15 @@ const KeyboardChatScrollView = forwardRef<
       keyboardLiftBehavior,
       freeze,
       offset,
-      blankSize: effectiveBlankSize,
-      extraContentPadding: effectiveExtraContentPadding,
+      blankSize,
+      extraContentPadding,
     });
 
     useExtraContentPadding({
       scrollViewRef,
-      extraContentPadding: effectiveExtraContentPadding,
+      extraContentPadding,
       keyboardPadding: padding,
-      blankSize: effectiveBlankSize,
+      blankSize,
       scroll,
       layout,
       size,
@@ -82,8 +75,8 @@ const KeyboardChatScrollView = forwardRef<
 
     const totalPadding = useDerivedValue(() =>
       Math.max(
-        effectiveBlankSize.value,
-        padding.value + effectiveExtraContentPadding.value,
+        blankSize.value,
+        padding.value + extraContentPadding.value,
       ),
     );
 
@@ -91,7 +84,7 @@ const KeyboardChatScrollView = forwardRef<
     // Apps that render into the unsafe area can supply a negative
     // scrollIndicatorInsets adjustment at the application layer.
     const indicatorPadding = useDerivedValue(
-      () => padding.value + effectiveExtraContentPadding.value,
+      () => padding.value + extraContentPadding.value,
     );
 
     const onLayout = useCallback(
