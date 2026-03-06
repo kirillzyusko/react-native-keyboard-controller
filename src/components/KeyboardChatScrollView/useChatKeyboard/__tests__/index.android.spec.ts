@@ -126,6 +126,7 @@ describe("`useChatKeyboard` — Android non-inverted + always", () => {
     handlers.onStart({ height: KEYBOARD });
     // user did NOT scroll — offset stays at what scrollTo set (100 + 300 = 400)
     mockOffset.value = 400;
+    handlers.onEnd({ height: KEYBOARD });
     mockScrollTo.mockClear();
 
     // keyboard closes: re-captures offsetBeforeScroll = 400 - 300 = 100 (same as original)
