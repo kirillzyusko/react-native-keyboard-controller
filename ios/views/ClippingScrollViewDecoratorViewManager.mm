@@ -83,6 +83,9 @@ static void KCApplyNoopScrollRectToVisible(UIScrollView *scrollView)
   object_setClass(scrollView, subclass);
 }
 
+// Workaround for https://github.com/facebook/react-native/issues/54123
+// RN 0.81+ ScrollView contentInset area doesn't respond to touch events.
+// Can be removed once the upstream fix lands.
 static void KCApplyFixedHitTest(UIScrollView *scrollView)
 {
   if (!scrollView || !scrollView.superview) {
