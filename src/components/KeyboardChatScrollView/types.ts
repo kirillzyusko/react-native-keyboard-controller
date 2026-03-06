@@ -59,7 +59,7 @@ export type KeyboardChatScrollViewProps = {
    */
   extraContentPadding?: SharedValue<number>;
   /**
-   * A shared value representing a minimum inset floor (in pixels).
+   * A shared value representing a minimum inset floor.
    *
    * When set, the total bottom padding is computed as:
    * `max(blankSize, keyboardPadding + extraContentPadding)`
