@@ -1,6 +1,8 @@
 import { renderHook } from "@testing-library/react-native";
 import { useAnimatedRef } from "react-native-reanimated";
 
+import { sv } from "../../useExtraContentPadding/__fixtures__/setup";
+
 import type { useChatKeyboard } from "..";
 import type { SharedValue } from "react-native-reanimated";
 import type Reanimated from "react-native-reanimated";
@@ -72,14 +74,13 @@ export function setupBeforeEach() {
 
 type RenderOptions = Omit<
   Parameters<typeof useChatKeyboard>[1],
-  "freeze" | "offset" | "extraContentPadding"
+  "freeze" | "offset" | "minimumContentPadding" | "extraContentPadding"
 > & {
   freeze?: boolean;
   offset?: number;
+  minimumContentPadding?: SharedValue<number>;
   extraContentPadding?: SharedValue<number>;
 };
-
-const ZERO_CONTENT_PADDING = { value: 0 } as SharedValue<number>;
 
 /**
  * Create a render function that loads the hook from the given module path.
@@ -102,9 +103,11 @@ export function createRender(modulePath: string) {
         ...options,
         freeze: options.freeze ?? false,
         offset: options.offset ?? 0,
-        extraContentPadding:
-          options.extraContentPadding ?? ZERO_CONTENT_PADDING,
+        minimumContentPadding: options.minimumContentPadding ?? sv(0),
+        extraContentPadding: options.extraContentPadding ?? sv(0),
       });
     });
   };
 }
+
+export { sv };

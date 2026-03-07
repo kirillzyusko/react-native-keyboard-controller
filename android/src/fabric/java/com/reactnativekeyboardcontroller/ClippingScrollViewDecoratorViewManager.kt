@@ -34,4 +34,11 @@ class ClippingScrollViewDecoratorViewManager :
   ) {
     view?.setContentInsetTop(value)
   }
+
+  override fun setApplyWorkaroundForContentInsetHitTestBug(
+    view: ClippingScrollViewDecoratorView?,
+    value: Boolean,
+  ) {
+    view?.setApplyWorkaroundForContentInsetHitTestBug(value)
+  }
 }

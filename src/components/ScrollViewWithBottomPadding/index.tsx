@@ -31,8 +31,11 @@ type ScrollViewWithBottomPaddingProps = {
   children?: React.ReactNode;
   inverted?: boolean;
   bottomPadding: SharedValue<number>;
+  /** Padding for scroll indicator insets (excludes minimumContentPadding). Falls back to bottomPadding when not provided. */
+  scrollIndicatorPadding?: SharedValue<number>;
   /** Absolute Y content offset (iOS only, for KeyboardChatScrollView). */
   contentOffsetY?: SharedValue<number>;
+  applyWorkaroundForContentInsetHitTestBug?: boolean;
 } & ScrollViewProps;
 
 const ScrollViewWithBottomPadding = forwardRef<
@@ -43,10 +46,12 @@ const ScrollViewWithBottomPadding = forwardRef<
     {
       ScrollViewComponent,
       bottomPadding,
+      scrollIndicatorPadding,
       contentInset,
       scrollIndicatorInsets,
       inverted,
       contentOffsetY,
+      applyWorkaroundForContentInsetHitTestBug,
       children,
       ...rest
     },
@@ -60,6 +65,14 @@ const ScrollViewWithBottomPadding = forwardRef<
       const bottom = insetBottom + (contentInset?.bottom || 0);
       const top = insetTop + (contentInset?.top || 0);
 
+      const indicatorPadding = scrollIndicatorPadding ?? bottomPadding;
+      const indicatorTop =
+        (inverted ? indicatorPadding.value : 0) +
+        (scrollIndicatorInsets?.top || 0);
+      const indicatorBottom =
+        (!inverted ? indicatorPadding.value : 0) +
+        (scrollIndicatorInsets?.bottom || 0);
+
       const result: Record<string, unknown> = {
         // iOS prop
         contentInset: {
@@ -69,8 +82,8 @@ const ScrollViewWithBottomPadding = forwardRef<
           left: contentInset?.left,
         },
         scrollIndicatorInsets: {
-          bottom: bottom,
-          top: top,
+          bottom: indicatorBottom,
+          top: indicatorTop,
           right: scrollIndicatorInsets?.right,
           left: scrollIndicatorInsets?.left,
         },
@@ -107,6 +120,7 @@ const ScrollViewWithBottomPadding = forwardRef<
       <ReanimatedClippingScrollView
         animatedProps={animatedProps}
         style={styles.container}
+        applyWorkaroundForContentInsetHitTestBug={applyWorkaroundForContentInsetHitTestBug}
       >
         <ScrollViewComponent ref={ref} animatedProps={animatedProps} {...rest}>
           {inverted ? (

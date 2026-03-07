@@ -89,19 +89,22 @@ describe("`useChatKeyboard` — Android closing behaviors", () => {
     mockOffset.value = 1200;
     render({ inverted: false, keyboardLiftBehavior: "never" });
 
+    // Open — never mode: no scroll
     handlers.onStart({ height: KEYBOARD });
     handlers.onMove({ height: KEYBOARD });
     expect(mockScrollTo).not.toHaveBeenCalled();
 
-    // Keyboard closes: offsetBeforeScroll = 1200 - 300 = 900
+    // User scrolled to max valid position during keyboard open
+    // (maxScroll with padding=300 is 2000-800+300=1500)
+    mockOffset.value = 1500;
     handlers.onStart({ height: 0 });
+    // Keyboard partially closed: effective=200, actualTotalPadding=max(0,200)=200
+    // maxScroll = 2000-800+200 = 1400, scroll=1500 > 1400 → clamp
     handlers.onMove({ height: 200 });
-    // wasAtEnd: isScrollAtEnd(900+300, 800, 2000) = 2000 >= 1980 → true
-    // target = clampedScrollTarget(900, 200, 2000, 800) = min(1100, 1400) = 1100
     expect(mockScrollTo).toHaveBeenLastCalledWith(
       expect.anything(),
       0,
-      1100,
+      1400,
       false,
     );
   });

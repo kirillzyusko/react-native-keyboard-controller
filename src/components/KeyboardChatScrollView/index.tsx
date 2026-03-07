@@ -5,7 +5,6 @@ import {
   useAnimatedRef,
   useAnimatedStyle,
   useDerivedValue,
-  useSharedValue,
 } from "react-native-reanimated";
 import Reanimated from "react-native-reanimated";
 
@@ -19,6 +18,7 @@ import type { KeyboardChatScrollViewProps } from "./types";
 import type { LayoutChangeEvent } from "react-native";
 
 const ZERO_CONTENT_PADDING = makeMutable(0);
+const ZERO_MINIMUM_CONTENT_PADDING = makeMutable(0);
 
 const KeyboardChatScrollView = forwardRef<
   Reanimated.ScrollView,
@@ -33,6 +33,8 @@ const KeyboardChatScrollView = forwardRef<
       freeze = false,
       offset = 0,
       extraContentPadding = ZERO_CONTENT_PADDING,
+      minimumContentPadding = ZERO_MINIMUM_CONTENT_PADDING,
+      applyWorkaroundForContentInsetHitTestBug,
       onLayout: onLayoutProp,
       onContentSizeChange: onContentSizeChangeProp,
       ...rest
@@ -41,10 +43,6 @@ const KeyboardChatScrollView = forwardRef<
   ) => {
     const scrollViewRef = useAnimatedRef<Reanimated.ScrollView>();
     const onRef = useCombinedRef(ref, scrollViewRef);
-    const defaultExtraContentPadding = useSharedValue(0);
-    const effectiveExtraContentPadding =
-      extraContentPadding ?? defaultExtraContentPadding;
-
     const {
       padding,
       currentHeight,
@@ -59,13 +57,15 @@ const KeyboardChatScrollView = forwardRef<
       keyboardLiftBehavior,
       freeze,
       offset,
-      extraContentPadding: effectiveExtraContentPadding,
+      minimumContentPadding,
+      extraContentPadding,
     });
 
     useExtraContentPadding({
       scrollViewRef,
-      extraContentPadding: effectiveExtraContentPadding,
+      extraContentPadding,
       keyboardPadding: padding,
+      minimumContentPadding,
       scroll,
       layout,
       size,
@@ -74,8 +74,18 @@ const KeyboardChatScrollView = forwardRef<
       freeze,
     });
 
-    const totalPadding = useDerivedValue(
-      () => padding.value + effectiveExtraContentPadding.value,
+    const totalPadding = useDerivedValue(() =>
+      Math.max(
+        minimumContentPadding.value,
+        padding.value + extraContentPadding.value,
+      ),
+    );
+
+    // Scroll indicator inset = keyboard + extraContentPadding (excludes minimumContentPadding).
+    // Apps that render into the unsafe area can supply a negative
+    // scrollIndicatorInsets adjustment at the application layer.
+    const indicatorPadding = useDerivedValue(
+      () => padding.value + extraContentPadding.value,
     );
 
     const onLayout = useCallback(
@@ -115,9 +125,11 @@ const KeyboardChatScrollView = forwardRef<
           ref={onRef}
           {...rest}
           bottomPadding={totalPadding}
+          scrollIndicatorPadding={indicatorPadding}
           contentOffsetY={contentOffsetY}
           inverted={inverted}
           ScrollViewComponent={ScrollViewComponent}
+          applyWorkaroundForContentInsetHitTestBug={applyWorkaroundForContentInsetHitTestBug}
           onContentSizeChange={onContentSizeChange}
           onLayout={onLayout}
         >

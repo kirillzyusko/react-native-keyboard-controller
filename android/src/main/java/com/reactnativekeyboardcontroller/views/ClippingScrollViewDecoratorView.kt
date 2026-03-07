@@ -31,6 +31,10 @@ class ClippingScrollViewDecoratorView(
     decorateScrollView()
   }
 
+  fun setApplyWorkaroundForContentInsetHitTestBug(value: Boolean) {
+    // iOS-only workaround; no-op on Android
+  }
+
   private fun decorateScrollView() {
     val scrollView = getChildAt(0) as? ScrollView ?: return
 
