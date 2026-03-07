@@ -1,8 +1,16 @@
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import { useNavigation } from "@react-navigation/native";
-import React, { useCallback, useEffect, useRef } from "react";
-import { Button, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import {
+  Button,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { KeyboardController } from "react-native-keyboard-controller";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import Switch from "../../../components/Switch";
 
@@ -10,6 +18,7 @@ import { useChatConfigStore } from "./store";
 
 function ConfigSheet() {
   const navigation = useNavigation();
+  const { bottom } = useSafeAreaInsets();
   const bottomSheetModalRef = useRef<BottomSheet>(null);
   const inverted = useChatConfigStore((state) => state.inverted);
   const setInverted = useChatConfigStore((state) => state.setInverted);
@@ -23,6 +32,15 @@ function ConfigSheet() {
   );
   const nextLiftBehavior = useChatConfigStore(
     (state) => state.nextLiftBehavior,
+  );
+  const minimumContentPadding = useChatConfigStore(
+    (state) => state.minimumContentPadding,
+  );
+  const setMinimumContentPadding = useChatConfigStore(
+    (state) => state.setMinimumContentPadding,
+  );
+  const [paddingText, setPaddingText] = useState(
+    String(minimumContentPadding),
   );
 
   const handlePresentModalPress = useCallback(async () => {
@@ -61,15 +79,36 @@ function ConfigSheet() {
     <BottomSheet
       ref={bottomSheetModalRef}
       index={-1}
+      keyboardBehavior="extend"
+      keyboardBlurBehavior="restore"
       snapPoints={["50%"]}
       onChange={handleSheetChange}
     >
-      <BottomSheetView style={styles.bottomSheetContent}>
+      <BottomSheetView
+        style={[styles.bottomSheetContent, { paddingBottom: bottom }]}
+      >
         <Button
           testID="bottom_sheet_close_modal"
           title="Close modal"
           onPress={() => bottomSheetModalRef.current?.close()}
         />
+        <View style={styles.switchContainer}>
+          <Text style={styles.text}>minimumContentPadding</Text>
+          <TextInput
+            keyboardType="numeric"
+            style={styles.numberInput}
+            testID="bottom_sheet_minimum_content_padding"
+            value={paddingText}
+            onChangeText={setPaddingText}
+            onFocus={() => setPaddingText("")}
+            onEndEditing={() => {
+              const num = Number(paddingText);
+              const value = Number.isNaN(num) ? 0 : num;
+              setMinimumContentPadding(value);
+              setPaddingText(String(value));
+            }}
+          />
+        </View>
         <View style={styles.switchContainer}>
           <Text style={styles.text}>Toggle inverted</Text>
           <Switch
@@ -159,6 +198,16 @@ const styles = StyleSheet.create({
     margin: 16,
   },
   text: {
+    color: "black",
+  },
+  numberInput: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 4,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    minWidth: 60,
+    textAlign: "right",
     color: "black",
   },
 });

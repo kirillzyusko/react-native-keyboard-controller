@@ -30,6 +30,8 @@ interface ChatConfigStore {
   resetMessages: () => void;
   keyboardLiftBehavior: KeyboardChatScrollViewProps["keyboardLiftBehavior"];
   nextLiftBehavior: () => void;
+  minimumContentPadding: number;
+  setMinimumContentPadding: (value: number) => void;
 }
 
 export const useChatConfigStore = create<ChatConfigStore>((set, get) => ({
@@ -78,4 +80,6 @@ export const useChatConfigStore = create<ChatConfigStore>((set, get) => ({
         liftModes[idx === liftModes.length - 1 ? 0 : idx + 1],
     });
   },
+  minimumContentPadding: 0,
+  setMinimumContentPadding: (value) => set({ minimumContentPadding: value }),
 }));
