@@ -23,8 +23,9 @@ export type KeyboardAvoidingViewBaseProps = {
   enabled?: boolean;
 
   /**
-   * Distance between the top of the user screen and the React Native view. This
-   * may be non-zero in some cases. Defaults to 0.
+   * Extra offset to add above the keyboard. Since the view's position is
+   * measured in absolute screen coordinates, this is purely additive.
+   * Defaults to 0.
    */
   keyboardVerticalOffset?: number;
 } & ViewProps;
@@ -103,13 +104,14 @@ const KeyboardAvoidingView = forwardRef<
     const relativeKeyboardHeight = useCallback(() => {
       "worklet";
 
-      // With measureInWindow, frame.y is in absolute screen coordinates,
-      // so keyboardVerticalOffset is no longer needed — the view's position
-      // on screen is already captured in frame.y.
-      const keyboardY = screenHeight - keyboard.heightWhenOpened.value;
+      // measureInWindow gives absolute screen coordinates, so frame.y
+      // already accounts for navigation headers, modals, etc.
+      // keyboardVerticalOffset is purely additive extra offset.
+      const keyboardY =
+        screenHeight - keyboard.heightWhenOpened.value - keyboardVerticalOffset;
 
       return Math.max(frame.value.y + frame.value.height - keyboardY, 0);
-    }, [screenHeight]);
+    }, [screenHeight, keyboardVerticalOffset]);
     const interpolateToRelativeKeyboardHeight = useCallback(
       (value: number) => {
         "worklet";

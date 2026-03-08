@@ -115,7 +115,7 @@ export default function KeyboardAvoidingViewExample({ navigation }: Props) {
       <KAVContent
         behavior={behavior}
         isPackageImplementation={isPackageImplementation}
-        keyboardVerticalOffset={100}
+        keyboardVerticalOffset={0}
       />
       <Modal
         animationType="slide"
