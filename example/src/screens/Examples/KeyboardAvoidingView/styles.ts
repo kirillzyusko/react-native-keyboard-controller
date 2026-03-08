@@ -50,4 +50,23 @@ export default StyleSheet.create({
     fontSize: 16,
     color: "white",
   },
+  modalHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: "#e0e0e0",
+  },
+  closeButton: {
+    color: "rgb(40, 64, 147)",
+    fontSize: 16,
+  },
+  modalTitle: {
+    flex: 1,
+    textAlign: "center",
+    fontSize: 18,
+    fontWeight: "600",
+    color: "black",
+    marginRight: 40,
+  },
 });

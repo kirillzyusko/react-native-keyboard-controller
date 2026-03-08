@@ -10,6 +10,7 @@ import Reanimated, {
 
 import { useWindowDimensions } from "../../hooks";
 
+import useCombinedRef from "../hooks/useCombinedRef";
 import { useKeyboardAnimation, useTranslateAnimation } from "./hooks";
 
 import type { LayoutRectangle, ViewProps } from "react-native";
@@ -102,11 +103,13 @@ const KeyboardAvoidingView = forwardRef<
     const relativeKeyboardHeight = useCallback(() => {
       "worklet";
 
-      const keyboardY =
-        screenHeight - keyboard.heightWhenOpened.value - keyboardVerticalOffset;
+      // With measureInWindow, frame.y is in absolute screen coordinates,
+      // so keyboardVerticalOffset is no longer needed — the view's position
+      // on screen is already captured in frame.y.
+      const keyboardY = screenHeight - keyboard.heightWhenOpened.value;
 
       return Math.max(frame.value.y + frame.value.height - keyboardY, 0);
-    }, [screenHeight, keyboardVerticalOffset]);
+    }, [screenHeight]);
     const interpolateToRelativeKeyboardHeight = useCallback(
       (value: number) => {
         "worklet";
@@ -196,20 +199,7 @@ const KeyboardAvoidingView = forwardRef<
           return {};
       }
     }, [behavior, enabled, interpolateToRelativeKeyboardHeight]);
-    const combinedRef = useCallback(
-      (node: View | null) => {
-        internalRef.current = node;
-
-        if (typeof ref === "function") {
-          ref(node);
-        } else if (ref != null && "current" in ref) {
-          // ForwardedRef includes RefObject whose .current is readonly in TS,
-          // but React always passes a mutable ref object at runtime.
-          (ref as React.MutableRefObject<View | null>).current = node;
-        }
-      },
-      [ref],
-    );
+    const combinedRef = useCombinedRef(internalRef, ref);
     const isPositionBehavior = behavior === "position";
     const containerStyle = isPositionBehavior ? contentContainerStyle : style;
     const combinedStyles = useMemo(
