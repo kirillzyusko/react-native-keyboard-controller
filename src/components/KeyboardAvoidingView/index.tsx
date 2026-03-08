@@ -92,7 +92,7 @@ const KeyboardAvoidingView = forwardRef<
     ref,
   ) => {
     const initialFrame = useSharedValue<LayoutRectangle | null>(null);
-    const internalRef = React.useRef<View>(null);
+    const internalRef = React.useRef<View | null>(null);
     const frame = useDerivedValue(() => initialFrame.value || defaultLayout);
 
     const { translate, padding } = useTranslateAnimation();
@@ -209,11 +209,15 @@ const KeyboardAvoidingView = forwardRef<
     }, [behavior, enabled, interpolateToRelativeKeyboardHeight]);
     const combinedRef = useCallback(
       (node: View | null) => {
-        (internalRef as React.MutableRefObject<View | null>).current = node;
+        internalRef.current = node;
 
-        if (typeof ref === "function") ref(node);
-        else if (ref)
+        if (typeof ref === "function") {
+          ref(node);
+        } else if (ref != null && "current" in ref) {
+          // ForwardedRef includes RefObject whose .current is readonly in TS,
+          // but React always passes a mutable ref object at runtime.
           (ref as React.MutableRefObject<View | null>).current = node;
+        }
       },
       [ref],
     );
