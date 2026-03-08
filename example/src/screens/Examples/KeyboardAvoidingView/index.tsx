@@ -73,6 +73,8 @@ export default function KeyboardAvoidingViewExample({ navigation }: Props) {
   const [behavior, setBehavior] = useState<Behavior>(behaviors[0]);
   const [isPackageImplementation, setPackageImplementation] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [offset, setOffset] = useState(0);
+  const offsets = [0, 50, 100];
 
   useEffect(() => {
     navigation.setOptions({
@@ -105,17 +107,30 @@ export default function KeyboardAvoidingViewExample({ navigation }: Props) {
           >
             {behavior}
           </Text>
+          <Text
+            style={styles.header}
+            testID="keyboard_avoiding_view.offset"
+            onPress={() => {
+              const index = offsets.indexOf(offset);
+
+              setOffset(
+                offsets[index === offsets.length - 1 ? 0 : index + 1],
+              );
+            }}
+          >
+            +{offset}
+          </Text>
         </View>
       ),
     });
-  }, [isPackageImplementation, behavior]);
+  }, [isPackageImplementation, behavior, offset]);
 
   return (
     <>
       <KAVContent
         behavior={behavior}
         isPackageImplementation={isPackageImplementation}
-        keyboardVerticalOffset={0}
+        keyboardVerticalOffset={offset}
       />
       <Modal
         animationType="slide"
@@ -132,7 +147,7 @@ export default function KeyboardAvoidingViewExample({ navigation }: Props) {
         <KAVContent
           behavior={behavior}
           isPackageImplementation={isPackageImplementation}
-          keyboardVerticalOffset={0}
+          keyboardVerticalOffset={offset}
         />
       </Modal>
     </>
