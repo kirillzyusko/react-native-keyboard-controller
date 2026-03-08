@@ -2,13 +2,14 @@ import React, { forwardRef, useCallback, useMemo } from "react";
 import { View } from "react-native";
 import Reanimated, {
   interpolate,
+  runOnJS,
   runOnUI,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
 } from "react-native-reanimated";
 
-import { useWindowDimensions } from "../../hooks";
+import { useKeyboardHandler, useWindowDimensions } from "../../hooks";
 import useCombinedRef from "../hooks/useCombinedRef";
 
 import { useKeyboardAnimation, useTranslateAnimation } from "./hooks";
@@ -132,6 +133,18 @@ const KeyboardAvoidingView = forwardRef<
         ) {
           // eslint-disable-next-line react-compiler/react-compiler
           initialFrame.value = layout;
+        } else {
+          // For height mode with keyboard open: update position coordinates
+          // (which may change, e.g. measureInWindow correcting after modal
+          // animation) but preserve the original height to avoid feedback loop
+          // where height change → onLayout → height change.
+          // eslint-disable-next-line react-compiler/react-compiler
+          initialFrame.value = {
+            x: layout.x,
+            y: layout.y,
+            width: layout.width,
+            height: initialFrame.value.height,
+          };
         }
       },
       [behavior],
@@ -160,6 +173,35 @@ const KeyboardAvoidingView = forwardRef<
         onLayoutProps?.(e);
       },
       [onLayoutProps],
+    );
+
+    // Re-measure absolute position when the keyboard starts opening.
+    // measureInWindow can return stale y=0 if the initial onLayout fires
+    // during a modal slide-up animation. By the time the user focuses an
+    // input (triggering keyboard), the animation is complete and
+    // measureInWindow returns the correct position.
+    const reMeasure = useCallback(() => {
+      const viewRef = internalRef.current;
+
+      if (viewRef?.measureInWindow) {
+        viewRef.measureInWindow((x, y) => {
+          const frame = initialFrame.value;
+
+          if (frame && frame.y !== y) {
+            initialFrame.value = { ...frame, x, y };
+          }
+        });
+      }
+    }, []);
+    useKeyboardHandler(
+      {
+        onStart: () => {
+          "worklet";
+
+          runOnJS(reMeasure)();
+        },
+      },
+      [],
     );
 
     const animatedStyle = useAnimatedStyle(() => {
