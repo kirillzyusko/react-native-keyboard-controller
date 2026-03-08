@@ -4620,6 +4620,11 @@ react-is@^19.1.0:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-19.1.0.tgz#805bce321546b7e14c084989c77022351bbdd11b"
   integrity sha512-Oe56aUPnkHyyDxxkvqtd7KkdQP5uIUfHxd5XTb3wE9d/kRnZLmKbDB0GWk919tdQ+mxxPtG6EAs6RMT6i1qtHg==
 
+react-native-advanced-input-mask@1.4.6:
+  version "1.4.6"
+  resolved "https://registry.yarnpkg.com/react-native-advanced-input-mask/-/react-native-advanced-input-mask-1.4.6.tgz#70f35805ad85d29f67987235309dd7eba60178e8"
+  integrity sha512-70qm6wQ2YJVWq4iHqzOJg6d4Ej3duid16G9dGZh6PxMweyfq4TeMbAi5DcmHRe71tDf436IgjWmGENAFPtnPWg==
+
 react-native-gesture-handler@2.28.0:
   version "2.28.0"
   resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-2.28.0.tgz#07fb4f5eae72f810aac3019b060d26c1835bfd0c"
@@ -4679,11 +4684,6 @@ react-native-screens@4.16.0:
     react-freeze "^1.0.0"
     react-native-is-edge-to-edge "^1.2.1"
     warn-once "^0.1.0"
-
-react-native-text-input-mask@3.1.5:
-  version "3.1.5"
-  resolved "https://registry.yarnpkg.com/react-native-text-input-mask/-/react-native-text-input-mask-3.1.5.tgz#332f587e6f78fdceb9d0c3a75279de89705559a7"
-  integrity sha512-3fskFHLEqjDDQldeMabo6bHWFCjgoq5IZmZ1my7UAFbuXqpZGGOI9+x2FiJiNddQDYbzg5xNkG8nBKTW7PdDEA==
 
 react-native-toast-message@^2.3.0:
   version "2.3.0"

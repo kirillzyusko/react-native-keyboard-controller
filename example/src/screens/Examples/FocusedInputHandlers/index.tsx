@@ -6,19 +6,19 @@ import {
   View,
   findNodeHandle,
 } from "react-native";
+import { MaskedTextInput } from "react-native-advanced-input-mask";
 import { useFocusedInputHandler } from "react-native-keyboard-controller";
 import Reanimated, {
   runOnJS,
   useAnimatedStyle,
   useSharedValue,
 } from "react-native-reanimated";
-import TextInputMask from "react-native-text-input-mask";
 
 import type {
   TextInputProps,
   TextInputSelectionChangeEventData,
 } from "react-native";
-import type { TextInputMaskProps } from "react-native-text-input-mask";
+import type { MaskedTextInputProps } from "react-native-advanced-input-mask";
 
 type MaskedInputState = {
   formatted: string; // +1 (123) 456-78-90
@@ -166,14 +166,14 @@ export default function TextInputMaskExample() {
   );
 
   const onChangeText = useCallback<
-    NonNullable<TextInputMaskProps["onChangeText"]>
+    NonNullable<MaskedTextInputProps["onChangeText"]>
   >((formatted, extracted) => {
     setData({ formatted, extracted });
   }, []);
 
   return (
     <View style={style.container}>
-      <TextInputMask
+      <MaskedTextInput
         keyboardType="phone-pad"
         mask="+1 ([000]) [000] [00] [00]"
         placeholder="+1 (___) ___ __ __"

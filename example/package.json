@@ -30,7 +30,7 @@
     "react-native-reanimated": "3.19.2",
     "react-native-safe-area-context": "5.6.1",
     "react-native-screens": "4.16.0",
-    "react-native-text-input-mask": "3.1.5",
+    "react-native-advanced-input-mask": "1.4.6",
     "react-native-toast-message": "^2.3.0",
     "react-native-webview": "^13.16.0",
     "zustand": "^5.0.11"

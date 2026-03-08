@@ -4,11 +4,11 @@ PODS:
   - fast_float (8.0.0)
   - FBLazyVector (0.81.4)
   - fmt (11.0.2)
+  - ForkInputMask (7.3.3)
   - glog (0.3.5)
   - hermes-engine (0.81.4):
     - hermes-engine/Pre-built (= 0.81.4)
   - hermes-engine/Pre-built (0.81.4)
-  - InputMask (6.1.0)
   - lottie-ios (4.5.0)
   - lottie-react-native (7.3.4):
     - boost
@@ -1779,6 +1779,35 @@ PODS:
     - React-RCTFBReactNativeSpec
     - ReactCommon/turbomodule/core
     - SocketRocket
+  - react-native-advanced-input-mask (1.4.6):
+    - boost
+    - DoubleConversion
+    - fast_float
+    - fmt
+    - ForkInputMask (~> 7.3.2)
+    - glog
+    - hermes-engine
+    - RCT-Folly
+    - RCT-Folly/Fabric
+    - RCTRequired
+    - RCTTypeSafety
+    - React-Core
+    - React-debug
+    - React-Fabric
+    - React-featureflags
+    - React-graphics
+    - React-ImageManager
+    - React-jsi
+    - React-NativeModulesApple
+    - React-RCTFabric
+    - React-renderercss
+    - React-rendererdebug
+    - React-utils
+    - ReactCodegen
+    - ReactCommon/turbomodule/bridging
+    - ReactCommon/turbomodule/core
+    - SocketRocket
+    - Yoga
   - react-native-blur (4.4.1):
     - boost
     - DoubleConversion
@@ -1837,10 +1866,6 @@ PODS:
     - Yoga
   - react-native-safe-area-context (5.6.1):
     - React-Core
-  - react-native-text-input-mask (3.1.5):
-    - InputMask (~> 6.1.0)
-    - React-Core
-    - React-RCTText
   - react-native-webview (13.16.0):
     - boost
     - DoubleConversion
@@ -2710,10 +2735,10 @@ DEPENDENCIES:
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - React-Mapbuffer (from `../node_modules/react-native/ReactCommon`)
   - React-microtasksnativemodule (from `../node_modules/react-native/ReactCommon/react/nativemodule/microtasks`)
+  - react-native-advanced-input-mask (from `../node_modules/react-native-advanced-input-mask`)
   - "react-native-blur (from `../node_modules/@react-native-community/blur`)"
   - react-native-keyboard-controller (from `../node_modules/react-native-keyboard-controller`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
-  - react-native-text-input-mask (from `../node_modules/react-native-text-input-mask`)
   - react-native-webview (from `../node_modules/react-native-webview`)
   - React-NativeModulesApple (from `../node_modules/react-native/ReactCommon/react/nativemodule/core/platform/ios`)
   - React-oscompat (from `../node_modules/react-native/ReactCommon/oscompat`)
@@ -2756,7 +2781,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
-    - InputMask
+    - ForkInputMask
     - lottie-ios
     - SocketRocket
 
@@ -2844,14 +2869,14 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   React-microtasksnativemodule:
     :path: "../node_modules/react-native/ReactCommon/react/nativemodule/microtasks"
+  react-native-advanced-input-mask:
+    :path: "../node_modules/react-native-advanced-input-mask"
   react-native-blur:
     :path: "../node_modules/@react-native-community/blur"
   react-native-keyboard-controller:
     :path: "../node_modules/react-native-keyboard-controller"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
-  react-native-text-input-mask:
-    :path: "../node_modules/react-native-text-input-mask"
   react-native-webview:
     :path: "../node_modules/react-native-webview"
   React-NativeModulesApple:
@@ -2935,9 +2960,9 @@ SPEC CHECKSUMS:
   fast_float: b32c788ed9c6a8c584d114d0047beda9664e7cc6
   FBLazyVector: 941bef1c8eeabd9fe1f501e30a5220beee913886
   fmt: a40bb5bd0294ea969aaaba240a927bd33d878cdd
+  ForkInputMask: 55e3fbab504b22da98483e9f9a6514b98fdd2f3c
   glog: 5683914934d5b6e4240e497e0f4a3b42d1854183
   hermes-engine: 35c763d57c9832d0eef764316ca1c4d043581394
-  InputMask: 71d291dc54d2deaeac6512afb6ec2304228c0bb7
   lottie-ios: a881093fab623c467d3bce374367755c272bdd59
   lottie-react-native: 38ad382c9420a1a079c7e6958a11e26c3183d943
   RCT-Folly: 59ec0ac1f2f39672a0c6e6cecdd39383b764646f
@@ -2973,10 +2998,10 @@ SPEC CHECKSUMS:
   React-logger: 1767babce2d28c3251039ce05556714a2c8c6ded
   React-Mapbuffer: 33f678ee25b6c0ee2b01b1ecec08e3e02424cefe
   React-microtasksnativemodule: 44b44a4d3cd6ffb85d928abf741acdc26722de2e
+  react-native-advanced-input-mask: 9736114228c7c8b990c8e57abd0df3f6b9a479d0
   react-native-blur: 2181432139e3b470cad492f7729cb640cee60045
   react-native-keyboard-controller: a88895ad0c6f47d3e81c5682a97ffd6c04fab41a
   react-native-safe-area-context: aac2745e96999c8633d2f6119e4e39b499c2ac8b
-  react-native-text-input-mask: 22ca8eeef84d42a896f79428f7d175a5eb8b1c4e
   react-native-webview: a742b11276a0443e856cc5dc3e21a3fdf3351cdf
   React-NativeModulesApple: b5d18bc109c45c9a1c6b71664991b5cc3adc4e48
   React-oscompat: 93b5535ea7f7dff46aaee4f78309a70979bdde9d
