@@ -104,19 +104,8 @@ const KeyboardAvoidingView = forwardRef<
 
       const keyboardY =
         screenHeight - keyboard.heightWhenOpened.value - keyboardVerticalOffset;
-      const viewBottom = frame.value.y + frame.value.height;
-      // In pageSheet modals, the view doesn't extend to the screen bottom.
-      // The keyboard covers the gap below the view, so we treat the view as
-      // extending to the screen bottom for the overlap calculation. This only
-      // applies to large views (>50% of screen) to avoid affecting small views.
-      const gap = screenHeight - viewBottom;
-      const isModalLikeView =
-        gap > 0 &&
-        gap < keyboard.heightWhenOpened.value &&
-        frame.value.height > screenHeight * 0.5;
-      const effectiveBottom = isModalLikeView ? screenHeight : viewBottom;
 
-      return Math.max(effectiveBottom - keyboardY, 0);
+      return Math.max(frame.value.y + frame.value.height - keyboardY, 0);
     }, [screenHeight, keyboardVerticalOffset]);
     const interpolateToRelativeKeyboardHeight = useCallback(
       (value: number) => {
