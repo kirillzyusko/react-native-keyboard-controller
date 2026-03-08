@@ -92,6 +92,7 @@ const KeyboardAvoidingView = forwardRef<
     ref,
   ) => {
     const initialFrame = useSharedValue<LayoutRectangle | null>(null);
+    const internalRef = React.useRef<View>(null);
     const frame = useDerivedValue(() => initialFrame.value || defaultLayout);
 
     const { translate, padding } = useTranslateAnimation();
@@ -103,8 +104,19 @@ const KeyboardAvoidingView = forwardRef<
 
       const keyboardY =
         screenHeight - keyboard.heightWhenOpened.value - keyboardVerticalOffset;
+      const viewBottom = frame.value.y + frame.value.height;
+      // In pageSheet modals, the view doesn't extend to the screen bottom.
+      // The keyboard covers the gap below the view, so we treat the view as
+      // extending to the screen bottom for the overlap calculation. This only
+      // applies to large views (>50% of screen) to avoid affecting small views.
+      const gap = screenHeight - viewBottom;
+      const isModalLikeView =
+        gap > 0 &&
+        gap < keyboard.heightWhenOpened.value &&
+        frame.value.height > screenHeight * 0.5;
+      const effectiveBottom = isModalLikeView ? screenHeight : viewBottom;
 
-      return Math.max(frame.value.y + frame.value.height - keyboardY, 0);
+      return Math.max(effectiveBottom - keyboardY, 0);
     }, [screenHeight, keyboardVerticalOffset]);
     const interpolateToRelativeKeyboardHeight = useCallback(
       (value: number) => {
@@ -132,7 +144,25 @@ const KeyboardAvoidingView = forwardRef<
     );
     const onLayout = useCallback<NonNullable<ViewProps["onLayout"]>>(
       (e) => {
-        runOnUI(onLayoutWorklet)(e.nativeEvent.layout);
+        const layout = e.nativeEvent.layout;
+        // Use measureInWindow to get absolute screen coordinates instead of
+        // parent-relative coordinates from onLayout. This fixes keyboard avoidance
+        // in modals where the parent view's y=0 doesn't correspond to screen y=0.
+        const viewRef = internalRef.current;
+
+        if (viewRef && viewRef.measureInWindow) {
+          viewRef.measureInWindow((x, y, _width, _height) => {
+            runOnUI(onLayoutWorklet)({
+              x,
+              y,
+              width: layout.width,
+              height: layout.height,
+            });
+          });
+        } else {
+          runOnUI(onLayoutWorklet)(layout);
+        }
+
         onLayoutProps?.(e);
       },
       [onLayoutProps],
@@ -177,6 +207,16 @@ const KeyboardAvoidingView = forwardRef<
           return {};
       }
     }, [behavior, enabled, interpolateToRelativeKeyboardHeight]);
+    const combinedRef = useCallback(
+      (node: View | null) => {
+        (internalRef as React.MutableRefObject<View | null>).current = node;
+
+        if (typeof ref === "function") ref(node);
+        else if (ref)
+          (ref as React.MutableRefObject<View | null>).current = node;
+      },
+      [ref],
+    );
     const isPositionBehavior = behavior === "position";
     const containerStyle = isPositionBehavior ? contentContainerStyle : style;
     const combinedStyles = useMemo(
@@ -186,7 +226,7 @@ const KeyboardAvoidingView = forwardRef<
 
     if (isPositionBehavior) {
       return (
-        <View ref={ref} style={style} onLayout={onLayout} {...props}>
+        <View ref={combinedRef} style={style} onLayout={onLayout} {...props}>
           <Reanimated.View style={combinedStyles}>{children}</Reanimated.View>
         </View>
       );
@@ -194,7 +234,7 @@ const KeyboardAvoidingView = forwardRef<
 
     return (
       <Reanimated.View
-        ref={ref}
+        ref={combinedRef}
         style={combinedStyles}
         onLayout={onLayout}
         {...props}
