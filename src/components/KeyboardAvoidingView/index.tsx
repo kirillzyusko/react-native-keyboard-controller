@@ -9,7 +9,7 @@ import Reanimated, {
   useSharedValue,
 } from "react-native-reanimated";
 
-import { useKeyboardHandler, useWindowDimensions } from "../../hooks";
+import { useGenericKeyboardHandler, useWindowDimensions } from "../../hooks";
 import useCombinedRef from "../hooks/useCombinedRef";
 
 import { useKeyboardAnimation, useTranslateAnimation } from "./hooks";
@@ -193,7 +193,7 @@ const KeyboardAvoidingView = forwardRef<
         });
       }
     }, []);
-    useKeyboardHandler(
+    useGenericKeyboardHandler(
       {
         onStart: () => {
           "worklet";
