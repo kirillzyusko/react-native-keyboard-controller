@@ -7,8 +7,8 @@ jest.mock("react-native-reanimated", () => ({
 import {
   clampedScrollTarget,
   computeIOSContentOffset,
-  getMinimumPaddingAbsorbed,
   getEffectiveHeight,
+  getMinimumPaddingAbsorbed,
   getScrollEffective,
   isScrollAtEnd,
   shouldShiftContent,

@@ -119,8 +119,10 @@ const ScrollViewWithBottomPadding = forwardRef<
     return (
       <ReanimatedClippingScrollView
         animatedProps={animatedProps}
+        applyWorkaroundForContentInsetHitTestBug={
+          applyWorkaroundForContentInsetHitTestBug
+        }
         style={styles.container}
-        applyWorkaroundForContentInsetHitTestBug={applyWorkaroundForContentInsetHitTestBug}
       >
         <ScrollViewComponent ref={ref} animatedProps={animatedProps} {...rest}>
           {inverted ? (

@@ -120,9 +120,9 @@ export const KeyboardChatLegendList = typedForwardRef(
         return (
           <KeyboardChatScrollView
             {...scrollProps}
-            minimumContentPadding={minimumContentPadding}
-            extraContentPadding={extraContentPadding}
             applyWorkaroundForContentInsetHitTestBug
+            extraContentPadding={extraContentPadding}
+            minimumContentPadding={minimumContentPadding}
           />
         );
       },

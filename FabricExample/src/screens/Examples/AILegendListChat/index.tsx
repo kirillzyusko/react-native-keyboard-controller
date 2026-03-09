@@ -5,13 +5,7 @@ import {
   useRef,
   useState,
 } from "react";
-import {
-  Button,
-  Platform,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
+import { Button, Platform, Text, TextInput, View } from "react-native";
 import {
   KeyboardController,
   KeyboardGestureArea,
@@ -168,7 +162,6 @@ const AIChat = () => {
 
   useLayoutEffect(() => {
     composerRef.current?.measure((_x, _y, _width, height) => {
-      // eslint-disable-next-line react-compiler/react-compiler -- Reanimated shared values are designed to be mutated via .value
       composerHeight.value = height;
       listRef.current?.reportContentInset({ bottom: height });
     });
@@ -308,7 +301,6 @@ const AIChat = () => {
           keyExtractor={(_item, index) => `item-${index}`}
           maintainScrollAtEnd={Platform.OS === "web"}
           offset={insets.bottom}
-          scrollIndicatorInsets={{ bottom: -insets.bottom }}
           renderItem={({ item }) => (
             <View>
               {item.sender === "user" ? (
@@ -338,6 +330,7 @@ const AIChat = () => {
               )}
             </View>
           )}
+          scrollIndicatorInsets={{ bottom: -insets.bottom }}
           style={styles.list}
         />
       </KeyboardGestureArea>
