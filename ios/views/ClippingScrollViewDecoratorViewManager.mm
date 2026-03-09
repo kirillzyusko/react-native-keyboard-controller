@@ -115,27 +115,27 @@ static void KCApplyFixedHitTest(UIScrollView *scrollView)
       // Get the original implementation to call it
       IMP originalImp = method_getImplementation(original);
       UIView *(*originalHitTest)(id, SEL, CGPoint, UIEvent *) =
-          (UIView *(*)(id, SEL, CGPoint, UIEvent *))originalImp;
+          (UIView * (*)(id, SEL, CGPoint, UIEvent *)) originalImp;
 
       IMP fixedHitTestImp = imp_implementationWithBlock(
           ^UIView *(__unsafe_unretained UIView *self, CGPoint point, UIEvent *event) {
-              // Call the original implementation
-              UIView *result = originalHitTest(self, @selector(hitTest:withEvent:), point, event);
+            // Call the original implementation
+            UIView *result = originalHitTest(self, @selector(hitTest:withEvent:), point, event);
 
-              // This is the fix: when RN's betterHitTest returns self (the container),
-              // return the scrollView instead so touches can reach it
-              if (result == self) {
-                // Dynamically find the scrollView at hit-test time to handle RN refreshes
-                // where the scrollView instance is recreated but the swizzled class persists
-                for (UIView *subview in self.subviews) {
-                  if ([subview isKindOfClass:[UIScrollView class]] &&
-                      ![subview isKindOfClass:[UITextView class]]) {
-                    return subview;
-                  }
+            // This is the fix: when RN's betterHitTest returns self (the container),
+            // return the scrollView instead so touches can reach it
+            if (result == self) {
+              // Dynamically find the scrollView at hit-test time to handle RN refreshes
+              // where the scrollView instance is recreated but the swizzled class persists
+              for (UIView *subview in self.subviews) {
+                if ([subview isKindOfClass:[UIScrollView class]] &&
+                    ![subview isKindOfClass:[UITextView class]]) {
+                  return subview;
                 }
               }
+            }
 
-              return result;
+            return result;
           });
 
       class_addMethod(
