@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
-  KeyboardAvoidingView as RNKeyboardAvoidingView,
   Modal,
+  KeyboardAvoidingView as RNKeyboardAvoidingView,
   Text,
   TextInput,
   TouchableOpacity,
@@ -113,9 +113,7 @@ export default function KeyboardAvoidingViewExample({ navigation }: Props) {
             onPress={() => {
               const index = offsets.indexOf(offset);
 
-              setOffset(
-                offsets[index === offsets.length - 1 ? 0 : index + 1],
-              );
+              setOffset(offsets[index === offsets.length - 1 ? 0 : index + 1]);
             }}
           >
             +{offset}

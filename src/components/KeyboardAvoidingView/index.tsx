@@ -9,8 +9,8 @@ import Reanimated, {
 } from "react-native-reanimated";
 
 import { useWindowDimensions } from "../../hooks";
-
 import useCombinedRef from "../hooks/useCombinedRef";
+
 import { useKeyboardAnimation, useTranslateAnimation } from "./hooks";
 
 import type { LayoutRectangle, ViewProps } from "react-native";
