@@ -115,11 +115,11 @@ This prop uses runtime method swizzling, which can be fragile and may conflict w
 
 ### `minimumContentPadding`
 
-A [Reanimated `SharedValue<number>`](https://docs.swmansion.com/react-native-reanimated/docs/core/useSharedValue/) representing a minimum inset floor (in pixels) for the bottom padding.
+A [Reanimated `SharedValue<number>`](https://docs.swmansion.com/react-native-reanimated/docs/core/useSharedValue/) representing a minimum inset floor for the bottom padding.
 
 When set, the total bottom padding is computed as:
 
-```
+```js
 max(minimumContentPadding, keyboardPadding + extraContentPadding)
 ```
 
