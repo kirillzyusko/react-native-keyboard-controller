@@ -126,6 +126,7 @@ function KeyboardChatScrollViewPlayground() {
             alignItemsAtEnd={inverted}
             contentContainerStyle={contentContainerStyle}
             data={messages}
+            initialScrollAtEnd={inverted}
             keyExtractor={(item) => item.text}
             renderItem={({ item }) => <Message {...item} />}
             renderScrollComponent={memoList}
