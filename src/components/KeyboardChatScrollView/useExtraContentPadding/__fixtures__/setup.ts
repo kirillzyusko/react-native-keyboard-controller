@@ -1,6 +1,8 @@
 import { renderHook } from "@testing-library/react-native";
 import { useAnimatedRef } from "react-native-reanimated";
 
+import { sv } from "../../../../__fixtures__/sv";
+
 import type { useExtraContentPadding } from "..";
 import type { SharedValue } from "react-native-reanimated";
 import type Reanimated from "react-native-reanimated";
@@ -19,10 +21,6 @@ jest.mock("react-native-reanimated", () => ({
     reactionEffect = effect;
   },
 }));
-
-export const sv = <T>(initial: T): SharedValue<T> => {
-  return { value: initial } as SharedValue<T>;
-};
 
 type RenderOptions = Omit<
   Parameters<typeof useExtraContentPadding>[0],

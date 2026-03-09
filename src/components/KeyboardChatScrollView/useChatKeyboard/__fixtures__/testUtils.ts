@@ -1,7 +1,7 @@
 import { renderHook } from "@testing-library/react-native";
 import { useAnimatedRef } from "react-native-reanimated";
 
-import { sv } from "../../useExtraContentPadding/__fixtures__/setup";
+import { sv } from "../../../../__fixtures__/sv";
 
 import type { useChatKeyboard } from "..";
 import type { SharedValue } from "react-native-reanimated";
@@ -109,5 +109,3 @@ export function createRender(modulePath: string) {
     });
   };
 }
-
-export { sv };
