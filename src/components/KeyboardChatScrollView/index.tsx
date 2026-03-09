@@ -34,7 +34,7 @@ const KeyboardChatScrollView = forwardRef<
       offset = 0,
       extraContentPadding = ZERO_CONTENT_PADDING,
       minimumContentPadding = ZERO_MINIMUM_CONTENT_PADDING,
-      applyWorkaroundForContentInsetHitTestBug,
+      applyWorkaroundForContentInsetHitTestBug = false,
       onLayout: onLayoutProp,
       onContentSizeChange: onContentSizeChangeProp,
       ...rest
@@ -124,12 +124,14 @@ const KeyboardChatScrollView = forwardRef<
         <ScrollViewWithBottomPadding
           ref={onRef}
           {...rest}
+          applyWorkaroundForContentInsetHitTestBug={
+            applyWorkaroundForContentInsetHitTestBug
+          }
           bottomPadding={totalPadding}
-          scrollIndicatorPadding={indicatorPadding}
           contentOffsetY={contentOffsetY}
           inverted={inverted}
+          scrollIndicatorPadding={indicatorPadding}
           ScrollViewComponent={ScrollViewComponent}
-          applyWorkaroundForContentInsetHitTestBug={applyWorkaroundForContentInsetHitTestBug}
           onContentSizeChange={onContentSizeChange}
           onLayout={onLayout}
         >
