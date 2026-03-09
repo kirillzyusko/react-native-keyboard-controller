@@ -31,7 +31,8 @@ class ClippingScrollViewDecoratorView(
     decorateScrollView()
   }
 
-  fun setApplyWorkaroundForContentInsetHitTestBug(_value: Boolean) {
+  @Suppress("detekt:UnusedParameter")
+  fun setApplyWorkaroundForContentInsetHitTestBug(value: Boolean) {
     // iOS-only workaround; no-op on Android
   }
 
