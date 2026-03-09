@@ -1,3 +1,4 @@
+import { sv } from "../../../../__fixtures__/sv";
 import {
   type Handlers,
   KEYBOARD,
@@ -6,7 +7,6 @@ import {
   mockOffset,
   mockSize,
   setupBeforeEach,
-  sv,
 } from "../__fixtures__/testUtils";
 
 const render = createRender("../index.ios");

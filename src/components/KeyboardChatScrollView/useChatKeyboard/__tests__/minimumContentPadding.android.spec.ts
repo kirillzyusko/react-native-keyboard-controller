@@ -1,3 +1,4 @@
+import { sv } from "../../../../__fixtures__/sv";
 import {
   type Handlers,
   KEYBOARD,
@@ -7,7 +8,6 @@ import {
   mockScrollTo,
   mockSize,
   setupBeforeEach,
-  sv,
 } from "../__fixtures__/testUtils";
 
 const render = createRender("../index.ts");
