@@ -120,7 +120,7 @@ A [Reanimated `SharedValue<number>`](https://docs.swmansion.com/react-native-rea
 When set, the total bottom padding is computed as:
 
 ```js
-max(minimumContentPadding, keyboardPadding + extraContentPadding)
+max(minimumContentPadding, keyboardPadding + extraContentPadding);
 ```
 
 This means the keyboard "absorbs" into the minimum padding rather than adding to it:
@@ -155,6 +155,7 @@ The value must be a `SharedValue` (from `useSharedValue`) — not a plain number
 On **iOS with React Native 0.81+**, the `contentInset` area created by `minimumContentPadding` may not respond to touch/scroll gestures due to [facebook/react-native#54123](https://github.com/facebook/react-native/issues/54123).
 
 To fix this, you must either:
+
 - Set `applyWorkaroundForContentInsetHitTestBug={true}` on `KeyboardChatScrollView`, **or**
 - Apply a patch to React Native that fixes the upstream bug
 
