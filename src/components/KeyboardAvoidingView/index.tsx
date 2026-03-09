@@ -24,11 +24,20 @@ export type KeyboardAvoidingViewBaseProps = {
   enabled?: boolean;
 
   /**
-   * Extra offset to add above the keyboard. Since the view's position is
-   * measured in absolute screen coordinates, this is purely additive.
-   * Defaults to 0.
+   * Distance between the top of the user screen and the React Native view. This
+   * may be non-zero in some cases. Defaults to 0.
    */
   keyboardVerticalOffset?: number;
+
+  /**
+   * When `true`, the view automatically detects its position on screen,
+   * accounting for navigation headers, modals, and other layout offsets.
+   * This means `keyboardVerticalOffset` becomes purely additive extra
+   * space rather than compensation for unknown positioning.
+   *
+   * Defaults to `false` for backward compatibility.
+   */
+  automaticOffset?: boolean;
 } & ViewProps;
 
 export type KeyboardAvoidingViewProps = KeyboardAvoidingViewBaseProps &
@@ -88,6 +97,7 @@ const KeyboardAvoidingView = forwardRef<
       contentContainerStyle,
       enabled = true,
       keyboardVerticalOffset = 0,
+      automaticOffset = false,
       style,
       onLayout: onLayoutProps,
       ...props
@@ -105,9 +115,11 @@ const KeyboardAvoidingView = forwardRef<
     const relativeKeyboardHeight = useCallback(() => {
       "worklet";
 
-      // measureInWindow gives absolute screen coordinates, so frame.y
-      // already accounts for navigation headers, modals, etc.
-      // keyboardVerticalOffset is purely additive extra offset.
+      // When automaticOffset is true, frame.y is in absolute screen
+      // coordinates (via measureInWindow) and already accounts for
+      // navigation headers, modals, etc. Otherwise frame.y is
+      // parent-relative from onLayout and keyboardVerticalOffset must
+      // compensate manually.
       const keyboardY =
         screenHeight - keyboard.heightWhenOpened.value - keyboardVerticalOffset;
 
@@ -152,27 +164,34 @@ const KeyboardAvoidingView = forwardRef<
     const onLayout = useCallback<NonNullable<ViewProps["onLayout"]>>(
       (e) => {
         const layout = e.nativeEvent.layout;
-        // Use measureInWindow to get absolute screen coordinates instead of
-        // parent-relative coordinates from onLayout. This fixes keyboard avoidance
-        // in modals where the parent view's y=0 doesn't correspond to screen y=0.
-        const viewRef = internalRef.current;
 
-        if (viewRef && viewRef.measureInWindow) {
-          viewRef.measureInWindow((x, y, _width, _height) => {
-            runOnUI(onLayoutWorklet)({
-              x,
-              y,
-              width: layout.width,
-              height: layout.height,
+        if (automaticOffset) {
+          // Use measureInWindow to get absolute screen coordinates instead of
+          // parent-relative coordinates from onLayout. This fixes keyboard
+          // avoidance in modals where the parent view's y=0 doesn't correspond
+          // to screen y=0, and on regular screens where the nav bar offset
+          // would otherwise need to be passed via keyboardVerticalOffset.
+          const viewRef = internalRef.current;
+
+          if (viewRef && viewRef.measureInWindow) {
+            viewRef.measureInWindow((x, y, _width, _height) => {
+              runOnUI(onLayoutWorklet)({
+                x,
+                y,
+                width: layout.width,
+                height: layout.height,
+              });
             });
-          });
+          } else {
+            runOnUI(onLayoutWorklet)(layout);
+          }
         } else {
           runOnUI(onLayoutWorklet)(layout);
         }
 
         onLayoutProps?.(e);
       },
-      [onLayoutProps],
+      [onLayoutProps, automaticOffset],
     );
 
     // Re-measure absolute position when the keyboard starts opening.
@@ -181,6 +200,8 @@ const KeyboardAvoidingView = forwardRef<
     // input (triggering keyboard), the animation is complete and
     // measureInWindow returns the correct position.
     const reMeasure = useCallback(() => {
+      if (!automaticOffset) return;
+
       const viewRef = internalRef.current;
 
       if (viewRef?.measureInWindow) {
@@ -192,7 +213,7 @@ const KeyboardAvoidingView = forwardRef<
           }
         });
       }
-    }, []);
+    }, [automaticOffset]);
     useGenericKeyboardHandler(
       {
         onStart: () => {

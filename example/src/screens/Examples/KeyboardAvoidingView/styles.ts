@@ -1,15 +1,25 @@
 import { StyleSheet } from "react-native";
 
 export default StyleSheet.create({
-  header: {
-    color: "black",
-    marginRight: 12,
-  },
   container: {
     flex: 1,
   },
-  row: {
+  settings: {
     flexDirection: "row",
+    justifyContent: "center",
+    gap: 8,
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+  },
+  settingsButton: {
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    borderRadius: 8,
+    backgroundColor: "#e8e8e8",
+  },
+  settingsText: {
+    color: "black",
+    fontSize: 14,
   },
   content: {
     flex: 1,

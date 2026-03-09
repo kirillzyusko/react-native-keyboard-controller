@@ -131,12 +131,18 @@ A boolean prop indicating whether `KeyboardAvoidingView` is enabled or disabled.
 
 ### `keyboardVerticalOffset`
 
-Extra offset (in points) to add above the keyboard. Default is `0`.
+This is the distance between the top of the user screen and the react native view, may be non-zero in some use cases. Default is `0`.
 
-The view’s position on screen is measured automatically using `measureInWindow`, so navigation headers, modals, and other layout offsets are already accounted for. You do **not** need to pass `useHeaderHeight()` or manually compensate for navigation bars — this is handled internally.
+By default the view uses parent-relative coordinates from `onLayout`, so you typically need to set this to the height of your navigation header (e.g., pass `useHeaderHeight()` from `@react-navigation/elements`).
 
-Use `keyboardVerticalOffset` only when you want to add **extra** space above the keyboard beyond the automatically calculated position (e.g., to leave room for a toolbar or additional padding).
+If you enable [`automaticOffset`](#automaticoffset), the view automatically detects its position on screen, and `keyboardVerticalOffset` becomes purely **additive** extra space — you no longer need to compensate for navigation headers or modals.
 
 import KeyboardVerticalOffset from "@site/src/components/KeyboardVerticalOffset";
 
 <KeyboardVerticalOffset />
+
+### `automaticOffset`
+
+When `true`, the view automatically detects its position on screen, accounting for navigation headers, modals, and other layout offsets. This means `keyboardVerticalOffset` becomes purely additive extra space rather than compensation for unknown positioning.
+
+Default is `false`.

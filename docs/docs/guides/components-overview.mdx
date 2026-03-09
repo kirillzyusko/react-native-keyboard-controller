@@ -56,7 +56,7 @@ import KeyboardExtender from "../api/views/keyboard-extender/keyboard-extender.l
 
 Use `KeyboardAvoidingView` when you need to prevent the keyboard from hiding important UI elements, especially `TextInput` components. It automatically adjusts its layout—by changing its height, position, or padding—when the keyboard appears. A key advantage over the standard React Native component is its focus on _consistent behavior and smoother animations_ across both iOS and Android, simplifying cross-platform development. It's ideal for general screens like forms or chat interfaces.
 
-You can control how it adjusts using the `behavior` prop (`padding`, `height`, `position`, `translate-with-padding`). Navigation headers and modals are handled automatically — use `keyboardVerticalOffset` only if you need extra space above the keyboard.
+You can control how it adjusts using the `behavior` prop (`padding`, `height`, `position`, `translate-with-padding`). Use `keyboardVerticalOffset` to account for navigation headers, or enable `automaticOffset` to have headers and modals handled automatically.
 
 ## [`KeyboardStickyView`](../api/components/keyboard-sticky-view)
 
