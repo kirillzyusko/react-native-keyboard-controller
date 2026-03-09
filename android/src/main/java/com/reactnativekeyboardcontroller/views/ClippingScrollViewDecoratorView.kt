@@ -31,7 +31,7 @@ class ClippingScrollViewDecoratorView(
     decorateScrollView()
   }
 
-  fun setApplyWorkaroundForContentInsetHitTestBug(value: Boolean) {
+  fun setApplyWorkaroundForContentInsetHitTestBug(_value: Boolean) {
     // iOS-only workaround; no-op on Android
   }
 
