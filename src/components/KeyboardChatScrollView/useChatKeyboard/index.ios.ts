@@ -95,13 +95,15 @@ function useChatKeyboard(
           minimumContentPadding.value,
           inverted,
         );
-        const visiblePadding =
-          visibleFraction * minimumContentPadding.value;
+        const visiblePadding = visibleFraction * minimumContentPadding.value;
         const minimumPaddingAbsorbed = Math.max(
           0,
           visiblePadding - extraContentPadding.value,
         );
-        const scrollEff = getScrollEffective(effective, minimumPaddingAbsorbed);
+        const scrollEffective = getScrollEffective(
+          effective,
+          minimumPaddingAbsorbed,
+        );
         const actualTotalPadding = Math.max(
           minimumContentPadding.value,
           effective + extraContentPadding.value,
@@ -179,10 +181,13 @@ function useChatKeyboard(
         // (not the full padding, which includes the absorbed portion).
         // Use the stored absorption from the previous event so that
         // the unwind matches the shift that was originally applied.
-        const prevScrollEff = getScrollEffective(padding.value, prevAbsorption.value);
+        const prevScrollEffective = getScrollEffective(
+          padding.value,
+          prevAbsorption.value,
+        );
         const relativeScroll = inverted
-          ? scroll.value + prevScrollEff
-          : scroll.value - prevScrollEff;
+          ? scroll.value + prevScrollEffective
+          : scroll.value - prevScrollEffective;
 
         padding.value = effective;
         prevAbsorption.value = minimumPaddingAbsorbed;
@@ -197,7 +202,11 @@ function useChatKeyboard(
 
         // When minimumContentPadding fully absorbs the keyboard opening, preserve current scroll position
         // (only when keyboard is open — effective > 0 — not when closing)
-        if (scrollEff === 0 && minimumPaddingAbsorbed > 0 && effective > 0) {
+        if (
+          scrollEffective === 0 &&
+          minimumPaddingAbsorbed > 0 &&
+          effective > 0
+        ) {
           contentOffsetY.value = scroll.value;
 
           return;
@@ -205,7 +214,7 @@ function useChatKeyboard(
 
         contentOffsetY.value = computeIOSContentOffset(
           relativeScroll,
-          scrollEff,
+          scrollEffective,
           size.value.height,
           layout.value.height,
           inverted,

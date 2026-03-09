@@ -5,8 +5,8 @@ import useScrollState from "../../hooks/useScrollState";
 
 import {
   clampedScrollTarget,
-  getMinimumPaddingAbsorbed,
   getEffectiveHeight,
+  getMinimumPaddingAbsorbed,
   getScrollEffective,
   getVisibleMinimumPaddingFraction,
   isScrollAtEnd,
@@ -118,9 +118,15 @@ function useChatKeyboard(
         );
         const minimumPaddingAbsorbed =
           visibleFraction >= 1
-            ? getMinimumPaddingAbsorbed(minimumContentPadding.value, extraContentPadding.value)
+            ? getMinimumPaddingAbsorbed(
+                minimumContentPadding.value,
+                extraContentPadding.value,
+              )
             : 0;
-        const scrollEff = getScrollEffective(effective, minimumPaddingAbsorbed);
+        const scrollEffective = getScrollEffective(
+          effective,
+          minimumPaddingAbsorbed,
+        );
 
         if (inverted && e.duration === -1) {
           // Android inverted: skip post-interactive snap-back events
@@ -136,10 +142,10 @@ function useChatKeyboard(
           if (!inverted && keyboardLiftBehavior === "whenAtEnd" && !atEnd) {
             // Sentinel: don't scroll in onMove (non-inverted only)
             offsetBeforeScroll.value = -1;
-          } else if (!inverted && scrollEff === 0) {
+          } else if (!inverted && scrollEffective === 0) {
             // minimumContentPadding fully absorbs the keyboard — prevent scroll
             offsetBeforeScroll.value = -1;
-          } else if (inverted && scrollEff === 0) {
+          } else if (inverted && scrollEffective === 0) {
             // minimumContentPadding fully absorbs the keyboard — guard for inverted
             offsetBeforeScroll.value = scroll.value;
           }
@@ -179,9 +185,14 @@ function useChatKeyboard(
           );
 
           const minimumPaddingAbsorbed =
-            getMinimumPaddingAbsorbed(minimumContentPadding.value, extraContentPadding.value) *
-            minimumPaddingFractionOnOpen.value;
-          const scrollEff = getScrollEffective(effective, minimumPaddingAbsorbed);
+            getMinimumPaddingAbsorbed(
+              minimumContentPadding.value,
+              extraContentPadding.value,
+            ) * minimumPaddingFractionOnOpen.value;
+          const scrollEffective = getScrollEffective(
+            effective,
+            minimumPaddingAbsorbed,
+          );
           const actualTotalPadding = Math.max(
             minimumContentPadding.value,
             effective + extraContentPadding.value,
@@ -203,7 +214,7 @@ function useChatKeyboard(
           ) {
             padding.value = effective;
 
-            if (scrollEff === 0 && minimumPaddingAbsorbed > 0) {
+            if (scrollEffective === 0 && minimumPaddingAbsorbed > 0) {
               return;
             }
 
@@ -223,7 +234,7 @@ function useChatKeyboard(
           }
 
           // When minimumContentPadding fully absorbs the keyboard, skip scroll
-          if (scrollEff === 0 && minimumPaddingAbsorbed > 0) {
+          if (scrollEffective === 0 && minimumPaddingAbsorbed > 0) {
             return;
           }
 
@@ -247,7 +258,8 @@ function useChatKeyboard(
             }
           }
 
-          const target = offsetBeforeScroll.value + padding.value - scrollEff;
+          const target =
+            offsetBeforeScroll.value + padding.value - scrollEffective;
 
           scrollTo(scrollViewRef, 0, target, false);
         } else {
@@ -258,9 +270,14 @@ function useChatKeyboard(
           );
 
           const minimumPaddingAbsorbed =
-            getMinimumPaddingAbsorbed(minimumContentPadding.value, extraContentPadding.value) *
-            minimumPaddingFractionOnOpen.value;
-          const scrollEff = getScrollEffective(effective, minimumPaddingAbsorbed);
+            getMinimumPaddingAbsorbed(
+              minimumContentPadding.value,
+              extraContentPadding.value,
+            ) * minimumPaddingFractionOnOpen.value;
+          const scrollEffective = getScrollEffective(
+            effective,
+            minimumPaddingAbsorbed,
+          );
           const actualTotalPadding = Math.max(
             minimumContentPadding.value,
             effective + extraContentPadding.value,
@@ -306,7 +323,7 @@ function useChatKeyboard(
 
           const target = clampedScrollTarget(
             offsetBeforeScroll.value,
-            scrollEff,
+            scrollEffective,
             size.value.height,
             layout.value.height,
             actualTotalPadding,
