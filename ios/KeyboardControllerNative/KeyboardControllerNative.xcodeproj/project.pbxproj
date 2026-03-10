@@ -19,6 +19,7 @@
 		0837001E2CE8CA4F00D67BBF /* TextInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0837001D2CE8CA4F00D67BBF /* TextInput.swift */; };
 		0837001F2CE8CA4F00D67BBF /* TextInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0837001D2CE8CA4F00D67BBF /* TextInput.swift */; };
 		083700202CE8CA4F00D67BBF /* TextInput.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0837001D2CE8CA4F00D67BBF /* TextInput.swift */; };
+		083C81EB2F6035A5005EDD4C /* KeyboardToolbarGroupTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 083C81EA2F6035A5005EDD4C /* KeyboardToolbarGroupTests.swift */; };
 		0850CCBA2CB49ECC000C0F8D /* SpringAnimationPerformanceTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0850CCB92CB49ECC000C0F8D /* SpringAnimationPerformanceTest.swift */; };
 		0850CCC22CB49F74000C0F8D /* SpringAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0850CCBF2CB49F74000C0F8D /* SpringAnimation.swift */; };
 		0850CCC32CB49F74000C0F8D /* SpringAnimation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0850CCBF2CB49F74000C0F8D /* SpringAnimation.swift */; };
@@ -76,6 +77,7 @@
 		081006AB2C36906800578E07 /* UIScrollView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UIScrollView.swift; path = ../../extensions/UIScrollView.swift; sourceTree = "<group>"; };
 		0828F07A2D4BFFDC005D4701 /* UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UIView.swift; path = ../extensions/UIView.swift; sourceTree = SOURCE_ROOT; };
 		0837001D2CE8CA4F00D67BBF /* TextInput.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TextInput.swift; path = ../protocols/TextInput.swift; sourceTree = SOURCE_ROOT; };
+		083C81EA2F6035A5005EDD4C /* KeyboardToolbarGroupTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardToolbarGroupTests.swift; sourceTree = "<group>"; };
 		0850CCB92CB49ECC000C0F8D /* SpringAnimationPerformanceTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpringAnimationPerformanceTest.swift; sourceTree = "<group>"; };
 		0850CCBF2CB49F74000C0F8D /* SpringAnimation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SpringAnimation.swift; path = ../../animations/SpringAnimation.swift; sourceTree = "<group>"; };
 		0850CCC02CB49F74000C0F8D /* KeyboardAnimation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = KeyboardAnimation.swift; path = ../../animations/KeyboardAnimation.swift; sourceTree = "<group>"; };
@@ -177,6 +179,7 @@
 		0873ED652BB6B7390004F3A4 /* KeyboardControllerNativeTests */ = {
 			isa = PBXGroup;
 			children = (
+				083C81EA2F6035A5005EDD4C /* KeyboardToolbarGroupTests.swift */,
 				0873ED662BB6B7390004F3A4 /* KeyboardControllerNativeTests.swift */,
 				0850CCB92CB49ECC000C0F8D /* SpringAnimationPerformanceTest.swift */,
 				08833D512CB56DB9007D4380 /* TimingAnimationPerformanceTest.swift */,
@@ -358,6 +361,7 @@
 				081006AD2C36906900578E07 /* UIScrollView.swift in Sources */,
 				0850CCCD2CB4A096000C0F8D /* UIUtils.swift in Sources */,
 				08833D522CB56DB9007D4380 /* TimingAnimationPerformanceTest.swift in Sources */,
+				083C81EB2F6035A5005EDD4C /* KeyboardToolbarGroupTests.swift in Sources */,
 				083700202CE8CA4F00D67BBF /* TextInput.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
