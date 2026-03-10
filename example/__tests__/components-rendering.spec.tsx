@@ -1,6 +1,6 @@
 import { render } from "@testing-library/react-native";
 import React from "react";
-import { View } from "react-native";
+import { TextInput, View } from "react-native";
 import {
   KeyboardAvoidingView,
   KeyboardAwareScrollView,
@@ -68,6 +68,27 @@ function KeyboardToolbarTest() {
   return <KeyboardToolbar content={content} />;
 }
 
+function KeyboardToolbarCompoundTest() {
+  return (
+    <>
+      <KeyboardToolbar>
+        <KeyboardToolbar.Background>
+          <EmptyView />
+        </KeyboardToolbar.Background>
+        <KeyboardToolbar.Content>
+          <EmptyView />
+        </KeyboardToolbar.Content>
+        <KeyboardToolbar.Prev />
+        <KeyboardToolbar.Next />
+        <KeyboardToolbar.Done />
+      </KeyboardToolbar>
+      <KeyboardToolbar.Group>
+        <TextInput />
+      </KeyboardToolbar.Group>
+    </>
+  );
+}
+
 function OverKeyboardViewTest() {
   return (
     <OverKeyboardView visible={true}>
@@ -107,6 +128,10 @@ describe("components rendering", () => {
 
   it("should render `KeyboardToolbar`", () => {
     expect(render(<KeyboardToolbarTest />)).toMatchSnapshot();
+  });
+
+  it("should render compound `KeyboardToolbar`", () => {
+    expect(render(<KeyboardToolbarCompoundTest />)).toMatchSnapshot();
   });
 
   it("should render `OverKeyboardView`", () => {

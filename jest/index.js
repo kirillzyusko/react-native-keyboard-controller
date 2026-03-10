@@ -122,7 +122,14 @@ const mock = {
   KeyboardStickyView: View,
   KeyboardAvoidingView: View,
   KeyboardAwareScrollView: ScrollView,
-  KeyboardToolbar: View,
+  KeyboardToolbar: Object.assign(View, {
+    Background: "KeyboardToolbar.Background",
+    Content: "KeyboardToolbar.Content",
+    Prev: "KeyboardToolbar.Prev",
+    Next: "KeyboardToolbar.Next",
+    Done: "KeyboardToolbar.Done",
+    Group: "KeyboardToolbar.Group",
+  }),
   KeyboardChatScrollView: ScrollView,
   // themes
   DefaultKeyboardToolbarTheme,

@@ -133,3 +133,38 @@ exports[`components rendering should render \`OverKeyboardView\` 1`] = `
   />
 </OverKeyboardView>
 `;
+
+exports[`components rendering should render compound \`KeyboardToolbar\` 1`] = `
+[
+  <View>
+    <KeyboardToolbar.Background>
+      <View
+        style={
+          {
+            "backgroundColor": "black",
+            "height": 20,
+            "width": 20,
+          }
+        }
+      />
+    </KeyboardToolbar.Background>
+    <KeyboardToolbar.Content>
+      <View
+        style={
+          {
+            "backgroundColor": "black",
+            "height": 20,
+            "width": 20,
+          }
+        }
+      />
+    </KeyboardToolbar.Content>
+    <KeyboardToolbar.Prev />
+    <KeyboardToolbar.Next />
+    <KeyboardToolbar.Done />
+  </View>,
+  <KeyboardToolbar.Group>
+    <TextInput />
+  </KeyboardToolbar.Group>,
+]
+`;
