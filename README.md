@@ -19,6 +19,7 @@ A universal keyboard handling solution for React Native — lightweight, fully c
 - 🌐 Display anything over the keyboard (without dismissing it) using `OverKeyboardView`
 - 🎨 Match keyboard background with `KeyboardBackgroundView`
 - 🧩 Extend keyboard with custom buttons/UI via `KeyboardExtender`
+- 💬 Build chat interfaces (messenger and 🤖 AI chats) easily with `KeyboardChatScrollView`
 - 📝 Easy retrieval of focused input info
 - 🧭 Compatible with any navigation library
 - ✨ More coming soon... stay tuned! 😊
