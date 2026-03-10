@@ -2,14 +2,13 @@ import React, { forwardRef, useCallback, useMemo } from "react";
 import { View } from "react-native";
 import Reanimated, {
   interpolate,
-  runOnJS,
   runOnUI,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
 } from "react-native-reanimated";
 
-import { useGenericKeyboardHandler, useWindowDimensions } from "../../hooks";
+import { useWindowDimensions } from "../../hooks";
 import useCombinedRef from "../hooks/useCombinedRef";
 
 import { useKeyboardAnimation, useTranslateAnimation } from "./hooks";
@@ -145,11 +144,11 @@ const KeyboardAvoidingView = forwardRef<
         ) {
           // eslint-disable-next-line react-compiler/react-compiler
           initialFrame.value = layout;
-        } else {
-          // For height mode with keyboard open: update position coordinates
-          // (which may change, e.g. measureInWindow correcting after modal
-          // animation) but preserve the original height to avoid feedback loop
-          // where height change → onLayout → height change.
+        } else if (automaticOffset) {
+          // Only automaticOffset needs this: measureInWindow can return stale
+          // y=0 during modal animation, and since isClosed is already false
+          // here, the corrected y from the next onLayout would be dropped.
+          // Preserve original height to avoid feedback loop.
           // eslint-disable-next-line react-compiler/react-compiler
           initialFrame.value = {
             x: layout.x,
@@ -159,32 +158,22 @@ const KeyboardAvoidingView = forwardRef<
           };
         }
       },
-      [behavior],
+      [behavior, automaticOffset],
     );
     const onLayout = useCallback<NonNullable<ViewProps["onLayout"]>>(
       (e) => {
         const layout = e.nativeEvent.layout;
 
         if (automaticOffset) {
-          // Use measureInWindow to get absolute screen coordinates instead of
-          // parent-relative coordinates from onLayout. This fixes keyboard
-          // avoidance in modals where the parent view's y=0 doesn't correspond
-          // to screen y=0, and on regular screens where the nav bar offset
-          // would otherwise need to be passed via keyboardVerticalOffset.
-          const viewRef = internalRef.current;
-
-          if (viewRef && viewRef.measureInWindow) {
-            viewRef.measureInWindow((x, y, _width, _height) => {
-              runOnUI(onLayoutWorklet)({
-                x,
-                y,
-                width: layout.width,
-                height: layout.height,
-              });
+          // ref is always set here — onLayout only fires when mounted
+          internalRef.current?.measureInWindow((x, y) => {
+            runOnUI(onLayoutWorklet)({
+              x,
+              y,
+              width: layout.width,
+              height: layout.height,
             });
-          } else {
-            runOnUI(onLayoutWorklet)(layout);
-          }
+          });
         } else {
           runOnUI(onLayoutWorklet)(layout);
         }
@@ -192,37 +181,6 @@ const KeyboardAvoidingView = forwardRef<
         onLayoutProps?.(e);
       },
       [onLayoutProps, automaticOffset],
-    );
-
-    // Re-measure absolute position when the keyboard starts opening.
-    // measureInWindow can return stale y=0 if the initial onLayout fires
-    // during a modal slide-up animation. By the time the user focuses an
-    // input (triggering keyboard), the animation is complete and
-    // measureInWindow returns the correct position.
-    const reMeasure = useCallback(() => {
-      if (!automaticOffset) return;
-
-      const viewRef = internalRef.current;
-
-      if (viewRef?.measureInWindow) {
-        viewRef.measureInWindow((x, y) => {
-          const frame = initialFrame.value;
-
-          if (frame && frame.y !== y) {
-            initialFrame.value = { ...frame, x, y };
-          }
-        });
-      }
-    }, [automaticOffset]);
-    useGenericKeyboardHandler(
-      {
-        onStart: () => {
-          "worklet";
-
-          runOnJS(reMeasure)();
-        },
-      },
-      [],
     );
 
     const animatedStyle = useAnimatedStyle(() => {
