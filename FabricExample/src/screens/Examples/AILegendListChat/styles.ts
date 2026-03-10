@@ -44,6 +44,7 @@ export default StyleSheet.create({
     width: 8,
   },
   input: {
+    color: "black",
     backgroundColor: "white",
     borderColor: "#ccc",
     borderRadius: 5,
@@ -70,6 +71,7 @@ export default StyleSheet.create({
   messageText: {
     fontSize: 16,
     lineHeight: 22,
+    color: "black",
   },
   placeholderContainer: {
     backgroundColor: "#f8f9fa",
