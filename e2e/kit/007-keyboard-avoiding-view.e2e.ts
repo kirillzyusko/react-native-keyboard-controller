@@ -45,7 +45,6 @@ describe("`KeyboardAvoidingView` specification", () => {
     await waitAndTap("keyboard_avoiding_view.offset");
     // absolute: Rel → Abs
     await waitAndTap("keyboard_avoiding_view.absolute");
-    // TODO: add bitmap assertion to verify toggle state
   });
 
   // Package/padding/Abs (offset=0)
@@ -84,7 +83,6 @@ describe("`KeyboardAvoidingView` specification", () => {
     await waitAndTap("keyboard_avoiding_view.offset");
     // implementation: Package → RN
     await waitAndTap("keyboard_avoiding_view.implementation");
-    // TODO: add bitmap assertion to verify toggle state
   });
 
   // RN/padding/Rel (offset=100)
