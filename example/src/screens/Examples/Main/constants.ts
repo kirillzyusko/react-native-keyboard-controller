@@ -82,6 +82,12 @@ export const examples: Example[] = [
     icons: "😶",
   },
   {
+    title: "KAV Automatic",
+    testID: "keyboard_avoiding_view_automatic",
+    info: ScreenNames.KEYBOARD_AVOIDING_VIEW_AUTOMATIC,
+    icons: "📐",
+  },
+  {
     title: "Enabled/disabled",
     testID: "enabled_disabled",
     info: ScreenNames.ENABLED_DISABLED,
