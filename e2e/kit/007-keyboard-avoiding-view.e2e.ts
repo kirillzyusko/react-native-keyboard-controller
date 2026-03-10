@@ -53,7 +53,7 @@ describe("`KeyboardAvoidingView` specification", () => {
     await waitForExpect(async () => {
       // TODO: add reference screenshot
       await expectBitmapsToBeEqual(
-        "AvoidingViewPackagePaddingAbsInitial",
+        "AvoidingViewPackagePaddingAutoInitial",
         0.27,
       );
     });
@@ -63,7 +63,7 @@ describe("`KeyboardAvoidingView` specification", () => {
     await waitAndTap("keyboard_avoiding_view.username");
     await waitForExpect(async () => {
       // TODO: add reference screenshot
-      await expectBitmapsToBeEqual("AvoidingViewPackagePaddingAbsOpened");
+      await expectBitmapsToBeEqual("AvoidingViewPackagePaddingAutoOpened");
     });
   });
 
@@ -71,7 +71,7 @@ describe("`KeyboardAvoidingView` specification", () => {
     await waitAndType("keyboard_avoiding_view.username", "\n");
     await waitForExpect(async () => {
       // TODO: add reference screenshot
-      await expectBitmapsToBeEqual("AvoidingViewPackagePaddingAbsClosed");
+      await expectBitmapsToBeEqual("AvoidingViewPackagePaddingAutoClosed");
     });
   });
 
