@@ -5,7 +5,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import com.facebook.react.bridge.UiThreadUtil
 import com.reactnativekeyboardcontroller.extensions.focus
-import com.reactnativekeyboardcontroller.views.KeyboardToolbarExcludeReactViewGroup
+import com.reactnativekeyboardcontroller.views.KeyboardToolbarGroupReactViewGroup
 
 object ViewHierarchyNavigator {
   fun setFocusTo(
@@ -26,17 +26,38 @@ object ViewHierarchyNavigator {
     fun findEditTexts(view: View?) {
       if (isValidTextInput(view)) {
         editTexts.add(view as EditText)
-      } else if (view is ViewGroup && view !is KeyboardToolbarExcludeReactViewGroup) {
+      } else if (view is ViewGroup && view !is KeyboardToolbarGroupReactViewGroup) {
         for (i in 0 until view.childCount) {
           findEditTexts(view.getChildAt(i))
         }
       }
     }
 
-    // Start the search with the provided viewGroup
-    findEditTexts(viewGroup)
+    // If the root is a group itself, search within it (for group-scoped queries)
+    if (viewGroup is KeyboardToolbarGroupReactViewGroup) {
+      for (i in 0 until viewGroup.childCount) {
+        findEditTexts(viewGroup.getChildAt(i))
+      }
+    } else {
+      findEditTexts(viewGroup)
+    }
 
     return editTexts
+  }
+
+  /**
+   * Finds the closest [KeyboardToolbarGroupReactViewGroup] ancestor of the given view.
+   * Returns null if the view is not inside any group.
+   */
+  fun findGroupAncestor(view: View?): KeyboardToolbarGroupReactViewGroup? {
+    var current = view?.parent
+    while (current != null) {
+      if (current is KeyboardToolbarGroupReactViewGroup) {
+        return current
+      }
+      current = current.parent
+    }
+    return null
   }
 
   private fun findNextEditText(currentFocus: View): EditText? = findEditTextInDirection(currentFocus, 1)
@@ -63,6 +84,11 @@ object ViewHierarchyNavigator {
       val nextChild = parentViewGroup.getChildAt(i)
       findEditTextOrGoDeeper(nextChild, direction)?.let { return it } // Return if an EditText is found
       i += direction
+    }
+
+    // Don't navigate outside the group boundary
+    if (parentViewGroup is KeyboardToolbarGroupReactViewGroup) {
+      return null
     }
 
     // Recurse to the parent's parent if no sibling EditText is found
@@ -92,7 +118,7 @@ object ViewHierarchyNavigator {
 
     if (isValidTextInput(child)) {
       result = child as EditText
-    } else if (child is ViewGroup && child !is KeyboardToolbarExcludeReactViewGroup) {
+    } else if (child is ViewGroup && child !is KeyboardToolbarGroupReactViewGroup) {
       // If the child is a ViewGroup, check its children recursively
       result = findEditTextInHierarchy(child, direction)
     }

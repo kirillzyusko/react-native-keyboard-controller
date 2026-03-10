@@ -151,7 +151,8 @@ public class FocusedInputObserver: NSObject {
 
     FocusedInputHolder.shared.set(currentResponder as? TextInput)
 
-    let allInputFields = ViewHierarchyNavigator.getAllInputFields()
+    let groupAncestor = ViewHierarchyNavigator.findGroupAncestor(currentResponder as? UIView)
+    let allInputFields = ViewHierarchyNavigator.getAllInputFields(root: groupAncestor)
     let currentIndex = allInputFields.firstIndex(where: { $0 == currentResponder }) ?? -1
 
     onFocusDidSet([

@@ -11,6 +11,8 @@ import UIKit
 
 @objc(ViewHierarchyNavigator)
 public class ViewHierarchyNavigator: NSObject {
+  private static let groupViewTypeName = "KeyboardToolbarGroupView"
+
   @objc public static func setFocusTo(direction: String) {
     DispatchQueue.main.async {
       if direction == "current" {
@@ -30,11 +32,24 @@ public class ViewHierarchyNavigator: NSObject {
   }
 
   public static func getAllInputFields() -> [TextInput] {
+    return getAllInputFields(root: nil)
+  }
+
+  public static func getAllInputFields(root: UIView?) -> [TextInput] {
     var textInputs = [TextInput]()
 
-    guard let rootView = UIApplication.topViewController()?.view else {
+    let rootView: UIView?
+    if let root = root {
+      rootView = root
+    } else {
+      rootView = UIApplication.topViewController()?.view
+    }
+
+    guard let rootView = rootView else {
       return []
     }
+
+    let isGroupRoot = isGroupView(rootView)
 
     /// Helper function to recursively search for TextInput views
     func findTextInputs(in view: UIView?) {
@@ -42,16 +57,40 @@ public class ViewHierarchyNavigator: NSObject {
 
       if let textInput = isValidTextInput(view) {
         textInputs.append(textInput)
-      } else if String(describing: type(of: view)) != "KeyboardToolbarExcludeView" {
+      } else if !isGroupView(view) {
         for subview in view.subviews {
           findTextInputs(in: subview)
         }
       }
     }
 
-    findTextInputs(in: rootView)
+    if isGroupRoot {
+      // When root is a group, search its children directly
+      for subview in rootView.subviews {
+        findTextInputs(in: subview)
+      }
+    } else {
+      findTextInputs(in: rootView)
+    }
 
     return textInputs
+  }
+
+  /// Finds the closest KeyboardToolbarGroupView ancestor of the given view.
+  /// Returns nil if the view is not inside any group.
+  public static func findGroupAncestor(_ view: UIView?) -> UIView? {
+    var current = view?.superview
+    while let parent = current {
+      if isGroupView(parent) {
+        return parent
+      }
+      current = parent.superview
+    }
+    return nil
+  }
+
+  private static func isGroupView(_ view: UIView) -> Bool {
+    return String(describing: type(of: view)) == groupViewTypeName
   }
 
   private static func findTextInputInDirection(currentFocus: UIView, direction: String) -> TextInput? {
@@ -81,6 +120,11 @@ public class ViewHierarchyNavigator: NSObject {
       }
     }
 
+    // Don't navigate outside the group boundary
+    if isGroupView(parentViewGroup) {
+      return nil
+    }
+
     // If no next or previous sibling was found in the parent, recurse to the parent's parent
     return findTextInputInDirection(currentFocus: parentViewGroup, direction: direction)
   }
@@ -91,7 +135,7 @@ public class ViewHierarchyNavigator: NSObject {
       return validTextInput
     }
 
-    guard String(describing: type(of: view)) != "KeyboardToolbarExcludeView" else { return nil }
+    guard !isGroupView(view) else { return nil }
 
     // Determine the iteration order based on the direction
     let subviews = direction == "next" ? view.subviews : view.subviews.reversed()
