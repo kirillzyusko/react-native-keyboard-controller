@@ -98,10 +98,14 @@ final class KeyboardToolbarGroupTests: XCTestCase {
     // Should NOT move to editText3 — should stay at groupEditText3
     let expectation = XCTestExpectation(description: "Wait for main queue")
     DispatchQueue.main.async {
-      XCTAssertFalse(
-        (self.editText3 as! TestableInput).becomeFirstResponderCalled,
-        "Should not have moved focus to editText3 outside group"
-      )
+      if let input = self.editText3 as? TestableInput {
+        XCTAssertFalse(
+          input.becomeFirstResponderCalled,
+          "Should not have moved focus to editText3 outside group"
+        )
+      } else {
+        XCTFail("editText3 is not a TestableInput")
+      }
       expectation.fulfill()
     }
     wait(for: [expectation], timeout: 10.0)
@@ -115,10 +119,14 @@ final class KeyboardToolbarGroupTests: XCTestCase {
     // Should NOT move to editText2 — should stay at groupEditText1
     let expectation = XCTestExpectation(description: "Wait for main queue")
     DispatchQueue.main.async {
-      XCTAssertFalse(
-        (self.editText2 as! TestableInput).becomeFirstResponderCalled,
-        "Should not have moved focus to editText2 outside group"
-      )
+      if let input = self.editText2 as? TestableInput {
+        XCTAssertFalse(
+          input.becomeFirstResponderCalled,
+          "Should not have moved focus to editText2 outside group"
+        )
+      } else {
+        XCTFail("editText2 is not a TestableInput")
+      }
       expectation.fulfill()
     }
     wait(for: [expectation], timeout: 10.0)
