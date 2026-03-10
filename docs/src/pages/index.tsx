@@ -165,7 +165,7 @@ const trustedBy = [
 
 function TrustedBy(): JSX.Element {
   return (
-    <section className={clsx(styles.trustedBySection)}>
+    <section className={clsx("playwright", styles.trustedBySection)}>
       <h2 className={clsx(styles.trustedByTitle)}>Trusted by</h2>
       <div className={clsx(styles.trustedByContainer)}>
         {trustedBy.map((item, index) => (
