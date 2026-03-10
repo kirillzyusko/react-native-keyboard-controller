@@ -114,11 +114,6 @@ const KeyboardAvoidingView = forwardRef<
     const relativeKeyboardHeight = useCallback(() => {
       "worklet";
 
-      // When automaticOffset is true, frame.y is in absolute screen
-      // coordinates (via measureInWindow) and already accounts for
-      // navigation headers, modals, etc. Otherwise frame.y is
-      // parent-relative from onLayout and keyboardVerticalOffset must
-      // compensate manually.
       const keyboardY =
         screenHeight - keyboard.heightWhenOpened.value - keyboardVerticalOffset;
 
@@ -165,7 +160,6 @@ const KeyboardAvoidingView = forwardRef<
         const layout = e.nativeEvent.layout;
 
         if (automaticOffset) {
-          // ref is always set here — onLayout only fires when mounted
           internalRef.current?.measureInWindow((x, y) => {
             runOnUI(onLayoutWorklet)({
               x,
