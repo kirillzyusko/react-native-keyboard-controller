@@ -11,6 +11,7 @@
 #import <react/renderer/components/RNKC/EventEmitters.h>
 #import <react/renderer/components/RNKC/Props.h>
 #import <react/renderer/components/RNKC/RCTComponentViewHelpers.h>
+#import <react/renderer/components/RNKC/RNKCKeyboardToolbarGroupViewComponentDescriptor.h>
 
 #import "RCTFabricComponentsPlugins.h"
 #endif
