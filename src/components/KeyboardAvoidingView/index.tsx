@@ -140,10 +140,14 @@ const KeyboardAvoidingView = forwardRef<
           // eslint-disable-next-line react-compiler/react-compiler
           initialFrame.value = layout;
         } else if (automaticOffset) {
-          // Only automaticOffset needs this: measureInWindow can return stale
-          // y=0 during modal animation, and since isClosed is already false
-          // here, the corrected y from the next onLayout would be dropped.
-          // Preserve original height to avoid feedback loop.
+          // The if-branch above skips layout updates in height mode while
+          // the keyboard is open to prevent a feedback loop (shrunk height
+          // stored → animatedStyle recalculates → view resizes → repeat).
+          // But automaticOffset uses measureInWindow which can return stale
+          // y=0 during modal animation — the corrected y arrives on the
+          // next onLayout (when the view resizes for the keyboard) and
+          // would be dropped without this branch. So accept position
+          // updates but keep the original height.
           // eslint-disable-next-line react-compiler/react-compiler
           initialFrame.value = {
             x: layout.x,
