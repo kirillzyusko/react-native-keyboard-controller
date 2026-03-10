@@ -101,6 +101,67 @@ Use `extraContentPadding` whenever an element that is **not** the keyboard chang
 The value must be a `SharedValue` (from `useSharedValue`) — not a plain number — so that changes are tracked on the UI thread without triggering a React re-render.
 :::
 
+### `applyWorkaroundForContentInsetHitTestBug`
+
+When `true`, applies a runtime workaround for a React Native 0.81+ bug where the ScrollView's `contentInset` area does not respond to touch/scroll gestures ([facebook/react-native#54123](https://github.com/facebook/react-native/issues/54123)).
+
+This uses Objective-C runtime method swizzling on the ScrollView's container view, which is inherently fragile. **Only enable if you are affected by the upstream bug and understand the risks.**
+
+**iOS only.** Defaults to `false`.
+
+:::warning
+This prop uses runtime method swizzling, which can be fragile and may conflict with other libraries or future React Native versions. Use with caution and thoroughly test your app when enabling this workaround.
+:::
+
+### `minimumContentPadding`
+
+A [Reanimated `SharedValue<number>`](https://docs.swmansion.com/react-native-reanimated/docs/core/useSharedValue/) representing a minimum inset floor for the bottom padding.
+
+When set, the total bottom padding is computed as:
+
+```js
+max(minimumContentPadding, keyboardPadding + extraContentPadding);
+```
+
+This means the keyboard "absorbs" into the minimum padding rather than adding to it:
+
+#### When `minimumContentPadding >= keyboard + extraContentPadding`
+
+Content does **not** move when the keyboard opens or closes — the minimum padding is large enough to absorb the keyboard height.
+
+<Video
+  src="/video/keyboard-chat-scroll-view/minimumContentPaddingGreaterThan.mp4"
+  style={{ height: "40vh" }}
+/>
+
+#### When `minimumContentPadding < keyboard + extraContentPadding`
+
+Content moves, but only by the **excess amount** beyond the minimum floor.
+
+<Video
+  src="/video/keyboard-chat-scroll-view/minimumContentPaddingLessThan.mp4"
+  style={{ height: "40vh" }}
+/>
+
+:::tip When to use it?
+Use `minimumContentPadding` in AI chat applications where a sent message needs space below it to push it to the top of the viewport while the AI response streams in. The minimum padding ensures this space remains available without causing additional movement when the keyboard opens.
+:::
+
+:::note
+The value must be a `SharedValue` (from `useSharedValue`) — not a plain number — so that changes are tracked on the UI thread without triggering a React re-render.
+:::
+
+:::warning iOS contentInset hit-test bug
+On **iOS with React Native 0.81+**, the `contentInset` area created by `minimumContentPadding` may not respond to touch/scroll gestures due to [facebook/react-native#54123](https://github.com/facebook/react-native/issues/54123).
+
+To fix this, you must either:
+
+- Set `applyWorkaroundForContentInsetHitTestBug={true}` on `KeyboardChatScrollView`, **or**
+- Apply a patch to React Native that fixes the upstream bug
+
+Without one of these solutions, users won't be able to scroll or interact with content in the minimum padding area.
+:::
+
 ## Usage with virtualized lists
 
 `KeyboardChatScrollView` doesn't ship with built-in wrappers for third-party virtualized list libraries, but since all of them (`FlatList`, `FlashList`, `LegendList`) accept a custom scroll component, integration is straightforward.

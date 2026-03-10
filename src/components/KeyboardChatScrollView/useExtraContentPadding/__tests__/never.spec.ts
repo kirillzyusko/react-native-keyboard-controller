@@ -1,8 +1,8 @@
+import { sv } from "../../../../__fixtures__/sv";
 import {
   createRender,
   mockScrollTo,
   reactionEffect,
-  sv,
 } from "../__fixtures__/setup";
 
 describe("useExtraContentPadding — never behavior", () => {

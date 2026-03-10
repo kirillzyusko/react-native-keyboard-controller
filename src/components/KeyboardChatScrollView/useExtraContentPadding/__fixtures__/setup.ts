@@ -1,6 +1,8 @@
 import { renderHook } from "@testing-library/react-native";
 import { useAnimatedRef } from "react-native-reanimated";
 
+import { sv } from "../../../../__fixtures__/sv";
+
 import type { useExtraContentPadding } from "..";
 import type { SharedValue } from "react-native-reanimated";
 import type Reanimated from "react-native-reanimated";
@@ -20,14 +22,12 @@ jest.mock("react-native-reanimated", () => ({
   },
 }));
 
-export const sv = <T>(initial: T): SharedValue<T> => {
-  return { value: initial } as SharedValue<T>;
-};
-
 type RenderOptions = Omit<
   Parameters<typeof useExtraContentPadding>[0],
-  "scrollViewRef"
->;
+  "scrollViewRef" | "minimumContentPadding"
+> & {
+  minimumContentPadding?: SharedValue<number>;
+};
 
 export const createRender = () => {
   return function render(options: RenderOptions) {
@@ -39,7 +39,11 @@ export const createRender = () => {
     return renderHook(() => {
       const ref = useAnimatedRef<Reanimated.ScrollView>();
 
-      mod.useExtraContentPadding({ scrollViewRef: ref, ...options });
+      mod.useExtraContentPadding({
+        scrollViewRef: ref,
+        minimumContentPadding: options.minimumContentPadding ?? sv(0),
+        ...options,
+      });
     });
   };
 };

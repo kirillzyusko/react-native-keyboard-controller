@@ -22,4 +22,5 @@
 #else
     UIView
 #endif
+@property (nonatomic, assign) BOOL applyWorkaroundForContentInsetHitTestBug;
 @end

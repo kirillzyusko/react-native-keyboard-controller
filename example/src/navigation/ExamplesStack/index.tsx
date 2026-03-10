@@ -2,6 +2,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
 
 import { ScreenNames } from "../../constants/screenNames";
+import AILegendListChat from "../../screens/Examples/AILegendListChat";
 import AwareScrollView from "../../screens/Examples/AwareScrollView";
 import AwareScrollViewStickyFooter from "../../screens/Examples/AwareScrollViewStickyFooter";
 import CloseScreen from "../../screens/Examples/Close";
@@ -56,6 +57,7 @@ export type ExamplesStackParamList = {
   [ScreenNames.KEYBOARD_SHARED_TRANSITIONS]: undefined;
   [ScreenNames.KEYBOARD_EXTENDER]: undefined;
   [ScreenNames.CHAT_KIT]: undefined;
+  [ScreenNames.AI_LEGEND_LIST_CHAT]: undefined;
 };
 
 const Stack = createStackNavigator<ExamplesStackParamList>();
@@ -147,6 +149,9 @@ const options = {
       backgroundColor: "#3A3A3C",
     },
     headerBackTitle: "Back",
+  },
+  [ScreenNames.AI_LEGEND_LIST_CHAT]: {
+    title: "AI LegendList Chat",
   },
 };
 
@@ -281,6 +286,11 @@ const ExamplesStack = () => (
       component={KeyboardChatScrollViewPlayground}
       name={ScreenNames.CHAT_KIT}
       options={options[ScreenNames.CHAT_KIT]}
+    />
+    <Stack.Screen
+      component={AILegendListChat}
+      name={ScreenNames.AI_LEGEND_LIST_CHAT}
+      options={options[ScreenNames.AI_LEGEND_LIST_CHAT]}
     />
   </Stack.Navigator>
 );
