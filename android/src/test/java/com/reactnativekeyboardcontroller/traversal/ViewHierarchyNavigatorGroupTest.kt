@@ -4,8 +4,6 @@ import android.content.Context
 import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.test.core.app.ApplicationProvider
-import com.facebook.react.bridge.ReactApplicationContext
-import com.facebook.react.uimanager.ThemedReactContext
 import com.reactnativekeyboardcontroller.extensions.focus
 import com.reactnativekeyboardcontroller.views.KeyboardToolbarGroupReactViewGroup
 import org.junit.Assert.assertNull
@@ -31,8 +29,6 @@ class ViewHierarchyNavigatorGroupTest {
   @Before
   fun setUp() {
     val context = ApplicationProvider.getApplicationContext<Context>()
-    val reactContext = ReactApplicationContext(context)
-    val themedReactContext = ThemedReactContext(reactContext, context)
 
     editText1 = EditText(context).apply { id = 1 }
     editText2 = EditText(context).apply { id = 2 }
@@ -43,7 +39,7 @@ class ViewHierarchyNavigatorGroupTest {
     editText4 = EditText(context).apply { id = 7 }
 
     group =
-      KeyboardToolbarGroupReactViewGroup(themedReactContext).apply {
+      KeyboardToolbarGroupReactViewGroup(context).apply {
         addView(groupEditText1)
         addView(groupEditText2)
         addView(groupEditText3)
