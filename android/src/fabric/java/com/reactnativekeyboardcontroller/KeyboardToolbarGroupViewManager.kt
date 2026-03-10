@@ -1,6 +1,5 @@
 package com.reactnativekeyboardcontroller
 
-import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.ViewGroupManager
 import com.facebook.react.uimanager.ViewManagerDelegate
@@ -10,11 +9,10 @@ import com.reactnativekeyboardcontroller.managers.KeyboardToolbarGroupViewManage
 import com.reactnativekeyboardcontroller.views.KeyboardToolbarGroupReactViewGroup
 import com.reactnativekeyboardcontroller.views.overlay.OverKeyboardHostView
 
-class KeyboardToolbarGroupViewManager(
-  mReactContext: ReactApplicationContext,
-) : ViewGroupManager<KeyboardToolbarGroupReactViewGroup>(),
+class KeyboardToolbarGroupViewManager :
+  ViewGroupManager<KeyboardToolbarGroupReactViewGroup>(),
   KeyboardToolbarGroupViewManagerInterface<OverKeyboardHostView> {
-  private val manager = KeyboardToolbarGroupViewManagerImpl(mReactContext)
+  private val manager = KeyboardToolbarGroupViewManagerImpl()
   private val mDelegate = KeyboardToolbarGroupViewManagerDelegate(this)
 
   override fun getDelegate(): ViewManagerDelegate<KeyboardToolbarGroupReactViewGroup> = mDelegate
