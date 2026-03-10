@@ -332,6 +332,26 @@ The property that allows to specify custom text for `Done` button.
 </KeyboardToolbar>
 ```
 
+### `KeyboardToolbar.Group`
+
+This component defines a group of inputs that form an isolated navigation region. When the user presses the prev/next arrows on `KeyboardToolbar`, the focus will only cycle through inputs **within the same group**. Inputs outside the group are not reachable from within, and inputs inside the group are not reachable from outside.
+
+This is useful for scenarios like bottom sheets, tab views, or any UI where a subset of inputs should have independent navigation.
+
+```tsx
+<BottomSheet>
+  <KeyboardToolbar.Group>
+    <TextInput placeholder="First name" />
+    <TextInput placeholder="Last name" />
+    <TextInput placeholder="Email" />
+  </KeyboardToolbar.Group>
+</BottomSheet>
+```
+
+:::info Toolbar button state
+When a grouped input is focused, the toolbar's prev/next buttons reflect the position within that group (not the global list of inputs). For example, the "prev" button will be disabled when focused on the first input of a group.
+:::
+
 ## Props
 
 ### [`View Props`](https://reactnative.dev/docs/view#props)
@@ -385,28 +405,6 @@ const theme: KeyboardToolbarProps["theme"] = {
 
 :::info dark/light theme support
 Don't forget that you need to specify colors for **both** `dark` and `light` theme. The theme will be selected automatically based on the device preferences.
-:::
-
-## Components
-
-### `KeyboardToolbar.Group`
-
-This component defines a group of inputs that form an isolated navigation region. When the user presses the prev/next arrows on `KeyboardToolbar`, the focus will only cycle through inputs **within the same group**. Inputs outside the group are not reachable from within, and inputs inside the group are not reachable from outside.
-
-This is useful for scenarios like bottom sheets, tab views, or any UI where a subset of inputs should have independent navigation.
-
-```tsx
-<BottomSheet>
-  <KeyboardToolbar.Group>
-    <TextInput placeholder="First name" />
-    <TextInput placeholder="Last name" />
-    <TextInput placeholder="Email" />
-  </KeyboardToolbar.Group>
-</BottomSheet>
-```
-
-:::info Toolbar button state
-When a grouped input is focused, the toolbar's prev/next buttons reflect the position within that group (not the global list of inputs). For example, the "prev" button will be disabled when focused on the first input of a group.
 :::
 
 ## Example
