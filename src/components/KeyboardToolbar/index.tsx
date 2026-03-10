@@ -3,7 +3,7 @@ import { StyleSheet, View } from "react-native";
 
 import {
   FocusedInputEvents,
-  RCTKeyboardToolbarExcludeView,
+  RCTKeyboardToolbarGroupView,
 } from "../../bindings";
 import { useKeyboardState } from "../../hooks";
 import KeyboardStickyView from "../KeyboardStickyView";
@@ -44,6 +44,7 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> & {
   Prev: typeof Prev;
   Next: typeof Next;
   Done: typeof Done;
+  Group: typeof RCTKeyboardToolbarGroupView;
 } = (props) => {
   const {
     children,
@@ -230,7 +231,7 @@ KeyboardToolbar.Content = Content;
 KeyboardToolbar.Prev = Prev;
 KeyboardToolbar.Next = Next;
 KeyboardToolbar.Done = Done;
-KeyboardToolbar.Exclude = RCTKeyboardToolbarExcludeView;
+KeyboardToolbar.Group = RCTKeyboardToolbarGroupView;
 
 export { colors as DefaultKeyboardToolbarTheme, KeyboardToolbarProps };
 export default KeyboardToolbar;

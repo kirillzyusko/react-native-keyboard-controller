@@ -8,6 +8,7 @@ import type {
   KeyboardEventsModule,
   KeyboardExtenderProps,
   KeyboardGestureAreaProps,
+  KeyboardToolbarGroupViewProps,
   OverKeyboardViewProps,
   WindowDimensionsEventsModule,
 } from "./types";
@@ -73,5 +74,5 @@ export const RCTKeyboardExtender: React.FC<KeyboardExtenderProps> =
     : ({ children }: KeyboardExtenderProps) => children;
 export const ClippingScrollView: React.FC<KeyboardBackgroundViewProps> =
   require("./specs/ClippingScrollViewDecoratorViewNativeComponent").default;
-export const RCTKeyboardToolbarExcludeView: React.FC<OverKeyboardViewProps> =
-  require("./specs/KeyboardToolbarExcludeViewNativeComponent").default;
+export const RCTKeyboardToolbarGroupView: React.FC<KeyboardToolbarGroupViewProps> =
+  require("./specs/KeyboardToolbarGroupViewNativeComponent").default;

@@ -60,6 +60,6 @@ class KeyboardControllerPackage : TurboReactPackage() {
       KeyboardGestureAreaViewManager(),
       OverKeyboardViewManager(),
       KeyboardBackgroundViewManager(),
-      KeyboardToolbarExcludeViewManager(reactContext),
+      KeyboardToolbarGroupViewManager(reactContext),
     )
 }

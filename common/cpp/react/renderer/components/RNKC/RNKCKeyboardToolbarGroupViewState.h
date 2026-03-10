@@ -6,12 +6,12 @@
 
 namespace facebook::react {
 
-class KeyboardToolbarExcludeViewState {
+class KeyboardToolbarGroupViewState {
  public:
-  KeyboardToolbarExcludeViewState() = default;
+  KeyboardToolbarGroupViewState() = default;
 
 #ifdef ANDROID
-  KeyboardToolbarExcludeViewState(KeyboardToolbarExcludeViewState const &previousState, folly::dynamic data) {}
+  KeyboardToolbarGroupViewState(KeyboardToolbarGroupViewState const &previousState, folly::dynamic data) {}
   folly::dynamic getDynamic() const {
     return {};
   }

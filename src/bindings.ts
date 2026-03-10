@@ -9,7 +9,7 @@ import type {
   KeyboardEventsModule,
   KeyboardExtenderProps,
   KeyboardGestureAreaProps,
-  KeyboardToolbarExcludeViewProps,
+  KeyboardToolbarGroupViewProps,
   OverKeyboardViewProps,
   WindowDimensionsEventsModule,
 } from "./types";
@@ -93,5 +93,5 @@ export const RCTKeyboardExtender =
  */
 export const ClippingScrollView =
   View as unknown as React.FC<ClippingScrollViewProps>;
-export const RCTKeyboardToolbarExcludeView =
-  View as unknown as React.FC<KeyboardToolbarExcludeViewProps>;
+export const RCTKeyboardToolbarGroupView =
+  View as unknown as React.FC<KeyboardToolbarGroupViewProps>;

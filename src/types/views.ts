@@ -49,6 +49,7 @@ export type KeyboardExtenderProps = PropsWithChildren<{
   /** Controls whether this `KeyboardExtender` instance should take an effect. Default is `true`. */
   enabled?: boolean;
 }>;
+export type KeyboardToolbarGroupViewProps = PropsWithChildren<ViewProps>;
 export type ClippingScrollViewProps = PropsWithChildren<
   ViewProps & {
     /** An additional space that gets applied to the bottom of the `ScrollView` (inside a scrollable content). Default is `0`. */

@@ -5,7 +5,7 @@ import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.views.view.ReactViewGroup
 
 @SuppressLint("ViewConstructor")
-class KeyboardToolbarExcludeReactViewGroup(
+class KeyboardToolbarGroupReactViewGroup(
   reactContext: ThemedReactContext,
 ) : ReactViewGroup(reactContext) {
   // semantic view used in KeyboardToolbar traverse algorithm

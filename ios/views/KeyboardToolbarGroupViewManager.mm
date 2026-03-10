@@ -1,11 +1,11 @@
 //
-//  KeyboardToolbarExcludeViewManager.mm
+//  KeyboardToolbarGroupViewManager.mm
 //  react-native-keyboard-controller
 //
 //  Created by Kiryl Ziusko on 26/12/2024.
 //
 
-#import "KeyboardToolbarExcludeViewManager.h"
+#import "KeyboardToolbarGroupViewManager.h"
 
 #ifdef RCT_NEW_ARCH_ENABLED
 #import <react/renderer/components/reactnativekeyboardcontroller/ComponentDescriptors.h>
@@ -23,9 +23,9 @@ using namespace facebook::react;
 #endif
 
 // MARK: Manager
-@implementation KeyboardToolbarExcludeViewManager
+@implementation KeyboardToolbarGroupViewManager
 
-RCT_EXPORT_MODULE(KeyboardToolbarExcludeViewManager)
+RCT_EXPORT_MODULE(KeyboardToolbarGroupViewManager)
 
 + (BOOL)requiresMainQueueSetup
 {
@@ -35,7 +35,7 @@ RCT_EXPORT_MODULE(KeyboardToolbarExcludeViewManager)
 #ifndef RCT_NEW_ARCH_ENABLED
 - (UIView *)view
 {
-  return [[KeyboardToolbarExcludeView alloc] initWithBridge:self.bridge];
+  return [[KeyboardToolbarGroupView alloc] initWithBridge:self.bridge];
 }
 #endif
 
@@ -43,17 +43,17 @@ RCT_EXPORT_MODULE(KeyboardToolbarExcludeViewManager)
 
 // MARK: View
 #ifdef RCT_NEW_ARCH_ENABLED
-@interface KeyboardToolbarExcludeView () <RCTKeyboardToolbarExcludeViewViewProtocol>
+@interface KeyboardToolbarGroupView () <RCTKeyboardToolbarGroupViewViewProtocol>
 @end
 #endif
 
-@implementation KeyboardToolbarExcludeView {
+@implementation KeyboardToolbarGroupView {
 }
 
 #ifdef RCT_NEW_ARCH_ENABLED
 + (ComponentDescriptorProvider)componentDescriptorProvider
 {
-  return concreteComponentDescriptorProvider<KeyboardToolbarExcludeViewComponentDescriptor>();
+  return concreteComponentDescriptorProvider<KeyboardToolbarGroupViewComponentDescriptor>();
 }
 #endif
 
@@ -79,9 +79,9 @@ RCT_EXPORT_MODULE(KeyboardToolbarExcludeViewManager)
 #endif
 
 #ifdef RCT_NEW_ARCH_ENABLED
-Class<RCTComponentViewProtocol> KeyboardToolbarExcludeViewCls(void)
+Class<RCTComponentViewProtocol> KeyboardToolbarGroupViewCls(void)
 {
-  return KeyboardToolbarExcludeView.class;
+  return KeyboardToolbarGroupView.class;
 }
 #endif
 
