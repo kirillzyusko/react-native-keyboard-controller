@@ -50,6 +50,7 @@ describe("`KeyboardAvoidingView` specification", () => {
   // Package/padding/Abs (offset=0)
   it("should have expected UI when keyboard closed - package/padding/abs", async () => {
     await waitForExpect(async () => {
+      // TODO: add reference screenshot
       await expectBitmapsToBeEqual(
         "AvoidingViewPackagePaddingAbsInitial",
         0.27,
@@ -60,6 +61,7 @@ describe("`KeyboardAvoidingView` specification", () => {
   it("should have expected UI when keyboard opened - package/padding/abs", async () => {
     await waitAndTap("keyboard_avoiding_view.username");
     await waitForExpect(async () => {
+      // TODO: add reference screenshot
       await expectBitmapsToBeEqual("AvoidingViewPackagePaddingAbsOpened");
     });
   });
@@ -67,6 +69,7 @@ describe("`KeyboardAvoidingView` specification", () => {
   it("should have expected UI when keyboard gets closed - package/padding/abs", async () => {
     await waitAndType("keyboard_avoiding_view.username", "\n");
     await waitForExpect(async () => {
+      // TODO: add reference screenshot
       await expectBitmapsToBeEqual("AvoidingViewPackagePaddingAbsClosed");
     });
   });
