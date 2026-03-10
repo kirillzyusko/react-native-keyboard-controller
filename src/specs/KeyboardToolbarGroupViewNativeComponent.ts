@@ -5,9 +5,6 @@ import type { ViewProps } from "react-native/Libraries/Components/View/ViewPropT
 
 export interface NativeProps extends ViewProps {}
 
-export default codegenNativeComponent<NativeProps>(
-  "KeyboardToolbarGroupView",
-  {
-    interfaceOnly: true,
-  },
-) as HostComponent<NativeProps>;
+export default codegenNativeComponent<NativeProps>("KeyboardToolbarGroupView", {
+  interfaceOnly: true,
+}) as HostComponent<NativeProps>;
