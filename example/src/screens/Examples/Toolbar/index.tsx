@@ -154,16 +154,22 @@ function Form() {
           title="Flat"
           onFocus={onHideAutoFill}
         />
-        <KeyboardToolbar.Exclude>
+        <KeyboardToolbar.Group>
           <TextInput
-            contextMenuHidden
-            keyboardType="numeric"
-            placeholder="Excluded"
+            keyboardType="default"
+            placeholder="Group input 1"
             testID="TextInput#14"
-            title="Excluded"
+            title="Group Input 1"
             onFocus={onHideAutoFill}
           />
-        </KeyboardToolbar.Exclude>
+          <TextInput
+            keyboardType="default"
+            placeholder="Group input 2"
+            testID="TextInput#15"
+            title="Group Input 2"
+            onFocus={onHideAutoFill}
+          />
+        </KeyboardToolbar.Group>
       </KeyboardAwareScrollView>
       <KeyboardToolbar
         insets={insets}
