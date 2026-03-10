@@ -1,25 +1,15 @@
 import { StyleSheet } from "react-native";
 
 export default StyleSheet.create({
+  header: {
+    color: "black",
+    marginRight: 12,
+  },
   container: {
     flex: 1,
   },
-  settings: {
+  row: {
     flexDirection: "row",
-    justifyContent: "center",
-    gap: 8,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-  },
-  settingsButton: {
-    paddingVertical: 4,
-    paddingHorizontal: 8,
-    borderRadius: 8,
-    backgroundColor: "#e8e8e8",
-  },
-  settingsText: {
-    color: "black",
-    fontSize: 14,
   },
   content: {
     flex: 1,
@@ -59,24 +49,5 @@ export default StyleSheet.create({
     fontWeight: "500",
     fontSize: 16,
     color: "white",
-  },
-  modalHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: "#e0e0e0",
-  },
-  closeButton: {
-    color: "rgb(40, 64, 147)",
-    fontSize: 16,
-  },
-  modalTitle: {
-    flex: 1,
-    textAlign: "center",
-    fontSize: 18,
-    fontWeight: "600",
-    color: "black",
-    marginRight: 40,
   },
 });
