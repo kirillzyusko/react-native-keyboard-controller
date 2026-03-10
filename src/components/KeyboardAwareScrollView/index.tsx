@@ -150,12 +150,18 @@ const KeyboardAwareScrollView = forwardRef<
       useSharedValue<FocusedInputSelectionChangedEvent | null>(null);
     const ghostViewSpace = useSharedValue(-1);
     const pendingSelectionForFocus = useSharedValue(false);
+    const scrollViewPageY = useSharedValue(0);
 
     const { height } = useWindowDimensions();
 
     const onScrollViewLayout = useCallback(
       (e: LayoutChangeEvent) => {
         scrollViewTarget.value = findNodeHandle(scrollViewAnimatedRef.current);
+
+        // @ts-expect-error something is wrong with the type of `measureInWindow`
+        scrollViewRef.current?.measureInWindow((_x, y) => {
+          scrollViewPageY.value = y;
+        });
 
         onLayout?.(e);
       },
@@ -205,7 +211,7 @@ const KeyboardAwareScrollView = forwardRef<
           return interpolatedScrollTo;
         }
 
-        if (point < 0) {
+        if (point < scrollViewPageY.value) {
           const positionOnScreen = visibleRect - bottomOffset;
           const topOfScreen = scrollPosition.value + point;
 
