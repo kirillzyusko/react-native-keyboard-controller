@@ -1,5 +1,5 @@
 import React, { forwardRef, useCallback, useMemo } from "react";
-import { findNodeHandle, View } from "react-native";
+import { View, findNodeHandle } from "react-native";
 import Reanimated, {
   interpolate,
   runOnUI,
@@ -142,7 +142,7 @@ const KeyboardAvoidingView = forwardRef<
           const node = internalRef.current;
           const tag = node ? findNodeHandle(node) : null;
 
-          if (tag != null) {
+          if (tag !== null) {
             // Use native windowPosition to get true screen-absolute coordinates.
             // This bypasses Fabric's measureInWindow which returns
             // surface-relative coordinates inside Modals (RN bug #52450).
