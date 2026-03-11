@@ -39,31 +39,17 @@ export type KeyboardAvoidingViewBaseProps = {
   automaticOffset?: boolean;
 } & ViewProps;
 
-export type KeyboardAvoidingViewProps = KeyboardAvoidingViewBaseProps &
-  (
-    | {
-        /**
-         * Specify how to react to the presence of the keyboard.
-         */
-        behavior?: "position";
+export type KeyboardAvoidingViewProps = KeyboardAvoidingViewBaseProps & {
+  /**
+   * Specify how to react to the presence of the keyboard.
+   */
+  behavior?: "height" | "padding" | "position" | "translate-with-padding";
 
-        /**
-         * Style of the content container when `behavior` is 'position'.
-         */
-        contentContainerStyle?: ViewProps["style"];
-      }
-    | {
-        /**
-         * Specify how to react to the presence of the keyboard.
-         */
-        behavior?: "height" | "padding" | "translate-with-padding";
-
-        /**
-         * `contentContainerStyle` is not allowed for these behaviors.
-         */
-        contentContainerStyle?: never;
-      }
-  );
+  /**
+   * Style of the content container when `behavior` is 'position'.
+   */
+  contentContainerStyle?: ViewProps["style"];
+};
 
 const defaultLayout: LayoutRectangle = {
   x: 0,
