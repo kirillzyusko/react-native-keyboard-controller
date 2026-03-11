@@ -100,9 +100,10 @@ RCT_EXPORT_METHOD(setFocusTo : (nonnull NSString *)direction)
                resolve:(RCTPromiseResolveBlock)resolve
                 reject:(RCTPromiseRejectBlock)reject
 #else
-RCT_EXPORT_METHOD(windowPosition : (nonnull NSNumber *)viewTag
-                  resolve : (RCTPromiseResolveBlock)resolve
-                  reject : (RCTPromiseRejectBlock)reject)
+RCT_EXPORT_METHOD(windowPosition
+                  : (nonnull NSNumber *)viewTag resolve
+                  : (RCTPromiseResolveBlock)resolve reject
+                  : (RCTPromiseRejectBlock)reject)
 #endif
 {
   dispatch_async(dispatch_get_main_queue(), ^{
@@ -123,7 +124,8 @@ RCT_EXPORT_METHOD(windowPosition : (nonnull NSNumber *)viewTag
             break;
           }
         }
-        if (window) break;
+        if (window)
+          break;
       }
     }
     UIView *view = [window viewWithTag:tag];
@@ -136,10 +138,10 @@ RCT_EXPORT_METHOD(windowPosition : (nonnull NSNumber *)viewTag
     // coordinates for views inside Modals (RN bug #52450).
     CGRect windowFrame = [view.superview convertRect:view.frame toView:nil];
     resolve(@{
-      @"x": @(windowFrame.origin.x),
-      @"y": @(windowFrame.origin.y),
-      @"width": @(windowFrame.size.width),
-      @"height": @(windowFrame.size.height),
+      @"x" : @(windowFrame.origin.x),
+      @"y" : @(windowFrame.origin.y),
+      @"width" : @(windowFrame.size.width),
+      @"height" : @(windowFrame.size.height),
     });
   });
 }
