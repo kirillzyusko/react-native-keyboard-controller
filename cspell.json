@@ -194,7 +194,8 @@
     "kirylziusko",
     "lottiefiles",
     "dotlottie",
-    "legendapp"
+    "legendapp",
+    "kortix"
   ],
   "ignorePaths": [
     "node_modules",
