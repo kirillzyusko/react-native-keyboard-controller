@@ -42,7 +42,10 @@ class KeyboardControllerModule(
   }
 
   @ReactMethod
-  fun windowPosition(viewTag: Double, promise: Promise) {
+  fun windowPosition(
+    viewTag: Double,
+    promise: Promise,
+  ) {
     module.windowPosition(viewTag, promise)
   }
 

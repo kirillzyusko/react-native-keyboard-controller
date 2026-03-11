@@ -79,7 +79,10 @@ class KeyboardControllerModuleImpl(
     }
   }
 
-  fun windowPosition(viewTag: Double, promise: Promise) {
+  fun windowPosition(
+    viewTag: Double,
+    promise: Promise,
+  ) {
     UiThreadUtil.runOnUiThread {
       val view = mReactContext.currentActivity?.findViewById<View>(viewTag.toInt())
       if (view == null) {

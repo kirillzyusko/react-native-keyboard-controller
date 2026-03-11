@@ -34,7 +34,10 @@ class KeyboardControllerModule(
     module.setFocusTo(direction)
   }
 
-  override fun windowPosition(viewTag: Double, promise: Promise) {
+  override fun windowPosition(
+    viewTag: Double,
+    promise: Promise,
+  ) {
     module.windowPosition(viewTag, promise)
   }
 
