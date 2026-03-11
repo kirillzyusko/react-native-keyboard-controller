@@ -137,9 +137,6 @@ const KeyboardAvoidingView = forwardRef<
           initialFrame.value === null ||
           behavior !== "height"
         ) {
-          // When the keyboard is open in height mode, storing the shrunk
-          // frame would cause a feedback loop (resize → recalculate →
-          // resize), so we skip that case entirely.
           // eslint-disable-next-line react-compiler/react-compiler
           initialFrame.value = layout;
         }
