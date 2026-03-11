@@ -1,5 +1,5 @@
 import React, { forwardRef, useCallback, useMemo } from "react";
-import { View, findNodeHandle } from "react-native";
+import { View } from "react-native";
 import Reanimated, {
   interpolate,
   runOnUI,
@@ -10,6 +10,7 @@ import Reanimated, {
 
 import { KeyboardControllerNative } from "../../bindings";
 import { useWindowDimensions } from "../../hooks";
+import { findNodeHandle } from "../../utils/findNodeHandle";
 import useCombinedRef from "../hooks/useCombinedRef";
 
 import { useKeyboardAnimation, useTranslateAnimation } from "./hooks";

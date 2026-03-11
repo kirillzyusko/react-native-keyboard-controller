@@ -129,7 +129,7 @@ RCT_EXPORT_METHOD(windowPosition
       }
     }
     UIView *view = [window viewWithTag:tag];
-    if (!view) {
+    if (!view || !view.superview) {
       reject(@"E_VIEW_NOT_FOUND", @"Could not find view for tag", nil);
       return;
     }
