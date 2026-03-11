@@ -139,19 +139,12 @@ const KeyboardAvoidingView = forwardRef<
         ) {
           // When the keyboard is open in height mode, storing the shrunk
           // frame would cause a feedback loop (resize → recalculate →
-          // resize), so that case falls through to the else-if below.
+          // resize), so we skip that case entirely.
           // eslint-disable-next-line react-compiler/react-compiler
           initialFrame.value = layout;
-        } else if (automaticOffset) {
-          // automaticOffset uses measureInWindow, which may return stale
-          // y=0 during modal animation. The corrected y arrives on a
-          // later onLayout that falls through here. Accept the corrected
-          // position but preserve the original height to avoid the same
-          // feedback loop.
-          initialFrame.value = { ...layout, height: initialFrame.value.height };
         }
       },
-      [behavior, automaticOffset],
+      [behavior],
     );
     const onLayout = useCallback<NonNullable<ViewProps["onLayout"]>>(
       (e) => {
