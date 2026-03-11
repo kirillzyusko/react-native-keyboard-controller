@@ -146,9 +146,18 @@ const KeyboardAvoidingView = forwardRef<
             // Use native windowPosition to get true screen-absolute coordinates.
             // This bypasses Fabric's measureInWindow which returns
             // surface-relative coordinates inside Modals (RN bug #52450).
-            KeyboardControllerNative.windowPosition(tag).then((position) => {
-              runOnUI(onLayoutWorklet)({ ...layout, y: position.y });
-            });
+            KeyboardControllerNative.windowPosition(tag)
+              .then((position) => {
+                runOnUI(onLayoutWorklet)({
+                  ...layout,
+                  x: position.x,
+                  y: position.y,
+                });
+              })
+              .catch(() => {
+                // View may have been unmounted — fall back to onLayout values
+                runOnUI(onLayoutWorklet)(layout);
+              });
           }
         } else {
           runOnUI(onLayoutWorklet)(layout);
