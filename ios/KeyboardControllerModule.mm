@@ -112,7 +112,21 @@ RCT_EXPORT_METHOD(windowPosition : (nonnull NSNumber *)viewTag
 #else
     tag = viewTag.integerValue;
 #endif
-    UIView *view = [UIApplication.sharedApplication.keyWindow viewWithTag:tag];
+    UIWindow *window = nil;
+    for (UIScene *scene in UIApplication.sharedApplication.connectedScenes) {
+      if (scene.activationState == UISceneActivationStateForegroundActive &&
+          [scene isKindOfClass:[UIWindowScene class]]) {
+        UIWindowScene *windowScene = (UIWindowScene *)scene;
+        for (UIWindow *w in windowScene.windows) {
+          if (w.isKeyWindow) {
+            window = w;
+            break;
+          }
+        }
+        if (window) break;
+      }
+    }
+    UIView *view = [window viewWithTag:tag];
     if (!view) {
       reject(@"E_VIEW_NOT_FOUND", @"Could not find view for tag", nil);
       return;
