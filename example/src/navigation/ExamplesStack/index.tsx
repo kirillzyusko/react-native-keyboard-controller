@@ -14,6 +14,7 @@ import InteractiveKeyboard from "../../screens/Examples/InteractiveKeyboard";
 import InteractiveKeyboardIOS from "../../screens/Examples/InteractiveKeyboardIOS";
 import KeyboardAnimation from "../../screens/Examples/KeyboardAnimation";
 import KeyboardAvoidingViewExample from "../../screens/Examples/KeyboardAvoidingView";
+import KeyboardAvoidingViewAutomaticExample from "../../screens/Examples/KeyboardAvoidingViewAutomatic";
 import KeyboardChatScrollViewPlayground from "../../screens/Examples/KeyboardChatScrollView";
 import KeyboardExtender from "../../screens/Examples/KeyboardExtender";
 import KeyboardSharedTransitionExample from "../../screens/Examples/KeyboardSharedTransitions";
@@ -44,6 +45,7 @@ export type ExamplesStackParamList = {
   [ScreenNames.INTERACTIVE_KEYBOARD_IOS]: undefined;
   [ScreenNames.NATIVE_STACK]: undefined;
   [ScreenNames.KEYBOARD_AVOIDING_VIEW]: undefined;
+  [ScreenNames.KEYBOARD_AVOIDING_VIEW_AUTOMATIC]: undefined;
   [ScreenNames.ENABLED_DISABLED]: undefined;
   [ScreenNames.CLOSE]: undefined;
   [ScreenNames.FOCUSED_INPUT_HANDLERS]: undefined;
@@ -102,6 +104,9 @@ const options = {
   },
   [ScreenNames.KEYBOARD_AVOIDING_VIEW]: {
     title: "KAV",
+  },
+  [ScreenNames.KEYBOARD_AVOIDING_VIEW_AUTOMATIC]: {
+    title: "KAV Automatic",
   },
   [ScreenNames.ENABLED_DISABLED]: {
     title: "Enabled/disabled",
@@ -221,6 +226,11 @@ const ExamplesStack = () => (
       component={KeyboardAvoidingViewExample}
       name={ScreenNames.KEYBOARD_AVOIDING_VIEW}
       options={options[ScreenNames.KEYBOARD_AVOIDING_VIEW]}
+    />
+    <Stack.Screen
+      component={KeyboardAvoidingViewAutomaticExample}
+      name={ScreenNames.KEYBOARD_AVOIDING_VIEW_AUTOMATIC}
+      options={options[ScreenNames.KEYBOARD_AVOIDING_VIEW_AUTOMATIC]}
     />
     <Stack.Screen
       component={EnabledDisabled}

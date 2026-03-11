@@ -9,6 +9,7 @@ import Reanimated, {
 } from "react-native-reanimated";
 
 import { useWindowDimensions } from "../../hooks";
+import useCombinedRef from "../hooks/useCombinedRef";
 
 import { useKeyboardAnimation, useTranslateAnimation } from "./hooks";
 
@@ -26,6 +27,16 @@ export type KeyboardAvoidingViewBaseProps = {
    * may be non-zero in some cases. Defaults to 0.
    */
   keyboardVerticalOffset?: number;
+
+  /**
+   * When `true`, the view automatically detects its position on screen,
+   * accounting for navigation headers, modals, and other layout offsets.
+   * This means `keyboardVerticalOffset` becomes purely additive extra
+   * space rather than compensation for unknown positioning.
+   *
+   * Defaults to `false` for backward compatibility.
+   */
+  automaticOffset?: boolean;
 } & ViewProps;
 
 export type KeyboardAvoidingViewProps = KeyboardAvoidingViewBaseProps &
@@ -85,6 +96,7 @@ const KeyboardAvoidingView = forwardRef<
       contentContainerStyle,
       enabled = true,
       keyboardVerticalOffset = 0,
+      automaticOffset = false,
       style,
       onLayout: onLayoutProps,
       ...props
@@ -92,6 +104,7 @@ const KeyboardAvoidingView = forwardRef<
     ref,
   ) => {
     const initialFrame = useSharedValue<LayoutRectangle | null>(null);
+    const internalRef = React.useRef<View | null>(null);
     const frame = useDerivedValue(() => initialFrame.value || defaultLayout);
 
     const { translate, padding } = useTranslateAnimation();
@@ -132,10 +145,20 @@ const KeyboardAvoidingView = forwardRef<
     );
     const onLayout = useCallback<NonNullable<ViewProps["onLayout"]>>(
       (e) => {
-        runOnUI(onLayoutWorklet)(e.nativeEvent.layout);
+        const layout = e.nativeEvent.layout;
+
+        if (automaticOffset) {
+          // ref is always set here — onLayout only fires after mount
+          internalRef.current?.measureInWindow((x, y) => {
+            runOnUI(onLayoutWorklet)({ ...layout, x, y });
+          });
+        } else {
+          runOnUI(onLayoutWorklet)(layout);
+        }
+
         onLayoutProps?.(e);
       },
-      [onLayoutProps],
+      [onLayoutProps, automaticOffset],
     );
 
     const animatedStyle = useAnimatedStyle(() => {
@@ -177,6 +200,7 @@ const KeyboardAvoidingView = forwardRef<
           return {};
       }
     }, [behavior, enabled, interpolateToRelativeKeyboardHeight]);
+    const combinedRef = useCombinedRef(internalRef, ref);
     const isPositionBehavior = behavior === "position";
     const containerStyle = isPositionBehavior ? contentContainerStyle : style;
     const combinedStyles = useMemo(
@@ -186,7 +210,7 @@ const KeyboardAvoidingView = forwardRef<
 
     if (isPositionBehavior) {
       return (
-        <View ref={ref} style={style} onLayout={onLayout} {...props}>
+        <View ref={combinedRef} style={style} onLayout={onLayout} {...props}>
           <Reanimated.View style={combinedStyles}>{children}</Reanimated.View>
         </View>
       );
@@ -194,7 +218,7 @@ const KeyboardAvoidingView = forwardRef<
 
     return (
       <Reanimated.View
-        ref={ref}
+        ref={combinedRef}
         style={combinedStyles}
         onLayout={onLayout}
         {...props}
