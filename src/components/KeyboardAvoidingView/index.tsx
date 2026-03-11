@@ -121,30 +121,49 @@ const KeyboardAvoidingView = forwardRef<
         if (
           keyboard.isClosed.value ||
           initialFrame.value === null ||
-          behavior !== "height"
+          // When automaticOffset is enabled, always preserve the pre-keyboard
+          // frame to avoid iOS modal keyboard adjustment shrinking the frame.
+          // Without automaticOffset, only preserve for "height" behavior
+          // (existing behavior for backward compatibility).
+          (!automaticOffset && behavior !== "height")
         ) {
           // eslint-disable-next-line react-compiler/react-compiler
           initialFrame.value = layout;
         }
       },
-      [behavior],
+      [behavior, automaticOffset],
     );
     const onLayout = useCallback<NonNullable<ViewProps["onLayout"]>>(
       (e) => {
         const layout = e.nativeEvent.layout;
 
         if (automaticOffset) {
-          // ref is always set here — onLayout only fires after mount
-          internalRef.current?.measureInWindow((x, y) => {
-            runOnUI(onLayoutWorklet)({ ...layout, x, y });
-          });
+          const node = internalRef.current;
+          if (node) {
+            node.measureInWindow((x, y) => {
+              // On Fabric (New Architecture), measureInWindow returns
+              // modal-surface-relative coordinates for views inside a Modal,
+              // instead of screen-absolute coordinates (RN bug #52450).
+              // Detect this by checking if measureInWindow returns the same
+              // values as onLayout. When detected, estimate the absolute Y
+              // by assuming the view extends to the bottom of the screen.
+              const isBrokenMeasurement =
+                Math.abs(y - layout.y) < 0.5 &&
+                Math.abs(x - layout.x) < 0.5;
+              const adjustedY = isBrokenMeasurement
+                ? screenHeight - layout.height
+                : y;
+
+              runOnUI(onLayoutWorklet)({ ...layout, y: adjustedY });
+            });
+          }
         } else {
           runOnUI(onLayoutWorklet)(layout);
         }
 
         onLayoutProps?.(e);
       },
-      [onLayoutProps, automaticOffset],
+      [onLayoutProps, automaticOffset, screenHeight],
     );
 
     const animatedStyle = useAnimatedStyle(() => {
