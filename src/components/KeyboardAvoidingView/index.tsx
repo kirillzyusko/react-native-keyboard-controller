@@ -2,14 +2,13 @@ import React, { forwardRef, useCallback, useMemo } from "react";
 import { View } from "react-native";
 import Reanimated, {
   interpolate,
-  runOnJS,
   runOnUI,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
 } from "react-native-reanimated";
 
-import { useGenericKeyboardHandler, useWindowDimensions } from "../../hooks";
+import { useWindowDimensions } from "../../hooks";
 import useCombinedRef from "../hooks/useCombinedRef";
 
 import { useKeyboardAnimation, useTranslateAnimation } from "./hooks";
@@ -170,33 +169,6 @@ const KeyboardAvoidingView = forwardRef<
         onLayoutProps?.(e);
       },
       [onLayoutProps, automaticOffset],
-    );
-
-    // In a modal, measureInWindow can return stale y=0 while the modal
-    // is still animating into place. Other modes self-correct because
-    // resizing the view triggers a new onLayout with fresh measurements.
-    // Position mode can't — its outer view never resizes (only the inner
-    // view shifts via { bottom }), so onLayout never re-fires. We use
-    // useGenericKeyboardHandler to re-measure on keyboard start, when
-    // the modal has settled. The async JS hop is safe because the outer
-    // view stays put during keyboard animation.
-    const remeasurePositionMode = useCallback(() => {
-      internalRef.current?.measureInWindow((x, y, width, height) => {
-        runOnUI(onLayoutWorklet)({ x, y, width, height });
-      });
-    }, [onLayoutWorklet]);
-
-    useGenericKeyboardHandler(
-      {
-        onStart: () => {
-          "worklet";
-
-          if (automaticOffset && behavior === "position") {
-            runOnJS(remeasurePositionMode)();
-          }
-        },
-      },
-      [automaticOffset, behavior, remeasurePositionMode],
     );
 
     const animatedStyle = useAnimatedStyle(() => {

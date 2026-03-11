@@ -15,14 +15,16 @@ const behaviors: Behavior[] = ["padding", "height", "position"];
 function KAVContent({
   behavior,
   keyboardVerticalOffset,
+  automaticOffset,
 }: {
   behavior: Behavior;
   keyboardVerticalOffset: number;
+  automaticOffset: boolean;
 }) {
   return (
     // @ts-expect-error discriminated union doesn't narrow with dynamic behavior
     <KeyboardAvoidingView
-      automaticOffset
+      automaticOffset={automaticOffset}
       behavior={behavior}
       contentContainerStyle={
         behavior === "position" ? styles.container : undefined
@@ -55,6 +57,7 @@ function KAVContent({
 
 export default function KeyboardAvoidingViewAutomaticExample() {
   const [behavior, setBehavior] = useState<Behavior>(behaviors[0]);
+  const [automaticOffset, setAutomaticOffset] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [offset, setOffset] = useState(0);
   const offsets = [0, 50, 100];
@@ -86,12 +89,24 @@ export default function KeyboardAvoidingViewAutomaticExample() {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.settingsButton}
+          onPress={() => setAutomaticOffset((v) => !v)}
+        >
+          <Text style={styles.settingsText}>
+            {automaticOffset ? "Auto" : "Manual"}
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.settingsButton}
           onPress={() => setShowModal(true)}
         >
           <Text style={styles.settingsText}>Modal</Text>
         </TouchableOpacity>
       </View>
-      <KAVContent behavior={behavior} keyboardVerticalOffset={offset} />
+      <KAVContent
+        automaticOffset={automaticOffset}
+        behavior={behavior}
+        keyboardVerticalOffset={offset}
+      />
       <Modal
         animationType="slide"
         presentationStyle="pageSheet"
@@ -102,9 +117,15 @@ export default function KeyboardAvoidingViewAutomaticExample() {
           <TouchableOpacity onPress={() => setShowModal(false)}>
             <Text style={styles.closeButton}>Close</Text>
           </TouchableOpacity>
-          <Text style={styles.modalTitle}>Modal KAV (automaticOffset)</Text>
+          <Text style={styles.modalTitle}>
+            Modal ({automaticOffset ? "Auto" : "Manual"})
+          </Text>
         </View>
-        <KAVContent behavior={behavior} keyboardVerticalOffset={offset} />
+        <KAVContent
+          automaticOffset={automaticOffset}
+          behavior={behavior}
+          keyboardVerticalOffset={offset}
+        />
       </Modal>
     </>
   );
