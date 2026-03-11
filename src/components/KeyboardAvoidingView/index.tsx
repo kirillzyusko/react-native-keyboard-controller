@@ -155,8 +155,16 @@ const KeyboardAvoidingView = forwardRef<
                 });
               })
               .catch(() => {
-                // View may have been unmounted — fall back to onLayout values
-                runOnUI(onLayoutWorklet)(layout);
+                // windowPosition failed (e.g. view unmounted or tag not found).
+                // Fall back to measureInWindow which returns correct absolute
+                // coordinates on Paper architecture.
+                if (node) {
+                  node.measureInWindow((x, y) => {
+                    runOnUI(onLayoutWorklet)({ ...layout, x, y });
+                  });
+                } else {
+                  runOnUI(onLayoutWorklet)(layout);
+                }
               });
           }
         } else {
