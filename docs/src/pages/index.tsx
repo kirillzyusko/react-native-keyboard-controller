@@ -48,6 +48,12 @@ const trustedBy = [
     name: "Bluesky",
   },
   {
+    img: "https://avatars.githubusercontent.com/u/11744586?s=200&v=4",
+    alt: "MetaMask mobile app",
+    link: "https://github.com/MetaMask/metamask-mobile",
+    name: "MetaMask",
+  },
+  {
     img: "https://avatars.githubusercontent.com/u/12504344?s=200&v=4",
     alt: "Expo framework",
     link: "https://docs.expo.dev/guides/keyboard-handling/",
@@ -58,6 +64,30 @@ const trustedBy = [
     alt: "InfiniteRed Ignite react native project boilerplate",
     link: "https://github.com/infinitered/ignite",
     name: "Ignite",
+  },
+  {
+    img: "https://avatars.githubusercontent.com/u/48327834?s=200&v=4",
+    alt: "Rainbow Mobile App",
+    link: "https://github.com/rainbow-me/rainbow",
+    name: "Rainbow",
+  },
+  {
+    img: "https://avatars.githubusercontent.com/u/8597527?s=200&v=4",
+    alt: "GetStream react-native SDK",
+    link: "https://github.com/GetStream/stream-chat-react-native",
+    name: "GetStream",
+  },
+  {
+    img: "https://avatars.githubusercontent.com/u/9828093?s=200&v=4",
+    alt: "Mattermost mobile app",
+    link: "https://github.com/mattermost/mattermost-mobile",
+    name: "Mattermost",
+  },
+  {
+    img: "https://avatars.githubusercontent.com/u/170767358?s=200&v=4",
+    alt: "Kortix mobile app",
+    link: "https://github.com/kortix-ai/suna",
+    name: "Kortix",
   },
   {
     img: "https://avatars.githubusercontent.com/u/36115574?s=200&v=4",
@@ -72,12 +102,6 @@ const trustedBy = [
     name: "Rocket Chat",
   },
   {
-    img: "https://avatars.githubusercontent.com/u/48327834?s=200&v=4",
-    alt: "Rainbow Mobile App",
-    link: "https://github.com/rainbow-me/rainbow",
-    name: "Rainbow",
-  },
-  {
     img: "https://avatars.githubusercontent.com/u/95456295?s=200&v=4",
     alt: "RSSNext Follow app",
     link: "https://github.com/RSSNext/Follow",
@@ -88,6 +112,12 @@ const trustedBy = [
     alt: "Chatwoot mobile app",
     link: "https://github.com/chatwoot/chatwoot-mobile-app",
     name: "Chatwoot",
+  },
+  {
+    img: "https://avatars.githubusercontent.com/u/546231?s=200&v=4",
+    alt: "Artsy mobile app",
+    link: "https://github.com/artsy/eigen",
+    name: "Artsy",
   },
   {
     img: "https://avatars.githubusercontent.com/u/4201786?s=200&v=4",
@@ -136,12 +166,6 @@ const trustedBy = [
     alt: "PocketPal AI App",
     link: "https://github.com/a-ghorbani/pocketpal-ai",
     name: "PocketPal AI",
-  },
-  {
-    img: "https://avatars.githubusercontent.com/u/7648832?s=200&v=4",
-    alt: "Kitsu App",
-    link: "https://github.com/hummingbird-me/kitsu-mobile",
-    name: "Kitsu",
   },
   {
     img: "https://play-lh.googleusercontent.com/KsXljWMtBXw131OcLT44ByxwznfdgM1a-2gZVYNBzPBKz9gqOCxEIhC83IpS35OIZQc=w200-h480-rw",
