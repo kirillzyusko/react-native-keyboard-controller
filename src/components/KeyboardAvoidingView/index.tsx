@@ -1,5 +1,5 @@
 import React, { forwardRef, useCallback, useMemo } from "react";
-import { View } from "react-native";
+import { findNodeHandle, View } from "react-native";
 import Reanimated, {
   interpolate,
   runOnUI,
@@ -8,6 +8,7 @@ import Reanimated, {
   useSharedValue,
 } from "react-native-reanimated";
 
+import { KeyboardControllerNative } from "../../bindings";
 import { useWindowDimensions } from "../../hooks";
 import useCombinedRef from "../hooks/useCombinedRef";
 
@@ -139,22 +140,14 @@ const KeyboardAvoidingView = forwardRef<
 
         if (automaticOffset) {
           const node = internalRef.current;
-          if (node) {
-            node.measureInWindow((x, y) => {
-              // On Fabric (New Architecture), measureInWindow returns
-              // modal-surface-relative coordinates for views inside a Modal,
-              // instead of screen-absolute coordinates (RN bug #52450).
-              // Detect this by checking if measureInWindow returns the same
-              // values as onLayout. When detected, estimate the absolute Y
-              // by assuming the view extends to the bottom of the screen.
-              const isBrokenMeasurement =
-                Math.abs(y - layout.y) < 0.5 &&
-                Math.abs(x - layout.x) < 0.5;
-              const adjustedY = isBrokenMeasurement
-                ? screenHeight - layout.height
-                : y;
+          const tag = node ? findNodeHandle(node) : null;
 
-              runOnUI(onLayoutWorklet)({ ...layout, y: adjustedY });
+          if (tag != null) {
+            // Use native windowPosition to get true screen-absolute coordinates.
+            // This bypasses Fabric's measureInWindow which returns
+            // surface-relative coordinates inside Modals (RN bug #52450).
+            KeyboardControllerNative.windowPosition(tag).then((position) => {
+              runOnUI(onLayoutWorklet)({ ...layout, y: position.y });
             });
           }
         } else {
@@ -163,7 +156,7 @@ const KeyboardAvoidingView = forwardRef<
 
         onLayoutProps?.(e);
       },
-      [onLayoutProps, automaticOffset, screenHeight],
+      [onLayoutProps, automaticOffset],
     );
 
     const animatedStyle = useAnimatedStyle(() => {

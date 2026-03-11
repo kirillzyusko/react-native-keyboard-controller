@@ -95,6 +95,41 @@ RCT_EXPORT_METHOD(setFocusTo : (nonnull NSString *)direction)
   [ViewHierarchyNavigator setFocusToDirection:direction];
 }
 
+#ifdef RCT_NEW_ARCH_ENABLED
+- (void)windowPosition:(double)viewTag
+               resolve:(RCTPromiseResolveBlock)resolve
+                reject:(RCTPromiseRejectBlock)reject
+#else
+RCT_EXPORT_METHOD(windowPosition : (nonnull NSNumber *)viewTag
+                  resolve : (RCTPromiseResolveBlock)resolve
+                  reject : (RCTPromiseRejectBlock)reject)
+#endif
+{
+  dispatch_async(dispatch_get_main_queue(), ^{
+    NSInteger tag;
+#ifdef RCT_NEW_ARCH_ENABLED
+    tag = (NSInteger)viewTag;
+#else
+    tag = viewTag.integerValue;
+#endif
+    UIView *view = [UIApplication.sharedApplication.keyWindow viewWithTag:tag];
+    if (!view) {
+      reject(@"E_VIEW_NOT_FOUND", @"Could not find view for tag", nil);
+      return;
+    }
+    // Use UIKit coordinate conversion to get true window coordinates.
+    // This bypasses Fabric's shadow tree which returns surface-relative
+    // coordinates for views inside Modals (RN bug #52450).
+    CGRect windowFrame = [view.superview convertRect:view.frame toView:nil];
+    resolve(@{
+      @"x": @(windowFrame.origin.x),
+      @"y": @(windowFrame.origin.y),
+      @"width": @(windowFrame.size.width),
+      @"height": @(windowFrame.size.height),
+    });
+  });
+}
+
 + (KeyboardController *)shared
 {
   return shared;

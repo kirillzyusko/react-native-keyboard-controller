@@ -5,6 +5,8 @@ import android.os.Build
 import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
+import com.facebook.react.bridge.Arguments
+import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.UiThreadUtil
 import com.reactnativekeyboardcontroller.interactive.KeyboardAnimationController
@@ -74,6 +76,25 @@ class KeyboardControllerModuleImpl(
 
     if (view != null) {
       ViewHierarchyNavigator.setFocusTo(direction, view)
+    }
+  }
+
+  fun windowPosition(viewTag: Double, promise: Promise) {
+    UiThreadUtil.runOnUiThread {
+      val view = mReactContext.currentActivity?.findViewById<View>(viewTag.toInt())
+      if (view == null) {
+        promise.reject("E_VIEW_NOT_FOUND", "Could not find view for tag")
+        return@runOnUiThread
+      }
+      val location = IntArray(2)
+      view.getLocationInWindow(location)
+      val density = mReactContext.resources.displayMetrics.density
+      val map = Arguments.createMap()
+      map.putDouble("x", location[0].toDouble() / density)
+      map.putDouble("y", location[1].toDouble() / density)
+      map.putDouble("width", view.width.toDouble() / density)
+      map.putDouble("height", view.height.toDouble() / density)
+      promise.resolve(map)
     }
   }
 
