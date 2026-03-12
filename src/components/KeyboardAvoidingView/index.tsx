@@ -8,7 +8,9 @@ import Reanimated, {
   useSharedValue,
 } from "react-native-reanimated";
 
+import { KeyboardControllerNative } from "../../bindings";
 import { useWindowDimensions } from "../../hooks";
+import { findNodeHandle } from "../../utils/findNodeHandle";
 import useCombinedRef from "../hooks/useCombinedRef";
 
 import { useKeyboardAnimation, useTranslateAnimation } from "./hooks";
@@ -131,18 +133,33 @@ const KeyboardAvoidingView = forwardRef<
     );
     const onLayout = useCallback<NonNullable<ViewProps["onLayout"]>>(
       (e) => {
+        onLayoutProps?.(e);
+
         const layout = e.nativeEvent.layout;
 
         if (automaticOffset) {
-          // ref is always set here — onLayout only fires after mount
-          internalRef.current?.measureInWindow((x, y) => {
-            runOnUI(onLayoutWorklet)({ ...layout, x, y });
-          });
-        } else {
-          runOnUI(onLayoutWorklet)(layout);
+          const tag = findNodeHandle(internalRef.current);
+
+          if (tag !== null) {
+            // Use native `viewPositionInWindow` to get true screen-absolute coordinates.
+            // This fixes current RN bugs:
+            // - https://github.com/facebook/react-native/pull/56062
+            // - https://github.com/facebook/react-native/pull/56056
+            return KeyboardControllerNative.viewPositionInWindow(tag)
+              .then((position) => {
+                runOnUI(onLayoutWorklet)({
+                  ...layout,
+                  x: position.x,
+                  y: position.y,
+                });
+              })
+              .catch(() => {
+                runOnUI(onLayoutWorklet)(layout);
+              });
+          }
         }
 
-        onLayoutProps?.(e);
+        return runOnUI(onLayoutWorklet)(layout);
       },
       [onLayoutProps, automaticOffset],
     );

@@ -5,8 +5,13 @@ import android.os.Build
 import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
+import com.facebook.react.bridge.Arguments
+import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.UiThreadUtil
+import com.reactnativekeyboardcontroller.extensions.dp
+import com.reactnativekeyboardcontroller.extensions.screenLocation
+import com.reactnativekeyboardcontroller.extensions.uiManager
 import com.reactnativekeyboardcontroller.interactive.KeyboardAnimationController
 import com.reactnativekeyboardcontroller.traversal.FocusedInputHolder
 import com.reactnativekeyboardcontroller.traversal.ViewHierarchyNavigator
@@ -14,6 +19,7 @@ import com.reactnativekeyboardcontroller.traversal.ViewHierarchyNavigator
 class KeyboardControllerModuleImpl(
   private val mReactContext: ReactApplicationContext,
 ) {
+  private val uiManager = mReactContext.uiManager
   private val controller = KeyboardAnimationController()
   private val mDefaultMode: Int = getCurrentMode()
 
@@ -74,6 +80,26 @@ class KeyboardControllerModuleImpl(
 
     if (view != null) {
       ViewHierarchyNavigator.setFocusTo(direction, view)
+    }
+  }
+
+  fun viewPositionInWindow(
+    viewTag: Double,
+    promise: Promise,
+  ) {
+    UiThreadUtil.runOnUiThread {
+      val view = uiManager?.resolveView(viewTag.toInt())
+      if (view == null) {
+        promise.reject("E_VIEW_NOT_FOUND", "Could not find view for tag")
+        return@runOnUiThread
+      }
+      val location = view.screenLocation
+      val map = Arguments.createMap()
+      map.putDouble("x", location[0].toFloat().dp)
+      map.putDouble("y", location[1].toFloat().dp)
+      map.putDouble("width", view.width.toFloat().dp)
+      map.putDouble("height", view.height.toFloat().dp)
+      promise.resolve(map)
     }
   }
 

@@ -23,6 +23,9 @@
 #endif
 
 #import <React/RCTEventDispatcherProtocol.h>
+#ifndef RCT_NEW_ARCH_ENABLED
+#import <React/RCTUIManager.h>
+#endif
 
 #ifdef RCT_NEW_ARCH_ENABLED
 @interface KeyboardController () <NativeKeyboardControllerSpec>
@@ -93,6 +96,39 @@ RCT_EXPORT_METHOD(setFocusTo : (nonnull NSString *)direction)
 #endif
 {
   [ViewHierarchyNavigator setFocusToDirection:direction];
+}
+
+#ifdef RCT_NEW_ARCH_ENABLED
+- (void)viewPositionInWindow:(double)viewTag
+                     resolve:(RCTPromiseResolveBlock)resolve
+                      reject:(RCTPromiseRejectBlock)reject
+#else
+RCT_EXPORT_METHOD(viewPositionInWindow
+                  : (nonnull NSNumber *)viewTag resolve
+                  : (RCTPromiseResolveBlock)resolve reject
+                  : (RCTPromiseRejectBlock)reject)
+#endif
+{
+  dispatch_async(dispatch_get_main_queue(), ^{
+    UIView *view = nil;
+#ifdef RCT_NEW_ARCH_ENABLED
+    NSInteger tag = (NSInteger)viewTag;
+    view = [UIApplication.sharedApplication.activeWindow viewWithTag:tag];
+#else
+    view = [self.bridge.uiManager viewForReactTag:viewTag];
+#endif
+    if (!view || !view.superview) {
+      reject(@"E_VIEW_NOT_FOUND", @"Could not find view for tag", nil);
+      return;
+    }
+    CGRect frame = [view.superview convertRect:view.frame toView:nil];
+    resolve(@{
+      @"x" : @(frame.origin.x),
+      @"y" : @(frame.origin.y),
+      @"width" : @(frame.size.width),
+      @"height" : @(frame.size.height),
+    });
+  });
 }
 
 + (KeyboardController *)shared

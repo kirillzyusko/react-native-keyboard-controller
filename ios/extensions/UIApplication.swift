@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 public extension UIApplication {
-  var activeWindow: UIWindow? {
+  @objc var activeWindow: UIWindow? {
     if #available(iOS 13.0, *) {
       for scene in connectedScenes {
         if scene.activationState == .foregroundActive,

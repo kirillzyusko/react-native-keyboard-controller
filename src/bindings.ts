@@ -22,6 +22,8 @@ export const KeyboardControllerNative: KeyboardControllerNativeModule = {
   preload: NOOP,
   dismiss: NOOP,
   setFocusTo: NOOP,
+  viewPositionInWindow: () =>
+    Promise.resolve({ x: 0, y: 0, width: 0, height: 0 }),
   addListener: NOOP,
   removeListeners: NOOP,
 };

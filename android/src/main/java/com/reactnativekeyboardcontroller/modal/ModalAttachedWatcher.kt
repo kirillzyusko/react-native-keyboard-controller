@@ -4,15 +4,14 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.core.view.ViewCompat
 import com.facebook.react.uimanager.ThemedReactContext
-import com.facebook.react.uimanager.UIManagerHelper
-import com.facebook.react.uimanager.common.UIManagerType
 import com.facebook.react.uimanager.events.Event
 import com.facebook.react.uimanager.events.EventDispatcherListener
 import com.facebook.react.views.modal.ReactModalHostView
 import com.facebook.react.views.view.ReactViewGroup
-import com.reactnativekeyboardcontroller.BuildConfig
 import com.reactnativekeyboardcontroller.constants.Keyboard
+import com.reactnativekeyboardcontroller.extensions.eventDispatcher
 import com.reactnativekeyboardcontroller.extensions.removeSelf
+import com.reactnativekeyboardcontroller.extensions.uiManager
 import com.reactnativekeyboardcontroller.listeners.KeyboardAnimationCallback
 import com.reactnativekeyboardcontroller.listeners.KeyboardAnimationCallbackConfig
 import com.reactnativekeyboardcontroller.log.Logger
@@ -26,9 +25,8 @@ class ModalAttachedWatcher(
   private val config: KeyboardAnimationCallbackConfig,
   private var callback: () -> KeyboardAnimationCallback?,
 ) : EventDispatcherListener {
-  private val archType = if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) UIManagerType.FABRIC else UIManagerType.DEFAULT
-  private val uiManager = UIManagerHelper.getUIManager(reactContext.reactApplicationContext, archType)
-  private val eventDispatcher = UIManagerHelper.getEventDispatcher(reactContext.reactApplicationContext, archType)
+  private val uiManager = reactContext.uiManager
+  private val eventDispatcher = reactContext.eventDispatcher
 
   override fun onEventDispatch(event: Event<*>) {
     if (event.eventName != MODAL_SHOW_EVENT) {

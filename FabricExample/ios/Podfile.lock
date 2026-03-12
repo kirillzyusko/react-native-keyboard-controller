@@ -3184,7 +3184,7 @@ SPEC CHECKSUMS:
   RNCMaskedView: 63268de1986a098b5f4d1fb5b1bc1e97fade0aee
   RNGestureHandler: 4f7cc97a71d4fe0fcba38c94acdd969f5f17c91c
   RNReactNativeHapticFeedback: 63aa39dbd6ef56e9de688210c5761d4007927a7e
-  RNReanimated: f2cdef8c5ec70e440498b949f9af3ea39f70fcec
+  RNReanimated: aabfea4a99566babeedbd3e33eb234b9756932bd
   RNScreens: 74985ca8e102294a60cec7513fa84c936fa0b20b
   RNWorklets: ab7740c2a152f77ff76a40d52be860d8f128fab1
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
