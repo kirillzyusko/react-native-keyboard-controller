@@ -100,8 +100,8 @@ RCT_EXPORT_METHOD(setFocusTo : (nonnull NSString *)direction)
 
 #ifdef RCT_NEW_ARCH_ENABLED
 - (void)viewPositionInWindow:(double)viewTag
-               resolve:(RCTPromiseResolveBlock)resolve
-                reject:(RCTPromiseRejectBlock)reject
+                     resolve:(RCTPromiseResolveBlock)resolve
+                      reject:(RCTPromiseRejectBlock)reject
 #else
 RCT_EXPORT_METHOD(viewPositionInWindow
                   : (nonnull NSNumber *)viewTag resolve

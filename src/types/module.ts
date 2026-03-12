@@ -124,7 +124,9 @@ export type KeyboardControllerNativeModule = {
   // all platforms
   dismiss: (keepFocus: boolean, animated: boolean) => void;
   setFocusTo: (direction: Direction) => void;
-  viewPositionInWindow: (viewTag: number) => Promise<ViewPositionInWindowResult>;
+  viewPositionInWindow: (
+    viewTag: number,
+  ) => Promise<ViewPositionInWindowResult>;
   // native event module stuff
   addListener: (eventName: string) => void;
   removeListeners: (count: number) => void;
