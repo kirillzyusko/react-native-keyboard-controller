@@ -123,10 +123,6 @@ const KeyboardAvoidingView = forwardRef<
         if (
           keyboard.isClosed.value ||
           initialFrame.value === null ||
-          // When automaticOffset is enabled, always preserve the pre-keyboard
-          // frame to avoid iOS modal keyboard adjustment shrinking the frame.
-          // Without automaticOffset, only preserve for "height" behavior
-          // (existing behavior for backward compatibility).
           behavior !== "height"
         ) {
           // eslint-disable-next-line react-compiler/react-compiler
