@@ -9,6 +9,7 @@ import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.UiThreadUtil
+import com.reactnativekeyboardcontroller.extensions.uiManager
 import com.reactnativekeyboardcontroller.interactive.KeyboardAnimationController
 import com.reactnativekeyboardcontroller.traversal.FocusedInputHolder
 import com.reactnativekeyboardcontroller.traversal.ViewHierarchyNavigator
@@ -16,6 +17,7 @@ import com.reactnativekeyboardcontroller.traversal.ViewHierarchyNavigator
 class KeyboardControllerModuleImpl(
   private val mReactContext: ReactApplicationContext,
 ) {
+  private val uiManager = mReactContext.uiManager
   private val controller = KeyboardAnimationController()
   private val mDefaultMode: Int = getCurrentMode()
 
@@ -84,7 +86,7 @@ class KeyboardControllerModuleImpl(
     promise: Promise,
   ) {
     UiThreadUtil.runOnUiThread {
-      val view = mReactContext.currentActivity?.findViewById<View>(viewTag.toInt())
+      val view = uiManager?.resolveView(viewTag.toInt())
       if (view == null) {
         promise.reject("E_VIEW_NOT_FOUND", "Could not find view for tag")
         return@runOnUiThread
