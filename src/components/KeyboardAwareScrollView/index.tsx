@@ -16,6 +16,7 @@ import Reanimated, {
   useSharedValue,
 } from "react-native-reanimated";
 
+import { KeyboardControllerNative } from "../../bindings";
 import {
   useFocusedInputHandler,
   useReanimatedFocusedInput,
@@ -150,14 +151,25 @@ const KeyboardAwareScrollView = forwardRef<
       useSharedValue<FocusedInputSelectionChangedEvent | null>(null);
     const ghostViewSpace = useSharedValue(-1);
     const pendingSelectionForFocus = useSharedValue(false);
+    const scrollViewPageY = useSharedValue(0);
 
     const { height } = useWindowDimensions();
 
     const onScrollViewLayout = useCallback(
-      (e: LayoutChangeEvent) => {
-        scrollViewTarget.value = findNodeHandle(scrollViewAnimatedRef.current);
+      async (e: LayoutChangeEvent) => {
+        const handle = findNodeHandle(scrollViewAnimatedRef.current);
+
+        scrollViewTarget.value = handle;
 
         onLayout?.(e);
+
+        if (handle !== null) {
+          const { y } = await KeyboardControllerNative.viewPositionInWindow(
+            handle,
+          );
+
+          scrollViewPageY.value = y;
+        }
       },
       [onLayout],
     );
@@ -205,7 +217,7 @@ const KeyboardAwareScrollView = forwardRef<
           return interpolatedScrollTo;
         }
 
-        if (point < 0) {
+        if (point < scrollViewPageY.value) {
           const positionOnScreen = visibleRect - bottomOffset;
           const topOfScreen = scrollPosition.value + point;
 
