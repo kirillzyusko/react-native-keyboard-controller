@@ -16,6 +16,7 @@ import Reanimated, {
   useSharedValue,
 } from "react-native-reanimated";
 
+import { KeyboardControllerNative } from "../../bindings";
 import {
   useFocusedInputHandler,
   useReanimatedFocusedInput,
@@ -155,15 +156,20 @@ const KeyboardAwareScrollView = forwardRef<
     const { height } = useWindowDimensions();
 
     const onScrollViewLayout = useCallback(
-      (e: LayoutChangeEvent) => {
-        scrollViewTarget.value = findNodeHandle(scrollViewAnimatedRef.current);
+      async (e: LayoutChangeEvent) => {
+        const handle = findNodeHandle(scrollViewAnimatedRef.current);
 
-        // @ts-expect-error something is wrong with the type of `measureInWindow`
-        scrollViewRef.current?.measureInWindow((_x, y) => {
-          scrollViewPageY.value = y;
-        });
+        scrollViewTarget.value = handle;
 
         onLayout?.(e);
+
+        if (handle !== null) {
+          const { y } = await KeyboardControllerNative.viewPositionInWindow(
+            handle,
+          );
+
+          scrollViewPageY.value = y;
+        }
       },
       [onLayout],
     );
