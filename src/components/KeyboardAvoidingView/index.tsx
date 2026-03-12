@@ -127,27 +127,29 @@ const KeyboardAvoidingView = forwardRef<
           // frame to avoid iOS modal keyboard adjustment shrinking the frame.
           // Without automaticOffset, only preserve for "height" behavior
           // (existing behavior for backward compatibility).
-          (!automaticOffset && behavior !== "height")
+          behavior !== "height"
         ) {
           // eslint-disable-next-line react-compiler/react-compiler
           initialFrame.value = layout;
         }
       },
-      [behavior, automaticOffset],
+      [behavior],
     );
     const onLayout = useCallback<NonNullable<ViewProps["onLayout"]>>(
       (e) => {
+        onLayoutProps?.(e);
+
         const layout = e.nativeEvent.layout;
 
         if (automaticOffset) {
-          const node = internalRef.current;
-          const tag = node ? findNodeHandle(node) : null;
+          const tag = findNodeHandle(internalRef.current);
 
           if (tag !== null) {
-            // Use native windowPosition to get true screen-absolute coordinates.
-            // This bypasses Fabric's measureInWindow which returns
-            // surface-relative coordinates inside Modals (RN bug #52450).
-            KeyboardControllerNative.windowPosition(tag)
+            // Use native `viewPositionInWindow` to get true screen-absolute coordinates.
+            // This fixes current RN bugs:
+            // - https://github.com/facebook/react-native/pull/56062
+            // - https://github.com/facebook/react-native/pull/56056
+            return KeyboardControllerNative.viewPositionInWindow(tag)
               .then((position) => {
                 runOnUI(onLayoutWorklet)({
                   ...layout,
@@ -156,25 +158,12 @@ const KeyboardAvoidingView = forwardRef<
                 });
               })
               .catch(() => {
-                // windowPosition failed (e.g. view unmounted or tag not found).
-                // Fall back to measureInWindow which returns correct absolute
-                // coordinates on Paper architecture.
-                if (node) {
-                  node.measureInWindow((x, y) => {
-                    runOnUI(onLayoutWorklet)({ ...layout, x, y });
-                  });
-                } else {
-                  runOnUI(onLayoutWorklet)(layout);
-                }
+                runOnUI(onLayoutWorklet)(layout);
               });
-          } else {
-            runOnUI(onLayoutWorklet)(layout);
           }
-        } else {
-          runOnUI(onLayoutWorklet)(layout);
         }
 
-        onLayoutProps?.(e);
+        runOnUI(onLayoutWorklet)(layout);
       },
       [onLayoutProps, automaticOffset],
     );

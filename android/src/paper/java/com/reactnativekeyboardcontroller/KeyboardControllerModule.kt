@@ -42,11 +42,11 @@ class KeyboardControllerModule(
   }
 
   @ReactMethod
-  fun windowPosition(
+  fun viewPositionInWindow(
     viewTag: Double,
     promise: Promise,
   ) {
-    module.windowPosition(viewTag, promise)
+    module.viewPositionInWindow(viewTag, promise)
   }
 
   @Suppress("detekt:UnusedParameter")

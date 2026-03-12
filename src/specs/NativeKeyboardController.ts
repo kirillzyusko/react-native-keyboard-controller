@@ -11,7 +11,7 @@ export interface Spec extends TurboModule {
   preload(): void;
   dismiss(keepFocus: boolean, animated: boolean): void;
   setFocusTo(direction: string): void;
-  windowPosition(viewTag: number): Promise<object>;
+  viewPositionInWindow(viewTag: number): Promise<object>;
 
   // event emitter
   addListener: (eventName: string) => void;

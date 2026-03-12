@@ -87,6 +87,9 @@ const mock = {
     setFocusTo: jest.fn(),
     isVisible: jest.fn().mockReturnValue(false),
     state: jest.fn().mockReturnValue(lastKeyboardEvent),
+    viewPositionInWindow: jest
+      .fn()
+      .mockReturnValue(Promise.resolve({ x: 0, y: 0, width: 0, height: 0 })),
   },
   AndroidSoftInputModes: {
     SOFT_INPUT_ADJUST_NOTHING: 48,

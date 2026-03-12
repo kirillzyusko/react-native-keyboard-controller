@@ -23,6 +23,9 @@
 #endif
 
 #import <React/RCTEventDispatcherProtocol.h>
+#ifndef RCT_NEW_ARCH_ENABLED
+#import <React/RCTUIManager.h>
+#endif
 
 #ifdef RCT_NEW_ARCH_ENABLED
 @interface KeyboardController () <NativeKeyboardControllerSpec>
@@ -96,52 +99,34 @@ RCT_EXPORT_METHOD(setFocusTo : (nonnull NSString *)direction)
 }
 
 #ifdef RCT_NEW_ARCH_ENABLED
-- (void)windowPosition:(double)viewTag
+- (void)viewPositionInWindow:(double)viewTag
                resolve:(RCTPromiseResolveBlock)resolve
                 reject:(RCTPromiseRejectBlock)reject
 #else
-RCT_EXPORT_METHOD(windowPosition
+RCT_EXPORT_METHOD(viewPositionInWindow
                   : (nonnull NSNumber *)viewTag resolve
                   : (RCTPromiseResolveBlock)resolve reject
                   : (RCTPromiseRejectBlock)reject)
 #endif
 {
   dispatch_async(dispatch_get_main_queue(), ^{
-    NSInteger tag;
+    UIView *view = nil;
 #ifdef RCT_NEW_ARCH_ENABLED
-    tag = (NSInteger)viewTag;
+    NSInteger tag = (NSInteger)viewTag;
+    view = [UIApplication.sharedApplication.activeWindow viewWithTag:tag];
 #else
-    tag = viewTag.integerValue;
+    view = [self.bridge.uiManager viewForReactTag:viewTag];
 #endif
-    UIWindow *window = nil;
-    for (UIScene *scene in UIApplication.sharedApplication.connectedScenes) {
-      if (scene.activationState == UISceneActivationStateForegroundActive &&
-          [scene isKindOfClass:[UIWindowScene class]]) {
-        UIWindowScene *windowScene = (UIWindowScene *)scene;
-        for (UIWindow *w in windowScene.windows) {
-          if (w.isKeyWindow) {
-            window = w;
-            break;
-          }
-        }
-        if (window)
-          break;
-      }
-    }
-    UIView *view = [window viewWithTag:tag];
     if (!view || !view.superview) {
       reject(@"E_VIEW_NOT_FOUND", @"Could not find view for tag", nil);
       return;
     }
-    // Use UIKit coordinate conversion to get true window coordinates.
-    // This bypasses Fabric's shadow tree which returns surface-relative
-    // coordinates for views inside Modals (RN bug #52450).
-    CGRect windowFrame = [view.superview convertRect:view.frame toView:nil];
+    CGRect frame = [view.superview convertRect:view.frame toView:nil];
     resolve(@{
-      @"x" : @(windowFrame.origin.x),
-      @"y" : @(windowFrame.origin.y),
-      @"width" : @(windowFrame.size.width),
-      @"height" : @(windowFrame.size.height),
+      @"x" : @(frame.origin.x),
+      @"y" : @(frame.origin.y),
+      @"width" : @(frame.size.width),
+      @"height" : @(frame.size.height),
     });
   });
 }

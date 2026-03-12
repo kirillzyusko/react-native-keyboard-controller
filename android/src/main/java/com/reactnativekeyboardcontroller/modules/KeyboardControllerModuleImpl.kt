@@ -9,6 +9,8 @@ import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.UiThreadUtil
+import com.reactnativekeyboardcontroller.extensions.dp
+import com.reactnativekeyboardcontroller.extensions.screenLocation
 import com.reactnativekeyboardcontroller.extensions.uiManager
 import com.reactnativekeyboardcontroller.interactive.KeyboardAnimationController
 import com.reactnativekeyboardcontroller.traversal.FocusedInputHolder
@@ -81,7 +83,7 @@ class KeyboardControllerModuleImpl(
     }
   }
 
-  fun windowPosition(
+  fun viewPositionInWindow(
     viewTag: Double,
     promise: Promise,
   ) {
@@ -91,14 +93,12 @@ class KeyboardControllerModuleImpl(
         promise.reject("E_VIEW_NOT_FOUND", "Could not find view for tag")
         return@runOnUiThread
       }
-      val location = IntArray(2)
-      view.getLocationInWindow(location)
-      val density = mReactContext.resources.displayMetrics.density
+      val location = view.screenLocation
       val map = Arguments.createMap()
-      map.putDouble("x", location[0].toDouble() / density)
-      map.putDouble("y", location[1].toDouble() / density)
-      map.putDouble("width", view.width.toDouble() / density)
-      map.putDouble("height", view.height.toDouble() / density)
+      map.putDouble("x", location[0].toFloat().dp)
+      map.putDouble("y", location[1].toFloat().dp)
+      map.putDouble("width", view.width.toFloat().dp)
+      map.putDouble("height", view.height.toFloat().dp)
       promise.resolve(map)
     }
   }

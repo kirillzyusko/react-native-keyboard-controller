@@ -34,11 +34,11 @@ class KeyboardControllerModule(
     module.setFocusTo(direction)
   }
 
-  override fun windowPosition(
+  override fun viewPositionInWindow(
     viewTag: Double,
     promise: Promise,
   ) {
-    module.windowPosition(viewTag, promise)
+    module.viewPositionInWindow(viewTag, promise)
   }
 
   override fun addListener(eventName: String?) {
