@@ -163,7 +163,7 @@ const KeyboardAvoidingView = forwardRef<
           }
         }
 
-        runOnUI(onLayoutWorklet)(layout);
+        return runOnUI(onLayoutWorklet)(layout);
       },
       [onLayoutProps, automaticOffset],
     );
