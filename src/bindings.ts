@@ -87,11 +87,20 @@ export const KeyboardBackgroundView =
 export const RCTKeyboardExtender =
   View as unknown as React.FC<KeyboardExtenderProps>;
 /**
- * A decorator that will clip the content of the `ScrollView`. It helps to simulate `contentInset` behavior on Android.
+ * A decorator that will clip the content of the `ScrollView`. It helps to simulate `contentInset` behavior on Android
  * Supports only `bottom` property (`paddingBottom` is not supported property of `ScrollView.style`).
  * Using this component we can modify bottom inset without having a fake view.
+ *
+ * On iOS we use swizzling to apply runtime patches to fix some broken internal methods.
+ * Ideally this component shouldn't exist and all its fixes/polyfills must be added directly to react-native and
+ * we will port features/fixes back to upstream, but at the moment we use this view to
+ * deliver desired functionality regardless of react-native version used.
  */
 export const ClippingScrollView =
   View as unknown as React.FC<ClippingScrollViewProps>;
+/**
+ * A View that defines a group of `TextInput`s.
+ * Used in toolbar navigation to assure that you can navigate only between inputs withing the same group.
+ */
 export const RCTKeyboardToolbarGroupView =
   View as unknown as React.FC<KeyboardToolbarGroupViewProps>;

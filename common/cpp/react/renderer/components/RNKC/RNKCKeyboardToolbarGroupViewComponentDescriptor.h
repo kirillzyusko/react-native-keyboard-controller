@@ -1,10 +1,3 @@
-//
-//  RNKCKeyboardToolbarGroupViewComponentDescriptor.h
-//  Pods
-//
-//  Created by Kiryl Ziusko on 26/12/2024.
-//
-
 #pragma once
 
 #include "RNKCKeyboardToolbarGroupViewShadowNode.h"
