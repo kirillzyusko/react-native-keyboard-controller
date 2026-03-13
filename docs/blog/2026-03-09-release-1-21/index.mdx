@@ -26,7 +26,12 @@ import ComparisonTable from "@site/src/components/ComparisonTable";
 
 Before diving into what's new, it's worth understanding why keyboard handling in React Native has always been tricky (even with `react-native-keyboard-controller`).
 
-The naive approach to pushing content above the keyboard is to animate a `paddingBottom` (or a fake spacer `View` at the end of a `ScrollView`). It works — mostly — but it comes with a hidden cost: **every frame of the keyboard animation triggers a full layout pass**.
+The naive approach to pushing content above the keyboard is to animate a `paddingBottom` or `height` property to reduce the content size. The easiest way it to wrap the content in a `KeyboardAvoidingView` component. It works — mostly — but it comes with a hidden cost: **every frame of the keyboard animation triggers a full layout pass**.
+
+<div className="playwright">
+  ![keyboard avoiding view visualization - we reduce height of the content when
+  keyboard appears](./keyboard-avoiding-view.png#img-thumbnail)
+</div>
 
 React Native's layout engine has to re-measure and re-position the entire view tree on every frame. For simple screens this is imperceptible, but for complex layouts — multi-line inputs, forms with `flex: 1`, lists with `justifyContent: "space-between"` or `gap` — the consequences are real:
 
@@ -35,7 +40,58 @@ React Native's layout engine has to re-measure and re-position the entire view t
 - **Unexpected spacing**: `gap` and `justifyContent: "space-between"` redistribute space differently when the available height changes — which it does, continuously, during keyboard animation.
 - **Performance**: the layout engine is not free, and running it at 60 (or 120) FPS per frame adds up.
 
-The right mental model: the keyboard should _extend the scrollable area_, not _change the layout_. On iOS this is exactly what `contentInset` does — it pushes the scroll indicator and adjusts scroll boundaries without touching the layout engine at all. It's a native scroll property, it's free, and it's exactly what we want.
+<Video
+  src="/video/kav-laggy.mov"
+  style={{ height: "40vh", marginBottom: 20 }}
+/>
+
+> This video is captured in debug mode and intentionally laggy to show the performance impact of the `KeyboardAvoidingView` component.
+
+So it becomes clear, that we **can not change layout every frame** because it's **very expensive**.
+
+We need to use `translateY` to achieve smooth animation. However using pure `translateY` is impossible, because messages that appear from the top will not be visible - `ScrollView` keeps its size and we just shift it vertically, so the top content will be always hidden:
+
+<div className="playwright">
+  ![when we apply vertical translate only then top messages gets hidden and we
+  can't scroll to it](./translate-only.png#img-thumbnail)
+</div>
+
+A logical approach that comes to mind is to combine two approaches together: during keyboard animation we can apply `translateY` that will run at smooth 120 FPS and resize container only **once** (when keyboard finish animation after appear or before animation start when keyboard disappears).
+
+And this is exactly what `KeyboardAvoidingView` component with `behavior="translate-with-padding"` does:
+
+<div className="playwright">
+  ![we achieve best from both worlds - we have smooth 120 FPS animation because
+  of translateY and content still can be properly scrollable because we resize
+  the view after animation](./translate-with-padding.png#img-thumbnail)
+</div>
+
+While this approach seems to be a fair compromise it still has downsides:
+
+- sometimes we may see blank space when keyboard closes and resize takes some time
+- if we have only single message (that is shown at the top) we still will apply `translateY`, so message will be hidden during animation (because we change its position) and will appear in the end (when resize happens);
+- we can't support conditional content re-positioning (i. e. don't apply `translateY` when we are at the end only).
+
+At this point of time it becomes clear - the main issue stems from the fact that we try to animate external container:
+
+```tsx
+<KeyboardAvoidingView behavior="translate-with-padding">
+  <ScrollView>{/* ... */}</ScrollView>
+</KeyboardAvoidingView>
+```
+
+So in ideal world we would need:
+
+- avoid re-layout and prefer re-flow;
+- be able to conditionally change layout position;
+
+<div className="playwright">
+  ![when we extend scrollable range we can avoid layout resizes and we can
+  change content position with 120FPS, because changing scroll position is a
+  light-weight operation](./content-inset.png#img-thumbnail)
+</div>
+
+So the right mental model: the keyboard should _extend the scrollable area_, not _change the layout_. On iOS this is exactly what `contentInset` does — it pushes the scroll indicator and adjusts scroll boundaries without touching the layout engine at all. It's a native scroll property, it's free, and it's exactly what we want.
 
 Android doesn't have it.
 
