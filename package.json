@@ -194,7 +194,8 @@
         "OverKeyboardView": "OverKeyboardView",
         "KeyboardBackgroundView": "KeyboardBackgroundView",
         "KeyboardExtender": "KeyboardExtender",
-        "ClippingScrollViewDecoratorView": "ClippingScrollViewDecoratorView"
+        "ClippingScrollViewDecoratorView": "ClippingScrollViewDecoratorView",
+        "KeyboardToolbarGroupView": "KeyboardToolbarGroupView"
       }
     }
   },

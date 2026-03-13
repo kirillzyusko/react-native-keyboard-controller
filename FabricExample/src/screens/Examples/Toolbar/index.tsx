@@ -1,3 +1,4 @@
+import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import React, { useCallback, useEffect, useState } from "react";
 import { Modal, Platform, StyleSheet, Text, View } from "react-native";
 import {
@@ -214,6 +215,24 @@ export default function ToolbarExample({ navigation }: Props) {
           <Form />
         </View>
       </Modal>
+      <BottomSheet index={-1}>
+        <BottomSheetView style={styles.bottomSheetContent}>
+          <KeyboardToolbar.Group>
+            <TextInput
+              keyboardType="default"
+              placeholder="Group input 1"
+              testID="TextInput#14"
+              title="Group Input 1"
+            />
+            <TextInput
+              keyboardType="default"
+              placeholder="Group input 2"
+              testID="TextInput#15"
+              title="Group Input 2"
+            />
+          </KeyboardToolbar.Group>
+        </BottomSheetView>
+      </BottomSheet>
     </>
   );
 }
@@ -244,5 +263,8 @@ const styles = StyleSheet.create({
   },
   modal: {
     marginTop: 32,
+  },
+  bottomSheetContent: {
+    flex: 1,
   },
 });
