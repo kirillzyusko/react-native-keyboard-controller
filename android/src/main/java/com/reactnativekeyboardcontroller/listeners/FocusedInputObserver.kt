@@ -120,7 +120,8 @@ class FocusedInputObserver(
         selectionSubscription = newFocus.addOnSelectionChangedListener(selectionListener)
         FocusedInputHolder.set(newFocus)
 
-        val allInputFields = ViewHierarchyNavigator.getAllInputFields(context?.rootView)
+        val groupAncestor = ViewHierarchyNavigator.findGroupAncestor(newFocus)
+        val allInputFields = ViewHierarchyNavigator.getAllInputFields(groupAncestor ?: context?.rootView)
         val currentIndex = allInputFields.indexOf(newFocus)
 
         context.emitEvent(
