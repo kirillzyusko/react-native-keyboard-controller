@@ -75,10 +75,7 @@ const KeyboardChatScrollView = forwardRef<
     });
 
     const totalPadding = useDerivedValue(() =>
-      Math.max(
-        blankSpace.value,
-        padding.value + extraContentPadding.value,
-      ),
+      Math.max(blankSpace.value, padding.value + extraContentPadding.value),
     );
 
     // Scroll indicator inset = keyboard + extraContentPadding (excludes blankSpace).

@@ -121,8 +121,8 @@ export const KeyboardChatLegendList = typedForwardRef(
           <KeyboardChatScrollView
             {...scrollProps}
             applyWorkaroundForContentInsetHitTestBug
-            extraContentPadding={extraContentPadding}
             blankSpace={blankSpace}
+            extraContentPadding={extraContentPadding}
           />
         );
       },
