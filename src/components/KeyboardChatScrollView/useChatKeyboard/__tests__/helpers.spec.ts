@@ -274,20 +274,20 @@ describe("`computeIOSContentOffset` specification", () => {
 });
 
 describe("`getMinimumPaddingAbsorbed` specification", () => {
-  it("should return 0 when minimumContentPadding is 0", () => {
+  it("should return 0 when blankSpace is 0", () => {
     expect(getMinimumPaddingAbsorbed(0, 0)).toBe(0);
     expect(getMinimumPaddingAbsorbed(0, 20)).toBe(0);
   });
 
-  it("should return minimumContentPadding minus extraContentPadding", () => {
+  it("should return blankSpace minus extraContentPadding", () => {
     expect(getMinimumPaddingAbsorbed(500, 20)).toBe(480);
   });
 
-  it("should return full minimumContentPadding when extraContentPadding is 0", () => {
+  it("should return full blankSpace when extraContentPadding is 0", () => {
     expect(getMinimumPaddingAbsorbed(500, 0)).toBe(500);
   });
 
-  it("should return 0 when extraContentPadding exceeds minimumContentPadding", () => {
+  it("should return 0 when extraContentPadding exceeds blankSpace", () => {
     expect(getMinimumPaddingAbsorbed(100, 200)).toBe(0);
   });
 

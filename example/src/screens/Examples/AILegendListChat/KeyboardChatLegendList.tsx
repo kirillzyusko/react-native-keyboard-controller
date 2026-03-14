@@ -44,11 +44,11 @@ export const KeyboardChatLegendList = typedForwardRef(
     const refLegendList = useRef<LegendListRef | null>(null);
     const combinedRef = useCombinedRef(forwardedRef, refLegendList);
 
-    const minimumContentPadding = useSharedValue<number>(0);
+    const blankSpace = useSharedValue<number>(0);
 
     const calculateTopItemInset = useCallback(() => {
       if (anchorToTopIndex === undefined || anchorToTopIndex < 0) {
-        minimumContentPadding.value = 0;
+        blankSpace.value = 0;
         refLegendList.current?.reportContentInset(null);
 
         return;
@@ -79,7 +79,7 @@ export const KeyboardChatLegendList = typedForwardRef(
         state.scrollLength - contentBelowTopItem,
       );
 
-      minimumContentPadding.value = calculatedInset;
+      blankSpace.value = calculatedInset;
       refLegendList.current?.reportContentInset({ bottom: calculatedInset });
     }, [anchorToTopIndex]);
 
@@ -121,12 +121,12 @@ export const KeyboardChatLegendList = typedForwardRef(
           <KeyboardChatScrollView
             {...scrollProps}
             applyWorkaroundForContentInsetHitTestBug
+            blankSpace={blankSpace}
             extraContentPadding={extraContentPadding}
-            minimumContentPadding={minimumContentPadding}
           />
         );
       },
-      [minimumContentPadding, extraContentPadding],
+      [blankSpace, extraContentPadding],
     );
 
     return (

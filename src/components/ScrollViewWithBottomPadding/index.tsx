@@ -31,7 +31,7 @@ type ScrollViewWithBottomPaddingProps = {
   children?: React.ReactNode;
   inverted?: boolean;
   bottomPadding: SharedValue<number>;
-  /** Padding for scroll indicator insets (excludes minimumContentPadding). Falls back to bottomPadding when not provided. */
+  /** Padding for scroll indicator insets (excludes blankSpace). Falls back to bottomPadding when not provided. */
   scrollIndicatorPadding?: SharedValue<number>;
   /** Absolute Y content offset (iOS only, for KeyboardChatScrollView). */
   contentOffsetY?: SharedValue<number>;

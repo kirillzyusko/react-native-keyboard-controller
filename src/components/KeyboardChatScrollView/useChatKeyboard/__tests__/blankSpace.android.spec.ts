@@ -39,13 +39,13 @@ beforeEach(() => {
   setupBeforeEach();
 });
 
-describe("minimumContentPadding — Android non-inverted + always", () => {
-  it("minimumContentPadding=0 produces identical behavior to default", () => {
+describe("blankSpace — Android non-inverted + always", () => {
+  it("blankSpace=0 produces identical behavior to default", () => {
     mockOffset.value = 100;
     render({
       inverted: false,
       keyboardLiftBehavior: "always",
-      minimumContentPadding: sv(0),
+      blankSpace: sv(0),
     });
 
     handlers.onStart({ height: KEYBOARD });
@@ -53,14 +53,14 @@ describe("minimumContentPadding — Android non-inverted + always", () => {
     expect(mockScrollTo).toHaveBeenCalledWith(expect.anything(), 0, 300, false);
   });
 
-  it("full absorption: no scroll movement when minimumContentPadding > keyboard", () => {
+  it("full absorption: no scroll movement when blankSpace > keyboard", () => {
     // Small content so minimum padding fills viewport (pastContentEnd = 0+800-300 = 500, fraction = 1)
     mockSize.value = { width: 390, height: 300 };
     mockOffset.value = 0;
     render({
       inverted: false,
       keyboardLiftBehavior: "always",
-      minimumContentPadding: sv(500),
+      blankSpace: sv(500),
     });
 
     handlers.onStart({ height: KEYBOARD });
@@ -78,7 +78,7 @@ describe("minimumContentPadding — Android non-inverted + always", () => {
     render({
       inverted: false,
       keyboardLiftBehavior: "always",
-      minimumContentPadding: sv(100),
+      blankSpace: sv(100),
     });
 
     handlers.onStart({ height: KEYBOARD });
@@ -91,7 +91,7 @@ describe("minimumContentPadding — Android non-inverted + always", () => {
     expect(mockScrollTo).toHaveBeenCalledWith(expect.anything(), 0, 100, false);
   });
 
-  it("full absorption with extraContentPadding: absorbed = minimumContentPadding - extraContentPadding", () => {
+  it("full absorption with extraContentPadding: absorbed = blankSpace - extraContentPadding", () => {
     // Small content so minimum padding fills viewport (pastContentEnd = 0+800-300 = 500, fraction = 1)
     mockSize.value = { width: 390, height: 300 };
     mockOffset.value = 0;
@@ -100,7 +100,7 @@ describe("minimumContentPadding — Android non-inverted + always", () => {
     render({
       inverted: false,
       keyboardLiftBehavior: "always",
-      minimumContentPadding: sv(500),
+      blankSpace: sv(500),
       extraContentPadding,
     });
 
@@ -112,15 +112,15 @@ describe("minimumContentPadding — Android non-inverted + always", () => {
   });
 });
 
-describe("minimumContentPadding — Android inverted + always", () => {
-  it("full absorption: no scroll movement when minimumContentPadding > keyboard", () => {
+describe("blankSpace — Android inverted + always", () => {
+  it("full absorption: no scroll movement when blankSpace > keyboard", () => {
     // Inverted: minimum padding at top, visible when scroll < 0
     // fraction = -(-500)/500 = 1
     mockOffset.value = -500;
     render({
       inverted: true,
       keyboardLiftBehavior: "always",
-      minimumContentPadding: sv(500),
+      blankSpace: sv(500),
     });
 
     handlers.onStart({ height: KEYBOARD });
@@ -135,7 +135,7 @@ describe("minimumContentPadding — Android inverted + always", () => {
     render({
       inverted: true,
       keyboardLiftBehavior: "always",
-      minimumContentPadding: sv(100),
+      blankSpace: sv(100),
     });
 
     handlers.onStart({ height: KEYBOARD });
@@ -146,13 +146,13 @@ describe("minimumContentPadding — Android inverted + always", () => {
   });
 });
 
-describe("minimumContentPadding — Android never behavior", () => {
+describe("blankSpace — Android never behavior", () => {
   it("full absorption: no scroll on close (non-inverted)", () => {
     mockOffset.value = 100;
     render({
       inverted: false,
       keyboardLiftBehavior: "never",
-      minimumContentPadding: sv(500),
+      blankSpace: sv(500),
     });
 
     // Open keyboard
@@ -173,7 +173,7 @@ describe("minimumContentPadding — Android never behavior", () => {
     render({
       inverted: true,
       keyboardLiftBehavior: "never",
-      minimumContentPadding: sv(500),
+      blankSpace: sv(500),
     });
 
     handlers.onStart({ height: KEYBOARD });
@@ -187,7 +187,7 @@ describe("minimumContentPadding — Android never behavior", () => {
   });
 });
 
-describe("minimumContentPadding — Android whenAtEnd behavior", () => {
+describe("blankSpace — Android whenAtEnd behavior", () => {
   it("full absorption prevents scroll even when at end", () => {
     // Small content so minimum padding fills viewport (pastContentEnd = 0+800-300 = 500, fraction = 1)
     // Position at end: 0 + 800 >= 300 - 20
@@ -196,7 +196,7 @@ describe("minimumContentPadding — Android whenAtEnd behavior", () => {
     render({
       inverted: false,
       keyboardLiftBehavior: "whenAtEnd",
-      minimumContentPadding: sv(500),
+      blankSpace: sv(500),
     });
 
     handlers.onStart({ height: KEYBOARD });

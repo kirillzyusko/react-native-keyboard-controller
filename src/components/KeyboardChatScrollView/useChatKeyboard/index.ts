@@ -39,7 +39,7 @@ function useChatKeyboard(
     keyboardLiftBehavior,
     freeze,
     offset,
-    minimumContentPadding,
+    blankSpace,
     extraContentPadding,
   } = options;
 
@@ -113,13 +113,13 @@ function useChatKeyboard(
           scroll.value,
           layout.value.height,
           size.value.height,
-          minimumContentPadding.value,
+          blankSpace.value,
           inverted,
         );
         const minimumPaddingAbsorbed =
           visibleFraction >= 1
             ? getMinimumPaddingAbsorbed(
-                minimumContentPadding.value,
+                blankSpace.value,
                 extraContentPadding.value,
               )
             : 0;
@@ -143,10 +143,10 @@ function useChatKeyboard(
             // Sentinel: don't scroll in onMove (non-inverted only)
             offsetBeforeScroll.value = -1;
           } else if (!inverted && scrollEffective === 0) {
-            // minimumContentPadding fully absorbs the keyboard — prevent scroll
+            // blankSpace fully absorbs the keyboard — prevent scroll
             offsetBeforeScroll.value = -1;
           } else if (inverted && scrollEffective === 0) {
-            // minimumContentPadding fully absorbs the keyboard — guard for inverted
+            // blankSpace fully absorbs the keyboard — guard for inverted
             offsetBeforeScroll.value = scroll.value;
           }
         } else {
@@ -186,7 +186,7 @@ function useChatKeyboard(
 
           const minimumPaddingAbsorbed =
             getMinimumPaddingAbsorbed(
-              minimumContentPadding.value,
+              blankSpace.value,
               extraContentPadding.value,
             ) * minimumPaddingFractionOnOpen.value;
           const scrollEffective = getScrollEffective(
@@ -194,7 +194,7 @@ function useChatKeyboard(
             minimumPaddingAbsorbed,
           );
           const actualTotalPadding = Math.max(
-            minimumContentPadding.value,
+            blankSpace.value,
             effective + extraContentPadding.value,
           );
 
@@ -233,7 +233,7 @@ function useChatKeyboard(
             return;
           }
 
-          // When minimumContentPadding fully absorbs the keyboard, skip scroll
+          // When blankSpace fully absorbs the keyboard, skip scroll
           if (scrollEffective === 0 && minimumPaddingAbsorbed > 0) {
             return;
           }
@@ -271,7 +271,7 @@ function useChatKeyboard(
 
           const minimumPaddingAbsorbed =
             getMinimumPaddingAbsorbed(
-              minimumContentPadding.value,
+              blankSpace.value,
               extraContentPadding.value,
             ) * minimumPaddingFractionOnOpen.value;
           const scrollEffective = getScrollEffective(
@@ -279,7 +279,7 @@ function useChatKeyboard(
             minimumPaddingAbsorbed,
           );
           const actualTotalPadding = Math.max(
-            minimumContentPadding.value,
+            blankSpace.value,
             effective + extraContentPadding.value,
           );
 
@@ -298,7 +298,7 @@ function useChatKeyboard(
             return;
           }
 
-          // "whenAtEnd" sentinel check (also used for minimumContentPadding full absorption)
+          // "whenAtEnd" sentinel check (also used for blankSpace full absorption)
           if (offsetBeforeScroll.value === -1) {
             if (closing.value) {
               // Keyboard didn't shift on open; ensure valid position on close
