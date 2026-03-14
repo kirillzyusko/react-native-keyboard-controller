@@ -118,6 +118,11 @@ With this cross-platform `contentInset` primitive in place, we can now build scr
 
 ## `KeyboardChatScrollView`
 
+<Video
+  src="/video/keyboard-chat-scroll-view/always.mov"
+  style={{ height: "40vh", marginBottom: 20 }}
+/>
+
 Chat UIs have unique keyboard requirements that go well beyond "push content up when keyboard appears":
 
 - Content should lift when the keyboard opens, but only sometimes (not while the user is scrolling through history)
@@ -150,21 +155,22 @@ That's it for the common case. Interactive keyboard dismissal, content lifting, 
 
 ### Virtualized lists
 
-Pass any animated `ScrollView`-compatible component via `ScrollViewComponent`:
+Wrap `KeyboardChatScrollView` in a scroll component and pass it to your virtualized list via `renderScrollComponent`:
 
 ```tsx
-import Animated from "react-native-reanimated";
 import { FlashList } from "@shopify/flash-list";
+import { KeyboardChatScrollView } from "react-native-keyboard-controller";
 
-const AnimatedFlashList = Animated.createAnimatedComponent(FlashList);
+const renderScrollComponent = (props) => <KeyboardChatScrollView {...props} />;
 
-<KeyboardChatScrollView
-  inverted
-  ScrollViewComponent={AnimatedFlashList}
-  estimatedItemSize={80}
->
-  {/* FlashList items */}
-</KeyboardChatScrollView>;
+return (
+  <FlashList
+    data={messages}
+    renderItem={({ item }) => <Message message={item} />}
+    estimatedItemSize={80}
+    renderScrollComponent={renderScrollComponent}
+  />
+);
 ```
 
 ### Controlling when content lifts
@@ -231,9 +237,11 @@ function onResponseGrow(responseHeight: number) {
   blankSpace.value = Math.max(0, screenHeight * 0.7 - responseHeight);
 }
 
-<KeyboardChatScrollView blankSpace={blankSpace}>
-  {/* messages */}
-</KeyboardChatScrollView>;
+return (
+  <KeyboardChatScrollView blankSpace={blankSpace}>
+    {/* messages */}
+  </KeyboardChatScrollView>
+);
 ```
 
 The effective bottom padding is computed as `max(blankSpace, keyboardHeight + extraContentPadding)`. This means:
@@ -250,9 +258,11 @@ When the keyboard dismisses to reveal a custom panel (emoji picker, file picker)
 ```tsx
 const [pickerOpen, setPickerOpen] = useState(false);
 
-<KeyboardChatScrollView freeze={pickerOpen}>
-  {/* messages */}
-</KeyboardChatScrollView>;
+return (
+  <KeyboardChatScrollView freeze={pickerOpen}>
+    {/* messages */}
+  </KeyboardChatScrollView>
+);
 ```
 
 ### Offset for non-bottom-attached inputs
@@ -271,8 +281,8 @@ The same `contentInset` foundation that powers `KeyboardChatScrollView` also bro
 
 Previously, the component added a hidden `View` at the bottom of the `ScrollView`'s content to create extra scroll space when the keyboard appeared. This worked, but it was the source of a long list of reported issues — exactly the kind of layout-related problems described at the beginning of this post:
 
-- Layouts using `flex: 1` would visually shift during keyboard animation ([#794](https://github.com/kirillzyusko/react-native-keyboard-controller/issues/794), [#645](https://github.com/kirillzyusko/react-native-keyboard-controller/issues/645))
-- `gap` and `justifyContent: "space-between"` produced unexpected results ([#168](https://github.com/kirillzyusko/react-native-keyboard-controller/issues/168))
+- Layouts using `flex: 1` would visually shift during keyboard animation ([#168](https://github.com/kirillzyusko/react-native-keyboard-controller/issues/168))
+- `gap` and `justifyContent: "space-between"` produced unexpected results ([#645](https://github.com/kirillzyusko/react-native-keyboard-controller/issues/645))
 
 Starting from `1.21.0`, `KeyboardAwareScrollView` uses `contentInset` on iOS and `ClippingScrollView` on Android under the hood. No hidden children. No layout modifications. The scrollable area expands to accommodate the keyboard, and everything outside that area stays exactly where it is.
 
