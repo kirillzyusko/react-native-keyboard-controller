@@ -113,38 +113,38 @@ This uses Objective-C runtime method swizzling on the ScrollView's container vie
 This prop uses runtime method swizzling, which can be fragile and may conflict with other libraries or future React Native versions. Use with caution and thoroughly test your app when enabling this workaround.
 :::
 
-### `minimumContentPadding`
+### `blankSpace`
 
 A [Reanimated `SharedValue<number>`](https://docs.swmansion.com/react-native-reanimated/docs/core/useSharedValue/) representing a minimum inset floor for the bottom padding.
 
 When set, the total bottom padding is computed as:
 
 ```js
-max(minimumContentPadding, keyboardPadding + extraContentPadding);
+max(blankSpace, keyboardPadding + extraContentPadding);
 ```
 
 This means the keyboard "absorbs" into the minimum padding rather than adding to it:
 
-#### When `minimumContentPadding >= keyboard + extraContentPadding`
+#### When `blankSpace >= keyboard + extraContentPadding`
 
 Content does **not** move when the keyboard opens or closes — the minimum padding is large enough to absorb the keyboard height.
 
 <Video
-  src="/video/keyboard-chat-scroll-view/minimumContentPaddingGreaterThan.mp4"
+  src="/video/keyboard-chat-scroll-view/blankSpaceGreaterThan.mp4"
   style={{ height: "40vh" }}
 />
 
-#### When `minimumContentPadding < keyboard + extraContentPadding`
+#### When `blankSpace < keyboard + extraContentPadding`
 
 Content moves, but only by the **excess amount** beyond the minimum floor.
 
 <Video
-  src="/video/keyboard-chat-scroll-view/minimumContentPaddingLessThan.mp4"
+  src="/video/keyboard-chat-scroll-view/blankSpaceLessThan.mp4"
   style={{ height: "40vh" }}
 />
 
 :::tip When to use it?
-Use `minimumContentPadding` in AI chat applications where a sent message needs space below it to push it to the top of the viewport while the AI response streams in. The minimum padding ensures this space remains available without causing additional movement when the keyboard opens.
+Use `blankSpace` in AI chat applications where a sent message needs space below it to push it to the top of the viewport while the AI response streams in. The minimum padding ensures this space remains available without causing additional movement when the keyboard opens.
 :::
 
 :::note
@@ -152,7 +152,7 @@ The value must be a `SharedValue` (from `useSharedValue`) — not a plain number
 :::
 
 :::warning iOS contentInset hit-test bug
-On **iOS with React Native 0.81+**, the `contentInset` area created by `minimumContentPadding` may not respond to touch/scroll gestures due to [facebook/react-native#54123](https://github.com/facebook/react-native/issues/54123).
+On **iOS with React Native 0.81+**, the `contentInset` area created by `blankSpace` may not respond to touch/scroll gestures due to [facebook/react-native#54123](https://github.com/facebook/react-native/issues/54123).
 
 To fix this, you must either:
 

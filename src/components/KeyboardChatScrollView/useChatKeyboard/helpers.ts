@@ -113,12 +113,12 @@ export const shouldShiftContent = (
  * @param scrollOffset - Current vertical scroll offset.
  * @param layoutHeight - Visible height of the scroll view.
  * @param contentHeight - Height of the scroll content (excludes insets).
- * @param minimumContentPadding - Size of the minimum padding inset area.
+ * @param blankSpace - Size of the minimum padding inset area.
  * @param inverted - Whether the list is inverted.
  * @returns A value between 0 (padding fully off-screen) and 1 (padding fully visible).
  * @example
  * ```ts
- * // Non-inverted: contentHeight=1500, layout=800, minimumContentPadding=300
+ * // Non-inverted: contentHeight=1500, layout=800, blankSpace=300
  * getVisibleMinimumPaddingFraction(1500, 800, 1500, 300, false); // 1   (at end, viewport past content)
  * getVisibleMinimumPaddingFraction(850, 800, 1500, 300, false);  // 0.5 (half padding visible)
  * getVisibleMinimumPaddingFraction(700, 800, 1500, 300, false);  // 0   (padding off-screen)
@@ -128,32 +128,32 @@ export const getVisibleMinimumPaddingFraction = (
   scrollOffset: number,
   layoutHeight: number,
   contentHeight: number,
-  minimumContentPadding: number,
+  blankSpace: number,
   inverted: boolean,
 ): number => {
   "worklet";
 
-  if (minimumContentPadding <= 0) {
+  if (blankSpace <= 0) {
     return 0;
   }
 
   if (inverted) {
     // Minimum padding is in contentInset.top; visible when scroll < 0
-    return Math.max(0, Math.min(1, -scrollOffset / minimumContentPadding));
+    return Math.max(0, Math.min(1, -scrollOffset / blankSpace));
   }
 
   // Minimum padding is in contentInset.bottom; visible when viewport extends past content
   const pastContentEnd = scrollOffset + layoutHeight - contentHeight;
 
-  return Math.max(0, Math.min(1, pastContentEnd / minimumContentPadding));
+  return Math.max(0, Math.min(1, pastContentEnd / blankSpace));
 };
 
 /**
  * Compute how much of the minimum content padding absorbs the keyboard + extraContentPadding.
  *
- * @param minimumContentPadding - Minimum inset floor.
+ * @param blankSpace - Minimum inset floor.
  * @param extraContentPadding - Extra content padding from external elements.
- * @returns The portion of minimumContentPadding that absorbs keyboard displacement.
+ * @returns The portion of blankSpace that absorbs keyboard displacement.
  * @example
  * ```ts
  * getMinimumPaddingAbsorbed(500, 20); // 480
@@ -161,12 +161,12 @@ export const getVisibleMinimumPaddingFraction = (
  * ```
  */
 export const getMinimumPaddingAbsorbed = (
-  minimumContentPadding: number,
+  blankSpace: number,
   extraContentPadding: number,
 ): number => {
   "worklet";
 
-  return Math.max(0, minimumContentPadding - extraContentPadding);
+  return Math.max(0, blankSpace - extraContentPadding);
 };
 
 /**

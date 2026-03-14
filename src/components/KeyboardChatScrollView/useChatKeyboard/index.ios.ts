@@ -41,7 +41,7 @@ function useChatKeyboard(
     keyboardLiftBehavior,
     freeze,
     offset,
-    minimumContentPadding,
+    blankSpace,
     extraContentPadding,
   } = options;
 
@@ -92,10 +92,10 @@ function useChatKeyboard(
           scroll.value,
           layout.value.height,
           size.value.height,
-          minimumContentPadding.value,
+          blankSpace.value,
           inverted,
         );
-        const visiblePadding = visibleFraction * minimumContentPadding.value;
+        const visiblePadding = visibleFraction * blankSpace.value;
         const minimumPaddingAbsorbed = Math.max(
           0,
           visiblePadding - extraContentPadding.value,
@@ -105,7 +105,7 @@ function useChatKeyboard(
           minimumPaddingAbsorbed,
         );
         const actualTotalPadding = Math.max(
-          minimumContentPadding.value,
+          blankSpace.value,
           effective + extraContentPadding.value,
         );
 
@@ -200,7 +200,7 @@ function useChatKeyboard(
           return;
         }
 
-        // When minimumContentPadding fully absorbs the keyboard opening, preserve current scroll position
+        // When blankSpace fully absorbs the keyboard opening, preserve current scroll position
         // (only when keyboard is open — effective > 0 — not when closing)
         if (
           scrollEffective === 0 &&

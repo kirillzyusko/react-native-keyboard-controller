@@ -24,9 +24,9 @@ jest.mock("react-native-reanimated", () => ({
 
 type RenderOptions = Omit<
   Parameters<typeof useExtraContentPadding>[0],
-  "scrollViewRef" | "minimumContentPadding"
+  "scrollViewRef" | "blankSpace"
 > & {
-  minimumContentPadding?: SharedValue<number>;
+  blankSpace?: SharedValue<number>;
 };
 
 export const createRender = () => {
@@ -41,7 +41,7 @@ export const createRender = () => {
 
       mod.useExtraContentPadding({
         scrollViewRef: ref,
-        minimumContentPadding: options.minimumContentPadding ?? sv(0),
+        blankSpace: options.blankSpace ?? sv(0),
         ...options,
       });
     });

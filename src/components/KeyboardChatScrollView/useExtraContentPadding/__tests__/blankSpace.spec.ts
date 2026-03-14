@@ -5,14 +5,14 @@ import {
   reactionEffect,
 } from "../__fixtures__/setup";
 
-describe("useExtraContentPadding — minimumContentPadding floor", () => {
-  it("should skip scroll when minimumContentPadding fully absorbs the change", () => {
+describe("useExtraContentPadding — blankSpace floor", () => {
+  it("should skip scroll when blankSpace fully absorbs the change", () => {
     const render = createRender();
 
     render({
       extraContentPadding: sv(20),
       keyboardPadding: sv(0),
-      minimumContentPadding: sv(500),
+      blankSpace: sv(500),
       scroll: sv(100),
       layout: sv({ width: 390, height: 800 }),
       size: sv({ width: 390, height: 2000 }),
@@ -29,13 +29,13 @@ describe("useExtraContentPadding — minimumContentPadding floor", () => {
     expect(mockScrollTo).not.toHaveBeenCalled();
   });
 
-  it("should scroll by effective delta when minimumContentPadding partially absorbs", () => {
+  it("should scroll by effective delta when blankSpace partially absorbs", () => {
     const render = createRender();
 
     render({
       extraContentPadding: sv(300),
       keyboardPadding: sv(200),
-      minimumContentPadding: sv(400),
+      blankSpace: sv(400),
       scroll: sv(100),
       layout: sv({ width: 390, height: 800 }),
       size: sv({ width: 390, height: 2000 }),
@@ -54,13 +54,13 @@ describe("useExtraContentPadding — minimumContentPadding floor", () => {
     expect(mockScrollTo).toHaveBeenCalledWith(expect.anything(), 0, 200, false);
   });
 
-  it("minimumContentPadding=0 produces identical behavior to default", () => {
+  it("blankSpace=0 produces identical behavior to default", () => {
     const render = createRender();
 
     render({
       extraContentPadding: sv(20),
       keyboardPadding: sv(300),
-      minimumContentPadding: sv(0),
+      blankSpace: sv(0),
       scroll: sv(1200),
       layout: sv({ width: 390, height: 800 }),
       size: sv({ width: 390, height: 2000 }),
@@ -90,7 +90,7 @@ describe("useExtraContentPadding — minimumContentPadding floor", () => {
     render({
       extraContentPadding: sv(20),
       keyboardPadding: sv(300),
-      minimumContentPadding: sv(400),
+      blankSpace: sv(400),
       scroll: sv(5),
       layout: sv({ width: 390, height: 800 }),
       size: sv({ width: 390, height: 2000 }),
@@ -101,19 +101,19 @@ describe("useExtraContentPadding — minimumContentPadding floor", () => {
 
     // previousTotal = max(400, 300+0) = 400
     // currentTotal = max(400, 300+20) = 400
-    // effectiveDelta = 0 → skip (minimumContentPadding floor absorbs)
+    // effectiveDelta = 0 → skip (blankSpace floor absorbs)
     reactionEffect(20, 0);
 
     expect(mockScrollTo).not.toHaveBeenCalled();
   });
 
-  it("should scroll when change exceeds minimumContentPadding floor (inverted)", () => {
+  it("should scroll when change exceeds blankSpace floor (inverted)", () => {
     const render = createRender();
 
     render({
       extraContentPadding: sv(200),
       keyboardPadding: sv(300),
-      minimumContentPadding: sv(400),
+      blankSpace: sv(400),
       scroll: sv(5),
       layout: sv({ width: 390, height: 800 }),
       size: sv({ width: 390, height: 2000 }),

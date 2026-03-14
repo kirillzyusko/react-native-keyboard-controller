@@ -12,7 +12,7 @@ type UseExtraContentPaddingOptions = {
   /** Keyboard-only padding from useChatKeyboard — used to compute total padding for clamping. */
   keyboardPadding: SharedValue<number>;
   /** Minimum inset floor — used to absorb keyboard and extraContentPadding changes. */
-  minimumContentPadding: SharedValue<number>;
+  blankSpace: SharedValue<number>;
   /** Current vertical scroll offset. */
   scroll: SharedValue<number>;
   /** Visible viewport dimensions. */
@@ -43,7 +43,7 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
     scrollViewRef,
     extraContentPadding,
     keyboardPadding,
-    minimumContentPadding,
+    blankSpace,
     scroll,
     layout,
     size,
@@ -65,19 +65,19 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
         return;
       }
 
-      // Compute effective delta considering minimumContentPadding floor
+      // Compute effective delta considering blankSpace floor
       const previousTotal = Math.max(
-        minimumContentPadding.value,
+        blankSpace.value,
         keyboardPadding.value + previous,
       );
       const currentTotal = Math.max(
-        minimumContentPadding.value,
+        blankSpace.value,
         keyboardPadding.value + current,
       );
       const effectiveDelta = currentTotal - previousTotal;
 
       if (effectiveDelta === 0) {
-        // minimumContentPadding absorbed the change
+        // blankSpace absorbed the change
         return;
       }
 
