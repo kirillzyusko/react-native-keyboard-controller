@@ -210,6 +210,39 @@ function ChatScreen() {
 }
 ```
 
+### Reserving space with `minimumContentPadding`
+
+AI chat apps have a unique layout pattern: after the user sends a message, the app typically pushes that message to the top of the viewport and reserves empty space below it — space where the AI response will stream in. This is done by adding a large bottom inset to the scroll view.
+
+The challenge is what happens when the keyboard opens or closes while that reserved space exists. Without special handling, the keyboard height would _add_ to the reserved space, causing the content to jump further than expected.
+
+`minimumContentPadding` solves this by defining a **minimum inset floor**. The keyboard "absorbs" into it rather than stacking on top:
+
+```tsx
+const minimumContentPadding = useSharedValue(0);
+
+// After the user sends a message, reserve space for the AI response
+function onMessageSent() {
+  minimumContentPadding.value = screenHeight * 0.7;
+}
+
+// As the AI response streams in and fills the space, shrink the reservation
+function onResponseGrow(responseHeight: number) {
+  minimumContentPadding.value = Math.max(0, screenHeight * 0.7 - responseHeight);
+}
+
+<KeyboardChatScrollView minimumContentPadding={minimumContentPadding}>
+  {/* messages */}
+</KeyboardChatScrollView>
+```
+
+The effective bottom padding is computed as `max(minimumContentPadding, keyboardHeight + extraContentPadding)`. This means:
+
+- If the reserved space is **larger** than the keyboard — content doesn't move at all when the keyboard opens. The keyboard simply occupies space that was already padded.
+- If the reserved space is **smaller** than the keyboard — content moves only by the excess amount, not the full keyboard height.
+
+The result is a seamless experience: the user can open and close the keyboard while an AI response is streaming, and the chat doesn't jump around.
+
 ### Freezing layout during emoji/attachment pickers
 
 When the keyboard dismisses to reveal a custom panel (emoji picker, file picker), you want to freeze the scroll layout so the content doesn't jump:
