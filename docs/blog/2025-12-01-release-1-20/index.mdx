@@ -12,7 +12,7 @@ Curious about what’s new? Let’s dive in!
 
 <!-- truncate -->
 
-import Head from "@docusaurus/Head";
+import ExpoSnack from "@site/src/components/ExpoSnack";
 
 ## Expo Snack support
 
@@ -22,24 +22,7 @@ With version `1.20.0`, that limitation is finally gone. The library now works se
 
 Below is an embedded Snack that includes the code I used for my [AppJS Conf](https://appjs.co) demo this year:
 
-<div
-  data-snack-id="@kirylziusko/chat-keyboard-avoiding-view"
-  data-snack-platform="ios"
-  data-snack-preview="true"
-  data-snack-theme="light"
-  style={{
-    overflow: "hidden",
-    background: "#fbfcfd",
-    border: "1px solid var(--color-border)",
-    borderRadius: 4,
-    height: 505,
-    width: "100%",
-  }}
-></div>
-
-<Head>
-  <script src="https://snack.expo.dev/embed.js" async />
-</Head>
+<ExpoSnack id="@kirylziusko/chat-keyboard-avoiding-view" />
 
 <br />
 
