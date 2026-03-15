@@ -63,4 +63,4 @@ This handler can be handy when you need to have an access to input on a global l
 
 <!-- -->
 
-[](/react-native-keyboard-controller/video/selection-demo.mov)
+[](/react-native-keyboard-controller/video/selection-demo.mp4)
