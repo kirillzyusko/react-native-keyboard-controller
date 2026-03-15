@@ -39,8 +39,10 @@ React Native's layout engine has to re-measure and re-position the entire view t
 - **Performance**: the layout engine is not free, and running it at 60 (or 120) FPS per frame adds up.
 
 <Video
-  src="/video/kav-choppy.mov"
+  src="/video/kav-choppy.mp4"
   style={{ height: "40vh", marginBottom: 20 }}
+  autoPlay={false}
+  playsInline={true}
 />
 
 > This video is captured in debug mode and intentionally choppy to show the performance impact of the `KeyboardAvoidingView` component.
@@ -119,7 +121,7 @@ With this cross-platform `contentInset` primitive in place, we can now build scr
 ## `KeyboardChatScrollView`
 
 <Video
-  src="/video/keyboard-chat-scroll-view/always.mov"
+  src="/video/keyboard-chat-scroll-view/always.mp4"
   style={{ height: "40vh", marginBottom: 20 }}
 />
 
