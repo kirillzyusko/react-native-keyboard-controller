@@ -2,6 +2,10 @@
 
 This guide provides a concise overview of the main UI components in `react-native-keyboard-controller`. Choose the right component to handle keyboard interactions smoothly and consistently across platforms.
 
+Building a chat app?
+
+If you are building a chat application, check out the dedicated [guide](/react-native-keyboard-controller/docs/guides/building-chat-app.md) guide that explores pitfalls of building chat app layout and shows how to solve them using `KeyboardChatScrollView` component.
+
 ## [`KeyboardAvoidingView`](/react-native-keyboard-controller/docs/api/components/keyboard-avoiding-view.md)[​](/react-native-keyboard-controller/docs/guides/components-overview.md#keyboardavoidingview "Direct link to keyboardavoidingview")
 
 <!-- -->
@@ -12,7 +16,7 @@ This guide provides a concise overview of the main UI components in `react-nativ
 
 Use `KeyboardAvoidingView` when you need to prevent the keyboard from hiding important UI elements, especially `TextInput` components. It automatically adjusts its layout—by changing its height, position, or padding—when the keyboard appears. A key advantage over the standard React Native component is its focus on *consistent behavior and smoother animations* across both iOS and Android, simplifying cross-platform development. It's ideal for general screens like forms or chat interfaces.
 
-You can control how it adjusts using the `behavior` prop (`padding`, `height`, `position`, `translate-with-padding`), and remember to set `keyboardVerticalOffset` if your view is positioned below a header or navigation bar.
+You can control how it adjusts using the `behavior` prop (`padding`, `height`, `position`, `translate-with-padding`). Use `keyboardVerticalOffset` to account for navigation headers, or enable `automaticOffset` to have headers and modals handled automatically.
 
 ## [`KeyboardStickyView`](/react-native-keyboard-controller/docs/api/components/keyboard-sticky-view.md)[​](/react-native-keyboard-controller/docs/guides/components-overview.md#keyboardstickyview "Direct link to keyboardstickyview")
 

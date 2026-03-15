@@ -15,7 +15,8 @@ Control each frame of keyboard movement in react native
 #### api
 
 - [KeyboardAvoidingView](/docs/api/components/keyboard-avoiding-view.md): This component will automatically adjust its height, position, or bottom padding based on the keyboard height to remain visible while the virtual keyboard is displayed.
-- [KeyboardAwareScrollView](/docs/api/components/keyboard-aware-scroll-view.md): <Lottie
+- [KeyboardAwareScrollView](/docs/api/components/keyboard-aware-scroll-view.md): ScrollView that effortlessly handles keyboard appearance, automatically scrolls to focused TextInput and provides a native-like performance
+- [KeyboardChatScrollView](/docs/api/components/keyboard-chat-scroll-view.md): KeyboardChatScrollView is a purpose-built component for chat application layouts. It handles keyboard appearance, interactive dismissal, and content repositioning with smooth 60/120 FPS animations — all the keyboard behaviors that chat apps need, but general-purpose components _struggle_ to deliver.
 - [KeyboardStickyView](/docs/api/components/keyboard-sticky-view.md): A KeyboardStickyView component seamlessly ensures that a designated view sticks to the keyboard's movements, maintaining visibility and interaction. Often referred to as a keyboard accessory or keyboard accessory view, it helps you enhance the user experience by preventing important UI elements from being obscured by the keyboard, creating a smooth and user-friendly interface in your React Native application.
 - [KeyboardToolbar](/docs/api/components/keyboard-toolbar.md): KeyboardToolbar is a view that sticky to the keyboard and has next and previous buttons for switching between inputs as well as Done button for closing the keyboard.
 - [useFocusedInputHandler](/docs/api/hooks/input/use-focused-input-handler.md): useFocusedInputHandler is a hook that allows to intercept events from a focused TextInput.
@@ -51,6 +52,7 @@ Frequently asked questions and answers on them
 
 #### guides
 
+- [Building a chat app](/docs/guides/building-chat-app.md): A guide that explores the challenges of building chat app layouts and shows how to solve them using the KeyboardChatScrollView component
 - [Building own hook](/docs/guides/building-own-hook.md): Default hooks may not perfectly fit in your app, because it changes/restores softInputMode on mount/unmount of the component where it's used.
 - [Compatibility](/docs/guides/compatibility.md): Compatibility of library with different react-native versions and architectures
 - [Components Overview](/docs/guides/components-overview.md): Overview and comparison of view and components available in this package

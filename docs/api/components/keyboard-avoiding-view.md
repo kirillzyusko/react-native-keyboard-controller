@@ -124,6 +124,10 @@ A boolean prop indicating whether `KeyboardAvoidingView` is enabled or disabled.
 
 This is the distance between the top of the user screen and the react native view. This is particularly useful when there are fixed headers, navigation bars, or other UI elements at the top of the screen. Default is `0`.
 
+By default the view uses parent-relative coordinates from `onLayout`, so you typically need to set this to the height of your navigation header (e.g., pass `useHeaderHeight()` from `@react-navigation/elements`).
+
+If you enable [`automaticOffset`](/react-native-keyboard-controller/docs/api/components/keyboard-avoiding-view.md#automaticoffset), the view automatically detects its position on screen, and `keyboardVerticalOffset` becomes purely **additive** extra space — you no longer need to compensate for navigation headers or modals.
+
 <!-- -->
 
 When to use `keyboardVerticalOffset`?
@@ -152,7 +156,7 @@ const MyScreen = () => {
 
 * **Custom Toolbars or Fixed Elements at the Top** - If your app has a fixed toolbar, status bar, or other UI elements at the top, you should offset accordingly.
 
-* **Modal Screens with Different Layouts** - When using `KeyboardAvoidingView` inside a `Modal`, you may need to manually define the vertical offset to account for the modal’s positioning.
+* **Modal Screens with Different Layouts** - When using `KeyboardAvoidingView` inside a `Modal`, you may need to manually define the vertical offset to account for the modal's positioning. Alternatively, consider using [`automaticOffset`](/react-native-keyboard-controller/docs/api/components/keyboard-avoiding-view.md#automaticoffset) which handles modals automatically.
 
 Below shown a visual representation of `keyboardVerticalOffset`:
 
@@ -160,11 +164,17 @@ Handling `StatusBar` height on Android with `useHeaderHeight`
 
 On `Android`, how you handle the `StatusBar` height depends on whether the `StatusBar` is **translucent** or **not**:
 
-* **If the `StatusBar` is translucent**, `react-navigation` **automatically includes the `StatusBar` height** in `useHeaderHeight()`, along with safe-area padding. This behavior aligns with iOS, so you don’t need to manually add the `StatusBar` height.
+* **If the `StatusBar` is translucent**, `react-navigation` **automatically includes the `StatusBar` height** in `useHeaderHeight()`, along with safe-area padding. This behavior aligns with iOS, so you don't need to manually add the `StatusBar` height.
 * **If the StatusBar is not translucent**, `useHeaderHeight()` does **not** include the `StatusBar` height. In this case, you need to add it manually:
 
 ```
 const headerHeight = useHeaderHeight() + (StatusBar.currentHeight ?? 0);
 ```
 
-Since `StatusBar.currentHeight` is an **Android-only** property, using `?? 0` ensures it doesn’t cause issues on iOS. This approach avoids the need for `Platform.OS` or `Platform.select` checks.
+Since `StatusBar.currentHeight` is an **Android-only** property, using `?? 0` ensures it doesn't cause issues on iOS. This approach avoids the need for `Platform.OS` or `Platform.select` checks.
+
+### `automaticOffset`[​](/react-native-keyboard-controller/docs/api/components/keyboard-avoiding-view.md#automaticoffset "Direct link to automaticoffset")
+
+When `true`, the view automatically detects its position on screen, accounting for navigation headers, modals, and other layout offsets. This means `keyboardVerticalOffset` becomes purely additive extra space rather than compensation for unknown positioning.
+
+Default is `false`.
