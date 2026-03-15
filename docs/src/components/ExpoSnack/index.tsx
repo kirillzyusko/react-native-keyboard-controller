@@ -28,6 +28,7 @@ export default function ExpoSnack({
 
     if (!existing) {
       const script = document.createElement("script");
+
       script.src = EMBED_SCRIPT_SRC;
       script.async = true;
       document.head.appendChild(script);
