@@ -26,7 +26,7 @@ keyboard appears" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAxQAAAJECAM
 <li><strong>Unexpected spacing</strong>: <code>gap</code> and <code>justifyContent: "space-between"</code> redistribute space differently when the available height changes — which it does, continuously, during keyboard animation.</li>
 <li><strong>Performance</strong>: the layout engine is not free, and running it at 60 (or 120) FPS per frame adds up.</li>
 </ul>
-<div class="center video"><video loop="" muted="" playsinline="" height="100%" src="/react-native-keyboard-controller/pr-preview/pr-1360/video/kav-choppy.mp4" width="100%" style="height:40vh;margin-bottom:20px"></video></div>
+<div class="center video"><video autoplay="" loop="" muted="" playsinline="" height="100%" src="/react-native-keyboard-controller/pr-preview/pr-1360/video/kav-choppy.mp4" width="100%" style="height:40vh;margin-bottom:20px"></video></div>
 <blockquote>
 <p>This video is captured in debug mode and intentionally choppy to show the performance impact of the <code>KeyboardAvoidingView</code> component.</p>
 </blockquote>
