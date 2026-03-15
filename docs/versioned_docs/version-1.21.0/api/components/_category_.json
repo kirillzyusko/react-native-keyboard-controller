@@ -1,0 +1,8 @@
+{
+  "label": "📚 Components",
+  "position": 2,
+  "link": {
+    "type": "generated-index",
+    "description": "A set of JS components that simplify keyboard management and user interaction handling"
+  }
+}
