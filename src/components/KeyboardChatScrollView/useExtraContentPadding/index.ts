@@ -19,6 +19,8 @@ type UseExtraContentPaddingOptions = {
   layout: SharedValue<{ width: number; height: number }>;
   /** Total content dimensions. */
   size: SharedValue<{ width: number; height: number }>;
+  /** IOS only — when provided, sets contentOffset atomically with contentInset. */
+  contentOffsetY?: SharedValue<number>;
   inverted: boolean;
   keyboardLiftBehavior: KeyboardLiftBehavior;
   freeze: boolean;
@@ -47,6 +49,7 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
     scroll,
     layout,
     size,
+    contentOffsetY,
     inverted,
     keyboardLiftBehavior,
     freeze,
@@ -104,7 +107,12 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
       if (inverted) {
         const target = Math.max(scroll.value - effectiveDelta, -currentTotal);
 
-        scrollTo(scrollViewRef, 0, target, false);
+        if (contentOffsetY) {
+          // eslint-disable-next-line react-compiler/react-compiler
+          contentOffsetY.value = target;
+        } else {
+          scrollTo(scrollViewRef, 0, target, false);
+        }
       } else {
         const maxScroll = Math.max(
           size.value.height - layout.value.height + currentTotal,
@@ -112,7 +120,11 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
         );
         const target = Math.min(scroll.value + effectiveDelta, maxScroll);
 
-        scrollTo(scrollViewRef, 0, target, false);
+        if (contentOffsetY) {
+          contentOffsetY.value = target;
+        } else {
+          scrollTo(scrollViewRef, 0, target, false);
+        }
       }
     },
     [inverted, keyboardLiftBehavior, freeze],
