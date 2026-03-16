@@ -194,3 +194,7 @@ Since `StatusBar.currentHeight` is an **Android-only** property, using `?? 0` en
 When `true`, the view automatically detects its position on screen, accounting for navigation headers, modals, and other layout offsets. This means `keyboardVerticalOffset` becomes purely additive extra space rather than compensation for unknown positioning.
 
 Default is `false`.
+
+## Known issues
+
+- [react-native-reanimated#9111](https://github.com/software-mansion/react-native-reanimated/issues/9111): Modifying React state before keyboard events causes missing animations on iOS (new arch only).
