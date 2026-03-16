@@ -10,6 +10,8 @@ import type Reanimated from "react-native-reanimated";
 export const mockScrollTo = jest.fn();
 export let reactionEffect: (current: number, previous: number | null) => void;
 
+export const flushRAF = () => new Promise((resolve) => setTimeout(resolve, 0));
+
 jest.mock("react-native-reanimated", () => ({
   ...require("react-native-reanimated/mock"),
   scrollTo: (...args: unknown[]) => mockScrollTo(...args),

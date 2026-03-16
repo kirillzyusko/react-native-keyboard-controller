@@ -1,6 +1,7 @@
 import { sv } from "../../../../__fixtures__/sv";
 import {
   createRender,
+  flushRAF,
   mockScrollTo,
   reactionEffect,
 } from "../__fixtures__/setup";
@@ -118,7 +119,7 @@ describe("useExtraContentPadding — contentOffsetY (iOS atomic path)", () => {
     expect(mockScrollTo).not.toHaveBeenCalled();
   });
 
-  it("should fall back to scrollTo when contentOffsetY is undefined", () => {
+  it("should fall back to scrollTo when contentOffsetY is undefined", async () => {
     const render = createRender();
 
     render({
@@ -134,6 +135,7 @@ describe("useExtraContentPadding — contentOffsetY (iOS atomic path)", () => {
     });
 
     reactionEffect(20, 0);
+    await flushRAF();
 
     expect(mockScrollTo).toHaveBeenCalledWith(expect.anything(), 0, 120, false);
   });

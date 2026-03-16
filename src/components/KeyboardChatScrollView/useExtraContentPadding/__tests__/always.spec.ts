@@ -1,12 +1,13 @@
 import { sv } from "../../../../__fixtures__/sv";
 import {
   createRender,
+  flushRAF,
   mockScrollTo,
   reactionEffect,
 } from "../__fixtures__/setup";
 
 describe("useExtraContentPadding — always behavior", () => {
-  it("should scrollTo on grow when at end (non-inverted)", () => {
+  it("should scrollTo on grow when at end (non-inverted)", async () => {
     const render = createRender();
 
     render({
@@ -21,6 +22,7 @@ describe("useExtraContentPadding — always behavior", () => {
     });
 
     reactionEffect(20, 0);
+    await flushRAF();
 
     expect(mockScrollTo).toHaveBeenCalledWith(
       expect.anything(),
@@ -30,7 +32,7 @@ describe("useExtraContentPadding — always behavior", () => {
     );
   });
 
-  it("should scrollTo on grow when NOT at end (non-inverted)", () => {
+  it("should scrollTo on grow when NOT at end (non-inverted)", async () => {
     const render = createRender();
 
     render({
@@ -45,11 +47,12 @@ describe("useExtraContentPadding — always behavior", () => {
     });
 
     reactionEffect(20, 0);
+    await flushRAF();
 
     expect(mockScrollTo).toHaveBeenCalledWith(expect.anything(), 0, 120, false);
   });
 
-  it("should scrollTo on shrink (non-inverted)", () => {
+  it("should scrollTo on shrink (non-inverted)", async () => {
     const render = createRender();
 
     render({
@@ -64,6 +67,7 @@ describe("useExtraContentPadding — always behavior", () => {
     });
 
     reactionEffect(0, 20);
+    await flushRAF();
 
     expect(mockScrollTo).toHaveBeenCalledWith(
       expect.anything(),
@@ -73,7 +77,7 @@ describe("useExtraContentPadding — always behavior", () => {
     );
   });
 
-  it("should scrollTo on grow (inverted)", () => {
+  it("should scrollTo on grow (inverted)", async () => {
     const render = createRender();
 
     render({
@@ -88,6 +92,7 @@ describe("useExtraContentPadding — always behavior", () => {
     });
 
     reactionEffect(20, 0);
+    await flushRAF();
 
     expect(mockScrollTo).toHaveBeenCalledWith(expect.anything(), 0, -15, false);
   });

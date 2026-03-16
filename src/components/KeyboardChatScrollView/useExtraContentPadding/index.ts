@@ -111,7 +111,11 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
           // eslint-disable-next-line react-compiler/react-compiler
           contentOffsetY.value = target;
         } else {
-          scrollTo(scrollViewRef, 0, target, false);
+          // Defer scrollTo so the animatedProps inset commit lands first;
+          // otherwise the native ScrollView clamps to the old range.
+          requestAnimationFrame(() => {
+            scrollTo(scrollViewRef, 0, target, false);
+          });
         }
       } else {
         const maxScroll = Math.max(
@@ -123,7 +127,9 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
         if (contentOffsetY) {
           contentOffsetY.value = target;
         } else {
-          scrollTo(scrollViewRef, 0, target, false);
+          requestAnimationFrame(() => {
+            scrollTo(scrollViewRef, 0, target, false);
+          });
         }
       }
     },

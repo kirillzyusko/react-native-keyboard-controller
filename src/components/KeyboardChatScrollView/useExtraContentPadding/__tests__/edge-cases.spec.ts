@@ -1,6 +1,7 @@
 import { sv } from "../../../../__fixtures__/sv";
 import {
   createRender,
+  flushRAF,
   mockScrollTo,
   reactionEffect,
 } from "../__fixtures__/setup";
@@ -63,7 +64,7 @@ describe("useExtraContentPadding — edge cases", () => {
     expect(mockScrollTo).not.toHaveBeenCalled();
   });
 
-  it("should clamp to maxScroll (non-inverted)", () => {
+  it("should clamp to maxScroll (non-inverted)", async () => {
     const render = createRender();
 
     render({
@@ -79,6 +80,7 @@ describe("useExtraContentPadding — edge cases", () => {
 
     // delta = 50, scroll + delta = 1540, maxScroll = 2000 - 800 + 300 + 50 = 1550
     reactionEffect(50, 0);
+    await flushRAF();
 
     expect(mockScrollTo).toHaveBeenCalledWith(
       expect.anything(),
@@ -88,7 +90,7 @@ describe("useExtraContentPadding — edge cases", () => {
     );
   });
 
-  it("should clamp to -totalPadding (inverted)", () => {
+  it("should clamp to -totalPadding (inverted)", async () => {
     const render = createRender();
 
     render({
@@ -104,6 +106,7 @@ describe("useExtraContentPadding — edge cases", () => {
 
     // delta = 50, target = -280 - 50 = -330, clamp to -350
     reactionEffect(50, 0);
+    await flushRAF();
 
     expect(mockScrollTo).toHaveBeenCalledWith(
       expect.anything(),
