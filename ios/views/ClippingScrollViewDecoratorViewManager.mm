@@ -221,7 +221,7 @@ RCT_EXPORT_VIEW_PROPERTY(applyWorkaroundForContentInsetHitTestBug, BOOL)
   }
 }
 
-#ifdef RCT_NEW_ARCH_ENABLE
+#ifdef RCT_NEW_ARCH_ENABLED
 Class<RCTComponentViewProtocol> ClippingScrollViewDecoratorViewCls(void)
 {
   return ClippingScrollViewDecoratorView.class;
