@@ -4,9 +4,15 @@ on:
   push:
     branches:
       - main
+    paths:
+      - "**.mov"
+      - ".github/workflows/check-mov-files.yml"
   pull_request:
     branches:
       - main
+    paths:
+      - "**.mov"
+      - ".github/workflows/check-mov-files.yml"
 
 jobs:
   check-mov:
