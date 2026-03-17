@@ -298,6 +298,7 @@ If you don't enable this flag you'll see de-synchronized keyboard animation on A
 On iOS (New Architecture only), updating React state right before a keyboard event can cause animations to be skipped entirely. This happens because a React commit can block Reanimated from applying its animated updates in the same frame.
 
 Common triggers include:
+
 - updating state in the `onFocus` callback of a `TextInput`;
 - updating state in response to the `keyboardWillShow` event;
 - using `KeyboardToolbar` or other components that trigger a state update before the keyboard appears.
