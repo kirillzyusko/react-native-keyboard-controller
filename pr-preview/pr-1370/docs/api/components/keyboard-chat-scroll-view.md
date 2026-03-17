@@ -249,9 +249,7 @@ On Android we adjust the scroll position inside the [`onMove`](/react-native-key
 
 ## Troubleshooting[​](/react-native-keyboard-controller/pr-preview/pr-1370/docs/api/components/keyboard-chat-scroll-view.md#troubleshooting "Direct link to Troubleshooting")
 
-### Reanimated feature flags (new arch only)[​](/react-native-keyboard-controller/pr-preview/pr-1370/docs/api/components/keyboard-chat-scroll-view.md#reanimated-feature-flags-new-arch-only "Direct link to Reanimated feature flags (new arch only)")
-
-#### De-synchronized Android animation[​](/react-native-keyboard-controller/pr-preview/pr-1370/docs/api/components/keyboard-chat-scroll-view.md#de-synchronized-android-animation "Direct link to De-synchronized Android animation")
+### De-synchronized Android animation (new arch only)[​](/react-native-keyboard-controller/pr-preview/pr-1370/docs/api/components/keyboard-chat-scroll-view.md#de-synchronized-android-animation-new-arch-only "Direct link to De-synchronized Android animation (new arch only)")
 
 `KeyboardChatScrollView` relies on a Reanimated commit hook internally. If you're using **Reanimated < 4.3.0**, you need to enable the [`USE_COMMIT_HOOK_ONLY_FOR_REACT_COMMITS`](https://docs.swmansion.com/react-native-reanimated/docs/guides/feature-flags/#use_commit_hook_only_for_react_commits) feature flag in your `package.json`:
 
@@ -275,7 +273,7 @@ What it affects?
 
 If you don't enable this flag you'll see de-synchronized keyboard animation on Android/Fabric architecture.
 
-#### Missing animations on iOS[​](/react-native-keyboard-controller/pr-preview/pr-1370/docs/api/components/keyboard-chat-scroll-view.md#missing-animations-on-ios "Direct link to Missing animations on iOS")
+### Missing animations on iOS (new arch only)[​](/react-native-keyboard-controller/pr-preview/pr-1370/docs/api/components/keyboard-chat-scroll-view.md#missing-animations-on-ios-new-arch-only "Direct link to Missing animations on iOS (new arch only)")
 
 On iOS (New Architecture only), updating React state right before a keyboard event can cause animations to be skipped entirely. This happens because a React commit can block Reanimated from applying its animated updates in the same frame.
 
