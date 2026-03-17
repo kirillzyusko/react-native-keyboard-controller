@@ -197,6 +197,75 @@ const onKeyboardPress = () => {
 
 When `freeze` is `true`, all keyboard-driven layout changes (padding, content offset, scroll position) are paused.
 
+### Reserving blank space for AI streaming responses
+
+In AI chat apps (like ChatGPT or Claude), after the user sends a message, the AI response streams in token by token. Without special handling, the user's sent message stays at the bottom of the viewport and the streaming response grows underneath the keyboard — invisible until the user scrolls.
+
+The `blankSpace` prop solves this. It sets a **minimum bottom inset** on the scroll view, creating empty space below the last message. This pushes the user's sent message toward the top of the screen, leaving room for the AI response to stream in visibly. The total bottom padding is computed as:
+
+```
+max(blankSpace, keyboardPadding + extraContentPadding)
+```
+
+This means the keyboard **absorbs into** the blank space rather than adding to it — so opening the keyboard doesn't cause an extra jump when `blankSpace` is already larger than the keyboard height.
+
+#### Basic usage
+
+Pass a `SharedValue<number>` that you update whenever the conversation state changes:
+
+```tsx
+import { useSharedValue } from "react-native-reanimated";
+
+function ChatScreen() {
+  const blankSpace = useSharedValue(0);
+
+  const onSend = useCallback(() => {
+    // After sending, reserve space so the sent message
+    // is pushed to the top while the AI response streams in
+    blankSpace.value = scrollViewHeight;
+  }, [scrollViewHeight]);
+
+  const onResponseComplete = useCallback(() => {
+    // Once the AI response is complete and fills the screen,
+    // the blank space is no longer needed
+    blankSpace.value = 0;
+  }, []);
+
+  return (
+    <KeyboardChatScrollView blankSpace={blankSpace}>
+      {/* ...messages... */}
+    </KeyboardChatScrollView>
+  );
+}
+```
+
+#### Calculating the right value
+
+The value of `blankSpace` should be the amount of empty space needed below your content. In practice, this is the difference between the scrollable area and the content that sits below the "anchor" message (the last user message). A typical pattern with an inverted virtualized list looks like:
+
+```tsx
+const blankSpace = useSharedValue(0);
+
+// Recalculate whenever content size or the anchor point changes
+const updateBlankSpace = useCallback(() => {
+  // Sum the heights of messages from the anchor point to the end
+  let contentBelowAnchor = 0;
+
+  for (let i = anchorIndex; i < messages.length; i++) {
+    contentBelowAnchor += getMessageHeight(i);
+  }
+
+  // Reserve the remaining space as blank
+  blankSpace.value = Math.max(0, scrollableHeight - contentBelowAnchor);
+}, [anchorIndex, messages.length]);
+```
+
+As the AI response streams in and grows taller, `contentBelowAnchor` increases and `blankSpace` naturally shrinks toward `0`.
+
+:::warning iOS contentInset hit-test bug
+On **iOS with React Native 0.81+**, the `contentInset` area created by `blankSpace` may not respond to touch/scroll gestures. To fix this, set `applyWorkaroundForContentInsetHitTestBug={true}` on `KeyboardChatScrollView`, or apply the upstream React Native patch. See the [API reference](../api/components/keyboard-chat-scroll-view#blankspace) for details.
+:::
+
 ### Handling a growing multiline input
 
 If your composer has a `multiline` `TextInput` that grows as the user types, you need to tell `KeyboardChatScrollView` about the extra space it takes up — otherwise the component doesn't know the scrollable range has changed and the bottom messages can get clipped under the input.
