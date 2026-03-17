@@ -267,7 +267,7 @@ On Android we adjust the scroll position inside the [`onMove`](../hooks/keyboard
 
 ## Troubleshooting
 
-### Reanimated feature flag
+### De-synchronized Android animation (new arch only)
 
 `KeyboardChatScrollView` relies on a Reanimated commit hook internally. If you're using **Reanimated < 4.3.0**, you need to enable the [`USE_COMMIT_HOOK_ONLY_FOR_REACT_COMMITS`](https://docs.swmansion.com/react-native-reanimated/docs/guides/feature-flags/#use_commit_hook_only_for_react_commits) feature flag in your `package.json`:
 
@@ -289,4 +289,20 @@ If you're on **Reanimated 4.3.0+**, this flag is enabled by default — no extra
 
 :::info What it affects?
 If you don't enable this flag you'll see de-synchronized keyboard animation on Android/Fabric architecture.
+:::
+
+### Missing animations on iOS (new arch only)
+
+On iOS (New Architecture only), updating React state right before a keyboard event can cause animations to be skipped entirely. This happens because a React commit can block Reanimated from applying its animated updates in the same frame.
+
+Common triggers include:
+
+- updating state in the `onFocus` callback of a `TextInput`;
+- updating state in response to the `keyboardWillShow` event;
+- using `KeyboardToolbar` or other components that trigger a state update before the keyboard appears.
+
+To fix this, enable the [DISABLE_COMMIT_PAUSING_MECHANISM](https://docs.swmansion.com/react-native-reanimated/docs/guides/feature-flags/#disable_commit_pausing_mechanism) feature flag. See the link for detailed setup instructions.
+
+:::info Do I need to enable this flag?
+This issue can occur even if the state update comes from a different screen (e.g. a parent navigator). To check, open the React Profiler and look for any React commits that happen just before the keyboard event — if you see one, you likely need this flag.
 :::
