@@ -178,3 +178,21 @@ Since `StatusBar.currentHeight` is an **Android-only** property, using `?? 0` en
 When `true`, the view automatically detects its position on screen, accounting for navigation headers, modals, and other layout offsets. This means `keyboardVerticalOffset` becomes purely additive extra space rather than compensation for unknown positioning.
 
 Default is `false`.
+
+## Troubleshooting[​](/react-native-keyboard-controller/docs/api/components/keyboard-avoiding-view.md#troubleshooting "Direct link to Troubleshooting")
+
+### Missing iOS animation with `translate-with-padding` behavior[​](/react-native-keyboard-controller/docs/api/components/keyboard-avoiding-view.md#missing-ios-animation-with-translate-with-padding-behavior "Direct link to missing-ios-animation-with-translate-with-padding-behavior")
+
+On iOS, updating React state right before a keyboard event can cause animations to be skipped entirely. This happens because a React commit can block Reanimated from applying its animated updates in the same frame.
+
+Common triggers include:
+
+* updating state in the `onFocus` callback of a `TextInput`;
+* updating state in response to the `keyboardWillShow` event;
+* using `KeyboardToolbar` or other components that trigger a state update before the keyboard appears.
+
+To fix this, enable the [DISABLE\_COMMIT\_PAUSING\_MECHANISM](https://docs.swmansion.com/react-native-reanimated/docs/guides/feature-flags/#disable_commit_pausing_mechanism) feature flag. See the link for detailed setup instructions.
+
+Do I need to enable this flag?
+
+This issue can occur even if the state update comes from a different screen (e.g. a parent navigator). To check, open the React Profiler and look for any React commits that happen just before the keyboard event — if you see one, you likely need this flag.
