@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { scrollTo, useAnimatedReaction } from "react-native-reanimated";
 
 import { isScrollAtEnd, shouldShiftContent } from "../useChatKeyboard/helpers";
@@ -55,6 +56,24 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
     freeze,
   } = options;
 
+  const scrollToTarget = useCallback(
+    (target: number) => {
+      "worklet";
+
+      if (contentOffsetY) {
+        // eslint-disable-next-line react-compiler/react-compiler
+        contentOffsetY.value = target;
+      } else {
+        // Defer scrollTo so the animatedProps inset commit lands first;
+        // otherwise the native ScrollView clamps to the old range.
+        requestAnimationFrame(() => {
+          scrollTo(scrollViewRef, 0, target, false);
+        });
+      }
+    },
+    [scrollViewRef, contentOffsetY],
+  );
+
   useAnimatedReaction(
     () => extraContentPadding.value,
     (current, previous) => {
@@ -107,16 +126,7 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
       if (inverted) {
         const target = Math.max(scroll.value - effectiveDelta, -currentTotal);
 
-        if (contentOffsetY) {
-          // eslint-disable-next-line react-compiler/react-compiler
-          contentOffsetY.value = target;
-        } else {
-          // Defer scrollTo so the animatedProps inset commit lands first;
-          // otherwise the native ScrollView clamps to the old range.
-          requestAnimationFrame(() => {
-            scrollTo(scrollViewRef, 0, target, false);
-          });
-        }
+        scrollToTarget(target);
       } else {
         const maxScroll = Math.max(
           size.value.height - layout.value.height + currentTotal,
@@ -124,13 +134,7 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
         );
         const target = Math.min(scroll.value + effectiveDelta, maxScroll);
 
-        if (contentOffsetY) {
-          contentOffsetY.value = target;
-        } else {
-          requestAnimationFrame(() => {
-            scrollTo(scrollViewRef, 0, target, false);
-          });
-        }
+        scrollToTarget(target);
       }
     },
     [inverted, keyboardLiftBehavior, freeze],
