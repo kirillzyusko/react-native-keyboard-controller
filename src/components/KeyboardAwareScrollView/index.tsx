@@ -164,11 +164,15 @@ const KeyboardAwareScrollView = forwardRef<
         onLayout?.(e);
 
         if (handle !== null) {
-          const { y } = await KeyboardControllerNative.viewPositionInWindow(
-            handle,
-          );
+          try {
+            const { y } = await KeyboardControllerNative.viewPositionInWindow(
+              handle,
+            );
 
-          scrollViewPageY.value = y;
+            scrollViewPageY.value = y;
+          } catch {
+            // ignore
+          }
         }
       },
       [onLayout],
