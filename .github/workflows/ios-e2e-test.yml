@@ -138,6 +138,25 @@ jobs:
       - uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: ${{ matrix.devices.xcode }}
+      - name: Cleanup runner
+        run: |
+          echo "Disk before cleanup:"
+          df -h
+
+          # Remove unavailable simulators
+          xcrun simctl delete unavailable || true
+
+          # Clean DerivedData
+          rm -rf ~/Library/Developer/Xcode/DerivedData || true
+
+          # Clean simulator caches
+          rm -rf ~/Library/Developer/CoreSimulator/Caches || true
+
+          # Optional but powerful (frees a lot)
+          rm -rf ~/Library/Caches/* || true
+
+          echo "Disk after cleanup:"
+          df -h
       - name: Get Xcode version
         run: xcodebuild -version
       # needed for additional runtime installation
