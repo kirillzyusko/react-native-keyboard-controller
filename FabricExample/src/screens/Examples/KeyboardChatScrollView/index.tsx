@@ -47,8 +47,7 @@ function KeyboardChatScrollViewPlayground() {
   const flashRef = useRef<FlashListRef<MessageProps>>(null);
   const flatRef = useRef<FlatList<MessageProps>>(null);
   const scrollRef = useRef<VirtualizedListScrollViewRef>(null);
-  const textInputRef = useRef<TextInput>(null);
-  const textRef = useRef("");
+  const [text, setText] = useState("");
   const [inputHeight, setInputHeight] = useState(TEXT_INPUT_HEIGHT);
   const extraContentPadding = useSharedValue(0);
   const { inverted, messages, reversedMessages, addMessage, mode } =
@@ -70,20 +69,19 @@ function KeyboardChatScrollViewPlayground() {
     },
     [extraContentPadding],
   );
-  const onInput = useCallback((text: string) => {
-    textRef.current = text;
+  const onInput = useCallback((value: string) => {
+    setText(value);
   }, []);
   const onSend = useCallback(() => {
-    const message = textRef.current.trim();
+    const message = text.trim();
 
     if (message === "") {
       return;
     }
 
     addMessage({ text: message, sender: true });
-    textInputRef.current?.clear();
-    textRef.current = "";
-  }, [addMessage]);
+    setText("");
+  }, [addMessage, text]);
 
   useEffect(() => {
     legendRef.current?.scrollToOffset({
@@ -177,11 +175,11 @@ function KeyboardChatScrollViewPlayground() {
             />
           </View>
           <TextInput
-            ref={textInputRef}
             multiline
             nativeID="chat-input"
             style={styles.input}
             testID="chat.input"
+            value={text}
             onChangeText={onInput}
             onLayout={onInputLayoutChanged}
           />
