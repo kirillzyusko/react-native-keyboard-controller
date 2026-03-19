@@ -48,3 +48,24 @@ export const createRender = () => {
 beforeEach(() => {
   mockScrollTo.mockClear();
 });
+
+/**
+ * Temporarily removes `nativeFabricUIManager` from global to simulate legacy
+ * (bridge) architecture for the duration of the provided callback.
+ *
+ * @param fn - Callback to run under legacy arch conditions.
+ */
+export function withLegacyArch(fn: () => void) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const original = (global as any).nativeFabricUIManager;
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (global as any).nativeFabricUIManager = undefined;
+
+  try {
+    fn();
+  } finally {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (global as any).nativeFabricUIManager = original;
+  }
+}

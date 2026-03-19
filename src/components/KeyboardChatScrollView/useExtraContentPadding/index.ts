@@ -1,4 +1,5 @@
 import { useCallback } from "react";
+import { Platform } from "react-native";
 import { scrollTo, useAnimatedReaction } from "react-native-reanimated";
 
 import { isScrollAtEnd, shouldShiftContent } from "../useChatKeyboard/helpers";
@@ -56,22 +57,27 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
     freeze,
   } = options;
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const isNewArch = !!(global as any).nativeFabricUIManager;
+
   const scrollToTarget = useCallback(
     (target: number) => {
       "worklet";
 
-      if (contentOffsetY) {
+      if (contentOffsetY && isNewArch) {
         // eslint-disable-next-line react-compiler/react-compiler
         contentOffsetY.value = target;
-      } else {
+      } else if (Platform.OS === "android") {
         // Defer scrollTo so the animatedProps inset commit lands first;
         // otherwise the native ScrollView clamps to the old range.
         requestAnimationFrame(() => {
           scrollTo(scrollViewRef, 0, target, false);
         });
+      } else {
+        scrollTo(scrollViewRef, 0, target, false);
       }
     },
-    [scrollViewRef, contentOffsetY],
+    [scrollViewRef, contentOffsetY, isNewArch],
   );
 
   useAnimatedReaction(

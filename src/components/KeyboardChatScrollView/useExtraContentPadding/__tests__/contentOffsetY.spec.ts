@@ -4,6 +4,7 @@ import {
   flushRAF,
   mockScrollTo,
   reactionEffect,
+  withLegacyArch,
 } from "../__fixtures__/setup";
 
 describe("useExtraContentPadding — contentOffsetY (iOS atomic path)", () => {
@@ -138,5 +139,55 @@ describe("useExtraContentPadding — contentOffsetY (iOS atomic path)", () => {
     await flushRAF();
 
     expect(mockScrollTo).toHaveBeenCalledWith(expect.anything(), 0, 120, false);
+  });
+});
+
+describe("useExtraContentPadding — iOS legacy arch (scrollTo path)", () => {
+  it("should use scrollTo directly when on legacy arch even if contentOffsetY is provided (non-inverted)", () => {
+    const render = createRender();
+    const contentOffsetY = sv(100);
+
+    withLegacyArch(() => {
+      render({
+        extraContentPadding: sv(20),
+        keyboardPadding: sv(300),
+        scroll: sv(100),
+        layout: sv({ width: 390, height: 800 }),
+        size: sv({ width: 390, height: 2000 }),
+        contentOffsetY,
+        inverted: false,
+        keyboardLiftBehavior: "always",
+        freeze: false,
+      });
+    });
+
+    reactionEffect(20, 0);
+
+    expect(contentOffsetY.value).toBe(100);
+    expect(mockScrollTo).toHaveBeenCalledWith(expect.anything(), 0, 120, false);
+  });
+
+  it("should use scrollTo directly when on legacy arch even if contentOffsetY is provided (inverted)", () => {
+    const render = createRender();
+    const contentOffsetY = sv(5);
+
+    withLegacyArch(() => {
+      render({
+        extraContentPadding: sv(20),
+        keyboardPadding: sv(300),
+        scroll: sv(5),
+        layout: sv({ width: 390, height: 800 }),
+        size: sv({ width: 390, height: 2000 }),
+        contentOffsetY,
+        inverted: true,
+        keyboardLiftBehavior: "always",
+        freeze: false,
+      });
+    });
+
+    reactionEffect(20, 0);
+
+    expect(contentOffsetY.value).toBe(5);
+    expect(mockScrollTo).toHaveBeenCalledWith(expect.anything(), 0, -15, false);
   });
 });
