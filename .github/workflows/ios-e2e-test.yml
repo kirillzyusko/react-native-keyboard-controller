@@ -138,24 +138,24 @@ jobs:
       - uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: ${{ matrix.devices.xcode }}
-      - name: Cleanup runner
+      - name: Fix CoreSimulator (macos-26 safe)
         run: |
-          echo "Disk before cleanup:"
+          echo "Before:"
           df -h
 
-          # Remove unavailable simulators
-          xcrun simctl delete unavailable || true
+          # Kill simulator services
+          sudo killall -9 com.apple.CoreSimulator.CoreSimulatorService || true
 
-          # Clean DerivedData
+          # Unmount all runtime volumes
+          mount | grep CoreSimulator | awk '{print $1}' | while read disk; do
+            sudo diskutil unmount force "$disk" || true
+          done
+
+          # Clean everything
+          rm -rf ~/Library/Developer/CoreSimulator || true
           rm -rf ~/Library/Developer/Xcode/DerivedData || true
 
-          # Clean simulator caches
-          rm -rf ~/Library/Developer/CoreSimulator/Caches || true
-
-          # Optional but powerful (frees a lot)
-          rm -rf ~/Library/Caches/* || true
-
-          echo "Disk after cleanup:"
+          echo "After cleanup:"
           df -h
       - name: Get Xcode version
         run: xcodebuild -version
