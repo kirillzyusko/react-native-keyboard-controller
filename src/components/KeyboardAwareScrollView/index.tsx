@@ -416,6 +416,7 @@ const KeyboardAwareScrollView = forwardRef<
             keyboardWillChangeSize ||
             focusWasChanged
           ) {
+            syncKeyboardFrame(e);
             // persist scroll value
             scrollPosition.value = position.value;
             // just persist height - later will be used in interpolation
@@ -463,8 +464,6 @@ const KeyboardAwareScrollView = forwardRef<
         },
         onMove: (e) => {
           "worklet";
-
-          syncKeyboardFrame(e);
 
           if (removeGhostPadding(e.height)) {
             return;
