@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import { Platform } from "react-native";
 import { scrollTo, useAnimatedReaction } from "react-native-reanimated";
 
+import { IS_FABRIC } from "../../../architecture";
 import { isScrollAtEnd, shouldShiftContent } from "../useChatKeyboard/helpers";
 
 import type { KeyboardLiftBehavior } from "../useChatKeyboard/types";
@@ -57,14 +58,11 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
     freeze,
   } = options;
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const isNewArch = !!(global as any).nativeFabricUIManager;
-
   const scrollToTarget = useCallback(
     (target: number) => {
       "worklet";
 
-      if (contentOffsetY && isNewArch) {
+      if (contentOffsetY && IS_FABRIC) {
         // eslint-disable-next-line react-compiler/react-compiler
         contentOffsetY.value = target;
       } else if (Platform.OS === "android") {
@@ -77,7 +75,7 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
         scrollTo(scrollViewRef, 0, target, false);
       }
     },
-    [scrollViewRef, contentOffsetY, isNewArch],
+    [scrollViewRef, contentOffsetY],
   );
 
   useAnimatedReaction(
