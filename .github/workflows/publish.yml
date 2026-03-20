@@ -1,0 +1,22 @@
+name: 🌐 Publish Package to npmjs
+
+on:
+  release:
+    types: [created]
+  workflow_dispatch:
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      # Setup .npmrc file to publish to npm
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24.x"
+          registry-url: "https://registry.npmjs.org"
+          cache: yarn
+      - run: yarn install --frozen-lockfile
+      - run: npm publish --provenance

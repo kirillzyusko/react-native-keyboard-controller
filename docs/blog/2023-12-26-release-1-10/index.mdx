@@ -1,0 +1,94 @@
+---
+slug: release-1-10
+title: New release features, a year overview
+authors: [kirill]
+tags:
+  [
+    react-native,
+    keyboard,
+    focused text input,
+    keyboard aware scroll view,
+    dismiss,
+  ]
+keywords:
+  [
+    react-native-keyboard-controller,
+    keyboard,
+    focused text input,
+    onChangeText,
+    changed text,
+    dismiss,
+    keyboard aware scroll view,
+  ]
+---
+
+I'm thrilled to announce the latest release, version `1.10.0`, of `react-native-keyboard-controller`! Packed with new functionalities and improvements, this update aims to enhance your React Native development experience.
+
+import Lottie from "lottie-react";
+import lottie from "../../src/components/HomepageFeatures/text-inputs.lottie.json";
+
+<div style={{ display: "flex", justifyContent: "center", marginBottom: 20 }}>
+  <Lottie
+    className="lottie"
+    animationData={lottie}
+    style={{ width: 400, height: 400 }}
+    loop
+  />
+</div>
+
+<!-- truncate -->
+
+## Key features
+
+### `useFocusedInputHandler` hook
+
+Introducing the `useFocusedInputHandler` hook! This powerful addition empowers developers to manage focused input with unparalleled ease. The hook comes with a straightforward signature:
+
+```ts
+useFocusedInputHandler(
+  {
+    onChangeText: ({ text }) => {
+      "worklet";
+
+      // Your custom logic here
+    },
+  },
+  [],
+);
+```
+
+Whenever you are building your own avoiding solution or tracking user activity this hook can be a perfect fit for your needs!
+
+### Exporting `KeyboardAwareScrollView`
+
+I've heard your feedback, and in response, I'm now exporting `KeyboardAwareScrollView` from the library core. This widely-used component provides an enhanced `ScrollView` experience, ensuring smoother navigation and improved user interactions. Now, you can effortlessly integrate it into your projects and leverage its capabilities for a more polished UI 😎
+
+### `KeyboardController.dismiss()` method
+
+Simplify your workflow with the addition of the `KeyboardController.dismiss()` method. This method streamlines the dismissal of the keyboard, making it a breeze to manage user input interactions. Enhance the user experience by effortlessly controlling when and how the keyboard should disappear.
+
+## Reflecting on a Productive Year: 2023 🎁🎅
+
+As we bid farewell to 2023, it's a moment to reflect on the incredible strides we've made together. This year has been marked by innovation, user-centric enhancements, and the continuous evolution of our toolkit. Here's a summary of the key milestones:
+
+### Interactive Keyboard Implementation
+
+I took a giant leap forward by implementing an interactive keyboard. This feature enhances user engagement and provides a dynamic interface for a more immersive experience. Now, user interactions with the keyboard are not just functional but also interactive and enjoyable 😊
+
+### Expanded Event Metadata
+
+In response to your needs, I introduced new metadata fields — `duration`, `target` and `timestamp` — to events. These additions provide more comprehensive insights into user interactions, enabling you to fine-tune and optimize your applications with a deeper understanding of user behavior.
+
+### Diverse Component Additions
+
+My commitment to versatility led to the incorporation of several new components. The introduction of `KeyboardAvoidingView`, `KeyboardStickyFooter`, and `KeyboardAwareScrollView` opens up a world of possibilities for crafting responsive and user-friendly interfaces. These components are designed to seamlessly integrate into your projects, offering enhanced UI control.
+
+### Empowering Hooks
+
+Empowering developers with more tools, I introduced a series of new hooks. From the versatile `useKeyboardController` to the focused input management provided by `useReanimatedFocusedInput` and the feature-rich `useFocusedInputHandler` hook, these additions streamline development and elevate the capabilities of your React Native applications.
+
+## Looking Forward to 2024 ☃️🎄❄️
+
+As I embark on the journey into the new year, the excitement is palpable. I'm eager to build upon the successes of 2023 and bring even more features to the table. Our roadmap is filled with promising enhancements, and I can't wait to share them with you. Your feedback has been invaluable, and I look forward to continuing this collaborative journey in the coming year.
+
+Thank you for being a part of our community. Here's to a year of growth, collaboration, and the continued evolution of your React Native development experience!

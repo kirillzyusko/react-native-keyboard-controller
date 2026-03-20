@@ -1,0 +1,40 @@
+name: 🎬 Check .mov files
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "**.mov"
+      - ".github/workflows/check-mov-files.yml"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "**.mov"
+      - ".github/workflows/check-mov-files.yml"
+
+jobs:
+  check-mov:
+    runs-on: ubuntu-latest
+    name: 🔍 check .mov files
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check for .mov files
+        run: |
+          MOV_FILES=$(find . -type f -iname "*.mov")
+          if [ -n "$MOV_FILES" ]; then
+            echo "::error::Found .mov files that should be converted to .mp4 (Google Chrome does not support .mov codec):"
+            echo "$MOV_FILES"
+            echo ""
+            echo "Please convert them using:"
+            echo ""
+            echo "find . -type f -iname \"*.mov\" -exec sh -c '"
+            echo "for f do"
+            echo "  ffmpeg -fflags +genpts -i \"\$f\" -vf fps=60 -c:v libx264 -pix_fmt yuv420p -movflags +faststart \"\${f%.*}.mp4\""
+            echo "done"
+            echo "' sh {} +"
+            exit 1
+          fi
+          echo "No .mov files found ✅"

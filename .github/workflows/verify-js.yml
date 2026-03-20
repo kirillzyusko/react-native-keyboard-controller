@@ -1,0 +1,68 @@
+name: 👨‍💻 Verify JS
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  compile:
+    name: 🔀 Compile TS
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: yarn
+      - name: Install dependencies
+        run: |
+          yarn install --frozen-lockfile
+          cd example
+          yarn install --frozen-lockfile
+      - name: Run TypeScript
+        run: yarn typescript
+  lint:
+    name: 🔎 Lint TS
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: yarn
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Run Lint
+        run: yarn lint
+      - name: Check formatting
+        run: yarn prettier '**/*' --ignore-unknown --check
+  tests:
+    name: 📖 Unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+          cache: yarn
+      - name: Install dependencies
+        run: |
+          yarn install --frozen-lockfile
+          cd example
+          yarn install --frozen-lockfile
+          cd ../FabricExample
+          yarn install --frozen-lockfile
+      - name: Run lib tests
+        run: yarn test src
+      - name: Run example app tests (verify mocks)
+        run: |
+          cd example
+          yarn test
+      - name: Run example fabric app tests (verify mocks)
+        run: |
+          cd FabricExample
+          yarn test

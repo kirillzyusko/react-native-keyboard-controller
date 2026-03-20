@@ -1,0 +1,59 @@
+name: "Boot iOS Simulator"
+description: "Boots an iOS simulator with retry logic and timeout handling"
+author: "Bitwarden"
+
+inputs:
+  simulator-name:
+    description: "Name of the simulator device (e.g., iPhone 17 Pro)"
+    required: true
+  simulator-version:
+    description: "iOS version for the simulator (e.g., 26.0)"
+    required: true
+
+outputs:
+  simulator-id:
+    description: "The identifier of the booted simulator device"
+    value: ${{ steps.boot.outputs.device-id }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Boot Simulator
+      id: boot
+      shell: bash
+      env:
+        _SIMULATOR_NAME: ${{ inputs.simulator-name }}
+        _SIMULATOR_VERSION: ${{ inputs.simulator-version }}
+      run: |
+        SIMULATOR_VERSION_WITHOUT_PATCH=$(echo "$_SIMULATOR_VERSION" | cut -d. -f1,2)
+        echo "Listing simulator devices:"
+        SIMULATORS=$(xcrun simctl list devices "iOS $SIMULATOR_VERSION_WITHOUT_PATCH" available)
+        echo "$SIMULATORS"
+        DEVICE_ID=$(echo "$SIMULATORS" | grep "$_SIMULATOR_NAME" | head -1 | sed -E 's/.*\(([A-F0-9-]+)\).*/\1/')
+        echo "--------------------------------"
+        echo "👀 Updating dyld_shared_cache:"
+        xcrun simctl runtime dyld_shared_cache update --all
+        echo "--------------------------------"
+        echo "👀 Booting simulator: $_SIMULATOR_NAME ($_SIMULATOR_VERSION) with ID: $DEVICE_ID"
+        echo "device-id=$DEVICE_ID" >> "$GITHUB_OUTPUT"
+
+        i=1
+        max=5
+        while [ $i -le $max ]; do
+            echo "👀 Launching Simulator (Attempt $i/$max)"
+            # Brewfile installs coreutils which includes gtimeout
+            if gtimeout -s SIGKILL 2m xcrun simctl bootstatus "$DEVICE_ID" -b; then
+                echo "✅ Simulator booted successfully"
+                exit 0
+            else
+                echo "❌ Simulator boot timed out. Shutting down..."
+                xcrun simctl shutdown "$DEVICE_ID" || true # prevents "Unable to shutdown device in current state: Shutdown" error
+
+                echo "🔁 Retrying in 5s..."
+                i=$((i + 1))
+                sleep 5
+            fi
+        done
+
+        echo "::error::Failed to boot simulator after $max attempts."
+        exit 1

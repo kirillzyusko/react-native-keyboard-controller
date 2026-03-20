@@ -1,0 +1,90 @@
+---
+slug: compound-keyboard-toolbar
+title: Version 1.19 — A fresh KeyboardToolbar API, instant dismiss, and more! 🎉
+authors: [kirill]
+tags: [react-native, keyboard, keyboard-toolbar]
+keywords:
+  [
+    react-native-keyboard-controller,
+    keyboard toolbar,
+    dismiss without animation,
+  ]
+---
+
+Hello everyone! 👋
+
+I’m thrilled to announce **version 1.19** of `react-native-keyboard-controller`. This release brings:
+
+- A brand new **compound KeyboardToolbar API**
+- The ability to **dismiss the keyboard instantly** (without animation!)
+- Full **React Native 0.80+** compatibility
+- And smaller fixes and refinements 🎉
+
+Let’s dive into what’s new 👇
+
+<!-- truncate -->
+
+## 🔥 New `KeyboardToolbar` API
+
+When the `KeyboardToolbar` API first landed in `1.11.0`, it unlocked powerful customization options — but it also came with a long list of props that made configuration a bit... verbose.
+
+With **release 1.19**, the API has been redesigned from the ground up to make it **more flexible, modular, and expressive** - without sacrificing any of that power.
+
+Introducing the new compound component pattern:
+
+```tsx
+<KeyboardToolbar opacity={Platform.OS === "ios" ? "4F" : "DD"}>
+  <KeyboardToolbar.Background>
+    <BlurView
+      blurAmount={32}
+      blurType={Platform.OS === "ios" ? "chromeMaterial" : "light"}
+      reducedTransparencyFallbackColor="white"
+      style={styles.absolute}
+    />
+  </KeyboardToolbar.Background>
+  <KeyboardToolbar.Content>
+    {showAutoFill ? (
+      <AutoFillContacts onContactSelected={onContactSelected} />
+    ) : null}
+  </KeyboardToolbar.Content>
+  <KeyboardToolbar.Prev onPress={haptic} />
+  <KeyboardToolbar.Next onPress={haptic} />
+  <KeyboardToolbar.Done onPress={haptic} />
+</KeyboardToolbar>
+```
+
+This approach makes the toolbar **composable** (choose which parts to render), **customizable** (easily swap or style individual sections) and **readable** (your code now mirrors the actual UI layout).
+
+If you’ve ever wished for more control or a cleaner API, this one’s for you 🎉
+
+## ⚡ Instant keyboard dismissal
+
+By default keyboard opens and closes with animation. But in some cases you might want to dismiss the keyboard **instantly** - for example when you use a fancy shared transitions and don't want keyboard animation to distract your users:
+
+import Video from "@site/src/components/Video";
+
+<Video src="/video/instant-dismiss.mp4" width={35} />
+<br />
+
+In this release I've added a new option for `KeyboardController.dismiss` method that allows you to do that. You can pass `animated` prop to control whether the keyboard should be animated or not:
+
+```ts
+import { KeyboardController } from "react-native-keyboard-controller";
+
+KeyboardController.dismiss({ animated: false });
+```
+
+## 👀 Support for RN 0.80+
+
+The library was compatible with RN 0.80+, but this version resolves some edge cases and assures that everything works as expected.
+
+If you are using RN 0.80+ - feel free to upgrade to the latest version of the lib.
+
+## 🤔 What's next?
+
+As always, my top focus is **resolving open issues** and keeping the library stable for everyone:
+
+- Issues with more 👍 reactions are prioritized first — that’s how I track what matters most to the community.
+- Issues labeled “sponsor 💖” receive **highest priority** as part of dedicated sponsor support.
+
+As always stay tuned and follow me on [Twitter](https://twitter.com/ziusko) and [GitHub](https://github.com/kirillzyusko) for updates. Thank you for your support! 😊

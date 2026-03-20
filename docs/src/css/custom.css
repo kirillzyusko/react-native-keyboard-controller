@@ -1,0 +1,346 @@
+/**
+ * Any CSS included here will be global. The classic template
+ * bundles Infima by default. Infima is a CSS framework designed to
+ * work well for content-centric websites.
+ */
+
+/* You can override the default Infima variables here. */
+:root {
+  --ifm-color-primary: #0075db;
+  --ifm-color-primary-dark: #0568ce;
+  --ifm-color-primary-darker: #0061cc;
+  --ifm-color-primary-darkest: #0040b5;
+  --ifm-color-primary-light: #1062d3;
+  --ifm-color-primary-lighter: #1089ee;
+  --ifm-color-primary-lightest: #1090ee;
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+}
+
+.menu__link {
+  word-break: break-word;
+}
+
+/* For readability concerns, you should choose a lighter palette in dark mode. */
+[data-theme="dark"] {
+  --ifm-color-primary: #00b2e7;
+  --ifm-color-primary-dark: #00acd7;
+  --ifm-color-primary-darker: #00d2e2;
+  --ifm-color-primary-darkest: #00c5c0;
+  --ifm-color-primary-light: #04c5e0;
+  --ifm-color-primary-lighter: #10c8ea;
+  --ifm-color-primary-lightest: #2acdff;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="light"] .DocSearch {
+  /* --docsearch-primary-color: var(--ifm-color-primary); */
+  /* --docsearch-text-color: var(--ifm-font-color-base); */
+  --docsearch-muted-color: var(--ifm-color-secondary-darkest);
+  --docsearch-container-background: rgba(94, 100, 112, 0.7);
+  /* Modal */
+  --docsearch-modal-background: var(--ifm-color-secondary-lighter);
+  /* Search box */
+  --docsearch-searchbox-background: var(--ifm-color-secondary);
+  --docsearch-searchbox-focus-background: var(--ifm-color-white);
+  /* Hit */
+  --docsearch-hit-color: var(--ifm-font-color-base);
+  --docsearch-hit-active-color: var(--ifm-color-white);
+  --docsearch-hit-background: var(--ifm-color-white);
+  /* Footer */
+  --docsearch-footer-background: var(--ifm-color-white);
+}
+
+[data-theme="dark"] .DocSearch {
+  --docsearch-text-color: var(--ifm-font-color-base);
+  --docsearch-muted-color: var(--ifm-color-secondary-darkest);
+  --docsearch-container-background: rgba(47, 55, 69, 0.7);
+  /* Modal */
+  --docsearch-modal-background: var(--ifm-background-color);
+  /* Search box */
+  --docsearch-searchbox-background: var(--ifm-background-color);
+  --docsearch-searchbox-focus-background: var(--ifm-color-black);
+  /* Hit */
+  --docsearch-hit-color: var(--ifm-font-color-base);
+  --docsearch-hit-active-color: var(--ifm-color-white);
+  --docsearch-hit-background: var(--ifm-color-emphasis-100);
+  /* Footer */
+  --docsearch-footer-background: var(--ifm-background-surface-color);
+  --docsearch-key-gradient: linear-gradient(
+    -26.5deg,
+    var(--ifm-color-emphasis-200) 0%,
+    var(--ifm-color-emphasis-100) 100%
+  );
+}
+
+.code-block-add-line {
+  display: block;
+  margin: 0 calc(-1 * var(--ifm-pre-padding));
+  padding: 0 var(--ifm-pre-padding);
+  border-left: 3px solid;
+}
+
+[data-theme="light"] .code-block-add-line {
+  background-color: #00ff0020;
+  border-left-color: #00ff0080;
+}
+
+[data-theme="dark"] .code-block-add-line {
+  background-color: #ffff0020;
+  border-left-color: #ffff0080;
+}
+
+.svg {
+  height: 100%;
+  width: 50%;
+  margin-bottom: 20px;
+}
+
+.code-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.code-block {
+  flex: 1 1 300px;
+  overflow: auto;
+}
+
+.description-block {
+  padding-right: 20px;
+}
+
+.grid {
+  display: grid;
+  margin-bottom: 20px;
+  grid-template-columns: 80% 20%;
+}
+
+@media (max-width: 1200px) {
+  .grid {
+    grid-template-columns: 70% 30%;
+  }
+}
+
+@media (max-width: 996px) {
+  .grid {
+    grid-template-columns: 80% 20%;
+  }
+}
+
+@media (max-width: 700px) {
+  .grid {
+    grid-template-columns: 70% 30%;
+  }
+}
+
+@media (max-width: 500px) {
+  .grid {
+    grid-template-columns: 60% 40%;
+  }
+}
+
+@media (max-width: 356px) {
+  .grid {
+    grid-template-columns: 100% 0%;
+  }
+}
+
+.desktop {
+  display: block;
+}
+
+.mobile {
+  display: none;
+}
+
+@media (max-width: 500px) {
+  .desktop {
+    display: none;
+  }
+  .mobile {
+    display: block;
+  }
+}
+
+.label {
+  border-radius: 20px;
+  color: #fff;
+  display: inline-block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 2px 12px;
+  position: relative;
+}
+
+.label.android {
+  background: #3ddc84;
+}
+
+.label.android::before {
+  content: "Android";
+}
+
+.label.ios {
+  background: #616a70;
+}
+
+.label.ios::before {
+  content: "iOS";
+}
+
+.label.required {
+  background: #fa5035;
+}
+
+.label.required::before {
+  content: "Required";
+}
+
+.label.new {
+  background: #40e0d0;
+}
+
+.label.new::before {
+  content: "New";
+}
+
+.label.web {
+  background: #007bff;
+}
+
+.label.web::before {
+  content: "Web";
+}
+
+h1 .label {
+  padding: 3px 12px;
+  top: -9px;
+}
+
+h2 .label {
+  padding: 3px 12px;
+  top: -5px;
+}
+
+h3 .label {
+  line-height: 20px;
+  top: -2px;
+}
+
+/* to become a circle in table of contents */
+.table-of-contents .label {
+  border-radius: 100%;
+  color: transparent;
+  float: none;
+  height: 6px;
+  margin-left: 4px;
+  margin-top: 7px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  white-space: nowrap;
+  width: 6px;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.keyboard-button {
+  transition: all 0.25s ease-in-out;
+}
+
+.keyboard-button-primary {
+  transition: all 0.25s ease-in-out;
+}
+
+.keyboard-button-secondary {
+  transition: all 0.25s ease-in-out;
+}
+
+.keyboard-button-secondary-2 {
+  transition: all 0.25s ease-in-out;
+}
+
+.keyboard-button-group:hover .keyboard-button {
+  fill: rgb(160, 160, 160);
+}
+
+.keyboard-button-group:hover .keyboard-button-primary {
+  fill: rgb(46, 157, 255);
+}
+
+.keyboard-button-group:hover .keyboard-button-secondary {
+  fill: rgb(123, 123, 123);
+}
+
+.keyboard-button-group:hover .keyboard-button-secondary-2 {
+  fill: rgb(255, 255, 255);
+}
+
+.hover {
+  fill: rgb(50, 50, 50);
+}
+
+@keyframes typing {
+  0% {
+    transform: translateY(0px);
+  }
+  25% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.dot {
+  animation-iteration-count: infinite;
+  animation-name: typing;
+  animation-duration: 1s;
+}
+
+.dot-1 {
+  animation-delay: 0s;
+}
+
+.dot-2 {
+  animation-delay: 0.2s;
+}
+
+.dot-3 {
+  animation-delay: 0.4s;
+}
+
+.interactive-animation {
+  height: 400px;
+  margin-bottom: 24px;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .doc-fade--run {
+    animation: doc-fade-in 250ms ease-in-out;
+    will-change: opacity, transform, filter;
+  }
+  @keyframes doc-fade-in {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+}

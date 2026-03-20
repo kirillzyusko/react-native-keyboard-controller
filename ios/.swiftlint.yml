@@ -1,0 +1,19 @@
+disabled_rules:
+  # trailing comma is forced by swiftformat
+  - trailing_comma
+  - for_where
+
+line_length:
+  warning: 120
+  ignores_urls: true
+
+identifier_name:
+  excluded:
+    - i # allow `i` variable in cycles
+
+opening_brace:
+  # this is controlled by `swiftformat` and we can not change config of formatter
+  ignore_multiline_statement_conditions: true
+
+excluded:
+  - Pods

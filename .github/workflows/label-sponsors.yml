@@ -1,0 +1,14 @@
+name: Label sponsors
+on:
+  issues:
+    types: [opened]
+jobs:
+  build:
+    name: is-sponsor-label
+    runs-on: ubuntu-latest
+    steps:
+      - uses: JasonEtco/is-sponsor-label-action@v2.0.0
+        with:
+          label: Sponsor 💖
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

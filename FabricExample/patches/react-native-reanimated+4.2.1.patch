@@ -1,0 +1,13 @@
+diff --git a/node_modules/react-native-reanimated/Common/cpp/reanimated/Fabric/updates/UpdatesRegistryManager.cpp b/node_modules/react-native-reanimated/Common/cpp/reanimated/Fabric/updates/UpdatesRegistryManager.cpp
+index 48a3e33..a242150 100644
+--- a/node_modules/react-native-reanimated/Common/cpp/reanimated/Fabric/updates/UpdatesRegistryManager.cpp
++++ b/node_modules/react-native-reanimated/Common/cpp/reanimated/Fabric/updates/UpdatesRegistryManager.cpp
+@@ -22,7 +22,7 @@ void UpdatesRegistryManager::addRegistry(const std::shared_ptr<UpdatesRegistry>
+ }
+ 
+ void UpdatesRegistryManager::pauseReanimatedCommits() {
+-  if constexpr (!StaticFeatureFlags::getFlag("DISABLE_COMMIT_PAUSING_MECHANISM")) {
++  if constexpr (false) {
+     isPaused_ = true;
+   }
+ }

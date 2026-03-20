@@ -1,0 +1,20 @@
+.swiper-pagination {
+  background-color: rgb(224, 224, 224) !important;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  padding: 5px;
+  width: 70px !important;
+  align-self: center;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+
+  left: 50% !important;
+  transform: translateX(-50%);
+}
+
+.custom-swiper {
+  width: 200px !important;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}

@@ -1,0 +1,284 @@
+---
+keywords:
+  [
+    react-native-keyboard-controller,
+    toolbar,
+    keyboard toolbar,
+    keyboard next button,
+    keyboard next input,
+    keyboard previous button,
+    keyboard previous input,
+    keyboard done button,
+  ]
+---
+
+# KeyboardToolbar
+
+`KeyboardToolbar` is a view that sticky to the keyboard and has **next** and **previous** buttons for switching between inputs as well as **Done** button for closing the keyboard.
+
+This component is fully customizable and allows you to define any behavior for provided buttons and also allows you to render additional content.
+
+import Lottie from "lottie-react";
+import toolbar from "./toolbar.lottie.json";
+
+<div style={{ display: "flex", justifyContent: "center", marginBottom: 20 }}>
+  <Lottie
+    className="lottie"
+    animationData={toolbar}
+    style={{ width: 400, height: 400 }}
+    loop
+  />
+</div>
+
+## Features
+
+- **Fully customizable UI** 🎨: Tailor the appearance of the toolbar to match your app's design.
+- **Supports dark/light theme** 🌓: Adapts to the theme settings of the user's device for a seamless experience.
+- **Extended accessibility support** 🔍: Ensures that all users, including those with disabilities, can navigate through inputs effectively.
+- **Full control over the buttons behavior** 🔧: Customize the actions triggered by the next, previous, and done buttons according to your needs.
+
+## Props
+
+### `button`
+
+This property allows to render custom touchable component for next, previous and done button.
+
+```tsx
+import { TouchableOpacity } from "react-native-gesture-handler";
+import {
+  KeyboardToolbar,
+  KeyboardToolbarProps,
+} from "react-native-keyboard-controller";
+
+const CustomButton: KeyboardToolbarProps["button"] = ({
+  children,
+  onPress,
+}) => <TouchableOpacity onPress={onPress}>{children}</TouchableOpacity>;
+
+// ...
+
+<KeyboardToolbar button={CustomButton} />;
+```
+
+### `content`
+
+This property allows you to show a custom content in the middle of the toolbar. It accepts JSX element. Default value is `null`.
+
+```tsx
+<KeyboardToolbar
+  content={
+    showAutoFill ? (
+      <AutoFillContacts onContactSelected={onContactSelected} />
+    ) : null
+  }
+/>
+```
+
+### `doneText`
+
+The property that allows to specify custom text for `Done` button.
+
+```tsx
+<KeyboardToolbar doneText="Close" />
+```
+
+### `icon`
+
+`icon` property allows to render custom icons for prev and next buttons.
+
+```tsx
+import { Text } from "react-native";
+import {
+  KeyboardToolbar,
+  KeyboardToolbarProps,
+} from "react-native-keyboard-controller";
+
+const Icon: KeyboardToolbarProps["icon"] = ({ type }) => {
+  return <Text>{type === "next" ? "⬇️" : "⬆️"}</Text>;
+};
+
+// ...
+
+<KeyboardToolbar icon={Icon} />;
+```
+
+### `showArrows`
+
+A boolean prop indicating whether to show `next` and `prev` buttons. Can be useful to set it to `false` if you have only one input and want to show only `Done` button. Default to `true`.
+
+### `theme`
+
+Prop allowing you to specify the brand colors of your application for `KeyboardToolbar` component. If you want to re-use already platform specific colors you can import `DefaultKeyboardToolbarTheme` object and override colors only necessary colors:
+
+```ts
+import {
+  DefaultKeyboardToolbarTheme,
+  KeyboardToolbarProps,
+} from "react-native-keyboard-controller";
+
+const theme: KeyboardToolbarProps["theme"] = {
+  ...DefaultKeyboardToolbarTheme,
+  dark: {
+    ...DefaultKeyboardToolbarTheme.dark,
+    primary: "#FFCC00",
+  },
+};
+```
+
+:::info dark/light theme support
+Don't forget that you need to specify colors for **both** `dark` and `light` theme. The theme will be selected automatically based on the device preferences.
+:::
+
+## Example
+
+```tsx
+import React, { useCallback, useState } from "react";
+import { StyleSheet, Text, TextInput as TextInputRN, View } from "react-native";
+import {
+  KeyboardAwareScrollView,
+  KeyboardToolbar,
+} from "react-native-keyboard-controller";
+
+import type {
+  NativeSyntheticEvent,
+  TextInputFocusEventData,
+  TextInputProps,
+} from "react-native";
+
+export default function ToolbarExample() {
+  return (
+    <>
+      <KeyboardAwareScrollView bottomOffset={35} style={scrollViewStyles}>
+        <TextInput placeholder="Your name" title="Name" />
+        <TextInput placeholder="Your surname" title="Surname" />
+        <TextInput
+          placeholder="example@gmail.com"
+          title="Email"
+          editable={false}
+        />
+        <TextInput
+          placeholder="Tell us funny facts about you"
+          title="About you"
+          editable={false}
+        />
+        <View style={styles.row}>
+          <View style={styles.birthday}>
+            <TextInput placeholder="DD" title="Day" />
+          </View>
+          <View style={[styles.birthday, styles.withPadding]}>
+            <TextInput placeholder="MM" title="Month" />
+          </View>
+          <View style={styles.birthday}>
+            <TextInput placeholder="YYYY" title="Year" />
+          </View>
+        </View>
+        <TextInput placeholder="Country" title="Country" />
+        <TextInput placeholder="Region of the city" title="Region" />
+        <TextInput placeholder="City where you currently live" title="City" />
+        <TextInput placeholder="Street name" title="Street" />
+        <TextInput placeholder="House number" title="House" />
+        <TextInput placeholder="Flat number" title="Flat" />
+      </KeyboardAwareScrollView>
+      <KeyboardToolbar />
+    </>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: "white",
+  },
+  row: {
+    flexDirection: "row",
+  },
+  birthday: {
+    flex: 1 / 3,
+  },
+  withPadding: {
+    paddingHorizontal: 16,
+  },
+});
+const scrollViewStyles = [styles.withPadding, styles.container];
+
+type CustomTextInputProps = {
+  title?: string;
+} & TextInputProps;
+
+const TextInput = (props: CustomTextInputProps) => {
+  const { title, ...rest } = props;
+  const [isFocused, setFocused] = useState(false);
+
+  const onFocus = useCallback(
+    (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
+      setFocused(true);
+      props.onFocus?.(e);
+    },
+    [],
+  );
+
+  const onBlur = useCallback(
+    (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
+      setFocused(false);
+      props.onBlur?.(e);
+    },
+    [],
+  );
+
+  return (
+    <>
+      {!!title && <Text style={textInputStyles.title}>{title}</Text>}
+      <TextInputRN
+        placeholderTextColor="#6c6c6c"
+        style={[
+          textInputStyles.container,
+          rest.editable === false && textInputStyles.disabled,
+          isFocused && textInputStyles.focused,
+        ]}
+        multiline
+        numberOfLines={2}
+        testID={rest.placeholder}
+        {...rest}
+        placeholder={`${rest.placeholder}`}
+        onFocus={onFocus}
+        onBlur={onBlur}
+      />
+    </>
+  );
+};
+
+const textInputStyles = StyleSheet.create({
+  title: {
+    marginBottom: 6,
+    marginLeft: 3,
+    color: "black",
+    fontSize: 16,
+  },
+  container: {
+    width: "100%",
+    minHeight: 50,
+    maxHeight: 200,
+    marginBottom: 50,
+    borderColor: "black",
+    borderWidth: 2,
+    marginRight: 160,
+    borderRadius: 10,
+    color: "black",
+    paddingHorizontal: 12,
+  },
+  disabled: {
+    opacity: 0.5,
+  },
+  focused: {
+    borderColor: "#20AAFF",
+  },
+});
+```
+
+:::info More comprehensive usage
+For more comprehensive usage that covers more complex interactions please check [example](https://github.com/kirillzyusko/react-native-keyboard-controller/tree/main/example) app.
+:::
+
+## Limitations
+
+- By default `TextInput` search happens within `UIViewController`/`FragmentActivity` (current screen if you are using `react-native-screens`)
+- The order of the navigation is defined by the view hierarchy (commonly referred to as the view-tree).

@@ -1,0 +1,35 @@
+<resources>
+  <style name="aosp_light">
+    <item name="color">#ebeff1</item>
+  </style>
+  <style name="gboard_dark">
+    <item name="color">#1c1c2c</item>
+  </style>
+  <style name="gboard_light">
+    <item name="color">#ebeff1</item>
+  </style>
+  <style name="gboard_tts_dark">
+    <item name="color">#202124</item>
+  </style>
+  <style name="gboard_tts_light">
+    <item name="color">#f8f9fa</item>
+  </style>
+  <style name="swiftkey_dark">
+    <item name="color">#141414</item>
+  </style>
+  <style name="swiftkey_light">
+    <item name="color">#f1f1f1</item>
+  </style>
+  <style name="yandex_dark">
+    <item name="color">#1a1b20</item>
+  </style>
+  <style name="yandex_light">
+    <item name="color">#eeedf4</item>
+  </style>
+  <style name="samsung_dark">
+    <item name="color">#080808</item>
+  </style>
+  <style name="samsung_light">
+    <item name="color">#e4e4e4</item>
+  </style>
+</resources>

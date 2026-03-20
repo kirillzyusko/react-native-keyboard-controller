@@ -1,0 +1,298 @@
+---
+keywords:
+  [
+    react-native-keyboard-controller,
+    KeyboardAwareScrollView,
+    keyboard aware view,
+    aware scroll view,
+  ]
+---
+
+# KeyboardAwareScrollView
+
+import Lottie from "lottie-react";
+import lottie from "@site/src/components/HomepageFeatures/text-inputs.lottie.json";
+
+<div style={{ display: "flex", justifyContent: "center", marginBottom: 20 }}>
+  <Lottie
+    className="lottie"
+    animationData={lottie}
+    style={{ width: 400, height: 400 }}
+    loop
+  />
+</div>
+
+`ScrollView` that effortlessly handles keyboard appearance, automatically scrolls to focused `TextInput` and provides a native-like performance.
+
+## Comparison
+
+Current `react-native` ecosystem has a plenty of solutions that solves the problem of focused inputs being covered by keyboard. Each of them has its own advantages and disadvantages.
+
+Below is a table with the most important functions and their support in various implementations:
+
+|                                                               | [react-native-avoid-soft-input](https://mateusz1913.github.io/react-native-avoid-softinput/) | [react-native-keyboard-aware-scroll-view](https://github.com/APSL/react-native-keyboard-aware-scroll-view) | [react-native-keyboard-manager](https://github.com/douglasjunior/react-native-keyboard-manager) | [react-native-keyboard-controller](./keyboard-aware-scroll-view.mdx) |
+| ------------------------------------------------------------- | -------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| Respects keyboard animation                                   | 🟠 <sup><small>1</small></sup>                                                               | ❌                                                                                                         | ✅                                                                                              | ✅                                                                   |
+| JS implementation                                             | ❌                                                                                           | ✅                                                                                                         | ❌                                                                                              | 🟠 <sup><small>2</small></sup>                                       |
+| Reacts on focused input layout changes                        | ❌                                                                                           | ❌                                                                                                         | 🟠 <sup><small>3</small></sup>                                                                  | ✅                                                                   |
+| Reacts on focus changes                                       | ✅                                                                                           | ✅                                                                                                         | ✅                                                                                              | ✅                                                                   |
+| Reacts on selection changes                                   | ❌                                                                                           | ❌                                                                                                         | 🟠 <sup><small>3</small></sup>                                                                  | ✅                                                                   |
+| Auto-scroll when user is typing and input in non visible area | ❌                                                                                           | ❌                                                                                                         | 🟠 <sup><small>3</small></sup>                                                                  | ✅                                                                   |
+| Android support                                               | ✅                                                                                           | ✅                                                                                                         | ❌                                                                                              | ✅                                                                   |
+| Maintained                                                    | ✅                                                                                           | ❌                                                                                                         | ✅                                                                                              | ✅                                                                   |
+| Support Fabric (new) architecture                             | ✅                                                                                           | 🟠 <sup><small>4</small></sup>                                                                             | ❌                                                                                              | ✅                                                                   |
+
+> <sup>1</sup> <b>only</b> on <b>iOS</b>
+
+<!-- prettier-ignore-start -->
+> <sup>2</sup> <code>KeyboardAwareScrollView</code> is implemented in JS, but some hooks
+> (<code>useKeyboardHandler</code>/<code>useReanimatedFocusedInput</code>/<code>useFocusedInputHandler</code>)
+> exposed from native code
+<!-- prettier-ignore-end -->
+
+<!-- prettier-ignore-start -->
+> <sup>3</sup> achievable with
+> <code>KeyboardManager.reloadLayoutIfNeeded()</code>
+> usage in appropriate <code>TextInput</code> callbacks
+> (<code>onLayout</code>/<code>onChangeText</code>/<code>onSelectionChange</code>)
+<!-- prettier-ignore-end -->
+
+> <sup>4</sup> since it's JS based solution it supports new architecture, but it
+> uses <b>deprecated</b> API.
+
+## Props
+
+### [`ScrollView Props`](https://reactnative.dev/docs/scrollview#props)
+
+Inherits [ScrollView Props](https://reactnative.dev/docs/scrollview#props).
+
+### `bottomOffset`
+
+The distance between keyboard and focused `TextInput` when keyboard is shown. Default is `0`.
+
+:::info `react-native-keyboard-aware-scroll-view` equivalent
+This property is equivalent to [extraHeight](https://github.com/APSL/react-native-keyboard-aware-scroll-view/tree/9eee405f7b3e261faf86a0fc8e495288d91c853e?tab=readme-ov-file#props) from original [react-native-keyboard-aware-scroll-view](https://github.com/APSL/react-native-keyboard-aware-scroll-view) package.
+:::
+
+:::warning
+If you specified `snapToOffsets` to your `ScrollView` then `KeyboardAwareScrollView` will automatically respect to these values and an actual `bottomOffset` may be bigger (but focused input will be always above the keyboard anyway).
+:::
+
+### `disableScrollOnKeyboardHide`
+
+Prevents automatic scrolling of the `ScrollView` when the keyboard gets hidden, maintaining the current screen position. Default is `false`.
+
+### `enabled`
+
+A boolean prop indicating whether `KeyboardAwareScrollView` is enabled or disabled. Default is `true`.
+
+### `extraKeyboardSpace`
+
+Adjusting the bottom spacing of `KeyboardAwareScrollView`. Default is `0`.
+
+:::tip When to use it?
+It can be useful when there is some space between the `KeyboardAwareScrollView` and the _**bottom edge**_ of the screen (and you don't want the full keyboard frame to be in the bottom). In such cases, you can specify a **negative** value.
+
+If you have _**sticky elements**_ above the keyboard and want to extend the keyboard frame in the bottom of `ScrollView`, then you can specify a **positive** value.
+:::
+
+:::info `react-native-keyboard-aware-scroll-view` equivalent
+This property acts as [extraScrollHeight](https://github.com/APSL/react-native-keyboard-aware-scroll-view/tree/9eee405f7b3e261faf86a0fc8e495288d91c853e?tab=readme-ov-file#props) from original [react-native-keyboard-aware-scroll-view](https://github.com/APSL/react-native-keyboard-aware-scroll-view) package.
+:::
+
+## Integration with 3rd party components
+
+### `FlatList`/`FlashList`/`SectionList` etc.
+
+Unlike original [react-native-keyboard-aware-scroll-view](https://github.com/APSL/react-native-keyboard-aware-scroll-view) package I'm not exporting `KeyboardAwareFlatList`, `KeyboardAwareSectionList` and other components.
+
+If you want to integrate it with your custom virtualization list, you can pass `renderScrollComponent` prop like:
+
+```tsx
+import { FlatList } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
+
+<FlatList
+  renderScrollComponent={(props) => <KeyboardAwareScrollView {...props} />}
+/>;
+
+// or
+
+import { FlashList } from "@shopify/flash-list";
+
+<FlashList
+  renderScrollComponent={(props) => <KeyboardAwareScrollView {...props} />}
+/>;
+```
+
+<details>
+  <summary>Click to see a full code example with integration</summary>
+
+```tsx
+import React from "react";
+import { View, FlatList, TextInput } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
+
+const List = () => {
+  return (
+    <View style={{ flex: 1 }}>
+      <FlatList
+        data={new Array(10).fill(0).map((_, i) => i)}
+        keyExtractor={(data) => String(data)}
+        renderItem={() => {
+          return (
+            <View
+              style={{
+                width: "100%",
+                height: 250,
+                backgroundColor: "#00000066",
+                justifyContent: "center",
+              }}
+            >
+              <TextInput
+                style={{
+                  height: 40,
+                  width: "100%",
+                  borderColor: "black",
+                  borderWidth: 2,
+                }}
+              />
+            </View>
+          );
+        }}
+        renderScrollComponent={(props) => (
+          <KeyboardAwareScrollView {...props} />
+        )}
+        ItemSeparatorComponent={() => <View style={{ height: 5 }} />}
+        showsVerticalScrollIndicator={false}
+      />
+    </View>
+  );
+};
+
+export default List;
+```
+
+</details>
+
+### `@gorhom/bottom-sheet`
+
+To seamlessly work with [@gorhom/bottom-sheet](https://github.com/gorhom/react-native-bottom-sheet) you will need to wrap `KeyboardAwareScrollView` in some HOCs provided by `@gorhom/bottom-sheet`.
+
+```tsx title="BottomSheetKeyboardAwareScrollView.tsx"
+import { memo } from "react";
+import {
+  KeyboardAwareScrollView,
+  KeyboardAwareScrollViewProps,
+} from "react-native-keyboard-controller";
+import {
+  SCROLLABLE_TYPE,
+  createBottomSheetScrollableComponent,
+  type BottomSheetScrollViewMethods,
+} from "@gorhom/bottom-sheet";
+import type { BottomSheetScrollViewProps } from "@gorhom/bottom-sheet/src/components/bottomSheetScrollable/types";
+import Reanimated from "react-native-reanimated";
+
+const AnimatedScrollView =
+  Reanimated.createAnimatedComponent<KeyboardAwareScrollViewProps>(
+    KeyboardAwareScrollView,
+  );
+const BottomSheetScrollViewComponent = createBottomSheetScrollableComponent<
+  BottomSheetScrollViewMethods,
+  BottomSheetScrollViewProps
+>(SCROLLABLE_TYPE.SCROLLVIEW, AnimatedScrollView);
+const BottomSheetKeyboardAwareScrollView = memo(BottomSheetScrollViewComponent);
+
+BottomSheetKeyboardAwareScrollView.displayName =
+  "BottomSheetKeyboardAwareScrollView";
+
+export default BottomSheetKeyboardAwareScrollView as (
+  props: BottomSheetScrollViewProps & KeyboardAwareScrollViewProps,
+) => ReturnType<typeof BottomSheetKeyboardAwareScrollView>;
+```
+
+```tsx title="index.tsx"
+import BottomSheet from "@gorhom/bottom-sheet";
+import BottomSheetKeyboardAwareScrollView from "./BottomSheetKeyboardAwareScrollView";
+
+export function Example() {
+  return (
+    <BottomSheet>
+      <BottomSheetKeyboardAwareScrollView>
+        {/* More content here */}
+      </BottomSheetKeyboardAwareScrollView>
+    </BottomSheet>
+  );
+}
+```
+
+## Example
+
+```tsx
+import React from "react";
+import {
+  StyleSheet,
+  TextInputProps,
+  TextInput as TextInputRN,
+} from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
+
+const TextInput = (props: TextInputProps) => {
+  return (
+    <TextInputRN
+      placeholderTextColor="#6c6c6c"
+      style={styles.textInput}
+      multiline
+      numberOfLines={2}
+      testID={props.placeholder}
+      {...props}
+      placeholder={`${props.placeholder} (${
+        props.keyboardType === "default" ? "text" : "numeric"
+      })`}
+    />
+  );
+};
+
+export default function AwareScrollView() {
+  return (
+    <KeyboardAwareScrollView
+      bottomOffset={50}
+      style={styles.container}
+      contentContainerStyle={styles.content}
+    >
+      {new Array(10).fill(0).map((_, i) => (
+        <TextInput
+          key={i}
+          placeholder={`TextInput#${i}`}
+          keyboardType={i % 2 === 0 ? "numeric" : "default"}
+        />
+      ))}
+    </KeyboardAwareScrollView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    paddingHorizontal: 16,
+  },
+  content: {
+    paddingTop: 50,
+  },
+  textInput: {
+    width: "100%",
+    minHeight: 50,
+    maxHeight: 200,
+    marginBottom: 50,
+    borderColor: "black",
+    borderWidth: 2,
+    marginRight: 160,
+    borderRadius: 10,
+    color: "black",
+    paddingHorizontal: 12,
+  },
+});
+```
+
+## Known issues
+
+- [react-native-reanimated#5567](https://github.com/software-mansion/react-native-reanimated/issues/5567): Resizing content inside `ScrollView` prevents multiline `TextInput` from growing in Fabric

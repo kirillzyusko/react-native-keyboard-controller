@@ -1,0 +1,42 @@
+name: 📝 Create size diff comment
+
+on:
+  workflow_run:
+    workflows: ["🧪 Size calculation"]
+    types:
+      - completed
+
+permissions:
+  pull-requests: write
+  actions: read
+
+jobs:
+  comment:
+    name: 💬 Post size diff comment
+    runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion == 'success'
+    steps:
+      - name: Download size data
+        uses: actions/download-artifact@v4
+        with:
+          name: size-data
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id }}
+
+      - name: Read size data
+        id: size-data
+        run: |
+          echo "NEW_SIZE=$(cat new-size.txt)" >> "$GITHUB_OUTPUT"
+          echo "OLD_SIZE=$(cat old-size.txt)" >> "$GITHUB_OUTPUT"
+          echo "DIFF=$(cat diff.txt)" >> "$GITHUB_OUTPUT"
+          echo "SIGN=$(cat sign.txt)" >> "$GITHUB_OUTPUT"
+          echo "PR_NUMBER=$(cat pr-number.txt)" >> "$GITHUB_OUTPUT"
+
+      - uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          number: ${{ steps.size-data.outputs.PR_NUMBER }}
+          message: |
+            ### 📊 Package size report
+            | Current size | Target Size | Difference |
+            | ------------- | ------------- | ------------------------ |
+            | ${{ steps.size-data.outputs.NEW_SIZE }} bytes | ${{ steps.size-data.outputs.OLD_SIZE }} bytes | ${{ steps.size-data.outputs.DIFF }} bytes ${{ steps.size-data.outputs.SIGN }} |
