@@ -416,11 +416,12 @@ const KeyboardAwareScrollView = forwardRef<
             keyboardWillChangeSize ||
             focusWasChanged
           ) {
-            syncKeyboardFrame(e);
             // persist scroll value
             scrollPosition.value = position.value;
             // just persist height - later will be used in interpolation
             keyboardHeight.value = e.height;
+            // and update keyboard spacer size
+            syncKeyboardFrame(e);
           }
 
           // focus was changed
