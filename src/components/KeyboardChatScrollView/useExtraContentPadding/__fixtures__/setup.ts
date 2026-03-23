@@ -12,6 +12,14 @@ export let reactionEffect: (current: number, previous: number | null) => void;
 
 export const flushRAF = () => new Promise((resolve) => setTimeout(resolve, 0));
 
+let mockForceLegacy = false;
+
+jest.mock("../../../../architecture", () => ({
+  get IS_FABRIC() {
+    return !mockForceLegacy;
+  },
+}));
+
 jest.mock("react-native-reanimated", () => ({
   ...require("react-native-reanimated/mock"),
   scrollTo: (...args: unknown[]) => mockScrollTo(...args),
@@ -46,26 +54,11 @@ export const createRender = () => {
 };
 
 beforeEach(() => {
+  mockForceLegacy = false;
   mockScrollTo.mockClear();
 });
 
-/**
- * Temporarily removes `nativeFabricUIManager` from global to simulate legacy
- * (bridge) architecture for the duration of the provided callback.
- *
- * @param fn - Callback to run under legacy arch conditions.
- */
-export function withLegacyArch(fn: () => void) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const original = (global as any).nativeFabricUIManager;
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  (global as any).nativeFabricUIManager = undefined;
-
-  try {
-    fn();
-  } finally {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (global as any).nativeFabricUIManager = original;
-  }
-}
+export const withLegacyArch = (fn: () => void) => {
+  mockForceLegacy = true;
+  fn();
+};
