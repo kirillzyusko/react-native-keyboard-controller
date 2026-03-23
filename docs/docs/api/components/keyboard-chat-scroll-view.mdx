@@ -306,3 +306,33 @@ To fix this, enable the [DISABLE_COMMIT_PAUSING_MECHANISM](https://docs.swmansio
 :::info Do I need to enable this flag?
 This issue can occur even if the state update comes from a different screen (e.g. a parent navigator). To check, open the React Profiler and look for any React commits that happen just before the keyboard event — if you see one, you likely need this flag.
 :::
+
+### `scrollToEnd` doesn't scroll to the correct position when keyboard is open
+
+React Native's `FlatList.scrollToEnd()` calculates the scroll offset using `visibleLength` without accounting for the keyboard-adjusted layout. This means calling `listRef.current?.scrollToEnd()` may stop short of the actual end when the keyboard is visible.
+
+**Workaround:** call `scrollToEnd` on the underlying `KeyboardChatScrollView` instead of the `FlatList`. To do that, pass a separate `scrollViewRef` through your `renderScrollComponent` wrapper and use it for scrolling:
+
+```tsx
+const scrollViewRef = useRef(null);
+
+const renderScrollComponent = useCallback(
+  (props) => (
+    <KeyboardChatScrollView {...props} scrollViewRef={scrollViewRef} />
+  ),
+  [],
+);
+
+<FlatList
+  data={messages}
+  renderItem={renderItem}
+  renderScrollComponent={renderScrollComponent}
+/>;
+
+// Instead of listRef.current?.scrollToEnd()
+scrollViewRef.current?.scrollToEnd();
+```
+
+:::note
+`FlatList` internally assigns its own ref to the component returned by `renderScrollComponent`. The `scrollViewRef` prop gives you a **second** ref to the same `KeyboardChatScrollView` instance so you can call `scrollToEnd` without interfering with `FlatList`'s internals.
+:::
