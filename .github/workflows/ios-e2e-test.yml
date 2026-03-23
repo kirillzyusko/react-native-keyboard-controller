@@ -138,25 +138,6 @@ jobs:
       - uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: ${{ matrix.devices.xcode }}
-      - name: Cleanup iOS simulator
-        run: |
-          echo "Before:"
-          df -h
-
-          # Kill simulator services
-          sudo killall -9 com.apple.CoreSimulator.CoreSimulatorService || true
-
-          # Unmount all runtime volumes
-          mount | grep CoreSimulator | awk '{print $1}' | while read disk; do
-            sudo diskutil unmount force "$disk" || true
-          done
-
-          # Clean everything
-          rm -rf ~/Library/Developer/CoreSimulator || true
-          rm -rf ~/Library/Developer/Xcode/DerivedData || true
-
-          echo "After cleanup:"
-          df -h
       - name: Get Xcode version
         run: xcodebuild -version
       # needed for additional runtime installation
