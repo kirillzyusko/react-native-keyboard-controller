@@ -69,6 +69,7 @@ const KeyboardChatScrollView = forwardRef<
       scroll,
       layout,
       size,
+      contentOffsetY,
       inverted,
       keyboardLiftBehavior,
       freeze,

@@ -1,12 +1,13 @@
 import { sv } from "../../../../__fixtures__/sv";
 import {
   createRender,
+  flushRAF,
   mockScrollTo,
   reactionEffect,
 } from "../__fixtures__/setup";
 
 describe("useExtraContentPadding — whenAtEnd behavior", () => {
-  it("should scrollTo when at end (non-inverted)", () => {
+  it("should scrollTo when at end (non-inverted)", async () => {
     const render = createRender();
 
     render({
@@ -21,6 +22,7 @@ describe("useExtraContentPadding — whenAtEnd behavior", () => {
     });
 
     reactionEffect(20, 0);
+    await flushRAF();
 
     expect(mockScrollTo).toHaveBeenCalled();
   });
@@ -44,7 +46,7 @@ describe("useExtraContentPadding — whenAtEnd behavior", () => {
     expect(mockScrollTo).not.toHaveBeenCalled();
   });
 
-  it("should scrollTo when at end (inverted)", () => {
+  it("should scrollTo when at end (inverted)", async () => {
     const render = createRender();
 
     render({
@@ -59,6 +61,7 @@ describe("useExtraContentPadding — whenAtEnd behavior", () => {
     });
 
     reactionEffect(20, 0);
+    await flushRAF();
 
     expect(mockScrollTo).toHaveBeenCalled();
   });

@@ -1,12 +1,13 @@
 import { sv } from "../../../../__fixtures__/sv";
 import {
   createRender,
+  flushRAF,
   mockScrollTo,
   reactionEffect,
 } from "../__fixtures__/setup";
 
 describe("useExtraContentPadding — persistent behavior", () => {
-  it("should scrollTo on grow", () => {
+  it("should scrollTo on grow", async () => {
     const render = createRender();
 
     render({
@@ -21,6 +22,7 @@ describe("useExtraContentPadding — persistent behavior", () => {
     });
 
     reactionEffect(20, 0);
+    await flushRAF();
 
     expect(mockScrollTo).toHaveBeenCalledWith(expect.anything(), 0, 120, false);
   });
@@ -44,7 +46,7 @@ describe("useExtraContentPadding — persistent behavior", () => {
     expect(mockScrollTo).not.toHaveBeenCalled();
   });
 
-  it("should scrollTo on shrink when at end", () => {
+  it("should scrollTo on shrink when at end", async () => {
     const render = createRender();
 
     render({
@@ -59,6 +61,7 @@ describe("useExtraContentPadding — persistent behavior", () => {
     });
 
     reactionEffect(0, 20);
+    await flushRAF();
 
     expect(mockScrollTo).toHaveBeenCalled();
   });

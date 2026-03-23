@@ -1,6 +1,7 @@
 import { sv } from "../../../../__fixtures__/sv";
 import {
   createRender,
+  flushRAF,
   mockScrollTo,
   reactionEffect,
 } from "../__fixtures__/setup";
@@ -29,7 +30,7 @@ describe("useExtraContentPadding — blankSpace floor", () => {
     expect(mockScrollTo).not.toHaveBeenCalled();
   });
 
-  it("should scroll by effective delta when blankSpace partially absorbs", () => {
+  it("should scroll by effective delta when blankSpace partially absorbs", async () => {
     const render = createRender();
 
     render({
@@ -50,11 +51,12 @@ describe("useExtraContentPadding — blankSpace floor", () => {
     // maxScroll = max(2000 - 800 + 500, 0) = 1700
     // target = min(100 + 100, 1700) = 200
     reactionEffect(300, 0);
+    await flushRAF();
 
     expect(mockScrollTo).toHaveBeenCalledWith(expect.anything(), 0, 200, false);
   });
 
-  it("blankSpace=0 produces identical behavior to default", () => {
+  it("blankSpace=0 produces identical behavior to default", async () => {
     const render = createRender();
 
     render({
@@ -75,6 +77,7 @@ describe("useExtraContentPadding — blankSpace floor", () => {
     // maxScroll = max(2000 - 800 + 320, 0) = 1520
     // target = min(1200 + 20, 1520) = 1220
     reactionEffect(20, 0);
+    await flushRAF();
 
     expect(mockScrollTo).toHaveBeenCalledWith(
       expect.anything(),
@@ -107,7 +110,7 @@ describe("useExtraContentPadding — blankSpace floor", () => {
     expect(mockScrollTo).not.toHaveBeenCalled();
   });
 
-  it("should scroll when change exceeds blankSpace floor (inverted)", () => {
+  it("should scroll when change exceeds blankSpace floor (inverted)", async () => {
     const render = createRender();
 
     render({
@@ -127,6 +130,7 @@ describe("useExtraContentPadding — blankSpace floor", () => {
     // effectiveDelta = 100
     // target = max(5 - 100, -500) = max(-95, -500) = -95
     reactionEffect(200, 0);
+    await flushRAF();
 
     expect(mockScrollTo).toHaveBeenCalledWith(expect.anything(), 0, -95, false);
   });

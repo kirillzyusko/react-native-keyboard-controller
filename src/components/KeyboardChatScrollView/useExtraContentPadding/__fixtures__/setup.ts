@@ -1,14 +1,24 @@
 import { renderHook } from "@testing-library/react-native";
 import { useAnimatedRef } from "react-native-reanimated";
 
+import { useExtraContentPadding } from "..";
 import { sv } from "../../../../__fixtures__/sv";
 
-import type { useExtraContentPadding } from "..";
 import type { SharedValue } from "react-native-reanimated";
 import type Reanimated from "react-native-reanimated";
 
 export const mockScrollTo = jest.fn();
 export let reactionEffect: (current: number, previous: number | null) => void;
+
+export const flushRAF = () => new Promise((resolve) => setTimeout(resolve, 0));
+
+let mockForceLegacy = false;
+
+jest.mock("../../../../architecture", () => ({
+  get IS_FABRIC() {
+    return !mockForceLegacy;
+  },
+}));
 
 jest.mock("react-native-reanimated", () => ({
   ...require("react-native-reanimated/mock"),
@@ -31,15 +41,10 @@ type RenderOptions = Omit<
 
 export const createRender = () => {
   return function render(options: RenderOptions) {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const mod = require("..") as {
-      useExtraContentPadding: typeof useExtraContentPadding;
-    };
-
     return renderHook(() => {
       const ref = useAnimatedRef<Reanimated.ScrollView>();
 
-      mod.useExtraContentPadding({
+      useExtraContentPadding({
         scrollViewRef: ref,
         blankSpace: options.blankSpace ?? sv(0),
         ...options,
@@ -49,6 +54,11 @@ export const createRender = () => {
 };
 
 beforeEach(() => {
-  jest.resetModules();
+  mockForceLegacy = false;
   mockScrollTo.mockClear();
 });
+
+export const withLegacyArch = (fn: () => void) => {
+  mockForceLegacy = true;
+  fn();
+};
