@@ -1,6 +1,7 @@
 package com.reactnativekeyboardcontroller.views
 
 import android.annotation.SuppressLint
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ScrollView
 import com.facebook.react.uimanager.ThemedReactContext
@@ -37,7 +38,7 @@ class ClippingScrollViewDecoratorView(
   }
 
   private fun decorateScrollView() {
-    val scrollView = getChildAt(0) as? ScrollView ?: return
+    val scrollView = findScrollView(this) ?: return
 
     scrollView.clipToPadding = false
 
@@ -65,5 +66,21 @@ class ClippingScrollViewDecoratorView(
     }
 
     appliedTopInsetPx = newTopInsetPx
+  }
+
+  private fun findScrollView(view: View?): ScrollView? {
+    var result: ScrollView? = null
+
+    if (view is ScrollView) {
+      result = view
+    } else if (view is ViewGroup) {
+      var i = 0
+      while (i < view.childCount && result == null) {
+        result = findScrollView(view.getChildAt(i))
+        i++
+      }
+    }
+
+    return result
   }
 }
