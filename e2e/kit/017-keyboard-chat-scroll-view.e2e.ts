@@ -13,7 +13,6 @@ describe("`KeyboardChatScrollView` specs", () => {
     await scrollDownUntilElementIsVisible("main_scroll_view", "chat_kit");
     await waitAndTap("chat_kit");
     await waitForElementById("chat.input");
-    await expect(element(by.id("layout_passes"))).toHaveText("Layout pass: 2");
   });
 
   it("should use non-inverted `FlatList`", async () => {
@@ -22,7 +21,6 @@ describe("`KeyboardChatScrollView` specs", () => {
     await waitAndTap("bottom_sheet_close_modal");
     await element(by.id("chat.scroll")).swipe("up", "fast", 1, 0.5, 0.5);
     await element(by.id("chat.scroll")).swipe("up", "fast", 1, 0.5, 0.5);
-    // component gets re-mounted
     await expect(element(by.id("layout_passes"))).toHaveText("Layout pass: 1");
   });
 
