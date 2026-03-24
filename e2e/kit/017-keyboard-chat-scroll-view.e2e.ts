@@ -21,6 +21,7 @@ describe("`KeyboardChatScrollView` specs", () => {
     await waitAndTap("bottom_sheet_toggle_flat_list_state");
     await waitAndTap("bottom_sheet_close_modal");
     await element(by.id("chat.scroll")).swipe("up", "fast", 1, 0.5, 0.5);
+    await element(by.id("chat.scroll")).swipe("up", "fast", 1, 0.5, 0.5);
     // component gets re-mounted
     await expect(element(by.id("layout_passes"))).toHaveText("Layout pass: 1");
   });
