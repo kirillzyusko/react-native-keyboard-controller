@@ -37,6 +37,7 @@ public class KeyboardMovementObserver: NSObject {
   // manual did events
   var notification: Notification?
   var keyboardDidTask: DispatchWorkItem?
+  var keyboardDidEventID: UInt = 0
 
   @objc public init(
     handler: @escaping (NSString, NSNumber, NSNumber, NSNumber, NSNumber) -> Void,

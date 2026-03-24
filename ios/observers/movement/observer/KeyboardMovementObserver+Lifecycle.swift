@@ -29,6 +29,11 @@ public extension KeyboardMovementObserver {
 
   @objc func unmount() {
     isMounted = false
+    keyboardDidTask?.cancel()
+    keyboardDidTask = nil
+    notification = nil
+    removeKeyboardWatcher()
+    removeKVObserver()
     // swiftlint:disable:next notification_center_detachment
     NotificationCenter.default.removeObserver(self)
   }

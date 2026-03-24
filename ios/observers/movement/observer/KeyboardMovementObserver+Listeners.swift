@@ -6,6 +6,32 @@
 //
 
 extension KeyboardMovementObserver {
+  private func emitKeyboardDidAppear(height: CGFloat, duration: Int) {
+    let progress = 1.0
+
+    onCancelAnimation()
+    onEvent("onKeyboardMoveEnd", height as NSNumber, progress as NSNumber, duration as NSNumber, tag)
+    onNotify("KeyboardController::keyboardDidShow", buildEventParams(height, duration, tag))
+
+    removeKeyboardWatcher()
+    setupKVObserver()
+    animation = nil
+  }
+
+  private func emitKeyboardDidDisappear(duration: Int) {
+    onCancelAnimation()
+    onEvent("onKeyboardMoveEnd", 0 as NSNumber, 0, duration as NSNumber, tag)
+    onNotify("KeyboardController::keyboardDidHide", buildEventParams(0, duration, tag))
+
+    removeKeyboardWatcher()
+    animation = nil
+  }
+
+  private func currentKeyboardHeight() -> CGFloat {
+    let (visibleKeyboardHeight, _) = keyboardTrackingView.view.frameTransitionInWindow
+    return max(CGFloat(visibleKeyboardHeight) - KeyboardAreaExtender.shared.offset, 0)
+  }
+
   @objc func keyboardWillAppear(_ notification: Notification) {
     guard !UIResponder.isKeyboardPreloading else { return }
 
@@ -63,17 +89,7 @@ extension KeyboardMovementObserver {
       tag = UIResponder.current.reactViewTag
       self.keyboardHeight = keyboardHeight
 
-      let height = self.keyboardHeight
-      // always limit progress to the maximum possible value
-      let progress = min(height / self.keyboardHeight, 1.0)
-
-      onCancelAnimation()
-      onEvent("onKeyboardMoveEnd", height as NSNumber, progress as NSNumber, duration as NSNumber, tag)
-      onNotify("KeyboardController::keyboardDidShow", buildEventParams(height, duration, tag))
-
-      removeKeyboardWatcher()
-      setupKVObserver()
-      animation = nil
+      emitKeyboardDidAppear(height: self.keyboardHeight, duration: duration)
 
       NotificationCenter.default.post(
         name: .keyboardDidAppear, object: notification, userInfo: nil
@@ -86,16 +102,14 @@ extension KeyboardMovementObserver {
     let (duration, _) = notification.keyboardMetaData()
     tag = UIResponder.current.reactViewTag
 
-    onCancelAnimation()
-    onEvent("onKeyboardMoveEnd", 0 as NSNumber, 0, duration as NSNumber, tag)
-    onNotify("KeyboardController::keyboardDidHide", buildEventParams(0, duration, tag))
-
-    removeKeyboardWatcher()
-    animation = nil
+    emitKeyboardDidDisappear(duration: duration)
   }
 
-  @objc func scheduleDidEvent(height: CGFloat, duration: CGFloat) {
+  @objc func scheduleDidEvent(height targetHeight: CGFloat, duration: CGFloat) {
     keyboardDidTask?.cancel()
+    keyboardDidEventID += 1
+    let eventID = keyboardDidEventID
+    _ = targetHeight
 
     guard let notification = notification else {
       return
@@ -103,10 +117,21 @@ extension KeyboardMovementObserver {
 
     let task = DispatchWorkItem { [weak self] in
       guard let self = self else { return }
-      if height > 0 {
-        self.keyboardDidAppear(notification)
+      guard self.isMounted, eventID == self.keyboardDidEventID else { return }
+
+      let duration = self.duration
+      let currentHeight = self.currentKeyboardHeight()
+      self.tag = UIResponder.current.reactViewTag
+
+      if currentHeight > 0 {
+        self.keyboardHeight = currentHeight
+        self.emitKeyboardDidAppear(height: currentHeight, duration: duration)
+
+        NotificationCenter.default.post(
+          name: .keyboardDidAppear, object: notification, userInfo: nil
+        )
       } else {
-        self.keyboardDidDisappear(notification)
+        self.emitKeyboardDidDisappear(duration: duration)
       }
     }
 
