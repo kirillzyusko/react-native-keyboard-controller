@@ -1,4 +1,4 @@
-import React, { forwardRef, useCallback, useRef, useState } from "react";
+import React, { forwardRef, useCallback, useState } from "react";
 import {
   type LayoutChangeEvent,
   type ScrollViewProps,
@@ -15,12 +15,12 @@ import {
   invertedContentContainerStyle,
 } from "./styles";
 
-import type { Ref } from "react";
+import type { RefCallback } from "react";
 import type { SharedValue } from "react-native-reanimated";
 
 type VirtualizedListScrollViewProps = ScrollViewProps & {
   extraContentPadding?: SharedValue<number>;
-  scrollViewRef?: Ref<VirtualizedListScrollViewRef>;
+  chatScrollViewRef?: { current: VirtualizedListScrollViewRef | null };
 };
 
 export type VirtualizedListScrollViewRef = React.ElementRef<
@@ -32,30 +32,35 @@ const VirtualizedListScrollView = forwardRef<
   VirtualizedListScrollViewProps
 >(
   (
-    { onLayout: onLayoutProp, extraContentPadding, scrollViewRef, ...props },
+    {
+      onLayout: onLayoutProp,
+      extraContentPadding,
+      chatScrollViewRef,
+      ...props
+    },
     ref,
   ) => {
-    // combine FlatList's internal ref with the user-provided scrollViewRef
-    const scrollViewRefStable = useRef<Ref<VirtualizedListScrollViewRef>>(null);
-
-    scrollViewRefStable.current = scrollViewRef ?? null;
-    const combinedRef = useCallback(
+    const setScrollViewRef = useCallback(
       (instance: VirtualizedListScrollViewRef | null) => {
+        if (chatScrollViewRef) {
+          // eslint-disable-next-line react-compiler/react-compiler
+          chatScrollViewRef.current =
+            instance as VirtualizedListScrollViewRef | null;
+        }
+      },
+      [chatScrollViewRef],
+    );
+    const combinedRef: RefCallback<VirtualizedListScrollViewRef> = useCallback(
+      (instance) => {
         if (typeof ref === "function") {
           ref(instance);
         } else if (ref) {
           ref.current = instance;
         }
 
-        const svRef = scrollViewRefStable.current;
-
-        if (typeof svRef === "function") {
-          svRef(instance);
-        } else if (svRef) {
-          svRef.current = instance;
-        }
+        setScrollViewRef(instance);
       },
-      [ref, scrollViewRefStable],
+      [ref, setScrollViewRef],
     );
     const [layoutPass, setLayoutPass] = useState(0);
     const { bottom } = useSafeAreaInsets();
