@@ -151,6 +151,7 @@ const KeyboardAwareScrollView = forwardRef<
       useSharedValue<FocusedInputSelectionChangedEvent | null>(null);
     const ghostViewSpace = useSharedValue(-1);
     const pendingSelectionForFocus = useSharedValue(false);
+    const selectionUpdatedSinceHide = useSharedValue(false);
     const scrollViewPageY = useSharedValue(0);
 
     const { height } = useWindowDimensions();
@@ -185,12 +186,19 @@ const KeyboardAwareScrollView = forwardRef<
       (e: number, animated: boolean = false) => {
         "worklet";
 
+        console.log(`[KASV::maybeScroll] called with e=${e}, animated=${animated}`);
+        console.log(`[KASV::maybeScroll] enabled=${enabled}, scrollPosition=${scrollPosition.value}, position=${position.value}`);
+        console.log(`[KASV::maybeScroll] keyboardHeight=${keyboardHeight.value}, initialKeyboardSize=${initialKeyboardSize.value}`);
+        console.log(`[KASV::maybeScroll] layout.parentScrollViewTarget=${layout.value?.parentScrollViewTarget}, scrollViewTarget=${scrollViewTarget.value}`);
+
         if (!enabled) {
+          console.log("[KASV::maybeScroll] BAIL: not enabled");
           return 0;
         }
 
         // input belongs to ScrollView
         if (layout.value?.parentScrollViewTarget !== scrollViewTarget.value) {
+          console.log("[KASV::maybeScroll] BAIL: input not in this ScrollView");
           return 0;
         }
 
@@ -198,6 +206,9 @@ const KeyboardAwareScrollView = forwardRef<
         const absoluteY = layout.value?.layout.absoluteY || 0;
         const inputHeight = layout.value?.layout.height || 0;
         const point = absoluteY + inputHeight;
+
+        console.log(`[KASV::maybeScroll] height=${height}, visibleRect=${visibleRect}, absoluteY=${absoluteY}, inputHeight=${inputHeight}, point=${point}, bottomOffset=${bottomOffset}`);
+        console.log(`[KASV::maybeScroll] condition: visibleRect - point (${visibleRect - point}) <= bottomOffset (${bottomOffset}) => ${visibleRect - point <= bottomOffset}`);
 
         if (visibleRect - point <= bottomOffset) {
           const relativeScrollTo =
@@ -216,6 +227,8 @@ const KeyboardAwareScrollView = forwardRef<
           const targetScrollY =
             Math.max(interpolatedScrollTo, 0) + scrollPosition.value;
 
+          console.log(`[KASV::maybeScroll] SCROLL DOWN: relativeScrollTo=${relativeScrollTo}, interpolatedScrollTo=${interpolatedScrollTo}, targetScrollY=${targetScrollY}`);
+
           scrollTo(scrollViewAnimatedRef, 0, targetScrollY, animated);
 
           return interpolatedScrollTo;
@@ -225,12 +238,16 @@ const KeyboardAwareScrollView = forwardRef<
           const positionOnScreen = visibleRect - bottomOffset;
           const topOfScreen = scrollPosition.value + point;
 
+          console.log(`[KASV::maybeScroll] SCROLL UP: point=${point} < scrollViewPageY=${scrollViewPageY.value}, scrollTo=${topOfScreen - positionOnScreen}`);
+
           scrollTo(
             scrollViewAnimatedRef,
             0,
             topOfScreen - positionOnScreen,
             animated,
           );
+        } else {
+          console.log("[KASV::maybeScroll] NO SCROLL needed");
         }
 
         return 0;
@@ -266,6 +283,8 @@ const KeyboardAwareScrollView = forwardRef<
         "worklet";
 
         const prevScroll = scrollPosition.value;
+
+        console.log(`[KASV::performScrollWithPositionRestoration] newPosition=${newPosition}, prevScroll=${prevScroll}, keyboardHeight=${keyboardHeight.value}`);
 
         // eslint-disable-next-line react-compiler/react-compiler
         scrollPosition.value = newPosition;
@@ -338,18 +357,31 @@ const KeyboardAwareScrollView = forwardRef<
         const lastTarget = lastSelection.value?.target;
         const latestSelection = lastSelection.value?.selection;
 
-        lastSelection.value = e;
+        console.log(`[KASV::onSelectionChange] target=${e.target}, lastTarget=${lastTarget}, pendingSelectionForFocus=${pendingSelectionForFocus.value}`);
+        console.log(`[KASV::onSelectionChange] selection.end.y=${e.selection.end.y}, selection.end.position=${e.selection.end.position}`);
 
-        if (e.target !== lastTarget) {
+        lastSelection.value = e;
+        selectionUpdatedSinceHide.value = true;
+
+        if (e.target !== lastTarget || pendingSelectionForFocus.value) {
+          console.log(`[KASV::onSelectionChange] target changed or pending focus! (targetChanged=${e.target !== lastTarget}, pending=${pendingSelectionForFocus.value})`);
+
           if (pendingSelectionForFocus.value) {
             // selection arrived after onStart - complete the deferred setup
             pendingSelectionForFocus.value = false;
             updateLayoutFromSelection();
 
+            console.log(`[KASV::onSelectionChange] deferred setup complete. layout=${JSON.stringify(layout.value?.layout)}`);
+            console.log(`[KASV::onSelectionChange] keyboardWillAppear=${keyboardWillAppear.value}, keyboardHeight=${keyboardHeight.value}`);
+
             // if keyboard was already visible (focus change, no onMove expected),
             // perform the deferred scroll now
             if (!keyboardWillAppear.value && keyboardHeight.value > 0) {
-              position.value += maybeScroll(keyboardHeight.value, true);
+              const scrollDelta = maybeScroll(keyboardHeight.value, true);
+
+              console.log(`[KASV::onSelectionChange] deferred scroll: scrollDelta=${scrollDelta}, position before=${position.value}`);
+              position.value += scrollDelta;
+              console.log(`[KASV::onSelectionChange] position after=${position.value}`);
             }
           }
 
@@ -361,10 +393,14 @@ const KeyboardAwareScrollView = forwardRef<
           e.selection.end.position === e.selection.start.position &&
           latestSelection?.end.y !== e.selection.end.y
         ) {
+          console.log("[KASV::onSelectionChange] new line detected, scrollFromCurrentPosition");
+
           return scrollFromCurrentPosition();
         }
         // selection has been changed
         if (e.selection.start.position !== e.selection.end.position) {
+          console.log("[KASV::onSelectionChange] selection range changed, scrollFromCurrentPosition");
+
           return scrollFromCurrentPosition();
         }
 
@@ -390,6 +426,12 @@ const KeyboardAwareScrollView = forwardRef<
         onStart: (e) => {
           "worklet";
 
+          console.log("=== [KASV::onStart] ===");
+          console.log(`[KASV::onStart] e.height=${e.height}, e.target=${e.target}, e.duration=${e.duration}`);
+          console.log(`[KASV::onStart] BEFORE: keyboardHeight=${keyboardHeight.value}, tag=${tag.value}, position=${position.value}, scrollPosition=${scrollPosition.value}`);
+          console.log(`[KASV::onStart] BEFORE: initialKeyboardSize=${initialKeyboardSize.value}, scrollBeforeKeyboardMovement=${scrollBeforeKeyboardMovement.value}`);
+          console.log(`[KASV::onStart] input.value?.layout=${JSON.stringify(input.value?.layout)}`);
+
           const keyboardWillChangeSize =
             keyboardHeight.value !== e.height && e.height > 0;
 
@@ -400,8 +442,11 @@ const KeyboardAwareScrollView = forwardRef<
             (tag.value !== e.target && e.target !== -1) ||
             keyboardWillChangeSize;
 
+          console.log(`[KASV::onStart] keyboardWillAppear=${keyboardWillAppear.value}, keyboardWillHide=${keyboardWillHide}, keyboardWillChangeSize=${keyboardWillChangeSize}, focusWasChanged=${focusWasChanged}`);
+
           if (keyboardWillChangeSize) {
             initialKeyboardSize.value = keyboardHeight.value;
+            console.log(`[KASV::onStart] keyboardWillChangeSize -> initialKeyboardSize set to ${keyboardHeight.value}`);
           }
 
           if (keyboardWillHide) {
@@ -409,6 +454,7 @@ const KeyboardAwareScrollView = forwardRef<
             initialKeyboardSize.value = 0;
             scrollPosition.value = scrollBeforeKeyboardMovement.value;
             pendingSelectionForFocus.value = false;
+            console.log(`[KASV::onStart] keyboardWillHide -> scrollPosition reset to scrollBeforeKeyboardMovement=${scrollBeforeKeyboardMovement.value}`);
           }
 
           if (
@@ -422,21 +468,30 @@ const KeyboardAwareScrollView = forwardRef<
             keyboardHeight.value = e.height;
             // and update keyboard spacer size
             syncKeyboardFrame(e);
+            console.log(`[KASV::onStart] persisted: scrollPosition=${position.value}, keyboardHeight=${e.height}`);
           }
 
           // focus was changed
           if (focusWasChanged) {
             tag.value = e.target;
 
-            if (lastSelection.value?.target === e.target) {
-              // selection arrived before onStart - use it to update layout
+            if (lastSelection.value?.target === e.target && selectionUpdatedSinceHide.value) {
+              // fresh selection arrived before onStart - use it to update layout
+              console.log("[KASV::onStart] focusChanged: FRESH selection arrived BEFORE onStart, updating layout from selection");
               updateLayoutFromSelection();
               pendingSelectionForFocus.value = false;
             } else {
-              // selection hasn't arrived yet for the new target.
-              // use input layout as-is; will be refined when selection arrives.
-              if (input.value) {
+              // selection hasn't arrived yet for the new target (iOS 15),
+              // or it's stale from previous session (Android refocus same input).
+              // Use stale selection as best-effort fallback if available for same target,
+              // otherwise fall back to full input layout.
+              // Will be corrected if a fresh onSelectionChange arrives.
+              if (lastSelection.value?.target === e.target) {
+                console.log(`[KASV::onStart] focusChanged: using STALE selection as fallback, selection.end.y=${lastSelection.value?.selection.end.y}`);
+                updateLayoutFromSelection();
+              } else if (input.value) {
                 layout.value = input.value;
+                console.log(`[KASV::onStart] focusChanged: no selection for target, using input layout: absoluteY=${input.value?.layout.absoluteY}, height=${input.value?.layout.height}`);
               }
               pendingSelectionForFocus.value = true;
             }
@@ -444,13 +499,20 @@ const KeyboardAwareScrollView = forwardRef<
             // save current scroll position - when keyboard will hide we'll reuse
             // this value to achieve smooth hide effect
             scrollBeforeKeyboardMovement.value = position.value;
+            console.log(`[KASV::onStart] focusChanged: scrollBeforeKeyboardMovement=${position.value}`);
           }
 
           if (focusWasChanged && !keyboardWillAppear.value) {
+            console.log(`[KASV::onStart] focusChanged + keyboard already visible, pendingSelection=${pendingSelectionForFocus.value}`);
+
             if (!pendingSelectionForFocus.value) {
               // update position on scroll value, so `onEnd` handler
               // will pick up correct values
-              position.value += maybeScroll(e.height, true);
+              const scrollDelta = maybeScroll(e.height, true);
+
+              console.log(`[KASV::onStart] maybeScroll returned scrollDelta=${scrollDelta}, position before=${position.value}`);
+              position.value += scrollDelta;
+              console.log(`[KASV::onStart] position after=${position.value}`);
             }
           }
 
@@ -459,14 +521,24 @@ const KeyboardAwareScrollView = forwardRef<
             scrollViewLayout.value.height -
             scrollViewContentSize.value.height;
 
+          console.log(`[KASV::onStart] ghostViewSpace=${ghostViewSpace.value}, scrollViewLayout.height=${scrollViewLayout.value.height}, contentSize.height=${scrollViewContentSize.value.height}`);
+
           if (ghostViewSpace.value > 0) {
             scrollPosition.value = position.value;
+            console.log(`[KASV::onStart] ghostViewSpace > 0 -> scrollPosition=${position.value}`);
           }
+
+          console.log(`[KASV::onStart] FINAL: scrollPosition=${scrollPosition.value}, position=${position.value}, keyboardHeight=${keyboardHeight.value}, initialKeyboardSize=${initialKeyboardSize.value}`);
+          console.log(`[KASV::onStart] FINAL: layout=${JSON.stringify(layout.value?.layout)}`);
         },
         onMove: (e) => {
           "worklet";
 
+          console.log(`[KASV::onMove] e.height=${e.height}, e.progress=${e.progress}, position=${position.value}`);
+
           if (removeGhostPadding(e.height)) {
+            console.log("[KASV::onMove] BAIL: removeGhostPadding handled it");
+
             return;
           }
 
@@ -478,16 +550,26 @@ const KeyboardAwareScrollView = forwardRef<
         onEnd: (e) => {
           "worklet";
 
+          console.log("=== [KASV::onEnd] ===");
+          console.log(`[KASV::onEnd] e.height=${e.height}, e.target=${e.target}`);
+          console.log(`[KASV::onEnd] BEFORE: keyboardHeight=${keyboardHeight.value}, scrollPosition=${scrollPosition.value}, position=${position.value}`);
+
           removeGhostPadding(e.height);
 
           keyboardHeight.value = e.height;
           scrollPosition.value = position.value;
 
           if (e.height === 0) {
-            lastSelection.value = null;
+            selectionUpdatedSinceHide.value = false;
+          } else {
+            // keyboard fully shown — clear pending flag to prevent leaking
+            // into next focus-change session
+            pendingSelectionForFocus.value = false;
           }
 
           syncKeyboardFrame(e);
+
+          console.log(`[KASV::onEnd] AFTER: keyboardHeight=${keyboardHeight.value}, scrollPosition=${scrollPosition.value}, position=${position.value}`);
         },
       },
       [
