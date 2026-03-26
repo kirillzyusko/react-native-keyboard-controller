@@ -1,4 +1,4 @@
 {
   "extends": "./tsconfig",
-  "exclude": ["example", "FabricExample", "docs", "e2e"]
+  "exclude": ["example", "FabricExample", "docs", "e2e", "**/__tests__", "**/__fixtures__"]
 }
