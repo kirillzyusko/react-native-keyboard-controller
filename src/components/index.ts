@@ -11,6 +11,6 @@ export type { KeyboardStickyViewProps } from "./KeyboardStickyView";
 export type {
   KeyboardAwareScrollViewProps,
   KeyboardAwareScrollViewRef,
-} from "./KeyboardAwareScrollView";
+} from "./KeyboardAwareScrollView/types";
 export type { KeyboardToolbarProps } from "./KeyboardToolbar";
 export type { KeyboardChatScrollViewProps } from "./KeyboardChatScrollView/types";
