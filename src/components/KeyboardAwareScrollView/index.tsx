@@ -561,9 +561,12 @@ const KeyboardAwareScrollView = forwardRef<
 
           if (e.height === 0) {
             selectionUpdatedSinceHide.value = false;
-          } else {
-            // keyboard fully shown — clear pending flag to prevent leaking
-            // into next focus-change session
+          } else if (keyboardWillAppear.value) {
+            // keyboard fully shown after appearing from hidden state — clear
+            // pending flag to prevent leaking into next focus-change session.
+            // Only when the keyboard was actually appearing (not a focus switch
+            // with same keyboard height), otherwise we'd clear the flag before
+            // onSelectionChange has a chance to process it.
             pendingSelectionForFocus.value = false;
           }
 
