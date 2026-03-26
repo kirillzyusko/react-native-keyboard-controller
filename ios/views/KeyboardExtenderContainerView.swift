@@ -12,7 +12,10 @@ public class KeyboardExtenderContainerView: NSObject {
   @objc public static func create(frame: CGRect, contentView: UIView) -> UIView {
     #if canImport(UIKit.UIGlassEffect)
       if #available(iOS 26.0, *) {
-        return ModernContainerView(frame: frame, contentView: contentView)
+        let requiresCompat = Bundle.main.object(forInfoDictionaryKey: "UIDesignRequiresCompatibility") as? Bool ?? false
+        if !requiresCompat {
+          return ModernContainerView(frame: frame, contentView: contentView)
+        }
       }
     #endif
 
