@@ -5,18 +5,29 @@ import { render, act } from "@testing-library/react-native";
 // ---------------------------------------------------------------------------
 // Constants (derived from real device logs)
 // ---------------------------------------------------------------------------
-const SCREEN_HEIGHT = 844;
-const KEYBOARD_HEIGHT = 291;
-const SV_TARGET = 769; // scrollView native handle
-const INPUT_TARGET = 765; // TextInput native handle
+const SCREEN_HEIGHT = 928;
+const KEYBOARD_HEIGHT = 312;
+const BOTTOM_OFFSET = 62;
+const SV_TARGET = 1469; // scrollView native handle
+const INPUT_TARGET_A = 1373; // first TextInput native handle
+const INPUT_TARGET_B = 1395; // second TextInput native handle
 
-const INPUT_LAYOUT = {
-  absoluteY: 541,
-  height: 360,
-  y: 450,
+const INPUT_LAYOUT_A = {
+  absoluteY: 281.67,
+  height: 60.33,
+  y: 165.67,
   x: 0,
-  absoluteX: 0,
-  width: 390,
+  absoluteX: 16,
+  width: 394.67,
+};
+
+const INPUT_LAYOUT_B = {
+  absoluteY: 695.67,
+  height: 60.33,
+  y: 579.67,
+  x: 0,
+  absoluteX: 16,
+  width: 121,
 };
 
 // ---------------------------------------------------------------------------
@@ -26,7 +37,7 @@ const mockScrollTo = jest.fn();
 const mockInput: { value: any } = { value: null };
 const mockOffset: { value: number } = { value: 0 };
 const mockLayout: { value: { width: number; height: number } } = {
-  value: { width: 390, height: 753 },
+  value: { width: 390, height: 812 },
 };
 const mockSize: { value: { width: number; height: number } } = {
   value: { width: 390, height: 2000 },
@@ -127,19 +138,21 @@ jest.mock("../../ScrollViewWithBottomPadding", () => {
 // Helpers
 // ---------------------------------------------------------------------------
 
-function inputEvent(overrides: Record<string, any> = {}) {
+function inputEvent(
+  target: number,
+  layout: typeof INPUT_LAYOUT_A,
+) {
   return {
-    target: INPUT_TARGET,
+    target,
     parentScrollViewTarget: SV_TARGET,
-    layout: { ...INPUT_LAYOUT },
-    ...overrides,
+    layout: { ...layout },
   };
 }
 
 function selectionEvent(
-  target = INPUT_TARGET,
-  endY = 123,
-  endPosition = 338,
+  target: number,
+  endY = 47,
+  endPosition = 0,
 ) {
   return {
     target,
@@ -150,11 +163,11 @@ function selectionEvent(
   };
 }
 
-function kbEvent(height: number, target = INPUT_TARGET) {
+function kbEvent(height: number, target: number) {
   return {
     height,
     target,
-    duration: 250,
+    duration: height > 0 ? 285 : 285,
     progress: KEYBOARD_HEIGHT > 0 ? height / KEYBOARD_HEIGHT : 0,
   };
 }
@@ -162,33 +175,28 @@ function kbEvent(height: number, target = INPUT_TARGET) {
 function resetMocks() {
   mockScrollTo.mockClear();
   mockOffset.value = 0;
-  mockLayout.value = { width: 390, height: 753 };
+  mockLayout.value = { width: 390, height: 812 };
   mockSize.value = { width: 390, height: 2000 };
   mockInput.value = null;
   capturedOnLayout = null;
 }
 
-/**
- * Render the component and trigger onLayout so that `scrollViewTarget` is set.
- */
-async function renderKASV() {
+async function renderKASV(bottomOffset = BOTTOM_OFFSET) {
   const KeyboardAwareScrollView = require("../index").default;
 
   render(
-    <KeyboardAwareScrollView>
+    <KeyboardAwareScrollView bottomOffset={bottomOffset}>
       <View />
     </KeyboardAwareScrollView>,
   );
 
-  // Trigger onLayout to set scrollViewTarget via findNodeHandle
   await act(async () => {
     capturedOnLayout?.({
-      nativeEvent: { layout: { x: 0, y: 0, width: 390, height: 753 } },
+      nativeEvent: { layout: { x: 0, y: 0, width: 390, height: 812 } },
     });
   });
 }
 
-/** Return the `y` argument of the most recent `scrollTo` call, or undefined. */
 function lastScrollToY(): number | undefined {
   const calls = mockScrollTo.mock.calls;
 
@@ -196,7 +204,6 @@ function lastScrollToY(): number | undefined {
     return undefined;
   }
 
-  // scrollTo(ref, x, y, animated)
   return calls[calls.length - 1][2];
 }
 
@@ -209,117 +216,144 @@ beforeEach(() => {
 });
 
 describe("KeyboardAwareScrollView scroll behavior", () => {
+  // First input (A) is above the keyboard — no scroll needed.
+  // Second input (B) is below the keyboard — scroll IS needed.
+  //
+  // visibleRect = 928 - 312 = 616
+  //
+  // Input A: point = 281.67 + 47 = 328.67
+  //   visibleRect - point = 287.33 > bottomOffset(62) → NO scroll
+  //
+  // Input B: point = 695.67 + 47 = 742.67
+  //   visibleRect - point = -126.67 <= bottomOffset(62) → SCROLL
+  //   relativeScrollTo = 312 - (928 - 742.67) + 62 = 188.67
+  //   targetScrollY = 188.67 + scrollPosition
+
   describe("iOS 16+: onSelectionChange → onStart → onMove → onEnd", () => {
-    it("should scroll to correct position using selection-corrected height", async () => {
+    it("should not scroll when input is already visible", async () => {
       await renderKASV();
-      mockInput.value = inputEvent();
+      mockInput.value = inputEvent(INPUT_TARGET_A, INPUT_LAYOUT_A);
 
-      // 1. Selection arrives BEFORE onStart (iOS 16+ behavior)
-      selectionHandler(selectionEvent());
+      selectionHandler(selectionEvent(INPUT_TARGET_A));
+      keyboardHandlers.onStart(kbEvent(KEYBOARD_HEIGHT, INPUT_TARGET_A));
 
-      // 2. Keyboard starts showing
-      keyboardHandlers.onStart(kbEvent(KEYBOARD_HEIGHT));
-
-      // 3. Simulate final onMove frame at full keyboard height
       mockScrollTo.mockClear();
-      keyboardHandlers.onMove(kbEvent(KEYBOARD_HEIGHT));
+      keyboardHandlers.onMove(kbEvent(KEYBOARD_HEIGHT, INPUT_TARGET_A));
 
-      // point = 541 + 123 = 664
-      // relativeScrollTo = 291 - (844 - 664) + 0 = 111
-      // targetScrollY = 111 + 0 = 111
-      expect(lastScrollToY()).toBeCloseTo(111, 0);
+      // Input A is visible — no scroll needed
+      expect(mockScrollTo).not.toHaveBeenCalled();
 
-      keyboardHandlers.onEnd(kbEvent(KEYBOARD_HEIGHT));
+      keyboardHandlers.onEnd(kbEvent(KEYBOARD_HEIGHT, INPUT_TARGET_A));
     });
   });
 
   describe("iOS 15: onStart → onSelectionChange → onMove → onEnd", () => {
     it("should use deferred selection and scroll correctly", async () => {
       await renderKASV();
-      mockInput.value = inputEvent();
+      mockInput.value = inputEvent(INPUT_TARGET_B, INPUT_LAYOUT_B);
 
-      // 1. Keyboard starts BEFORE selection (iOS 15 behavior)
-      keyboardHandlers.onStart(kbEvent(KEYBOARD_HEIGHT));
+      keyboardHandlers.onStart(kbEvent(KEYBOARD_HEIGHT, INPUT_TARGET_B));
+      selectionHandler(selectionEvent(INPUT_TARGET_B));
 
-      // 2. Selection arrives after onStart
-      selectionHandler(selectionEvent());
-
-      // 3. Final onMove frame
       mockScrollTo.mockClear();
-      keyboardHandlers.onMove(kbEvent(KEYBOARD_HEIGHT));
+      keyboardHandlers.onMove(kbEvent(KEYBOARD_HEIGHT, INPUT_TARGET_B));
 
-      // Must use selection-corrected height (123), not full input (360)
-      expect(lastScrollToY()).toBeCloseTo(111, 0);
+      // Must use selection height (47), not full input (60.33)
+      expect(lastScrollToY()).toBeCloseTo(188.67, 0);
 
-      keyboardHandlers.onEnd(kbEvent(KEYBOARD_HEIGHT));
+      keyboardHandlers.onEnd(kbEvent(KEYBOARD_HEIGHT, INPUT_TARGET_B));
     });
   });
 
   describe("iOS 15: refocus same input after keyboard hide", () => {
     it("should use fresh selection data on refocus", async () => {
       await renderKASV();
-      mockInput.value = inputEvent();
+      mockInput.value = inputEvent(INPUT_TARGET_B, INPUT_LAYOUT_B);
 
-      // ---- First focus (cursor at y=123) ----
-      keyboardHandlers.onStart(kbEvent(KEYBOARD_HEIGHT));
-      selectionHandler(selectionEvent(INPUT_TARGET, 123, 338));
-      keyboardHandlers.onMove(kbEvent(KEYBOARD_HEIGHT));
-      keyboardHandlers.onEnd(kbEvent(KEYBOARD_HEIGHT));
-      mockOffset.value = 111;
+      // ---- First focus (cursor at y=47) ----
+      keyboardHandlers.onStart(kbEvent(KEYBOARD_HEIGHT, INPUT_TARGET_B));
+      selectionHandler(selectionEvent(INPUT_TARGET_B, 47, 0));
+      keyboardHandlers.onMove(kbEvent(KEYBOARD_HEIGHT, INPUT_TARGET_B));
+      keyboardHandlers.onEnd(kbEvent(KEYBOARD_HEIGHT, INPUT_TARGET_B));
+      mockOffset.value = 189;
 
       // ---- Keyboard hide ----
-      keyboardHandlers.onStart(kbEvent(0));
-      keyboardHandlers.onEnd(kbEvent(0));
+      keyboardHandlers.onStart(kbEvent(0, INPUT_TARGET_B));
+      keyboardHandlers.onEnd(kbEvent(0, INPUT_TARGET_B));
       mockOffset.value = 0;
 
-      // ---- Second focus (cursor moved to y=273) ----
+      // ---- Second focus (cursor at y=20 — different position) ----
       mockScrollTo.mockClear();
 
-      keyboardHandlers.onStart(kbEvent(KEYBOARD_HEIGHT));
-      // Fresh selection arrives with a different cursor position
-      selectionHandler(selectionEvent(INPUT_TARGET, 273, 736));
-      keyboardHandlers.onMove(kbEvent(KEYBOARD_HEIGHT));
+      keyboardHandlers.onStart(kbEvent(KEYBOARD_HEIGHT, INPUT_TARGET_B));
+      selectionHandler(selectionEvent(INPUT_TARGET_B, 20, 5));
+      keyboardHandlers.onMove(kbEvent(KEYBOARD_HEIGHT, INPUT_TARGET_B));
 
-      // Should use fresh selection height (273), not stale (123)
-      // point = 541 + 273 = 814
-      // relativeScrollTo = 291 - (844 - 814) + 0 = 261
-      // targetScrollY = 261 + 0 = 261
-      expect(lastScrollToY()).toBeCloseTo(261, 0);
+      // point = 695.67 + 20 = 715.67
+      // relativeScrollTo = 312 - (928 - 715.67) + 62 = 161.67
+      expect(lastScrollToY()).toBeCloseTo(161.67, 0);
 
-      keyboardHandlers.onEnd(kbEvent(KEYBOARD_HEIGHT));
+      keyboardHandlers.onEnd(kbEvent(KEYBOARD_HEIGHT, INPUT_TARGET_B));
     });
   });
 
   describe("Android: refocus same input, selection not re-emitted", () => {
     it("should use stale selection as fallback when no new selection arrives", async () => {
       await renderKASV();
-      mockInput.value = inputEvent();
+      mockInput.value = inputEvent(INPUT_TARGET_B, INPUT_LAYOUT_B);
 
       // ---- First focus (selection arrives) ----
-      selectionHandler(selectionEvent(INPUT_TARGET, 123, 338));
-      keyboardHandlers.onStart(kbEvent(KEYBOARD_HEIGHT));
-      keyboardHandlers.onMove(kbEvent(KEYBOARD_HEIGHT));
-      keyboardHandlers.onEnd(kbEvent(KEYBOARD_HEIGHT));
-      mockOffset.value = 111;
+      selectionHandler(selectionEvent(INPUT_TARGET_B, 47, 0));
+      keyboardHandlers.onStart(kbEvent(KEYBOARD_HEIGHT, INPUT_TARGET_B));
+      keyboardHandlers.onMove(kbEvent(KEYBOARD_HEIGHT, INPUT_TARGET_B));
+      keyboardHandlers.onEnd(kbEvent(KEYBOARD_HEIGHT, INPUT_TARGET_B));
+      mockOffset.value = 189;
 
       // ---- Keyboard hide ----
-      keyboardHandlers.onStart(kbEvent(0));
-      keyboardHandlers.onEnd(kbEvent(0));
+      keyboardHandlers.onStart(kbEvent(0, INPUT_TARGET_B));
+      keyboardHandlers.onEnd(kbEvent(0, INPUT_TARGET_B));
       mockOffset.value = 0;
 
       // ---- Second focus (NO selection event — Android behavior) ----
       mockScrollTo.mockClear();
 
-      keyboardHandlers.onStart(kbEvent(KEYBOARD_HEIGHT));
-      // No selectionHandler call — Android doesn't re-emit for same cursor
-      keyboardHandlers.onMove(kbEvent(KEYBOARD_HEIGHT));
+      keyboardHandlers.onStart(kbEvent(KEYBOARD_HEIGHT, INPUT_TARGET_B));
+      keyboardHandlers.onMove(kbEvent(KEYBOARD_HEIGHT, INPUT_TARGET_B));
 
-      // Must use stale selection (height=123), NOT full input height (360)
-      // With full input: point = 541+360 = 901, scroll = 348 (WRONG)
-      // With stale selection: point = 541+123 = 664, scroll = 111 (CORRECT)
-      expect(lastScrollToY()).toBeCloseTo(111, 0);
+      // Must use stale selection (height=47), NOT full input height (60.33)
+      expect(lastScrollToY()).toBeCloseTo(188.67, 0);
 
-      keyboardHandlers.onEnd(kbEvent(KEYBOARD_HEIGHT));
+      keyboardHandlers.onEnd(kbEvent(KEYBOARD_HEIGHT, INPUT_TARGET_B));
+    });
+  });
+
+  describe("Toolbar: focus switch while keyboard is visible", () => {
+    it("should scroll to newly focused input via deferred selection", async () => {
+      await renderKASV();
+      mockInput.value = inputEvent(INPUT_TARGET_A, INPUT_LAYOUT_A);
+
+      // ---- Focus input A — keyboard opens, no scroll needed ----
+      selectionHandler(selectionEvent(INPUT_TARGET_A));
+      keyboardHandlers.onStart(kbEvent(KEYBOARD_HEIGHT, INPUT_TARGET_A));
+      keyboardHandlers.onMove(kbEvent(KEYBOARD_HEIGHT, INPUT_TARGET_A));
+      keyboardHandlers.onEnd(kbEvent(KEYBOARD_HEIGHT, INPUT_TARGET_A));
+
+      // ---- Toolbar moves focus to input B (keyboard stays visible) ----
+      // Native sends onStart → onEnd (no animation, duration=0)
+      // then onSelectionChange arrives
+      mockInput.value = inputEvent(INPUT_TARGET_B, INPUT_LAYOUT_B);
+      mockScrollTo.mockClear();
+
+      keyboardHandlers.onStart(kbEvent(KEYBOARD_HEIGHT, INPUT_TARGET_B));
+      keyboardHandlers.onEnd(kbEvent(KEYBOARD_HEIGHT, INPUT_TARGET_B));
+
+      // Selection arrives AFTER onEnd — the pendingSelectionForFocus flag
+      // must survive onEnd so the deferred scroll runs here
+      selectionHandler(selectionEvent(INPUT_TARGET_B, 47, 0));
+
+      // point = 695.67 + 47 = 742.67
+      // relativeScrollTo = 312 - (928 - 742.67) + 62 = 188.67
+      expect(lastScrollToY()).toBeCloseTo(188.67, 0);
     });
   });
 });
