@@ -197,6 +197,7 @@ export default List;
 ### `@gorhom/bottom-sheet`
 
 To seamlessly work with [@gorhom/bottom-sheet](https://github.com/gorhom/react-native-bottom-sheet) you will need to wrap `KeyboardAwareScrollView` in some HOCs provided by `@gorhom/bottom-sheet`.
+Let Reanimated infer the component props here to avoid TypeScript overload mismatches in newer Reanimated versions.
 
 ```tsx title="BottomSheetKeyboardAwareScrollView.tsx"
 import { memo } from "react";
@@ -213,9 +214,7 @@ import type { BottomSheetScrollViewProps } from "@gorhom/bottom-sheet/src/compon
 import Reanimated from "react-native-reanimated";
 
 const AnimatedScrollView =
-  Reanimated.createAnimatedComponent<KeyboardAwareScrollViewProps>(
-    KeyboardAwareScrollView,
-  );
+  Reanimated.createAnimatedComponent(KeyboardAwareScrollView);
 const BottomSheetScrollViewComponent = createBottomSheetScrollableComponent<
   BottomSheetScrollViewMethods,
   BottomSheetScrollViewProps
