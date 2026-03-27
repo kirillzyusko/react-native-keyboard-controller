@@ -94,4 +94,7 @@ export const options = {
   [ScreenNames.AI_LEGEND_LIST_CHAT]: {
     title: "AI LegendList Chat",
   },
+  [ScreenNames.KEYBOARD_EFFECTS]: {
+    title: "Keyboard Effects",
+  },
 };

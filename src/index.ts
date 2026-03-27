@@ -15,11 +15,13 @@ export {
   // keyboard toolbar
   KeyboardToolbar,
   DefaultKeyboardToolbarTheme,
+  KeyboardEffects,
 } from "./components";
 export type {
   KeyboardChatScrollViewProps,
   KeyboardAvoidingViewProps,
   KeyboardStickyViewProps,
+  KeyboardEffectsProps,
   KeyboardAwareScrollViewProps,
   KeyboardAwareScrollViewRef,
   KeyboardToolbarProps,
