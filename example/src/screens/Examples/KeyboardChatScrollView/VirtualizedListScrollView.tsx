@@ -15,10 +15,12 @@ import {
   invertedContentContainerStyle,
 } from "./styles";
 
+import type { RefCallback } from "react";
 import type { SharedValue } from "react-native-reanimated";
 
 type VirtualizedListScrollViewProps = ScrollViewProps & {
   extraContentPadding?: SharedValue<number>;
+  chatScrollViewRef?: { current: VirtualizedListScrollViewRef | null };
 };
 
 export type VirtualizedListScrollViewRef = React.ElementRef<
@@ -28,49 +30,82 @@ export type VirtualizedListScrollViewRef = React.ElementRef<
 const VirtualizedListScrollView = forwardRef<
   VirtualizedListScrollViewRef,
   VirtualizedListScrollViewProps
->(({ onLayout: onLayoutProp, extraContentPadding, ...props }, ref) => {
-  const [layoutPass, setLayoutPass] = useState(0);
-  const { bottom } = useSafeAreaInsets();
-  const chatKitOffset = bottom - MARGIN;
-
-  const { inverted, freeze, mode, keyboardLiftBehavior } = useChatConfigStore();
-
-  // on old arch only FlatList and FlashList supports `inverted` prop
-  const isInvertedSupported =
-    inverted && (mode === "flat" || mode === "flash") ? inverted : false;
-  const onLayout = useCallback(
-    (e: LayoutChangeEvent) => {
-      setLayoutPass((l) => l + 1);
-      onLayoutProp?.(e);
+>(
+  (
+    {
+      onLayout: onLayoutProp,
+      extraContentPadding,
+      chatScrollViewRef,
+      ...props
     },
-    [onLayoutProp],
-  );
-
-  return (
-    <>
-      <KeyboardChatScrollView
-        ref={ref}
-        automaticallyAdjustContentInsets={false}
-        contentContainerStyle={
-          inverted ? invertedContentContainerStyle : contentContainerStyle
+    ref,
+  ) => {
+    const setScrollViewRef = useCallback(
+      (instance: VirtualizedListScrollViewRef | null) => {
+        if (chatScrollViewRef) {
+          // eslint-disable-next-line react-compiler/react-compiler
+          chatScrollViewRef.current =
+            instance as VirtualizedListScrollViewRef | null;
         }
-        contentInsetAdjustmentBehavior="never"
-        extraContentPadding={extraContentPadding}
-        freeze={freeze}
-        inverted={isInvertedSupported}
-        keyboardDismissMode="interactive"
-        keyboardLiftBehavior={keyboardLiftBehavior}
-        offset={chatKitOffset}
-        testID="chat.scroll"
-        onLayout={onLayout}
-        {...props}
-      />
-      <Text style={styles.counter} testID="layout_passes">
-        Layout pass: {layoutPass}
-      </Text>
-    </>
-  );
-});
+      },
+      [chatScrollViewRef],
+    );
+    const combinedRef: RefCallback<VirtualizedListScrollViewRef> = useCallback(
+      (instance) => {
+        if (typeof ref === "function") {
+          ref(instance);
+        } else if (ref) {
+          ref.current = instance;
+        }
+
+        setScrollViewRef(instance);
+      },
+      [ref, setScrollViewRef],
+    );
+    const [layoutPass, setLayoutPass] = useState(0);
+    const { bottom } = useSafeAreaInsets();
+    const chatKitOffset = bottom - MARGIN;
+
+    const { inverted, freeze, mode, keyboardLiftBehavior } =
+      useChatConfigStore();
+
+    // on old arch only FlatList and FlashList supports `inverted` prop
+    const isInvertedSupported =
+      inverted && (mode === "flat" || mode === "flash") ? inverted : false;
+    const onLayout = useCallback(
+      (e: LayoutChangeEvent) => {
+        setLayoutPass((l) => l + 1);
+        onLayoutProp?.(e);
+      },
+      [onLayoutProp],
+    );
+
+    return (
+      <>
+        <KeyboardChatScrollView
+          ref={combinedRef}
+          automaticallyAdjustContentInsets={false}
+          contentContainerStyle={
+            inverted ? invertedContentContainerStyle : contentContainerStyle
+          }
+          contentInsetAdjustmentBehavior="never"
+          extraContentPadding={extraContentPadding}
+          freeze={freeze}
+          inverted={isInvertedSupported}
+          keyboardDismissMode="interactive"
+          keyboardLiftBehavior={keyboardLiftBehavior}
+          offset={chatKitOffset}
+          testID="chat.scroll"
+          onLayout={onLayout}
+          {...props}
+        />
+        <Text style={styles.counter} testID="layout_passes">
+          Layout pass: {layoutPass}
+        </Text>
+      </>
+    );
+  },
+);
 
 const styles = StyleSheet.create({
   counter: {
