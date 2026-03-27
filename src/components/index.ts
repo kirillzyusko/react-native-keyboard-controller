@@ -6,8 +6,10 @@ export {
   DefaultKeyboardToolbarTheme,
 } from "./KeyboardToolbar";
 export { default as KeyboardChatScrollView } from "./KeyboardChatScrollView";
+export { default as KeyboardEffects } from "./KeyboardEffects";
 export type { KeyboardAvoidingViewProps } from "./KeyboardAvoidingView";
 export type { KeyboardStickyViewProps } from "./KeyboardStickyView";
+export type { KeyboardEffectsProps } from "./KeyboardEffects";
 export type {
   KeyboardAwareScrollViewProps,
   KeyboardAwareScrollViewRef,
