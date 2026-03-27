@@ -17,6 +17,7 @@ export const MOCK_SCREEN_HEIGHT = 928;
 export const KEYBOARD_HEIGHT = 312;
 export const BOTTOM_OFFSET = 62;
 export const MOCK_SV_TARGET = 1469;
+export const MOCK_SV_PAGE_Y = 116;
 export const INPUT_TARGET_A = 1373;
 export const INPUT_TARGET_B = 1395;
 
