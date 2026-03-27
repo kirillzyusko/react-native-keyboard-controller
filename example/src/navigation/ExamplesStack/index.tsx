@@ -16,6 +16,7 @@ import KeyboardAnimation from "../../screens/Examples/KeyboardAnimation";
 import KeyboardAvoidingViewExample from "../../screens/Examples/KeyboardAvoidingView";
 import KeyboardAvoidingViewAutomaticExample from "../../screens/Examples/KeyboardAvoidingViewAutomatic";
 import KeyboardChatScrollViewPlayground from "../../screens/Examples/KeyboardChatScrollView";
+import KeyboardEffectsExample from "../../screens/Examples/KeyboardEffects";
 import KeyboardExtender from "../../screens/Examples/KeyboardExtender";
 import KeyboardSharedTransitionExample from "../../screens/Examples/KeyboardSharedTransitions";
 import UseKeyboardState from "../../screens/Examples/KeyboardStateHook";
@@ -62,6 +63,7 @@ export type ExamplesStackParamList = {
   [ScreenNames.KEYBOARD_EXTENDER]: undefined;
   [ScreenNames.CHAT_KIT]: undefined;
   [ScreenNames.AI_LEGEND_LIST_CHAT]: undefined;
+  [ScreenNames.KEYBOARD_EFFECTS]: undefined;
 };
 
 const Stack = createStackNavigator<ExamplesStackParamList>();
@@ -207,6 +209,11 @@ const ExamplesStack = () => (
       component={AILegendListChat}
       name={ScreenNames.AI_LEGEND_LIST_CHAT}
       options={options[ScreenNames.AI_LEGEND_LIST_CHAT]}
+    />
+    <Stack.Screen
+      component={KeyboardEffectsExample}
+      name={ScreenNames.KEYBOARD_EFFECTS}
+      options={options[ScreenNames.KEYBOARD_EFFECTS]}
     />
   </Stack.Navigator>
 );
