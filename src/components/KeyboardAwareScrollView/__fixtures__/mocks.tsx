@@ -13,6 +13,7 @@
 // ---------------------------------------------------------------------------
 const MOCK_SCREEN_H = 928;
 const MOCK_SV = 1469;
+const MOCK_SV_PAGE_Y = 116;
 
 const mockInterpolateFn = (
   value: number,
@@ -89,7 +90,7 @@ jest.mock("../../../utils/findNodeHandle", () => ({
 
 jest.mock("../../../bindings", () => ({
   KeyboardControllerNative: {
-    viewPositionInWindow: jest.fn().mockResolvedValue({ y: 0 }),
+    viewPositionInWindow: jest.fn().mockResolvedValue({ y: MOCK_SV_PAGE_Y }),
   },
 }));
 

@@ -565,18 +565,20 @@ const KeyboardAwareScrollView = forwardRef<
           }
 
           // When keyboard size changes for the same input (e.g. emoji ↔ text),
-          // absoluteY in the stored layout is stale — it reflects the input's
-          // position before any keyboard-related scrolling. Adjust it to match
-          // the current on-screen position so maybeScroll computes correctly.
+          // absoluteY in the stored layout may be stale on some platforms (iOS
+          // doesn't update it when scroll changes, Android does). Compute the
+          // actual on-screen position from the input's content-relative Y,
+          // current scroll offset, and ScrollView's position — this is correct
+          // regardless of whether the native side updated absoluteY.
           if (keyboardWillChangeSize && !actualFocusChanged && layout.value) {
-            const scrolledAmount =
-              position.value - scrollBeforeKeyboardMovement.value;
-
             layout.value = {
               ...layout.value,
               layout: {
                 ...layout.value.layout,
-                absoluteY: layout.value.layout.absoluteY - scrolledAmount,
+                absoluteY:
+                  layout.value.layout.y -
+                  position.value +
+                  scrollViewPageY.value,
               },
             };
           }
