@@ -5,7 +5,10 @@ import {
   StyleSheet,
   Text,
 } from "react-native";
-import { KeyboardChatScrollView } from "react-native-keyboard-controller";
+import {
+  KeyboardChatScrollView,
+  KeyboardController,
+} from "react-native-keyboard-controller";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useChatConfigStore } from "./store";
@@ -65,7 +68,11 @@ const VirtualizedListScrollView = forwardRef<
         onLayout={onLayout}
         {...props}
       />
-      <Text style={styles.counter} testID="layout_passes">
+      <Text
+        style={styles.counter}
+        testID="layout_passes"
+        onPress={() => KeyboardController.dismiss()}
+      >
         Layout pass: {layoutPass}
       </Text>
     </>
