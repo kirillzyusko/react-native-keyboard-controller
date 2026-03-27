@@ -60,7 +60,7 @@ extension KeyboardMovementObserver {
       let position = CGFloat(animation.valueAt(time: duration))
       // handles a case when final frame has final destination (i. e. 0 or 291)
       // but CASpringAnimation can never get to this final destination
-      let race: (CGFloat, CGFloat) -> CGFloat = animation.isIncreasing ? max : min
+      let race: (CGFloat, CGFloat) -> CGFloat = animation.isIncreasing ? { max($0, $1) } : { min($0, $1) }
       keyboardPosition = race(position, keyboardPosition)
       animation.lastValue = keyboardPosition
     }
