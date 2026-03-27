@@ -30,33 +30,14 @@ import ScrollViewWithBottomPadding from "../ScrollViewWithBottomPadding";
 import { useSmoothKeyboardHandler } from "./useSmoothKeyboardHandler";
 import { debounce, scrollDistanceWithRespectToSnapPoints } from "./utils";
 
-import type { AnimatedScrollViewComponent } from "../ScrollViewWithBottomPadding";
-import type {
-  LayoutChangeEvent,
-  ScrollView,
-  ScrollViewProps,
-} from "react-native";
+import type { LayoutChangeEvent, ScrollView } from "react-native";
 import type {
   FocusedInputLayoutChangedEvent,
   FocusedInputSelectionChangedEvent,
+  KeyboardAwareScrollViewProps,
+  KeyboardAwareScrollViewRef,
   NativeEvent,
 } from "react-native-keyboard-controller";
-
-export type KeyboardAwareScrollViewProps = {
-  /** The distance between the keyboard and the caret inside a focused `TextInput` when the keyboard is shown. Default is `0`. */
-  bottomOffset?: number;
-  /** Prevents automatic scrolling of the `ScrollView` when the keyboard gets hidden, maintaining the current screen position. Default is `false`. */
-  disableScrollOnKeyboardHide?: boolean;
-  /** Controls whether this `KeyboardAwareScrollView` instance should take effect. Default is `true`. */
-  enabled?: boolean;
-  /** Adjusting the bottom spacing of KeyboardAwareScrollView. Default is `0`. */
-  extraKeyboardSpace?: number;
-  /** Custom component for `ScrollView`. Default is `ScrollView`. */
-  ScrollViewComponent?: AnimatedScrollViewComponent;
-} & ScrollViewProps;
-export type KeyboardAwareScrollViewRef = {
-  assureFocusedInputVisible: () => void;
-} & ScrollView;
 
 // Everything begins from `onStart` handler. This handler is called every time,
 // when keyboard changes its size or when focused `TextInput` was changed. In
@@ -151,6 +132,7 @@ const KeyboardAwareScrollView = forwardRef<
       useSharedValue<FocusedInputSelectionChangedEvent | null>(null);
     const ghostViewSpace = useSharedValue(-1);
     const pendingSelectionForFocus = useSharedValue(false);
+    const selectionUpdatedSinceHide = useSharedValue(false);
     const scrollViewPageY = useSharedValue(0);
 
     const { height } = useWindowDimensions();
@@ -339,8 +321,9 @@ const KeyboardAwareScrollView = forwardRef<
         const latestSelection = lastSelection.value?.selection;
 
         lastSelection.value = e;
+        selectionUpdatedSinceHide.value = true;
 
-        if (e.target !== lastTarget) {
+        if (e.target !== lastTarget || pendingSelectionForFocus.value) {
           if (pendingSelectionForFocus.value) {
             // selection arrived after onStart - complete the deferred setup
             pendingSelectionForFocus.value = false;
@@ -428,14 +411,22 @@ const KeyboardAwareScrollView = forwardRef<
           if (focusWasChanged) {
             tag.value = e.target;
 
-            if (lastSelection.value?.target === e.target) {
-              // selection arrived before onStart - use it to update layout
+            if (
+              lastSelection.value?.target === e.target &&
+              selectionUpdatedSinceHide.value
+            ) {
+              // fresh selection arrived before onStart - use it to update layout
               updateLayoutFromSelection();
               pendingSelectionForFocus.value = false;
             } else {
-              // selection hasn't arrived yet for the new target.
-              // use input layout as-is; will be refined when selection arrives.
-              if (input.value) {
+              // selection hasn't arrived yet for the new target (iOS 15),
+              // or it's stale from previous session (Android refocus same input).
+              // Use stale selection as best-effort fallback if available for same target,
+              // otherwise fall back to full input layout.
+              // Will be corrected if a fresh onSelectionChange arrives.
+              if (lastSelection.value?.target === e.target) {
+                updateLayoutFromSelection();
+              } else if (input.value) {
                 layout.value = input.value;
               }
               pendingSelectionForFocus.value = true;
@@ -484,7 +475,14 @@ const KeyboardAwareScrollView = forwardRef<
           scrollPosition.value = position.value;
 
           if (e.height === 0) {
-            lastSelection.value = null;
+            selectionUpdatedSinceHide.value = false;
+          } else if (keyboardWillAppear.value) {
+            // keyboard fully shown after appearing from hidden state — clear
+            // pending flag to prevent leaking into next focus-change session.
+            // Only when the keyboard was actually appearing (not a focus switch
+            // with same keyboard height), otherwise we'd clear the flag before
+            // onSelectionChange has a chance to process it.
+            pendingSelectionForFocus.value = false;
           }
 
           syncKeyboardFrame(e);
