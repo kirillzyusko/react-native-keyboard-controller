@@ -15,6 +15,7 @@ export {
   // keyboard toolbar
   KeyboardToolbar,
   DefaultKeyboardToolbarTheme,
+  KeyboardEffects,
 } from "./components";
 export type {
   KeyboardChatScrollViewProps,
@@ -24,5 +25,6 @@ export type {
   KeyboardAwareScrollViewProps,
   KeyboardAwareScrollViewRef,
   KeyboardToolbarProps,
+  KeyboardEffectsProps,
 } from "./components";
 export { OverKeyboardView, KeyboardExtender } from "./views";
