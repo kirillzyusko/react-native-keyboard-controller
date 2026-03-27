@@ -213,9 +213,7 @@ import type { BottomSheetScrollViewProps } from "@gorhom/bottom-sheet/src/compon
 import Reanimated from "react-native-reanimated";
 
 const AnimatedScrollView =
-  Reanimated.createAnimatedComponent<KeyboardAwareScrollViewProps>(
-    KeyboardAwareScrollView,
-  );
+  Reanimated.createAnimatedComponent(KeyboardAwareScrollView);
 const BottomSheetScrollViewComponent = createBottomSheetScrollableComponent<
   BottomSheetScrollViewMethods,
   BottomSheetScrollViewProps
