@@ -22,6 +22,7 @@ import com.reactnativekeyboardcontroller.listeners.KeyboardAnimationCallbackConf
 import com.reactnativekeyboardcontroller.log.Logger
 import com.reactnativekeyboardcontroller.modal.ModalAttachedWatcher
 import java.lang.ref.WeakReference
+import kotlin.math.max
 
 private val TAG = EdgeToEdgeReactViewGroup::class.qualifiedName
 
@@ -110,10 +111,11 @@ class EdgeToEdgeReactViewGroup(
             FrameLayout.LayoutParams.MATCH_PARENT,
           )
 
-        val shouldApplyZeroPaddingTop = !active || this.isStatusBarTranslucent
-        val shouldApplyZeroPaddingBottom = !active || this.isNavigationBarTranslucent
+        val shouldApplyZeroPaddingTop = this.isStatusBarTranslucent
+        val shouldApplyZeroPaddingBottom = this.isNavigationBarTranslucent
         val navBarInsets = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
         val systemBarInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+        val keyboardInsets = if (active) 0 else insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
 
         params.setMargins(
           navBarInsets.left,
@@ -124,14 +126,14 @@ class EdgeToEdgeReactViewGroup(
           },
           navBarInsets.right,
           if (shouldApplyZeroPaddingBottom) {
-            0
+            keyboardInsets
           } else {
-            navBarInsets.bottom
+            max(navBarInsets.bottom, keyboardInsets)
           },
         )
         content?.layoutParams = params
 
-        v.replaceStatusBarInsets(insets, this.isStatusBarTranslucent, active)
+        insets
       }
     }
   }
@@ -145,7 +147,7 @@ class EdgeToEdgeReactViewGroup(
       reactContext.currentActivity?.let {
         WindowCompat.setDecorFitsSystemWindows(
           it.window,
-          !isEdgeToEdge,
+          false,
         )
       }
       // unclear legacy flag if it was set earlier
