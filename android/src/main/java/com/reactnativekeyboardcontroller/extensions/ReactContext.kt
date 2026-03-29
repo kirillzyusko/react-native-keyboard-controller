@@ -2,6 +2,7 @@ package com.reactnativekeyboardcontroller.extensions
 
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import com.facebook.react.bridge.ReactContext
 import com.facebook.react.uimanager.UIManagerHelper
 import com.facebook.react.uimanager.common.UIManagerType
@@ -28,3 +29,12 @@ val ReactContext.content: ViewGroup?
     this.currentActivity?.window?.decorView?.rootView?.findViewById(
       androidx.appcompat.R.id.action_bar_root,
     )
+
+val ReactContext.windowSoftInputMode: Int
+  get() =
+    this
+      .currentActivity
+      ?.window
+      ?.attributes
+      ?.softInputMode
+      ?: WindowManager.LayoutParams.SOFT_INPUT_STATE_UNSPECIFIED

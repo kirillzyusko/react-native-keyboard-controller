@@ -5,6 +5,7 @@ import android.content.res.Configuration
 import android.os.Handler
 import android.os.Looper
 import android.view.WindowManager
+import android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
 import android.widget.FrameLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
@@ -14,9 +15,9 @@ import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.views.view.ReactViewGroup
 import com.reactnativekeyboardcontroller.extensions.content
 import com.reactnativekeyboardcontroller.extensions.removeSelf
-import com.reactnativekeyboardcontroller.extensions.replaceStatusBarInsets
 import com.reactnativekeyboardcontroller.extensions.requestApplyInsetsWhenAttached
 import com.reactnativekeyboardcontroller.extensions.rootView
+import com.reactnativekeyboardcontroller.extensions.windowSoftInputMode
 import com.reactnativekeyboardcontroller.listeners.KeyboardAnimationCallback
 import com.reactnativekeyboardcontroller.listeners.KeyboardAnimationCallbackConfig
 import com.reactnativekeyboardcontroller.log.Logger
@@ -128,7 +129,8 @@ class EdgeToEdgeReactViewGroup(
           if (shouldApplyZeroPaddingBottom) {
             keyboardInsets
           } else {
-            max(navBarInsets.bottom, keyboardInsets)
+            if (reactContext.windowSoftInputMode == SOFT_INPUT_ADJUST_RESIZE)
+            max(navBarInsets.bottom, keyboardInsets) else navBarInsets.bottom
           },
         )
         content?.layoutParams = params
@@ -139,6 +141,7 @@ class EdgeToEdgeReactViewGroup(
   }
 
   fun setEdgeToEdge() {
+    // TODO: simplify
     val nextValue = active || isPreservingEdgeToEdge
 
     if (isEdgeToEdge != nextValue) {
