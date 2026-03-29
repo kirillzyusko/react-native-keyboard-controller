@@ -135,7 +135,7 @@ class EdgeToEdgeReactViewGroup(
         )
         content?.layoutParams = params
 
-        insets
+        ViewCompat.onApplyWindowInsets(v, insets)
       }
     }
   }
