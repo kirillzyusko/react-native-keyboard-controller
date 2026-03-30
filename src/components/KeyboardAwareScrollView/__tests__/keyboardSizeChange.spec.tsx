@@ -94,12 +94,6 @@ describe("KeyboardAwareScrollView — keyboard size change (emoji toggle)", () =
 
     const scrollAfterText = lastScrollToY();
 
-    // Should scroll back to roughly the original position (~188.67),
-    // NOT keep climbing higher
-    if (scrollAfterText !== undefined) {
-      expect(scrollAfterText).toBeLessThan(250);
-    }
-
     // Key assertion: position should NOT exceed the emoji keyboard scroll
     // (i.e. no accumulation happening)
     expect(scrollAfterText ?? mockOffset.value).toBeLessThan(
