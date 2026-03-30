@@ -46,7 +46,6 @@ class EdgeToEdgeReactViewGroup(
   private var isStatusBarTranslucent = false
   private var isNavigationBarTranslucent = false
   private var isPreservingEdgeToEdge = false
-  private var isEdgeToEdge = false
   var active: Boolean = false
     set(value) {
       field = value
@@ -112,28 +111,25 @@ class EdgeToEdgeReactViewGroup(
             FrameLayout.LayoutParams.MATCH_PARENT,
           )
 
-        val shouldApplyZeroPaddingTop = this.isStatusBarTranslucent
-        val shouldApplyZeroPaddingBottom = this.isNavigationBarTranslucent
+        val shouldApplyBottomPadding =
+          active && reactContext.windowSoftInputMode == SOFT_INPUT_ADJUST_RESIZE && !isPreservingEdgeToEdge
         val navBarInsets = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
         val systemBarInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-        val keyboardInsets = if (active) 0 else insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
+        val keyboardInsets =
+          if (!shouldApplyBottomPadding) 0 else insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
 
         params.setMargins(
           navBarInsets.left,
-          if (shouldApplyZeroPaddingTop) {
+          if (this.isStatusBarTranslucent) {
             0
           } else {
             systemBarInsets.top
           },
           navBarInsets.right,
-          if (shouldApplyZeroPaddingBottom) {
+          if (this.isNavigationBarTranslucent) {
             keyboardInsets
           } else {
-            if (reactContext.windowSoftInputMode == SOFT_INPUT_ADJUST_RESIZE) {
-              max(navBarInsets.bottom, keyboardInsets)
-            } else {
-              navBarInsets.bottom
-            }
+            max(navBarInsets.bottom, keyboardInsets)
           },
         )
         content?.layoutParams = params
@@ -144,21 +140,14 @@ class EdgeToEdgeReactViewGroup(
   }
 
   fun setEdgeToEdge() {
-    // TODO: simplify
-    val nextValue = active || isPreservingEdgeToEdge
-
-    if (isEdgeToEdge != nextValue) {
-      isEdgeToEdge = nextValue
-
-      reactContext.currentActivity?.let {
-        WindowCompat.setDecorFitsSystemWindows(
-          it.window,
-          false,
-        )
-      }
-      // unclear legacy flag if it was set earlier
-      reactContext.currentActivity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+    reactContext.currentActivity?.let {
+      WindowCompat.setDecorFitsSystemWindows(
+        it.window,
+        false,
+      )
     }
+    // unclear legacy flag if it was set earlier
+    reactContext.currentActivity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
   }
 
   private fun setupKeyboardCallbacks() {
