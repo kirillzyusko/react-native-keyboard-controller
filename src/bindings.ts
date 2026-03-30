@@ -17,6 +17,8 @@ import type { EmitterSubscription } from "react-native";
 
 const NOOP = () => {};
 
+export const keyboardBorderRadius: number = 0;
+
 export const KeyboardControllerNative: KeyboardControllerNativeModule = {
   setDefaultMode: NOOP,
   setInputMode: NOOP,

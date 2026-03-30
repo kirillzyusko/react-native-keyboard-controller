@@ -13,6 +13,8 @@ class KeyboardControllerModule(
 
   override fun getName(): String = KeyboardControllerModuleImpl.NAME
 
+  override fun getConstants(): MutableMap<String, Any> = mutableMapOf("keyboardBorderRadius" to 0)
+
   @ReactMethod
   fun setInputMode(mode: Int) {
     module.setInputMode(mode)

@@ -53,6 +53,13 @@ RCT_EXPORT_MODULE()
   return NO;
 }
 
+- (NSDictionary *)constantsToExport
+{
+  return @{
+    @"keyboardBorderRadius" : @([KeyboardExtenderContainerView keyboardBorderRadius]),
+  };
+}
+
 #ifdef RCT_NEW_ARCH_ENABLED
 - (void)setDefaultMode
 #else

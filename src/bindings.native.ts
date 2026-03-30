@@ -36,6 +36,9 @@ export const KeyboardControllerNative = (
       )
 ) as KeyboardControllerNativeModule;
 
+export const keyboardBorderRadius: number =
+  RCTKeyboardController?.getConstants()?.keyboardBorderRadius ?? 0;
+
 const KEYBOARD_CONTROLLER_NAMESPACE = "KeyboardController::";
 const eventEmitter = new NativeEventEmitter(KeyboardControllerNative);
 

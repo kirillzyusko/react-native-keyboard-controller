@@ -11,6 +11,8 @@ class KeyboardControllerModule(
 
   override fun getName(): String = KeyboardControllerModuleImpl.NAME
 
+  override fun getConstants(): MutableMap<String, Any> = mutableMapOf("keyboardBorderRadius" to 0)
+
   override fun setInputMode(mode: Double) {
     module.setInputMode(mode.toInt())
   }
