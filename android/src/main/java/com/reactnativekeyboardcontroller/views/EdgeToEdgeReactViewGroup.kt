@@ -129,8 +129,11 @@ class EdgeToEdgeReactViewGroup(
           if (shouldApplyZeroPaddingBottom) {
             keyboardInsets
           } else {
-            if (reactContext.windowSoftInputMode == SOFT_INPUT_ADJUST_RESIZE)
-            max(navBarInsets.bottom, keyboardInsets) else navBarInsets.bottom
+            if (reactContext.windowSoftInputMode == SOFT_INPUT_ADJUST_RESIZE) {
+              max(navBarInsets.bottom, keyboardInsets)
+            } else {
+              navBarInsets.bottom
+            }
           },
         )
         content?.layoutParams = params

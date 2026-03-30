@@ -4,9 +4,7 @@ import android.annotation.SuppressLint
 import android.graphics.Rect
 import android.os.Build
 import android.view.View
-import androidx.core.graphics.Insets
 import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.reactnativekeyboardcontroller.log.Logger
 
 /**

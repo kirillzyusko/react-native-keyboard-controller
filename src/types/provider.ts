@@ -24,7 +24,6 @@ export type KeyboardProviderProps = {
    *
    * @platform android
    * @see https://github.com/kirillzyusko/react-native-keyboard-controller/issues/592
-   * @deprecated Since 1.21.3 this prop doesn't have any effect and always preserves edge-to-edge mode.
    */
   preserveEdgeToEdge?: boolean;
   /**
