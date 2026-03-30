@@ -332,9 +332,7 @@ const KeyboardAwareScrollView = forwardRef<
             // if keyboard was already visible (focus change, no onMove expected),
             // perform the deferred scroll now
             if (!keyboardWillAppear.value && keyboardHeight.value > 0) {
-              const scrollDelta = maybeScroll(keyboardHeight.value, true);
-
-              position.value += scrollDelta;
+              position.value += maybeScroll(keyboardHeight.value, true);
             }
           }
 
@@ -466,9 +464,7 @@ const KeyboardAwareScrollView = forwardRef<
             if (!pendingSelectionForFocus.value) {
               // update position on scroll value, so `onEnd` handler
               // will pick up correct values
-              const scrollDelta = maybeScroll(e.height, true);
-
-              position.value += scrollDelta;
+              position.value += maybeScroll(e.height, true);
             }
           }
 
