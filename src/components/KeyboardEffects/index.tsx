@@ -1,6 +1,7 @@
 import React, { forwardRef, useMemo } from "react";
-import { Platform, StyleSheet, View as RNView } from "react-native";
+import { Platform, View as RNView, StyleSheet } from "react-native";
 
+import { KEYBOARD_BORDER_RADIUS } from "../../constants";
 import KeyboardStickyView from "../KeyboardStickyView";
 
 import type { KeyboardStickyViewProps } from "../KeyboardStickyView";
@@ -53,8 +54,8 @@ const styles = StyleSheet.create({
     height: 999,
   },
   rounded: {
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
+    borderTopLeftRadius: KEYBOARD_BORDER_RADIUS,
+    borderTopRightRadius: KEYBOARD_BORDER_RADIUS,
     overflow: "hidden",
   },
 });
