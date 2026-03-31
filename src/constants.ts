@@ -1,3 +1,5 @@
+import { KeyboardControllerNative } from "./bindings";
+
 // copied from `android.view.WindowManager.LayoutParams`
 export enum AndroidSoftInputModes {
   SOFT_INPUT_ADJUST_NOTHING = 48,
@@ -17,3 +19,5 @@ export enum AndroidSoftInputModes {
   SOFT_INPUT_STATE_UNSPECIFIED = 0,
   SOFT_INPUT_STATE_VISIBLE = 4,
 }
+export const KEYBOARD_BORDER_RADIUS =
+  KeyboardControllerNative.getConstants().keyboardBorderRadius;

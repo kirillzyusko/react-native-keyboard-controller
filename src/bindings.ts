@@ -17,8 +17,6 @@ import type { EmitterSubscription } from "react-native";
 
 const NOOP = () => {};
 
-export const keyboardBorderRadius: number = 0;
-
 export const KeyboardControllerNative: KeyboardControllerNativeModule = {
   setDefaultMode: NOOP,
   setInputMode: NOOP,
@@ -29,6 +27,9 @@ export const KeyboardControllerNative: KeyboardControllerNativeModule = {
     Promise.resolve({ x: 0, y: 0, width: 0, height: 0 }),
   addListener: NOOP,
   removeListeners: NOOP,
+  getConstants: () => ({
+    keyboardBorderRadius: 0,
+  }),
 };
 /**
  * An event emitter that provides a way to subscribe to next keyboard events:

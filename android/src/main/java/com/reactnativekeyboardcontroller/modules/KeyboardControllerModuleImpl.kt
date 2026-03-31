@@ -23,6 +23,7 @@ class KeyboardControllerModuleImpl(
   private val controller = KeyboardAnimationController()
   private val mDefaultMode: Int = getCurrentMode()
 
+  // region Module methods
   fun setInputMode(mode: Int) {
     setSoftInputMode(mode)
   }
@@ -102,7 +103,9 @@ class KeyboardControllerModuleImpl(
       promise.resolve(map)
     }
   }
+  // endregion
 
+  // region Helpers
   private fun setSoftInputMode(mode: Int) {
     UiThreadUtil.runOnUiThread {
       if (getCurrentMode() != mode) {
@@ -118,8 +121,13 @@ class KeyboardControllerModuleImpl(
       ?.attributes
       ?.softInputMode
       ?: WindowManager.LayoutParams.SOFT_INPUT_STATE_UNSPECIFIED
+  // endregion
+
+  // region Module constants
+  fun getConstants(): MutableMap<String, Any> = mutableMapOf("keyboardBorderRadius" to 0)
 
   companion object {
     const val NAME = "KeyboardController"
   }
+  // endregion
 }

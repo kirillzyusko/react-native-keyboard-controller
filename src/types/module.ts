@@ -130,4 +130,8 @@ export type KeyboardControllerNativeModule = {
   // native event module stuff
   addListener: (eventName: string) => void;
   removeListeners: (count: number) => void;
+  // constants
+  getConstants: () => {
+    keyboardBorderRadius: number;
+  };
 };
