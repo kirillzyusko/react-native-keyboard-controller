@@ -112,9 +112,16 @@ public class FocusedInputObserver: NSObject {
     NotificationCenter.default.removeObserver(self)
   }
 
-  @objc func didReceiveFocus(_: Notification) {
+  @objc func didReceiveFocus(_ notification: Notification) {
     if UIResponder.current == currentResponder {
-      // focus was already handled by keyboard event
+      // The same input is still focused — no need to re-run the full onFocus()
+      // setup (observers, delegate substitution, focusDidSet event). However,
+      // keyboardWillShowNotification also fires when the keyboard *resizes*
+      // (e.g. switching between text and emoji keyboards). In that case we must
+      // refresh the layout so consumers receive an up-to-date absoluteY.
+      if notification.name == UIResponder.keyboardWillShowNotification {
+        syncUpLayout()
+      }
       return
     }
 
