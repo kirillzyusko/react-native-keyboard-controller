@@ -3,7 +3,9 @@ import { TurboModuleRegistry } from "react-native";
 import type { TurboModule } from "react-native";
 
 export interface Spec extends TurboModule {
-  readonly getConstants: () => {};
+  readonly getConstants: () => {
+    keyboardBorderRadius: number;
+  };
 
   // methods
   setInputMode(mode: number): void;

@@ -13,6 +13,8 @@ class KeyboardControllerModule(
 
   override fun getName(): String = KeyboardControllerModuleImpl.NAME
 
+  override fun getConstants(): MutableMap<String, Any> = module.getConstants()
+
   @ReactMethod
   fun setInputMode(mode: Int) {
     module.setInputMode(mode)

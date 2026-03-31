@@ -11,6 +11,8 @@ class KeyboardControllerModule(
 
   override fun getName(): String = KeyboardControllerModuleImpl.NAME
 
+  override fun getTypedExportedConstants(): Map<String, Any> = module.getConstants()
+
   override fun setInputMode(mode: Double) {
     module.setInputMode(mode.toInt())
   }

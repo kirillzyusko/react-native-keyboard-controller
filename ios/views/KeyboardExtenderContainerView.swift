@@ -9,16 +9,26 @@ import UIKit
 
 @objc
 public class KeyboardExtenderContainerView: NSObject {
-  @objc public static func create(frame: CGRect, contentView: UIView) -> UIView {
+  private static func usesModernKeyboard() -> Bool {
     #if canImport(UIKit.UIGlassEffect)
       if #available(iOS 26.0, *) {
         let requiresCompat = Bundle.main.object(forInfoDictionaryKey: "UIDesignRequiresCompatibility") as? Bool ?? false
-        if !requiresCompat {
-          return ModernContainerView(frame: frame, contentView: contentView)
-        }
+        return !requiresCompat
       }
     #endif
+    return false
+  }
 
+  @objc public static func keyboardBorderRadius() -> CGFloat {
+    return usesModernKeyboard() ? 30 : 0
+  }
+
+  @objc public static func create(frame: CGRect, contentView: UIView) -> UIView {
+    if usesModernKeyboard() {
+      if #available(iOS 26.0, *) {
+        return ModernContainerView(frame: frame, contentView: contentView)
+      }
+    }
     return LegacyContainerView(frame: frame, contentView: contentView)
   }
 }
