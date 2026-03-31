@@ -432,21 +432,15 @@ const KeyboardAwareScrollView = forwardRef<
             }
 
             // save current scroll position - when keyboard will hide we'll reuse
-            // this value to achieve smooth hide effect.
-            // Only for actual focus changes — keyboard-size-only changes (e.g.
-            // emoji ↔ text toggle) should preserve the original value so that
-            // absoluteY correction and keyboard-hide scroll-back work correctly.
+            // this value to achieve smooth hide effect (only for actual focus change
+            // keyboard resize handled below)
             if (actualFocusChanged) {
               scrollBeforeKeyboardMovement.value = position.value;
             }
           }
 
-          // When keyboard size changes for the same input (e.g. emoji ↔ text),
-          // absoluteY in the stored layout may be stale on some platforms (iOS
-          // doesn't update it when scroll changes, Android does). Compute the
-          // actual on-screen position from the input's content-relative Y,
-          // current scroll offset, and ScrollView's position — this is correct
-          // regardless of whether the native side updated absoluteY.
+          // compute the actual on-screen position from the input's content-relative Y,
+          // current scroll offset, and ScrollView's position (case for keyboard resize)
           if (keyboardWillChangeSize && !actualFocusChanged && layout.value) {
             layout.value = {
               ...layout.value,
