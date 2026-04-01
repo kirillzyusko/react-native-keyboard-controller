@@ -288,3 +288,67 @@ To fix this, enable the [DISABLE\_COMMIT\_PAUSING\_MECHANISM](https://docs.swman
 Do I need to enable this flag?
 
 This issue can occur even if the state update comes from a different screen (e.g. a parent navigator). To check, open the React Profiler and look for any React commits that happen just before the keyboard event — if you see one, you likely need this flag.
+
+### `scrollToEnd` doesn't scroll to the correct position when keyboard is open[​](/react-native-keyboard-controller/docs/api/components/keyboard-chat-scroll-view.md#scrolltoend-doesnt-scroll-to-the-correct-position-when-keyboard-is-open "Direct link to scrolltoend-doesnt-scroll-to-the-correct-position-when-keyboard-is-open")
+
+React Native's `FlatList.scrollToEnd()` calculates the scroll offset using `visibleLength` without accounting for the keyboard-adjusted layout. This means calling `listRef.current?.scrollToEnd()` may stop short of the actual end when the keyboard is visible.
+
+**Workaround:** call `scrollToEnd` on the underlying `KeyboardChatScrollView` instead of the `FlatList`. Since `FlatList` internally assigns its own ref to the scroll component, you need a separate ref to reach it. Create a wrapper component that accepts a custom ref prop and forwards it alongside `FlatList`'s internal ref:
+
+```
+import { forwardRef, useCallback } from "react";
+import { KeyboardChatScrollView } from "react-native-keyboard-controller";
+
+import type { RefCallback } from "react";
+import type { ScrollViewProps } from "react-native";
+
+type ChatScrollViewRef = React.ElementRef<typeof KeyboardChatScrollView>;
+type ChatScrollViewProps = ScrollViewProps & {
+  chatScrollViewRef?: { current: ChatScrollViewRef | null };
+};
+
+const ChatScrollView = forwardRef<ChatScrollViewRef, ChatScrollViewProps>(
+  ({ chatScrollViewRef, ...props }, ref) => {
+    const combinedRef: RefCallback<ChatScrollViewRef> = useCallback(
+      (instance) => {
+        // forward to FlatList's internal ref
+        if (typeof ref === "function") {
+          ref(instance);
+        } else if (ref) {
+          ref.current = instance;
+        }
+
+        // forward to the user-provided ref
+        if (chatScrollViewRef) {
+          chatScrollViewRef.current = instance as ChatScrollViewRef | null;
+        }
+      },
+      [ref, chatScrollViewRef],
+    );
+
+    return <KeyboardChatScrollView ref={combinedRef} {...props} />;
+  },
+);
+```
+
+Then use it with `FlatList` via `renderScrollComponent`:
+
+```
+const chatScrollViewRef = useRef<ChatScrollViewRef>(null);
+
+const renderScrollComponent = useCallback(
+  (props: ScrollViewProps) => (
+    <ChatScrollView {...props} chatScrollViewRef={chatScrollViewRef} />
+  ),
+  [],
+);
+
+<FlatList
+  data={messages}
+  renderItem={renderItem}
+  renderScrollComponent={renderScrollComponent}
+/>;
+
+// Instead of listRef.current?.scrollToEnd()
+chatScrollViewRef.current?.scrollToEnd();
+```
