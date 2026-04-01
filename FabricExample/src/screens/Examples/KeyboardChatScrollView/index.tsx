@@ -1,5 +1,5 @@
-import { LegendList, type LegendListRef } from "@legendapp/list";
-import { FlashList, type FlashListRef } from "@shopify/flash-list";
+import { LegendList } from "@legendapp/list";
+import { FlashList } from "@shopify/flash-list";
 import React, {
   useCallback,
   useEffect,
@@ -39,13 +39,10 @@ import VirtualizedListScrollView, {
   type VirtualizedListScrollViewRef,
 } from "./VirtualizedListScrollView";
 
-import type { MessageProps } from "../../../components/Message/types";
 import type { LayoutChangeEvent, ScrollViewProps } from "react-native";
 
 function KeyboardChatScrollViewPlayground() {
-  const legendRef = useRef<LegendListRef>(null);
-  const flashRef = useRef<FlashListRef<MessageProps>>(null);
-  const flatRef = useRef<FlatList<MessageProps>>(null);
+  const chatScrollViewRef = useRef<VirtualizedListScrollViewRef | null>(null);
   const scrollRef = useRef<VirtualizedListScrollViewRef>(null);
   const [text, setText] = useState("");
   const [inputHeight, setInputHeight] = useState(TEXT_INPUT_HEIGHT);
@@ -84,15 +81,7 @@ function KeyboardChatScrollViewPlayground() {
   }, [addMessage, text]);
 
   useEffect(() => {
-    legendRef.current?.scrollToOffset({
-      animated: true,
-      offset: Number.MAX_SAFE_INTEGER,
-    });
-    flashRef.current?.scrollToEnd({ animated: true });
-    flatRef.current?.scrollToOffset({
-      animated: true,
-      offset: Number.MAX_SAFE_INTEGER,
-    });
+    chatScrollViewRef.current?.scrollToEnd({ animated: true });
     scrollRef.current?.scrollToEnd({ animated: true });
   }, [messages]);
 
@@ -100,6 +89,7 @@ function KeyboardChatScrollViewPlayground() {
     (props: ScrollViewProps) => (
       <VirtualizedListScrollView
         {...props}
+        chatScrollViewRef={chatScrollViewRef}
         extraContentPadding={extraContentPadding}
       />
     ),
@@ -116,7 +106,6 @@ function KeyboardChatScrollViewPlayground() {
       >
         {mode === "legend" && (
           <LegendList
-            ref={legendRef}
             alignItemsAtEnd={inverted}
             contentContainerStyle={contentContainerStyle}
             data={messages}
@@ -128,7 +117,6 @@ function KeyboardChatScrollViewPlayground() {
         )}
         {mode === "flash" && (
           <FlashList
-            ref={flashRef}
             contentContainerStyle={contentContainerStyle}
             data={messages}
             keyExtractor={(item) => item.text}
@@ -141,7 +129,6 @@ function KeyboardChatScrollViewPlayground() {
         )}
         {mode === "flat" && (
           <FlatList
-            ref={flatRef}
             data={inverted ? reversedMessages : messages}
             inverted={inverted}
             keyExtractor={(item) => item.text}
