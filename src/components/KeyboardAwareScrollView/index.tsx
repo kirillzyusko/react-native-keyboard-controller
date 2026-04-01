@@ -12,6 +12,7 @@ import Reanimated, {
   scrollTo,
   useAnimatedReaction,
   useAnimatedRef,
+  useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
 } from "react-native-reanimated";
@@ -104,6 +105,7 @@ const KeyboardAwareScrollView = forwardRef<
       disableScrollOnKeyboardHide = false,
       enabled = true,
       extraKeyboardSpace = 0,
+      mode = "insets",
       ScrollViewComponent = Reanimated.ScrollView,
       snapToOffsets,
       ...rest
@@ -219,30 +221,39 @@ const KeyboardAwareScrollView = forwardRef<
       },
       [bottomOffset, enabled, height, snapToOffsets],
     );
-    const removeGhostPadding = useCallback((e: number) => {
-      "worklet";
+    const removeGhostPadding = useCallback(
+      (e: number) => {
+        "worklet";
 
-      // new `ScrollViewWithBottomPadding` behavior: if we hide keyboard and we are in the end of `ScrollView`
-      // then we always need to scroll back, because we apply a padding that doesn't change layout, so we will
-      // not have auto scroll back in this case
-      if (!keyboardWillAppear.value && ghostViewSpace.value > 0) {
-        scrollTo(
-          scrollViewAnimatedRef,
-          0,
-          scrollPosition.value -
-            interpolate(
-              e,
-              [initialKeyboardSize.value, keyboardHeight.value],
-              [ghostViewSpace.value, 0],
-            ),
-          false,
-        );
+        // layout mode: the spacer view participates in layout, so the ScrollView
+        // reflows naturally when it shrinks — no manual scroll correction needed.
+        if (mode === "layout") {
+          return false;
+        }
 
-        return true;
-      }
+        // insets mode: `ScrollViewWithBottomPadding` extends scrollable area without
+        // changing layout, so when the keyboard hides and we're at the end of the
+        // ScrollView we must manually scroll back.
+        if (!keyboardWillAppear.value && ghostViewSpace.value > 0) {
+          scrollTo(
+            scrollViewAnimatedRef,
+            0,
+            scrollPosition.value -
+              interpolate(
+                e,
+                [initialKeyboardSize.value, keyboardHeight.value],
+                [ghostViewSpace.value, 0],
+              ),
+            false,
+          );
 
-      return false;
-    }, []);
+          return true;
+        }
+
+        return false;
+      },
+      [mode],
+    );
     const performScrollWithPositionRestoration = useCallback(
       (newPosition: number) => {
         "worklet";
@@ -445,13 +456,15 @@ const KeyboardAwareScrollView = forwardRef<
             }
           }
 
-          ghostViewSpace.value =
-            position.value +
-            scrollViewLayout.value.height -
-            scrollViewContentSize.value.height;
+          if (mode === "insets") {
+            ghostViewSpace.value =
+              position.value +
+              scrollViewLayout.value.height -
+              scrollViewContentSize.value.height;
 
-          if (ghostViewSpace.value > 0) {
-            scrollPosition.value = position.value;
+            if (ghostViewSpace.value > 0) {
+              scrollPosition.value = position.value;
+            }
           }
         },
         onMove: (e) => {
@@ -489,6 +502,7 @@ const KeyboardAwareScrollView = forwardRef<
         },
       },
       [
+        mode,
         maybeScroll,
         removeGhostPadding,
         disableScrollOnKeyboardHide,
@@ -555,6 +569,31 @@ const KeyboardAwareScrollView = forwardRef<
       () => (enabled ? currentKeyboardFrameHeight.value : 0),
       [enabled],
     );
+    // layout mode only: a spacer view whose paddingBottom grows with the keyboard.
+    // The `+ 1` ensures the scroll view never reaches its absolute end during animation,
+    // avoiding the layout recalculation that triggers on every frame at the boundary.
+    // see: https://github.com/kirillzyusko/react-native-keyboard-controller/pull/342
+    const layoutSpacerStyle = useAnimatedStyle(
+      () =>
+        enabled && mode === "layout"
+          ? { paddingBottom: currentKeyboardFrameHeight.value + 1 }
+          : {},
+      [enabled, mode],
+    );
+
+    if (mode === "layout") {
+      return (
+        <ScrollViewComponent
+          ref={onRef}
+          {...rest}
+          scrollEventThrottle={16}
+          onLayout={onScrollViewLayout}
+        >
+          {children}
+          {enabled && <Reanimated.View style={layoutSpacerStyle} />}
+        </ScrollViewComponent>
+      );
+    }
 
     return (
       <ScrollViewWithBottomPadding

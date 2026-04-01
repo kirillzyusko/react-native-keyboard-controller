@@ -20,6 +20,7 @@ export type {
   KeyboardChatScrollViewProps,
   KeyboardAvoidingViewProps,
   KeyboardStickyViewProps,
+  KeyboardAwareScrollViewMode,
   KeyboardAwareScrollViewProps,
   KeyboardAwareScrollViewRef,
   KeyboardToolbarProps,
