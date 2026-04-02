@@ -2,6 +2,7 @@ package com.reactnativekeyboardcontroller.listeners
 
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import androidx.core.view.ViewCompat
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.uimanager.ThemedReactContext
 import com.reactnativekeyboardcontroller.extensions.content
@@ -43,6 +44,7 @@ class WindowDimensionListener(
     attachedContent?.viewTreeObserver?.removeOnGlobalLayoutListener(layoutListener)
     attachedContent = null
     layoutListener = null
+    listenerID = -1
   }
 
   private fun updateWindowDimensions(content: ViewGroup?) {
