@@ -9,6 +9,7 @@ export { default as KeyboardChatScrollView } from "./KeyboardChatScrollView";
 export type { KeyboardAvoidingViewProps } from "./KeyboardAvoidingView";
 export type { KeyboardStickyViewProps } from "./KeyboardStickyView";
 export type {
+  KeyboardAwareScrollViewMode,
   KeyboardAwareScrollViewProps,
   KeyboardAwareScrollViewRef,
 } from "./KeyboardAwareScrollView/types";

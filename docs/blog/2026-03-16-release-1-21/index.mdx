@@ -288,6 +288,29 @@ Starting from `1.21.0`, `KeyboardAwareScrollView` uses `contentInset` on iOS and
 
 This is a behavioral improvement — your existing `KeyboardAwareScrollView` usage needs no changes.
 
+### Opting back into layout-based spacing with `mode="layout"`
+
+There is, however, one class of UI where the old behavior was actually the _desired_ outcome: layouts that **intentionally rely on flex redistribution**. If you have a form where layout re-distribution helps to put form in correct position, the inset approach won't do that — it extends scroll space without touching layout.
+
+For these cases, `1.21.0` ships a new `mode` prop:
+
+```tsx
+<KeyboardAwareScrollView
+  mode="layout"
+  contentContainerStyle={{ flex: 1, justifyContent: "space-between" }}
+>
+  <FormFields />
+  <SubmitButton />
+</KeyboardAwareScrollView>
+```
+
+| `mode`                 | How space is created                  | Layout reflow         |
+| ---------------------- | ------------------------------------- | --------------------- |
+| `"insets"` _(default)_ | `contentInset` / `ClippingScrollView` | ❌ none               |
+| `"layout"`             | Spacer `View` appended as last child  | ✅ flex redistributes |
+
+I intentionally made `"insets"` default to deliver best possible performance, but if your layout depends on layout changes - you may want to use `mode="layout"`.
+
 ## Other notable changes
 
 Beyond the headline features, this release includes a couple of smaller but important additions.

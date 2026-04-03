@@ -116,6 +116,34 @@ If you have _**sticky elements**_ above the keyboard and want to extend the keyb
 This property acts as [extraScrollHeight](https://github.com/APSL/react-native-keyboard-aware-scroll-view/tree/9eee405f7b3e261faf86a0fc8e495288d91c853e?tab=readme-ov-file#props) from original [react-native-keyboard-aware-scroll-view](https://github.com/APSL/react-native-keyboard-aware-scroll-view) package.
 :::
 
+### `mode`
+
+Controls how keyboard space is created at the bottom of the `ScrollView`. Default is `"insets"`.
+
+| Value      | Behavior                                                                                                                                                                                                                 |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `"insets"` | Extends the scrollable area via `contentInset` (iOS) and `ClippingScrollView` (Android). Content layout is never modified — no layout reflows occur during keyboard animation. **Recommended for most use cases.**       |
+| `"layout"` | Appends a spacer `View` as the last child of the `ScrollView`. The spacer participates in layout, so flex-based arrangements (e.g. `justifyContent: "space-between"`, `gap`) reflow naturally when the keyboard appears. |
+
+:::tip When to use `mode="layout"`?
+If your `ScrollView` content relies on flex distribution — for example a form where a submit button should stay visually pinned to the bottom of the available space — use `mode="layout"` so the layout engine redistributes space when the keyboard appears.
+
+```tsx
+<KeyboardAwareScrollView
+  mode="layout"
+  contentContainerStyle={{ flex: 1, justifyContent: "space-between" }}
+>
+  <FormFields />
+  <SubmitButton />
+</KeyboardAwareScrollView>
+```
+
+:::
+
+:::note
+`mode="insets"` was introduced in `1.21.0` and is the default. `mode="layout"` restores the pre-`1.21.0` spacer-based behavior for cases where layout reflow is intentional.
+:::
+
 ## Integration with 3rd party components
 
 ### `FlatList`/`FlashList`/`SectionList` etc.
