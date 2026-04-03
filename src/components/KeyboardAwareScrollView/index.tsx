@@ -414,8 +414,14 @@ const KeyboardAwareScrollView = forwardRef<
             scrollPosition.value = position.value;
             // just persist height - later will be used in interpolation
             keyboardHeight.value = e.height;
-            // and update keyboard spacer size
-            syncKeyboardFrame(e);
+
+            // insets mode: set the full contentInset upfront so that maybeScroll
+            // calculations are correct from the very first onMove frame.
+            // layout mode: do NOT set it here — the spacer must grow frame-by-frame
+            // in onMove to avoid a premature full-height jump before the keyboard moves.
+            if (mode === "insets") {
+              syncKeyboardFrame(e);
+            }
           }
 
           // focus was changed
@@ -472,6 +478,11 @@ const KeyboardAwareScrollView = forwardRef<
 
           if (removeGhostPadding(e.height)) {
             return;
+          }
+
+          // layout mode: drive the spacer view animation frame-by-frame
+          if (mode === "layout") {
+            syncKeyboardFrame(e);
           }
 
           // if the user has set disableScrollOnKeyboardHide, only auto-scroll when the keyboard opens

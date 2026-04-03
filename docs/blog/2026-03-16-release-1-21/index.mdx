@@ -290,7 +290,7 @@ This is a behavioral improvement — your existing `KeyboardAwareScrollView` usa
 
 ### Opting back into layout-based spacing with `mode="layout"`
 
-There is, however, one class of UI where the old behavior was actually the _desired_ outcome: layouts that **intentionally rely on flex redistribution**. If you have a form where a submit button should rise with the keyboard because it's held in place by `justifyContent: "space-between"`, the inset approach won't do that — it extends scroll space without touching layout.
+There is, however, one class of UI where the old behavior was actually the _desired_ outcome: layouts that **intentionally rely on flex redistribution**. If you have a form where layout re-distribution helps to put form in correct position, the inset approach won't do that — it extends scroll space without touching layout.
 
 For these cases, `1.21.0` ships a new `mode` prop:
 
@@ -309,7 +309,7 @@ For these cases, `1.21.0` ships a new `mode` prop:
 | `"insets"` _(default)_ | `contentInset` / `ClippingScrollView` | ❌ none               |
 | `"layout"`             | Spacer `View` appended as last child  | ✅ flex redistributes |
 
-The default remains `"insets"` — no migration needed for the common case.
+I intentionally made `"insets"` default to deliver best possible performance, but if your layout depends on layout changes - you may want to use `mode="layout"`.
 
 ## Other notable changes
 
