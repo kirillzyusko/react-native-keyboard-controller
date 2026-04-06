@@ -13,11 +13,14 @@ import com.reactnativekeyboardcontroller.views.EdgeToEdgeReactViewGroup
 
 class KeyboardControllerViewManagerImpl {
   private var listener: WindowDimensionListener? = null
+  private var listenerContext: ThemedReactContext? = null
 
   fun createViewInstance(reactContext: ThemedReactContext): EdgeToEdgeReactViewGroup {
-    if (listener == null) {
+    if (listener == null || listenerContext !== reactContext) {
+      listener?.detachListener()
       listener = WindowDimensionListener(reactContext)
       listener?.attachListener()
+      listenerContext = reactContext
     }
     return EdgeToEdgeReactViewGroup(reactContext)
   }
@@ -25,6 +28,7 @@ class KeyboardControllerViewManagerImpl {
   fun invalidate() {
     listener?.detachListener()
     listener = null
+    listenerContext = null
   }
 
   fun synchronizeFocusedInputLayout(view: EdgeToEdgeReactViewGroup) {

@@ -43,6 +43,7 @@ class WindowDimensionListener(
     attachedContent?.viewTreeObserver?.removeOnGlobalLayoutListener(layoutListener)
     attachedContent = null
     layoutListener = null
+    listenerID = -1
   }
 
   private fun updateWindowDimensions(content: ViewGroup?) {
