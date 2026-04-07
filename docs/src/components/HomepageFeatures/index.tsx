@@ -52,25 +52,33 @@ const FeatureList: FeatureItem[] = [
   },
 ];
 
-const lottieStyle = {
-  height: 400,
-  marginBottom: 24,
-};
+function Feature({
+  title,
+  lottie,
+  description,
+  index,
+}: FeatureItem & { index: number }) {
+  const isReversed = index % 2 !== 0;
 
-function Feature({ title, lottie, description }: FeatureItem) {
   return (
-    <div className={clsx("col col--3")}>
-      <div className="text--center">
+    <div
+      className={clsx(
+        styles.featureRow,
+        isReversed && styles.featureRowReverse,
+      )}
+    >
+      <div className={styles.featureText}>
+        <div className={styles.featureNumber}>Feature {String(index + 1).padStart(2, "0")}</div>
+        <h3>{title}</h3>
+        <p>{description}</p>
+      </div>
+      <div className={styles.featureAnimation}>
         <Lottie
           loop
           animationData={lottie}
           className="lottie"
-          style={lottieStyle}
+          style={{ height: 380 }}
         />
-      </div>
-      <div className="text--center padding-horiz--md">
-        <h3>{title}</h3>
-        <p>{description}</p>
       </div>
     </div>
   );
@@ -80,11 +88,9 @@ export default function HomepageFeatures(): JSX.Element {
   return (
     <section className={styles.features}>
       <div className="container">
-        <div className="row">
-          {FeatureList.map((props, idx) => (
-            <Feature key={idx} {...props} />
-          ))}
-        </div>
+        {FeatureList.map((props, idx) => (
+          <Feature key={idx} index={idx} {...props} />
+        ))}
       </div>
     </section>
   );
