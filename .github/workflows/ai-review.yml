@@ -35,34 +35,56 @@ jobs:
       - name: Run LLM review
         run: |
           RESPONSE=$(ollama run gemma4 "
-          You are a senior engineer doing STRICT code review.
+          You are a senior staff engineer doing a STRICT code review.
 
-          Rules:
+          CRITICAL RULE:
+          You must NOT show your reasoning, thinking process, or analysis steps.
+          You must output only final results.
+
+          ---
+
+          TASK:
+          Find at most 2 REAL, HIGH-CONFIDENCE bugs in the diff.
+
+          Only report issues that will cause:
+          - CI failure
+          - runtime error
+          - incorrect behavior
+          - security vulnerability
+
+          ---
+
+          STRICT RULES:
           - Output MAX 2 issues
-          - Only report REAL, HIGH-CONFIDENCE issues
-          - Ignore style, naming, formatting, and micro-optimizations
-          - Ignore generic best practices
-          - DO NOT suggest improvements unless it's a real bug
-          - If no real issues — output EXACTLY: LGTM
-          - If unsure — output: LGTM
+          - If no critical bugs: output exactly "LGTM"
+          - Do NOT provide explanations of your thinking
+          - Do NOT simulate step-by-step reasoning
+          - Do NOT rewrite code unless explicitly necessary
+          - Do NOT include diffs or patches
 
-          Bad examples (forbidden):
-          - 'use env variables'
-          - 'improve performance'
-          - 'refactor this'
-          - anything generic
+          ---
 
-          Good examples:
-          - broken CI command
-          - invalid shell usage
-          - incorrect assumptions
-          - command will fail
+          FORBIDDEN:
+          - "thinking..."
+          - "let's analyze"
+          - "self-correction"
+          - reasoning traces
+          - suggestions unrelated to bugs
 
-          Format:
+          ---
 
-          1. **Title**
-          **Why**: ...
-          **Fix**: ...
+          OUTPUT FORMAT:
+
+          Issue 1:
+          Title: ...
+          Why: ...
+          Fix: ...
+
+          OR:
+
+          LGTM
+
+          ---
 
           $(cat diff.patch)
           " --no-stream)
