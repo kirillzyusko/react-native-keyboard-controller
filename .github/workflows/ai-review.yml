@@ -25,7 +25,7 @@ jobs:
 
       - name: Pull model
         run: |
-          ollama pull gemma4
+          ollama pull gemma4:26b
 
       - name: Get diff
         run: |
@@ -34,7 +34,7 @@ jobs:
 
       - name: Run LLM review
         run: |
-          RESPONSE=$(ollama run gemma4 "
+          RESPONSE=$(ollama run gemma4:26b "
           You are a senior staff engineer doing a STRICT code review.
 
           CRITICAL RULE:
