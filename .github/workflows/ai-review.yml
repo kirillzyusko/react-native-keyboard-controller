@@ -28,10 +28,22 @@ jobs:
         run: |
           ollama pull gemma4
 
-      - name: Get diff
+      - name: Build LLM context
         run: |
           git fetch origin main
-          git diff origin/main...HEAD > diff.patch
+
+          FILES=$(git diff --name-only origin/main...HEAD)
+
+          > prompt.txt
+
+          for file in $FILES; do
+            echo "===== FILE: $file =====" >> prompt.txt
+            cat "$file" >> prompt.txt 2>/dev/null || true
+            echo "" >> prompt.txt
+          done
+
+          echo "===== DIFF =====" >> prompt.txt
+          git diff origin/main...HEAD >> prompt.txt
 
       - name: Run LLM review
         run: |
@@ -69,8 +81,10 @@ jobs:
           **Why**: ...
           **Fix**: ...
 
-          $(cat diff.patch)
+          $(cat prompt.txt)
           "
+
+          echo "$PROMPT"
 
           RESPONSE=$(curl -s http://localhost:11434/api/generate \
             -d "$(jq -n --arg prompt "$PROMPT" '{
