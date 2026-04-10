@@ -1,0 +1,56 @@
+name: 🦊 Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Ollama
+        run: |
+          curl -fsSL https://ollama.com/install.sh | sh
+
+      - name: Start Ollama
+        run: |
+          ollama serve &
+          sleep 5
+
+      - name: Pull model
+        run: |
+          ollama pull llama3
+
+      - name: Get diff
+        run: |
+          git fetch origin main
+          git diff origin/main...HEAD > diff.patch
+
+      - name: Run LLM review
+        run: |
+          RESPONSE=$(ollama run llama3 "
+          You are a strict senior engineer.
+          Review this PR diff. Focus on bugs, performance, and bad practices.
+          Be concise.
+
+          $(cat diff.patch)
+          ")
+
+          echo "$RESPONSE" > review.txt
+
+      - name: Comment PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const body = fs.readFileSync('review.txt', 'utf8');
+
+            github.rest.issues.createComment({
+              ...context.repo,
+              issue_number: context.issue.number,
+              body
+            });
