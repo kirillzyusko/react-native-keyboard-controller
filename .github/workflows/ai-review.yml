@@ -1,0 +1,140 @@
+name: 🦊 Code Review
+
+on:
+  pull_request:
+    types: [ready_for_review, synchronize]
+    paths:
+      - ".github/workflows/**"
+      - "package.json"
+      - "react-native-keyboard-controller.podspec"
+      - "react-native.config.js"
+      - "android/**"
+      - "common/**"
+      - "ios/**"
+      - "src/**"
+      - "jest/**"
+      - "docs/docs/**"
+      - "docs/src/**"
+      - "docs/blog/**"
+
+jobs:
+  review:
+    name: 🕵️ Finding bugs
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Ollama
+        run: |
+          curl -fsSL https://ollama.com/install.sh | sh
+
+      - name: Start Ollama
+        run: |
+          ollama serve &
+          sleep 5
+
+      - name: Pull model
+        run: |
+          ollama pull deepseek-r1:14b
+
+      - name: Build LLM context
+        run: |
+          git fetch origin main
+
+          FILES=$(git diff --name-only origin/main...HEAD)
+
+          > prompt.txt
+
+          for file in $FILES; do
+            echo "===== FILE: $file =====" >> prompt.txt
+            cat "$file" >> prompt.txt 2>/dev/null || true
+            echo "" >> prompt.txt
+          done
+
+          echo "===== DIFF =====" >> prompt.txt
+          git diff origin/main...HEAD >> prompt.txt
+
+      - name: Run LLM review
+        run: |
+          PROMPT="
+          You are a senior staff engineer performing a STRICT pull request code review.
+
+          Your ONLY goal is to detect REAL defects that will cause:
+          - runtime errors
+          - CI/CD failure
+          - incorrect program behavior
+          - security vulnerabilities
+
+          ---
+
+          ## HARD CONSTRAINTS (must follow exactly)
+
+          - Output MAXIMUM 2 issues
+          - If there are NO critical issues → output EXACTLY: LGTM
+          - Do NOT guess, speculate, or infer risk
+          - If not 100% sure → output LGTM
+          - Do NOT comment on style, naming, formatting, or architecture
+          - Do NOT suggest refactoring or improvements unless it fixes a real bug
+          - Do NOT provide general engineering advice
+          - Do NOT include reasoning, thinking, or analysis process
+          - Do NOT output anything except final result
+
+          ---
+
+          ## DETECTION PRIORITY (only these matter)
+
+          1. Code that will crash at runtime
+          2. Broken CI / build / scripts
+          3. Incorrect logic that changes behavior
+          4. Security issues that are clearly exploitable
+          5. Invalid assumptions that guarantee failure
+
+          ---
+
+          ## FORBIDDEN CONTENT
+
+          Reject these categories completely:
+          - 'best practices'
+          - 'consider improving'
+          - 'might be better'
+          - performance suggestions without measurable bug
+          - architectural opinions
+          - speculative risks
+
+          Format:
+
+          1. **Title**
+          **Why**: ...
+          **Fix**: ...
+
+          $(cat prompt.txt)
+          "
+
+          echo "$PROMPT"
+
+          RESPONSE=$(curl -s http://localhost:11434/api/generate \
+            -d "$(jq -n --arg prompt "$PROMPT" '{
+              model: "deepseek-r1:14b",
+              prompt: $prompt,
+              stream: false
+            }')")
+
+          echo "$RESPONSE" | jq -r '.response' > review.txt
+
+      - name: Comment PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const body = fs.readFileSync('review.txt', 'utf8');
+
+            github.rest.issues.createComment({
+              ...context.repo,
+              issue_number: context.issue.number,
+              body
+            });
