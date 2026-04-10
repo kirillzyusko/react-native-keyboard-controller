@@ -98,9 +98,9 @@ jobs:
           ## FORBIDDEN CONTENT
 
           Reject these categories completely:
-          - "best practices"
-          - "consider improving"
-          - "might be better"
+          - 'best practices'
+          - 'consider improving'
+          - 'might be better'
           - performance suggestions without measurable bug
           - architectural opinions
           - speculative risks
