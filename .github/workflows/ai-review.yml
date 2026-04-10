@@ -11,8 +11,18 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+
+      - name: Get PR diff (API)
+        run: |
+          curl -s \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Accept: application/vnd.github.v3.diff" \
+            ${{ github.event.pull_request.url }} \
+            > diff.patch
+
+      - name: Trim diff
+        run: |
+          head -c 12000 diff.patch > small.diff
 
       - name: Install Ollama
         run: |
@@ -20,29 +30,60 @@ jobs:
 
       - name: Start Ollama
         run: |
-          ollama serve &
-          sleep 5
+          ollama serve > /dev/null 2>&1 &
+          
+          for i in {1..10}; do
+            ollama list && break
+            sleep 2
+          done
 
       - name: Pull model
         run: |
-          ollama pull llama3
-
-      - name: Get diff
-        run: |
-          git fetch origin main
-          git diff origin/main...HEAD > diff.patch
+          ollama pull mistral
 
       - name: Run LLM review
         run: |
-          RESPONSE=$(ollama run llama3 "
-          You are a strict senior engineer.
-          Review this PR diff. Focus on bugs, performance, and bad practices.
-          Be concise.
+          RESPONSE=$(ollama run mistral "
+You are a senior engineer doing STRICT code review.
 
-          $(cat diff.patch)
-          ")
+Rules:
+- Output MAX 2 issues
+- Only report REAL, HIGH-CONFIDENCE issues
+- Ignore style, naming, formatting, and micro-optimizations
+- Ignore generic best practices
+- DO NOT suggest improvements unless it's a real bug
+- If no real issues — output EXACTLY: LGTM
+- If unsure — output: LGTM
+
+Bad examples (forbidden):
+- 'use env variables'
+- 'improve performance'
+- 'refactor this'
+- anything generic
+
+Good examples:
+- broken CI command
+- invalid shell usage
+- incorrect assumptions
+- command will fail
+
+Format:
+
+1. Title
+Why: ...
+Fix: ...
+
+Diff:
+$(cat small.diff)
+")
 
           echo "$RESPONSE" > review.txt
+
+      - name: Post-process response
+        run: |
+          if grep -qi "env var\|performance\|refactor\|best practice" review.txt; then
+            echo "LGTM" > review.txt
+          fi
 
       - name: Comment PR
         uses: actions/github-script@v7
@@ -50,6 +91,8 @@ jobs:
           script: |
             const fs = require('fs');
             const body = fs.readFileSync('review.txt', 'utf8');
+
+            if (!body || body.trim() === "") return;
 
             github.rest.issues.createComment({
               ...context.repo,
