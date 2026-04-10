@@ -2,6 +2,7 @@ import React, { forwardRef, useCallback, useMemo } from "react";
 import { StyleSheet } from "react-native";
 import {
   makeMutable,
+  useAnimatedReaction,
   useAnimatedRef,
   useAnimatedStyle,
   useDerivedValue,
@@ -12,6 +13,7 @@ import useCombinedRef from "../hooks/useCombinedRef";
 import ScrollViewWithBottomPadding from "../ScrollViewWithBottomPadding";
 
 import { useChatKeyboard } from "./useChatKeyboard";
+import { isScrollAtEnd } from "./useChatKeyboard/helpers";
 import { useExtraContentPadding } from "./useExtraContentPadding";
 
 import type { KeyboardChatScrollViewProps } from "./types";
@@ -35,6 +37,7 @@ const KeyboardChatScrollView = forwardRef<
       extraContentPadding = ZERO_CONTENT_PADDING,
       blankSpace = ZERO_BLANK_SPACE,
       applyWorkaroundForContentInsetHitTestBug = false,
+      isAtEnd: isAtEndSV,
       onLayout: onLayoutProp,
       onContentSizeChange: onContentSizeChangeProp,
       ...rest
@@ -60,6 +63,27 @@ const KeyboardChatScrollView = forwardRef<
       blankSpace,
       extraContentPadding,
     });
+
+    useAnimatedReaction(
+      () => {
+        if (!isAtEndSV || layout.value.height <= 0 || size.value.height <= 0) {
+          return true;
+        }
+
+        return isScrollAtEnd(
+          scroll.value,
+          layout.value.height,
+          size.value.height,
+          inverted,
+        );
+      },
+      (atEnd, previous) => {
+        if (isAtEndSV && atEnd !== previous) {
+          // eslint-disable-next-line react-compiler/react-compiler
+          isAtEndSV.value = atEnd;
+        }
+      },
+    );
 
     useExtraContentPadding({
       scrollViewRef,
