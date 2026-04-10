@@ -120,11 +120,7 @@ const KeyboardAvoidingView = forwardRef<
       (layout: LayoutRectangle) => {
         "worklet";
 
-        if (
-          keyboard.isClosed.value ||
-          initialFrame.value === null ||
-          behavior !== "height"
-        ) {
+        if (keyboard.isClosed.value || initialFrame.value === null) {
           // eslint-disable-next-line react-compiler/react-compiler
           initialFrame.value = layout;
         }
