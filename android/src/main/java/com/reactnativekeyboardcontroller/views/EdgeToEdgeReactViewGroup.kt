@@ -5,6 +5,7 @@ import android.content.res.Configuration
 import android.os.Handler
 import android.os.Looper
 import android.view.WindowManager
+import android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
 import android.widget.FrameLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
@@ -14,14 +15,15 @@ import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.views.view.ReactViewGroup
 import com.reactnativekeyboardcontroller.extensions.content
 import com.reactnativekeyboardcontroller.extensions.removeSelf
-import com.reactnativekeyboardcontroller.extensions.replaceStatusBarInsets
 import com.reactnativekeyboardcontroller.extensions.requestApplyInsetsWhenAttached
 import com.reactnativekeyboardcontroller.extensions.rootView
+import com.reactnativekeyboardcontroller.extensions.windowSoftInputMode
 import com.reactnativekeyboardcontroller.listeners.KeyboardAnimationCallback
 import com.reactnativekeyboardcontroller.listeners.KeyboardAnimationCallbackConfig
 import com.reactnativekeyboardcontroller.log.Logger
 import com.reactnativekeyboardcontroller.modal.ModalAttachedWatcher
 import java.lang.ref.WeakReference
+import kotlin.math.max
 
 private val TAG = EdgeToEdgeReactViewGroup::class.qualifiedName
 
@@ -44,7 +46,6 @@ class EdgeToEdgeReactViewGroup(
   private var isStatusBarTranslucent = false
   private var isNavigationBarTranslucent = false
   private var isPreservingEdgeToEdge = false
-  private var isEdgeToEdge = false
   var active: Boolean = false
     set(value) {
       field = value
@@ -110,47 +111,43 @@ class EdgeToEdgeReactViewGroup(
             FrameLayout.LayoutParams.MATCH_PARENT,
           )
 
-        val shouldApplyZeroPaddingTop = !active || this.isStatusBarTranslucent
-        val shouldApplyZeroPaddingBottom = !active || this.isNavigationBarTranslucent
+        val shouldApplyBottomPadding =
+          !active && reactContext.windowSoftInputMode == SOFT_INPUT_ADJUST_RESIZE && !isPreservingEdgeToEdge
         val navBarInsets = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
         val systemBarInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+        val keyboardInsets =
+          if (!shouldApplyBottomPadding) 0 else insets.getInsets(WindowInsetsCompat.Type.ime()).bottom
 
         params.setMargins(
           navBarInsets.left,
-          if (shouldApplyZeroPaddingTop) {
+          if (this.isStatusBarTranslucent) {
             0
           } else {
             systemBarInsets.top
           },
           navBarInsets.right,
-          if (shouldApplyZeroPaddingBottom) {
-            0
+          if (this.isNavigationBarTranslucent) {
+            keyboardInsets
           } else {
-            navBarInsets.bottom
+            max(navBarInsets.bottom, keyboardInsets)
           },
         )
         content?.layoutParams = params
 
-        v.replaceStatusBarInsets(insets, this.isStatusBarTranslucent, active)
+        ViewCompat.onApplyWindowInsets(v, insets)
       }
     }
   }
 
   fun setEdgeToEdge() {
-    val nextValue = active || isPreservingEdgeToEdge
-
-    if (isEdgeToEdge != nextValue) {
-      isEdgeToEdge = nextValue
-
-      reactContext.currentActivity?.let {
-        WindowCompat.setDecorFitsSystemWindows(
-          it.window,
-          !isEdgeToEdge,
-        )
-      }
-      // unclear legacy flag if it was set earlier
-      reactContext.currentActivity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+    reactContext.currentActivity?.let {
+      WindowCompat.setDecorFitsSystemWindows(
+        it.window,
+        false,
+      )
     }
+    // unclear legacy flag if it was set earlier
+    reactContext.currentActivity?.window?.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
   }
 
   private fun setupKeyboardCallbacks() {

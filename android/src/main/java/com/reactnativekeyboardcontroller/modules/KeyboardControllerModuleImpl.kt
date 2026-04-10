@@ -3,7 +3,6 @@ package com.reactnativekeyboardcontroller.modules
 import android.content.Context
 import android.os.Build
 import android.view.View
-import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.Promise
@@ -12,6 +11,7 @@ import com.facebook.react.bridge.UiThreadUtil
 import com.reactnativekeyboardcontroller.extensions.dp
 import com.reactnativekeyboardcontroller.extensions.screenLocation
 import com.reactnativekeyboardcontroller.extensions.uiManager
+import com.reactnativekeyboardcontroller.extensions.windowSoftInputMode
 import com.reactnativekeyboardcontroller.interactive.KeyboardAnimationController
 import com.reactnativekeyboardcontroller.traversal.FocusedInputHolder
 import com.reactnativekeyboardcontroller.traversal.ViewHierarchyNavigator
@@ -21,7 +21,7 @@ class KeyboardControllerModuleImpl(
 ) {
   private val uiManager = mReactContext.uiManager
   private val controller = KeyboardAnimationController()
-  private val mDefaultMode: Int = getCurrentMode()
+  private val mDefaultMode: Int = mReactContext.windowSoftInputMode
 
   // region Module methods
   fun setInputMode(mode: Int) {
@@ -108,19 +108,11 @@ class KeyboardControllerModuleImpl(
   // region Helpers
   private fun setSoftInputMode(mode: Int) {
     UiThreadUtil.runOnUiThread {
-      if (getCurrentMode() != mode) {
+      if (mReactContext.windowSoftInputMode != mode) {
         mReactContext.currentActivity?.window?.setSoftInputMode(mode)
       }
     }
   }
-
-  private fun getCurrentMode(): Int =
-    mReactContext
-      .currentActivity
-      ?.window
-      ?.attributes
-      ?.softInputMode
-      ?: WindowManager.LayoutParams.SOFT_INPUT_STATE_UNSPECIFIED
   // endregion
 
   // region Module constants
