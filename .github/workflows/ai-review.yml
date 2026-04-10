@@ -3,6 +3,19 @@ name: 🦊 Code Review
 on:
   pull_request:
     types: [ready_for_review, synchronize]
+    paths:
+      - ".github/workflows/**"
+      - "package.json"
+      - "react-native-keyboard-controller.podspec"
+      - "react-native.config.js"
+      - "android/**"
+      - "common/**"
+      - "ios/**"
+      - "src/**"
+      - "jest/**"
+      - "docs/docs/**"
+      - "docs/src/**"
+      - "docs/blog/**"
 
 jobs:
   review:
