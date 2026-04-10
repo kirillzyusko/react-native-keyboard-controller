@@ -2,10 +2,11 @@ name: 🦊 Code Review
 
 on:
   pull_request:
-    types: [opened, synchronize]
+    types: [ready_for_review, synchronize]
 
 jobs:
   review:
+    if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
 
     steps:
