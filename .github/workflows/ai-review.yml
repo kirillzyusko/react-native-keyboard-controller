@@ -40,7 +40,7 @@ jobs:
 
       - name: Pull model
         run: |
-          ollama pull gpt-oss:20b
+          ollama pull deepseek-r1:14b
 
       - name: Build LLM context
         run: |
@@ -119,7 +119,7 @@ jobs:
 
           RESPONSE=$(curl -s http://localhost:11434/api/generate \
             -d "$(jq -n --arg prompt "$PROMPT" '{
-              model: "gpt-oss:20b",
+              model: "deepseek-r1:14b",
               prompt: $prompt,
               stream: false
             }')")
