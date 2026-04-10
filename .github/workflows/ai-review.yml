@@ -60,12 +60,12 @@ jobs:
 
           Format:
 
-          1. **(Title)**
+          1. **Title**
           **Why**: ...
           **Fix**: ...
 
           $(cat diff.patch)
-          ")
+          " --no-stream)
 
           echo "$RESPONSE" > review.txt
 
