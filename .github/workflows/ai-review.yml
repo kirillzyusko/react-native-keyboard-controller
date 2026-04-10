@@ -26,7 +26,7 @@ jobs:
 
       - name: Pull model
         run: |
-          ollama pull gemma4
+          ollama pull gemma4:26b
 
       - name: Get diff
         run: |
@@ -74,7 +74,7 @@ jobs:
 
           RESPONSE=$(curl -s http://localhost:11434/api/generate \
             -d "$(jq -n --arg prompt "$PROMPT" '{
-              model: "gemma4",
+              model: "gemma4:26b",
               prompt: $prompt,
               stream: false
             }')")
