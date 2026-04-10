@@ -19,6 +19,7 @@ on:
 
 jobs:
   review:
+    name: 🕵️ Finding bugs
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
 
@@ -39,7 +40,7 @@ jobs:
 
       - name: Pull model
         run: |
-          ollama pull gemma4
+          ollama pull gpt-oss:20b
 
       - name: Build LLM context
         run: |
@@ -118,7 +119,7 @@ jobs:
 
           RESPONSE=$(curl -s http://localhost:11434/api/generate \
             -d "$(jq -n --arg prompt "$PROMPT" '{
-              model: "gemma4",
+              model: "gpt-oss:20b",
               prompt: $prompt,
               stream: false
             }')")
