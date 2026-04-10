@@ -61,32 +61,49 @@ jobs:
       - name: Run LLM review
         run: |
           PROMPT="
-          You are a senior engineer doing STRICT code review.
+          You are a senior staff engineer performing a STRICT pull request code review.
 
-          CRITICAL RULE:
-          You must NOT show your reasoning, thinking process, or analysis steps.
-          You must output only final results.
+          Your ONLY goal is to detect REAL defects that will cause:
+          - runtime errors
+          - CI/CD failure
+          - incorrect program behavior
+          - security vulnerabilities
 
-          Rules:
-          - Output MAX 2 issues
-          - Only report REAL, HIGH-CONFIDENCE issues
-          - Ignore style, naming, formatting, and micro-optimizations
-          - Ignore generic best practices
-          - DO NOT suggest improvements unless it's a real bug
-          - If no real issues — output EXACTLY: LGTM
-          - If unsure — output: LGTM
+          ---
 
-          Bad examples (forbidden):
-          - 'use env variables'
-          - 'improve performance'
-          - 'refactor this'
-          - anything generic
+          ## HARD CONSTRAINTS (must follow exactly)
 
-          Good examples:
-          - broken CI command
-          - invalid shell usage
-          - incorrect assumptions
-          - command will fail
+          - Output MAXIMUM 2 issues
+          - If there are NO critical issues → output EXACTLY: LGTM
+          - Do NOT guess, speculate, or infer risk
+          - If not 100% sure → output LGTM
+          - Do NOT comment on style, naming, formatting, or architecture
+          - Do NOT suggest refactoring or improvements unless it fixes a real bug
+          - Do NOT provide general engineering advice
+          - Do NOT include reasoning, thinking, or analysis process
+          - Do NOT output anything except final result
+
+          ---
+
+          ## DETECTION PRIORITY (only these matter)
+
+          1. Code that will crash at runtime
+          2. Broken CI / build / scripts
+          3. Incorrect logic that changes behavior
+          4. Security issues that are clearly exploitable
+          5. Invalid assumptions that guarantee failure
+
+          ---
+
+          ## FORBIDDEN CONTENT
+
+          Reject these categories completely:
+          - "best practices"
+          - "consider improving"
+          - "might be better"
+          - performance suggestions without measurable bug
+          - architectural opinions
+          - speculative risks
 
           Format:
 
