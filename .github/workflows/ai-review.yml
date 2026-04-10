@@ -34,7 +34,7 @@ jobs:
 
       - name: Run LLM review
         run: |
-          RESPONSE=$(ollama run gemma4 "
+          PROMPT="
           You are a senior engineer doing STRICT code review.
 
           CRITICAL RULE:
@@ -69,9 +69,16 @@ jobs:
           **Fix**: ...
 
           $(cat diff.patch)
-          " --no-stream)
+          "
 
-          echo "$RESPONSE" > review.txt
+          RESPONSE=$(curl -s http://localhost:11434/api/generate \
+            -d "$(jq -n --arg prompt "$PROMPT" '{
+              model: "gemma4",
+              prompt: $prompt,
+              stream: false
+            }')")
+
+          echo "$RESPONSE" | jq -r '.response' > review.txt
 
       - name: Comment PR
         uses: actions/github-script@v7
