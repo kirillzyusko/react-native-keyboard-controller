@@ -92,6 +92,10 @@ jobs:
       - name: Run LLM review
         run: |
           PROMPT="
+          CHANGES:
+
+          $(cat prompt.txt)
+          ---
           You are a senior staff engineer performing a STRICT pull request code review.
 
           You are NOT allowed to summarize or explain the changes.
@@ -168,8 +172,6 @@ jobs:
           1. **Title**
           **Why**: ...
           **Fix**: ...
-
-          $(cat prompt.txt)
           "
 
           echo "$PROMPT"
