@@ -23,6 +23,14 @@ jobs:
     if: github.event.pull_request.draft == false
     runs-on: ubuntu-latest
 
+    env:
+      MODEL: deepseek-r1:14b
+      INCLUDE_REGEX: '^(\.github/workflows/|package\.json|react-native-keyboard-controller\.podspec|react-native\.config\.js|android/|common/|ios/|src/|jest/|docs/docs/|docs/src/|docs/blog/)'
+
+    concurrency:
+      group: ai-review-${{ github.event.pull_request.number }}
+      cancel-in-progress: true
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -40,29 +48,63 @@ jobs:
 
       - name: Pull model
         run: |
-          ollama pull deepseek-r1:14b
+          ollama pull $MODEL
 
       - name: Build LLM context
         run: |
           git fetch origin main
 
-          FILES=$(git diff --name-only origin/main...HEAD)
+          FILES=$(git diff --name-status origin/main...HEAD | awk '{print $1 "|" $2}')
 
           > prompt.txt
 
-          for file in $FILES; do
-            echo "===== FILE: $file =====" >> prompt.txt
-            cat "$file" >> prompt.txt 2>/dev/null || true
-            echo "" >> prompt.txt
-          done
+          while IFS="|" read -r status file; do
+            [ -z "$file" ] && continue
+
+            # Ignore example / FabricExample anywhere
+            if [[ "$file" =~ (^|/)(example|FabricExample)(/|$) ]]; then
+              continue
+            fi
+
+            # Respect paths filter
+            if ! [[ "$file" =~ $INCLUDE_REGEX ]]; then
+              continue
+            fi
+
+            # Only include content for MODIFIED files
+            if [[ "$status" == "M" ]]; then
+              echo "===== FILE: $file =====" >> prompt.txt
+              cat "$file" >> prompt.txt 2>/dev/null || true
+              echo "" >> prompt.txt
+            fi
+
+          done <<< "$FILES"
 
           echo "===== DIFF =====" >> prompt.txt
-          git diff origin/main...HEAD >> prompt.txt
+          git diff origin/main...HEAD | \
+          awk '
+            /^diff --git/ {
+              skip = ($3 ~ /\/(example|FabricExample)\//)
+            }
+            !skip
+          ' >> prompt.txt
 
       - name: Run LLM review
         run: |
           PROMPT="
+          CHANGES:
+
+          $(cat prompt.txt)
+          ---
           You are a senior staff engineer performing a STRICT pull request code review.
+
+          You are NOT allowed to summarize or explain the changes.
+
+          If you output anything other than:
+          - a list of issues in the required format
+          - or exactly 'LGTM'
+
+          → your response is INVALID.
 
           Your ONLY goal is to detect REAL defects that will cause:
           - runtime errors
@@ -82,6 +124,7 @@ jobs:
           - Do NOT suggest refactoring or improvements unless it fixes a real bug
           - Do NOT provide general engineering advice
           - Do NOT include reasoning, thinking, or analysis process
+          - Do NOT provide changes overview → only issues spotted during review
           - Do NOT output anything except final result
 
           ---
@@ -105,36 +148,75 @@ jobs:
           - performance suggestions without measurable bug
           - architectural opinions
           - speculative risks
+          - changes overview
+
+          Examples of INVALID responses (DO NOT DO THIS):
+
+          - 'This PR introduces...'
+          - 'The changes include...'
+          - 'Here is a summary...'
+          - 'This adds a new feature...'
+          - Any explanation of what the code does
+
+          If you do this → you FAILED the task.
+
+          You MUST make a strict decision:
+
+          - If there is at least 1 REAL defect → output issues
+          - If there are 0 CERTAIN defects → output EXACTLY: LGTM
+
+          No other output is allowed.
 
           Format:
 
           1. **Title**
           **Why**: ...
           **Fix**: ...
-
-          $(cat prompt.txt)
           "
 
           echo "$PROMPT"
 
           RESPONSE=$(curl -s http://localhost:11434/api/generate \
-            -d "$(jq -n --arg prompt "$PROMPT" '{
-              model: "deepseek-r1:14b",
-              prompt: $prompt,
-              stream: false
-            }')")
+            -d "$(jq -n \
+              --arg model "$MODEL" \
+              --arg prompt "$PROMPT" \
+              '{
+                model: $model,
+                prompt: $prompt,
+                stream: false
+              }')")
 
           echo "$RESPONSE" | jq -r '.response' > review.txt
 
-      - name: Comment PR
+      - name: Upsert PR comment
         uses: actions/github-script@v7
         with:
           script: |
             const fs = require('fs');
             const body = fs.readFileSync('review.txt', 'utf8');
 
-            github.rest.issues.createComment({
+            const marker = '<!-- AI_REVIEW_COMMENT -->';
+            const finalBody = `${marker}\n${body}`;
+
+            const { data: comments } = await github.rest.issues.listComments({
               ...context.repo,
               issue_number: context.issue.number,
-              body
             });
+
+            const existing = comments.find(comment =>
+              comment.body && comment.body.includes(marker)
+            );
+
+            if (existing) {
+              await github.rest.issues.updateComment({
+                ...context.repo,
+                comment_id: existing.id,
+                body: finalBody,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                ...context.repo,
+                issue_number: context.issue.number,
+                body: finalBody,
+              });
+            }
