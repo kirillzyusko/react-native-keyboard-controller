@@ -58,7 +58,6 @@ class KeyboardAnimationCallback(
   val view: View,
   val context: ThemedReactContext?,
   private val config: KeyboardAnimationCallbackConfig,
-  private val source: KeyboardAnimationCallback? = null,
 ) : WindowInsetsAnimationCompat.Callback(config.dispatchMode),
   OnApplyWindowInsetsListener,
   Suspendable {
@@ -181,7 +180,7 @@ class KeyboardAnimationCallback(
     if (prevKeyboardHeight != newHeight && !isMoving && !isSuspended) {
       Logger.w(
         TAG,
-        "detected desynchronized state - force updating it. $prevKeyboardHeight -> $newHeight. Attached: ${view.isAttachedToWindow} EVA: ${this.eventPropagationView.isAttachedToWindow} Modal ${this.source}",
+        "detected desynchronized state - force updating it.",
       )
       this.syncKeyboardPosition(newHeight, newHeight > 0)
     }
@@ -191,8 +190,6 @@ class KeyboardAnimationCallback(
 
   override fun onPrepare(animation: WindowInsetsAnimationCompat) {
     super.onPrepare(animation)
-
-    println("desynchronized - onPrepare")
 
     if (!animation.isKeyboardAnimation || isSuspended) {
       return
