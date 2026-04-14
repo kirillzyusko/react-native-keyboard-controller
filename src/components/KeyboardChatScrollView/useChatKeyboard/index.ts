@@ -82,7 +82,7 @@ function useChatKeyboard(
       onStart: (e) => {
         "worklet";
 
-        if (freeze) {
+        if (freeze.value) {
           return;
         }
 
@@ -166,7 +166,7 @@ function useChatKeyboard(
       onMove: (e) => {
         "worklet";
 
-        if (freeze) {
+        if (freeze.value) {
           return;
         }
 
@@ -340,7 +340,7 @@ function useChatKeyboard(
       onEnd: (e) => {
         "worklet";
 
-        if (freeze) {
+        if (freeze.value) {
           return;
         }
 
@@ -358,7 +358,7 @@ function useChatKeyboard(
         }
       },
     },
-    [inverted, keyboardLiftBehavior, freeze, offset],
+    [inverted, keyboardLiftBehavior, offset],
   );
 
   return {

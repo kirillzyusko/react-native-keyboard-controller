@@ -64,7 +64,7 @@ function useChatKeyboard(
       onStart: (e) => {
         "worklet";
 
-        if (freeze) {
+        if (freeze.value) {
           return;
         }
 
@@ -229,7 +229,7 @@ function useChatKeyboard(
       onEnd: (e) => {
         "worklet";
 
-        if (freeze) {
+        if (freeze.value) {
           return;
         }
 
@@ -242,7 +242,7 @@ function useChatKeyboard(
         padding.value = effective;
       },
     },
-    [inverted, keyboardLiftBehavior, freeze, offset, extraContentPadding],
+    [inverted, keyboardLiftBehavior, offset, extraContentPadding],
   );
 
   return {

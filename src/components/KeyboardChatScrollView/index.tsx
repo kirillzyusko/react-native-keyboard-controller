@@ -43,6 +43,9 @@ const KeyboardChatScrollView = forwardRef<
   ) => {
     const scrollViewRef = useAnimatedRef<Reanimated.ScrollView>();
     const onRef = useCombinedRef(ref, scrollViewRef);
+    const freezeSV = useDerivedValue(() =>
+      typeof freeze === "boolean" ? freeze : freeze.value,
+    );
     const {
       padding,
       currentHeight,
@@ -55,7 +58,7 @@ const KeyboardChatScrollView = forwardRef<
     } = useChatKeyboard(scrollViewRef, {
       inverted,
       keyboardLiftBehavior,
-      freeze,
+      freeze: freezeSV,
       offset,
       blankSpace,
       extraContentPadding,
@@ -72,7 +75,7 @@ const KeyboardChatScrollView = forwardRef<
       contentOffsetY,
       inverted,
       keyboardLiftBehavior,
-      freeze,
+      freeze: freezeSV,
     });
 
     const totalPadding = useDerivedValue(() =>

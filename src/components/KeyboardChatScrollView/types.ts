@@ -46,7 +46,7 @@ export type KeyboardChatScrollViewProps = {
    *
    * Default is `false`.
    */
-  freeze?: boolean;
+  freeze?: boolean | SharedValue<boolean>;
   /**
    * A shared value representing additional padding from external elements
    * (e.g., a growing multiline `TextInput` in a `KeyboardStickyView`).

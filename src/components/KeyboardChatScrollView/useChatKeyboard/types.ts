@@ -6,7 +6,7 @@ type KeyboardLiftBehavior = "always" | "whenAtEnd" | "persistent" | "never";
 type UseChatKeyboardOptions = {
   inverted: boolean;
   keyboardLiftBehavior: KeyboardLiftBehavior;
-  freeze: boolean;
+  freeze: SharedValue<boolean>;
   offset: number;
   blankSpace: SharedValue<number>;
   /** Extra content padding shared value — needed on iOS to correctly clamp contentOffset. */

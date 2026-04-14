@@ -197,6 +197,28 @@ const onKeyboardPress = () => {
 
 When `freeze` is `true`, all keyboard-driven layout changes (padding, content offset, scroll position) are paused.
 
+:::tip SharedValue support
+`freeze` also accepts a [Reanimated `SharedValue<boolean>`](https://docs.swmansion.com/react-native-reanimated/docs/core/useSharedValue/). This is useful when you need to toggle freezing synchronously from a worklet — for example, inside a gesture handler:
+
+```tsx
+import { useSharedValue } from "react-native-reanimated";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
+
+const freeze = useSharedValue(false);
+
+const gesture = Gesture.Pan().onStart(() => {
+  "worklet";
+  // freeze synchronously on the UI thread before the keyboard starts dismissing
+  freeze.value = true;
+});
+
+<KeyboardChatScrollView freeze={freeze}>
+  {/* ...messages... */}
+</KeyboardChatScrollView>;
+```
+
+:::
+
 ### Handling a growing multiline input
 
 If your composer has a `multiline` `TextInput` that grows as the user types, you need to tell `KeyboardChatScrollView` about the extra space it takes up — otherwise the component doesn't know the scrollable range has changed and the bottom messages can get clipped under the input.

@@ -76,7 +76,7 @@ type RenderOptions = Omit<
   Parameters<typeof useChatKeyboard>[1],
   "freeze" | "offset" | "blankSpace" | "extraContentPadding"
 > & {
-  freeze?: boolean;
+  freeze?: boolean | SharedValue<boolean>;
   offset?: number;
   blankSpace?: SharedValue<number>;
   extraContentPadding?: SharedValue<number>;
@@ -99,9 +99,11 @@ export function createRender(modulePath: string) {
     return renderHook(() => {
       const ref = useAnimatedRef<Reanimated.ScrollView>();
 
+      const freeze = options.freeze ?? false;
+
       return mod.useChatKeyboard(ref, {
         ...options,
-        freeze: options.freeze ?? false,
+        freeze: typeof freeze === "boolean" ? sv(freeze) : freeze,
         offset: options.offset ?? 0,
         blankSpace: options.blankSpace ?? sv(0),
         extraContentPadding: options.extraContentPadding ?? sv(0),
