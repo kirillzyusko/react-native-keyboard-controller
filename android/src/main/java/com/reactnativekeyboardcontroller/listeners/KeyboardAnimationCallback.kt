@@ -180,7 +180,7 @@ class KeyboardAnimationCallback(
     if (prevKeyboardHeight != newHeight && !isMoving && !isSuspended) {
       Logger.w(
         TAG,
-        "detected desynchronized state - force updating it.",
+        "detected desynchronized state - force updating it: $newHeight",
       )
       this.syncKeyboardPosition(newHeight, newHeight > 0)
     }

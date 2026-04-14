@@ -73,6 +73,18 @@ class ModalAttachedWatcher(
         // and overall attaching additional callbacks (if animation events go through the main window) is not necessary
         ViewCompat.setWindowInsetsAnimationCallback(rootView, callback)
         ViewCompat.setOnApplyWindowInsetsListener(eventView, callback)
+
+        // when modal is shown then keyboard will be hidden by default
+        //
+        // - if events are coming from main window - then keyboard position
+        //   will be synchronized from main window callback
+        // - if events are coming from modal window - then we need to update
+        //   position ourself, because callback can be attached after keyboard
+        //   auto-dismissal and we may miss some events and keyboard position
+        //   will be outdated
+        view.post {
+          callback.syncKeyboardPosition(0.0, false)
+        }
       }
 
       dialog?.setOnDismissListener {
