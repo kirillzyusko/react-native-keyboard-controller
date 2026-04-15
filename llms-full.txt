@@ -640,6 +640,8 @@ import { ScrollView } from "react-native-gesture-handler";
 
 When `true`, freezes all keyboard-driven layout changes. This is useful when dismissing the keyboard to show a custom input view (such as an emoji picker or bottom sheet) — it prevents the chat content from shifting while the transition happens.
 
+Accepts either a plain `boolean` or a [Reanimated `SharedValue<boolean>`](https://docs.swmansion.com/react-native-reanimated/docs/core/useSharedValue/). Using a `SharedValue` allows you to toggle freezing from the UI thread (e.g., inside a worklet or gesture handler) without triggering a React re-render.
+
 ### `inverted`[​](/react-native-keyboard-controller/docs/api/components/keyboard-chat-scroll-view.md#inverted "Direct link to inverted")
 
 Set to `true` if your list uses the `inverted` prop (the standard pattern for chat-style lists where the newest messages appear at the bottom).
@@ -3232,6 +3234,27 @@ const onKeyboardPress = () => {
 ```
 
 When `freeze` is `true`, all keyboard-driven layout changes (padding, content offset, scroll position) are paused.
+
+SharedValue support
+
+`freeze` also accepts a [Reanimated `SharedValue<boolean>`](https://docs.swmansion.com/react-native-reanimated/docs/core/useSharedValue/). This is useful when you need to toggle freezing synchronously from a worklet — for example, inside a gesture handler:
+
+```
+import { useSharedValue } from "react-native-reanimated";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
+
+const freeze = useSharedValue(false);
+
+const gesture = Gesture.Pan().onStart(() => {
+  "worklet";
+  // freeze synchronously on the UI thread before the keyboard starts dismissing
+  freeze.value = true;
+});
+
+<KeyboardChatScrollView freeze={freeze}>
+  {/* ...messages... */}
+</KeyboardChatScrollView>;
+```
 
 ### Handling a growing multiline input[​](/react-native-keyboard-controller/docs/guides/building-chat-app.md#handling-a-growing-multiline-input "Direct link to Handling a growing multiline input")
 

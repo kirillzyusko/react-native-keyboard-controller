@@ -30,6 +30,8 @@ import { ScrollView } from "react-native-gesture-handler";
 
 When `true`, freezes all keyboard-driven layout changes. This is useful when dismissing the keyboard to show a custom input view (such as an emoji picker or bottom sheet) — it prevents the chat content from shifting while the transition happens.
 
+Accepts either a plain `boolean` or a [Reanimated `SharedValue<boolean>`](https://docs.swmansion.com/react-native-reanimated/docs/core/useSharedValue/). Using a `SharedValue` allows you to toggle freezing from the UI thread (e.g., inside a worklet or gesture handler) without triggering a React re-render.
+
 ### `inverted`[​](/react-native-keyboard-controller/docs/api/components/keyboard-chat-scroll-view.md#inverted "Direct link to inverted")
 
 Set to `true` if your list uses the `inverted` prop (the standard pattern for chat-style lists where the newest messages appear at the bottom).
