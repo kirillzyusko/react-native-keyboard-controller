@@ -26,7 +26,7 @@ type UseExtraContentPaddingOptions = {
   contentOffsetY?: SharedValue<number>;
   inverted: boolean;
   keyboardLiftBehavior: KeyboardLiftBehavior;
-  freeze: boolean;
+  freeze: SharedValue<boolean>;
 };
 
 /**
@@ -81,7 +81,7 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
   useAnimatedReaction(
     () => extraContentPadding.value,
     (current, previous) => {
-      if (freeze || previous === null) {
+      if (freeze.value || previous === null) {
         return;
       }
 
@@ -141,7 +141,7 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
         scrollToTarget(target);
       }
     },
-    [inverted, keyboardLiftBehavior, freeze],
+    [inverted, keyboardLiftBehavior],
   );
 }
 

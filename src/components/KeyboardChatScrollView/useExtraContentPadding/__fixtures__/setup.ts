@@ -34,20 +34,23 @@ jest.mock("react-native-reanimated", () => ({
 
 type RenderOptions = Omit<
   Parameters<typeof useExtraContentPadding>[0],
-  "scrollViewRef" | "blankSpace"
+  "scrollViewRef" | "blankSpace" | "freeze"
 > & {
   blankSpace?: SharedValue<number>;
+  freeze: boolean | SharedValue<boolean>;
 };
 
 export const createRender = () => {
   return function render(options: RenderOptions) {
     return renderHook(() => {
       const ref = useAnimatedRef<Reanimated.ScrollView>();
+      const { freeze, ...rest } = options;
 
       useExtraContentPadding({
         scrollViewRef: ref,
         blankSpace: options.blankSpace ?? sv(0),
-        ...options,
+        freeze: typeof freeze === "boolean" ? sv(freeze) : freeze,
+        ...rest,
       });
     });
   };
