@@ -69,7 +69,7 @@ const VirtualizedListScrollView = forwardRef<
     const { inverted, freeze, mode, keyboardLiftBehavior } =
       useChatConfigStore();
 
-    // on old arch only FlatList and FlashList supports `inverted` prop
+    // only FlatList and FlashList supports `inverted` prop
     const isInvertedSupported =
       inverted && (mode === "flat" || mode === "flash") ? inverted : false;
     const onLayout = useCallback(

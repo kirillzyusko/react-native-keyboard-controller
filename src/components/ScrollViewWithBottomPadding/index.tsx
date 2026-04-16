@@ -125,17 +125,7 @@ const ScrollViewWithBottomPadding = forwardRef<
         style={styles.container}
       >
         <ScrollViewComponent ref={ref} animatedProps={animatedProps} {...rest}>
-          {inverted && OS === "android" ? (
-            // The only thing it can break is `StickyHeader`, but it's already broken in FlatList and other lists
-            // don't support this functionality, so we can add additional view here
-            // The correct fix would be to add a new prop in ScrollView that allows
-            // to customize children extraction logic and skip custom view
-            <View collapsable={false} nativeID="container">
-              {children}
-            </View>
-          ) : (
-            children
-          )}
+          {children}
         </ScrollViewComponent>
       </ReanimatedClippingScrollView>
     );

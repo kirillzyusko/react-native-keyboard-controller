@@ -119,6 +119,7 @@ function KeyboardChatScrollViewPlayground() {
           <FlashList
             contentContainerStyle={contentContainerStyle}
             data={messages}
+            inverted={inverted}
             keyExtractor={(item) => item.text}
             maintainVisibleContentPosition={{
               startRenderingFromBottom: inverted,

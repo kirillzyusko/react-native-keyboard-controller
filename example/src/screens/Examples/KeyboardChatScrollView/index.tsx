@@ -104,12 +104,7 @@ function KeyboardChatScrollViewPlayground() {
 
   return (
     <SafeAreaView edges={["bottom"]} style={styles.container}>
-      <KeyboardGestureArea
-        interpolator="ios"
-        offset={inputHeight}
-        style={styles.container}
-        textInputNativeID="chat-input"
-      >
+      <>
         {mode === "legend" && (
           <LegendList
             alignItemsAtEnd={inverted}
@@ -180,7 +175,7 @@ function KeyboardChatScrollViewPlayground() {
             <Image source={require("./send.png")} style={styles.icon} />
           </TouchableOpacity>
         </KeyboardStickyView>
-      </KeyboardGestureArea>
+      </>
       <ConfigSheet />
     </SafeAreaView>
   );
