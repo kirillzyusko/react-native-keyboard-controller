@@ -36,7 +36,7 @@ target 'KeyboardControllerExample' do
       # :ccache_enabled => true
     )
 
-    # Fix fmt compilation error with Xcode 26.4 (consteval broken in Apple Clang 17+)
+    # Fix fmt compilation error with Xcode 26.4 (const eval broken in Apple Clang 17+)
     installer.pods_project.targets.each do |target|
       if target.name == 'fmt'
         target.build_configurations.each do |config|
