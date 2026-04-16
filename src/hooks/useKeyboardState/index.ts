@@ -5,7 +5,7 @@ import { KeyboardController } from "../../module";
 
 import type { IKeyboardState } from "../../types";
 
-const EVENTS = ["keyboardDidShow", "keyboardDidHide"] as const;
+const EVENTS = ["keyboardWillShow", "keyboardDidHide"] as const;
 
 const getLatestState = () => ({
   ...KeyboardController.state(),
@@ -53,12 +53,6 @@ function useKeyboardState<T = IKeyboardState>(
         setState(selector(getLatestState())),
       ),
     );
-    // update `appearance` prematurely
-    const willShowSubscription = KeyboardEvents.addListener(
-      "keyboardWillShow",
-      (e) =>
-        setState(selector({ ...getLatestState(), appearance: e.appearance })),
-    );
 
     // we might have missed an update between reading a value in render and
     // `addListener` in this handler, so we set it here. If there was
@@ -67,7 +61,6 @@ function useKeyboardState<T = IKeyboardState>(
 
     return () => {
       subscriptions.forEach((subscription) => subscription.remove());
-      willShowSubscription.remove();
     };
   }, []);
 
