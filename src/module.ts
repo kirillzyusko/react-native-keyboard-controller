@@ -21,7 +21,7 @@ KeyboardEvents.addListener("keyboardDidHide", (e) => {
   lastState = e;
 });
 
-KeyboardEvents.addListener("keyboardDidShow", (e) => {
+KeyboardEvents.addListener("keyboardWillShow", (e) => {
   isClosed = false;
   lastState = e;
 });
