@@ -1,5 +1,5 @@
 import React, { forwardRef } from "react";
-import { Platform, View } from "react-native";
+import { Platform } from "react-native";
 import Reanimated, {
   useAnimatedProps,
   useSharedValue,
