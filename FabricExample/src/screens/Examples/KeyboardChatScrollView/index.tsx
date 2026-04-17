@@ -34,6 +34,7 @@ import styles, {
   MARGIN,
   TEXT_INPUT_HEIGHT,
   contentContainerStyle,
+  invertedContentContainerStyle,
 } from "./styles";
 import VirtualizedListScrollView, {
   type VirtualizedListScrollViewRef,
@@ -117,8 +118,10 @@ function KeyboardChatScrollViewPlayground() {
         )}
         {mode === "flash" && (
           <FlashList
-            contentContainerStyle={contentContainerStyle}
-            data={messages}
+            contentContainerStyle={
+              inverted ? invertedContentContainerStyle : contentContainerStyle
+            }
+            data={inverted ? reversedMessages : messages}
             inverted={inverted}
             keyExtractor={(item) => item.text}
             maintainVisibleContentPosition={{

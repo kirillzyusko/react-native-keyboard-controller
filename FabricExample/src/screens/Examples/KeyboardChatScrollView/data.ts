@@ -15,6 +15,14 @@ export const messages = [
     text: "It's pretty cool. We were able to built gallery with share element transitions without any flickering or any other issues",
     sender: true,
   },
+  {
+    text: "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n1111222223333\n\n\n\n\n\n\n\n\n\n",
+    sender: false,
+  },
+  { text: "1", sender: false },
+  { text: "2", sender: false },
+  { text: "3", sender: false },
+  { text: "\n\n\n\n\n\n\n\n1118889993330002\n\n\n\n\n", sender: false },
   { text: "So far it looks cool!", sender: true },
   { text: "And seems to be pretty stable", sender: true },
   {
