@@ -99,6 +99,8 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> & {
   );
   const containerStyle = useMemo(
     () => [
+      // CRUCIAL: gives the native view real bounds
+      styles.toolbar,
       KEYBOARD_HAS_ROUNDED_CORNERS
         ? {
             marginLeft: (insets?.left ?? 0) + 16,
