@@ -100,12 +100,12 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> & {
   const containerStyle = useMemo(
     () => [
       // CRUCIAL: gives the native view real bounds
-      styles.toolbar,
+      styles.sticky,
       KEYBOARD_HAS_ROUNDED_CORNERS
-        ? {
-            marginLeft: (insets?.left ?? 0) + 16,
-            marginRight: (insets?.right ?? 0) + 16,
-          }
+        ? ({
+            left: (insets?.left ?? 0) + 16,
+            right: (insets?.right ?? 0) + 16,
+          } as const)
         : null,
     ],
     [insets],
@@ -209,6 +209,13 @@ const KeyboardToolbar: React.FC<KeyboardToolbarProps> & {
 };
 
 const styles = StyleSheet.create({
+  sticky: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    bottom: 0,
+    height: KEYBOARD_TOOLBAR_HEIGHT,
+  },
   toolbar: {
     position: "absolute",
     bottom: 0,
