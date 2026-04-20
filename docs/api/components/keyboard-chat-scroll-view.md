@@ -36,6 +36,10 @@ Accepts either a plain `boolean` or a [Reanimated `SharedValue<boolean>`](https:
 
 Set to `true` if your list uses the `inverted` prop (the standard pattern for chat-style lists where the newest messages appear at the bottom).
 
+Virtualized list caution
+
+If you're using `inverted={true}` with virtualized lists (e.g. `FlashList`), make sure to increase `drawDistance` (or any similar prop that controls how much content is rendered outside the visible area). This can help [prevent](https://github.com/kirillzyusko/react-native-keyboard-controller/pull/1437) content flashing during keyboard animations.
+
 ### `keyboardLiftBehavior`[​](/react-native-keyboard-controller/docs/api/components/keyboard-chat-scroll-view.md#keyboardliftbehavior "Direct link to keyboardliftbehavior")
 
 Controls how the chat content responds when the keyboard appears. Defaults to `"always"`.
