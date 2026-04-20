@@ -48,7 +48,7 @@ class ClippingScrollViewDecoratorView(
     // virtualizer calculations correct (it reads layout positions,
     // not translationY).
     val contentView = scrollView.getChildAt(0) as? ViewGroup ?: return
-    (contentView.getChildAt(0) as? ViewGroup)?.translationY = newTopInsetPx.toFloat()
+    contentView.translationY = newTopInsetPx.toFloat()
 
     scrollView.setPadding(
       scrollView.paddingLeft,

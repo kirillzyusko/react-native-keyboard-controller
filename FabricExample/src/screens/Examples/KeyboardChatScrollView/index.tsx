@@ -8,6 +8,7 @@ import React, {
   useState,
 } from "react";
 import {
+  Dimensions,
   FlatList,
   Image,
   StyleSheet,
@@ -34,6 +35,7 @@ import styles, {
   MARGIN,
   TEXT_INPUT_HEIGHT,
   contentContainerStyle,
+  invertedContentContainerStyle,
 } from "./styles";
 import VirtualizedListScrollView, {
   type VirtualizedListScrollViewRef,
@@ -117,8 +119,18 @@ function KeyboardChatScrollViewPlayground() {
         )}
         {mode === "flash" && (
           <FlashList
-            contentContainerStyle={contentContainerStyle}
-            data={messages}
+            contentContainerStyle={
+              inverted ? invertedContentContainerStyle : contentContainerStyle
+            }
+            data={inverted ? reversedMessages : messages}
+            // use slightly bigger distance to avoid flashing for inverted case
+            // internally `KeyboardChatScrollView` re-positions content and in case
+            // of inverted it shifts it by `translateY={keyboardSize}` and adjust scroll position
+            // so real content movement can be `keyboardSize x2`, and `FlashList` may recycle wrong items
+            // using bigger distance we assure that we will not see flickering of messages
+            // during keyboard animation
+            drawDistance={Dimensions.get("screen").height}
+            inverted={inverted}
             keyExtractor={(item) => item.text}
             maintainVisibleContentPosition={{
               startRenderingFromBottom: inverted,
