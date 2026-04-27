@@ -87,4 +87,11 @@ export type KeyboardChatScrollViewProps = {
    * Default is `undefined` (equivalent to `0` — no minimum floor).
    */
   blankSpace?: SharedValue<number>;
+  /**
+   * Optional shared value that tracks whether the scroll view is currently at the end.
+   *
+   * When provided, `KeyboardChatScrollView` updates it on the UI thread using the same
+   * scroll metrics that drive `keyboardLiftBehavior="whenAtEnd"`.
+   */
+  isAtEnd?: SharedValue<boolean>;
 } & ScrollViewProps;
