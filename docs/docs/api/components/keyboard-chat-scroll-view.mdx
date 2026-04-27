@@ -168,6 +168,22 @@ To fix this, you must either:
 Without one of these solutions, users won't be able to scroll or interact with content in the minimum padding area.
 :::
 
+### `onContentInsetChange`
+
+A callback fired whenever the effective content inset changes — i.e. the static [`contentInset`](https://reactnative.dev/docs/scrollview#contentinset) prop combined with the dynamic keyboard-driven padding (`keyboardPadding + extraContentPadding`, or `blankSpace` when it dominates).
+
+```ts
+type Insets = { top: number; bottom: number; left: number; right: number };
+
+onContentInsetChange?: (insets: Insets) => void;
+```
+
+The callback is invoked on every animation frame during the keyboard transition (and once for any non-animated change to the static `contentInset` prop).
+
+:::tip When to use it?
+On **Android**, the synthetic content inset is _not_ included in the native `onScroll` event payload (because the inset is simulated at the React Native layer rather than reported by the native `ScrollView`). Use `onContentInsetChange` to track the current inset alongside scroll offsets.
+:::
+
 ## Usage with virtualized lists
 
 `KeyboardChatScrollView` doesn't ship with built-in wrappers for third-party virtualized list libraries, but since all of them (`FlatList`, `FlashList`, `LegendList`) accept a custom scroll component, integration is straightforward.
