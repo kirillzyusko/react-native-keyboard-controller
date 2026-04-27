@@ -10,11 +10,11 @@ import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.UiThreadUtil
 import com.facebook.react.uimanager.IllegalViewOperationException
 import com.reactnativekeyboardcontroller.extensions.dp
-import com.reactnativekeyboardcontroller.log.Logger
 import com.reactnativekeyboardcontroller.extensions.screenLocation
 import com.reactnativekeyboardcontroller.extensions.uiManager
 import com.reactnativekeyboardcontroller.extensions.windowSoftInputMode
 import com.reactnativekeyboardcontroller.interactive.KeyboardAnimationController
+import com.reactnativekeyboardcontroller.log.Logger
 import com.reactnativekeyboardcontroller.traversal.FocusedInputHolder
 import com.reactnativekeyboardcontroller.traversal.ViewHierarchyNavigator
 
