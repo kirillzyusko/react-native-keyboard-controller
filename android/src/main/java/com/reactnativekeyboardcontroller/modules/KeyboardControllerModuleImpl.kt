@@ -8,6 +8,7 @@ import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.UiThreadUtil
+import com.facebook.react.uimanager.IllegalViewOperationException
 import com.reactnativekeyboardcontroller.extensions.dp
 import com.reactnativekeyboardcontroller.extensions.screenLocation
 import com.reactnativekeyboardcontroller.extensions.uiManager
@@ -89,7 +90,12 @@ class KeyboardControllerModuleImpl(
     promise: Promise,
   ) {
     UiThreadUtil.runOnUiThread {
-      val view = uiManager?.resolveView(viewTag.toInt())
+      val view =
+        try {
+          uiManager?.resolveView(viewTag.toInt())
+        } catch (e: IllegalViewOperationException) {
+          null
+        }
       if (view == null) {
         promise.reject("E_VIEW_NOT_FOUND", "Could not find view for tag")
         return@runOnUiThread
