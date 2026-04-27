@@ -10,12 +10,15 @@ import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.UiThreadUtil
 import com.facebook.react.uimanager.IllegalViewOperationException
 import com.reactnativekeyboardcontroller.extensions.dp
+import com.reactnativekeyboardcontroller.log.Logger
 import com.reactnativekeyboardcontroller.extensions.screenLocation
 import com.reactnativekeyboardcontroller.extensions.uiManager
 import com.reactnativekeyboardcontroller.extensions.windowSoftInputMode
 import com.reactnativekeyboardcontroller.interactive.KeyboardAnimationController
 import com.reactnativekeyboardcontroller.traversal.FocusedInputHolder
 import com.reactnativekeyboardcontroller.traversal.ViewHierarchyNavigator
+
+private val TAG = KeyboardControllerModuleImpl::class.qualifiedName
 
 class KeyboardControllerModuleImpl(
   private val mReactContext: ReactApplicationContext,
@@ -94,6 +97,7 @@ class KeyboardControllerModuleImpl(
         try {
           uiManager?.resolveView(viewTag.toInt())
         } catch (e: IllegalViewOperationException) {
+          Logger.w(TAG, "Could not resolve view for tag ${viewTag.toInt()}", e)
           null
         }
       if (view == null) {
