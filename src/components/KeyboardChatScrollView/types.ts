@@ -1,4 +1,7 @@
-import type { AnimatedScrollViewComponent } from "../ScrollViewWithBottomPadding";
+import type {
+  AnimatedScrollViewComponent,
+  ScrollViewContentInsets,
+} from "../ScrollViewWithBottomPadding";
 import type { KeyboardLiftBehavior } from "./useChatKeyboard/types";
 import type { ScrollViewProps } from "react-native";
 import type { SharedValue } from "react-native-reanimated";
@@ -87,4 +90,13 @@ export type KeyboardChatScrollViewProps = {
    * Default is `undefined` (equivalent to `0` — no minimum floor).
    */
   blankSpace?: SharedValue<number>;
+  /**
+   * Fires whenever the effective content inset changes — the static `contentInset`
+   * prop combined with the dynamic keyboard-driven padding.
+   *
+   * Useful on Android, where the synthetic content inset is not reflected in the native
+   * `onScroll` event payload. Consumers such as virtualized lists computing their own
+   * `scrollToEnd` target can use this to track the current inset alongside scroll offsets.
+   */
+  onContentInsetChange?: (insets: ScrollViewContentInsets) => void;
 } & ScrollViewProps;

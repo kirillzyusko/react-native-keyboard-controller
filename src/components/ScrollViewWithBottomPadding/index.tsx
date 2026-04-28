@@ -1,7 +1,10 @@
 import React, { forwardRef } from "react";
 import { Platform } from "react-native";
 import Reanimated, {
+  runOnJS,
   useAnimatedProps,
+  useAnimatedReaction,
+  useDerivedValue,
   useSharedValue,
 } from "react-native-reanimated";
 
@@ -26,6 +29,13 @@ export type AnimatedScrollViewComponent = React.ForwardRefExoticComponent<
   AnimatedScrollViewProps & React.RefAttributes<Reanimated.ScrollView>
 >;
 
+export type ScrollViewContentInsets = {
+  top: number;
+  bottom: number;
+  left: number;
+  right: number;
+};
+
 type ScrollViewWithBottomPaddingProps = {
   ScrollViewComponent: AnimatedScrollViewComponent;
   children?: React.ReactNode;
@@ -36,6 +46,12 @@ type ScrollViewWithBottomPaddingProps = {
   /** Absolute Y content offset (iOS only, for KeyboardChatScrollView). */
   contentOffsetY?: SharedValue<number>;
   applyWorkaroundForContentInsetHitTestBug?: boolean;
+  /**
+   * Fires whenever the effective content inset changes (combines the static `contentInset`
+   * prop with the dynamic keyboard-driven padding). Useful on Android where the synthetic
+   * inset is not reflected in `onScroll` events.
+   */
+  onContentInsetChange?: (insets: ScrollViewContentInsets) => void;
 } & ScrollViewProps;
 
 const ScrollViewWithBottomPadding = forwardRef<
@@ -52,6 +68,7 @@ const ScrollViewWithBottomPadding = forwardRef<
       inverted,
       contentOffsetY,
       applyWorkaroundForContentInsetHitTestBug,
+      onContentInsetChange,
       children,
       ...rest
     },
@@ -59,11 +76,52 @@ const ScrollViewWithBottomPadding = forwardRef<
   ) => {
     const prevContentOffsetY = useSharedValue<number | null>(null);
 
+    const insets = useDerivedValue(() => {
+      const dynamicTop = inverted ? bottomPadding.value : 0;
+      const dynamicBottom = !inverted ? bottomPadding.value : 0;
+
+      return {
+        dynamic: {
+          top: dynamicTop,
+          bottom: dynamicBottom,
+        },
+        effective: {
+          top: dynamicTop + (contentInset?.top || 0),
+          bottom: dynamicBottom + (contentInset?.bottom || 0),
+          left: contentInset?.left || 0,
+          right: contentInset?.right || 0,
+        } as ScrollViewContentInsets,
+      };
+    }, [
+      inverted,
+      contentInset?.top,
+      contentInset?.bottom,
+      contentInset?.left,
+      contentInset?.right,
+    ]);
+
+    useAnimatedReaction(
+      () => insets.value.effective,
+      (current, previous) => {
+        if (!onContentInsetChange) {
+          return;
+        }
+        if (
+          previous &&
+          current.top === previous.top &&
+          current.bottom === previous.bottom &&
+          current.left === previous.left &&
+          current.right === previous.right
+        ) {
+          return;
+        }
+        runOnJS(onContentInsetChange)(current);
+      },
+      [onContentInsetChange],
+    );
+
     const animatedProps = useAnimatedProps(() => {
-      const insetTop = inverted ? bottomPadding.value : 0;
-      const insetBottom = !inverted ? bottomPadding.value : 0;
-      const bottom = insetBottom + (contentInset?.bottom || 0);
-      const top = insetTop + (contentInset?.top || 0);
+      const { dynamic, effective } = insets.value;
 
       const indicatorPadding = scrollIndicatorPadding ?? bottomPadding;
       const indicatorTop =
@@ -75,12 +133,7 @@ const ScrollViewWithBottomPadding = forwardRef<
 
       const result: Record<string, unknown> = {
         // iOS prop
-        contentInset: {
-          bottom: bottom,
-          top: top,
-          right: contentInset?.right,
-          left: contentInset?.left,
-        },
+        contentInset: effective,
         scrollIndicatorInsets: {
           bottom: indicatorBottom,
           top: indicatorTop,
@@ -88,8 +141,8 @@ const ScrollViewWithBottomPadding = forwardRef<
           left: scrollIndicatorInsets?.left,
         },
         // Android prop
-        contentInsetBottom: insetBottom,
-        contentInsetTop: insetTop,
+        contentInsetBottom: dynamic.bottom,
+        contentInsetTop: dynamic.top,
       };
 
       if (contentOffsetY) {
@@ -104,10 +157,6 @@ const ScrollViewWithBottomPadding = forwardRef<
 
       return result;
     }, [
-      contentInset?.bottom,
-      contentInset?.top,
-      contentInset?.right,
-      contentInset?.left,
       scrollIndicatorInsets?.bottom,
       scrollIndicatorInsets?.top,
       scrollIndicatorInsets?.right,
