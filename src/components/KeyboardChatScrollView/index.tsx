@@ -12,6 +12,7 @@ import useCombinedRef from "../hooks/useCombinedRef";
 import ScrollViewWithBottomPadding from "../ScrollViewWithBottomPadding";
 
 import { useChatKeyboard } from "./useChatKeyboard";
+import { useEndVisible } from "./useEndVisible";
 import { useExtraContentPadding } from "./useExtraContentPadding";
 
 import type { KeyboardChatScrollViewProps } from "./types";
@@ -37,6 +38,7 @@ const KeyboardChatScrollView = forwardRef<
       applyWorkaroundForContentInsetHitTestBug = false,
       onLayout: onLayoutProp,
       onContentSizeChange: onContentSizeChangeProp,
+      onEndVisible,
       ...rest
     },
     ref,
@@ -76,6 +78,14 @@ const KeyboardChatScrollView = forwardRef<
       inverted,
       keyboardLiftBehavior,
       freeze: freezeSV,
+    });
+
+    useEndVisible({
+      scroll,
+      layout,
+      size,
+      inverted,
+      onEndVisible,
     });
 
     const totalPadding = useDerivedValue(() =>
