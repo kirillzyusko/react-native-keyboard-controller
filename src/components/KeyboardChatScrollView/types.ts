@@ -99,4 +99,19 @@ export type KeyboardChatScrollViewProps = {
    * `scrollToEnd` target can use this to track the current inset alongside scroll offsets.
    */
   onContentInsetChange?: (insets: ScrollViewContentInsets) => void;
+  /**
+   * Fires whenever the visibility of the content "end" changes — both when the user
+   * arrives at the end and when they leave it. The boolean parameter reflects the new state.
+   *
+   * For non-inverted lists, the "end" is the bottom of the content. For inverted lists
+   * (`inverted={true}`), the "end" is the top of the scroll view, where the latest messages
+   * are rendered. The same internal detection drives `keyboardLiftBehavior="whenAtEnd"`.
+   *
+   * The callback can be either a plain JS function or a Reanimated worklet — the type is
+   * detected automatically. Worklets run on the UI thread; plain functions are dispatched
+   * via `runOnJS`.
+   *
+   * Fires once on mount with the initial state (after the scroll view has been measured).
+   */
+  onEndVisible?: (visible: boolean) => void;
 } & ScrollViewProps;
