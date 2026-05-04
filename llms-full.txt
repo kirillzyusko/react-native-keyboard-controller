@@ -772,6 +772,42 @@ When to use it?
 
 On **Android**, the synthetic content inset is *not* included in the native `onScroll` event payload (because the inset is simulated at the React Native layer rather than reported by the native `ScrollView`). Use `onContentInsetChange` to track the current inset alongside scroll offsets.
 
+### `onEndVisible`[​](/react-native-keyboard-controller/docs/api/components/keyboard-chat-scroll-view.md#onendvisible "Direct link to onendvisible")
+
+A callback fired whenever the visibility of the content "end" changes — **both** when the user arrives at the end and when they leave it. The boolean parameter reflects the new state.
+
+```
+onEndVisible?: (visible: boolean) => void;
+```
+
+* For **non-inverted** lists, the "end" is the bottom of the content (the newest messages, in a typical chat).
+* For **inverted** lists (`inverted={true}`), the "end" is the top of the scroll view (where the latest messages are rendered).
+
+The callback uses the same internal "at end" detection that powers `keyboardLiftBehavior="whenAtEnd"`, so the value stays in sync with the lift decision.
+
+The callback fires on every transition in either direction (unlike `FlatList`'s `onEndReached`, which fires only on entry). It also fires once on mount with the initial value, after the scroll view has been measured.
+
+When to use it?
+
+The classic case is a **jump-to-latest** affordance in a chat UI:
+
+```
+const [showJump, setShowJump] = useState(false);
+
+<KeyboardChatScrollView onEndVisible={(visible) => setShowJump(!visible)}>
+  {/* ...messages... */}
+</KeyboardChatScrollView>;
+```
+
+Worklet support
+
+The callback can be either a plain JS function **or** a Reanimated worklet — the type is detected automatically:
+
+* A **worklet** (a function with the `'worklet'` directive) runs on the UI thread, with no JS thread hop.
+* A **plain JS function** is dispatched via `runOnJS` and runs on the JS thread.
+
+Use a worklet when you want to drive UI animations (e.g. fade a jump-to-latest button) without bouncing through React state.
+
 ## Usage with virtualized lists[​](/react-native-keyboard-controller/docs/api/components/keyboard-chat-scroll-view.md#usage-with-virtualized-lists "Direct link to Usage with virtualized lists")
 
 `KeyboardChatScrollView` doesn't ship with built-in wrappers for third-party virtualized list libraries, but since all of them (`FlatList`, `FlashList`, `LegendList`) accept a custom scroll component, integration is straightforward.
