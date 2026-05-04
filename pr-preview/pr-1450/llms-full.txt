@@ -770,9 +770,7 @@ The classic case is a **jump-to-latest** affordance in a chat UI:
 ```
 const [showJump, setShowJump] = useState(false);
 
-<KeyboardChatScrollView
-  onEndVisible={(visible) => setShowJump(!visible)}
->
+<KeyboardChatScrollView onEndVisible={(visible) => setShowJump(!visible)}>
   {/* ...messages... */}
 </KeyboardChatScrollView>;
 ```
