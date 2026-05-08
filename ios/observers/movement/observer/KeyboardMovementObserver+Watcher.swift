@@ -22,13 +22,14 @@ extension KeyboardMovementObserver {
   }
 
   @objc func updateKeyboardFrame(link: CADisplayLink) {
+    print(keyboardTrackingView.view)
     if keyboardTrackingView.view == nil {
       return
     }
 
     let (visibleKeyboardHeight, keyboardFrameY) = keyboardTrackingView.view.frameTransitionInWindow
     var keyboardPosition = visibleKeyboardHeight - KeyboardAreaExtender.shared.offset
-
+    print("\(keyboardPosition) \(prevKeyboardPosition) \(keyboardFrameY)")
     if keyboardPosition == prevKeyboardPosition || keyboardFrameY == 0 {
       return
     }

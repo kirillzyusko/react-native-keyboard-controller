@@ -12,6 +12,38 @@ private var pendingBecomeResponder: TextInput?
 private var originalResignFirstResponder: IMP?
 private var originalBecomeFirstResponder: IMP?
 
+extension UIApplication {
+    var keyboardWindow: UIWindow? {
+        // iOS 16+: official-ish private API on UIRemoteKeyboardWindow
+        if #available(iOS 16.0, *),
+           let cls = NSClassFromString("UIRemoteKeyboardWindow") as? NSObject.Type {
+            let sel = NSSelectorFromString("remoteKeyboardWindowForScreen:create:")
+            let screen = UIScreen.main
+            // returns UIWindow? — cast via unmanaged to avoid ARC mis-claim
+            let result = cls.perform(sel, with: screen, with: false)
+            return UIWindow.topWindow
+        }
+        // Pre-iOS 16: scan windows by class name suffix
+        return UIApplication.shared.windows.first { window in
+            let name = NSStringFromClass(type(of: window))
+            return name.hasPrefix("UI") && name.hasSuffix("RemoteKeyboardWindow")
+        }
+    }
+
+    var keyboardView: UIView? {
+        guard let kbWindow = keyboardWindow else { return nil }
+        // hierarchy: UIRemoteKeyboardWindow > UIInputSetContainerView > UIInputSetHostView
+        for container in kbWindow.subviews where
+            NSStringFromClass(type(of: container)).hasSuffix("InputSetContainerView") {
+            for host in container.subviews where
+                NSStringFromClass(type(of: host)).hasSuffix("InputSetHostView") {
+                return host
+            }
+        }
+        return nil
+    }
+}
+
 @objc
 extension UIResponder {
   public static func swizzleBecomeFirstResponder() {
@@ -103,6 +135,19 @@ extension UIResponder {
     let castOriginalBecomeFirstResponder = unsafeBitCast(
       originalBecomeFirstResponder, to: Function.self
     )
-    return castOriginalBecomeFirstResponder(self, selector)
+    UIView.performWithoutAnimation {
+      castOriginalBecomeFirstResponder(self, selector)
+    }
+    
+    /*DispatchQueue.main.asyncAfter(deadline: .now() + 2.5, execute: {
+      KeyboardView.find()?.subviews[0].transform = CGAffineTransform(translationX: 0, y: -150)
+      print(KeyboardView.find()?.superview?.superview?.layer.sublayers)
+      KeyboardView.find()?.superview?.superview?.transform = CGAffineTransform(translationX: 0, y: -150)
+      if let kb = UIApplication.shared.keyboardView {
+          kb.layer.bounds = CGRect(origin: CGPoint(x: 0, y: -50), size: kb.bounds.size)
+      }
+    })*/
+    
+    return true
   }
 }
