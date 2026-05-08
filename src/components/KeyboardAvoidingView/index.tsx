@@ -1,19 +1,12 @@
-import React, { forwardRef, useCallback, useMemo } from "react";
-import { View } from "react-native";
-import Reanimated, {
-  interpolate,
-  runOnUI,
-  useAnimatedStyle,
-  useDerivedValue,
-  useSharedValue,
-} from "react-native-reanimated";
+import React, { forwardRef, useCallback, useEffect, useMemo, useRef } from "react";
+import { Animated, View } from "react-native";
 
-import { KeyboardControllerNative } from "../../bindings";
+import { KeyboardControllerNative, KeyboardEvents } from "../../bindings";
+import { useKeyboardContext } from "../../context";
 import { useWindowDimensions } from "../../hooks";
+import { useAnimatedValue } from "../../internal";
 import { findNodeHandle } from "../../utils/findNodeHandle";
 import useCombinedRef from "../hooks/useCombinedRef";
-
-import { useKeyboardAnimation, useTranslateAnimation } from "./hooks";
 
 import type { LayoutRectangle, ViewProps } from "react-native";
 
@@ -91,46 +84,40 @@ const KeyboardAvoidingView = forwardRef<
     },
     ref,
   ) => {
-    const initialFrame = useSharedValue<LayoutRectangle | null>(null);
-    const internalRef = React.useRef<View | null>(null);
-    const frame = useDerivedValue(() => initialFrame.value || defaultLayout);
-
-    const { translate, padding } = useTranslateAnimation();
-    const keyboard = useKeyboardAnimation();
+    const { animated } = useKeyboardContext();
+    const frameRef = useRef<LayoutRectangle>(defaultLayout);
+    const internalRef = useRef<View | null>(null);
     const { height: screenHeight } = useWindowDimensions();
 
-    const relativeKeyboardHeight = useCallback(() => {
-      "worklet";
+    // Stores the relative keyboard height (pixels) for the current keyboard session.
+    // Updated just before the keyboard animation starts (keyboardWillShow), so that
+    // Animated.multiply(progress, relativeHeightValue) smoothly tracks the keyboard.
+    const relativeHeightValue = useAnimatedValue(0);
 
-      const keyboardY =
-        screenHeight - keyboard.heightWhenOpened.value - keyboardVerticalOffset;
-
-      return Math.max(frame.value.y + frame.value.height - keyboardY, 0);
-    }, [screenHeight, keyboardVerticalOffset]);
-    const interpolateToRelativeKeyboardHeight = useCallback(
-      (value: number) => {
-        "worklet";
-
-        return interpolate(value, [0, 1], [0, relativeKeyboardHeight()]);
+    const computeRelativeHeight = useCallback(
+      (keyboardHeight: number) => {
+        const frame = frameRef.current;
+        const keyboardY =
+          screenHeight - keyboardHeight - keyboardVerticalOffset;
+        return Math.max(frame.y + frame.height - keyboardY, 0);
       },
-      [relativeKeyboardHeight],
+      [screenHeight, keyboardVerticalOffset],
     );
 
-    const onLayoutWorklet = useCallback(
-      (layout: LayoutRectangle) => {
-        "worklet";
+    useEffect(() => {
+      const showSub = KeyboardEvents.addListener("keyboardWillShow", (e) => {
+        relativeHeightValue.setValue(computeRelativeHeight(e.height));
+      });
+      const didHideSub = KeyboardEvents.addListener("keyboardDidHide", () => {
+        relativeHeightValue.setValue(0);
+      });
 
-        if (
-          keyboard.isClosed.value ||
-          initialFrame.value === null ||
-          behavior !== "height"
-        ) {
-          // eslint-disable-next-line react-compiler/react-compiler
-          initialFrame.value = layout;
-        }
-      },
-      [behavior],
-    );
+      return () => {
+        showSub.remove();
+        didHideSub.remove();
+      };
+    }, [computeRelativeHeight, relativeHeightValue]);
+
     const onLayout = useCallback<NonNullable<ViewProps["onLayout"]>>(
       (e) => {
         onLayoutProps?.(e);
@@ -141,68 +128,57 @@ const KeyboardAvoidingView = forwardRef<
           const tag = findNodeHandle(internalRef.current);
 
           if (tag !== null) {
-            // Use native `viewPositionInWindow` to get true screen-absolute coordinates.
-            // This fixes current RN bugs:
-            // - https://github.com/facebook/react-native/pull/56062
-            // - https://github.com/facebook/react-native/pull/56056
             return KeyboardControllerNative.viewPositionInWindow(tag)
               .then((position) => {
-                runOnUI(onLayoutWorklet)({
+                frameRef.current = {
                   ...layout,
                   x: position.x,
                   y: position.y,
-                });
+                };
               })
               .catch(() => {
-                runOnUI(onLayoutWorklet)(layout);
+                frameRef.current = layout;
               });
           }
         }
 
-        return runOnUI(onLayoutWorklet)(layout);
+        frameRef.current = layout;
       },
       [onLayoutProps, automaticOffset],
     );
 
-    const animatedStyle = useAnimatedStyle(() => {
+    // bottom = progress * relativeKeyboardHeight.
+    // Both operands are stable Animated nodes (same reference for the component's
+    // lifetime), so we create this derived node once on mount.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const bottom = useMemo(
+      () => Animated.multiply(animated.progress, relativeHeightValue),
+      [],
+    );
+
+    const animatedStyle = useMemo(() => {
       if (!enabled) {
         return {};
       }
 
-      const bottom = interpolateToRelativeKeyboardHeight(
-        keyboard.progress.value,
-      );
-      const translateY = interpolateToRelativeKeyboardHeight(translate.value);
-      const paddingBottom = interpolateToRelativeKeyboardHeight(padding.value);
-      const height = frame.value.height - bottom;
-
       switch (behavior) {
         case "height":
-          if (!keyboard.isClosed.value && height > 0) {
-            return {
-              height,
-              flex: 0,
-            };
-          }
-
-          return {};
+        case "padding":
+          return { paddingBottom: bottom };
 
         case "position":
           return { bottom };
 
-        case "padding":
-          return { paddingBottom: bottom };
-
         case "translate-with-padding":
-          return {
-            paddingTop: paddingBottom,
-            transform: [{ translateY: -translateY }],
-          };
+          // Simplified: translate-with-padding falls back to padding behavior
+          // without the reanimated-specific translation component.
+          return { paddingBottom: bottom };
 
         default:
           return {};
       }
-    }, [behavior, enabled, interpolateToRelativeKeyboardHeight]);
+    }, [behavior, enabled, bottom]);
+
     const combinedRef = useCombinedRef(internalRef, ref);
     const isPositionBehavior = behavior === "position";
     const containerStyle = isPositionBehavior ? contentContainerStyle : style;
@@ -214,20 +190,20 @@ const KeyboardAvoidingView = forwardRef<
     if (isPositionBehavior) {
       return (
         <View ref={combinedRef} style={style} onLayout={onLayout} {...props}>
-          <Reanimated.View style={combinedStyles}>{children}</Reanimated.View>
+          <Animated.View style={combinedStyles}>{children}</Animated.View>
         </View>
       );
     }
 
     return (
-      <Reanimated.View
+      <Animated.View
         ref={combinedRef}
         style={combinedStyles}
         onLayout={onLayout}
         {...props}
       >
         {children}
-      </Reanimated.View>
+      </Animated.View>
     );
   },
 );

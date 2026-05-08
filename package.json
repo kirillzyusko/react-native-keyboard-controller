@@ -124,8 +124,7 @@
   },
   "peerDependencies": {
     "react": "*",
-    "react-native": "*",
-    "react-native-reanimated": ">=3.0.0"
+    "react-native": "*"
   },
   "jest": {
     "preset": "react-native",

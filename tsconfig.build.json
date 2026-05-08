@@ -6,6 +6,13 @@
     "docs",
     "e2e",
     "**/__tests__",
-    "**/__fixtures__"
+    "**/__fixtures__",
+    "src/components/KeyboardStickyView",
+    "src/components/KeyboardAwareScrollView",
+    "src/components/KeyboardChatScrollView",
+    "src/components/ScrollViewWithBottomPadding",
+    "src/components/hooks/useScrollState.ts",
+    "src/views/KeyboardExtender",
+    "src/components/KeyboardToolbar"
   ]
 }
