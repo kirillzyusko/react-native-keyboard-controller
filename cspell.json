@@ -195,7 +195,9 @@
     "lottiefiles",
     "dotlottie",
     "legendapp",
-    "kortix"
+    "kortix",
+    "relayout",
+    "overscroll"
   ],
   "ignorePaths": [
     "node_modules",

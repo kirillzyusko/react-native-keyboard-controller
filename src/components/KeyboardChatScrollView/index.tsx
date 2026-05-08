@@ -80,17 +80,18 @@ const KeyboardChatScrollView = forwardRef<
       freeze: freezeSV,
     });
 
+    const totalPadding = useDerivedValue(() =>
+      Math.max(blankSpace.value, padding.value + extraContentPadding.value),
+    );
+
     useEndVisible({
       scroll,
       layout,
       size,
       inverted,
+      appliedInset: totalPadding,
       onEndVisible,
     });
-
-    const totalPadding = useDerivedValue(() =>
-      Math.max(blankSpace.value, padding.value + extraContentPadding.value),
-    );
 
     // Scroll indicator inset = keyboard + extraContentPadding (excludes blankSpace).
     // Apps that render into the unsafe area can supply a negative

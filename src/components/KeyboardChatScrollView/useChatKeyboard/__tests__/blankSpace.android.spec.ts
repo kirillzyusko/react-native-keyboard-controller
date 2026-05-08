@@ -71,9 +71,11 @@ describe("blankSpace — Android non-inverted + always", () => {
   });
 
   it("partial absorption: reduced scroll displacement", () => {
-    // Content slightly smaller than viewport so minimum padding is fully visible
-    // (pastContentEnd = 0+800-700 = 100, fraction = 100/100 = 1)
-    mockSize.value = { width: 390, height: 700 };
+    // Natural content height = 700 (slightly smaller than viewport=800). On Android
+    // the native scroll view reports contentSize extended by the applied inset, so
+    // mockSize = natural(700) + appliedInset(max(100, 300)) = 1000 while keyboard open.
+    // pastContentEnd = 0+800-700 = 100, fraction = 100/100 = 1
+    mockSize.value = { width: 390, height: 1000 };
     mockOffset.value = 0;
     render({
       inverted: false,

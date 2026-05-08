@@ -6,7 +6,6 @@ import useScrollState from "../../hooks/useScrollState";
 import {
   clampedScrollTarget,
   getEffectiveHeight,
-  getMinimumPaddingAbsorbed,
   getScrollEffective,
   getVisibleMinimumPaddingFraction,
   isScrollAtEnd,
@@ -48,7 +47,13 @@ function useChatKeyboard(
   const offsetBeforeScroll = useSharedValue(0);
   const targetKeyboardHeight = useSharedValue(0);
   const closing = useSharedValue(false);
-  const minimumPaddingFractionOnOpen = useSharedValue(0);
+  // Visible portion of blankSpace at the moment the keyboard started opening. Snapshot
+  // from onStart — used by onMove to keep the per-frame math stable as the keyboard
+  // animates. Must match iOS's per-frame formula: `absorbed = max(0, visiblePadding -
+  // extraContent)`, NOT `(blankSpace - extra) * fraction` (which scales `extra` by
+  // fraction and gives a smaller absorption than iOS when the blank is only partially
+  // visible, causing under-shift on short content).
+  const visiblePaddingOnOpen = useSharedValue(0);
   const actualOpenShift = useSharedValue(0);
   const {
     layout,
@@ -57,6 +62,24 @@ function useChatKeyboard(
     onLayout,
     onContentSizeChange,
   } = useScrollState(scrollViewRef);
+  // On Android, `size.value.height` comes from native scroll events where the
+  // ScrollView reads `contentView.getHeight()` (= bottom - top). The decorator extends
+  // `contentView.bottom` by the applied inset to provide the blank-space scroll range,
+  // so `size.value.height` is "natural content + applied inset". iOS reports pure
+  // natural height via `contentSize` (contentInset is reported separately). To align
+  // Android's `isScrollAtEnd` with iOS, subtract the applied inset here. The applied
+  // inset at any moment equals what `ScrollViewWithBottomPadding` writes to
+  // `contentInsetBottom + contentInsetTop`, which is `max(blankSpace, padding +
+  // extraContentPadding)` (i.e. `bottomPadding.value` from chat).
+  const naturalContentHeight = (): number => {
+    "worklet";
+    const appliedInset = Math.max(
+      blankSpace.value,
+      padding.value + extraContentPadding.value,
+    );
+
+    return Math.max(0, size.value.height - appliedInset);
+  };
   const clampScrollIfNeeded = (
     effective: number,
     totalPaddingForMaxScroll?: number,
@@ -67,8 +90,11 @@ function useChatKeyboard(
       totalPaddingForMaxScroll !== undefined
         ? totalPaddingForMaxScroll
         : effective;
+    // Use the natural content height (not `size.value.height`, which on Android already
+    // includes the applied inset via the decorator's `child.bottom` extension) so we
+    // don't double-count the inset when computing the scrollable range.
     const maxScroll = Math.max(
-      size.value.height - layout.value.height + paddingForMax,
+      naturalContentHeight() - layout.value.height + paddingForMax,
       0,
     );
 
@@ -103,26 +129,29 @@ function useChatKeyboard(
         const atEnd = isScrollAtEnd(
           scroll.value,
           layout.value.height,
-          size.value.height,
+          naturalContentHeight(),
           inverted,
         );
 
         // Scale minimum padding absorption by how much of it is visible.
-        // Fully visible → full absorption; fully off-screen → no absorption.
+        // Proportional, NOT a binary gate: for short content the viewport always shows
+        // content+blank, and blankSpace can never be "fully visible" (visibleFraction <
+        // 1) because blank extends beyond viewport. A binary gate would skip absorption
+        // entirely and we'd shift by the full keyboard height, pushing short content off
+        // the top. Matches iOS's per-frame math (index.ios.ts: `visibleFraction *
+        // blankSpace`).
         const visibleFraction = getVisibleMinimumPaddingFraction(
           scroll.value,
           layout.value.height,
-          size.value.height,
+          naturalContentHeight(),
           blankSpace.value,
           inverted,
         );
-        const minimumPaddingAbsorbed =
-          visibleFraction >= 1
-            ? getMinimumPaddingAbsorbed(
-                blankSpace.value,
-                extraContentPadding.value,
-              )
-            : 0;
+        const visiblePadding = visibleFraction * blankSpace.value;
+        const minimumPaddingAbsorbed = Math.max(
+          0,
+          visiblePadding - extraContentPadding.value,
+        );
         const scrollEffective = getScrollEffective(
           effective,
           minimumPaddingAbsorbed,
@@ -135,7 +164,7 @@ function useChatKeyboard(
           return;
         } else if (e.height > 0) {
           // Android: keyboard opening — set padding + capture scroll position
-          minimumPaddingFractionOnOpen.value = visibleFraction >= 1 ? 1 : 0;
+          visiblePaddingOnOpen.value = visiblePadding;
           padding.value = effective;
           offsetBeforeScroll.value = scroll.value;
 
@@ -184,11 +213,10 @@ function useChatKeyboard(
             offset,
           );
 
-          const minimumPaddingAbsorbed =
-            getMinimumPaddingAbsorbed(
-              blankSpace.value,
-              extraContentPadding.value,
-            ) * minimumPaddingFractionOnOpen.value;
+          const minimumPaddingAbsorbed = Math.max(
+            0,
+            visiblePaddingOnOpen.value - extraContentPadding.value,
+          );
           const scrollEffective = getScrollEffective(
             effective,
             minimumPaddingAbsorbed,
@@ -202,7 +230,7 @@ function useChatKeyboard(
           const wasAtEnd = isScrollAtEnd(
             offsetBeforeScroll.value,
             layout.value.height,
-            size.value.height,
+            naturalContentHeight(),
             inverted,
           );
 
@@ -224,10 +252,16 @@ function useChatKeyboard(
           }
 
           if (!shouldShiftContent(keyboardLiftBehavior, wasAtEnd)) {
-            // Closing, not shifting: reduce padding to avoid gap
+            // Closing, not shifting: reduce padding to avoid gap. Clamp BEFORE
+            // mutating padding.value — `clampScrollIfNeeded` reads
+            // `naturalContentHeight()` which subtracts `padding.value` from the
+            // native-reported `size.value.height`. On Android the native hasn't
+            // applied the new inset yet, so `size.value.height` still reflects the
+            // pre-mutation inset; computing with the post-mutation `padding.value`
+            // would overestimate the natural content and inflate maxScroll.
             if (closing.value && effective < padding.value) {
-              padding.value = effective;
               clampScrollIfNeeded(effective, actualTotalPadding);
+              padding.value = effective;
             }
 
             return;
@@ -249,9 +283,10 @@ function useChatKeyboard(
                 padding.value = effective;
                 scrollTo(scrollViewRef, 0, 0, false);
               } else if (closing.value) {
-                // Not at end: reduce padding to avoid gap
-                padding.value = effective;
+                // Not at end: reduce padding to avoid gap. Clamp BEFORE mutating
+                // padding.value (see comment above in the !shouldShift branch).
                 clampScrollIfNeeded(effective, actualTotalPadding);
+                padding.value = effective;
               }
 
               return;
@@ -263,17 +298,25 @@ function useChatKeyboard(
 
           scrollTo(scrollViewRef, 0, target, false);
         } else {
+          // Skip post-interactive snap-back events. When the user drags on the scroll
+          // view with the keyboard open, Android emits `onMove` with `duration === -1`
+          // as the keyboard re-establishes position. Without this guard, the scrollTo
+          // below would override the user's in-progress drag — causing the scroll
+          // position to snap back when the user lifts their finger.
+          if (e.duration === -1) {
+            return;
+          }
+
           const effective = getEffectiveHeight(
             e.height,
             targetKeyboardHeight.value,
             offset,
           );
 
-          const minimumPaddingAbsorbed =
-            getMinimumPaddingAbsorbed(
-              blankSpace.value,
-              extraContentPadding.value,
-            ) * minimumPaddingFractionOnOpen.value;
+          const minimumPaddingAbsorbed = Math.max(
+            0,
+            visiblePaddingOnOpen.value - extraContentPadding.value,
+          );
           const scrollEffective = getScrollEffective(
             effective,
             minimumPaddingAbsorbed,
@@ -308,11 +351,16 @@ function useChatKeyboard(
             return;
           }
 
-          // "persistent" closing: maintain position, clamped to valid range
+          // "persistent" closing: maintain the actual shift applied during open. Using
+          // `padding.value` here was wrong when blankSpace absorbed part of the keyboard
+          // — the shift during open was only the uncovered-by-blankSpace portion, NOT
+          // the full keyboard height, so `offsetBefore + padding` over-scrolled on
+          // close. `actualOpenShift` records the real clamped shift captured at the end
+          // of the open animation.
           if (keyboardLiftBehavior === "persistent" && closing.value) {
-            const keepAt = offsetBeforeScroll.value + padding.value;
+            const keepAt = offsetBeforeScroll.value + actualOpenShift.value;
             const maxScroll = Math.max(
-              size.value.height - layout.value.height + actualTotalPadding,
+              naturalContentHeight() - layout.value.height + actualTotalPadding,
               0,
             );
 
@@ -324,7 +372,7 @@ function useChatKeyboard(
           const target = clampedScrollTarget(
             offsetBeforeScroll.value,
             scrollEffective,
-            size.value.height,
+            naturalContentHeight(),
             layout.value.height,
             actualTotalPadding,
           );

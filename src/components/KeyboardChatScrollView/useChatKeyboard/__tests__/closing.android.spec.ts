@@ -86,6 +86,10 @@ describe("`useChatKeyboard` — Android closing behaviors", () => {
   });
 
   it("never non-inverted: should scroll back on close when at end", () => {
+    // Natural content = 2000. On Android mockSize reflects native contentSize
+    // extended by the applied inset, so mockSize = natural(2000) + appliedInset(300)
+    // = 2300 while keyboard is open.
+    mockSize.value = { width: 390, height: 2300 };
     mockOffset.value = 1200;
     render({ inverted: false, keyboardLiftBehavior: "never" });
 
@@ -134,8 +138,10 @@ describe("`useChatKeyboard` — Android closing behaviors", () => {
   });
 
   it("persistent non-inverted: should clamp to max when position exceeds valid range", () => {
-    // Small content so position exceeds natural max scroll
-    mockSize.value = { width: 390, height: 1000 };
+    // Natural content = 1000 (small so position exceeds natural max scroll). On
+    // Android mockSize reflects native contentSize extended by the applied inset,
+    // so mockSize = natural(1000) + appliedInset(300) = 1300 while keyboard open.
+    mockSize.value = { width: 390, height: 1300 };
     mockOffset.value = 100;
     render({ inverted: false, keyboardLiftBehavior: "persistent" });
 
@@ -251,8 +257,11 @@ describe("`useChatKeyboard` — Android closing behaviors", () => {
   });
 
   it("whenAtEnd inverted: should clamp scroll to maxScroll on close when position exceeds new range", () => {
-    // Small content so that old scroll (900) exceeds maxScroll after keyboard shrinks
-    mockSize.value = { width: 390, height: 1500 };
+    // Natural content = 1500 (small so old scroll 900 exceeds maxScroll after
+    // keyboard shrinks). On Android mockSize reflects native contentSize extended
+    // by the applied inset, so mockSize = natural(1500) + appliedInset(300) = 1800
+    // while keyboard open.
+    mockSize.value = { width: 390, height: 1800 };
     // Not at end: isScrollAtEnd(900, 800, 1500, true) = (900 <= 20) = false
     mockOffset.value = 900;
     render({ inverted: true, keyboardLiftBehavior: "whenAtEnd" });

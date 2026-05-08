@@ -132,7 +132,7 @@ const ScrollViewWithBottomPadding = forwardRef<
         (scrollIndicatorInsets?.bottom || 0);
 
       const result: Record<string, unknown> = {
-        // iOS prop
+        // iOS ScrollView props.
         contentInset: effective,
         scrollIndicatorInsets: {
           bottom: indicatorBottom,
@@ -140,7 +140,7 @@ const ScrollViewWithBottomPadding = forwardRef<
           right: scrollIndicatorInsets?.right,
           left: scrollIndicatorInsets?.left,
         },
-        // Android prop
+        // Android `KeyboardControllerScrollView` props (ignored by the stock ScrollView on iOS/web).
         contentInsetBottom: dynamic.bottom,
         contentInsetTop: dynamic.top,
       };

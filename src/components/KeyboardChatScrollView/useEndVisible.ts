@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { Platform } from "react-native";
 import {
   runOnJS,
   useAnimatedReaction,
@@ -16,6 +17,14 @@ type Options = {
   layout: SharedValue<{ width: number; height: number }>;
   size: SharedValue<{ width: number; height: number }>;
   inverted: boolean;
+  /**
+   * Inset currently applied to the native ScrollView. Used on Android to subtract the
+   * blank-space extension from `size.value.height` (which on Android includes it,
+   * because the decorator extends `contentView.bottom`). On iOS the native scroll event
+   * reports natural content size independent of `contentInset`, so no adjustment
+   * needed.
+   */
+  appliedInset: SharedValue<number>;
   onEndVisible?: EndVisibleCallback;
 };
 
@@ -23,11 +32,14 @@ const hasWorkletHash = (value: unknown): boolean =>
   typeof value === "function" &&
   !!(value as unknown as Record<string, unknown>).__workletHash;
 
+const IS_ANDROID = Platform.OS === "android";
+
 export const useEndVisible = ({
   scroll,
   layout,
   size,
   inverted,
+  appliedInset,
   onEndVisible,
 }: Options) => {
   const isWorklet = useMemo(() => hasWorkletHash(onEndVisible), [onEndVisible]);
@@ -40,10 +52,14 @@ export const useEndVisible = ({
       return null;
     }
 
+    const naturalContentHeight = IS_ANDROID
+      ? Math.max(0, size.value.height - appliedInset.value)
+      : size.value.height;
+
     return isScrollAtEnd(
       scroll.value,
       layout.value.height,
-      size.value.height,
+      naturalContentHeight,
       inverted,
     );
   });
