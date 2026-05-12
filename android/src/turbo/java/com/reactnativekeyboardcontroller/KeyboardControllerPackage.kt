@@ -8,8 +8,13 @@ import com.facebook.react.module.model.ReactModuleInfoProvider
 import com.facebook.react.uimanager.ViewManager
 import com.reactnativekeyboardcontroller.modules.KeyboardControllerModuleImpl
 import com.reactnativekeyboardcontroller.modules.statusbar.StatusBarManagerCompatModuleImpl
+import com.reactnativekeyboardcontroller.workarounds.InsetsAnimationCrashGuard
 
 class KeyboardControllerPackage : TurboReactPackage() {
+  init {
+    InsetsAnimationCrashGuard.install()
+  }
+
   override fun getModule(
     name: String,
     reactContext: ReactApplicationContext,
