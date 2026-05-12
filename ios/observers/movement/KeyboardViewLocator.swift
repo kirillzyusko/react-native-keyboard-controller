@@ -11,11 +11,6 @@ final class KeyboardViewLocator {
   private var cachedWindowsCount: Int = 0
 
   func resolve() -> UIView? {
-    // on iOS 26 we always get a new keyboard istance
-    if #available(iOS 26, *) {
-      return KeyboardView.find()
-    }
-
     let currentWindowsCount = UIApplication.shared.windows.count
     
     if cachedKeyboardView == nil || currentWindowsCount != cachedWindowsCount {
