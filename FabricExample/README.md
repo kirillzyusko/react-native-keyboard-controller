@@ -1,6 +1,8 @@
 <img src="../gifs/example-screenshot.png" align="left" width="300" style="margin-right: 40px;">
 
-# Example
+# FabricExample
+
+This example app runs on the [New Architecture](https://reactnative.dev/docs/the-new-architecture/landing-page) (Fabric).
 
 ## Run the app
 
@@ -10,10 +12,10 @@
 yarn
 ```
 
-2. Install the example app dependencies:
+2. Install the FabricExample app dependencies:
 
 ```bash
-cd example
+cd FabricExample
 yarn
 ```
 
