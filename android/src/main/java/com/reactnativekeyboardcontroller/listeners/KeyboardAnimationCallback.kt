@@ -31,6 +31,13 @@ import kotlin.math.abs
 private val TAG = KeyboardAnimationCallback::class.qualifiedName
 private val isResizeHandledInCallbackMethods = Keyboard.IS_ANIMATION_EMULATED
 
+private data class PendingKeyboardStartEvent(
+  val keyboardHeight: Double,
+  val progress: Double,
+  val duration: Int,
+  val target: Int,
+)
+
 data class KeyboardAnimationCallbackConfig(
   val persistentInsetTypes: Int,
   val deferredInsetTypes: Int,
@@ -63,6 +70,7 @@ class KeyboardAnimationCallback(
   private var isTransitioning = false
   private var duration = 0
   private var viewTagFocused = -1
+  private var pendingStartEvent: PendingKeyboardStartEvent? = null
   private var animationsToSkip = hashSetOf<WindowInsetsAnimationCompat>()
   private val isKeyboardInteractive: Boolean
     get() = duration == -1
@@ -177,6 +185,7 @@ class KeyboardAnimationCallback(
     }
 
     isTransitioning = true
+    pendingStartEvent = null
     isKeyboardVisible = isKeyboardVisible()
     duration = animation.durationMillis.toInt()
     val keyboardHeight = getCurrentKeyboardHeight()
@@ -205,18 +214,16 @@ class KeyboardAnimationCallback(
     )
 
     Logger.i(TAG, "HEIGHT:: $keyboardHeight TAG:: $viewTagFocused")
-    context.dispatchEvent(
-      eventPropagationView.id,
-      KeyboardTransitionEvent(
-        surfaceId,
-        eventPropagationView.id,
-        KeyboardTransitionEvent.Start,
+    // AOSP calls app onStart before its internal listener.onReady. Dispatching
+    // a RN event here lets Reanimated synchronously mutate Fabric and can
+    // cancel the pending IME controller before Android starts its animator.
+    pendingStartEvent =
+      PendingKeyboardStartEvent(
         keyboardHeight,
         if (!isKeyboardVisible) 0.0 else 1.0,
         duration,
         viewTagFocused,
-      ),
-    )
+      )
 
     return super.onStart(animation, bounds)
   }
@@ -265,6 +272,11 @@ class KeyboardAnimationCallback(
       "DiffY: $diffY $height $progress ${InteractiveKeyboardProvider.isInteractive} $viewTagFocused",
     )
 
+    flushPendingStartEvent()
+    if (!isTransitioning) {
+      return insets
+    }
+
     val event =
       if (InteractiveKeyboardProvider.isInteractive) {
         KeyboardTransitionEvent.Interactive
@@ -306,9 +318,12 @@ class KeyboardAnimationCallback(
 
         if (animation in animationsToSkip) {
           duration = 0
+          pendingStartEvent = null
           animationsToSkip.remove(animation)
           return@Runnable
         }
+
+        flushPendingStartEvent()
 
         context.emitEvent(
           "KeyboardController::" + if (!isKeyboardVisible) "keyboardDidHide" else "keyboardDidShow",
@@ -352,6 +367,7 @@ class KeyboardAnimationCallback(
     prevKeyboardHeight = keyboardHeight
     isTransitioning = false
     duration = 0
+    pendingStartEvent = null
 
     context.emitEvent(
       "KeyboardController::" + if (!isKeyboardVisible) "keyboardDidHide" else "keyboardDidShow",
@@ -375,6 +391,7 @@ class KeyboardAnimationCallback(
   }
 
   fun destroy() {
+    pendingStartEvent = null
     view.viewTreeObserver.removeOnGlobalFocusChangeListener(focusListener)
     layoutObserver?.destroy()
   }
@@ -428,6 +445,24 @@ class KeyboardAnimationCallback(
 
     // on hide it will be negative value, so we are using max function
     return (keyboardHeight - navigationBar).toFloat().dp.coerceAtLeast(0.0)
+  }
+
+  private fun flushPendingStartEvent() {
+    val event = pendingStartEvent ?: return
+
+    pendingStartEvent = null
+    context.dispatchEvent(
+      eventPropagationView.id,
+      KeyboardTransitionEvent(
+        surfaceId,
+        eventPropagationView.id,
+        KeyboardTransitionEvent.Start,
+        event.keyboardHeight,
+        event.progress,
+        event.duration,
+        event.target,
+      ),
+    )
   }
 
   private fun getEventParams(height: Double): WritableMap {
