@@ -1,10 +1,10 @@
-<img src="../gifs/example-screenshot.png" align="left" width="300" style="margin-right: 40px;">
-
 # FabricExample
 
 This example app runs on the [New Architecture](https://reactnative.dev/docs/the-new-architecture/landing-page) (Fabric).
 
 ## Run the app
+
+<img src="../gifs/example-screenshot.png" align="right" width="230px" style="margin-left: 40px;">
 
 1. Install the repository dependencies (from the project root):
 
