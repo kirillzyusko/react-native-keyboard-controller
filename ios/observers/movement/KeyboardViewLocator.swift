@@ -7,7 +7,7 @@
 
 final class KeyboardViewLocator {
   static let shared = KeyboardViewLocator()
-  private var cachedKeyboardView: UIView?
+  private weak var cachedKeyboardView: UIView?
   private var cachedWindowsCount: Int = 0
 
   func resolve() -> UIView? {
