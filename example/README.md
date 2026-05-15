@@ -1,8 +1,8 @@
-<img src="../gifs/example-screenshot.png" align="left" width="300" style="margin-right: 40px;">
-
 # Example
 
 ## Run the app
+
+<img src="../gifs/example-screenshot.png" align="right" width="35%" style="margin-right: 40px;">
 
 1. Install the repository dependencies (from the project root):
 
