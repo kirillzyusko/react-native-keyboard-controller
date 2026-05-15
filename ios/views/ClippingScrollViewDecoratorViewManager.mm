@@ -16,6 +16,7 @@
 #import "RCTFabricComponentsPlugins.h"
 #endif
 
+#import <TargetConditionals.h>
 #import <UIKit/UIKit.h>
 #import <objc/runtime.h>
 
@@ -213,11 +214,16 @@ RCT_EXPORT_VIEW_PROPERTY(applyWorkaroundForContentInsetHitTestBug, BOOL)
 {
   [super didMoveToWindow];
   if (self.window) {
+#if TARGET_OS_MACCATALYST
+    // Catalyst UIScrollView is AppKit-backed; avoid runtime subclassing it.
+    return;
+#else
     UIScrollView *scrollView = KCFindFirstScrollView(self);
     KCApplyNoopScrollRectToVisible(scrollView);
     if (self.applyWorkaroundForContentInsetHitTestBug) {
       KCApplyFixedHitTest(scrollView);
     }
+#endif
   }
 }
 
