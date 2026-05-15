@@ -195,7 +195,8 @@
     "lottiefiles",
     "dotlottie",
     "legendapp",
-    "kortix"
+    "kortix",
+    "MACCATALYST"
   ],
   "ignorePaths": [
     "node_modules",
