@@ -1,7 +1,7 @@
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Button, Platform, ScrollView, Text, View } from "react-native";
-import { KeyboardAvoidingView, KeyboardAwareScrollView } from "react-native-keyboard-controller";
+import { Button, Platform, ScrollView, Text, View, KeyboardAvoidingView } from "react-native";
+import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 
 import Switch from "../../../components/Switch";
 import TextInput from "../../../components/TextInput";
@@ -45,8 +45,8 @@ export default function AwareScrollView({ navigation }: Props) {
   const [snapToOffsetsEnabled, setSnapToOffsetsEnabled] = useState(false);
 
   return (
-    <>
-      <KeyboardAwareScrollView
+    <KeyboardAvoidingView>
+      <ScrollView
         bottomOffset={50}
         contentContainerStyle={styles.content}
         disableScrollOnKeyboardHide={disableScrollOnKeyboardHide}
@@ -91,7 +91,7 @@ export default function AwareScrollView({ navigation }: Props) {
           style={styles.input}
           onChangeText={setText}
         />
-      </KeyboardAwareScrollView>
+      </ScrollView>
       <BottomSheet ref={bottomSheetModalRef} index={-1} snapPoints={["40%"]}>
         <BottomSheetView style={styles.bottomSheetContent}>
           <Button
@@ -132,6 +132,6 @@ export default function AwareScrollView({ navigation }: Props) {
           </View>
         </BottomSheetView>
       </BottomSheet>
-    </>
+    </KeyboardAvoidingView>
   );
 }
