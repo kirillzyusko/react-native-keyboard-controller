@@ -35,12 +35,12 @@ export const useKeyboardAnimation = () => {
           isClosed.value = false;
           heightWhenOpened.value = e.height;
         }
-      },
-      onMove: (e) => {
-        "worklet";
 
         progress.value = e.progress;
         height.value = e.height;
+      },
+      onMove: (e) => {
+        "worklet";
       },
       onInteractive: (e) => {
         "worklet";
