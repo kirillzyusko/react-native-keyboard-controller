@@ -29,7 +29,7 @@ export default function KeyboardAvoidingViewExample({ navigation }: Props) {
   const Container = RNKeyboardAvoidingView;
 
   return (
-    <RNKeyboardAvoidingView
+    <View
       behavior={behavior}
       contentContainerStyle={styles.container}
       style={{flex: 1}}
@@ -63,6 +63,6 @@ export default function KeyboardAvoidingViewExample({ navigation }: Props) {
           </TouchableOpacity>
         </>
       </View>
-    </RNKeyboardAvoidingView>
+    </View>
   );
 }

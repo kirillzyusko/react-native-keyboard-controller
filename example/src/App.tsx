@@ -40,7 +40,7 @@ export default function App() {
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
       <GestureHandlerRootView style={styles.root}>
-        <KeyboardProvider statusBarTranslucent>
+        <>
           <NavigationContainer fallback={spinner} linking={linking}>
             <StatusBar
               animated
@@ -50,7 +50,7 @@ export default function App() {
             />
             <RootStack />
           </NavigationContainer>
-        </KeyboardProvider>
+        </>
       </GestureHandlerRootView>
     </SafeAreaProvider>
   );
