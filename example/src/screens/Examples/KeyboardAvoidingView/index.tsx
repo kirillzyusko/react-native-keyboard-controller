@@ -29,7 +29,7 @@ export default function KeyboardAvoidingViewExample({ navigation }: Props) {
   const Container = RNKeyboardAvoidingView;
 
   return (
-    <KeyboardAvoidingView
+    <View
       behavior={behavior}
       contentContainerStyle={styles.container}
       style={{flex: 1}}
@@ -54,15 +54,15 @@ export default function KeyboardAvoidingViewExample({ navigation }: Props) {
             />
           </View>
         </View>
-        <>
+        <KeyboardStickyView>
           <TouchableOpacity
             style={styles.button}
             testID="keyboard_avoiding_view.submit"
           >
             <Text style={styles.text}>Login</Text>
           </TouchableOpacity>
-        </>
+        </KeyboardStickyView>
       </View>
-    </KeyboardAvoidingView>
+    </View>
   );
 }
