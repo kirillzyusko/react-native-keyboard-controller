@@ -40,6 +40,7 @@ export const options = {
   },
   [ScreenNames.KEYBOARD_AVOIDING_VIEW]: {
     title: "KAV",
+    headerShown: false,
   },
   [ScreenNames.KEYBOARD_AVOIDING_VIEW_AUTOMATIC]: {
     title: "KAV Automatic",

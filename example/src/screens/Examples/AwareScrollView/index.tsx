@@ -1,7 +1,7 @@
 import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Button, Platform, Text, View } from "react-native";
-import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
+import { Button, Platform, ScrollView, Text, View } from "react-native";
+import { KeyboardAvoidingView, KeyboardAwareScrollView } from "react-native-keyboard-controller";
 
 import Switch from "../../../components/Switch";
 import TextInput from "../../../components/TextInput";
@@ -43,20 +43,6 @@ export default function AwareScrollView({ navigation }: Props) {
     useState(false);
   const [enabled, setEnabled] = useState(true);
   const [snapToOffsetsEnabled, setSnapToOffsetsEnabled] = useState(false);
-
-  useEffect(() => {
-    navigation.setOptions({
-      headerRight: () => (
-        <Text
-          style={styles.header}
-          testID="open_bottom_sheet_modal"
-          onPress={handlePresentModalPress}
-        >
-          Open config
-        </Text>
-      ),
-    });
-  }, []);
 
   return (
     <>

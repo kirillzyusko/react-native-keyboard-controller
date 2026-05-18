@@ -13,9 +13,11 @@ export default StyleSheet.create({
   },
   content: {
     flex: 1,
-    maxHeight: 600,
+    justifyContent: "space-between",
   },
   heading: {
+    paddingHorizontal: 24,
+    paddingTop: 60,
     color: "black",
     fontSize: 36,
     marginBottom: 48,
@@ -24,7 +26,7 @@ export default StyleSheet.create({
   inner: {
     padding: 24,
     flex: 1,
-    justifyContent: "space-between",
+    justifyContent: "center",
   },
   textInput: {
     height: 45,
@@ -35,9 +37,11 @@ export default StyleSheet.create({
   },
   inputs: {
     gap: 36,
-    marginBottom: 36,
+    marginBottom: 200,
   },
   button: {
+    marginBottom: 20,
+    marginHorizontal: 24,
     marginTop: 12,
     height: 45,
     borderRadius: 10,
