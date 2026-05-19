@@ -82,7 +82,10 @@ function InteractiveKeyboard({ navigation }: Props) {
     () => ({
       height: 50,
       width: "100%",
-      backgroundColor: "#BCBCBC",
+      backgroundColor: "#FFFFFF",
+      borderTopWidth: 1,
+      borderTopColor: "#E5E5EA",
+      paddingHorizontal: 16,
       transform: [{ translateY: -height.value }],
     }),
     [],

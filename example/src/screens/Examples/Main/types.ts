@@ -5,4 +5,5 @@ export type Example = {
   title: string;
   info: ScreenNames;
   icons: string;
+  badge?: string;
 };

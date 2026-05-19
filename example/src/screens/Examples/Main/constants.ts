@@ -32,6 +32,7 @@ export const examples: Example[] = [
     testID: "aware_scroll_view",
     info: ScreenNames.AWARE_SCROLL_VIEW,
     icons: "🤓",
+    badge: "Margelo Blog",
   },
   {
     title: "Aware scroll view sticky footer",
@@ -80,12 +81,14 @@ export const examples: Example[] = [
     testID: "keyboard_avoiding_view",
     info: ScreenNames.KEYBOARD_AVOIDING_VIEW,
     icons: "😶",
+    badge: "Margelo Blog",
   },
   {
     title: "KeyboardAvoidingView Automatic",
     testID: "keyboard_avoiding_view_automatic",
     info: ScreenNames.KEYBOARD_AVOIDING_VIEW_AUTOMATIC,
     icons: "📐",
+    badge: "Margelo Blog",
   },
   {
     title: "Enabled/disabled",

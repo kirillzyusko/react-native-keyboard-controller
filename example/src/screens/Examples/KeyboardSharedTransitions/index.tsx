@@ -35,7 +35,7 @@ const KeyboardSharedTransitionExample = () => {
       backgroundColor: interpolateColor(
         progress.value,
         [0, 1],
-        ["#323232", "#474747"],
+        ["#FFFFFF", "#E5E5EA"],
       ),
     }),
     [],
@@ -44,7 +44,7 @@ const KeyboardSharedTransitionExample = () => {
   return (
     <SafeAreaView
       style={{
-        backgroundColor: "#000000",
+        backgroundColor: "#F2F2F7",
         flex: 1,
         justifyContent: "flex-end",
       }}
@@ -64,13 +64,18 @@ const KeyboardSharedTransitionExample = () => {
         >
           <ReanimatedTextInput
             placeholder="127.0.0.1"
-            placeholderTextColor="#ececec"
+            placeholderTextColor="#8E8E93"
             style={[
               {
                 width: "100%",
-                padding: 10,
-                borderRadius: 8,
+                paddingVertical: 14,
+                paddingHorizontal: 16,
+                borderRadius: 12,
+                borderWidth: 1,
+                borderColor: "#D1D1D6",
                 textAlign: "center",
+                color: "#1C1C1E",
+                fontSize: 16,
               },
               inputColor,
             ]}

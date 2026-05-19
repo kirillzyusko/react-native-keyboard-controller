@@ -1,5 +1,5 @@
 import React from "react";
-import { TextInput, View } from "react-native";
+import { StyleSheet, TextInput, View } from "react-native";
 import { useKeyboardHandler } from "react-native-keyboard-controller";
 import Reanimated, {
   interpolate,
@@ -38,20 +38,43 @@ function NonUIProps() {
 
   const rStyle = useAnimatedStyle(() => {
     return {
-      backgroundColor: "gray",
+      backgroundColor: "#007AFF",
+      borderRadius: 8,
       height: height.value,
       width: interpolate(progress.value, [0, 1], [100, 200]),
     };
   });
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={nonUIStyles.container}>
       <TextInput
-        style={{ width: "100%", height: 50, backgroundColor: "red" }}
+        style={nonUIStyles.input}
+        placeholder="Type something..."
+        placeholderTextColor="#8E8E93"
       />
       <Reanimated.View style={rStyle} />
     </View>
   );
 }
+
+const nonUIStyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#F2F2F7",
+    paddingHorizontal: 16,
+    paddingTop: 16,
+  },
+  input: {
+    width: "100%",
+    height: 48,
+    backgroundColor: "#FFFFFF",
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "#D1D1D6",
+    paddingHorizontal: 16,
+    color: "#1C1C1E",
+    fontSize: 16,
+  },
+});
 
 export default NonUIProps;

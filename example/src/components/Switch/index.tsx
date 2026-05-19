@@ -1,4 +1,4 @@
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 type SwitchProps = {
   value: boolean;
@@ -9,21 +9,31 @@ type SwitchProps = {
 const Switch = ({ onChange, testID, value }: SwitchProps) => {
   return (
     <TouchableOpacity testID={testID} onPress={onChange}>
-      <View style={[styles.checkbox, value && styles.checked]} />
+      <View style={[styles.checkbox, value && styles.checked]}>
+        {value && <Text style={styles.checkmark}>{"✓"}</Text>}
+      </View>
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   checkbox: {
-    width: 20,
-    height: 20,
+    width: 24,
+    height: 24,
     borderWidth: 2,
-    borderColor: "#3c3c3c",
-    borderRadius: 4,
+    borderColor: "#C7C7CC",
+    borderRadius: 6,
+    alignItems: "center",
+    justifyContent: "center",
   },
   checked: {
-    backgroundColor: "#28519e",
+    backgroundColor: "#007AFF",
+    borderColor: "#007AFF",
+  },
+  checkmark: {
+    color: "#FFFFFF",
+    fontSize: 14,
+    fontWeight: "bold",
   },
 });
 

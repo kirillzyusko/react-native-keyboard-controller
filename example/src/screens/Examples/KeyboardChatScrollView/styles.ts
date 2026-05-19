@@ -17,7 +17,7 @@ export default StyleSheet.create({
     padding: MARGIN,
     borderRadius: 99,
     borderWidth: 1,
-    borderColor: "#BCBCBC",
+    borderColor: "#48484A",
     backgroundColor: "#3A3A3C66",
   },
   composer: {
@@ -30,7 +30,7 @@ export default StyleSheet.create({
     top: MARGIN + (TEXT_INPUT_HEIGHT - MARGIN * 2) / 2,
     right: MARGIN * 2,
     padding: MARGIN,
-    backgroundColor: "white",
+    backgroundColor: "#007AFF",
     height: 24,
     width: 24,
     alignItems: "center",

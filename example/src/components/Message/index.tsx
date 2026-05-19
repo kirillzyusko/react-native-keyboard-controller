@@ -8,7 +8,9 @@ import type { MessageProps } from "./types";
 export default function Message({ text, sender }: MessageProps) {
   return (
     <View style={sender ? styles.senderContainer : styles.recipientContainer}>
-      <Text style={styles.message}>{text}</Text>
+      <Text style={sender ? styles.senderMessage : styles.recipientMessage}>
+        {text}
+      </Text>
     </View>
   );
 }

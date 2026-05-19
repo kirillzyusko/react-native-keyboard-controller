@@ -17,9 +17,15 @@ export default function OverKeyboardViewExample() {
   const [isShow, setShow] = useState(false);
 
   return (
-    <View>
-      <TextInput style={styles.input} testID="over_keyboard_view.input" />
+    <View style={styles.screen}>
+      <TextInput
+        placeholder="Type here..."
+        placeholderTextColor="#8E8E93"
+        style={styles.input}
+        testID="over_keyboard_view.input"
+      />
       <Button
+        color="#007AFF"
         testID="over_keyboard_view.show"
         title="Show"
         onPress={() => setShow(true)}
@@ -53,6 +59,10 @@ export default function OverKeyboardViewExample() {
 }
 
 const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+    backgroundColor: "#F2F2F7",
+  },
   fullScreen: {
     flex: 1,
   },
@@ -62,15 +72,32 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   background: {
-    width: 200,
-    height: 200,
-    backgroundColor: "blue",
+    width: "100%",
+    paddingHorizontal: 16,
+    paddingTop: 20,
+    paddingBottom: 34,
+    backgroundColor: "#FFFFFF",
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    shadowColor: "#000",
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: -4 },
+    elevation: 4,
+    minHeight: 200,
   },
   input: {
-    backgroundColor: "yellow",
-    width: 200,
+    backgroundColor: "#FFFFFF",
     height: 50,
     alignSelf: "center",
     marginTop: 150,
+    borderWidth: 1,
+    borderColor: "#D1D1D6",
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    marginHorizontal: 24,
+    width: "85%",
+    fontSize: 16,
+    color: "#1C1C1E",
   },
 });

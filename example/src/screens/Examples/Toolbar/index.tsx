@@ -239,7 +239,7 @@ export default function ToolbarExample({ navigation }: Props) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "white",
+    backgroundColor: "#F2F2F7",
   },
   row: {
     flexDirection: "row",
@@ -258,13 +258,17 @@ const styles = StyleSheet.create({
     right: 0,
   },
   header: {
-    color: "black",
+    color: "#007AFF",
     marginRight: 12,
+    fontWeight: "600",
   },
   modal: {
     marginTop: 32,
+    backgroundColor: "#F2F2F7",
+    flex: 1,
   },
   bottomSheetContent: {
     flex: 1,
+    padding: 16,
   },
 });

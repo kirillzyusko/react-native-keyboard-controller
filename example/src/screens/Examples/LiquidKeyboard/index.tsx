@@ -128,15 +128,19 @@ const LiquidKeyboardExample = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#8A8A8C",
+    backgroundColor: "#1C1C1E",
     justifyContent: "space-between",
   },
   textInput: {
-    height: 50,
-    paddingHorizontal: 10,
-    margin: 10,
+    height: 48,
+    paddingHorizontal: 16,
+    margin: 16,
     borderWidth: 1,
-    borderColor: "white",
+    borderColor: "rgba(255,255,255,0.2)",
+    borderRadius: 12,
+    color: "#FFFFFF",
+    fontSize: 16,
+    backgroundColor: "rgba(255,255,255,0.08)",
   },
 });
 

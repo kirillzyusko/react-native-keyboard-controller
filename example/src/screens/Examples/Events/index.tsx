@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { StyleSheet, TextInput } from "react-native";
+import { StyleSheet, TextInput, View } from "react-native";
 import {
   KeyboardEvents,
   useResizeMode,
@@ -7,10 +7,22 @@ import {
 import Toast from "react-native-toast-message";
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#F2F2F7",
+    paddingHorizontal: 16,
+    paddingTop: 16,
+  },
   input: {
-    height: 50,
+    height: 48,
     width: "100%",
-    backgroundColor: "#3c3c3c",
+    backgroundColor: "#FFFFFF",
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "#D1D1D6",
+    paddingHorizontal: 16,
+    color: "#1C1C1E",
+    fontSize: 16,
   },
 });
 
@@ -63,14 +75,21 @@ function EventsListener() {
     };
   }, []);
 
-  return <TextInput keyboardType="numeric" style={styles.input} />;
+  return (
+    <TextInput
+      keyboardType="numeric"
+      style={styles.input}
+      placeholder="Tap to see keyboard events"
+      placeholderTextColor="#8E8E93"
+    />
+  );
 }
 
 export default function Events() {
   return (
-    <>
+    <View style={styles.container}>
       <EventsListener />
       <Toast />
-    </>
+    </View>
   );
 }

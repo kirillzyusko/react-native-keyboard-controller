@@ -14,7 +14,11 @@ const Stack = createStackNavigator<RootStackParamList>();
 
 const options = {
   [ScreenNames.EXAMPLES_STACK]: { headerShown: false },
-  [ScreenNames.EXAMPLES]: { title: "Examples" },
+  [ScreenNames.EXAMPLES]: {
+    title: "Margelo Demo",
+    headerStyle: { backgroundColor: "#F2F2F7" },
+    headerShadowVisible: false,
+  },
 };
 
 const RootStack = () => (

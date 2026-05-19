@@ -11,9 +11,12 @@ import type { RootStackParamList } from "../../../navigation/RootStack";
 import type { StackScreenProps } from "@react-navigation/stack";
 
 const styles = StyleSheet.create({
+  scrollView: {
+    backgroundColor: "#F2F2F7",
+  },
   scrollViewContainer: {
-    paddingVertical: 10,
-    paddingHorizontal: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 12,
   },
 });
 
@@ -28,6 +31,7 @@ const ExampleMain = ({ navigation }: Props) => {
 
   return (
     <ScrollView
+      style={styles.scrollView}
       contentContainerStyle={styles.scrollViewContainer}
       testID="main_scroll_view"
     >

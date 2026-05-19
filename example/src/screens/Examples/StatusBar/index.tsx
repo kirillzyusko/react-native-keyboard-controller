@@ -1,11 +1,36 @@
 import React, { useState } from "react";
-import { Button, StatusBar, View } from "react-native";
+import {
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import { useKeyboardController } from "react-native-keyboard-controller";
 
 import KeyboardAnimationTemplate from "../../../components/KeyboardAnimation";
 import { randomColor } from "../../../utils";
 
 import type { StatusBarStyle } from "react-native";
+
+const StatusBarButton = ({
+  testID,
+  title,
+  onPress,
+}: {
+  testID: string;
+  title: string;
+  onPress: () => void;
+}) => (
+  <TouchableOpacity
+    testID={testID}
+    style={statusStyles.button}
+    onPress={onPress}
+    activeOpacity={0.7}
+  >
+    <Text style={statusStyles.buttonText}>{title}</Text>
+  </TouchableOpacity>
+);
 
 export default function StatusBarManipulation() {
   const [color, setColor] = useState("#00FF0000");
@@ -16,7 +41,7 @@ export default function StatusBarManipulation() {
   const { setEnabled, enabled } = useKeyboardController();
 
   return (
-    <View style={{ flex: 1, backgroundColor: "pink" }}>
+    <View style={statusStyles.container}>
       <StatusBar
         animated={animated}
         backgroundColor={color}
@@ -25,40 +50,66 @@ export default function StatusBarManipulation() {
         translucent={translucent}
       />
       <KeyboardAnimationTemplate />
-      <Button
-        testID="button.hidden"
-        title={`Set ${hidden ? "shown" : "hidden"}`}
-        onPress={() => setHidden(!hidden)}
-      />
-      <Button
-        testID="button.color"
-        title="Update color"
-        onPress={() => setColor(`${randomColor()}`)}
-      />
-      <Button
-        testID="button.animated"
-        title={`Set ${!animated ? "" : "not"} animated`}
-        onPress={() => setAnimated(!animated)}
-      />
-      <Button
-        testID="button.bar_style"
-        title={`Change ${barStyle}`}
-        onPress={() =>
-          setBarStyle(
-            barStyle === "light-content" ? "dark-content" : "light-content",
-          )
-        }
-      />
-      <Button
-        testID="button.translucent"
-        title={`Set ${!translucent ? "" : "not"} translucent`}
-        onPress={() => setTranslucent(!translucent)}
-      />
-      <Button
-        testID="button.enabled"
-        title={`${enabled ? "Disable" : "Enable"} module`}
-        onPress={() => setEnabled(!enabled)}
-      />
+      <View style={statusStyles.buttonGroup}>
+        <StatusBarButton
+          testID="button.hidden"
+          title={`Set ${hidden ? "shown" : "hidden"}`}
+          onPress={() => setHidden(!hidden)}
+        />
+        <StatusBarButton
+          testID="button.color"
+          title="Update color"
+          onPress={() => setColor(`${randomColor()}`)}
+        />
+        <StatusBarButton
+          testID="button.animated"
+          title={`Set ${!animated ? "" : "not"} animated`}
+          onPress={() => setAnimated(!animated)}
+        />
+        <StatusBarButton
+          testID="button.bar_style"
+          title={`Change ${barStyle}`}
+          onPress={() =>
+            setBarStyle(
+              barStyle === "light-content" ? "dark-content" : "light-content",
+            )
+          }
+        />
+        <StatusBarButton
+          testID="button.translucent"
+          title={`Set ${!translucent ? "" : "not"} translucent`}
+          onPress={() => setTranslucent(!translucent)}
+        />
+        <StatusBarButton
+          testID="button.enabled"
+          title={`${enabled ? "Disable" : "Enable"} module`}
+          onPress={() => setEnabled(!enabled)}
+        />
+      </View>
     </View>
   );
 }
+
+const statusStyles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#F2F2F7",
+  },
+  buttonGroup: {
+    paddingHorizontal: 16,
+    paddingBottom: 16,
+    gap: 8,
+  },
+  button: {
+    backgroundColor: "#007AFF",
+    borderRadius: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    alignItems: "center",
+  },
+  buttonText: {
+    color: "#FFFFFF",
+    fontSize: 15,
+    fontWeight: "600",
+  },
+});

@@ -51,7 +51,7 @@ export default function KeyboardAnimation({
     () => ({
       width: 50,
       height: 50,
-      backgroundColor: "gray",
+      backgroundColor: "#8E8E93",
       borderRadius: 25,
       transform: [{ translateY: -keyboard.value }],
     }),
@@ -70,7 +70,7 @@ export default function KeyboardAnimation({
             style={{
               width: 50,
               height: 50,
-              backgroundColor: "green",
+              backgroundColor: "#34C759",
               borderRadius: 25,
               transform: [
                 {
@@ -88,8 +88,14 @@ export default function KeyboardAnimation({
             style={{
               width: 200,
               marginTop: 50,
-              height: 50,
-              backgroundColor: "yellow",
+              height: 48,
+              backgroundColor: "#FFFFFF",
+              borderRadius: 12,
+              borderWidth: 1,
+              borderColor: "#D1D1D6",
+              paddingHorizontal: 16,
+              color: "#1C1C1E",
+              fontSize: 16,
             }}
             testID="keyboard_animation_text_input"
           />
@@ -98,7 +104,7 @@ export default function KeyboardAnimation({
               style={{
                 width: 50,
                 height: 50,
-                backgroundColor: "red",
+                backgroundColor: "#FF3B30",
                 borderRadius: 25,
                 transform: [{ translateY: height }],
               }}

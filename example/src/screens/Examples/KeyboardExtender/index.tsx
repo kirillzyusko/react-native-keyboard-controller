@@ -56,7 +56,7 @@ export default function KeyboardExtendExample() {
           <TextInput
             keyboardType="numeric"
             placeholder="Donation amount"
-            placeholderTextColor="#5c5c5c"
+            placeholderTextColor="#8E8E93"
             style={styles.input}
             testID="donation_amount"
             onFocus={() => setShowExtend(true)}
@@ -64,7 +64,7 @@ export default function KeyboardExtendExample() {
           <TextInput
             keyboardType="numeric"
             placeholder="Postal code"
-            placeholderTextColor="#5c5c5c"
+            placeholderTextColor="#8E8E93"
             style={styles.input}
             testID="postal_code"
             onFocus={() => setShowExtend(false)}
@@ -106,31 +106,36 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 20,
+    paddingTop: 16,
   },
   input: {
-    height: 40,
-    borderWidth: 2,
-    borderColor: "#1c1c1c",
-    borderRadius: 8,
-    padding: 10,
-    fontSize: 18,
-    marginBottom: 20,
+    height: 48,
+    borderWidth: 1,
+    borderColor: "#D1D1D6",
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    fontSize: 16,
+    marginBottom: 16,
+    backgroundColor: "#FFFFFF",
+    color: "#1C1C1E",
   },
   keyboardExtend: {
     width: "100%",
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
+    paddingVertical: 4,
   },
   priceText: {
-    fontSize: 18,
+    fontSize: 17,
     fontWeight: "600",
-    padding: 20,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
   },
   lightKeyboardText: {
-    color: "black",
+    color: "#007AFF",
   },
   darkKeyboardText: {
-    color: "white",
+    color: "#64D2FF",
   },
 });

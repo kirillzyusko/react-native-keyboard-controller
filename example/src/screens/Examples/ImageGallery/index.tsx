@@ -274,24 +274,36 @@ const IMAGE_SIZE = width / IMAGES_PER_ROW;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#F2F2F7",
   },
   search: {
     height: 50,
-    backgroundColor: "white",
-    borderRadius: 50,
-    marginHorizontal: 10,
-    paddingHorizontal: 10,
-    marginVertical: 10,
+    backgroundColor: "#FFFFFF",
+    borderRadius: 12,
+    marginHorizontal: 16,
+    paddingHorizontal: 16,
+    marginVertical: 12,
+    borderWidth: 1,
+    borderColor: "#D1D1D6",
+    fontSize: 16,
+    color: "#1C1C1E",
+    shadowColor: "#000",
+    shadowOpacity: 0.04,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 2,
   },
   image: {
     width: IMAGE_SIZE,
     height: IMAGE_SIZE,
     backgroundColor: "#dcdcdc",
+    borderRadius: 8,
   },
   row: {
     flexDirection: "row",
     gap: 5,
     marginBottom: 5,
+    paddingHorizontal: 5,
   },
 });
 

@@ -13,7 +13,7 @@ type Props = {
 } & Example;
 
 const ExampleLink: FC<Props> = (props) => {
-  const { onPress, title, testID, info, icons, index } = props;
+  const { onPress, title, testID, info, icons, badge, index } = props;
 
   const onCardPress = useCallback(() => onPress(info), [onPress]);
 
@@ -24,10 +24,17 @@ const ExampleLink: FC<Props> = (props) => {
       onPress={onCardPress}
     >
       <View style={styles.row}>
-        <Text style={styles.text}>
-          {index}. {title}
-        </Text>
-        <Text style={styles.text}>{icons}</Text>
+        <View style={styles.titleRow}>
+          <Text style={styles.title}>
+            {index}. {title}
+          </Text>
+          {badge && (
+            <View style={styles.badge}>
+              <Text style={styles.badgeText}>{badge}</Text>
+            </View>
+          )}
+        </View>
+        <Text style={styles.icons}>{icons}</Text>
       </View>
     </TouchableOpacity>
   );

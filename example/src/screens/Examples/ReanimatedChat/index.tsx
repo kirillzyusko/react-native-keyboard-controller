@@ -50,9 +50,12 @@ function ReanimatedChat({ navigation }: Props) {
   );
   const textInputStyle = useAnimatedStyle(
     () => ({
-      height: 50,
+      height: 48,
       width: "100%",
-      backgroundColor: "#BCBCBC",
+      backgroundColor: "#FFFFFF",
+      paddingHorizontal: 16,
+      borderTopWidth: 1,
+      borderTopColor: "#E5E5EA",
       transform: [{ translateY: height.value }],
     }),
     [],
