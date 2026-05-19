@@ -15,7 +15,6 @@ export const options = {
   },
   [ScreenNames.AWARE_SCROLL_VIEW]: {
     title: "Aware scroll view",
-    headerShown: false,
   },
   [ScreenNames.AWARE_SCROLL_VIEW_STICKY_FOOTER]: {
     title: "Aware scroll view sticky footer",
@@ -87,9 +86,9 @@ export const options = {
   },
   [ScreenNames.CHAT_KIT]: {
     title: "Chat Kit",
-    headerTintColor: "#fff",
+    headerTintColor: "#007AFF",
     headerStyle: {
-      backgroundColor: "#3A3A3C",
+      backgroundColor: "#F9F9F9",
     },
     headerBackTitle: "Back",
   },

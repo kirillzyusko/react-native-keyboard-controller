@@ -25,6 +25,14 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 2,
     lineHeight: 21,
   },
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#007AFF",
+    marginTop: 12,
+    marginBottom: 14,
+    paddingHorizontal: 2,
+  },
   header: {
     color: "#007AFF",
     paddingRight: 12,
@@ -68,5 +76,9 @@ export const styles = StyleSheet.create({
   bottomSheetContent: {
     flex: 1,
     padding: 16,
+  },
+  switchLabel: {
+    fontSize: 15,
+    color: "#1A1A2E",
   },
 });

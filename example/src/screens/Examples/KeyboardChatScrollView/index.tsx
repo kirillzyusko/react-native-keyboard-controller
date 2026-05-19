@@ -12,6 +12,7 @@ import {
   FlatList,
   Image,
   StyleSheet,
+  Text,
   TextInput,
   TouchableOpacity,
   View,
@@ -105,6 +106,16 @@ function KeyboardChatScrollViewPlayground() {
 
   return (
     <SafeAreaView edges={["bottom"]} style={styles.container}>
+      {/* Chat header */}
+      <View style={styles.chatHeader}>
+        <View style={styles.avatarCircle}>
+          <Text style={styles.avatarText}>M</Text>
+        </View>
+        <View style={styles.headerInfo}>
+          <Text style={styles.chatName}>Margelo Team</Text>
+          <Text style={styles.chatStatus}>online</Text>
+        </View>
+      </View>
       <KeyboardGestureArea
         interpolator="ios"
         offset={inputHeight}

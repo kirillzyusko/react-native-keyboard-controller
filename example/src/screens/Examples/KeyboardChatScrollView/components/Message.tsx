@@ -9,31 +9,41 @@ import type { MessageProps } from "../../../../components/Message/types";
 export default function Message({ text, sender }: MessageProps) {
   return (
     <View style={sender ? styles.senderContainer : styles.recipientContainer}>
-      <Text style={styles.message}>{text}</Text>
+      <Text style={sender ? styles.senderMessage : styles.recipientMessage}>
+        {text}
+      </Text>
     </View>
   );
 }
 
 const container = {
-  borderRadius: 10,
-  padding: 10,
-  margin: 10,
-  marginVertical: 5,
-  maxWidth: "80%" as const,
+  borderRadius: 20,
+  paddingHorizontal: 14,
+  paddingVertical: 10,
+  marginHorizontal: 12,
+  marginVertical: 2,
+  maxWidth: "78%" as const,
 };
 
 const styles = StyleSheet.create({
   senderContainer: {
     alignSelf: "flex-end",
-    backgroundColor: "#F8F8FC",
+    backgroundColor: "#007AFF",
     ...container,
   },
   recipientContainer: {
     alignSelf: "flex-start",
-    backgroundColor: "#64D2FF",
+    backgroundColor: "#E8E8ED",
     ...container,
   },
-  message: {
-    color: "#000000",
+  senderMessage: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    lineHeight: 22,
+  },
+  recipientMessage: {
+    color: "#1C1C1E",
+    fontSize: 16,
+    lineHeight: 22,
   },
 });
