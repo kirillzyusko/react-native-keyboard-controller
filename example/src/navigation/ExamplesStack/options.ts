@@ -45,6 +45,7 @@ export const options = {
   },
   [ScreenNames.KEYBOARD_AVOIDING_VIEW_AUTOMATIC]: {
     title: "KAV Automatic",
+    headerShown: false,
   },
   [ScreenNames.ENABLED_DISABLED]: {
     title: "Enabled/disabled",
