@@ -25,9 +25,7 @@ const TextInput = (props: CustomTextInputProps) => {
         ]}
         testID={rest.placeholder}
         {...rest}
-        placeholder={`${rest.placeholder} (${
-          rest.keyboardType === "default" ? "text" : "numeric"
-        })`}
+        placeholder={rest.placeholder}
         onBlur={(e) => {
           setFocused(false);
           rest.onBlur?.(e);
@@ -45,36 +43,38 @@ const styles = StyleSheet.create({
   title: {
     marginBottom: 6,
     marginLeft: 2,
-    color: "#6B7280",
+    color: "#374151",
     fontSize: 13,
     fontWeight: "600",
+    letterSpacing: 0.1,
   },
   container: {
     width: "100%",
     minHeight: 50,
     maxHeight: 200,
-    marginBottom: 12,
+    marginBottom: 14,
     borderColor: "#E5E7EB",
     borderWidth: 1,
     borderRadius: 12,
-    color: "#1A1A2E",
+    color: "#111827",
     backgroundColor: "#F9FAFB",
     paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingVertical: 14,
     fontSize: 16,
   },
   focused: {
     borderColor: "#007AFF",
-    backgroundColor: "#FFFFFF",
+    borderWidth: 1.5,
+    backgroundColor: "#F0F7FF",
     ...Platform.select({
       ios: {
         shadowColor: "#007AFF",
-        shadowOffset: { width: 0, height: 0 },
-        shadowOpacity: 0.12,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.15,
         shadowRadius: 8,
       },
       android: {
-        elevation: 2,
+        elevation: 3,
       },
     }),
   },

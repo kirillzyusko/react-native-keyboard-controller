@@ -2,6 +2,7 @@ import BottomSheet, { BottomSheetView } from "@gorhom/bottom-sheet";
 import React, { useCallback, useRef, useState } from "react";
 import { Button, Platform, Text, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import Switch from "../../../components/Switch";
 import TextInput from "../../../components/TextInput";
@@ -13,13 +14,14 @@ import type { StackScreenProps } from "@react-navigation/stack";
 
 type Props = StackScreenProps<ExamplesStackParamList>;
 
-const ABOUT_ME = `I'm a software engineer based in San Francisco. I have over 5 years of experience working with React Native and mobile development. Currently looking to verify my identity to unlock full platform features.`;
+const ADDITIONAL_NOTES = `I'm relocating from Germany to the US next month, so my residential address will change. Please use my current address for now. I can provide updated documentation once my new lease is finalized.`;
 
 export default function AwareScrollView({ navigation }: Props) {
   const bottomSheetModalRef = useRef<BottomSheet>(null);
   const [disableScrollOnKeyboardHide, setDisableScrollOnKeyboardHide] =
     useState(false);
   const [enabled, setEnabled] = useState(true);
+  const insets = useSafeAreaInsets();
 
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.expand();
@@ -29,12 +31,19 @@ export default function AwareScrollView({ navigation }: Props) {
     <>
       <KeyboardAwareScrollView
         bottomOffset={50}
-        contentContainerStyle={styles.content}
+        contentContainerStyle={[styles.content, { paddingTop: insets.top + 24 }]}
         disableScrollOnKeyboardHide={disableScrollOnKeyboardHide}
         enabled={enabled}
         style={styles.container}
         testID="aware_scroll_view_container"
       >
+        <View style={styles.progressContainer}>
+          <Text style={styles.stepLabel}>Step 1 of 3</Text>
+          <View style={styles.progressBar}>
+            <View style={styles.progressFill} />
+          </View>
+        </View>
+
         <Text style={styles.formTitle}>Identity Verification</Text>
         <Text style={styles.formSubtitle}>
           Please fill in your details below to complete your KYC verification.
@@ -46,25 +55,25 @@ export default function AwareScrollView({ navigation }: Props) {
         <TextInput
           title="First Name"
           keyboardType="default"
-          placeholder="First Name"
+          placeholder="John"
           returnKeyType="next"
         />
         <TextInput
           title="Last Name"
           keyboardType="default"
-          placeholder="Last Name"
+          placeholder="Doe"
           returnKeyType="next"
         />
         <TextInput
           title="Date of Birth"
           keyboardType="default"
-          placeholder="Date of Birth"
+          placeholder="MM / DD / YYYY"
           returnKeyType="next"
         />
         <TextInput
           title="Nationality"
           keyboardType="default"
-          placeholder="Nationality"
+          placeholder="e.g. American"
           returnKeyType="next"
         />
 
@@ -73,13 +82,13 @@ export default function AwareScrollView({ navigation }: Props) {
         <TextInput
           title="Email Address"
           keyboardType="email-address"
-          placeholder="Email Address"
+          placeholder="john.doe@example.com"
           returnKeyType="next"
         />
         <TextInput
           title="Phone Number"
           keyboardType="phone-pad"
-          placeholder="Phone Number"
+          placeholder="+1 (555) 000-0000"
           returnKeyType="next"
         />
 
@@ -88,31 +97,31 @@ export default function AwareScrollView({ navigation }: Props) {
         <TextInput
           title="Street Address"
           keyboardType="default"
-          placeholder="Street Address"
+          placeholder="123 Main Street, Apt 4B"
           returnKeyType="next"
         />
         <TextInput
           title="City"
           keyboardType="default"
-          placeholder="City"
+          placeholder="San Francisco"
           returnKeyType="next"
         />
         <TextInput
           title="State / Province"
           keyboardType="default"
-          placeholder="State / Province"
+          placeholder="California"
           returnKeyType="next"
         />
         <TextInput
           title="Postal Code"
           keyboardType={Platform.OS === "ios" ? "numbers-and-punctuation" : "default"}
-          placeholder="Postal Code"
+          placeholder="94102"
           returnKeyType="next"
         />
         <TextInput
           title="Country"
           keyboardType="default"
-          placeholder="Country"
+          placeholder="United States"
           returnKeyType="next"
         />
 
@@ -121,35 +130,35 @@ export default function AwareScrollView({ navigation }: Props) {
         <TextInput
           title="Document Type"
           keyboardType="default"
-          placeholder="Document Type"
+          placeholder="e.g. Passport, Driver's License"
           returnKeyType="next"
         />
         <TextInput
           title="Document Number"
           contextMenuHidden={Platform.OS === "ios"}
           keyboardType="default"
-          placeholder="Document Number"
+          placeholder="e.g. AB1234567"
           returnKeyType="next"
         />
         <TextInput
           title="Issuing Country"
           keyboardType="default"
-          placeholder="Issuing Country"
+          placeholder="United States"
           returnKeyType="next"
         />
         <TextInput
           title="Expiration Date"
           keyboardType="default"
-          placeholder="Expiration Date"
+          placeholder="MM / DD / YYYY"
           returnKeyType="next"
         />
 
         {/* Additional */}
         <Text style={styles.sectionTitle}>Additional Information</Text>
         <TextInput
-          defaultValue={ABOUT_ME}
-          title="About Me"
-          placeholder="About Me"
+          defaultValue={ADDITIONAL_NOTES}
+          title="Additional Notes"
+          placeholder="Any additional information or special circumstances..."
           style={styles.input}
         />
       </KeyboardAwareScrollView>

@@ -15,6 +15,7 @@ export const options = {
   },
   [ScreenNames.AWARE_SCROLL_VIEW]: {
     title: "Aware scroll view",
+    headerShown: false,
   },
   [ScreenNames.AWARE_SCROLL_VIEW_STICKY_FOOTER]: {
     title: "Aware scroll view sticky footer",
