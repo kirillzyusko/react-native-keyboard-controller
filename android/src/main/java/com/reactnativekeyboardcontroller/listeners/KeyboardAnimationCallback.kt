@@ -273,28 +273,26 @@ class KeyboardAnimationCallback(
     )
 
     flushPendingStartEvent()
-    if (!isTransitioning) {
-      return insets
-    }
-
-    val event =
-      if (InteractiveKeyboardProvider.isInteractive) {
-        KeyboardTransitionEvent.Interactive
-      } else {
-        KeyboardTransitionEvent.Move
-      }
-    context.dispatchEvent(
-      eventPropagationView.id,
-      KeyboardTransitionEvent(
-        surfaceId,
+    if (isTransitioning) {
+      val event =
+        if (InteractiveKeyboardProvider.isInteractive) {
+          KeyboardTransitionEvent.Interactive
+        } else {
+          KeyboardTransitionEvent.Move
+        }
+      context.dispatchEvent(
         eventPropagationView.id,
-        event,
-        height,
-        progress,
-        duration,
-        viewTagFocused,
-      ),
-    )
+        KeyboardTransitionEvent(
+          surfaceId,
+          eventPropagationView.id,
+          event,
+          height,
+          progress,
+          duration,
+          viewTagFocused,
+        ),
+      )
+    }
 
     return insets
   }
