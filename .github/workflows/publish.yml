@@ -21,5 +21,6 @@ jobs:
           # It increases the chance of a compromised release being publish
           # See https://github.com/actions/setup-node/issues/1445#issuecomment-4040130833
           # cache: yarn
+          package-manager-cache: false
       - run: yarn install --frozen-lockfile
       - run: npm publish --provenance
