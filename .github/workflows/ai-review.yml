@@ -71,10 +71,10 @@ jobs:
               continue
             fi
 
-            # Only include content for MODIFIED files
+            # Include base content for MODIFIED files so the diff reads old -> new
             if [[ "$status" == "M" ]]; then
-              echo "===== FILE: $file =====" >> prompt.txt
-              cat "$file" >> prompt.txt 2>/dev/null || true
+              echo "===== BASE FILE: $file =====" >> prompt.txt
+              git show "origin/main:$file" >> prompt.txt 2>/dev/null || true
               echo "" >> prompt.txt
             fi
 
