@@ -94,7 +94,7 @@ class EdgeToEdgeReactViewGroup(
     this.deactivate()
   }
 
-  override fun onConfigurationChanged(newConfig: Configuration?) {
+  override fun onConfigurationChanged(newConfig: Configuration) {
     this.reApplyWindowInsets()
   }
   // endregion

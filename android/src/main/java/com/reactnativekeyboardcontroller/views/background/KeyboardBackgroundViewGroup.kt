@@ -17,7 +17,7 @@ class KeyboardBackgroundViewGroup(
   }
 
   // theme changed
-  override fun onConfigurationChanged(newConfig: Configuration?) {
+  override fun onConfigurationChanged(newConfig: Configuration) {
     super.onConfigurationChanged(newConfig)
     super.setBackgroundColor(reactContext.getInputMethodColor())
   }
