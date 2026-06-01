@@ -51,7 +51,6 @@ public extension UIView {
 public extension Optional where Wrapped == UIView {
   var frameTransitionInWindow: (Double, Double) {
     let areCrossFadeTransitionsEnabled = (self?.layer.presentation()?.animationKeys() ?? []).contains("opacity")
-
     let frameY = self?.layer.presentation()?.frame.origin.y ?? 0
     let windowH = self?.window?.bounds.size.height ?? 0
     var position = windowH - frameY

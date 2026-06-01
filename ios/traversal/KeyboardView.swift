@@ -16,7 +16,7 @@ enum KeyboardView {
   /// inspired by https://stackoverflow.com/questions/32598490/show-uiview-with-buttons-over-keyboard-like-in-skype-viber-messengers-swift-i
   static func find() -> UIView? {
     let window = UIWindow.keyboardWindow
-    
+
     guard let w = window else {
       return nil
     }

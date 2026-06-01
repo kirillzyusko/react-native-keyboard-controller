@@ -44,7 +44,7 @@ public extension UIWindow {
         : UIApplication.shared.activeWindow
     }
   }
-  
+
   static var keyboardWindow: UIWindow? {
     return sharedKeyboardWindowObserver.keyboardWindow
   }
