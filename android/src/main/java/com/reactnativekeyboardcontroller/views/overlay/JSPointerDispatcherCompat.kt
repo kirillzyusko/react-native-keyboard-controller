@@ -1,17 +1,23 @@
 package com.reactnativekeyboardcontroller.views.overlay
 
 import android.view.MotionEvent
+import android.view.View
 import android.view.ViewGroup
 import com.facebook.react.uimanager.JSPointerDispatcher
 import com.facebook.react.uimanager.events.EventDispatcher
 import java.lang.reflect.Method
 
 /**
- * Compat layer for `JSPointerDispatcher` interface for RN < 0.72
+ * Compat layer for `JSPointerDispatcher` interface for RN < 0.72.
+ *
+ * Uses composition instead of inheritance because `JSPointerDispatcher`
+ * became a final Kotlin class in RN 0.87+.
  */
 class JSPointerDispatcherCompat(
   viewGroup: ViewGroup,
-) : JSPointerDispatcher(viewGroup) {
+) {
+  private val delegate = JSPointerDispatcher(viewGroup)
+
   private val handleMotionEventMethod: Method? by lazy {
     try {
       // Try to get the 3-parameter method (for RN >= 0.72)
@@ -42,11 +48,23 @@ class JSPointerDispatcherCompat(
   ) {
     handleMotionEventMethod?.let { method ->
       if (method.parameterCount == RN_72_PARAMS_COUNT) {
-        method.invoke(this, event, eventDispatcher, isCapture)
+        method.invoke(delegate, event, eventDispatcher, isCapture)
       } else {
-        method.invoke(this, event, eventDispatcher)
+        method.invoke(delegate, event, eventDispatcher)
       }
     }
+  }
+
+  fun onChildStartedNativeGesture(
+    childView: View?,
+    ev: MotionEvent,
+    eventDispatcher: EventDispatcher,
+  ) {
+    delegate.onChildStartedNativeGesture(childView, ev, eventDispatcher)
+  }
+
+  fun onChildEndedNativeGesture() {
+    delegate.onChildEndedNativeGesture()
   }
 
   companion object {
