@@ -12,7 +12,7 @@ final class KeyboardViewLocator {
 
   func resolve() -> UIView? {
     let currentWindowsCount = UIApplication.shared.windows.count
-    
+
     if cachedKeyboardView == nil || currentWindowsCount != cachedWindowsCount {
       cachedKeyboardView = KeyboardView.find()
       cachedWindowsCount = currentWindowsCount
