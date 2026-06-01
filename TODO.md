@@ -1,0 +1,5 @@
+- [-] dismissal without animation (dismiss({animated: false}))
+- [-] interactive dismissal
+- [-] cross fade enabled (test detection?)
+- [-] toggle under feature flag
+- [-] release after iOS 27
