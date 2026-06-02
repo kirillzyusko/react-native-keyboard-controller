@@ -208,15 +208,39 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
 
   // MARK: call forwarding
 
+  private static let forwardedSelectors: Set<String> = {
+    var set = Set<String>()
+    let protocolNames = ["UITextFieldDelegate", "UITextViewDelegate", "UIScrollViewDelegate"]
+    for name in protocolNames {
+      guard let proto = NSProtocolFromString(name) else { continue }
+      for isRequired in [true, false] {
+        var count: UInt32 = 0
+        guard let methods = protocol_copyMethodDescriptionList(proto, isRequired, true, &count) else {
+          continue
+        }
+        for i in 0 ..< Int(count) {
+          set.insert(NSStringFromSelector(methods[i].name))
+        }
+        free(methods)
+      }
+    }
+    return set
+  }()
+
+  private func canForward(_ aSelector: Selector) -> Bool {
+    return Self.forwardedSelectors.contains(NSStringFromSelector(aSelector))
+  }
+
   override func responds(to aSelector: Selector!) -> Bool {
     if super.responds(to: aSelector) {
       return true
     }
+    guard canForward(aSelector) else { return false }
     return activeDelegate?.responds(to: aSelector) ?? false
   }
 
   override func forwardingTarget(for aSelector: Selector!) -> Any? {
-    if activeDelegate?.responds(to: aSelector) ?? false {
+    if canForward(aSelector), activeDelegate?.responds(to: aSelector) ?? false {
       return activeDelegate
     }
     return super.forwardingTarget(for: aSelector)
