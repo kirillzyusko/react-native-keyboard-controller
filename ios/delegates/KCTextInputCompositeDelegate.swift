@@ -219,7 +219,9 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
           continue
         }
         for i in 0 ..< Int(count) {
-          set.insert(NSStringFromSelector(methods[i].name))
+          if let sel = methods[i].name {
+            set.insert(NSStringFromSelector(sel))
+          }
         }
         free(methods)
       }
