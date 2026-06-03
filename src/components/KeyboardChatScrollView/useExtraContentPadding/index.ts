@@ -69,6 +69,11 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
         // Defer scrollTo so the animatedProps inset commit lands first;
         // otherwise the native ScrollView clamps to the old range.
         requestAnimationFrame(() => {
+          // check that view is still mounted and ref is actual
+          // otherwise it may lead to a crash
+          if (!scrollViewRef()) {
+            return;
+          }
           scrollTo(scrollViewRef, 0, target, false);
         });
       } else {
