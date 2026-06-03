@@ -526,13 +526,13 @@ const KeyboardAwareScrollView = forwardRef<
     const synchronize = useCallback(async () => {
       await update();
 
-      setTimeout(() => {
+      requestAnimationFrame(() => {
         runOnUI(() => {
           "worklet";
 
           scrollFromCurrentPosition();
         })();
-      }, 1000);
+      });
     }, [update, scrollFromCurrentPosition]);
 
     useImperativeHandle(
