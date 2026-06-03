@@ -11,8 +11,11 @@ import {
   lastScrollToY,
   mockInput,
   mockKeyboardHandlers,
+  mockLayout,
+  mockOffset,
   mockScrollTo,
   mockSelectionHandler,
+  mockSize,
   renderKeyboardAwareScrollView,
   reset,
   selectionEvent,
@@ -59,5 +62,40 @@ describe("KeyboardAwareScrollView — toolbar focus switch", () => {
     // point = 695.67 + 47 = 742.67
     // relativeScrollTo = 312 - (928 - 742.67) + 62 = 188.67
     expect(lastScrollToY()).toBeCloseTo(188.67, 0);
+  });
+
+  it("should not cancel an animated same-height focus scroll when ghost padding is positive", async () => {
+    await renderKeyboardAwareScrollView();
+    mockInput.value = inputEvent(INPUT_TARGET_A, INPUT_LAYOUT_A);
+
+    // Focus input A so the keyboard is already visible and the next focus
+    // change is a same-height keyboard event.
+    mockSelectionHandler.current(selectionEvent(INPUT_TARGET_A));
+    mockKeyboardHandlers.current.onStart(
+      kbEvent(KEYBOARD_HEIGHT, INPUT_TARGET_A),
+    );
+    mockKeyboardHandlers.current.onEnd(
+      kbEvent(KEYBOARD_HEIGHT, INPUT_TARGET_A),
+    );
+
+    mockLayout.value = { width: 402, height: 636.67 };
+    mockSize.value = { width: 370, height: 1050 };
+    mockOffset.value = 638.33;
+    mockInput.value = inputEvent(INPUT_TARGET_B, INPUT_LAYOUT_B);
+    mockScrollTo.mockClear();
+
+    // iOS can deliver the fresh selection before the same-height onStart.
+    // onStart then issues the animated scroll and computes positive ghost space.
+    mockSelectionHandler.current(selectionEvent(INPUT_TARGET_B, 47, 0));
+    mockKeyboardHandlers.current.onStart(
+      kbEvent(KEYBOARD_HEIGHT, INPUT_TARGET_B),
+    );
+    mockKeyboardHandlers.current.onEnd(
+      kbEvent(KEYBOARD_HEIGHT, INPUT_TARGET_B),
+    );
+
+    expect(mockScrollTo).toHaveBeenCalledTimes(1);
+    expect(mockScrollTo.mock.calls[0][2]).toBeCloseTo(827, 0);
+    expect(mockScrollTo.mock.calls[0][3]).toBe(true);
   });
 });
