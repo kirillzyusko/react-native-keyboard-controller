@@ -493,7 +493,9 @@ const KeyboardAwareScrollView = forwardRef<
         onEnd: (e) => {
           "worklet";
 
-          removeGhostPadding(e.height);
+          if (e.height === 0) {
+            removeGhostPadding(e.height);
+          }
 
           keyboardHeight.value = e.height;
           scrollPosition.value = position.value;
