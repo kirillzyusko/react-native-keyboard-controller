@@ -1,12 +1,14 @@
 package com.reactnativekeyboardcontroller.views
 
 import android.annotation.SuppressLint
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ScrollView
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.views.view.ReactViewGroup
 import com.reactnativekeyboardcontroller.extensions.px
+import kotlin.math.max
 
 @SuppressLint("ViewConstructor")
 class ClippingScrollViewDecoratorView(
@@ -15,26 +17,40 @@ class ClippingScrollViewDecoratorView(
   private var insetBottom = 0.0
   private var insetTop = 0.0
   private var appliedTopInsetPx = 0
-  private var appliedContentInsetPx = 0
-  private var contentViewBaseBottom = 0
-  private var decoratedContentView: ViewGroup? = null
-  private var isApplyingContentInset = false
-  private val contentLayoutListener =
-    View.OnLayoutChangeListener { view, _, _, _, bottom, _, _, _, _ ->
-      if (isApplyingContentInset) {
-        return@OnLayoutChangeListener
-      }
-
-      val contentView = view as? ViewGroup ?: return@OnLayoutChangeListener
-
-      contentViewBaseBottom = bottom
-      applyContentInset(contentView, appliedContentInsetPx)
-    }
+  private var paddingScrollWorkaroundActive = false
 
   override fun onAttachedToWindow() {
     super.onAttachedToWindow()
 
     decorateScrollView()
+  }
+
+  override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+    val scrollView = findScrollView(this)
+
+    if (scrollView == null) {
+      return super.dispatchTouchEvent(event)
+    }
+
+    if (event.actionMasked == MotionEvent.ACTION_DOWN) {
+      paddingScrollWorkaroundActive = shouldUsePaddingScrollWorkaround(scrollView, event)
+    }
+
+    val handled =
+      if (paddingScrollWorkaroundActive) {
+        dispatchWithExpandedContentRange(scrollView, event)
+      } else {
+        super.dispatchTouchEvent(event)
+      }
+
+    if (
+      event.actionMasked == MotionEvent.ACTION_UP ||
+      event.actionMasked == MotionEvent.ACTION_CANCEL
+    ) {
+      paddingScrollWorkaroundActive = false
+    }
+
+    return handled
   }
 
   fun setContentInsetBottom(value: Double) {
@@ -64,21 +80,13 @@ class ClippingScrollViewDecoratorView(
     // not translationY).
     val contentView = scrollView.getChildAt(0) as? ViewGroup ?: return
     contentView.translationY = newTopInsetPx.toFloat()
-    trackContentView(contentView)
 
     scrollView.setPadding(
       scrollView.paddingLeft,
       scrollView.paddingTop,
       scrollView.paddingRight,
-      0,
-    )
-
-    // Extend the real child bottom instead of ScrollView padding. Android's
-    // ScrollView.canScrollVertically() ignores padding-created range, which
-    // prevents child-started drags when the content itself is shorter than the
-    // viewport.
-    applyContentInset(
-      contentView,
+      // pass accumulated value — visually both top and bottom insets
+      // extend the scroll range via bottom padding
       (insetBottom + insetTop).toFloat().px.toInt(),
     )
 
@@ -89,6 +97,65 @@ class ClippingScrollViewDecoratorView(
     }
 
     appliedTopInsetPx = newTopInsetPx
+  }
+
+  private fun shouldUsePaddingScrollWorkaround(
+    scrollView: ScrollView,
+    event: MotionEvent,
+  ): Boolean {
+    val contentView = scrollView.getChildAt(0) ?: return false
+    val viewportHeight =
+      scrollView.height - scrollView.paddingTop - scrollView.paddingBottom
+    val paddingCreatesScrollRange = contentView.height > viewportHeight
+
+    return scrollView.scrollY == 0 &&
+      paddingCreatesScrollRange &&
+      !scrollView.canScrollVertically(1) &&
+      isTouchInScrollContent(scrollView, event)
+  }
+
+  private fun dispatchWithExpandedContentRange(
+    scrollView: ScrollView,
+    event: MotionEvent,
+  ): Boolean {
+    val contentView = scrollView.getChildAt(0) ?: return super.dispatchTouchEvent(event)
+    val originalBottom = contentView.bottom
+    val expandedBottom =
+      max(originalBottom, scrollView.height + scrollView.scrollY + MIN_SCROLL_RANGE_PX)
+
+    if (expandedBottom == originalBottom) {
+      return super.dispatchTouchEvent(event)
+    }
+
+    return try {
+      contentView.bottom = expandedBottom
+      super.dispatchTouchEvent(event)
+    } finally {
+      contentView.bottom = originalBottom
+    }
+  }
+
+  private fun isTouchInScrollContent(
+    scrollView: ScrollView,
+    event: MotionEvent,
+  ): Boolean {
+    val contentView = scrollView.getChildAt(0) ?: return false
+    val thisLocation = IntArray(COORDINATES_SIZE)
+    val scrollViewLocation = IntArray(COORDINATES_SIZE)
+
+    getLocationOnScreen(thisLocation)
+    scrollView.getLocationOnScreen(scrollViewLocation)
+
+    val x = event.x + thisLocation[0] - scrollViewLocation[0]
+    val y = event.y + thisLocation[1] - scrollViewLocation[1]
+    val scrollY = scrollView.scrollY
+
+    return !(
+      y < contentView.top - scrollY ||
+        y >= contentView.bottom - scrollY ||
+        x < contentView.left ||
+        x >= contentView.right
+    )
   }
 
   private fun findScrollView(view: View?): ScrollView? {
@@ -107,33 +174,8 @@ class ClippingScrollViewDecoratorView(
     return result
   }
 
-  private fun trackContentView(contentView: ViewGroup) {
-    if (decoratedContentView === contentView) {
-      return
-    }
-
-    decoratedContentView?.removeOnLayoutChangeListener(contentLayoutListener)
-    decoratedContentView = contentView
-    contentViewBaseBottom = contentView.bottom
-    contentView.addOnLayoutChangeListener(contentLayoutListener)
-  }
-
-  private fun applyContentInset(
-    contentView: ViewGroup,
-    insetPx: Int,
-  ) {
-    appliedContentInsetPx = insetPx
-
-    val targetBottom = contentViewBaseBottom + insetPx
-    if (contentView.bottom == targetBottom) {
-      return
-    }
-
-    isApplyingContentInset = true
-    try {
-      contentView.bottom = targetBottom
-    } finally {
-      isApplyingContentInset = false
-    }
+  companion object {
+    private const val COORDINATES_SIZE = 2
+    private const val MIN_SCROLL_RANGE_PX = 2
   }
 }
