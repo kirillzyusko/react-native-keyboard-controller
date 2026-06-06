@@ -15,6 +15,21 @@ class ClippingScrollViewDecoratorView(
   private var insetBottom = 0.0
   private var insetTop = 0.0
   private var appliedTopInsetPx = 0
+  private var appliedContentInsetPx = 0
+  private var contentViewBaseBottom = 0
+  private var decoratedContentView: ViewGroup? = null
+  private var isApplyingContentInset = false
+  private val contentLayoutListener =
+    View.OnLayoutChangeListener { view, _, _, _, bottom, _, _, _, _ ->
+      if (isApplyingContentInset) {
+        return@OnLayoutChangeListener
+      }
+
+      val contentView = view as? ViewGroup ?: return@OnLayoutChangeListener
+
+      contentViewBaseBottom = bottom
+      applyContentInset(contentView, appliedContentInsetPx)
+    }
 
   override fun onAttachedToWindow() {
     super.onAttachedToWindow()
@@ -49,13 +64,21 @@ class ClippingScrollViewDecoratorView(
     // not translationY).
     val contentView = scrollView.getChildAt(0) as? ViewGroup ?: return
     contentView.translationY = newTopInsetPx.toFloat()
+    trackContentView(contentView)
 
     scrollView.setPadding(
       scrollView.paddingLeft,
       scrollView.paddingTop,
       scrollView.paddingRight,
-      // pass accumulated value — visually both top and bottom insets
-      // extend the scroll range via bottom padding
+      0,
+    )
+
+    // Extend the real child bottom instead of ScrollView padding. Android's
+    // ScrollView.canScrollVertically() ignores padding-created range, which
+    // prevents child-started drags when the content itself is shorter than the
+    // viewport.
+    applyContentInset(
+      contentView,
       (insetBottom + insetTop).toFloat().px.toInt(),
     )
 
@@ -82,5 +105,35 @@ class ClippingScrollViewDecoratorView(
     }
 
     return result
+  }
+
+  private fun trackContentView(contentView: ViewGroup) {
+    if (decoratedContentView === contentView) {
+      return
+    }
+
+    decoratedContentView?.removeOnLayoutChangeListener(contentLayoutListener)
+    decoratedContentView = contentView
+    contentViewBaseBottom = contentView.bottom
+    contentView.addOnLayoutChangeListener(contentLayoutListener)
+  }
+
+  private fun applyContentInset(
+    contentView: ViewGroup,
+    insetPx: Int,
+  ) {
+    appliedContentInsetPx = insetPx
+
+    val targetBottom = contentViewBaseBottom + insetPx
+    if (contentView.bottom == targetBottom) {
+      return
+    }
+
+    isApplyingContentInset = true
+    try {
+      contentView.bottom = targetBottom
+    } finally {
+      isApplyingContentInset = false
+    }
   }
 }
