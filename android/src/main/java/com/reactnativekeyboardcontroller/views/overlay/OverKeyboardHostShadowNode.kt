@@ -25,7 +25,8 @@ internal class OverKeyboardHostShadowNode : LayoutShadowNode() {
     super.addChildAt(child, i)
     // intentionally use the explicit getter because newer RN Kotlin files no longer
     // generate the property accessor, so Kotlin property access would fail to compile.
-    @Suppress("UsePropertyAccessSyntax") val displaySize = getThemedContext().getDisplaySize()
+    @Suppress("UsePropertyAccessSyntax")
+    val displaySize = getThemedContext().getDisplaySize()
     child.setStyleWidth(displaySize.x.toFloat())
     child.setStyleHeight(displaySize.y.toFloat())
   }
