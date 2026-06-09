@@ -22,6 +22,14 @@ export const mockSize = { value: { width: 390, height: 2000 } };
 export const KEYBOARD = 300;
 export const mockScrollTo = jest.fn();
 
+type Reaction = {
+  producer: () => unknown;
+  effect: (current: unknown, previous: unknown | null) => void;
+  previous: unknown;
+};
+
+const reactions: Reaction[] = [];
+
 /**
  * Linear interpolate mock matching Reanimated's `interpolate` signature.
  *
@@ -61,15 +69,36 @@ export function reset() {
  */
 export function setupBeforeEach() {
   jest.resetModules();
+  reactions.length = 0;
 
   jest.doMock("react-native-reanimated", () => ({
     ...require("react-native-reanimated/mock"),
     scrollTo: mockScrollTo,
     interpolate: mockInterpolate,
+    useAnimatedReaction: (
+      producer: () => unknown,
+      effect: (current: unknown, previous: unknown | null) => void,
+    ) => {
+      reactions.push({
+        producer,
+        effect,
+        previous: producer(),
+      });
+    },
   }));
 
   reset();
   mockScrollTo.mockClear();
+}
+
+/** Run registered Reanimated reactions after mutating mocked shared values. */
+export function flushAnimatedReactions() {
+  for (const reaction of reactions) {
+    const current = reaction.producer();
+
+    reaction.effect(current, reaction.previous);
+    reaction.previous = current;
+  }
 }
 
 type RenderOptions = Omit<

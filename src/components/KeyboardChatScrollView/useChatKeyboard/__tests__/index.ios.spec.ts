@@ -1,7 +1,9 @@
+import { sv } from "../../../../__fixtures__/sv";
 import {
   type Handlers,
   KEYBOARD,
   createRender,
+  flushAnimatedReactions,
   mockLayout,
   mockOffset,
   mockScrollTo,
@@ -102,6 +104,29 @@ describe("`useChatKeyboard` — iOS non-inverted + always", () => {
     handlers.onMove({ height: 150 });
 
     expect(mockScrollTo).not.toHaveBeenCalled();
+  });
+
+  it("should apply the latest frozen keyboard padding when unfrozen", () => {
+    const freeze = sv(false);
+    const { result } = render({
+      inverted: false,
+      keyboardLiftBehavior: "always",
+      freeze,
+    });
+
+    handlers.onStart({ height: KEYBOARD });
+    expect(result.current.padding.value).toBe(KEYBOARD);
+
+    freeze.value = true;
+    flushAnimatedReactions();
+    handlers.onStart({ height: 0 });
+    handlers.onEnd({ height: 0 });
+    expect(result.current.padding.value).toBe(KEYBOARD);
+
+    freeze.value = false;
+    flushAnimatedReactions();
+
+    expect(result.current.padding.value).toBe(0);
   });
 });
 
