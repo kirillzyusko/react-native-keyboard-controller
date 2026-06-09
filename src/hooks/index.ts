@@ -292,5 +292,5 @@ export function useFocusedInputHandler(
   }, deps);
 }
 
-export * from "./useWindowDimensions";
+export { useWindowDimensions } from "react-native";
 export * from "./useKeyboardState";
