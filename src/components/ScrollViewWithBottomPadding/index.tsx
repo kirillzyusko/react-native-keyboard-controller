@@ -148,7 +148,14 @@ const ScrollViewWithBottomPadding = forwardRef<
       if (contentOffsetY) {
         const curr = contentOffsetY.value;
 
-        if (curr !== prevContentOffsetY.value) {
+        if (prevContentOffsetY.value === null) {
+          // Swallow the initial evaluation: emitting `contentOffset {x:0,y:0}`
+          // in the first animatedProps run overrides the wrapped ScrollView's
+          // own `contentOffset` prop on Fabric (e.g. a list's initial scroll
+          // offset), making the list mount scrolled to the top natively.
+          // eslint-disable-next-line react-compiler/react-compiler
+          prevContentOffsetY.value = curr;
+        } else if (curr !== prevContentOffsetY.value) {
           // eslint-disable-next-line react-compiler/react-compiler
           prevContentOffsetY.value = curr;
           result.contentOffset = { x: 0, y: curr };
