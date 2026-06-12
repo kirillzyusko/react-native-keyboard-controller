@@ -175,7 +175,7 @@ class KeyboardAnimationCallback(
     }
 
     // always verify insets, because sometimes default lifecycle methods may not be invoked
-    // (when we press "Share" on Android 16, when Modal closes keyboard, etc.)
+    // (when we press "Share" on Android 16, when Modal closes keyboard, when permission Alert presented etc.)
     val newHeight = getCurrentKeyboardHeight(insets)
     if (prevKeyboardHeight != newHeight && !isMoving && !isSuspended) {
       Logger.w(
