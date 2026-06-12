@@ -16,8 +16,7 @@ class KeyboardTransitionEvent(
 ) : Event<KeyboardTransitionEvent>(surfaceId, viewId) {
   override fun getEventName() = event.value
 
-  // All events for a given view can be coalesced?
-  override fun getCoalescingKey(): Short = 0
+  override fun canCoalesce() = false
 
   override fun getEventData(): WritableMap? =
     Arguments.createMap().apply {

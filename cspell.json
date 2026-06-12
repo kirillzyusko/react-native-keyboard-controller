@@ -196,7 +196,8 @@
     "dotlottie",
     "legendapp",
     "kortix",
-    "MACCATALYST"
+    "MACCATALYST",
+    "desynchronized"
   ],
   "ignorePaths": [
     "node_modules",

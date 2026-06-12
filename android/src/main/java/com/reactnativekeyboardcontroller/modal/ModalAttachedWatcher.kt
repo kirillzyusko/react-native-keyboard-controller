@@ -82,14 +82,19 @@ class ModalAttachedWatcher(
         //   position ourself, because callback can be attached after keyboard
         //   auto-dismissal and we may miss some events and keyboard position
         //   will be outdated
-        callback.syncKeyboardPosition(0.0, false)
+        view.post {
+          callback.syncKeyboardPosition(0.0, false)
+        }
       }
 
       dialog?.setOnDismissListener {
         callback.syncKeyboardPosition()
         callback.destroy()
         eventView.removeSelf()
-        this.callback()?.suspend(false)
+        // un-pause it in next frame because straight away `onApplyWindowInsets` will be called
+        view.post {
+          this.callback()?.suspend(false)
+        }
       }
 
       // imitating edge-to-edge mode behavior
