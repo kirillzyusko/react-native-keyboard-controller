@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		080373072D56C9450013CC14 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080373062D56C9450013CC14 /* AppDelegate.swift */; };
+		080373092D56C9450013CC14 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080373082D56C9450013CC14 /* SceneDelegate.swift */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		6204C340D92F4647309CF60E /* libPods-KeyboardControllerFabricExample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 66C8C56FA822B62D28B0930A /* libPods-KeyboardControllerFabricExample.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
@@ -27,6 +28,7 @@
 /* Begin PBXFileReference section */
 		00E356EE1AD99517003FC87E /* KeyboardControllerFabricExampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KeyboardControllerFabricExampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		080373062D56C9450013CC14 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		080373082D56C9450013CC14 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* KeyboardControllerFabricExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KeyboardControllerFabricExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = KeyboardControllerFabricExample/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = KeyboardControllerFabricExample/Info.plist; sourceTree = "<group>"; };
@@ -61,6 +63,7 @@
 			isa = PBXGroup;
 			children = (
 				080373062D56C9450013CC14 /* AppDelegate.swift */,
+				080373082D56C9450013CC14 /* SceneDelegate.swift */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
@@ -323,6 +326,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				080373072D56C9450013CC14 /* AppDelegate.swift in Sources */,
+				080373092D56C9450013CC14 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

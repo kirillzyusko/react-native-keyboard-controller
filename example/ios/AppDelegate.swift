@@ -13,33 +13,51 @@ import UIKit
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
   var window: UIWindow?
- 
+
   var reactNativeDelegate: ReactNativeDelegate?
   var reactNativeFactory: RCTReactNativeFactory?
- 
+  private var launchOptions: [UIApplication.LaunchOptionsKey: Any]?
+
   func application(
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
   ) -> Bool {
+    self.launchOptions = launchOptions
+
     let delegate = ReactNativeDelegate()
     let factory = RCTReactNativeFactory(delegate: delegate)
     delegate.dependencyProvider = RCTAppDependencyProvider()
- 
+
     reactNativeDelegate = delegate
     reactNativeFactory = factory
- 
-    window = UIWindow(frame: UIScreen.main.bounds)
- 
-    factory.startReactNative(
+
+    return true
+  }
+
+  func application(
+    _ application: UIApplication,
+    configurationForConnecting connectingSceneSession: UISceneSession,
+    options: UIScene.ConnectionOptions
+  ) -> UISceneConfiguration {
+    let configuration = UISceneConfiguration(
+      name: "Default Configuration",
+      sessionRole: connectingSceneSession.role
+    )
+    configuration.delegateClass = SceneDelegate.self
+    return configuration
+  }
+
+  func startReactNative(in window: UIWindow) {
+    self.window = window
+
+    reactNativeFactory?.startReactNative(
       withModuleName: "KeyboardControllerExample",
       in: window,
       launchOptions: launchOptions
     )
- 
-    return true
   }
 }
- 
+
 class ReactNativeDelegate: RCTDefaultReactNativeFactoryDelegate {
   override func sourceURL(for bridge: RCTBridge) -> URL? {
     self.bundleURL()

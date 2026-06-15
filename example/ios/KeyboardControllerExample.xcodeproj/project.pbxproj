@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		080373042D56C85B0013CC14 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080373032D56C85B0013CC14 /* AppDelegate.swift */; };
 		080373052D56C85B0013CC14 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080373032D56C85B0013CC14 /* AppDelegate.swift */; };
+		080373092D56D8000013CC14 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080373082D56D8000013CC14 /* SceneDelegate.swift */; };
+		0803730A2D56D8000013CC14 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080373082D56D8000013CC14 /* SceneDelegate.swift */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		4C39C56BAD484C67AA576FFA /* libPods-KeyboardControllerExample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CA3E69C5B9553B26FBA2DF04 /* libPods-KeyboardControllerExample.a */; };
@@ -38,6 +40,7 @@
 		008F07F21AC5B25A0029DE68 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
 		00E356EE1AD99517003FC87E /* KeyboardControllerExampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KeyboardControllerExampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		080373032D56C85B0013CC14 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		080373082D56D8000013CC14 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* KeyboardControllerExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KeyboardControllerExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = KeyboardControllerExample/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = KeyboardControllerExample/Info.plist; sourceTree = "<group>"; };
@@ -90,6 +93,7 @@
 			isa = PBXGroup;
 			children = (
 				080373032D56C85B0013CC14 /* AppDelegate.swift */,
+				080373082D56D8000013CC14 /* SceneDelegate.swift */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
@@ -470,6 +474,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				080373052D56C85B0013CC14 /* AppDelegate.swift in Sources */,
+				080373092D56D8000013CC14 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -478,6 +483,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				080373042D56C85B0013CC14 /* AppDelegate.swift in Sources */,
+				0803730A2D56D8000013CC14 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
