@@ -88,8 +88,18 @@ const KeyboardChatScrollView = forwardRef<
       onEndVisible,
     });
 
+    // intentionally clamp `blankSpace` at one ScrollView viewport. The Android
+    // `ClippingScrollView` workaround temporarily substitutes padding/range
+    // during touch handling, and oversized blank ranges can de-sync during fast
+    // momentum gestures. One viewport is enough for the short-content case;
+    // larger values only allow scrolling to a fully blank screen which is not
+    // the use case for this library. If you found this comment and it causes
+    // a bug for you, please open an issue.
     const totalPadding = useDerivedValue(() =>
-      Math.max(blankSpace.value, padding.value + extraContentPadding.value),
+      Math.min(
+        layout.value.height,
+        Math.max(blankSpace.value, padding.value + extraContentPadding.value),
+      ),
     );
 
     // Scroll indicator inset = keyboard + extraContentPadding (excludes blankSpace).
