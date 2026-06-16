@@ -118,12 +118,12 @@ class ClippingScrollViewDecoratorView(
     scrollView: ScrollView,
     event: MotionEvent,
   ): Boolean {
-    val contentView = scrollView.getChildAt(0) ?: return super.dispatchTouchEvent(event)
-    val originalBottom = contentView.bottom
+    val contentView = scrollView.getChildAt(0)
+    val originalBottom = contentView?.bottom ?: 0
     val expandedBottom =
       max(originalBottom, scrollView.height + scrollView.scrollY + MIN_SCROLL_RANGE_PX)
 
-    if (expandedBottom == originalBottom) {
+    if (contentView == null || expandedBottom == originalBottom) {
       return super.dispatchTouchEvent(event)
     }
 
