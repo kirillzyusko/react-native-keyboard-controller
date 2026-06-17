@@ -231,6 +231,13 @@ const KeyboardAwareScrollView = forwardRef<
           return false;
         }
 
+        // MW - if the keyboard is already hidden and the new height is 0, we don't need to do anything
+        // This was being triggered when a modal or bottom sheet was opened after focusing a field at the bottom of 
+        // the scrollview.
+        if (keyboardHeight.value === 0 && e === 0) {
+          return false;
+        }
+
         // insets mode: `ScrollViewWithBottomPadding` extends scrollable area without
         // changing layout, so when the keyboard hides and we're at the end of the
         // ScrollView we must manually scroll back.
@@ -254,6 +261,7 @@ const KeyboardAwareScrollView = forwardRef<
       },
       [mode],
     );
+
     const performScrollWithPositionRestoration = useCallback(
       (newPosition: number) => {
         "worklet";
@@ -495,6 +503,7 @@ const KeyboardAwareScrollView = forwardRef<
 
           if (e.height === 0) {
             removeGhostPadding(e.height);
+            ghostViewSpace.value = -1;
           }
 
           keyboardHeight.value = e.height;
