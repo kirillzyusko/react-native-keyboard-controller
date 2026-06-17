@@ -156,7 +156,6 @@ const ScrollViewWithBottomPadding = forwardRef<
           // eslint-disable-next-line react-compiler/react-compiler
           prevContentOffsetY.value = curr;
         } else if (curr !== prevContentOffsetY.value) {
-          // eslint-disable-next-line react-compiler/react-compiler
           prevContentOffsetY.value = curr;
           result.contentOffset = { x: 0, y: curr };
         }
