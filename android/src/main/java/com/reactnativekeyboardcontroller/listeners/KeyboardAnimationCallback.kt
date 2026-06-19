@@ -393,8 +393,13 @@ class KeyboardAnimationCallback(
       "KeyboardController::" + if (!isKeyboardVisible) "keyboardDidHide" else "keyboardDidShow",
       getEventParams(keyboardHeight),
     )
-    // dispatch `onMove` to update RN animated value and `onEnd` to indicate that transition finished
-    listOf(KeyboardTransitionEvent.Move, KeyboardTransitionEvent.End).forEach { eventName ->
+    // dispatch full lifecycle of onStart/onMove/onEnd events to update RN animated value and
+    // keep imperative hooks like `useKeyboardHandler` in sync
+    listOf(
+      KeyboardTransitionEvent.Start,
+      KeyboardTransitionEvent.Move,
+      KeyboardTransitionEvent.End,
+    ).forEach { eventName ->
       context.dispatchEvent(
         eventPropagationView.id,
         KeyboardTransitionEvent(
