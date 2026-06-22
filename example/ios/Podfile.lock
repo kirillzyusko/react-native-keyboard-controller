@@ -1807,7 +1807,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - SocketRocket
     - Yoga
-  - react-native-keyboard-controller (1.21.11):
+  - react-native-keyboard-controller (1.21.12):
     - boost
     - DoubleConversion
     - fast_float
@@ -2974,7 +2974,7 @@ SPEC CHECKSUMS:
   React-Mapbuffer: 33f678ee25b6c0ee2b01b1ecec08e3e02424cefe
   React-microtasksnativemodule: 44b44a4d3cd6ffb85d928abf741acdc26722de2e
   react-native-blur: 2181432139e3b470cad492f7729cb640cee60045
-  react-native-keyboard-controller: 75b28e58430fcaaa7314c81482ec06a47f1de3d4
+  react-native-keyboard-controller: 9b62fca41636cdafade58e2000b4b7d092fb8d4d
   react-native-safe-area-context: aac2745e96999c8633d2f6119e4e39b499c2ac8b
   react-native-text-input-mask: 22ca8eeef84d42a896f79428f7d175a5eb8b1c4e
   react-native-webview: a742b11276a0443e856cc5dc3e21a3fdf3351cdf
@@ -3015,7 +3015,7 @@ SPEC CHECKSUMS:
   RNReanimated: f1d171f6d4a8bf0ec2b8b18bdc09be608fab2f9b
   RNScreens: 9ae2656a55e9466dc04da3ba196d7932a6bd8146
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748
-  Yoga: 922d794dce2af9c437f864bf4093abfa7a131adb
+  Yoga: a3ed390a19db0459bd6839823a6ac6d9c6db198d
 
 PODFILE CHECKSUM: 9daeb2f305d208764d5e2abd51a7380cefa2c594
 
