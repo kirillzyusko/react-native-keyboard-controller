@@ -3797,7 +3797,7 @@ This guide provides a concise overview of the main UI components in `react-nativ
 
 Building a chat app?
 
-If you are building a chat application, check out the dedicated [guide](/react-native-keyboard-controller/docs/guides/building-chat-app.md) guide that explores pitfalls of building chat app layout and shows how to solve them using `KeyboardChatScrollView` component.
+If you are building a chat application, check out the dedicated [guide](/react-native-keyboard-controller/docs/guides/building-chat-app.md) that explores pitfalls of building chat app layout and shows how to solve them using [`KeyboardChatScrollView`](/react-native-keyboard-controller/docs/api/components/keyboard-chat-scroll-view.md) component.
 
 ## [`KeyboardAvoidingView`](/react-native-keyboard-controller/docs/api/components/keyboard-avoiding-view.md)[​](/react-native-keyboard-controller/docs/guides/components-overview.md#keyboardavoidingview "Direct link to keyboardavoidingview")
 
