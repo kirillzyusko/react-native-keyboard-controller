@@ -15,8 +15,9 @@ extension Notification {
     return (duration, keyboardFrame)
   }
 
-  var isLocalKeyboardEvent: Bool {
-    (userInfo?[UIResponder.keyboardIsLocalUserInfoKey] as? Bool) != false
+  var canBeSafelyIgnored: Bool {
+    UIResponder.isKeyboardPreloading
+      || (userInfo?[UIResponder.keyboardIsLocalUserInfoKey] as? Bool) == false
   }
 }
 
