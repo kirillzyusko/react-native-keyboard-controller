@@ -14,6 +14,10 @@ extension Notification {
 
     return (duration, keyboardFrame)
   }
+
+  var isLocalKeyboardEvent: Bool {
+    (userInfo?[UIResponder.keyboardIsLocalUserInfoKey] as? Bool) != false
+  }
 }
 
 extension Notification.Name {
