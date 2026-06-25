@@ -8,8 +8,8 @@
 import UIKit
 
 /**
- * A compatibility view that resolves to `KeyboardView` on iOS < 26
- * and uses `keyboardLayoutGuide` on iOS 26+.
+ * A compatibility view that resolves to `KeyboardView` for the legacy path
+ * and uses `keyboardLayoutGuide` for configured iOS 26+ behavior.
  */
 public final class KeyboardTrackingView: UIView {
   private var keyboardView: UIView? {
@@ -69,6 +69,8 @@ public final class KeyboardTrackingView: UIView {
   }
 
   @objc public func attachToTopmostView(toWindow window: UIWindow? = nil) {
+    guard KeyboardControllerConfiguration.usesKeyboardLayoutGuideTracking else { return }
+
     var topViewController = window?.rootViewController
     if let rootVC = topViewController, let topView = rootVC.view, topView.window != nil {
       // ok, attach
@@ -120,7 +122,7 @@ public final class KeyboardTrackingView: UIView {
   }
 
   @objc var view: UIView? {
-    if #available(iOS 26.0, *) {
+    if KeyboardControllerConfiguration.usesKeyboardLayoutGuideTracking {
       return self
     } else {
       return keyboardView
@@ -135,7 +137,7 @@ public final class KeyboardTrackingView: UIView {
     let keyboardPosition = keyboardWindowH - keyboardFrameY
 
     // for `keyboardLayoutGuide` case we can just read keyboard position directly - no interpolation needed
-    if #available(iOS 26.0, *) {
+    if KeyboardControllerConfiguration.usesKeyboardLayoutGuideTracking {
       if keyboardPosition > keyboardHeight {
         return Self.invalidPosition
       }
