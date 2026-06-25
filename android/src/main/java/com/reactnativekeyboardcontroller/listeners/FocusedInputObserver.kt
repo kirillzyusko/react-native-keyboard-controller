@@ -106,7 +106,7 @@ class FocusedInputObserver(
           // remove it asynchronously to avoid crash in stripe input
           // see https://github.com/stripe/stripe-android/issues/10178
           input.post {
-            input.removeTextChangedListener(watcher)
+            watcher?.let { input.removeTextChangedListener(it) }
           }
         }
         selectionSubscription?.invoke()
