@@ -10,3 +10,9 @@
 - (void)setForceDelegate:(id<UITextViewDelegate>)delegate;
 
 @end
+
+@interface UITextField (DelegateManager)
+
+- (void)setForceDelegate:(id<UITextFieldDelegate>)delegate;
+
+@end

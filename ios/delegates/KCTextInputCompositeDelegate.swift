@@ -96,21 +96,6 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
     }
   }
 
-  func canSubstituteTextFieldDelegate(delegate: UITextFieldDelegate?) -> Bool {
-    let type = String(describing: delegate)
-    if type.range(of: "SQIPTextFieldInputModifier") != nil {
-      // SQIPTextFieldInputModifier is a private class used internally by Square.
-      // It forwards input events to the keyboard-controller delegate.
-      // To prevent an infinite loop, we avoid setting our delegate in this case.
-      // Since Square's SDK is used imperatively and doesn't allow adding custom components,
-      // keyboard-controller components cannot be used in this context,
-      // so it's safe to skip replacing the delegate.
-      return false
-    }
-
-    return true
-  }
-
   /// Getter for the active delegate
   var activeDelegate: AnyObject? {
     return textViewDelegate ?? textFieldDelegate
@@ -208,15 +193,49 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
 
   // MARK: call forwarding
 
+  /// Decides whether `aSelector` should be forwarded to `delegate`.
+  ///
+  /// Usually we stay fully transparent and forward every selector the
+  /// underlying delegate responds to. The exception is a field that acts as its
+  /// own UIKit delegate and relays callbacks to an inner delegate through
+  /// `forwardInvocation:` (e.g. `BKForwardingTextField`). For such a field
+  /// `activeDelegate` is the text input *itself*, so it also "responds" to the
+  /// many `UITextField` / `UITextView` methods that UIKit relays to its delegate
+  /// (e.g. `keyboardInputChangedSelection:`). Forwarding one of those back to the
+  /// field makes the field relay it to us again — an infinite recursion.
+  ///
+  /// To stay transparent without looping, when the delegate is the text input
+  /// itself we forward only the selectors it handles *dynamically* (i.e. the
+  /// ones it routes to its inner delegate via its own message forwarding), and
+  /// never the ones it implements as a UIKit object. `instancesRespond(to:)`
+  /// inspects the real method table only, so it is `false` exactly for the
+  /// selectors resolved through the field's own `forwardInvocation:`.
+  private func shouldForward(_ aSelector: Selector!, to delegate: AnyObject) -> Bool {
+    guard delegate.responds(to: aSelector) else {
+      return false
+    }
+
+    if delegate is UITextField || delegate is UITextView,
+       let delegateClass = type(of: delegate) as? NSObject.Type
+    {
+      return !delegateClass.instancesRespond(to: aSelector)
+    }
+
+    return true
+  }
+
   override func responds(to aSelector: Selector!) -> Bool {
     if super.responds(to: aSelector) {
       return true
     }
-    return activeDelegate?.responds(to: aSelector) ?? false
+    guard let activeDelegate = activeDelegate else {
+      return false
+    }
+    return shouldForward(aSelector, to: activeDelegate)
   }
 
   override func forwardingTarget(for aSelector: Selector!) -> Any? {
-    if activeDelegate?.responds(to: aSelector) ?? false {
+    if let activeDelegate = activeDelegate, shouldForward(aSelector, to: activeDelegate) {
       return activeDelegate
     }
     return super.forwardingTarget(for: aSelector)

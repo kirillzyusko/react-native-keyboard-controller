@@ -251,11 +251,13 @@ public class FocusedInputObserver: NSObject {
 
   private func substituteDelegate(_ input: UIResponder?) {
     if let textField = input as? UITextField {
-      if !(textField.delegate is KCTextInputCompositeDelegate),
-         delegate.canSubstituteTextFieldDelegate(delegate: textField.delegate)
-      {
+      if !(textField.delegate is KCTextInputCompositeDelegate) {
         delegate.setTextFieldDelegate(delegate: textField.delegate, textField: textField)
-        textField.delegate = delegate
+        // Force-set the real UIKit delegate slot instead of using the public
+        // setter. Some fields (e.g. self-delegating forwarding fields) hijack
+        // `setDelegate:` to redirect to an inner delegate, which would create an
+        // infinite recursion. See `UITextField+DelegateManager`.
+        textField.setForceDelegate(delegate)
       }
     } else if let textView = input as? UITextView {
       if !(textView.delegate is KCTextInputCompositeDelegate) {
@@ -267,7 +269,7 @@ public class FocusedInputObserver: NSObject {
 
   private func substituteDelegateBack(_ input: UIResponder?) {
     if let textField = input as? UITextField, let oldDelegate = delegate.activeDelegate as? UITextFieldDelegate {
-      textField.delegate = oldDelegate
+      textField.setForceDelegate(oldDelegate)
     } else if let textView = input as? UITextView, let oldDelegate = delegate.activeDelegate as? UITextViewDelegate {
       textView.setForceDelegate(oldDelegate)
     }
