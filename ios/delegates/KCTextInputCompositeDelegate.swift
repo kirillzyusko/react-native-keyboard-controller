@@ -65,7 +65,7 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
   // MARK: setters/getters
 
   func setTextViewDelegate(delegate: UITextViewDelegate?) {
-    // remove KVO from any old textView
+    // remove KVO from any old textField
     if let oldTextField = observedTextFieldForSelection {
       removeSelectionRangeObserver(from: oldTextField)
     }
