@@ -253,10 +253,6 @@ public class FocusedInputObserver: NSObject {
     if let textField = input as? UITextField {
       if !(textField.delegate is KCTextInputCompositeDelegate) {
         delegate.setTextFieldDelegate(delegate: textField.delegate, textField: textField)
-        // Force-set the real UIKit delegate slot instead of using the public
-        // setter. Some fields (e.g. self-delegating forwarding fields) hijack
-        // `setDelegate:` to redirect to an inner delegate, which would create an
-        // infinite recursion. See `UITextField+DelegateManager`.
         textField.setForceDelegate(delegate)
       }
     } else if let textView = input as? UITextView {

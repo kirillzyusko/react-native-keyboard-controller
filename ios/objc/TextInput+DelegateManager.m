@@ -1,12 +1,12 @@
 //
-//  UITextView+DelegateManager.m
+//  TextInput+DelegateManager.m
 //  react-native-keyboard-controller
 //
 //  Created by Kiryl Ziusko on 24/04/2024.
 //
 
 #import <objc/runtime.h>
-#import "UITextView+DelegateManager.h"
+#import "TextInput+DelegateManager.h"
 
 @implementation UITextView (DelegateManager)
 
