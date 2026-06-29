@@ -10,7 +10,14 @@ import type { View } from "react-native";
 const KEYBOARD_HAS_ROUNDED_CORNERS =
   Platform.OS === "ios" && parseInt(Platform.Version, 10) >= 26;
 
-export type KeyboardEffectsProps = KeyboardStickyViewProps;
+export type KeyboardEffectsProps = {
+  /**
+   * Whether the keyboard backdrop should be translucent.
+   *
+   * @default false
+   */
+  translucent?: boolean;
+} & KeyboardStickyViewProps;
 
 /**
  * A component that renders content behind the keyboard. Since the keyboard
@@ -31,10 +38,13 @@ export type KeyboardEffectsProps = KeyboardStickyViewProps;
 const KeyboardEffects = forwardRef<
   View,
   React.PropsWithChildren<KeyboardEffectsProps>
->(({ children, ...props }, ref) => {
+>(({ translucent, children, ...props }, ref) => {
   const containerStyle = useMemo(
-    () => [styles.container, KEYBOARD_HAS_ROUNDED_CORNERS && styles.rounded],
-    [],
+    () => [
+      styles.container,
+      KEYBOARD_HAS_ROUNDED_CORNERS && !translucent && styles.rounded,
+    ],
+    [translucent],
   );
 
   return (
