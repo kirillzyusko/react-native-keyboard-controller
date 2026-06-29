@@ -49,10 +49,6 @@ public extension UIWindow {
     return sharedKeyboardWindowObserver.keyboardWindow
   }
 
-  static var keyboardWindow: UIWindow? {
-    return sharedKeyboardWindowObserver.keyboardWindow
-  }
-
   static var topWindow: UIWindow? {
     return sharedKeyboardWindowObserver.getTopWindow()
   }
