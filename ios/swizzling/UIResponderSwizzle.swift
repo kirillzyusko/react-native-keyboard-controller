@@ -103,6 +103,6 @@ extension UIResponder {
     let castOriginalBecomeFirstResponder = unsafeBitCast(
       originalBecomeFirstResponder, to: Function.self
     )
-    return return castOriginalBecomeFirstResponder(self, selector)
+    return castOriginalBecomeFirstResponder(self, selector)
   }
 }
