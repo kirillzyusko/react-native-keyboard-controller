@@ -14,7 +14,7 @@ public extension UIWindow {
   static let sharedKeyboardWindowObserver = KeyboardWindowObserver()
 
   class KeyboardWindowObserver: NSObject {
-    private weak var keyboardWindow: UIWindow?
+    weak var keyboardWindow: UIWindow?
 
     override init() {
       super.init()
@@ -43,6 +43,10 @@ public extension UIWindow {
         ? keyboardWindow
         : UIApplication.shared.activeWindow
     }
+  }
+
+  static var keyboardWindow: UIWindow? {
+    return sharedKeyboardWindowObserver.keyboardWindow
   }
 
   static var topWindow: UIWindow? {
