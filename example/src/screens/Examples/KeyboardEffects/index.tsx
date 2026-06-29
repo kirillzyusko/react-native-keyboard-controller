@@ -13,8 +13,13 @@ import {
   KeyboardStickyView,
   useReanimatedKeyboardAnimation,
 } from "react-native-keyboard-controller";
+import LinearGradient from "react-native-linear-gradient";
 import Reanimated, { useAnimatedStyle } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
+
+const MODES = ["gradient", "color", "gif"] as const;
+
+type Mode = (typeof MODES)[number];
 
 const GIF_SOURCE = {
   uri: "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExbG1hdjU0bDBqZ3dha3NoNXF0YTY5ajNhNTdmMmV5azZsMHhlc21pMyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/dAWZiSMbMvObDWP3aA/giphy.gif",
@@ -58,9 +63,12 @@ const ColorButton = ({
 
 const KeyboardEffectsExample = () => {
   const [colorIndex, setColorIndex] = useState(0);
-  const [showGif, setShowGif] = useState(false);
+  const [mode, setMode] = useState<Mode>("gradient");
 
-  const toggleGif = useCallback(() => setShowGif((v) => !v), []);
+  const cycleMode = useCallback(
+    () => setMode((m) => MODES[(MODES.indexOf(m) + 1) % MODES.length]),
+    [],
+  );
 
   const colorEffectStyle = useMemo(
     () => [styles.fill, { backgroundColor: COLORS[colorIndex] }],
@@ -74,6 +82,34 @@ const KeyboardEffectsExample = () => {
     }),
     [],
   );
+
+  const renderEffect = () => {
+    switch (mode) {
+      case "gradient":
+        return (
+          <LinearGradient
+            colors={["rgba(80, 200, 137, 1)", "rgba(209, 5, 127, 1)"]}
+            end={{ x: 0.96, y: 0.3 }}
+            locations={[0, 1]}
+            start={{ x: 0.04, y: 0.7 }}
+            style={{ flex: 1 }}
+          />
+        );
+      case "gif":
+        return (
+          <View style={[styles.fill, { transform: [{ translateY: 0 }] }]}>
+            <Image source={GIF_SOURCE} style={styles.fill} />
+            <BlurView
+              blurAmount={32}
+              blurType="materialLight"
+              style={StyleSheet.absoluteFill}
+            />
+          </View>
+        );
+      default:
+        return <View style={colorEffectStyle} />;
+    }
+  };
 
   return (
     <>
@@ -90,55 +126,39 @@ const KeyboardEffectsExample = () => {
               />
             ))}
           </View>
-          <TouchableOpacity style={styles.toggleButton} onPress={toggleGif}>
-            <Text style={styles.toggleButtonText}>
-              {showGif ? "GIF" : "Color"}
-            </Text>
+          <TouchableOpacity style={styles.toggleButton} onPress={cycleMode}>
+            <Text style={styles.toggleButtonText}>{mode.toUpperCase()}</Text>
           </TouchableOpacity>
         </View>
-        <KeyboardStickyView offset={{ opened: 32 }}>
-          <Reanimated.View style={[StyleSheet.absoluteFillObject, opacity]}>
-            <Image
-              source={GIF_SOURCE}
-              style={{
-                left: 14,
-                right: 14,
-                top: -2,
-                bottom: 14,
-                position: "absolute",
-                borderRadius: 25,
-              }}
-            />
-            <BlurView
-              blurAmount={4}
-              blurType="light"
-              style={{
-                position: "absolute",
-                top: -12,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                borderRadius: 25,
-              }}
-            />
-          </Reanimated.View>
-          <TextInput placeholder="Describe an image" style={styles.textInput} />
-        </KeyboardStickyView>
       </SafeAreaView>
-      <KeyboardEffects translucent>
-        {showGif ? (
-          <View style={[{ flex: 1 }, {transform: [{ translateY: -15 }]}]}>
-            <Image source={GIF_SOURCE} style={styles.fill} />
-            <BlurView
-              blurAmount={32}
-              blurType="materialLight"
-              style={StyleSheet.absoluteFill}
-            />
-          </View>
-        ) : (
-          <View style={colorEffectStyle} />
-        )}
-      </KeyboardEffects>
+      <KeyboardEffects translucent>{renderEffect()}</KeyboardEffects>
+      <KeyboardStickyView offset={{ opened: 32 }}>
+        <Reanimated.View style={[StyleSheet.absoluteFillObject, opacity]}>
+          <Image
+            source={GIF_SOURCE}
+            style={{
+              left: 14,
+              right: 14,
+              top: -2,
+              bottom: 14,
+              position: "absolute",
+              borderRadius: 25,
+            }}
+          />
+          <BlurView
+            blurAmount={4}
+            blurType="light"
+            style={{
+              position: "absolute",
+              top: -12,
+              left: 0,
+              right: 0,
+              bottom: 0,
+            }}
+          />
+        </Reanimated.View>
+        <TextInput placeholder="Describe an image" style={styles.textInput} />
+      </KeyboardStickyView>
     </>
   );
 };
