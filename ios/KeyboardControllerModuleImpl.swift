@@ -13,6 +13,11 @@ public class KeyboardControllerModuleImpl: NSObject {
   private static let keyboardRevealGestureName = "keyboardRevealGesture"
 
   @objc
+  public static func setTranslucent(_ translucent: Bool) {
+    KeyboardBackdropController.shared.setTranslucent(translucent)
+  }
+
+  @objc
   public static func dismiss(_ keepFocus: Bool, animated: Bool) {
     let work = {
       let responder = UIResponder.current

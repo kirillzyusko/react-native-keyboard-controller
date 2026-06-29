@@ -40,6 +40,11 @@ class KeyboardControllerModuleImpl(
     // no-op on Android
   }
 
+  @Suppress("detekt:UnusedParameter")
+  fun setTranslucent(translucent: Boolean) {
+    // no-op on Android
+  }
+
   fun dismiss(
     keepFocus: Boolean,
     animated: Boolean,

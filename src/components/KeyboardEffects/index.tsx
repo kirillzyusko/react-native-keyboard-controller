@@ -1,7 +1,8 @@
-import React, { forwardRef, useMemo } from "react";
+import React, { forwardRef, useEffect, useMemo, useRef } from "react";
 import { Platform, View as RNView, StyleSheet } from "react-native";
 
 import { KEYBOARD_BORDER_RADIUS } from "../../constants";
+import { KeyboardController } from "../../module";
 import KeyboardStickyView from "../KeyboardStickyView";
 
 import type { KeyboardStickyViewProps } from "../KeyboardStickyView";
@@ -9,6 +10,21 @@ import type { View } from "react-native";
 
 const KEYBOARD_HAS_ROUNDED_CORNERS =
   Platform.OS === "ios" && parseInt(Platform.Version, 10) >= 26;
+const translucentEffectTokens = new Set<symbol>();
+
+const setTranslucentForToken = (token: symbol, enabled: boolean) => {
+  const hadToken = translucentEffectTokens.has(token);
+
+  if (enabled) {
+    translucentEffectTokens.add(token);
+  } else {
+    translucentEffectTokens.delete(token);
+  }
+
+  if (hadToken !== enabled) {
+    KeyboardController.setTranslucent(translucentEffectTokens.size > 0);
+  }
+};
 
 export type KeyboardEffectsProps = {
   /**
@@ -39,6 +55,7 @@ const KeyboardEffects = forwardRef<
   View,
   React.PropsWithChildren<KeyboardEffectsProps>
 >(({ translucent, children, ...props }, ref) => {
+  const translucentToken = useRef(Symbol("KeyboardEffects"));
   const containerStyle = useMemo(
     () => [
       styles.container,
@@ -46,6 +63,14 @@ const KeyboardEffects = forwardRef<
     ],
     [translucent],
   );
+
+  useEffect(() => {
+    setTranslucentForToken(translucentToken.current, Boolean(translucent));
+
+    return () => {
+      setTranslucentForToken(translucentToken.current, false);
+    };
+  }, [translucent]);
 
   return (
     <KeyboardStickyView ref={ref} {...props}>
