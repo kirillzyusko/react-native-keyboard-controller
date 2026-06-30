@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import AnimatedGlow from "react-native-animated-glow";
 import {
   KeyboardEffects,
   KeyboardStickyView,
@@ -16,6 +17,8 @@ import {
 import LinearGradient from "react-native-linear-gradient";
 import Reanimated, { useAnimatedStyle } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
+
+import type { PresetConfig } from "react-native-animated-glow";
 
 const MODES = ["gradient", "color", "gif"] as const;
 
@@ -40,6 +43,163 @@ type ColorButtonProps = {
   index: number;
   selectedIndex: number;
   onSelect: (index: number) => void;
+};
+
+const input: PresetConfig = {
+  metadata: {
+    name: "Default Rainbow",
+    textColor: "#FFFFFF",
+    textSize: 16,
+    category: "Gradient",
+    tags: ["colorful", "rainbow", "vibrant", "skia"],
+  },
+  states: [
+    {
+      name: "default",
+      preset: {
+        cornerRadius: 30,
+        outlineWidth: 4,
+        borderColor: [
+          "rgba(238, 255, 0, 1)",
+          "rgba(79, 255, 0, 1)",
+          "rgba(46, 90, 255, 1)",
+          "rgba(254, 0, 255, 1)",
+          "rgba(231, 23, 23, 1)",
+        ],
+        backgroundColor: "rgba(10, 10, 10, 1)",
+        animationSpeed: 1.2,
+        borderSpeedMultiplier: 1,
+        glowLayers: [
+          {
+            glowPlacement: "behind",
+            colors: [
+              "rgba(205, 201, 35, 1)",
+              "rgba(0, 255, 79, 1)",
+              "rgba(0, 119, 255, 1)",
+              "rgba(239, 0, 255, 1)",
+              "rgba(222, 28, 28, 1)",
+            ],
+            glowSize: 34,
+            opacity: 0.2,
+            speedMultiplier: 1,
+            coverage: 1,
+            relativeOffset: 0,
+          },
+          {
+            glowPlacement: "behind",
+            colors: [
+              "rgba(185, 182, 32, 1)",
+              "rgba(0, 255, 79, 1)",
+              "rgba(0, 119, 255, 1)",
+              "rgba(239, 0, 255, 1)",
+              "rgba(222, 28, 28, 1)",
+            ],
+            glowSize: 6,
+            opacity: 0.5,
+            speedMultiplier: 1,
+            coverage: 1,
+            relativeOffset: 0,
+          },
+          {
+            glowPlacement: "behind",
+            colors: ["#FFFFFF"],
+            glowSize: [2, 8, 8, 2],
+            opacity: 0.2,
+            speedMultiplier: 2,
+            coverage: 0.5,
+            relativeOffset: 0,
+          },
+        ],
+      },
+    },
+    {
+      name: "hover",
+      transition: 300,
+      preset: {
+        animationSpeed: 1.8,
+        glowLayers: [
+          {
+            glowSize: 40,
+            opacity: 0.24,
+          },
+          {
+            glowSize: 7,
+            opacity: 0.6,
+          },
+          {
+            glowSize: [2, 10, 10, 2],
+            opacity: 0.24,
+          },
+        ],
+      },
+    },
+    {
+      name: "press",
+      transition: 100,
+      preset: {
+        animationSpeed: 2.4,
+        glowLayers: [
+          {
+            glowSize: 40,
+            opacity: 0.28,
+          },
+          {
+            glowSize: 8,
+            opacity: 0.7,
+          },
+          {
+            glowSize: [3, 11, 11, 3],
+            opacity: 0.28,
+          },
+        ],
+      },
+    },
+  ],
+};
+const keyboard: PresetConfig = {
+  metadata: {
+    name: "Default Rainbow",
+    textColor: "#FFFFFF",
+    textSize: 16,
+    category: "Gradient",
+    tags: ["colorful", "rainbow", "vibrant", "skia"],
+  },
+  states: [
+    {
+      name: "default",
+      preset: {
+        cornerRadius: 0,
+        outlineWidth: 0,
+        borderColor: [
+          "rgb(0, 247, 255)",
+          "rgb(0, 106, 255)",
+          "rgba(46, 90, 255, 1)",
+          "rgba(254, 0, 255, 1)",
+          "rgba(231, 23, 23, 1)",
+        ],
+        backgroundColor: "rgba(10, 10, 10, 0)",
+        animationSpeed: 1.2,
+        borderSpeedMultiplier: 1,
+        glowLayers: [
+          {
+            glowPlacement: "over",
+            colors: [
+              "rgb(42, 255, 227)",
+              "rgb(0, 242, 255)",
+              "rgba(0, 119, 255, 1)",
+              "rgb(34, 0, 255)",
+              "rgb(222, 28, 219)",
+            ],
+            glowSize: 34,
+            opacity: 0.3,
+            speedMultiplier: 1,
+            coverage: 1,
+            relativeOffset: 0,
+          },
+        ],
+      },
+    },
+  ],
 };
 
 const ColorButton = ({
@@ -87,26 +247,9 @@ const KeyboardEffectsExample = () => {
     switch (mode) {
       case "gradient":
         return (
-          <View style={{ flex: 1 }}>
-            <LinearGradient
-              colors={[
-                "rgba(176, 151, 107, 0.03)",
-                "rgb(255, 0, 68)",
-                "rgb(255, 0, 43)",
-                "rgba(176, 151, 107, 0.03)",
-                // "rgb(116, 106, 179)",
-              ]}
-              end={{ x: 0, y: 1 }}
-              start={{ x: 0, y: 0 }}
-              style={{ flex: 0.4 }}
-            />
-            <View
-              style={[
-                StyleSheet.absoluteFill,
-                { backgroundColor: "#181818ce" },
-              ]}
-            />
-          </View>
+          <AnimatedGlow preset={keyboard}>
+            <View style={{ height: 300 }} />
+          </AnimatedGlow>
         );
       case "gif":
         return (
@@ -145,25 +288,18 @@ const KeyboardEffectsExample = () => {
         </View>
       </SafeAreaView>
       <KeyboardEffects translucent>{renderEffect()}</KeyboardEffects>
-      <KeyboardStickyView offset={{ opened: 16 }}>
-        <Reanimated.View style={[StyleSheet.absoluteFillObject, opacity]}>
-          <Image
-            source={GIF_SOURCE}
-            style={{
-              left: 14,
-              right: 14,
-              top: -2,
-              bottom: 14,
-              position: "absolute",
-              borderRadius: 25,
-            }}
+      <KeyboardStickyView
+        offset={{ opened: 16 }}
+        style={{ marginHorizontal: 16, marginBottom: 16 }}
+      >
+        <Reanimated.View style={[StyleSheet.absoluteFillObject, opacity]} />
+        <AnimatedGlow preset={input}>
+          <TextInput
+            keyboardAppearance="dark"
+            placeholder="Describe an image"
+            style={styles.textInput}
           />
-        </Reanimated.View>
-        <TextInput
-          keyboardAppearance="dark"
-          placeholder="Describe an image"
-          style={styles.textInput}
-        />
+        </AnimatedGlow>
       </KeyboardStickyView>
     </View>
   );
@@ -208,8 +344,6 @@ const styles = StyleSheet.create({
   textInput: {
     height: 50,
     paddingHorizontal: 16,
-    marginHorizontal: 16,
-    marginBottom: 16,
     borderRadius: 25,
     backgroundColor: "#FFFFFF",
   },
