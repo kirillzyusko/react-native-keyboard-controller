@@ -87,13 +87,26 @@ const KeyboardEffectsExample = () => {
     switch (mode) {
       case "gradient":
         return (
-          <LinearGradient
-            colors={["rgba(80, 200, 137, 1)", "rgba(209, 5, 127, 1)"]}
-            end={{ x: 0.96, y: 0.3 }}
-            locations={[0, 1]}
-            start={{ x: 0.04, y: 0.7 }}
-            style={{ flex: 1 }}
-          />
+          <View style={{ flex: 1 }}>
+            <LinearGradient
+              colors={[
+                "rgba(176, 151, 107, 0.03)",
+                "rgb(255, 0, 68)",
+                "rgb(255, 0, 43)",
+                "rgba(176, 151, 107, 0.03)",
+                // "rgb(116, 106, 179)",
+              ]}
+              end={{ x: 0, y: 1 }}
+              start={{ x: 0, y: 0 }}
+              style={{ flex: 0.4 }}
+            />
+            <View
+              style={[
+                StyleSheet.absoluteFill,
+                { backgroundColor: "#181818ce" },
+              ]}
+            />
+          </View>
         );
       case "gif":
         return (
@@ -112,7 +125,7 @@ const KeyboardEffectsExample = () => {
   };
 
   return (
-    <>
+    <View style={{ flex: 1, backgroundColor: "#181818" }}>
       <SafeAreaView style={styles.container}>
         <View style={styles.controls}>
           <View style={styles.colorPicker}>
@@ -132,7 +145,7 @@ const KeyboardEffectsExample = () => {
         </View>
       </SafeAreaView>
       <KeyboardEffects translucent>{renderEffect()}</KeyboardEffects>
-      <KeyboardStickyView offset={{ opened: 32 }}>
+      <KeyboardStickyView offset={{ opened: 16 }}>
         <Reanimated.View style={[StyleSheet.absoluteFillObject, opacity]}>
           <Image
             source={GIF_SOURCE}
@@ -145,21 +158,14 @@ const KeyboardEffectsExample = () => {
               borderRadius: 25,
             }}
           />
-          <BlurView
-            blurAmount={4}
-            blurType="light"
-            style={{
-              position: "absolute",
-              top: -12,
-              left: 0,
-              right: 0,
-              bottom: 0,
-            }}
-          />
         </Reanimated.View>
-        <TextInput placeholder="Describe an image" style={styles.textInput} />
+        <TextInput
+          keyboardAppearance="dark"
+          placeholder="Describe an image"
+          style={styles.textInput}
+        />
       </KeyboardStickyView>
-    </>
+    </View>
   );
 };
 

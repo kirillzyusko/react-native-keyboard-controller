@@ -19,8 +19,8 @@ final class KeyboardBackdropController: NSObject {
 
     NotificationCenter.default.addObserver(
       self,
-      selector: #selector(windowDidBecomeVisible(_:)),
-      name: UIWindow.didBecomeVisibleNotification,
+      selector: #selector(keyboardWillShow(_:)),
+      name: UIResponder.keyboardWillShowNotification,
       object: nil
     )
   }
@@ -30,7 +30,7 @@ final class KeyboardBackdropController: NSObject {
     applyTranslucency()
   }
 
-  @objc private func windowDidBecomeVisible(_ notification: Notification) {
+  @objc private func keyboardWillShow(_ notification: Notification) {
     guard isTranslucent, let window = UIWindow.keyboardWindow else {
       return
     }
