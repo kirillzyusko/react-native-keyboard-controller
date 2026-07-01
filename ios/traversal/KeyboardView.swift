@@ -25,7 +25,6 @@ enum KeyboardView {
       if subview.description.hasAnyPrefix(containerPrefixes) {
         for hostView in subview.subviews {
           if hostView.description.hasAnyPrefix(hostPrefixes), hostView.frame.height != 0 {
-            hideBackdropViews(in: hostView)
             return hostView
           }
         }
@@ -34,15 +33,5 @@ enum KeyboardView {
     }
 
     return nil
-  }
-  
-  private static func hideBackdropViews(in view: UIView) {
-    if String(describing: type(of: view)) == "UIKBBackdropView" {
-      view.alpha = 0
-    }
-
-    for subview in view.subviews {
-      hideBackdropViews(in: subview)
-    }
   }
 }
