@@ -2332,13 +2332,6 @@ caniuse-lite@^1.0.30001688:
   resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001700.tgz#26cd429cf09b4fd4e745daf4916039c794d720f6"
   integrity sha512-2S6XIXwaE7K7erT8dY+kLQcpa5ms63XlRkMkReXjle+kf6c5g38vyMl+Z5y8dSxOFDhcFe+nxnn261PLxBSQsQ==
 
-canvaskit-wasm@0.39.1:
-  version "0.39.1"
-  resolved "https://registry.yarnpkg.com/canvaskit-wasm/-/canvaskit-wasm-0.39.1.tgz#c3c8f3962cbabbedf246f7bcf90e859013c7eae9"
-  integrity sha512-Gy3lCmhUdKq+8bvDrs9t8+qf7RvcjuQn+we7vTVVyqgOVO1UVfHpsnBxkTZw+R4ApEJ3D5fKySl9TU11hmjl/A==
-  dependencies:
-    "@webgpu/types" "0.1.21"
-
 canvaskit-wasm@0.41.0:
   version "0.41.0"
   resolved "https://registry.yarnpkg.com/canvaskit-wasm/-/canvaskit-wasm-0.41.0.tgz#6068ad66313a70af0dd2d762f792011f553b4277"
@@ -4651,13 +4644,6 @@ react-is@^19.1.0:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-19.1.0.tgz#805bce321546b7e14c084989c77022351bbdd11b"
   integrity sha512-Oe56aUPnkHyyDxxkvqtd7KkdQP5uIUfHxd5XTb3wE9d/kRnZLmKbDB0GWk919tdQ+mxxPtG6EAs6RMT6i1qtHg==
 
-react-native-animated-glow@^3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/react-native-animated-glow/-/react-native-animated-glow-3.1.0.tgz#03060283f1d0cd83101683dab86b374c85220375"
-  integrity sha512-VdK6QiuZLx0Q6rL3VnRvouSWYdRGjH4CpTLRLkVV6s956f2HX6yl0GCzjgcH8bgNuigIS65riZ9Y9Byr+T/KNQ==
-  dependencies:
-    canvaskit-wasm "0.39.1"
-
 react-native-gesture-handler@2.28.0:
   version "2.28.0"
   resolved "https://registry.yarnpkg.com/react-native-gesture-handler/-/react-native-gesture-handler-2.28.0.tgz#07fb4f5eae72f810aac3019b060d26c1835bfd0c"
@@ -4685,11 +4671,6 @@ react-native-is-edge-to-edge@^1.2.1:
 "react-native-keyboard-controller@link:..":
   version "0.0.0"
   uid ""
-
-react-native-linear-gradient@^2.8.3:
-  version "2.8.3"
-  resolved "https://registry.yarnpkg.com/react-native-linear-gradient/-/react-native-linear-gradient-2.8.3.tgz#9a116649f86d74747304ee13db325e20b21e564f"
-  integrity sha512-KflAXZcEg54PXkLyflaSZQ3PJp4uC4whM7nT/Uot9m0e/qxFV3p6uor1983D1YOBJbJN7rrWdqIjq0T42jOJyA==
 
 react-native-reanimated@3.19.2:
   version "3.19.2"

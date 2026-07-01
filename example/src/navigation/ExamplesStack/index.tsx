@@ -2,6 +2,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
 
 import { ScreenNames } from "../../constants/screenNames";
+import AIKeyboard from "../../screens/Examples/AIKeyboard";
 import AILegendListChat from "../../screens/Examples/AILegendListChat";
 import AwareScrollView from "../../screens/Examples/AwareScrollView";
 import AwareScrollViewStickyFooter from "../../screens/Examples/AwareScrollViewStickyFooter";
@@ -64,6 +65,7 @@ export type ExamplesStackParamList = {
   [ScreenNames.CHAT_KIT]: undefined;
   [ScreenNames.AI_LEGEND_LIST_CHAT]: undefined;
   [ScreenNames.KEYBOARD_EFFECTS]: undefined;
+  [ScreenNames.AI_KEYBOARD]: undefined;
 };
 
 const Stack = createStackNavigator<ExamplesStackParamList>();
@@ -214,6 +216,11 @@ const ExamplesStack = () => (
       component={KeyboardEffectsExample}
       name={ScreenNames.KEYBOARD_EFFECTS}
       options={options[ScreenNames.KEYBOARD_EFFECTS]}
+    />
+    <Stack.Screen
+      component={AIKeyboard}
+      name={ScreenNames.AI_KEYBOARD}
+      options={options[ScreenNames.AI_KEYBOARD]}
     />
   </Stack.Navigator>
 );

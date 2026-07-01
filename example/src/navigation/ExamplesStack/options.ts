@@ -97,4 +97,7 @@ export const options = {
   [ScreenNames.KEYBOARD_EFFECTS]: {
     title: "Keyboard Effects",
   },
+  [ScreenNames.AI_KEYBOARD]: {
+    title: "AI Keyboard",
+  },
 };
