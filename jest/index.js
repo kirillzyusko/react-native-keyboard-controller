@@ -131,6 +131,7 @@ const mock = {
     Group: "KeyboardToolbar.Group",
   }),
   KeyboardChatScrollView: ScrollView,
+  KeyboardEffects: View,
   // themes
   DefaultKeyboardToolbarTheme,
 };
