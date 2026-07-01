@@ -1,4 +1,3 @@
-import { BlurView } from "@react-native-community/blur";
 import React, { useCallback, useMemo, useState } from "react";
 import {
   Image,
@@ -11,9 +10,7 @@ import {
 import {
   KeyboardEffects,
   KeyboardStickyView,
-  useReanimatedKeyboardAnimation,
 } from "react-native-keyboard-controller";
-import Reanimated, { useAnimatedStyle } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const GIF_SOURCE = {
@@ -66,14 +63,6 @@ const KeyboardEffectsExample = () => {
     () => [styles.fill, { backgroundColor: COLORS[colorIndex] }],
     [colorIndex],
   );
-  const { progress } = useReanimatedKeyboardAnimation();
-
-  const opacity = useAnimatedStyle(
-    () => ({
-      opacity: progress.value,
-    }),
-    [],
-  );
 
   return (
     <>
@@ -97,47 +86,16 @@ const KeyboardEffectsExample = () => {
           </TouchableOpacity>
         </View>
       </SafeAreaView>
-      <KeyboardEffects translucent>
+      <KeyboardStickyView>
+        <TextInput placeholder="Describe an image" style={styles.textInput} />
+      </KeyboardStickyView>
+      <KeyboardEffects>
         {showGif ? (
-          <View style={[{ flex: 1 }, { transform: [{ translateY: -45 }] }]}>
-            <Image source={GIF_SOURCE} style={styles.fill} />
-            <BlurView
-              blurAmount={32}
-              blurType="materialLight"
-              style={StyleSheet.absoluteFill}
-            />
-          </View>
+          <Image source={GIF_SOURCE} style={styles.fill} />
         ) : (
           <View style={colorEffectStyle} />
         )}
       </KeyboardEffects>
-      <KeyboardStickyView offset={{ opened: 32 }}>
-        <Reanimated.View style={[StyleSheet.absoluteFillObject, opacity]}>
-          <Image
-            source={GIF_SOURCE}
-            style={{
-              left: 14,
-              right: 14,
-              top: -2,
-              bottom: 14,
-              position: "absolute",
-              borderRadius: 25,
-            }}
-          />
-          <BlurView
-            blurAmount={4}
-            blurType="light"
-            style={{
-              position: "absolute",
-              top: -12,
-              left: 0,
-              right: 0,
-              bottom: 0,
-            }}
-          />
-        </Reanimated.View>
-        <TextInput placeholder="Describe an image" style={styles.textInput} />
-      </KeyboardStickyView>
     </>
   );
 };
