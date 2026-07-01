@@ -99,5 +99,6 @@ export const options = {
   },
   [ScreenNames.AI_KEYBOARD]: {
     title: "AI Keyboard",
+    headerShown: false,
   },
 };

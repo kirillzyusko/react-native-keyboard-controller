@@ -136,7 +136,7 @@ const GlowInput = () => {
       )}
       <TextInput
         keyboardAppearance="dark"
-        placeholder="Describe an image"
+        placeholder="Describe an image..."
         style={styles.input}
         onLayout={onLayout}
       />

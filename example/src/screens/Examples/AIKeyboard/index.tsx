@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StatusBar, StyleSheet, Text, View } from "react-native";
 import {
   KeyboardEffects,
   KeyboardStickyView,
@@ -18,6 +18,7 @@ import KeyboardGradient from "./KeyboardGradient";
  */
 const AIKeyboard = () => (
   <View style={styles.container}>
+    <StatusBar barStyle="light-content" />
     <SafeAreaView style={styles.hero}>
       <Text style={styles.title}>Describe an image or add a suggestion.</Text>
     </SafeAreaView>

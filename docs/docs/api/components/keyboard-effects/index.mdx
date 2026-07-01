@@ -1,0 +1,72 @@
+---
+keywords:
+  [
+    react-native-keyboard-controller,
+    KeyboardEffects,
+    keyboard effects,
+    translucent keyboard,
+    keyboard backdrop,
+    keyboard gradient,
+    keyboard glow,
+    siri keyboard,
+    ai keyboard,
+    keyboard,
+    ios,
+  ]
+---
+
+# KeyboardEffects
+
+A `KeyboardEffects` component renders arbitrary content **behind** the keyboard. When the keyboard is made `translucent`, whatever you render behind it (colors, gradients, images, animations) blends through the keyboard and creates rich visual effects - the same idea behind the Apple Intelligence / Siri keyboard glow.
+
+import Video from "@site/src/components/Video";
+
+<Video src="/video/keyboard-effects.webm" autoPlay loop muted />
+
+Under the hood it is built on top of [`KeyboardStickyView`](../keyboard-sticky-view/index.mdx), so the effect view follows the keyboard's movement and accepts the same `offset` / `enabled` props (and any other `View` props).
+
+:::info iOS only
+The translucent keyboard is an iOS capability. On other platforms the `translucent` prop is a no-op (the system keyboard is opaque, so content rendered behind it will not be visible). On **iOS 26+** the keyboard has rounded corners, and the effect view automatically matches that shape.
+:::
+
+## Example
+
+```tsx
+import { KeyboardEffects } from "react-native-keyboard-controller";
+import { View } from "react-native";
+
+const Effect = () => {
+  return (
+    <KeyboardEffects translucent>
+      <View style={{ flex: 1, backgroundColor: "purple" }} />
+    </KeyboardEffects>
+  );
+};
+```
+
+For a full "AI keyboard" example (an animated gradient bleeding through the keyboard plus a glowing input) see the `AIKeyboard` screen in the [example app](https://github.com/kirillzyusko/react-native-keyboard-controller/tree/main/example/src/screens/Examples/AIKeyboard).
+
+## Props
+
+### `translucent`
+
+A boolean prop indicating whether the keyboard backdrop should be translucent. When `true`, the system keyboard becomes translucent so the content rendered inside `KeyboardEffects` blends through it. When `false` (default), the keyboard stays opaque and, on iOS 26+, the effect view is clipped to the keyboard's rounded shape. Default is `false`.
+
+:::note Multiple instances
+Translucency is reference-counted across all mounted `KeyboardEffects` instances — the keyboard stays translucent as long as at least one mounted instance has `translucent={true}`, and reverts to opaque once none do.
+:::
+
+### `offset`
+
+Inherited from [`KeyboardStickyView`](../keyboard-sticky-view/index.mdx#offset). An object that specifies additional `translateY` offset applied to the effect view for a given keyboard state:
+
+- **closed** - additional offset when the keyboard is closed. Default value is `0`.
+- **opened** - additional offset when the keyboard is opened. Default value is `0`.
+
+### `enabled`
+
+Inherited from [`KeyboardStickyView`](../keyboard-sticky-view/index.mdx#enabled). A boolean prop indicating whether the view should react to keyboard movements. When disabled, the view is moved to its initial position (as if the keyboard were closed). Default is `true`.
+
+### Other props
+
+`KeyboardEffects` also forwards any other [`View`](https://reactnative.dev/docs/view#props) props (such as `style`) and a `ref` to the underlying container.
