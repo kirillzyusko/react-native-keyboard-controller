@@ -337,6 +337,12 @@ internal class KeyboardAnimationController {
     currentSpringAnimation = null
 
     pendingRequestOnReady = null
+
+    // `animateToFinish` clears this flag before finishing the controller, but gestures that
+    // end via `cancel()`/`onFinished`/`onCancelled` never pass through it. A stranded `true`
+    // makes `KeyboardAnimationCallback` treat the keyboard as moving forever, which disables
+    // its desynchronized-state recovery for the rest of the process lifetime.
+    InteractiveKeyboardProvider.isInteractive = false
   }
 
   /**
