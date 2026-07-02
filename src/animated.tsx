@@ -158,17 +158,22 @@ export const KeyboardProvider = (props: KeyboardProviderProps) => {
       heightSV.value = -event.height;
     }
   };
+  // On iOS the values were historically driven by the one-shot
+  // `onKeyboardMoveStart` event: the final height was written once and the
+  // visual smoothness relied on that write being adopted by UIKit's in-flight
+  // keyboard animation transaction (implicit CoreAnimation animation). On the
+  // first keyboard show after app launch the event/worklet pipeline is cold and
+  // the write lands outside the animation transaction, so views driven by these
+  // values teleport to the final position while the keyboard is still animating.
+  // Driving iOS from the per-frame `onKeyboardMove` stream (interpolated
+  // natively from the keyboard's own CA animation) removes that dependency;
+  // `onKeyboardMoveEnd` guarantees the final value even if ticks are dropped.
   const keyboardHandler = useAnimatedKeyboardHandler(
     {
-      onKeyboardMoveStart: (event: NativeEvent) => {
-        "worklet";
-
-        updateSharedValues(event, ["ios"]);
-      },
       onKeyboardMove: (event: NativeEvent) => {
         "worklet";
 
-        updateSharedValues(event, ["android"]);
+        updateSharedValues(event, ["android", "ios"]);
       },
       onKeyboardMoveInteractive: (event: NativeEvent) => {
         "worklet";
@@ -178,7 +183,7 @@ export const KeyboardProvider = (props: KeyboardProviderProps) => {
       onKeyboardMoveEnd: (event: NativeEvent) => {
         "worklet";
 
-        updateSharedValues(event, ["android"]);
+        updateSharedValues(event, ["android", "ios"]);
       },
     },
     [],
@@ -223,10 +228,9 @@ export const KeyboardProvider = (props: KeyboardProviderProps) => {
         style={styles.container}
         // on*Reanimated prop must precede animated handlers to work correctly
         onKeyboardMoveReanimated={keyboardHandler}
-        onKeyboardMoveStart={OS === "ios" ? onKeyboardMove : undefined}
-        onKeyboardMove={OS === "android" ? onKeyboardMove : undefined}
+        onKeyboardMove={onKeyboardMove}
         onKeyboardMoveInteractive={onKeyboardMove}
-        onKeyboardMoveEnd={OS === "android" ? onKeyboardMove : undefined}
+        onKeyboardMoveEnd={onKeyboardMove}
         onFocusedInputLayoutChangedReanimated={inputLayoutHandler}
       >
         {children}
