@@ -1,5 +1,5 @@
 import React, { forwardRef, useEffect, useMemo, useRef } from "react";
-import { Platform, View as RNView, StyleSheet } from "react-native";
+import { View as RNView, StyleSheet } from "react-native";
 
 import { KEYBOARD_BORDER_RADIUS } from "../../constants";
 import { KeyboardController } from "../../module";
@@ -8,8 +8,7 @@ import KeyboardStickyView from "../KeyboardStickyView";
 import type { KeyboardStickyViewProps } from "../KeyboardStickyView";
 import type { View } from "react-native";
 
-const KEYBOARD_HAS_ROUNDED_CORNERS =
-  Platform.OS === "ios" && parseInt(Platform.Version, 10) >= 26;
+export const KEYBOARD_HAS_ROUNDED_CORNERS = KEYBOARD_BORDER_RADIUS > 0;
 const translucentEffectTokens = new Set<symbol>();
 
 const setTranslucentForToken = (token: symbol, enabled: boolean) => {
