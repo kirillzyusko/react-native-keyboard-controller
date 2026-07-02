@@ -12,6 +12,7 @@ import {
   isScrollAtEnd,
   shouldShiftContent,
 } from "./helpers";
+import { useFrozenPadding } from "./useFrozenPadding";
 
 import type { UseChatKeyboardOptions, UseChatKeyboardReturn } from "./types";
 import type { AnimatedRef } from "react-native-reanimated";
@@ -82,10 +83,6 @@ function useChatKeyboard(
       onStart: (e) => {
         "worklet";
 
-        if (freeze.value) {
-          return;
-        }
-
         if (e.height > 0) {
           // eslint-disable-next-line react-compiler/react-compiler
           targetKeyboardHeight.value = e.height;
@@ -128,6 +125,10 @@ function useChatKeyboard(
           minimumPaddingAbsorbed,
         );
 
+        if (freeze.value) {
+          return;
+        }
+
         if (inverted && e.duration === -1) {
           // Android inverted: skip post-interactive snap-back events
           // (duration === -1 means the keyboard is re-establishing its
@@ -166,10 +167,6 @@ function useChatKeyboard(
       onMove: (e) => {
         "worklet";
 
-        if (freeze.value) {
-          return;
-        }
-
         currentHeight.value = e.height;
 
         if (inverted) {
@@ -183,6 +180,10 @@ function useChatKeyboard(
             targetKeyboardHeight.value,
             offset,
           );
+
+          if (freeze.value) {
+            return;
+          }
 
           const minimumPaddingAbsorbed =
             getMinimumPaddingAbsorbed(
@@ -269,6 +270,10 @@ function useChatKeyboard(
             offset,
           );
 
+          if (freeze.value) {
+            return;
+          }
+
           const minimumPaddingAbsorbed =
             getMinimumPaddingAbsorbed(
               blankSpace.value,
@@ -340,15 +345,17 @@ function useChatKeyboard(
       onEnd: (e) => {
         "worklet";
 
-        if (freeze.value) {
-          return;
-        }
+        currentHeight.value = e.height;
 
         const effective = getEffectiveHeight(
           e.height,
           targetKeyboardHeight.value,
           offset,
         );
+
+        if (freeze.value) {
+          return;
+        }
 
         padding.value = effective;
 
@@ -360,6 +367,14 @@ function useChatKeyboard(
     },
     [inverted, keyboardLiftBehavior, offset],
   );
+
+  useFrozenPadding({
+    currentHeight,
+    freeze,
+    offset,
+    padding,
+    targetKeyboardHeight,
+  });
 
   return {
     padding,
