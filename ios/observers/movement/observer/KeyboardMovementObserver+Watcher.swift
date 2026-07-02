@@ -23,6 +23,19 @@ extension KeyboardMovementObserver {
 
   @objc func updateKeyboardFrame(link: CADisplayLink) {
     if keyboardTrackingView.view == nil {
+      // iOS 26.x behavior - keyboard may be closed immediately and view will be `nil`
+      // we need to reset internal state and dispatch `onMove` event additionally only once
+      /*if prevKeyboardPosition != 0 {
+        prevKeyboardPosition = 0
+        onEvent(
+          "onKeyboardMove",
+          0,
+          0,
+          0,
+          tag
+        )
+      }*/
+
       return
     }
 
