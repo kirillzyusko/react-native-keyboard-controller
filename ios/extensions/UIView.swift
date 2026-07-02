@@ -39,6 +39,27 @@ public extension UIView {
     if isFirstResponder {
       return self
     }
+    #if targetEnvironment(macCatalyst)
+    // On Mac Catalyst running in the Mac idiom, `view.subviews` can contain
+    // host containers (e.g. UIRemoteView wrappers around Mac-side AppKit
+    // views) whose pointers cannot be bridged to UIView at the Swift level.
+    // Iterating them with the standard `for subview in subviews` loop trips
+    // a `swift_dynamicCast` SIGSEGV whenever findFirstResponder() is called
+    // during normal UIKit operations such as -becomeFirstResponder.
+    // Route through UIKit's responder chain via sendAction(_:to: nil, …)
+    // instead, which locates the first responder without touching the
+    // subview tree.
+    if UIDevice.current.userInterfaceIdiom == .mac {
+      UIResponder._kbcCapturedFirstResponder = nil
+      UIApplication.shared.sendAction(
+        #selector(UIResponder._kbcRecordFirstResponder(_:)),
+        to: nil,
+        from: nil,
+        for: nil
+      )
+      return UIResponder._kbcCapturedFirstResponder as? UIView
+    }
+    #endif
     for subview in subviews {
       if let responder = subview.findFirstResponder() {
         return responder
@@ -47,6 +68,21 @@ public extension UIView {
     return nil
   }
 }
+
+#if targetEnvironment(macCatalyst)
+private var _kbcCapturedFirstResponderKey: UInt8 = 0
+
+extension UIResponder {
+  fileprivate static var _kbcCapturedFirstResponder: UIResponder? {
+    get { objc_getAssociatedObject(UIResponder.self, &_kbcCapturedFirstResponderKey) as? UIResponder }
+    set { objc_setAssociatedObject(UIResponder.self, &_kbcCapturedFirstResponderKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC) }
+  }
+
+  @objc fileprivate func _kbcRecordFirstResponder(_ sender: Any?) {
+    UIResponder._kbcCapturedFirstResponder = self
+  }
+}
+#endif
 
 public extension Optional where Wrapped == UIView {
   var frameTransitionInWindow: (Double, Double) {

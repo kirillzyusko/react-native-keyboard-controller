@@ -13,6 +13,35 @@ import UIKit
 public class ViewHierarchyNavigator: NSObject {
   private static let groupViewTypeName = "KeyboardToolbarGroupView"
 
+  /// Returns the subviews of the given view in a way that's safe to iterate
+  /// from Swift on Mac Catalyst.
+  ///
+  /// On Catalyst running in the Mac idiom, `view.subviews` can contain host
+  /// containers (e.g. UIRemoteView wrappers around Mac-side AppKit views)
+  /// whose pointers cannot be bridged to UIView at the Swift level. Iterating
+  /// the standard Swift `[UIView]` array trips a `swift_dynamicCast` SIGSEGV
+  /// whenever one of those entries is encountered. Enumerating via Objective-C
+  /// KVC instead gives us an untyped NSArray we can defensively cast and skip.
+  ///
+  /// On any other platform this returns `view.subviews` directly — no behaviour
+  /// or performance change.
+  private static func safeSubviews(of view: UIView) -> [UIView] {
+    #if targetEnvironment(macCatalyst)
+    if UIDevice.current.userInterfaceIdiom == .mac {
+      guard let raw = view.value(forKey: "subviews") as? NSArray else { return [] }
+      var result: [UIView] = []
+      result.reserveCapacity(raw.count)
+      for entry in raw {
+        if let subview = entry as? UIView {
+          result.append(subview)
+        }
+      }
+      return result
+    }
+    #endif
+    return view.subviews
+  }
+
   @objc public static func setFocusTo(direction: String) {
     DispatchQueue.main.async {
       if direction == "current" {
@@ -58,7 +87,7 @@ public class ViewHierarchyNavigator: NSObject {
       if let textInput = isValidTextInput(view) {
         textInputs.append(textInput)
       } else if !isGroupView(view) {
-        for subview in view.subviews {
+        for subview in safeSubviews(of: view) {
           findTextInputs(in: subview)
         }
       }
@@ -66,7 +95,7 @@ public class ViewHierarchyNavigator: NSObject {
 
     if isGroupRoot {
       // When root is a group, search its children directly
-      for subview in rootView.subviews {
+      for subview in safeSubviews(of: rootView) {
         findTextInputs(in: subview)
       }
     } else {
@@ -138,7 +167,8 @@ public class ViewHierarchyNavigator: NSObject {
     guard !isGroupView(view) else { return nil }
 
     // Determine the iteration order based on the direction
-    let subviews = direction == "next" ? view.subviews : view.subviews.reversed()
+    let children = safeSubviews(of: view)
+    let subviews: [UIView] = direction == "next" ? children : children.reversed()
 
     // Iterate over subviews
     for subview in subviews {
