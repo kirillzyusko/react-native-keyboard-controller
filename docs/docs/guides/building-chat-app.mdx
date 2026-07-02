@@ -584,6 +584,35 @@ import ExpoSnack from "@site/src/components/ExpoSnack";
 
 <ExpoSnack id="@kirylziusko/c0b7f0" />
 
+## Matching the keyboard background (Instagram-style)
+
+By default the iOS keyboard is translucent — it blurs whatever sits behind it. Many chat apps (Instagram, and dark-themed messengers in general) instead make the keyboard appear to sit on a **solid background that matches the conversation**, so the keys blend into the chat rather than showing the system blur.
+
+You can reproduce this with [`KeyboardEffects`](../api/components/keyboard-effects). Make the keyboard `translucent` and render an opaque view — colored to match your chat background — behind it. The keyboard then blends with your color instead of the system material:
+
+```tsx
+import { View } from "react-native";
+import { KeyboardEffects } from "react-native-keyboard-controller";
+
+function ChatScreen() {
+  return (
+    <View style={{ flex: 1, backgroundColor: "#0A0A0A" }}>
+      {/* ...KeyboardChatScrollView + composer... */}
+
+      <KeyboardEffects translucent>
+        <View style={{ flex: 1, backgroundColor: "#0A0A0A" }} />
+      </KeyboardEffects>
+    </View>
+  );
+}
+```
+
+Because `KeyboardEffects` is built on `KeyboardStickyView`, the backdrop tracks the keyboard as it opens and closes, so the solid background stays aligned with the keys throughout the animation. Swap the plain `View` for a gradient or an animated Skia canvas and you get richer effects (an Apple Intelligence / Siri-style glow) — but a single opaque color is all you need for the Instagram look.
+
+:::info iOS only
+The translucent keyboard is an iOS capability, so this technique only affects iOS. On Android the keyboard is opaque and the backdrop won't show through — the rest of your chat layout keeps working unchanged. On iOS 26+ the keyboard's rounded corners are matched automatically.
+:::
+
 ## API reference
 
 For the full list of props and design principles, see the [`KeyboardChatScrollView` API reference](../api/components/keyboard-chat-scroll-view).
