@@ -5,6 +5,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ScrollView
+import androidx.core.widget.NestedScrollView
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.views.view.ReactViewGroup
 import com.reactnativekeyboardcontroller.extensions.px
@@ -100,7 +101,7 @@ class ClippingScrollViewDecoratorView(
   }
 
   private fun shouldUsePaddingScrollWorkaround(
-    scrollView: ScrollView,
+    scrollView: ViewGroup,
     event: MotionEvent,
   ): Boolean {
     val contentView = scrollView.getChildAt(0) ?: return false
@@ -115,7 +116,7 @@ class ClippingScrollViewDecoratorView(
   }
 
   private fun dispatchWithExpandedContentRange(
-    scrollView: ScrollView,
+    scrollView: ViewGroup,
     event: MotionEvent,
   ): Boolean {
     val contentView = scrollView.getChildAt(0)
@@ -136,7 +137,7 @@ class ClippingScrollViewDecoratorView(
   }
 
   private fun isTouchInScrollContent(
-    scrollView: ScrollView,
+    scrollView: ViewGroup,
     event: MotionEvent,
   ): Boolean {
     val contentView = scrollView.getChildAt(0) ?: return false
@@ -158,11 +159,15 @@ class ClippingScrollViewDecoratorView(
     )
   }
 
-  private fun findScrollView(view: View?): ScrollView? {
-    var result: ScrollView? = null
+  private fun findScrollView(view: View?): ViewGroup? {
+    var result: ViewGroup? = null
 
-    if (view is ScrollView) {
-      result = view
+    // Match NestedScrollView too: with React Native's `useNestedScrollViewAndroid`
+    // feature flag (RN 0.85+), ScrollView renders as a NestedScrollView subclass
+    // (a FrameLayout, not an android.widget.ScrollView). Both extend the scroll
+    // range via bottom padding + clipToPadding=false the same way.
+    if (view is ScrollView || view is NestedScrollView) {
+      result = view as ViewGroup
     } else if (view is ViewGroup) {
       var i = 0
       while (i < view.childCount && result == null) {
