@@ -18,14 +18,16 @@ extension KeyboardMovementObserver {
   }
 
   @objc func removeKeyboardWatcher() {
+    print(666)
     displayLink.isPaused = true
   }
 
   @objc func updateKeyboardFrame(link: CADisplayLink) {
+    print(1)
     if keyboardTrackingView.view == nil {
       // iOS 26.x behavior - keyboard may be closed immediately and view will be `nil`
       // we need to reset internal state and dispatch `onMove` event additionally only once
-      /*if prevKeyboardPosition != 0 {
+      if prevKeyboardPosition != 0 {
         prevKeyboardPosition = 0
         onEvent(
           "onKeyboardMove",
@@ -34,17 +36,19 @@ extension KeyboardMovementObserver {
           0,
           tag
         )
-      }*/
+      }
+      print(2)
 
       return
     }
 
     let (visibleKeyboardHeight, keyboardFrameY) = keyboardTrackingView.view.frameTransitionInWindow
     var keyboardPosition = visibleKeyboardHeight - KeyboardAreaExtender.shared.offset
-
+    print(21)
     if keyboardPosition == prevKeyboardPosition || keyboardFrameY == 0 {
       return
     }
+    print(3)
 
     if animation == nil {
       initializeAnimation(fromValue: prevKeyboardPosition, toValue: keyboardHeight)
@@ -54,6 +58,7 @@ extension KeyboardMovementObserver {
 
     if let animation = animation {
       if animation.isFinished {
+        print(4)
         return
       }
       let baseDuration = animation.timingAt(value: keyboardPosition)
@@ -77,6 +82,8 @@ extension KeyboardMovementObserver {
       keyboardPosition = race(position, keyboardPosition)
       animation.lastValue = keyboardPosition
     }
+    
+    print(5)
 
     onEvent(
       "onKeyboardMove",

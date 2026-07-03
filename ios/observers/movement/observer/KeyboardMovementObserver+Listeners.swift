@@ -71,6 +71,7 @@ extension KeyboardMovementObserver {
       onEvent("onKeyboardMoveEnd", height as NSNumber, progress as NSNumber, duration as NSNumber, tag)
       onNotify("KeyboardController::keyboardDidShow", buildEventParams(height, duration, tag))
 
+      print(7)
       removeKeyboardWatcher()
       setupKVObserver()
       animation = nil
@@ -90,6 +91,7 @@ extension KeyboardMovementObserver {
     onEvent("onKeyboardMoveEnd", 0 as NSNumber, 0, duration as NSNumber, tag)
     onNotify("KeyboardController::keyboardDidHide", buildEventParams(0, duration, tag))
 
+    print(8)
     removeKeyboardWatcher()
     animation = nil
   }
