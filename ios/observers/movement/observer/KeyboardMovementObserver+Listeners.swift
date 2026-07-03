@@ -7,6 +7,7 @@
 
 extension KeyboardMovementObserver {
   @objc func keyboardWillAppear(_ notification: Notification) {
+    print("keyboardWillAppear")
     guard !UIResponder.isKeyboardPreloading else { return }
 
     let (duration, frame) = notification.keyboardMetaData()
@@ -34,6 +35,7 @@ extension KeyboardMovementObserver {
   }
 
   @objc func keyboardWillDisappear(_ notification: Notification) {
+    print("keyboardWillDisappear")
     guard !UIResponder.isKeyboardPreloading else { return }
     let (duration, _) = notification.keyboardMetaData()
     tag = UIResponder.current.reactViewTag
@@ -98,6 +100,10 @@ extension KeyboardMovementObserver {
 
   @objc func scheduleDidEvent(height: CGFloat, duration: CGFloat) {
     keyboardDidTask?.cancel()
+    
+    print("scheduleDidEvent")
+    print(height)
+    print(duration)
 
     guard let notification = notification else {
       return

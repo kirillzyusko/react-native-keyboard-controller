@@ -4,3 +4,4 @@
 - [x] toggle under feature flag
 - [-] release after iOS 27
 - [-] e2e tests pass
+- [-] iOS < 26 problem: new keyboard window doesn't have an animation when keyboardWillAppear event is fired. Because of that we can not use correct duration and we interrupt the watcher in the mid of the animation, because we use 0.25 from notification.
