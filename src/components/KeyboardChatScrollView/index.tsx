@@ -14,6 +14,7 @@ import ScrollViewWithBottomPadding from "../ScrollViewWithBottomPadding";
 import { useChatKeyboard } from "./useChatKeyboard";
 import { useEndVisible } from "./useEndVisible";
 import { useExtraContentPadding } from "./useExtraContentPadding";
+import { useFrozenPadding } from "./useFrozenPadding";
 
 import type { KeyboardChatScrollViewProps } from "./types";
 import type { LayoutChangeEvent } from "react-native";
@@ -78,6 +79,12 @@ const KeyboardChatScrollView = forwardRef<
       inverted,
       keyboardLiftBehavior,
       freeze: freezeSV,
+    });
+
+    useFrozenPadding({
+      freeze: freezeSV,
+      offset,
+      padding,
     });
 
     useEndVisible({

@@ -11,7 +11,6 @@ import {
   isScrollAtEnd,
   shouldShiftContent,
 } from "./helpers";
-import { useFrozenPadding } from "./useFrozenPadding";
 
 import type { UseChatKeyboardOptions, UseChatKeyboardReturn } from "./types";
 import type { AnimatedRef } from "react-native-reanimated";
@@ -65,12 +64,14 @@ function useChatKeyboard(
       onStart: (e) => {
         "worklet";
 
+        if (freeze.value) {
+          return;
+        }
+
         if (e.height > 0) {
           // eslint-disable-next-line react-compiler/react-compiler
           targetKeyboardHeight.value = e.height;
         }
-
-        currentHeight.value = e.height;
 
         const effective = getEffectiveHeight(
           e.height,
@@ -107,10 +108,6 @@ function useChatKeyboard(
           blankSpace.value,
           effective + extraContentPadding.value,
         );
-
-        if (freeze.value) {
-          return;
-        }
 
         // persistent mode: when keyboard shrinks, clamp to valid range
         if (
@@ -232,7 +229,9 @@ function useChatKeyboard(
       onEnd: (e) => {
         "worklet";
 
-        currentHeight.value = e.height;
+        if (freeze.value) {
+          return;
+        }
 
         const effective = getEffectiveHeight(
           e.height,
@@ -240,23 +239,11 @@ function useChatKeyboard(
           offset,
         );
 
-        if (freeze.value) {
-          return;
-        }
-
         padding.value = effective;
       },
     },
     [inverted, keyboardLiftBehavior, offset, extraContentPadding],
   );
-
-  useFrozenPadding({
-    currentHeight,
-    freeze,
-    offset,
-    padding,
-    targetKeyboardHeight,
-  });
 
   return {
     padding,

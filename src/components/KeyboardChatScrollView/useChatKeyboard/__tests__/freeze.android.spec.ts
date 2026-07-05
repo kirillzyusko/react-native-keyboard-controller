@@ -1,9 +1,7 @@
-import { sv } from "../../../../__fixtures__/sv";
 import {
   type Handlers,
   KEYBOARD,
   createRender,
-  flushAnimatedReactions,
   mockLayout,
   mockOffset,
   mockScrollTo,
@@ -76,31 +74,6 @@ describe("`useChatKeyboard` — Android freeze", () => {
     });
 
     handlers.onEnd({ height: KEYBOARD });
-
-    expect(result.current.padding.value).toBe(0);
-  });
-
-  it("should apply the latest frozen keyboard padding when unfrozen", () => {
-    const freeze = sv(false);
-    const { result } = render({
-      inverted: false,
-      keyboardLiftBehavior: "always",
-      freeze,
-    });
-
-    handlers.onStart({ height: KEYBOARD });
-    handlers.onEnd({ height: KEYBOARD });
-    expect(result.current.padding.value).toBe(KEYBOARD);
-
-    freeze.value = true;
-    flushAnimatedReactions();
-    handlers.onStart({ height: 0 });
-    handlers.onMove({ height: 120 });
-    handlers.onEnd({ height: 0 });
-    expect(result.current.padding.value).toBe(KEYBOARD);
-
-    freeze.value = false;
-    flushAnimatedReactions();
 
     expect(result.current.padding.value).toBe(0);
   });
