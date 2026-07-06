@@ -1,5 +1,5 @@
 import React, { forwardRef, useEffect, useMemo, useRef } from "react";
-import { View as RNView, StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 
 import {
   KEYBOARD_BORDER_RADIUS,
@@ -9,7 +9,6 @@ import { KeyboardController } from "../../module";
 import KeyboardStickyView from "../KeyboardStickyView";
 
 import type { KeyboardStickyViewProps } from "../KeyboardStickyView";
-import type { View } from "react-native";
 
 type TranslucentStackEntry = { translucent: boolean };
 
@@ -98,7 +97,7 @@ const KeyboardEffects = forwardRef<
 
   return (
     <KeyboardStickyView ref={ref} {...props}>
-      <RNView style={containerStyle}>{children}</RNView>
+      <View style={containerStyle}>{children}</View>
     </KeyboardStickyView>
   );
 });

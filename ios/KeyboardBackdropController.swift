@@ -68,7 +68,6 @@ final class KeyboardBackdropController: NSObject {
     }
 
     for subview in view.subviews {
-      print(view.subviews)
       applyTranslucency(in: subview)
     }
   }
