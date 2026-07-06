@@ -125,7 +125,6 @@ export type KeyboardGradientProps = {
 const KeyboardGradient = ({ height = 500, style }: KeyboardGradientProps) => {
   const effect = useMemo(() => Skia.RuntimeEffect.Make(SKSL), []);
   const clock = useClock();
-  // 0 when the keyboard is closed, 1 when fully open -> fades the glow in/out.
   const { progress } = useReanimatedKeyboardAnimation();
   const [size, setSize] = useState({ width: 0, height: 0 });
 

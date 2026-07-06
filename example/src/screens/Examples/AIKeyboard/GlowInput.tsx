@@ -32,11 +32,10 @@ const useReanimatedKeyboardAnimation = () => {
 };
 
 /**
- * Glowing text input, drawn with Skia (no external glow library).
+ * Glowing text input, drawn with Skia.
  *
  * The shader takes the signed distance to a rounded rectangle and lays a soft
- * gaussian halo plus a tighter bright rim on top of it — the same idea a
- * border-glow library uses, but small enough to own. Color is a two-hue split
+ * gaussian halo plus a tighter bright rim on top of it. Color is a two-hue split
  * across the width (left <-> right) sampled from the shared palette, so it
  * cycles over time in sync with the keyboard backdrop.
  */
@@ -91,7 +90,6 @@ const CORNER_RADIUS = 25;
 const GlowInput = () => {
   const effect = useMemo(() => Skia.RuntimeEffect.Make(SKSL), []);
   const clock = useClock();
-  // 0 when the keyboard is closed, 1 when fully open -> fades the glow in/out.
   const { progress } = useReanimatedKeyboardAnimation();
   const [size, setSize] = useState({ width: 0, height: 0 });
 
