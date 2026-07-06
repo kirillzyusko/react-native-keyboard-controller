@@ -11,20 +11,36 @@ import KeyboardStickyView from "../KeyboardStickyView";
 import type { KeyboardStickyViewProps } from "../KeyboardStickyView";
 import type { View } from "react-native";
 
-const translucentEffectTokens = new Set<symbol>();
+type TranslucentStackEntry = { translucent: boolean };
 
-const setTranslucentForToken = (token: symbol, enabled: boolean) => {
-  const hadToken = translucentEffectTokens.has(token);
+const translucentStack: TranslucentStackEntry[] = [];
+let currentTranslucent = false;
 
-  if (enabled) {
-    translucentEffectTokens.add(token);
-  } else {
-    translucentEffectTokens.delete(token);
+const applyTranslucent = () => {
+  const next =
+    translucentStack.length > 0
+      ? translucentStack[translucentStack.length - 1].translucent
+      : false;
+
+  if (next !== currentTranslucent) {
+    currentTranslucent = next;
+    KeyboardController.setTranslucent(next);
+  }
+};
+
+const pushTranslucentEntry = (entry: TranslucentStackEntry) => {
+  translucentStack.push(entry);
+  applyTranslucent();
+};
+
+const removeTranslucentEntry = (entry: TranslucentStackEntry) => {
+  const index = translucentStack.indexOf(entry);
+
+  if (index !== -1) {
+    translucentStack.splice(index, 1);
   }
 
-  if (hadToken !== enabled) {
-    KeyboardController.setTranslucent(translucentEffectTokens.size > 0);
-  }
+  applyTranslucent();
 };
 
 export type KeyboardEffectsProps = {
@@ -56,7 +72,9 @@ const KeyboardEffects = forwardRef<
   View,
   React.PropsWithChildren<KeyboardEffectsProps>
 >(({ translucent, children, ...props }, ref) => {
-  const translucentToken = useRef(Symbol("KeyboardEffects"));
+  const stackEntry = useRef<TranslucentStackEntry>({
+    translucent: Boolean(translucent),
+  }).current;
   const containerStyle = useMemo(
     () => [
       styles.container,
@@ -66,12 +84,17 @@ const KeyboardEffects = forwardRef<
   );
 
   useEffect(() => {
-    setTranslucentForToken(translucentToken.current, Boolean(translucent));
+    pushTranslucentEntry(stackEntry);
 
     return () => {
-      setTranslucentForToken(translucentToken.current, false);
+      removeTranslucentEntry(stackEntry);
     };
-  }, [translucent]);
+  }, [stackEntry]);
+
+  useEffect(() => {
+    stackEntry.translucent = Boolean(translucent);
+    applyTranslucent();
+  }, [stackEntry, translucent]);
 
   return (
     <KeyboardStickyView ref={ref} {...props}>
