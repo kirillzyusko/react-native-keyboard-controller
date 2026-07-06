@@ -1807,7 +1807,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - SocketRocket
     - Yoga
-  - react-native-keyboard-controller (1.21.13):
+  - react-native-keyboard-controller (1.21.14):
     - boost
     - DoubleConversion
     - fast_float
@@ -2974,7 +2974,7 @@ SPEC CHECKSUMS:
   React-Mapbuffer: 33f678ee25b6c0ee2b01b1ecec08e3e02424cefe
   React-microtasksnativemodule: 44b44a4d3cd6ffb85d928abf741acdc26722de2e
   react-native-blur: 2181432139e3b470cad492f7729cb640cee60045
-  react-native-keyboard-controller: a01ccef1d2333cc447c6385b0f447f1253eae290
+  react-native-keyboard-controller: e7696a408f4a619883a85f6d4c7e3450ac7e59d1
   react-native-safe-area-context: aac2745e96999c8633d2f6119e4e39b499c2ac8b
   react-native-text-input-mask: 22ca8eeef84d42a896f79428f7d175a5eb8b1c4e
   react-native-webview: a742b11276a0443e856cc5dc3e21a3fdf3351cdf
