@@ -6,12 +6,12 @@ import {
   KeyboardAwareScrollView,
   KeyboardBackgroundView,
   KeyboardControllerView,
+  KeyboardEffects,
   KeyboardExtender,
   KeyboardProvider,
   KeyboardStickyView,
   KeyboardToolbar,
   OverKeyboardView,
-  KeyboardEffects,
 } from "react-native-keyboard-controller";
 
 function EmptyView() {
