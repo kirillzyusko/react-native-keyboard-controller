@@ -199,7 +199,9 @@
     "desynchronized",
     "skia",
     "fract",
-    "SKSL"
+    "SKSL",
+    "siri",
+    "luma"
   ],
   "ignorePaths": [
     "node_modules",

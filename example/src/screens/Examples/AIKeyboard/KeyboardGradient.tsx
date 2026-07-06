@@ -48,9 +48,9 @@ uniform float u_time;
 uniform float u_opacity; // 0 keyboard closed -> 1 open
 
 // One soft gaussian color blob.
-vec3 blob(vec2 p, vec2 center, vec3 color, float radius, inout float wsum) {
+vec3 blob(vec2 p, vec2 center, vec3 color, float radius, inout float wSum) {
   float g = exp(-dot(p - center, p - center) / (radius * radius));
-  wsum += g;
+  wSum += g;
   return color * g;
 }
 
@@ -77,15 +77,15 @@ half4 main(vec2 fragCoord) {
   vec3 col3 = palette(ct + 0.27);
 
   float radius = 0.52;       // larger -> softer, glow reaches further
-  float wsum = 0.0;
+  float wSum = 0.0;
   vec3 color = vec3(0.0);
-  color += blob(uv, c0, col0, radius, wsum);
-  color += blob(uv, c1, col1, radius, wsum);
-  color += blob(uv, c2, col2, radius, wsum);
-  color += blob(uv, c3, col3, radius, wsum);
+  color += blob(uv, c0, col0, radius, wSum);
+  color += blob(uv, c1, col1, radius, wSum);
+  color += blob(uv, c2, col2, radius, wSum);
+  color += blob(uv, c3, col3, radius, wSum);
 
   // Normalize so gaps between blobs stay fully colored (no dark centre).
-  color = color / max(wsum, 0.0001);
+  color = color / max(wSum, 0.0001);
 
   // Mute toward gray. Behind the keyboard this is meant to be a subtle wash,
   // not a vivid fill, so the keys stay readable (matches the Apple reference).
@@ -104,7 +104,7 @@ half4 main(vec2 fragCoord) {
 
   // Slight presence falloff where no blob reaches, then a master opacity. Keep
   // this low — the keyboard sits on top, so a little color goes a long way.
-  float density = clamp(wsum * 0.9, 0.0, 1.0);
+  float density = clamp(wSum * 0.9, 0.0, 1.0);
   float alpha = fade * density * 0.45 * u_opacity;
 
   // Skia runtime shaders output premultiplied color.

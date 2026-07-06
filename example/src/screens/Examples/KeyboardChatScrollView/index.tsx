@@ -57,7 +57,7 @@ function KeyboardChatScrollViewPlayground() {
     reversedMessages,
     addMessage,
     mode,
-    disableTranslucency,
+    translucent,
   } = useChatConfigStore();
   const { bottom } = useSafeAreaInsets();
 
@@ -199,7 +199,7 @@ function KeyboardChatScrollViewPlayground() {
         </KeyboardGestureArea>
         <ConfigSheet />
       </SafeAreaView>
-      {disableTranslucency && (
+      {!translucent && (
         <KeyboardEffects>
           <View style={styles.keyboardBackground} />
         </KeyboardEffects>
