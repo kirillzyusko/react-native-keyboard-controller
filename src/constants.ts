@@ -21,3 +21,4 @@ export enum AndroidSoftInputModes {
 }
 export const KEYBOARD_BORDER_RADIUS =
   KeyboardControllerNative.getConstants().keyboardBorderRadius;
+export const KEYBOARD_HAS_ROUNDED_CORNERS = KEYBOARD_BORDER_RADIUS > 0;
