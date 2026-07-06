@@ -171,4 +171,16 @@ export const examples: Example[] = [
     info: ScreenNames.AI_LEGEND_LIST_CHAT,
     icons: "🤖 💬",
   },
+  {
+    title: "Keyboard Effects",
+    testID: "keyboard_effects",
+    info: ScreenNames.KEYBOARD_EFFECTS,
+    icons: "🌈",
+  },
+  {
+    title: "AI Keyboard 🍏",
+    testID: "ai_keyboard",
+    info: ScreenNames.AI_KEYBOARD,
+    icons: "🔮",
+  },
 ];
