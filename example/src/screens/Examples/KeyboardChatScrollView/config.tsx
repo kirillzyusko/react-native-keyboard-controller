@@ -16,6 +16,12 @@ function ConfigSheet() {
   const beginning = useChatConfigStore((state) => state.beginning);
   const setBeginning = useChatConfigStore((state) => state.setBeginning);
   const setFreeze = useChatConfigStore((state) => state.setFreeze);
+  const disableTranslucency = useChatConfigStore(
+    (state) => state.disableTranslucency,
+  );
+  const setDisableTranslucency = useChatConfigStore(
+    (state) => state.setDisableTranslucency,
+  );
   const mode = useChatConfigStore((state) => state.mode);
   const setMode = useChatConfigStore((state) => state.setMode);
   const keyboardLiftBehavior = useChatConfigStore(
@@ -87,6 +93,16 @@ function ConfigSheet() {
             value={beginning}
             onChange={() => {
               setBeginning(!beginning);
+            }}
+          />
+        </View>
+        <View style={styles.switchContainer}>
+          <Text style={styles.text}>Disable keyboard translucency</Text>
+          <Switch
+            testID="bottom_sheet_toggle_disable_translucency_state"
+            value={disableTranslucency}
+            onChange={() => {
+              setDisableTranslucency(!disableTranslucency);
             }}
           />
         </View>

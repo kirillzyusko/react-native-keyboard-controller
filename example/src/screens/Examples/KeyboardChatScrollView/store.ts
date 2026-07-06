@@ -21,6 +21,8 @@ interface ChatConfigStore {
   setBeginning: (beginning: boolean) => void;
   freeze: boolean;
   setFreeze: (freeze: boolean) => void;
+  disableTranslucency: boolean;
+  setDisableTranslucency: (disableTranslucency: boolean) => void;
   messages: MessageProps[];
   reversedMessages: MessageProps[];
   setMessages: (messages: MessageProps[]) => void;
@@ -37,6 +39,8 @@ export const useChatConfigStore = create<ChatConfigStore>((set, get) => ({
   setInverted: (inverted) => set({ inverted }),
   freeze: false,
   setFreeze: (freeze) => set({ freeze }),
+  disableTranslucency: false,
+  setDisableTranslucency: (disableTranslucency) => set({ disableTranslucency }),
   beginning: false,
   setBeginning: (beginning) => {
     set(() => {
