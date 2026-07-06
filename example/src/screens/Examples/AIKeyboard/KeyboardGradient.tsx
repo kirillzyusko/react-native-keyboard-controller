@@ -35,8 +35,8 @@ const useReanimatedKeyboardAnimation = () => {
  * Smooth animated "aurora" used as the keyboard backdrop.
  *
  * Unlike a border-glow (which is bright at the edges and hollow in the middle),
- * this sums a handful of large, slowly drifting gaussian colour blobs into a
- * single continuous field, then normalises it — so there is no dark centre and
+ * this sums a handful of large, slowly drifting gaussian color blobs into a
+ * single continuous field, then normalizes it — so there is no dark centre and
  * no medial-axis seam. A top-bright vertical fade keeps the glow strongest near
  * the input and dissolves it toward the bottom of the keyboard.
  */
@@ -47,7 +47,7 @@ uniform vec2 u_resolution;
 uniform float u_time;
 uniform float u_opacity; // 0 keyboard closed -> 1 open
 
-// One soft gaussian colour blob.
+// One soft gaussian color blob.
 vec3 blob(vec2 p, vec2 center, vec3 color, float radius, inout float wsum) {
   float g = exp(-dot(p - center, p - center) / (radius * radius));
   wsum += g;
@@ -84,7 +84,7 @@ half4 main(vec2 fragCoord) {
   color += blob(uv, c2, col2, radius, wsum);
   color += blob(uv, c3, col3, radius, wsum);
 
-  // Normalise so gaps between blobs stay fully coloured (no dark centre).
+  // Normalize so gaps between blobs stay fully colored (no dark centre).
   color = color / max(wsum, 0.0001);
 
   // Mute toward gray. Behind the keyboard this is meant to be a subtle wash,
@@ -107,7 +107,7 @@ half4 main(vec2 fragCoord) {
   float density = clamp(wsum * 0.9, 0.0, 1.0);
   float alpha = fade * density * 0.45 * u_opacity;
 
-  // Skia runtime shaders output premultiplied colour.
+  // Skia runtime shaders output premultiplied color.
   return half4(half3(color * alpha), half(alpha));
 }
 `;

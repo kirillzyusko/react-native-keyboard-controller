@@ -36,7 +36,7 @@ const useReanimatedKeyboardAnimation = () => {
  *
  * The shader takes the signed distance to a rounded rectangle and lays a soft
  * gaussian halo plus a tighter bright rim on top of it — the same idea a
- * border-glow library uses, but small enough to own. Colour is a two-hue split
+ * border-glow library uses, but small enough to own. Color is a two-hue split
  * across the width (left <-> right) sampled from the shared palette, so it
  * cycles over time in sync with the keyboard backdrop.
  */
@@ -78,7 +78,7 @@ half4 main(vec2 fragCoord) {
 
   float alpha = clamp(halo + rim, 0.0, 1.0) * edgeFade * u_opacity;
 
-  // Skia runtime shaders output premultiplied colour.
+  // Skia runtime shaders output premultiplied color.
   return half4(half3(col * alpha), half(alpha));
 }
 `;

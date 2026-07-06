@@ -193,16 +193,16 @@ The translucent keyboard is an iOS capability (on iOS 26+ the keyboard also has 
 
 ## Quick Reference Table
 
-| Component                 | Primary Action When Keyboard Appears       | Container Resizes/Adjusts? | Typical Use Case             | Key Distinction vs. Others                                |
-| ------------------------- | ------------------------------------------ | -------------------------- | ---------------------------- | --------------------------------------------------------- |
-| `KeyboardAvoidingView`    | Adjusts layout (padding, position, height) | ✅                         | Small Forms, Chat Screens    | Consistent cross-platform avoidance, layout adjustment    |
-| `KeyboardStickyView`      | Moves/Translates view with keyboard        | ❌ (moves child only)      | Sticky Footer/Toolbar        | Moves element without resizing layout                     |
-| `KeyboardAwareScrollView` | Scrolls content to focused input           | ✅ (scroll position)       | Large Scrollable Forms/Lists | Auto-scrolls within ScrollView, respects native animation |
-| `KeyboardToolbar`         | Adds Nav/Done buttons, sticks to keyboard  | ❌ (it's sticky)           | Multi-Input Forms            | Provides UI + native logic for input navigation/dismissal |
-| `OverKeyboardView`        | Displays content _over_ the keyboard       | ❌ (overlays content)      | Menus, Modals over keyboard  | Keeps keyboard open while showing overlay content         |
-| `KeyboardExtender`        | Displays the content inside the keyboard   | ❌ (moves with keyboard)   | Quick actions, shortcuts     | Appears as part of keyboard, matches animation & style    |
-| `KeyboardBackgroundView`  | Matches keyboard background color          | ❌ (visual only)           | Visual Blending/Transitions  | Synchronizes color with keyboard for seamless UI effects  |
-| `KeyboardEffects`         | Renders content behind a translucent keyboard | ❌ (visual only)        | Themed/animated keyboard, solid backgrounds | Replaces what shows _through_ the keyboard (iOS)       |
+| Component                 | Primary Action When Keyboard Appears          | Container Resizes/Adjusts? | Typical Use Case                            | Key Distinction vs. Others                                |
+| ------------------------- | --------------------------------------------- | -------------------------- | ------------------------------------------- | --------------------------------------------------------- |
+| `KeyboardAvoidingView`    | Adjusts layout (padding, position, height)    | ✅                         | Small Forms, Chat Screens                   | Consistent cross-platform avoidance, layout adjustment    |
+| `KeyboardStickyView`      | Moves/Translates view with keyboard           | ❌ (moves child only)      | Sticky Footer/Toolbar                       | Moves element without resizing layout                     |
+| `KeyboardAwareScrollView` | Scrolls content to focused input              | ✅ (scroll position)       | Large Scrollable Forms/Lists                | Auto-scrolls within ScrollView, respects native animation |
+| `KeyboardToolbar`         | Adds Nav/Done buttons, sticks to keyboard     | ❌ (it's sticky)           | Multi-Input Forms                           | Provides UI + native logic for input navigation/dismissal |
+| `OverKeyboardView`        | Displays content _over_ the keyboard          | ❌ (overlays content)      | Menus, Modals over keyboard                 | Keeps keyboard open while showing overlay content         |
+| `KeyboardExtender`        | Displays the content inside the keyboard      | ❌ (moves with keyboard)   | Quick actions, shortcuts                    | Appears as part of keyboard, matches animation & style    |
+| `KeyboardBackgroundView`  | Matches keyboard background color             | ❌ (visual only)           | Visual Blending/Transitions                 | Synchronizes color with keyboard for seamless UI effects  |
+| `KeyboardEffects`         | Renders content behind a translucent keyboard | ❌ (visual only)           | Themed/animated keyboard, solid backgrounds | Replaces what shows _through_ the keyboard (iOS)          |
 
 ## Which Component Should You Use?
 

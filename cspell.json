@@ -196,7 +196,10 @@
     "legendapp",
     "kortix",
     "MACCATALYST",
-    "desynchronized"
+    "desynchronized",
+    "skia",
+    "fract",
+    "SKSL"
   ],
   "ignorePaths": [
     "node_modules",

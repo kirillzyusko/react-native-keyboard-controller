@@ -359,20 +359,18 @@ import ComparisonTable from "@site/src/components/ComparisonTable";
 import Image from "@site/src/components/Image";
 
 <ComparisonTable
-  left={
-    <Image src="/img/keyboard-chat-translucent.png" width={65} />
-  }
-  right={
-    <Image src="/img/keyboard-chat-non-translucent.png" width={65} />
-  }
+  left={<Image src="/img/keyboard-chat-translucent.png" width={65} />}
+  right={<Image src="/img/keyboard-chat-non-translucent.png" width={65} />}
   leftText={
     <i>
-      By default keyboard is transparent, messages behind the keyboard is visible (Messages app style)
+      By default keyboard is transparent, messages behind the keyboard is
+      visible (Messages app style)
     </i>
   }
   rightText={
     <i>
-      Non-transparent keyboard, messages behind the keyboard are hidden (Instagram app style)
+      Non-transparent keyboard, messages behind the keyboard are hidden
+      (Instagram app style)
     </i>
   }
 />
@@ -401,7 +399,6 @@ Because `KeyboardEffects` is built on `KeyboardStickyView`, the backdrop tracks 
 :::info iOS only
 The translucent keyboard is an iOS capability, so this technique only affects iOS. On Android the keyboard is opaque and the backdrop won't show through — the rest of your chat layout keeps working unchanged.
 :::
-
 
 ## Using with virtualized lists
 
