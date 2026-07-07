@@ -23,10 +23,8 @@ import Video from "@site/src/components/Video";
 
 <Video src="/video/keyboard-effects.webm" autoPlay loop muted />
 
-Under the hood it is built on top of [`KeyboardStickyView`](../keyboard-sticky-view/index.mdx), so the effect view follows the keyboard's movement and accepts the same `offset` / `enabled` props (and any other `View` props).
-
 :::info iOS only
-The translucent keyboard is an iOS capability. On other platforms the `translucent` prop is a no-op (the system keyboard is opaque, so content rendered behind it will not be visible). On **iOS 26+** the keyboard has rounded corners, and the effect view automatically matches that shape.
+The translucent keyboard is an iOS capability. On other platforms the `translucent` prop is a no-op (the system keyboard is opaque, so content rendered behind it will not be visible).
 :::
 
 ## Example
@@ -37,7 +35,7 @@ import { View } from "react-native";
 
 const Effect = () => {
   return (
-    <KeyboardEffects translucent>
+    <KeyboardEffects>
       <View style={{ flex: 1, backgroundColor: "purple" }} />
     </KeyboardEffects>
   );
@@ -48,25 +46,18 @@ For a full "AI keyboard" example (an animated gradient bleeding through the keyb
 
 ## Props
 
+### [`View Props`](https://reactnative.dev/docs/view#props)
+
+Inherits [View Props](https://reactnative.dev/docs/view#props).
+
+### [`KeyboardStickyViewProps`](./keyboard-sticky-view)
+
+Inherits [KeyboardStickyViewProps](./keyboard-sticky-view).
+
 ### `translucent`
 
 A boolean prop indicating whether the keyboard backdrop should be translucent. When `true`, the system keyboard becomes translucent so the content rendered inside `KeyboardEffects` blends through it. When `false` (default), the keyboard stays opaque and, on iOS 26+, the effect view is clipped to the keyboard's rounded shape. Default is `false`.
 
 :::note Multiple instances
-Translucency is reference-counted across all mounted `KeyboardEffects` instances — the keyboard stays translucent as long as at least one mounted instance has `translucent={true}`, and reverts to opaque once none do.
+Multiple mounted `KeyboardEffects` instances share a single native keyboard state, reconciled the same way React Native's `StatusBar` reconciles multiple instances: each instance's `translucent` value sits on a shared stack, and whichever instance was mounted (or updated) most recently wins. When that instance unmounts, the keyboard falls back to the value of the next-most-recently-mounted instance still on screen — not straight to opaque.
 :::
-
-### `offset`
-
-Inherited from [`KeyboardStickyView`](../keyboard-sticky-view/index.mdx#offset). An object that specifies additional `translateY` offset applied to the effect view for a given keyboard state:
-
-- **closed** - additional offset when the keyboard is closed. Default value is `0`.
-- **opened** - additional offset when the keyboard is opened. Default value is `0`.
-
-### `enabled`
-
-Inherited from [`KeyboardStickyView`](../keyboard-sticky-view/index.mdx#enabled). A boolean prop indicating whether the view should react to keyboard movements. When disabled, the view is moved to its initial position (as if the keyboard were closed). Default is `true`.
-
-### Other props
-
-`KeyboardEffects` also forwards any other [`View`](https://reactnative.dev/docs/view#props) props (such as `style`) and a `ref` to the underlying container.

@@ -353,7 +353,7 @@ On **iOS with React Native 0.81+**, the `contentInset` area created by `blankSpa
 
 ### Disable keyboard transparency
 
-By default the iOS keyboard is translucent — it blurs whatever sits behind it. Many chat apps (Instagram, and dark-themed messengers in general) instead make the keyboard appear to sit on a **solid background that matches the conversation**, so the keys blend into the chat rather than showing the system blur.
+By default the iOS keyboard is translucent — it blurs whatever sits behind it, so messages scrolled underneath stay faintly visible (the **Messages** app style). Many chat apps — Instagram, and other messengers in general — instead give the keyboard a **solid background that matches the conversation**, hiding the content behind the keyboard entirely and making the keys blend into the chat rather than showing the system blur.
 
 import ComparisonTable from "@site/src/components/ComparisonTable";
 import Image from "@site/src/components/Image";
@@ -363,7 +363,7 @@ import Image from "@site/src/components/Image";
   right={<Image src="/img/keyboard-chat-non-translucent.png" width={65} />}
   leftText={
     <i>
-      By default keyboard is transparent, messages behind the keyboard is
+      By default keyboard is transparent, messages behind the keyboard are
       visible (Messages app style)
     </i>
   }
@@ -375,7 +375,7 @@ import Image from "@site/src/components/Image";
   }
 />
 
-You can reproduce this with [`KeyboardEffects`](../api/components/keyboard-effects). Just render an opaque view — colored to match your chat background — behind it. The keyboard then blends with your color instead of the system material:
+You can achieve this with [`KeyboardEffects`](../api/components/keyboard-effects). Just render an opaque view — colored to match your chat background — behind the keyboard. The keyboard then blends with your color instead of the system material:
 
 ```tsx
 import { View } from "react-native";
@@ -383,18 +383,19 @@ import { KeyboardEffects } from "react-native-keyboard-controller";
 
 function ChatScreen() {
   return (
-    <View style={{ flex: 1, backgroundColor: "#0A0A0A" }}>
-      {/* ...KeyboardChatScrollView + composer... */}
-
+    <>
+      <View style={{ flex: 1, backgroundColor: "#0A0A0A" }}>
+        {/* ...KeyboardChatScrollView + composer... */}
+      </View>
       <KeyboardEffects>
         <View style={{ flex: 1, backgroundColor: "#0A0A0A" }} />
       </KeyboardEffects>
-    </View>
+    </>
   );
 }
 ```
 
-Because `KeyboardEffects` is built on `KeyboardStickyView`, the backdrop tracks the keyboard as it opens and closes, so the solid background stays aligned with the keys throughout the animation. Swap the plain `View` for a gradient or an animated Skia canvas and you get richer effects (an Apple Intelligence / Siri-style glow) — but a single opaque color is all you need for the Instagram look.
+Because `KeyboardEffects` is built on `KeyboardStickyView`, the backdrop tracks the keyboard as it opens and closes, so the solid background stays aligned with the keys throughout the animation. Swap the plain `View` for a gradient or an animated Skia canvas and you get richer effects (an Apple Intelligence / Siri-style glow).
 
 :::info iOS only
 The translucent keyboard is an iOS capability, so this technique only affects iOS. On Android the keyboard is opaque and the backdrop won't show through — the rest of your chat layout keeps working unchanged.

@@ -183,26 +183,28 @@ Use this when you want your UI to feel like it shares the same visual space as t
 
 <Video src="/video/keyboard-effects.webm" autoPlay loop muted />
 
-`KeyboardEffects` is, in a sense, the **opposite** of `KeyboardBackgroundView`. Rather than pulling the keyboard's background _into_ your UI to match it, it makes the system keyboard **translucent** and lets you render your own content _behind_ it — colors, gradients, images, or animations that blend through the keys. This is how you build effects like the Apple Intelligence / Siri keyboard glow, or give the keyboard a solid background that matches your app (à la Instagram) by rendering an opaque color behind it.
+`KeyboardEffects` is, in a sense, the **opposite** of `KeyboardBackgroundView`. Rather than pulling the keyboard's background _into_ your UI to match it, it lets you render arbitrary content — colors, gradients, images, animations — _behind_ the keyboard. By default, the iOS keyboard already has its own translucent blur, so your app's content is visible behind it, but blurred and tinted by the system. Setting `translucent` on `KeyboardEffects` removes that native blur/backdrop entirely, so whatever you render behind it shows through crisp and unaltered, in its place.
+
+That single mechanism covers both ends of the spectrum: render a solid, opaque color that matches your chat background and you get a fully non-transparent keyboard (à la Instagram); render an animated gradient or Skia shader and you get effects like the Apple Intelligence / Siri keyboard glow.
 
 Put differently: `KeyboardBackgroundView` is a passive, visual-only surface that _reads_ the keyboard's background and mirrors it in your layout; `KeyboardEffects` actively _replaces_ what shows through the keyboard. It's built on top of `KeyboardStickyView`, so it follows the keyboard and accepts the same `offset` / `enabled` props.
 
 :::info iOS only
-The translucent keyboard is an iOS capability (on iOS 26+ the keyboard also has rounded corners, which the effect view matches automatically). On other platforms the `translucent` prop is a no-op.
+Removing the keyboard's native blur is an iOS capability. On other platforms the `translucent` prop is a no-op — the system keyboard is already opaque, so content rendered behind it won't be visible either way.
 :::
 
 ## Quick Reference Table
 
-| Component                 | Primary Action When Keyboard Appears          | Container Resizes/Adjusts? | Typical Use Case                            | Key Distinction vs. Others                                |
-| ------------------------- | --------------------------------------------- | -------------------------- | ------------------------------------------- | --------------------------------------------------------- |
-| `KeyboardAvoidingView`    | Adjusts layout (padding, position, height)    | ✅                         | Small Forms, Chat Screens                   | Consistent cross-platform avoidance, layout adjustment    |
-| `KeyboardStickyView`      | Moves/Translates view with keyboard           | ❌ (moves child only)      | Sticky Footer/Toolbar                       | Moves element without resizing layout                     |
-| `KeyboardAwareScrollView` | Scrolls content to focused input              | ✅ (scroll position)       | Large Scrollable Forms/Lists                | Auto-scrolls within ScrollView, respects native animation |
-| `KeyboardToolbar`         | Adds Nav/Done buttons, sticks to keyboard     | ❌ (it's sticky)           | Multi-Input Forms                           | Provides UI + native logic for input navigation/dismissal |
-| `OverKeyboardView`        | Displays content _over_ the keyboard          | ❌ (overlays content)      | Menus, Modals over keyboard                 | Keeps keyboard open while showing overlay content         |
-| `KeyboardExtender`        | Displays the content inside the keyboard      | ❌ (moves with keyboard)   | Quick actions, shortcuts                    | Appears as part of keyboard, matches animation & style    |
-| `KeyboardBackgroundView`  | Matches keyboard background color             | ❌ (visual only)           | Visual Blending/Transitions                 | Synchronizes color with keyboard for seamless UI effects  |
-| `KeyboardEffects`         | Renders content behind a translucent keyboard | ❌ (visual only)           | Themed/animated keyboard, solid backgrounds | Replaces what shows _through_ the keyboard (iOS)          |
+| Component                 | Primary Action When Keyboard Appears       | Container Resizes/Adjusts? | Typical Use Case                            | Key Distinction vs. Others                                            |
+| ------------------------- | ------------------------------------------ | -------------------------- | ------------------------------------------- | --------------------------------------------------------------------- |
+| `KeyboardAvoidingView`    | Adjusts layout (padding, position, height) | ✅                         | Small Forms, Chat Screens                   | Consistent cross-platform avoidance, layout adjustment                |
+| `KeyboardStickyView`      | Moves/Translates view with keyboard        | ❌ (moves child only)      | Sticky Footer/Toolbar                       | Moves element without resizing layout                                 |
+| `KeyboardAwareScrollView` | Scrolls content to focused input           | ✅ (scroll position)       | Large Scrollable Forms/Lists                | Auto-scrolls within ScrollView, respects native animation             |
+| `KeyboardToolbar`         | Adds Nav/Done buttons, sticks to keyboard  | ❌ (it's sticky)           | Multi-Input Forms                           | Provides UI + native logic for input navigation/dismissal             |
+| `OverKeyboardView`        | Displays content _over_ the keyboard       | ❌ (overlays content)      | Menus, Modals over keyboard                 | Keeps keyboard open while showing overlay content                     |
+| `KeyboardExtender`        | Displays the content inside the keyboard   | ❌ (moves with keyboard)   | Quick actions, shortcuts                    | Appears as part of keyboard, matches animation & style                |
+| `KeyboardBackgroundView`  | Matches keyboard background color          | ❌ (visual only)           | Visual Blending/Transitions                 | Synchronizes color with keyboard for seamless UI effects              |
+| `KeyboardEffects`         | Renders any content behind the keyboard    | ❌ (visual only)           | Themed/animated keyboard, solid backgrounds | Removes native blur, replaces what shows _through_ the keyboard (iOS) |
 
 ## Which Component Should You Use?
 
@@ -215,6 +217,6 @@ Here's a simple guide to choosing:
 - When you need to display **contextual content like suggestions or menus over an active keyboard** without dismissing it, `OverKeyboardView` provides this unique capability.
 - If you want to **extend the keyboard with your own UI**, such as quick actions or input helpers that appear _inside_ the keyboard area, use `KeyboardExtender`.
 - If you're aiming for **visual consistency between your UI and the keyboard background** — for example, to blend a panel into the keyboard area — `KeyboardBackgroundView` helps match system colors for a polished, seamless effect.
-- If you want to **render colors, gradients, or animations behind a translucent keyboard** — a themed/animated keyboard, or a solid Instagram-style background — `KeyboardEffects` lets your content blend through the keys (iOS).
+- If you want to **render any content behind the keyboard** — disable the native blur for a solid, brand-colored background (à la Instagram), or drive an animated gradient/shader behind the keys (a Siri-style glow) — `KeyboardEffects` lets you replace what shows through the keyboard (iOS).
 
 This library offers specialized tools for common keyboard challenges in React Native. Choose the one that best fits your UI need.
