@@ -12,7 +12,6 @@ final class KeyboardBackdropController: NSObject {
   static let shared = KeyboardBackdropController()
 
   private var isTranslucent = false
-  private var originalAlphas: [ObjectIdentifier: CGFloat] = [:]
 
   override init() {
     super.init()
@@ -40,31 +39,16 @@ final class KeyboardBackdropController: NSObject {
 
   private func applyTranslucency() {
     guard let keyboardWindow = UIWindow.keyboardWindow else {
-      if !isTranslucent {
-        originalAlphas.removeAll()
-      }
       return
     }
 
     applyTranslucency(in: keyboardWindow)
-
-    if !isTranslucent {
-      originalAlphas.removeAll()
-    }
   }
 
   private func applyTranslucency(in view: UIView) {
     if isKeyboardBackdropView(view) {
-      let identifier = ObjectIdentifier(view)
-
-      if isTranslucent {
-        if originalAlphas[identifier] == nil {
-          originalAlphas[identifier] = view.alpha
-        }
-        view.alpha = 0
-      } else {
-        view.alpha = originalAlphas[identifier] ?? 1
-      }
+      view.alpha = isTranslucent ? 0 : 1
+      return
     }
 
     for subview in view.subviews {
