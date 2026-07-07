@@ -56,6 +56,7 @@ export const KeyboardController: KeyboardControllerModule = {
   setInputMode: KeyboardControllerNative.setInputMode,
   setFocusTo: KeyboardControllerNative.setFocusTo,
   preload: KeyboardControllerNative.preload,
+  setTranslucent: KeyboardControllerNative.setTranslucent,
   dismiss,
   isVisible,
   state,

@@ -82,6 +82,12 @@ export type KeyboardControllerModule = {
    * @see {@link https://kirillzyusko.github.io/react-native-keyboard-controller/docs/api/keyboard-controller#preload-|docs} page for more details.
    */
   preload: () => void;
+  /**
+   * Sets the keyboard backdrop translucency.
+   *
+   * @platform ios
+   */
+  setTranslucent: (translucent: boolean) => void;
   // all platforms
   /**
    * Dismisses the active keyboard. Removes a focus by default, but allows to pass `{keepFocus: true}` to keep focus.
@@ -121,6 +127,7 @@ export type KeyboardControllerNativeModule = {
   setInputMode: (mode: number) => void;
   // ios only
   preload: () => void;
+  setTranslucent: (translucent: boolean) => void;
   // all platforms
   dismiss: (keepFocus: boolean, animated: boolean) => void;
   setFocusTo: (direction: Direction) => void;

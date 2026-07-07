@@ -17,6 +17,7 @@ import {
   View,
 } from "react-native";
 import {
+  KeyboardEffects,
   KeyboardGestureArea,
   KeyboardStickyView,
 } from "react-native-keyboard-controller";
@@ -49,8 +50,14 @@ function KeyboardChatScrollViewPlayground() {
   const [text, setText] = useState("");
   const [inputHeight, setInputHeight] = useState(TEXT_INPUT_HEIGHT);
   const extraContentPadding = useSharedValue(0);
-  const { inverted, messages, reversedMessages, addMessage, mode } =
-    useChatConfigStore();
+  const {
+    inverted,
+    messages,
+    reversedMessages,
+    addMessage,
+    mode,
+    translucent,
+  } = useChatConfigStore();
   const { bottom } = useSafeAreaInsets();
 
   const stickyViewOffset = useMemo(
@@ -99,96 +106,103 @@ function KeyboardChatScrollViewPlayground() {
   );
 
   return (
-    <SafeAreaView edges={["bottom"]} style={styles.container}>
-      <KeyboardGestureArea
-        interpolator="ios"
-        offset={inputHeight}
-        style={styles.container}
-        textInputNativeID="chat-input"
-      >
-        {mode === "legend" && (
-          <LegendList
-            alignItemsAtEnd={inverted}
-            contentContainerStyle={contentContainerStyle}
-            data={messages}
-            initialScrollAtEnd={inverted}
-            keyExtractor={(item) => item.text}
-            renderItem={({ item }) => <Message {...item} />}
-            renderScrollComponent={memoList}
-          />
-        )}
-        {mode === "flash" && (
-          <FlashList
-            contentContainerStyle={
-              inverted ? invertedContentContainerStyle : contentContainerStyle
-            }
-            data={inverted ? reversedMessages : messages}
-            // use slightly bigger distance to avoid flashing for inverted case
-            // internally `KeyboardChatScrollView` re-positions content and in case
-            // of inverted it shifts it by `translateY={keyboardSize}` and adjust scroll position
-            // so real content movement can be `keyboardSize x2`, and `FlashList` may recycle wrong items
-            // using bigger distance we assure that we will not see flickering of messages
-            // during keyboard animation
-            drawDistance={Dimensions.get("screen").height}
-            inverted={inverted}
-            keyExtractor={(item) => item.text}
-            maintainVisibleContentPosition={{
-              startRenderingFromBottom: inverted,
-            }}
-            renderItem={({ item }) => <Message {...item} />}
-            renderScrollComponent={memoList}
-          />
-        )}
-        {mode === "flat" && (
-          <FlatList
-            data={inverted ? reversedMessages : messages}
-            inverted={inverted}
-            keyExtractor={(item) => item.text}
-            renderItem={({ item }) => <Message {...item} />}
-            renderScrollComponent={memoList}
-          />
-        )}
-        {mode === "scroll" && (
-          <VirtualizedListScrollView
-            ref={scrollRef}
-            extraContentPadding={extraContentPadding}
-          >
-            {messages.map((message, index) => (
-              <Message key={index} {...message} />
-            ))}
-          </VirtualizedListScrollView>
-        )}
-        <KeyboardStickyView offset={stickyViewOffset} style={styles.composer}>
-          <View
-            style={[
-              StyleSheet.absoluteFillObject,
-              { overflow: "hidden" },
-              styles.input,
-            ]}
-          >
-            <BlurView
-              blurAmount={32}
-              blurType="light"
-              reducedTransparencyFallbackColor="white"
-              style={StyleSheet.absoluteFillObject}
+    <>
+      <SafeAreaView edges={["bottom"]} style={styles.container}>
+        <KeyboardGestureArea
+          interpolator="ios"
+          offset={inputHeight}
+          style={styles.container}
+          textInputNativeID="chat-input"
+        >
+          {mode === "legend" && (
+            <LegendList
+              alignItemsAtEnd={inverted}
+              contentContainerStyle={contentContainerStyle}
+              data={messages}
+              initialScrollAtEnd={inverted}
+              keyExtractor={(item) => item.text}
+              renderItem={({ item }) => <Message {...item} />}
+              renderScrollComponent={memoList}
             />
-          </View>
-          <TextInput
-            multiline
-            nativeID="chat-input"
-            style={styles.input}
-            testID="chat.input"
-            value={text}
-            onChangeText={onInput}
-            onLayout={onInputLayoutChanged}
-          />
-          <TouchableOpacity style={styles.send} onPress={onSend}>
-            <Image source={require("./send.png")} style={styles.icon} />
-          </TouchableOpacity>
-        </KeyboardStickyView>
-      </KeyboardGestureArea>
-      <ConfigSheet />
-    </SafeAreaView>
+          )}
+          {mode === "flash" && (
+            <FlashList
+              contentContainerStyle={
+                inverted ? invertedContentContainerStyle : contentContainerStyle
+              }
+              data={inverted ? reversedMessages : messages}
+              // use slightly bigger distance to avoid flashing for inverted case
+              // internally `KeyboardChatScrollView` re-positions content and in case
+              // of inverted it shifts it by `translateY={keyboardSize}` and adjust scroll position
+              // so real content movement can be `keyboardSize x2`, and `FlashList` may recycle wrong items
+              // using bigger distance we assure that we will not see flickering of messages
+              // during keyboard animation
+              drawDistance={Dimensions.get("screen").height}
+              inverted={inverted}
+              keyExtractor={(item) => item.text}
+              maintainVisibleContentPosition={{
+                startRenderingFromBottom: inverted,
+              }}
+              renderItem={({ item }) => <Message {...item} />}
+              renderScrollComponent={memoList}
+            />
+          )}
+          {mode === "flat" && (
+            <FlatList
+              data={inverted ? reversedMessages : messages}
+              inverted={inverted}
+              keyExtractor={(item) => item.text}
+              renderItem={({ item }) => <Message {...item} />}
+              renderScrollComponent={memoList}
+            />
+          )}
+          {mode === "scroll" && (
+            <VirtualizedListScrollView
+              ref={scrollRef}
+              extraContentPadding={extraContentPadding}
+            >
+              {messages.map((message, index) => (
+                <Message key={index} {...message} />
+              ))}
+            </VirtualizedListScrollView>
+          )}
+          <KeyboardStickyView offset={stickyViewOffset} style={styles.composer}>
+            <View
+              style={[
+                StyleSheet.absoluteFillObject,
+                { overflow: "hidden" },
+                styles.input,
+              ]}
+            >
+              <BlurView
+                blurAmount={32}
+                blurType="light"
+                reducedTransparencyFallbackColor="white"
+                style={StyleSheet.absoluteFillObject}
+              />
+            </View>
+            <TextInput
+              multiline
+              nativeID="chat-input"
+              style={styles.input}
+              testID="chat.input"
+              value={text}
+              onChangeText={onInput}
+              onLayout={onInputLayoutChanged}
+            />
+            <TouchableOpacity style={styles.send} onPress={onSend}>
+              <Image source={require("./send.png")} style={styles.icon} />
+            </TouchableOpacity>
+          </KeyboardStickyView>
+        </KeyboardGestureArea>
+        <ConfigSheet />
+      </SafeAreaView>
+      {!translucent && (
+        <KeyboardEffects>
+          <View style={styles.keyboardBackground} />
+        </KeyboardEffects>
+      )}
+    </>
   );
 }
 

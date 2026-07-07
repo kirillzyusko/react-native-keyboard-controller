@@ -11,6 +11,7 @@ export interface Spec extends TurboModule {
   setInputMode(mode: number): void;
   setDefaultMode(): void;
   preload(): void;
+  setTranslucent(translucent: boolean): void;
   dismiss(keepFocus: boolean, animated: boolean): void;
   setFocusTo(direction: string): void;
   viewPositionInWindow(viewTag: number): Promise<object>;

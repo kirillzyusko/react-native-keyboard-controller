@@ -54,6 +54,20 @@ exports[`components rendering should render \`KeyboardControllerView\` 1`] = `
 />
 `;
 
+exports[`components rendering should render \`KeyboardEffectsTest\` 1`] = `
+<View>
+  <View
+    style={
+      {
+        "backgroundColor": "black",
+        "height": 20,
+        "width": 20,
+      }
+    }
+  />
+</View>
+`;
+
 exports[`components rendering should render \`KeyboardExtenderTest\` 1`] = `
 <KeyboardExtender
   enabled={true}

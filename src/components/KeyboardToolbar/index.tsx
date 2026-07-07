@@ -5,6 +5,7 @@ import {
   FocusedInputEvents,
   RCTKeyboardToolbarGroupView,
 } from "../../bindings";
+import { KEYBOARD_HAS_ROUNDED_CORNERS } from "../../constants";
 import { useKeyboardState } from "../../hooks";
 import KeyboardStickyView from "../KeyboardStickyView";
 
@@ -15,7 +16,6 @@ import { Background, Content, Done, Next, Prev } from "./compound/components";
 import { ToolbarContext } from "./compound/context";
 import {
   DEFAULT_OPACITY,
-  KEYBOARD_HAS_ROUNDED_CORNERS,
   KEYBOARD_TOOLBAR_HEIGHT,
   OPENED_OFFSET,
   TEST_ID_KEYBOARD_TOOLBAR,

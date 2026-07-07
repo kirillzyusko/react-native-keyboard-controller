@@ -25,6 +25,10 @@ class KeyboardControllerModule(
     module.preload()
   }
 
+  override fun setTranslucent(translucent: Boolean) {
+    module.setTranslucent(translucent)
+  }
+
   override fun dismiss(
     keepFocus: Boolean,
     animated: Boolean,

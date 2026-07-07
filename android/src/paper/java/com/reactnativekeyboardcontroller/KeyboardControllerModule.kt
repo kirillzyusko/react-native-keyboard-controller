@@ -31,6 +31,11 @@ class KeyboardControllerModule(
   }
 
   @ReactMethod
+  fun setTranslucent(translucent: Boolean) {
+    module.setTranslucent(translucent)
+  }
+
+  @ReactMethod
   fun dismiss(
     keepFocus: Boolean,
     animated: Boolean,

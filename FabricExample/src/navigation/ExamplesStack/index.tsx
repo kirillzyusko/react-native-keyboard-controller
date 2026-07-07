@@ -2,6 +2,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
 
 import { ScreenNames } from "../../constants/screenNames";
+import AIKeyboard from "../../screens/Examples/AIKeyboard";
 import AILegendListChat from "../../screens/Examples/AILegendListChat";
 import AwareScrollView from "../../screens/Examples/AwareScrollView";
 import AwareScrollViewStickyFooter from "../../screens/Examples/AwareScrollViewStickyFooter";
@@ -16,6 +17,7 @@ import KeyboardAnimation from "../../screens/Examples/KeyboardAnimation";
 import KeyboardAvoidingViewExample from "../../screens/Examples/KeyboardAvoidingView";
 import KeyboardAvoidingViewAutomaticExample from "../../screens/Examples/KeyboardAvoidingViewAutomatic";
 import KeyboardChatScrollViewPlayground from "../../screens/Examples/KeyboardChatScrollView";
+import KeyboardEffectsExample from "../../screens/Examples/KeyboardEffects";
 import KeyboardExtender from "../../screens/Examples/KeyboardExtender";
 import KeyboardSharedTransitionExample from "../../screens/Examples/KeyboardSharedTransitions";
 import UseKeyboardState from "../../screens/Examples/KeyboardStateHook";
@@ -62,6 +64,8 @@ export type ExamplesStackParamList = {
   [ScreenNames.KEYBOARD_EXTENDER]: undefined;
   [ScreenNames.CHAT_KIT]: undefined;
   [ScreenNames.AI_LEGEND_LIST_CHAT]: undefined;
+  [ScreenNames.KEYBOARD_EFFECTS]: undefined;
+  [ScreenNames.AI_KEYBOARD]: undefined;
 };
 
 const Stack = createStackNavigator<ExamplesStackParamList>();
@@ -207,6 +211,16 @@ const ExamplesStack = () => (
       component={AILegendListChat}
       name={ScreenNames.AI_LEGEND_LIST_CHAT}
       options={options[ScreenNames.AI_LEGEND_LIST_CHAT]}
+    />
+    <Stack.Screen
+      component={KeyboardEffectsExample}
+      name={ScreenNames.KEYBOARD_EFFECTS}
+      options={options[ScreenNames.KEYBOARD_EFFECTS]}
+    />
+    <Stack.Screen
+      component={AIKeyboard}
+      name={ScreenNames.AI_KEYBOARD}
+      options={options[ScreenNames.AI_KEYBOARD]}
     />
   </Stack.Navigator>
 );

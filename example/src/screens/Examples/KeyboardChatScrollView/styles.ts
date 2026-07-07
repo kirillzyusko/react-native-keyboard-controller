@@ -10,6 +10,12 @@ export default StyleSheet.create({
     flex: 1,
     backgroundColor: "#3A3A3C",
   },
+  // Rendered behind a translucent keyboard so the keys blend with the chat
+  // background instead of the default system blur (matches `container`).
+  keyboardBackground: {
+    flex: 1,
+    backgroundColor: "#3A3A3C",
+  },
   input: {
     flex: 1,
     margin: MARGIN,
