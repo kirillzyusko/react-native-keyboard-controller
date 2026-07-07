@@ -17,7 +17,7 @@ keywords:
 
 # KeyboardEffects
 
-A `KeyboardEffects` component renders arbitrary content **behind** the keyboard. When the keyboard is made `translucent`, whatever you render behind it (colors, gradients, images, animations) blends through the keyboard and creates rich visual effects - the same idea behind the Apple Intelligence / Siri keyboard glow.
+A `KeyboardEffects` component lets you render arbitrary content — colors, gradients, images, animations — **behind** the keyboard. Rendering an opaque view is enough to give the keyboard a solid, branded background instead of the default system blur. The `translucent` prop goes a step further for *animated* effects — it removes the native blur/backdrop entirely so a moving gradient or Skia shader shows through crisp and unaltered (the same idea behind the Apple Intelligence / Siri keyboard glow).
 
 import Video from "@site/src/components/Video";
 
@@ -56,7 +56,7 @@ Inherits [KeyboardStickyViewProps](./keyboard-sticky-view).
 
 ### `translucent`
 
-A boolean prop indicating whether the keyboard backdrop should be translucent. When `true`, the system keyboard becomes translucent so the content rendered inside `KeyboardEffects` blends through it. When `false` (default), the keyboard stays opaque and, on iOS 26+, the effect view is clipped to the keyboard's rounded shape. Default is `false`.
+A boolean prop indicating whether the keyboard backdrop should be translucent. When `true`, the system keyboard becomes translucent so the content rendered inside `KeyboardEffects` blends through it. When `false` (default), the keyboard stays opaque. Default is `false`.
 
 :::note Multiple instances
 Multiple mounted `KeyboardEffects` instances share a single native keyboard state, reconciled the same way React Native's `StatusBar` reconciles multiple instances: each instance's `translucent` value sits on a shared stack, and whichever instance was mounted (or updated) most recently wins. When that instance unmounts, the keyboard falls back to the value of the next-most-recently-mounted instance still on screen — not straight to opaque.

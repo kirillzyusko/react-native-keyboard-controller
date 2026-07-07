@@ -183,9 +183,7 @@ Use this when you want your UI to feel like it shares the same visual space as t
 
 <Video src="/video/keyboard-effects.webm" autoPlay loop muted />
 
-`KeyboardEffects` is, in a sense, the **opposite** of `KeyboardBackgroundView`. Rather than pulling the keyboard's background _into_ your UI to match it, it lets you render arbitrary content — colors, gradients, images, animations — _behind_ the keyboard. By default, the iOS keyboard already has its own translucent blur, so your app's content is visible behind it, but blurred and tinted by the system. Setting `translucent` on `KeyboardEffects` removes that native blur/backdrop entirely, so whatever you render behind it shows through crisp and unaltered, in its place.
-
-That single mechanism covers both ends of the spectrum: render a solid, opaque color that matches your chat background and you get a fully non-transparent keyboard (à la Instagram); render an animated gradient or Skia shader and you get effects like the Apple Intelligence / Siri keyboard glow.
+`KeyboardEffects` is, in a sense, the **opposite** of `KeyboardBackgroundView`. Rather than pulling the keyboard's background _into_ your UI to match it, it lets you render arbitrary content — colors, gradients, images, animations — _behind_ the keyboard. Rendering an opaque view is already enough to give the keyboard a solid, branded background instead of the default system blur. The `translucent` prop goes a step further for _animated_ effects — it removes the native blur/backdrop entirely so a moving gradient or Skia shader shows through crisp and unaltered, the same idea behind the Apple Intelligence / Siri keyboard glow.
 
 Put differently: `KeyboardBackgroundView` is a passive, visual-only surface that _reads_ the keyboard's background and mirrors it in your layout; `KeyboardEffects` actively _replaces_ what shows through the keyboard. It's built on top of `KeyboardStickyView`, so it follows the keyboard and accepts the same `offset` / `enabled` props.
 

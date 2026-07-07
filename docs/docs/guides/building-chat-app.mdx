@@ -395,7 +395,11 @@ function ChatScreen() {
 }
 ```
 
-Because `KeyboardEffects` is built on `KeyboardStickyView`, the backdrop tracks the keyboard as it opens and closes, so the solid background stays aligned with the keys throughout the animation. Swap the plain `View` for a gradient or an animated Skia canvas and you get richer effects (an Apple Intelligence / Siri-style glow).
+Because `KeyboardEffects` is built on `KeyboardStickyView`, the backdrop tracks the keyboard as it opens and closes, so the solid background stays aligned with the keys throughout the animation.
+
+:::tip Animated effects
+Swap the plain `View` for a gradient or an animated Skia canvas and you get richer effects (an Apple Intelligence / Siri-style glow).
+:::
 
 :::info iOS only
 The translucent keyboard is an iOS capability, so this technique only affects iOS. On Android the keyboard is opaque and the backdrop won't show through — the rest of your chat layout keeps working unchanged.
