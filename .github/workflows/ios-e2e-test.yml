@@ -143,6 +143,7 @@ jobs:
       # needed for additional runtime installation
       - name: Install Xcodes
         run: |
+          brew update
           brew upgrade xcodes || brew install xcodes
           xcodes version
       - name: Install additional iOS runtimes
