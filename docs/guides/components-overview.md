@@ -77,17 +77,30 @@ tip
 
 Use this when you want your UI to feel like it shares the same visual space as the system keyboard — particularly helpful for sticky toolbars, soft shadows, or themed transitions.
 
+## [`KeyboardEffects`](/react-native-keyboard-controller/docs/api/components/keyboard-effects.md)[​](/react-native-keyboard-controller/docs/guides/components-overview.md#keyboardeffects "Direct link to keyboardeffects")
+
+[](/react-native-keyboard-controller/video/keyboard-effects.webm)
+
+`KeyboardEffects` is, in a sense, the **opposite** of `KeyboardBackgroundView`. Rather than pulling the keyboard's background *into* your UI to match it, it lets you render arbitrary content — colors, gradients, images, animations — *behind* the keyboard. Rendering an opaque view is already enough to give the keyboard a solid, branded background instead of the default system blur. The `translucent` prop goes a step further for *animated* effects — it removes the native blur/backdrop entirely so a moving gradient or Skia shader shows through crisp and unaltered, the same idea behind the Apple Intelligence / Siri keyboard glow.
+
+Put differently: `KeyboardBackgroundView` is a passive, visual-only surface that *reads* the keyboard's background and mirrors it in your layout; `KeyboardEffects` actively *replaces* what shows through the keyboard. It's built on top of `KeyboardStickyView`, so it follows the keyboard and accepts the same `offset` / `enabled` props.
+
+iOS only
+
+Removing the keyboard's native blur is an iOS capability. On other platforms the `translucent` prop is a no-op — the system keyboard is already opaque, so content rendered behind it won't be visible either way.
+
 ## Quick Reference Table[​](/react-native-keyboard-controller/docs/guides/components-overview.md#quick-reference-table "Direct link to Quick Reference Table")
 
-| Component                 | Primary Action When Keyboard Appears       | Container Resizes/Adjusts? | Typical Use Case             | Key Distinction vs. Others                                |
-| ------------------------- | ------------------------------------------ | -------------------------- | ---------------------------- | --------------------------------------------------------- |
-| `KeyboardAvoidingView`    | Adjusts layout (padding, position, height) | ✅                         | Small Forms, Chat Screens    | Consistent cross-platform avoidance, layout adjustment    |
-| `KeyboardStickyView`      | Moves/Translates view with keyboard        | ❌ (moves child only)      | Sticky Footer/Toolbar        | Moves element without resizing layout                     |
-| `KeyboardAwareScrollView` | Scrolls content to focused input           | ✅ (scroll position)       | Large Scrollable Forms/Lists | Auto-scrolls within ScrollView, respects native animation |
-| `KeyboardToolbar`         | Adds Nav/Done buttons, sticks to keyboard  | ❌ (it's sticky)           | Multi-Input Forms            | Provides UI + native logic for input navigation/dismissal |
-| `OverKeyboardView`        | Displays content *over* the keyboard       | ❌ (overlays content)      | Menus, Modals over keyboard  | Keeps keyboard open while showing overlay content         |
-| `KeyboardExtender`        | Displays the content inside the keyboard   | ❌ (moves with keyboard)   | Quick actions, shortcuts     | Appears as part of keyboard, matches animation & style    |
-| `KeyboardBackgroundView`  | Matches keyboard background color          | ❌ (visual only)           | Visual Blending/Transitions  | Synchronizes color with keyboard for seamless UI effects  |
+| Component                 | Primary Action When Keyboard Appears       | Container Resizes/Adjusts? | Typical Use Case                            | Key Distinction vs. Others                                            |
+| ------------------------- | ------------------------------------------ | -------------------------- | ------------------------------------------- | --------------------------------------------------------------------- |
+| `KeyboardAvoidingView`    | Adjusts layout (padding, position, height) | ✅                         | Small Forms, Chat Screens                   | Consistent cross-platform avoidance, layout adjustment                |
+| `KeyboardStickyView`      | Moves/Translates view with keyboard        | ❌ (moves child only)      | Sticky Footer/Toolbar                       | Moves element without resizing layout                                 |
+| `KeyboardAwareScrollView` | Scrolls content to focused input           | ✅ (scroll position)       | Large Scrollable Forms/Lists                | Auto-scrolls within ScrollView, respects native animation             |
+| `KeyboardToolbar`         | Adds Nav/Done buttons, sticks to keyboard  | ❌ (it's sticky)           | Multi-Input Forms                           | Provides UI + native logic for input navigation/dismissal             |
+| `OverKeyboardView`        | Displays content *over* the keyboard       | ❌ (overlays content)      | Menus, Modals over keyboard                 | Keeps keyboard open while showing overlay content                     |
+| `KeyboardExtender`        | Displays the content inside the keyboard   | ❌ (moves with keyboard)   | Quick actions, shortcuts                    | Appears as part of keyboard, matches animation & style                |
+| `KeyboardBackgroundView`  | Matches keyboard background color          | ❌ (visual only)           | Visual Blending/Transitions                 | Synchronizes color with keyboard for seamless UI effects              |
+| `KeyboardEffects`         | Renders any content behind the keyboard    | ❌ (visual only)           | Themed/animated keyboard, solid backgrounds | Removes native blur, replaces what shows *through* the keyboard (iOS) |
 
 ## Which Component Should You Use?[​](/react-native-keyboard-controller/docs/guides/components-overview.md#which-component-should-you-use "Direct link to Which Component Should You Use?")
 
@@ -100,5 +113,6 @@ Here's a simple guide to choosing:
 * When you need to display **contextual content like suggestions or menus over an active keyboard** without dismissing it, `OverKeyboardView` provides this unique capability.
 * If you want to **extend the keyboard with your own UI**, such as quick actions or input helpers that appear *inside* the keyboard area, use `KeyboardExtender`.
 * If you're aiming for **visual consistency between your UI and the keyboard background** — for example, to blend a panel into the keyboard area — `KeyboardBackgroundView` helps match system colors for a polished, seamless effect.
+* If you want to **render any content behind the keyboard** — disable the native blur for a solid, brand-colored background (à la Instagram), or drive an animated gradient/shader behind the keys (a Siri-style glow) — `KeyboardEffects` lets you replace what shows through the keyboard (iOS).
 
 This library offers specialized tools for common keyboard challenges in React Native. Choose the one that best fits your UI need.

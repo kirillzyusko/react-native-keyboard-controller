@@ -326,6 +326,47 @@ iOS contentInset hit-test bug
 
 On **iOS with React Native 0.81+**, the `contentInset` area created by `blankSpace` may not respond to touch/scroll gestures. To fix this, set `applyWorkaroundForContentInsetHitTestBug={true}` on `KeyboardChatScrollView`, or apply the upstream React Native patch. See the [API reference](/react-native-keyboard-controller/docs/api/components/keyboard-chat-scroll-view.md#blankspace) for details.
 
+### Disable keyboard transparency[​](/react-native-keyboard-controller/docs/guides/building-chat-app.md#disable-keyboard-transparency "Direct link to Disable keyboard transparency")
+
+By default the iOS keyboard is translucent — it blurs whatever sits behind it, so messages scrolled underneath stay faintly visible (the **Messages** app style). Many chat apps — Instagram, and other messengers in general — instead give the keyboard a **solid background that matches the conversation**, hiding the content behind the keyboard entirely and making the keys blend into the chat rather than showing the system blur.
+
+<!-- -->
+
+|                                                                                                     |                                                                                           |
+| --------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| ![](/react-native-keyboard-controller/img/keyboard-chat-translucent.png)                            | ![](/react-native-keyboard-controller/img/keyboard-chat-non-translucent.png)              |
+| *By default keyboard is transparent, messages behind the keyboard are visible (Messages app style)* | *Non-transparent keyboard, messages behind the keyboard are hidden (Instagram app style)* |
+
+You can achieve this with [`KeyboardEffects`](/react-native-keyboard-controller/docs/api/components/keyboard-effects.md). Just render an opaque view — colored to match your chat background — behind the keyboard. The keyboard then blends with your color instead of the system material:
+
+```
+import { View } from "react-native";
+import { KeyboardEffects } from "react-native-keyboard-controller";
+
+function ChatScreen() {
+  return (
+    <>
+      <View style={{ flex: 1, backgroundColor: "#0A0A0A" }}>
+        {/* ...KeyboardChatScrollView + composer... */}
+      </View>
+      <KeyboardEffects>
+        <View style={{ flex: 1, backgroundColor: "#0A0A0A" }} />
+      </KeyboardEffects>
+    </>
+  );
+}
+```
+
+Because `KeyboardEffects` is built on `KeyboardStickyView`, the backdrop tracks the keyboard as it opens and closes, so the solid background stays aligned with the keys throughout the animation.
+
+Animated effects
+
+Swap the plain `View` for a gradient or an animated Skia canvas and you get richer effects (an Apple Intelligence / Siri-style glow).
+
+iOS only
+
+The translucent keyboard is an iOS capability, so this technique only affects iOS. On Android the keyboard is opaque and the backdrop won't show through — the rest of your chat layout keeps working unchanged.
+
 ## Using with virtualized lists[​](/react-native-keyboard-controller/docs/guides/building-chat-app.md#using-with-virtualized-lists "Direct link to Using with virtualized lists")
 
 For production chat apps you'll likely use a virtualized list (`FlatList`, `FlashList`, or `LegendList`) instead of a plain `ScrollView`. All of these accept a custom scroll component, making integration straightforward.
