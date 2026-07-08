@@ -1,0 +1,140 @@
+---
+slug: keyboard-effects
+title: "Enhancing keyboard UI with KeyboardEffects"
+authors: [kirill]
+tags: [react-native, keyboard, KeyboardEffects, ios]
+keywords:
+  [
+    react-native-keyboard-controller,
+    KeyboardEffects,
+    keyboard effects,
+    translucent keyboard,
+    keyboard backdrop,
+    keyboard gradient,
+    keyboard glow,
+    siri keyboard,
+    ai keyboard,
+  ]
+---
+
+import ComparisonTable from "@site/src/components/ComparisonTable";
+import Image from "@site/src/components/Image";
+import Video from "@site/src/components/Video";
+
+The `1.22.0` release is intentionally focused: it introduces a single new
+component, `KeyboardEffects`.
+
+<Video src="/video/keyboard-effects.webm" autoPlay loop muted />
+
+`KeyboardEffects` lets you render your own content **behind** the system
+keyboard. That content can be a plain color, a gradient, an image, a Skia canvas,
+or any other React Native view.
+
+<!-- truncate -->
+
+## Disabling keyboard translucency
+
+By default, the iOS keyboard is translucent: it blurs whatever sits underneath
+it, so messages or screen content can remain faintly visible. With
+`KeyboardEffects`, you can place an opaque view behind the keyboard and make that
+area look solid instead.
+
+<ComparisonTable
+  left={
+    <Image
+      src="/img/keyboard-chat-translucent.png"
+      width={65}
+      alt="Default translucent iOS keyboard with messages visible behind it"
+    />
+  }
+  right={
+    <Image
+      src="/img/keyboard-chat-non-translucent.png"
+      width={65}
+      alt="Keyboard with opaque background rendered behind it"
+    />
+  }
+  leftText={<i>Default translucent keyboard</i>}
+  rightText={<i>Keyboard with translucency disabled visually</i>}
+/>
+
+```tsx
+import { View } from "react-native";
+import { KeyboardEffects } from "react-native-keyboard-controller";
+
+function ChatScreen() {
+  return (
+    <>
+      {/* Your chat UI */}
+      <KeyboardEffects>
+        <View style={{ flex: 1, backgroundColor: "#0A0A0A" }} />
+      </KeyboardEffects>
+    </>
+  );
+}
+```
+
+## Using brand colors
+
+The same technique works for branding. Render a surface that matches your chat,
+composer, or app background, and the keyboard blends into the product instead of
+looking like a separate system layer.
+
+<Image
+  src="/img/keyboard-chat-custom-bg.png"
+  width={35}
+  alt="Keyboard matched with a custom app theme"
+  style={{ marginBottom: 20 }}
+/>
+
+```tsx
+import { View } from "react-native";
+import { KeyboardEffects } from "react-native-keyboard-controller";
+
+function BrandedKeyboardSurface() {
+  return (
+    <KeyboardEffects>
+      <View style={{ flex: 1, backgroundColor: "#111827" }} />
+    </KeyboardEffects>
+  );
+}
+```
+
+Because `KeyboardEffects` is built on top of `KeyboardStickyView`, the branded
+surface follows the keyboard while it opens, closes, and moves interactively.
+
+## Transparent keyboard
+
+For richer effects, pass the `translucent` prop. On iOS this removes the native
+keyboard backdrop, so animated content rendered inside `KeyboardEffects` can show
+through the keyboard buttons without being blurred by the system material.
+
+<Video src="/video/keyboard-effects.webm" autoPlay loop muted />
+
+```tsx
+import { KeyboardEffects } from "react-native-keyboard-controller";
+
+function AIKeyboard() {
+  return (
+    <KeyboardEffects translucent>
+      <KeyboardGradient />
+    </KeyboardEffects>
+  );
+}
+```
+
+This is the same technique behind Apple Intelligence, AI Keyboard, and
+Siri-style keyboard glow effects: the keyboard becomes a translucent surface,
+while your app owns the moving color, gradient, or shader behind it.
+
+:::info iOS only
+The translucent keyboard effect is an iOS capability. On Android the system
+keyboard is opaque, so the `translucent` prop is a no-op.
+:::
+
+## Learn more
+
+You can read the full [`KeyboardEffects` API page](/docs/next/api/components/keyboard-effects)
+or check the
+[`AIKeyboard` example](https://github.com/kirillzyusko/react-native-keyboard-controller/tree/main/example/src/screens/Examples/AIKeyboard)
+for a complete animated gradient implementation.
