@@ -142,7 +142,7 @@ jobs:
         run: xcodebuild -version
       # needed for additional runtime installation
       - name: Install Xcodes
-        run: brew tap xcodesorg/made
+        run: brew install xcodesorg/made/xcodes
       - name: Install additional iOS runtimes
         if: ${{ matrix.devices.runtime != '' && matrix.devices.runtime != null }}
         uses: ./.github/actions/retry-sudo-with-timeout
