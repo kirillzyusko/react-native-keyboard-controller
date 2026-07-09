@@ -100,7 +100,7 @@ extension KeyboardMovementObserver {
 
   @objc func scheduleDidEvent(height: CGFloat, duration: CGFloat) {
     keyboardDidTask?.cancel()
-    
+
     print("scheduleDidEvent")
     print(height)
     print(duration)

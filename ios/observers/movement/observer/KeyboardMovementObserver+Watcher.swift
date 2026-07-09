@@ -82,7 +82,7 @@ extension KeyboardMovementObserver {
       keyboardPosition = race(position, keyboardPosition)
       animation.lastValue = keyboardPosition
     }
-    
+
     print(5)
 
     onEvent(
