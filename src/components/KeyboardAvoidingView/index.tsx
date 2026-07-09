@@ -120,10 +120,16 @@ const KeyboardAvoidingView = forwardRef<
       (layout: LayoutRectangle) => {
         "worklet";
 
+        // `padding` and `translate-with-padding` change the layout of this
+        // very view. Recording their onLayout events while the keyboard is
+        // open turns the animated padding into the next animation's base
+        // frame, which feeds back into `relativeKeyboardHeight` and causes
+        // jitter. `position` animates an inner view instead, so its outer
+        // frame can still be refreshed safely.
         if (
           keyboard.isClosed.value ||
           initialFrame.value === null ||
-          behavior !== "height"
+          behavior === "position"
         ) {
           // eslint-disable-next-line react-compiler/react-compiler
           initialFrame.value = layout;
