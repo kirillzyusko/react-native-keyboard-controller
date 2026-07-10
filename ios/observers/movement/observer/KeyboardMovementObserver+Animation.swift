@@ -7,7 +7,7 @@
 
 extension KeyboardMovementObserver {
   func initializeAnimation(fromValue: Double, toValue: Double) {
-    print(keyboardTrackingView.view?.layer.presentation()?.animationKeys())
+    print("initializeAnimation \(keyboardTrackingView.view?.layer.presentation()?.animationKeys())")
     for key in ["position", "opacity"] {
       if let keyboardAnimation = keyboardTrackingView.view?.layer.presentation()?.animation(forKey: key) {
         if let springAnimation = keyboardAnimation as? CASpringAnimation {

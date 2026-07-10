@@ -52,6 +52,13 @@ extension KeyboardMovementObserver {
 
     if animation == nil {
       initializeAnimation(fromValue: prevKeyboardPosition, toValue: keyboardHeight)
+
+      if let animation {
+        scheduleDidEvent(
+          height: CGFloat(animation.toValue),
+          duration: animation.duration
+        )
+      }
     }
 
     prevKeyboardPosition = keyboardPosition
