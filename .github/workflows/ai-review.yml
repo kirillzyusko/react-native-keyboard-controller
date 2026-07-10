@@ -20,7 +20,11 @@ on:
 jobs:
   review:
     name: 🕵️ Finding bugs
-    if: github.event.pull_request.draft == false
+    # Fork pull requests receive a read-only GITHUB_TOKEN and therefore cannot
+    # upsert the review comment at the end of this job. Do not use
+    # pull_request_target here: this workflow processes contributor-controlled
+    # diffs and must not run with write credentials.
+    if: github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
 
     env:
@@ -48,7 +52,7 @@ jobs:
 
       - name: Pull model
         run: |
-          ollama pull $MODEL
+          ollama pull "$MODEL"
 
       - name: Build LLM context
         run: |
@@ -56,7 +60,7 @@ jobs:
 
           FILES=$(git diff --name-status origin/main...HEAD | awk '{print $1 "|" $2}')
 
-          > prompt.txt
+          : > prompt.txt
 
           while IFS="|" read -r status file; do
             [ -z "$file" ] && continue
