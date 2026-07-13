@@ -4,12 +4,10 @@ import React, {
   useEffect,
   useImperativeHandle,
   useMemo,
-  useState,
 } from "react";
 import Reanimated, {
   clamp,
   interpolate,
-  runOnJS,
   runOnUI,
   scrollTo,
   useAnimatedReaction,
@@ -140,55 +138,12 @@ const KeyboardAwareScrollView = forwardRef<
     const scrollViewPageY = useSharedValue(0);
 
     const { height } = useWindowDimensions();
-    const [diagnosticLines, setDiagnosticLines] = useState<string[]>([]);
-    const diagnosticLog = useSharedValue<string[]>([]);
-    const diagnosticSequence = useSharedValue(0);
-
-    const appendDiagnostic = useCallback((message: string) => {
-      "worklet";
-
-      const now = Date.now();
-      const eventNumber = diagnosticSequence.value + 1;
-
-      // eslint-disable-next-line react-compiler/react-compiler
-      diagnosticLog.value = [
-        ...diagnosticLog.value.slice(-255),
-        `#${eventNumber} ${String(now % 100000).padStart(5, "0")} ${message}`,
-      ];
-      diagnosticSequence.value = eventNumber;
-    }, []);
-
-    const appendDiagnosticJS = useCallback((message: string) => {
-      const now = Date.now();
-
-      setDiagnosticLines((previous) =>
-        [
-          ...previous,
-          `${String(now % 100000).padStart(5, "0")} ${message}`,
-        ].slice(-256),
-      );
-    }, []);
-
-    useEffect(() => {
-      appendDiagnosticJS("mounted");
-    }, [appendDiagnosticJS]);
-
-    useAnimatedReaction(
-      () => diagnosticSequence.value,
-      (current, previous) => {
-        if (current !== previous) {
-          runOnJS(setDiagnosticLines)(diagnosticLog.value);
-        }
-      },
-      [],
-    );
 
     const onScrollViewLayout = useCallback(
       async (e: LayoutChangeEvent) => {
         const handle = findNodeHandle(scrollViewAnimatedRef.current);
 
         scrollViewTarget.value = handle;
-        appendDiagnosticJS(`scroll layout handle=${handle}`);
 
         onLayout?.(e);
 
@@ -204,28 +159,22 @@ const KeyboardAwareScrollView = forwardRef<
           }
         }
       },
-      [appendDiagnosticJS, onLayout],
+      [onLayout],
     );
 
     /**
      * Function that will scroll a ScrollView as keyboard gets moving.
      */
     const maybeScroll = useCallback(
-      (e: number, animated: boolean = false, source = "unknown") => {
+      (e: number, animated: boolean = false) => {
         "worklet";
 
         if (!enabled) {
-          appendDiagnostic(`ms s=${source} a=off`);
-
           return 0;
         }
 
         // input belongs to ScrollView
         if (layout.value?.parentScrollViewTarget !== scrollViewTarget.value) {
-          appendDiagnostic(
-            `ms s=${source} a=own in=${layout.value?.parentScrollViewTarget} sv=${scrollViewTarget.value}`,
-          );
-
           return 0;
         }
 
@@ -251,14 +200,6 @@ const KeyboardAwareScrollView = forwardRef<
           const targetScrollY =
             Math.max(interpolatedScrollTo, 0) + scrollPosition.value;
 
-          appendDiagnostic(
-            `ms s=${source} a=sc y=${Math.round(targetScrollY)} d=${Math.round(
-              interpolatedScrollTo,
-            )} in=${Math.round(point)} vi=${Math.round(
-              visibleRect,
-            )} bo=${Math.round(bottomOffset)} an=${animated ? 1 : 0}`,
-          );
-
           scrollTo(scrollViewAnimatedRef, 0, targetScrollY, animated);
 
           return interpolatedScrollTo;
@@ -274,25 +215,11 @@ const KeyboardAwareScrollView = forwardRef<
             topOfScreen - positionOnScreen,
             animated,
           );
-
-          appendDiagnostic(
-            `ms s=${source} a=top y=${Math.round(
-              topOfScreen - positionOnScreen,
-            )} in=${Math.round(point)} vi=${Math.round(
-              visibleRect,
-            )} bo=${Math.round(bottomOffset)} an=${animated ? 1 : 0}`,
-          );
-        } else {
-          appendDiagnostic(
-            `ms s=${source} a=no in=${Math.round(point)} vi=${Math.round(
-              visibleRect,
-            )} bo=${Math.round(bottomOffset)}`,
-          );
         }
 
         return 0;
       },
-      [appendDiagnostic, bottomOffset, enabled, height, snapToOffsets],
+      [bottomOffset, enabled, height, snapToOffsets],
     );
     const removeGhostPadding = useCallback(
       (e: number) => {
@@ -328,13 +255,14 @@ const KeyboardAwareScrollView = forwardRef<
       [mode],
     );
     const performScrollWithPositionRestoration = useCallback(
-      (newPosition: number, source: string) => {
+      (newPosition: number) => {
         "worklet";
 
         const prevScroll = scrollPosition.value;
 
+        // eslint-disable-next-line react-compiler/react-compiler
         scrollPosition.value = newPosition;
-        maybeScroll(keyboardHeight.value, true, source);
+        maybeScroll(keyboardHeight.value, true);
         scrollPosition.value = prevScroll;
       },
       [scrollPosition, keyboardHeight, maybeScroll],
@@ -360,10 +288,6 @@ const KeyboardAwareScrollView = forwardRef<
       const customHeight = lastSelection.value?.selection.end.y;
 
       if (!input.value?.layout || !customHeight) {
-        appendDiagnostic(
-          `selection layout skip input=${input.value?.target} custom=${customHeight}`,
-        );
-
         return false;
       }
 
@@ -377,33 +301,24 @@ const KeyboardAwareScrollView = forwardRef<
         },
       };
 
-      appendDiagnostic(
-        `selection layout target=${input.value.target} y=${Math.round(
-          input.value.layout.absoluteY,
-        )} h=${Math.round(customHeight)}`,
-      );
-
       return true;
-    }, [appendDiagnostic, input, lastSelection, layout]);
-    const scrollFromCurrentPosition = useCallback(
-      (source = "selection") => {
-        "worklet";
+    }, [input, lastSelection, layout]);
+    const scrollFromCurrentPosition = useCallback(() => {
+      "worklet";
 
-        const prevLayout = layout.value;
+      const prevLayout = layout.value;
 
-        if (!updateLayoutFromSelection()) {
-          return;
-        }
+      if (!updateLayoutFromSelection()) {
+        return;
+      }
 
-        performScrollWithPositionRestoration(position.value, source);
+      performScrollWithPositionRestoration(position.value);
 
-        layout.value = prevLayout;
-      },
-      [performScrollWithPositionRestoration],
-    );
+      layout.value = prevLayout;
+    }, [performScrollWithPositionRestoration]);
     const onChangeText = useCallback(() => {
       "worklet";
-      scrollFromCurrentPosition("txt");
+      scrollFromCurrentPosition();
     }, [scrollFromCurrentPosition]);
     const onChangeTextHandler = useMemo(
       () => debounce(onChangeText, 200),
@@ -413,14 +328,6 @@ const KeyboardAwareScrollView = forwardRef<
       (e: FocusedInputSelectionChangedEvent) => {
         "worklet";
 
-        appendDiagnostic(
-          `selection target=${e.target} ${e.selection.start.position}-${
-            e.selection.end.position
-          } y=${Math.round(e.selection.start.y)}-${Math.round(
-            e.selection.end.y,
-          )}`,
-        );
-
         const lastTarget = lastSelection.value?.target;
         const latestSelection = lastSelection.value?.selection;
 
@@ -428,12 +335,6 @@ const KeyboardAwareScrollView = forwardRef<
         selectionUpdatedSinceHide.value = true;
 
         if (e.target !== lastTarget || pendingSelectionForFocus.value) {
-          appendDiagnostic(
-            `selection deferred targetChanged=${
-              e.target !== lastTarget
-            } pending=${pendingSelectionForFocus.value}`,
-          );
-
           if (pendingSelectionForFocus.value) {
             // selection arrived after onStart - complete the deferred setup
             pendingSelectionForFocus.value = false;
@@ -442,7 +343,7 @@ const KeyboardAwareScrollView = forwardRef<
             // if keyboard was already visible (focus change, no onMove expected),
             // perform the deferred scroll now
             if (!keyboardWillAppear.value && keyboardHeight.value > 0) {
-              position.value += maybeScroll(keyboardHeight.value, true, "sel");
+              position.value += maybeScroll(keyboardHeight.value, true);
             }
           }
 
@@ -454,18 +355,13 @@ const KeyboardAwareScrollView = forwardRef<
           e.selection.end.position === e.selection.start.position &&
           latestSelection?.end.y !== e.selection.end.y
         ) {
-          appendDiagnostic("selection branch input-growth");
-
-          return scrollFromCurrentPosition("sel");
+          return scrollFromCurrentPosition();
         }
         // selection has been changed
         if (e.selection.start.position !== e.selection.end.position) {
-          appendDiagnostic("selection branch range-changed");
-
-          return scrollFromCurrentPosition("sel");
+          return scrollFromCurrentPosition();
         }
 
-        appendDiagnostic("selection branch text-change");
         onChangeTextHandler();
       },
       [
@@ -473,7 +369,6 @@ const KeyboardAwareScrollView = forwardRef<
         onChangeTextHandler,
         updateLayoutFromSelection,
         maybeScroll,
-        appendDiagnostic,
       ],
     );
 
@@ -498,12 +393,6 @@ const KeyboardAwareScrollView = forwardRef<
           const focusWasChanged =
             (tag.value !== e.target && e.target !== -1) ||
             keyboardWillChangeSize;
-
-          appendDiagnostic(
-            `keyboard start h=${Math.round(e.height)} target=${e.target} p=${
-              e.progress
-            } changed=${focusWasChanged} appear=${keyboardWillAppear.value}`,
-          );
 
           if (keyboardWillChangeSize) {
             initialKeyboardSize.value = keyboardHeight.value;
@@ -539,10 +428,6 @@ const KeyboardAwareScrollView = forwardRef<
           if (focusWasChanged) {
             tag.value = e.target;
 
-            appendDiagnostic(
-              `focus transition target=${e.target} selectionTarget=${lastSelection.value?.target} fresh=${selectionUpdatedSinceHide.value}`,
-            );
-
             if (
               lastSelection.value?.target === e.target &&
               selectionUpdatedSinceHide.value
@@ -573,9 +458,7 @@ const KeyboardAwareScrollView = forwardRef<
             if (!pendingSelectionForFocus.value) {
               // update position on scroll value, so `onEnd` handler
               // will pick up correct values
-              position.value += maybeScroll(e.height, true, "ks");
-            } else {
-              appendDiagnostic("keyboard start scroll deferred");
+              position.value += maybeScroll(e.height, true);
             }
           }
 
@@ -593,6 +476,17 @@ const KeyboardAwareScrollView = forwardRef<
         onMove: (e) => {
           "worklet";
 
+          // On iOS 15 the first keyboard move can arrive before the fresh
+          // selection event for a newly focused input. Do not scroll using
+          // the temporary full-input layout in that window. Same-target
+          // refocuses can still use the existing stale-selection fallback.
+          if (
+            pendingSelectionForFocus.value &&
+            lastSelection.value?.target !== tag.value
+          ) {
+            return;
+          }
+
           if (removeGhostPadding(e.height)) {
             return;
           }
@@ -604,17 +498,11 @@ const KeyboardAwareScrollView = forwardRef<
 
           // if the user has set disableScrollOnKeyboardHide, only auto-scroll when the keyboard opens
           if (!disableScrollOnKeyboardHide || keyboardWillAppear.value) {
-            maybeScroll(e.height, false, "km");
+            maybeScroll(e.height);
           }
         },
         onEnd: (e) => {
           "worklet";
-
-          appendDiagnostic(
-            `keyboard end h=${Math.round(e.height)} target=${e.target} p=${
-              e.progress
-            } pos=${Math.round(position.value)}`,
-          );
 
           if (e.height === 0) {
             removeGhostPadding(e.height);
@@ -643,7 +531,6 @@ const KeyboardAwareScrollView = forwardRef<
         removeGhostPadding,
         disableScrollOnKeyboardHide,
         syncKeyboardFrame,
-        appendDiagnostic,
       ],
     );
 
@@ -654,7 +541,7 @@ const KeyboardAwareScrollView = forwardRef<
         runOnUI(() => {
           "worklet";
 
-          scrollFromCurrentPosition("lay");
+          scrollFromCurrentPosition();
         })();
       });
     }, [update, scrollFromCurrentPosition]);
@@ -692,30 +579,16 @@ const KeyboardAwareScrollView = forwardRef<
       () => input.value,
       (current, previous) => {
         if (
-          current?.target !== previous?.target ||
-          current?.layout.absoluteY !== previous?.layout.absoluteY ||
-          current?.layout.height !== previous?.layout.height
-        ) {
-          appendDiagnostic(
-            `input layout target=${current?.target} owner=${
-              current?.parentScrollViewTarget
-            } y=${Math.round(current?.layout.absoluteY ?? 0)} h=${Math.round(
-              current?.layout.height ?? 0,
-            )}`,
-          );
-        }
-
-        if (
           current?.target === previous?.target &&
           current?.layout.height !== previous?.layout.height
         ) {
           // input has changed layout - let's check if we need to scroll
           // may happen when you paste text, then onSelectionChange will be
           // fired earlier than text actually changes its layout
-          scrollFromCurrentPosition("sync");
+          scrollFromCurrentPosition();
         }
       },
-      [appendDiagnostic, scrollFromCurrentPosition],
+      [],
     );
 
     const padding = useDerivedValue(
@@ -736,66 +609,31 @@ const KeyboardAwareScrollView = forwardRef<
 
     if (mode === "layout") {
       return (
-        <>
-          <ScrollViewComponent
-            ref={onRef}
-            {...rest}
-            scrollEventThrottle={16}
-            onLayout={onScrollViewLayout}
-          >
-            {children}
-            {enabled && <Reanimated.View style={layoutSpacerStyle} />}
-          </ScrollViewComponent>
-          <DiagnosticOverlay lines={diagnosticLines} />
-        </>
+        <ScrollViewComponent
+          ref={onRef}
+          {...rest}
+          scrollEventThrottle={16}
+          onLayout={onScrollViewLayout}
+        >
+          {children}
+          {enabled && <Reanimated.View style={layoutSpacerStyle} />}
+        </ScrollViewComponent>
       );
     }
 
     return (
-      <>
-        <ScrollViewWithBottomPadding
-          ref={onRef}
-          {...rest}
-          bottomPadding={padding}
-          scrollEventThrottle={16}
-          ScrollViewComponent={ScrollViewComponent}
-          onLayout={onScrollViewLayout}
-        >
-          {children}
-        </ScrollViewWithBottomPadding>
-        <DiagnosticOverlay lines={diagnosticLines} />
-      </>
+      <ScrollViewWithBottomPadding
+        ref={onRef}
+        {...rest}
+        bottomPadding={padding}
+        scrollEventThrottle={16}
+        ScrollViewComponent={ScrollViewComponent}
+        onLayout={onScrollViewLayout}
+      >
+        {children}
+      </ScrollViewWithBottomPadding>
     );
   },
-);
-
-const DiagnosticOverlay = ({ lines }: { lines: string[] }) => (
-  <Reanimated.View
-    pointerEvents="none"
-    style={{
-      position: "absolute",
-      top: 0,
-      left: 0,
-      right: 0,
-      zIndex: 1000,
-      padding: 4,
-      backgroundColor: "rgba(0, 0, 0, 0.86)",
-    }}
-  >
-    {lines.slice(-48).map((line, index) => (
-      <Reanimated.Text
-        key={`${line}-${index}`}
-        style={{
-          color: "white",
-          fontFamily: "Courier",
-          fontSize: 8,
-          lineHeight: 10,
-        }}
-      >
-        {line}
-      </Reanimated.Text>
-    ))}
-  </Reanimated.View>
 );
 
 export default KeyboardAwareScrollView;
