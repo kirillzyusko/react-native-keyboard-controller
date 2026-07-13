@@ -80,5 +80,34 @@ describe("KeyboardAwareScrollView — selection order", () => {
         kbEvent(KEYBOARD_HEIGHT, INPUT_TARGET_B),
       );
     });
+
+    it("should not scroll before deferred selection arrives", async () => {
+      await renderKeyboardAwareScrollView();
+      mockInput.value = inputEvent(INPUT_TARGET_B, INPUT_LAYOUT_B);
+
+      mockKeyboardHandlers.current.onStart(
+        kbEvent(KEYBOARD_HEIGHT, INPUT_TARGET_B),
+      );
+
+      mockScrollTo.mockClear();
+      mockKeyboardHandlers.current.onMove(
+        kbEvent(KEYBOARD_HEIGHT, INPUT_TARGET_B),
+      );
+
+      expect(mockScrollTo).not.toHaveBeenCalled();
+
+      mockSelectionHandler.current(selectionEvent(INPUT_TARGET_B));
+      mockKeyboardHandlers.current.onMove(
+        kbEvent(KEYBOARD_HEIGHT, INPUT_TARGET_B),
+      );
+
+      // The first move after selection must use the caret height (47), not
+      // the full input height (60.33).
+      expect(lastScrollToY()).toBeCloseTo(188.67, 0);
+
+      mockKeyboardHandlers.current.onEnd(
+        kbEvent(KEYBOARD_HEIGHT, INPUT_TARGET_B),
+      );
+    });
   });
 });

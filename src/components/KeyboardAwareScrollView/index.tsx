@@ -476,6 +476,13 @@ const KeyboardAwareScrollView = forwardRef<
         onMove: (e) => {
           "worklet";
 
+          if (
+            pendingSelectionForFocus.value &&
+            lastSelection.value?.target !== tag.value
+          ) {
+            return;
+          }
+
           if (removeGhostPadding(e.height)) {
             return;
           }
