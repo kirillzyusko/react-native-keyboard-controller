@@ -1,0 +1,41 @@
+name: 📝 Create AI review comment
+
+on:
+  workflow_run:
+    workflows: ["🦊 Code Review"]
+    types:
+      - completed
+
+permissions:
+  pull-requests: write
+  actions: read
+
+jobs:
+  comment:
+    name: 💬 Post AI review comment
+    runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion == 'success'
+    steps:
+      - name: Download review data
+        uses: actions/download-artifact@v4
+        with:
+          name: ai-review-data
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.workflow_run.id }}
+
+      - name: Read review data
+        id: review-data
+        run: |
+          {
+            echo 'REVIEW<<EOF'
+            cat review.txt
+            echo EOF
+          } >> "$GITHUB_OUTPUT"
+          echo "PR_NUMBER=$(cat pr-number.txt)" >> "$GITHUB_OUTPUT"
+
+      - uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          number: ${{ steps.review-data.outputs.PR_NUMBER }}
+          header: ai-review
+          message: |
+            ${{ steps.review-data.outputs.REVIEW }}
