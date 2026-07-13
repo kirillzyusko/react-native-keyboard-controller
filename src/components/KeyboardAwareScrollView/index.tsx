@@ -287,7 +287,7 @@ const KeyboardAwareScrollView = forwardRef<
 
       const customHeight = lastSelection.value?.selection.end.y;
 
-      if (!input.value?.layout || !customHeight) {
+      if (!input.value?.layout || customHeight === undefined) {
         return false;
       }
 
