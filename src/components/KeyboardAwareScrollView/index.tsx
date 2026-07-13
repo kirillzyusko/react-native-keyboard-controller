@@ -476,10 +476,6 @@ const KeyboardAwareScrollView = forwardRef<
         onMove: (e) => {
           "worklet";
 
-          // On iOS 15 the first keyboard move can arrive before the fresh
-          // selection event for a newly focused input. Do not scroll using
-          // the temporary full-input layout in that window. Same-target
-          // refocuses can still use the existing stale-selection fallback.
           if (
             pendingSelectionForFocus.value &&
             lastSelection.value?.target !== tag.value
