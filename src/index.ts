@@ -27,4 +27,4 @@ export type {
   KeyboardToolbarProps,
   KeyboardEffectsProps,
 } from "./components";
-export { OverKeyboardView, KeyboardExtender } from "./views";
+export { OverKeyboardView, KeyboardExtender, CustomKeyboard } from "./views";

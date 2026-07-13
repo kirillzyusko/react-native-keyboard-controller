@@ -1,7 +1,11 @@
 package com.reactnativekeyboardcontroller.listeners
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ValueAnimator
 import android.view.View
 import android.view.ViewTreeObserver.OnGlobalFocusChangeListener
+import android.view.animation.DecelerateInterpolator
 import android.widget.EditText
 import androidx.core.graphics.Insets
 import androidx.core.view.OnApplyWindowInsetsListener
@@ -75,6 +79,7 @@ class KeyboardAnimationCallback(
   private val isKeyboardInteractive: Boolean
     get() = duration == -1
   override var isSuspended: Boolean = false
+  private var syntheticAnimator: ValueAnimator? = null
 
   // listeners
   private val focusListener =
@@ -83,7 +88,9 @@ class KeyboardAnimationCallback(
         viewTagFocused = newFocus.id
 
         // keyboard is visible and focus has been changed
-        if (this.isKeyboardVisible && oldFocus !== null) {
+        // (when suspended a custom keyboard drives its own event lifecycle,
+        // so instant IME-height events would only cause UI jumps)
+        if (this.isKeyboardVisible && oldFocus !== null && !isSuspended) {
           // imitate iOS behavior and send two instant start/end events containing an info about new tag
           // 1. onStart/onMove/onEnd can be still dispatched after, if keyboard change size (numeric -> alphabetic type)
           // 2. event should be send only when keyboard is visible, since this event arrives earlier -> `tag` will be
@@ -413,6 +420,94 @@ class KeyboardAnimationCallback(
         ),
       )
     }
+  }
+
+  /**
+   * Emits a full animated keyboard transition (will event + Start + per-frame Move + settled
+   * state) that is not backed by a real IME animation. Used by custom keyboards (panels) to
+   * mimic the system keyboard appearance/disappearance.
+   */
+  fun animateSyntheticTransition(
+    height: Double,
+    isVisible: Boolean,
+    durationMs: Int,
+  ) {
+    val runningAnimator = syntheticAnimator
+    val fromHeight =
+      if (runningAnimator?.isRunning == true) {
+        (runningAnimator.animatedValue as Float).toDouble()
+      } else {
+        prevKeyboardHeight
+      }
+    runningAnimator?.cancel()
+    syntheticAnimator = null
+
+    if (fromHeight == height) {
+      syncKeyboardPosition(height, isVisible)
+      return
+    }
+
+    duration = durationMs
+    isTransitioning = true
+    pendingStartEvent = null
+
+    context.emitEvent(
+      "KeyboardController::" + if (isVisible) "keyboardWillShow" else "keyboardWillHide",
+      getEventParams(height),
+    )
+    context.dispatchEvent(
+      eventPropagationView.id,
+      KeyboardTransitionEvent(
+        surfaceId,
+        eventPropagationView.id,
+        KeyboardTransitionEvent.Start,
+        height,
+        if (isVisible) 1.0 else 0.0,
+        durationMs,
+        viewTagFocused,
+      ),
+    )
+
+    val denominator = maxOf(height, fromHeight)
+    val animator = ValueAnimator.ofFloat(fromHeight.toFloat(), height.toFloat())
+    animator.duration = durationMs.toLong()
+    animator.interpolator = DecelerateInterpolator()
+    animator.addUpdateListener { animation ->
+      val animatedHeight = (animation.animatedValue as Float).toDouble()
+      val progress = if (denominator == 0.0) 0.0 else animatedHeight / denominator
+
+      context.dispatchEvent(
+        eventPropagationView.id,
+        KeyboardTransitionEvent(
+          surfaceId,
+          eventPropagationView.id,
+          KeyboardTransitionEvent.Move,
+          animatedHeight,
+          progress,
+          durationMs,
+          viewTagFocused,
+        ),
+      )
+    }
+    animator.addListener(
+      object : AnimatorListenerAdapter() {
+        private var isCancelled = false
+
+        override fun onAnimationCancel(animation: Animator) {
+          isCancelled = true
+        }
+
+        override fun onAnimationEnd(animation: Animator) {
+          if (isCancelled) {
+            return
+          }
+          syntheticAnimator = null
+          syncKeyboardPosition(height, isVisible)
+        }
+      },
+    )
+    syntheticAnimator = animator
+    animator.start()
   }
 
   fun destroy() {

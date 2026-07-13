@@ -1,6 +1,7 @@
 import { NativeEventEmitter, Platform } from "react-native";
 
 import type {
+  CustomKeyboardProps,
   FocusedInputEventsModule,
   KeyboardBackgroundViewProps,
   KeyboardControllerNativeModule,
@@ -72,6 +73,8 @@ export const RCTKeyboardExtender: React.FC<KeyboardExtenderProps> =
   Platform.OS === "ios"
     ? require("./specs/KeyboardExtenderNativeComponent").default
     : ({ children }: KeyboardExtenderProps) => children;
+export const RCTCustomKeyboardView: React.FC<CustomKeyboardProps> =
+  require("./specs/CustomKeyboardViewNativeComponent").default;
 export const ClippingScrollView: React.FC<KeyboardBackgroundViewProps> =
   require("./specs/ClippingScrollViewDecoratorViewNativeComponent").default;
 export const RCTKeyboardToolbarGroupView: React.FC<KeyboardToolbarGroupViewProps> =

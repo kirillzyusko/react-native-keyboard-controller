@@ -2,6 +2,7 @@ import { View } from "react-native";
 
 import type {
   ClippingScrollViewProps,
+  CustomKeyboardProps,
   FocusedInputEventsModule,
   KeyboardBackgroundViewProps,
   KeyboardControllerNativeModule,
@@ -90,6 +91,12 @@ export const KeyboardBackgroundView =
  */
 export const RCTKeyboardExtender =
   View as unknown as React.FC<KeyboardExtenderProps>;
+/**
+ * A container that replaces the system keyboard with its children
+ * whenever a text input becomes focused.
+ */
+export const RCTCustomKeyboardView =
+  View as unknown as React.FC<CustomKeyboardProps>;
 /**
  * A decorator that will clip the content of the `ScrollView`. It helps to simulate `contentInset` behavior on Android
  * Supports only `bottom` property (`paddingBottom` is not supported property of `ScrollView.style`).
