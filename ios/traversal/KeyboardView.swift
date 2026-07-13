@@ -24,10 +24,10 @@ enum KeyboardView {
     }
 
     for window in windows {
-      guard let currentWindow = window else { continue }
+      guard let window = window else { continue }
 
-      if currentWindow.description.hasAnyPrefix(windowPrefix) {
-        for subview in currentWindow.subviews {
+      if window.description.hasAnyPrefix(windowPrefix) {
+        for subview in window.subviews {
           if subview.description.hasAnyPrefix(containerPrefixes) {
             for hostView in subview.subviews {
               if hostView.description.hasAnyPrefix(hostPrefixes), hostView.frame.height != 0 {
