@@ -8,6 +8,8 @@
   "react-native": "src/index",
   "source": "src/index",
   "files": [
+    ".codex-plugin",
+    "skills",
     "src",
     "lib",
     "android",
@@ -43,6 +45,8 @@
     "lint-clang": "find ios/ -iname *.h -o -iname *.m -o -iname *.mm | grep -v -e Pods -e build | xargs clang-format -i -n --Werror",
     "prepare": "bob build > /dev/null 2>&1",
     "release": "release-it",
+    "plugin:check-version": "node scripts/sync-plugin-version.mjs --check",
+    "plugin:sync-version": "node scripts/sync-plugin-version.mjs",
     "example": "yarn --cwd example",
     "pods": "cd example && pod-install --quiet",
     "bootstrap": "yarn example && yarn && yarn pods"
@@ -73,7 +77,10 @@
     "ios",
     "android"
   ],
-  "repository": "https://github.com/kirillzyusko/react-native-keyboard-controller",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kirillzyusko/react-native-keyboard-controller.git"
+  },
   "author": "Kiryl Ziusko <zyusko.kirik@gmail.com> (https://github.com/kirillzyusko)",
   "license": "MIT",
   "bugs": {
@@ -147,6 +154,9 @@
     ]
   },
   "release-it": {
+    "hooks": {
+      "after:bump": "yarn plugin:sync-version"
+    },
     "git": {
       "commitMessage": "chore: release ${version}",
       "tagName": "v${version}"
