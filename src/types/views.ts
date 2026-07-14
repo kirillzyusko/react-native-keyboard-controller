@@ -49,6 +49,10 @@ export type KeyboardExtenderProps = PropsWithChildren<{
   /** Controls whether this `KeyboardExtender` instance should take an effect. Default is `true`. */
   enabled?: boolean;
 }>;
+export type CustomKeyboardProps = PropsWithChildren<{
+  /** Controls whether this `CustomKeyboard` instance should replace the system keyboard. Default is `true`. */
+  enabled?: boolean;
+}>;
 export type KeyboardToolbarGroupViewProps = PropsWithChildren<ViewProps>;
 export type ClippingScrollViewProps = PropsWithChildren<
   ViewProps & {

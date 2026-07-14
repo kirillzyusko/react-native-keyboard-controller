@@ -58,6 +58,7 @@ class KeyboardControllerPackage : BaseReactPackage() {
       KeyboardControllerViewManager(),
       KeyboardGestureAreaViewManager(),
       OverKeyboardViewManager(),
+      CustomKeyboardViewManager(),
       KeyboardBackgroundViewManager(),
       ClippingScrollViewDecoratorViewManager(),
       KeyboardToolbarGroupViewManager(),

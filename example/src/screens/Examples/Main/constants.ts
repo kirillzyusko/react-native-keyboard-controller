@@ -183,4 +183,10 @@ export const examples: Example[] = [
     info: ScreenNames.AI_KEYBOARD,
     icons: "🔮",
   },
+  {
+    title: "Custom Keyboard",
+    testID: "custom_keyboard",
+    info: ScreenNames.CUSTOM_KEYBOARD,
+    icons: "⌨️",
+  },
 ];

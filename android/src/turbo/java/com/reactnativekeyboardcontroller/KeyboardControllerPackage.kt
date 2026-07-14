@@ -59,6 +59,7 @@ class KeyboardControllerPackage : TurboReactPackage() {
       KeyboardControllerViewManager(),
       KeyboardGestureAreaViewManager(),
       OverKeyboardViewManager(),
+      CustomKeyboardViewManager(),
       KeyboardBackgroundViewManager(),
       ClippingScrollViewDecoratorViewManager(),
       KeyboardToolbarGroupViewManager(),

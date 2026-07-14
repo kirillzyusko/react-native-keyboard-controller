@@ -195,6 +195,7 @@
         "OverKeyboardView": "OverKeyboardView",
         "KeyboardBackgroundView": "KeyboardBackgroundView",
         "KeyboardExtender": "KeyboardExtender",
+        "CustomKeyboardView": "CustomKeyboardView",
         "ClippingScrollViewDecoratorView": "ClippingScrollViewDecoratorView",
         "KeyboardToolbarGroupView": "KeyboardToolbarGroupView"
       }

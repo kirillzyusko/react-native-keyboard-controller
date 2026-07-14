@@ -7,6 +7,7 @@ import AILegendListChat from "../../screens/Examples/AILegendListChat";
 import AwareScrollView from "../../screens/Examples/AwareScrollView";
 import AwareScrollViewStickyFooter from "../../screens/Examples/AwareScrollViewStickyFooter";
 import CloseScreen from "../../screens/Examples/Close";
+import CustomKeyboardExample from "../../screens/Examples/CustomKeyboard";
 import EnabledDisabled from "../../screens/Examples/EnabledDisabled";
 import Events from "../../screens/Examples/Events";
 import FocusedInputHandlers from "../../screens/Examples/FocusedInputHandlers";
@@ -66,6 +67,7 @@ export type ExamplesStackParamList = {
   [ScreenNames.AI_LEGEND_LIST_CHAT]: undefined;
   [ScreenNames.KEYBOARD_EFFECTS]: undefined;
   [ScreenNames.AI_KEYBOARD]: undefined;
+  [ScreenNames.CUSTOM_KEYBOARD]: undefined;
 };
 
 const Stack = createStackNavigator<ExamplesStackParamList>();
@@ -221,6 +223,11 @@ const ExamplesStack = () => (
       component={AIKeyboard}
       name={ScreenNames.AI_KEYBOARD}
       options={options[ScreenNames.AI_KEYBOARD]}
+    />
+    <Stack.Screen
+      component={CustomKeyboardExample}
+      name={ScreenNames.CUSTOM_KEYBOARD}
+      options={options[ScreenNames.CUSTOM_KEYBOARD]}
     />
   </Stack.Navigator>
 );
