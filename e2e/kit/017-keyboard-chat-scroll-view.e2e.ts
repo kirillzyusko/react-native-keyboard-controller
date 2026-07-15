@@ -8,6 +8,10 @@ import {
   waitForExpect,
 } from "./helpers";
 
+const closeKeyboard = async () => {
+  await waitAndTap("layout_passes");
+};
+
 describe("`KeyboardChatScrollView` specs", () => {
   it("should navigate to `KeyboardChatScrollView` example", async () => {
     await scrollDownUntilElementIsVisible("main_scroll_view", "chat_kit");
@@ -34,7 +38,7 @@ describe("`KeyboardChatScrollView` specs", () => {
 
   it("should push content down even if you scrolled a little bit", async () => {
     await element(by.id("chat.scroll")).swipe("down", "slow", 0.1, 0.5, 0.3);
-    await waitAndTap("layout_passes");
+    await closeKeyboard();
     await waitForExpect(async () => {
       await expectBitmapsToBeEqual("KeyboardChatScrollViewAlwaysClosed");
     });
@@ -43,18 +47,20 @@ describe("`KeyboardChatScrollView` specs", () => {
 
   it("should not change position if we reached the top", async () => {
     await element(by.id("chat.scroll")).swipe("down", "fast", 1, 0.5, 0.5);
+    await element(by.id("chat.scroll")).swipe("down", "fast", 1, 0.5, 0.5);
     await waitAndTap("chat.input");
-    await element(by.id("chat.scroll")).swipe("down", "fast", 0.25, 0.5, 0.2);
+    await element(by.id("chat.scroll")).swipe("down", "fast", 0.2, 0.5, 0.2);
+    await element(by.id("chat.scroll")).swipe("down", "fast", 0.2, 0.5, 0.2);
     await expect(element(by.id("layout_passes"))).toHaveText("Layout pass: 1");
-    await waitAndTap("layout_passes");
+    await closeKeyboard();
     await waitForExpect(async () => {
       await expectBitmapsToBeEqual("KeyboardChatScrollViewAlwaysClosedAtTop");
     });
   });
 
-  it("should change content position when input grows", () => {});
+  it.todo("should change content position when input grows");
 
-  it("should work with inverted list", () => {});
+  it.todo("should work with inverted list");
 
-  it("should close keyboard interactively", () => {});
+  it.todo("should close keyboard interactively");
 });
