@@ -3,7 +3,9 @@ import { expect } from "detox";
 import { expectBitmapsToBeEqual } from "./asserts";
 import {
   scrollDownUntilElementIsVisible,
+  waitAndReplace,
   waitAndTap,
+  waitAndType,
   waitForElementById,
   waitForExpect,
 } from "./helpers";
@@ -58,9 +60,24 @@ describe("`KeyboardChatScrollView` specs", () => {
     });
   });
 
-  it.todo("should change content position when input grows");
+  it("should change content position when input grows", async () => {
+    await waitAndTap("chat.input");
+    await waitAndType("chat.input", "\n\n\n\n");
+    await waitForExpect(async () => {
+      await expectBitmapsToBeEqual("KeyboardChatScrollViewAlwaysInputGrown");
+    });
+  });
+
+  it("should close keyboard interactively", async () => {
+    await waitAndReplace("chat.input", "");
+    await element(by.id("chat.scroll")).swipe("up", "fast", 0.2, 0.5, 0.2);
+    await element(by.id("chat.scroll")).swipe("down", "slow", 0.4, 0.5, 0.2);
+    await waitForExpect(async () => {
+      await expectBitmapsToBeEqual(
+        "KeyboardChatScrollViewAlwaysClosedInteractively",
+      );
+    });
+  });
 
   it.todo("should work with inverted list");
-
-  it.todo("should close keyboard interactively");
 });
