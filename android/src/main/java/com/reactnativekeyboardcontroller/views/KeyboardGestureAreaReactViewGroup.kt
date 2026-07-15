@@ -137,21 +137,25 @@ class KeyboardGestureAreaReactViewGroup(
         if (moveBy != 0) {
           controller.insetBy(moveBy)
         }
-      } else if (
-        !controller.isInsetAnimationRequestPending() &&
-        shouldStartRequest(
-          dy = dy,
-          imeVisible =
-            ViewCompat
-              .getRootWindowInsets(this)
-              ?.isVisible(WindowInsetsCompat.Type.ime()) == true,
-        )
-      ) {
-        // If we don't currently have control (and a request isn't pending),
-        // the IME is not shown, the user is scrolling up, and the view can't
-        // scroll up any more (i.e. over-scrolling), we can start to control
-        // the IME insets
-        controller.startControlRequest(this)
+      } else if (!controller.isInsetAnimationRequestPending()) {
+        val rootInsets = ViewCompat.getRootWindowInsets(this)
+        val moveBy =
+          this.interpolator.interpolate(
+            dy.roundToInt(),
+            this.getWindowHeight() - event.rawY.toInt(),
+            rootInsets?.getInsets(WindowInsetsCompat.Type.ime())?.bottom ?: 0,
+            offset,
+          )
+
+        if (
+          moveBy != 0 &&
+          shouldStartRequest(
+            dy = dy,
+            imeVisible = rootInsets?.isVisible(WindowInsetsCompat.Type.ime()) == true,
+          )
+        ) {
+          controller.startControlRequest(this)
+        }
       }
 
       // Lastly we record the event X, Y, and view's Y window position, for the
