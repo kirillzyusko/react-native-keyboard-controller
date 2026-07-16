@@ -2,6 +2,7 @@ import { expect } from "detox";
 
 import { expectBitmapsToBeEqual } from "./asserts";
 import {
+  delay,
   scrollDownUntilElementIsVisible,
   waitAndReplace,
   waitAndTap,
@@ -71,7 +72,8 @@ describe("`KeyboardChatScrollView` specs", () => {
   it("should close keyboard interactively", async () => {
     await waitAndReplace("chat.input", "");
     await element(by.id("chat.scroll")).swipe("up", "fast", 0.2, 0.5, 0.2);
-    await element(by.id("chat.scroll")).swipe("down", "slow", 0.4, 0.5, 0.2);
+    await delay(5000);
+    await element(by.id("chat.scroll")).swipe("down", "fast", 0.4, 0.5, 0.2);
     await waitForExpect(async () => {
       await expectBitmapsToBeEqual(
         "KeyboardChatScrollViewAlwaysClosedInteractively",
