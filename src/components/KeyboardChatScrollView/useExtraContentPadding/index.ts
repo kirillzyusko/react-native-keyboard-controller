@@ -29,6 +29,8 @@ type UseExtraContentPaddingOptions = {
   freeze: SharedValue<boolean>;
 };
 
+const OS = Platform.OS;
+
 /**
  * Hook that reacts to `extraContentPadding` changes and conditionally
  * adjusts the scroll position using `scrollTo` on both iOS and Android.
@@ -65,7 +67,7 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
       if (contentOffsetY && IS_FABRIC) {
         // eslint-disable-next-line react-compiler/react-compiler
         contentOffsetY.value = target;
-      } else if (Platform.OS === "android") {
+      } else if (OS === "android") {
         // Defer scrollTo so the animatedProps inset commit lands first;
         // otherwise the native ScrollView clamps to the old range.
         requestAnimationFrame(() => {
