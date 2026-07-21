@@ -208,15 +208,16 @@ VirtualizedListScrollView\.tsx
 
 ```
 import React, { forwardRef } from "react";
-import { KeyboardChatScrollView } from "react-native-keyboard-controller";
+import {
+  KeyboardChatScrollView,
+  type KeyboardChatScrollViewRef,
+} from "react-native-keyboard-controller";
 
 import type { ScrollViewProps } from "react-native";
 import type { KeyboardChatScrollViewProps } from "react-native-keyboard-controller";
 
-type Ref = React.ElementRef<typeof KeyboardChatScrollView>;
-
 const VirtualizedListScrollView = forwardRef<
-  Ref,
+  KeyboardChatScrollViewRef,
   ScrollViewProps & KeyboardChatScrollViewProps
 >((props, ref) => {
   return (
@@ -355,44 +356,48 @@ React Native's `FlatList.scrollToEnd()` calculates the scroll offset using `visi
 
 ```
 import { forwardRef, useCallback } from "react";
-import { KeyboardChatScrollView } from "react-native-keyboard-controller";
+import {
+  KeyboardChatScrollView,
+  type KeyboardChatScrollViewRef,
+} from "react-native-keyboard-controller";
 
 import type { RefCallback } from "react";
 import type { ScrollViewProps } from "react-native";
 
-type ChatScrollViewRef = React.ElementRef<typeof KeyboardChatScrollView>;
 type ChatScrollViewProps = ScrollViewProps & {
-  chatScrollViewRef?: { current: ChatScrollViewRef | null };
+  chatScrollViewRef?: { current: KeyboardChatScrollViewRef | null };
 };
 
-const ChatScrollView = forwardRef<ChatScrollViewRef, ChatScrollViewProps>(
-  ({ chatScrollViewRef, ...props }, ref) => {
-    const combinedRef: RefCallback<ChatScrollViewRef> = useCallback(
-      (instance) => {
-        // forward to FlatList's internal ref
-        if (typeof ref === "function") {
-          ref(instance);
-        } else if (ref) {
-          ref.current = instance;
-        }
+const ChatScrollView = forwardRef<
+  KeyboardChatScrollViewRef,
+  ChatScrollViewProps
+>(({ chatScrollViewRef, ...props }, ref) => {
+  const combinedRef: RefCallback<KeyboardChatScrollViewRef> = useCallback(
+    (instance) => {
+      // forward to FlatList's internal ref
+      if (typeof ref === "function") {
+        ref(instance);
+      } else if (ref) {
+        ref.current = instance;
+      }
 
-        // forward to the user-provided ref
-        if (chatScrollViewRef) {
-          chatScrollViewRef.current = instance as ChatScrollViewRef | null;
-        }
-      },
-      [ref, chatScrollViewRef],
-    );
+      // forward to the user-provided ref
+      if (chatScrollViewRef) {
+        chatScrollViewRef.current =
+          instance as KeyboardChatScrollViewRef | null;
+      }
+    },
+    [ref, chatScrollViewRef],
+  );
 
-    return <KeyboardChatScrollView ref={combinedRef} {...props} />;
-  },
-);
+  return <KeyboardChatScrollView ref={combinedRef} {...props} />;
+});
 ```
 
 Then use it with `FlatList` via `renderScrollComponent`:
 
 ```
-const chatScrollViewRef = useRef<ChatScrollViewRef>(null);
+const chatScrollViewRef = useRef<KeyboardChatScrollViewRef>(null);
 
 const renderScrollComponent = useCallback(
   (props: ScrollViewProps) => (

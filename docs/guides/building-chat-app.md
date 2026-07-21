@@ -379,18 +379,19 @@ VirtualizedListScrollView\.tsx
 
 ```
 import React, { forwardRef } from "react";
-import { KeyboardChatScrollView } from "react-native-keyboard-controller";
+import {
+  KeyboardChatScrollView,
+  type KeyboardChatScrollViewRef,
+} from "react-native-keyboard-controller";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import type { ScrollViewProps } from "react-native";
 import type { KeyboardChatScrollViewProps } from "react-native-keyboard-controller";
 
-type Ref = React.ElementRef<typeof KeyboardChatScrollView>;
-
 const BOTTOM_OFFSET = 8; // distance from safe area to input
 
 const VirtualizedListScrollView = forwardRef<
-  Ref,
+  KeyboardChatScrollViewRef,
   ScrollViewProps & KeyboardChatScrollViewProps
 >((props, ref) => {
   const { bottom } = useSafeAreaInsets();
@@ -492,6 +493,7 @@ import {
   KeyboardChatScrollView,
   KeyboardGestureArea,
   KeyboardStickyView,
+  type KeyboardChatScrollViewRef,
 } from "react-native-keyboard-controller";
 import { useSharedValue, withTiming } from "react-native-reanimated";
 import {
@@ -501,14 +503,12 @@ import {
 
 import type { KeyboardChatScrollViewProps } from "react-native-keyboard-controller";
 
-type Ref = React.ElementRef<typeof KeyboardChatScrollView>;
-
 const MARGIN = 8;
 const INPUT_HEIGHT = 42;
 
 // Wrapper for virtualized lists
 const ChatScrollView = forwardRef<
-  Ref,
+  KeyboardChatScrollViewRef,
   ScrollViewProps & KeyboardChatScrollViewProps
 >((props, ref) => {
   const { bottom } = useSafeAreaInsets();
