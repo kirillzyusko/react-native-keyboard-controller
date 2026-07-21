@@ -2,6 +2,7 @@
 import React, {
   useCallback,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -96,6 +97,18 @@ export const KeyboardProvider = (props: KeyboardProviderProps) => {
   const layout = useSharedValue<FocusedInputLayoutChangedEvent | null>(null);
   const setKeyboardHandlers = useEventHandlerRegistration(viewRef);
   const setInputHandlers = useEventHandlerRegistration(viewRef);
+
+  useLayoutEffect(() => {
+    if (!enabled) {
+      progress.setValue(0);
+      height.setValue(0);
+      // eslint-disable-next-line react-compiler/react-compiler
+      progressSV.value = 0;
+      heightSV.value = 0;
+      layout.value = null;
+    }
+  }, [enabled, height, heightSV, layout, progress, progressSV]);
+
   const update = useCallback(async () => {
     KeyboardControllerViewCommands.synchronizeFocusedInputLayout(
       viewRef.current,
@@ -153,7 +166,6 @@ export const KeyboardProvider = (props: KeyboardProviderProps) => {
     "worklet";
 
     if (platforms.includes(OS)) {
-      // eslint-disable-next-line react-compiler/react-compiler
       progressSV.value = event.progress;
       heightSV.value = -event.height;
     }
