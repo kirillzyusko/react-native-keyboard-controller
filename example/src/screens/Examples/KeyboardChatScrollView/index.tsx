@@ -17,10 +17,10 @@ import {
   View,
 } from "react-native";
 import {
+  type KeyboardChatScrollViewRef,
   KeyboardEffects,
   KeyboardGestureArea,
   KeyboardStickyView,
-  type KeyboardChatScrollViewRef,
 } from "react-native-keyboard-controller";
 import { useSharedValue, withTiming } from "react-native-reanimated";
 import {

@@ -7,8 +7,8 @@ import {
 } from "react-native";
 import {
   KeyboardChatScrollView,
-  KeyboardController,
   type KeyboardChatScrollViewRef,
+  KeyboardController,
 } from "react-native-keyboard-controller";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
