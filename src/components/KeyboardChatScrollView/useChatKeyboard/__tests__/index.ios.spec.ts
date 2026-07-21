@@ -67,6 +67,31 @@ describe("`useChatKeyboard` — iOS non-inverted + always", () => {
     expect(result.current.contentOffsetY!.value).toBe(100);
   });
 
+  it("should not set contentOffsetY after an interactive keyboard dismiss", () => {
+    const { result } = render({
+      inverted: false,
+      keyboardLiftBehavior: "always",
+    });
+
+    handlers.onStart({ height: KEYBOARD });
+    handlers.onMove({ height: KEYBOARD / 2 });
+    handlers.onEnd({ height: KEYBOARD });
+    expect(result.current.contentOffsetY!.value).toBe(KEYBOARD);
+
+    handlers.onInteractive({ height: KEYBOARD / 2 });
+    handlers.onStart({ height: 0 });
+
+    expect(result.current.padding.value).toBe(0);
+    // UIKit owns the native offset while the keyboard is dismissed interactively.
+    expect(result.current.contentOffsetY!.value).toBe(KEYBOARD);
+
+    handlers.onEnd({ height: 0 });
+
+    // check again just in case
+    expect(result.current.padding.value).toBe(0);
+    expect(result.current.contentOffsetY!.value).toBe(KEYBOARD);
+  });
+
   it("should handle keyboard resize (emoji toggle)", () => {
     mockOffset.value = 100;
     const { result } = render({
