@@ -7,6 +7,7 @@
 
 import Foundation
 
+@MainActor
 @objc(KeyboardEventsIgnorer)
 public class KeyboardEventsIgnorer: NSObject {
   @objc public static let shared = KeyboardEventsIgnorer()
