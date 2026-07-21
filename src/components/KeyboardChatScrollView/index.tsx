@@ -16,16 +16,19 @@ import { useEndVisible } from "./useEndVisible";
 import { useExtraContentPadding } from "./useExtraContentPadding";
 import { useFrozenPadding } from "./useFrozenPadding";
 
-import type { KeyboardChatScrollViewProps } from "./types";
+import type {
+  KeyboardChatScrollViewProps,
+  KeyboardChatScrollViewRef,
+} from "./types";
 import type { LayoutChangeEvent } from "react-native";
 
 const ZERO_CONTENT_PADDING = makeMutable(0);
 const ZERO_BLANK_SPACE = makeMutable(0);
 
-const KeyboardChatScrollView = forwardRef<
-  Reanimated.ScrollView,
-  React.PropsWithChildren<KeyboardChatScrollViewProps>
->(
+const KeyboardChatScrollView: React.ForwardRefExoticComponent<
+  React.PropsWithChildren<KeyboardChatScrollViewProps> &
+    React.RefAttributes<KeyboardChatScrollViewRef>
+> = forwardRef<KeyboardChatScrollViewRef, KeyboardChatScrollViewProps>(
   (
     {
       children,
