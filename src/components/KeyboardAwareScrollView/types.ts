@@ -1,4 +1,5 @@
 import type { AnimatedScrollViewComponent } from "../ScrollViewWithBottomPadding";
+import type { ComponentRef } from "react";
 import type { ScrollView, ScrollViewProps } from "react-native";
 
 export type KeyboardAwareScrollViewMode = "insets" | "layout";
@@ -26,4 +27,4 @@ export type KeyboardAwareScrollViewProps = {
 } & ScrollViewProps;
 export type KeyboardAwareScrollViewRef = {
   assureFocusedInputVisible: () => void;
-} & ScrollView;
+} & ComponentRef<typeof ScrollView>;
