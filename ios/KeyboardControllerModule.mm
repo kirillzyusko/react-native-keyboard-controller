@@ -87,6 +87,9 @@ RCT_EXPORT_METHOD(setInputMode : (nonnull NSNumber *)mode)
 RCT_EXPORT_METHOD(preload)
 #endif
 {
+  if (@available(iOS 26.0, *)) {
+    return;
+  }
   [UIResponder preloadKeyboardIfNeeded];
 }
 
