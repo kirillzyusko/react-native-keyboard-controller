@@ -20,6 +20,7 @@ import {
   KeyboardEffects,
   KeyboardGestureArea,
   KeyboardStickyView,
+  type KeyboardChatScrollViewRef,
 } from "react-native-keyboard-controller";
 import { useSharedValue } from "react-native-reanimated";
 import {
@@ -38,15 +39,13 @@ import styles, {
   contentContainerStyle,
   invertedContentContainerStyle,
 } from "./styles";
-import VirtualizedListScrollView, {
-  type VirtualizedListScrollViewRef,
-} from "./VirtualizedListScrollView";
+import VirtualizedListScrollView from "./VirtualizedListScrollView";
 
 import type { LayoutChangeEvent, ScrollViewProps } from "react-native";
 
 function KeyboardChatScrollViewPlayground() {
-  const chatScrollViewRef = useRef<VirtualizedListScrollViewRef | null>(null);
-  const scrollRef = useRef<VirtualizedListScrollViewRef>(null);
+  const chatScrollViewRef = useRef<KeyboardChatScrollViewRef | null>(null);
+  const scrollRef = useRef<KeyboardChatScrollViewRef>(null);
   const [text, setText] = useState("");
   const [inputHeight, setInputHeight] = useState(TEXT_INPUT_HEIGHT);
   const extraContentPadding = useSharedValue(0);
