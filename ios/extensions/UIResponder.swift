@@ -30,6 +30,7 @@ public extension Optional where Wrapped == UIResponder {
     guard let superview = (self as? UIView)?.superview else { return nil }
 
     #if KEYBOARD_CONTROLLER_NEW_ARCH_ENABLED
+      guard superview.responds(to: NSSelectorFromString("nativeId")) else { return nil }
       return superview.safeValue(forKey: "nativeId") as? String
     #else
       return superview.nativeID
