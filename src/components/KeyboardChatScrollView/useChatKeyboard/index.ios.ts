@@ -50,6 +50,7 @@ function useChatKeyboard(
   const contentOffsetY = useSharedValue(0);
   const targetKeyboardHeight = useSharedValue(0);
   const prevAbsorption = useSharedValue(0);
+  const isInteractiveDismissal = useSharedValue(false);
 
   const {
     layout,
@@ -108,6 +109,17 @@ function useChatKeyboard(
           blankSpace.value,
           effective + extraContentPadding.value,
         );
+
+        // `onInteractive` owns the native scroll offset. When its final
+        // keyboardWillHide event arrives, consume the marker so this
+        // transition only removes the inset and does not scroll programmatically.
+        if (isInteractiveDismissal.value) {
+          isInteractiveDismissal.value = false;
+          padding.value = effective;
+          prevAbsorption.value = minimumPaddingAbsorbed;
+
+          return;
+        }
 
         // persistent mode: when keyboard shrinks, clamp to valid range
         if (
@@ -220,6 +232,11 @@ function useChatKeyboard(
           inverted,
           actualTotalPadding,
         );
+      },
+      onInteractive: () => {
+        "worklet";
+
+        isInteractiveDismissal.value = true;
       },
       onMove: () => {
         "worklet";
