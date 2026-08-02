@@ -217,13 +217,12 @@ class KeyboardAnimationCallback(
       this.persistentKeyboardHeight = keyboardHeight
     }
 
-    layoutObserver?.syncUpLayout()
-
     // keyboard gets resized - we do not want to have a default animated transition
     // so we skip these animations
     val isKeyboardResized = keyboardHeight != 0.0 && prevKeyboardHeight != keyboardHeight
     val isKeyboardShown = isKeyboardVisible && prevKeyboardHeight != 0.0
     if (isKeyboardResized && isKeyboardShown && isResizeHandledInCallbackMethods) {
+      layoutObserver?.syncUpLayout()
       onKeyboardResized(keyboardHeight)
       animationsToSkip.add(animation)
 
@@ -477,6 +476,15 @@ class KeyboardAnimationCallback(
     val event = pendingStartEvent ?: return
 
     pendingStartEvent = null
+    // `FocusedInputLayoutChangedEvent` is delivered to Reanimated synchronously
+    // on the UI thread, just like the start event below. Dispatching it from
+    // within `onStart` runs inside `dispatchWindowInsetsAnimationStart`, where
+    // a synchronous Fabric mutation can reentrantly cancel a pending IME insets
+    // controller before AOSP calls `listener.onReady` (AOSP checks `isCancelled`
+    // only before dispatching `onStart` and never re-checks it afterwards), so
+    // the layout sync is flushed here together with the start event (keeping
+    // the original layout -> start dispatch order).
+    layoutObserver?.syncUpLayout()
     context.dispatchEvent(
       eventPropagationView.id,
       KeyboardTransitionEvent(
