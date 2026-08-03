@@ -37,6 +37,7 @@ export function useEventHandlerRegistration(
   const onRegisterHandler = (handler: EventHandlerProcessed<never, never>) => {
     const currentHandler =
       handler as unknown as WorkletHandlerOrWorkletHandlerObject;
+    let registeredViewTag: number | null = null;
     const attachWorkletHandlers = () => {
       const viewTag = findNodeHandle(viewTagRef.current);
 
@@ -52,6 +53,8 @@ export function useEventHandlerRegistration(
         } else {
           currentHandler.registerForEvents(viewTag);
         }
+
+        registeredViewTag = viewTag;
       }
     };
 
@@ -63,13 +66,13 @@ export function useEventHandlerRegistration(
     }
 
     return () => {
-      const viewTag = findNodeHandle(viewTagRef.current);
-
-      if (viewTag) {
+      if (registeredViewTag) {
         if ("workletEventHandler" in currentHandler) {
-          currentHandler.workletEventHandler.unregisterFromEvents(viewTag);
+          currentHandler.workletEventHandler.unregisterFromEvents(
+            registeredViewTag,
+          );
         } else {
-          currentHandler.unregisterFromEvents(viewTag);
+          currentHandler.unregisterFromEvents(registeredViewTag);
         }
       }
     };
