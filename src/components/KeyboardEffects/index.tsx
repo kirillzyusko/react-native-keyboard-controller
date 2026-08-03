@@ -49,6 +49,14 @@ export type KeyboardEffectsProps = {
    * @default false
    */
   translucent?: boolean;
+  /**
+   * Whether the effect view should match the keyboard's rounded top corners.
+   *
+   * Set to `false` when the effect should fully cover the keyboard bounds.
+   *
+   * @default true
+   */
+  rounded?: boolean;
 } & KeyboardStickyViewProps;
 
 /**
@@ -70,16 +78,16 @@ export type KeyboardEffectsProps = {
 const KeyboardEffects = forwardRef<
   View,
   React.PropsWithChildren<KeyboardEffectsProps>
->(({ translucent, children, ...props }, ref) => {
+>(({ translucent, rounded = true, children, ...props }, ref) => {
   const stackEntry = useRef<TranslucentStackEntry>({
     translucent: Boolean(translucent),
   }).current;
   const containerStyle = useMemo(
     () => [
       styles.container,
-      KEYBOARD_HAS_ROUNDED_CORNERS && !translucent && styles.rounded,
+      KEYBOARD_HAS_ROUNDED_CORNERS && rounded && styles.rounded,
     ],
-    [translucent],
+    [rounded],
   );
 
   useEffect(() => {
