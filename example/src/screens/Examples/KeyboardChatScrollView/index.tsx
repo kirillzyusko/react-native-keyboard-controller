@@ -1,4 +1,4 @@
-import { LegendList } from "@legendapp/list";
+import { LegendList } from "@legendapp/list/react-native";
 import { FlashList } from "@shopify/flash-list";
 import React, {
   useCallback,
