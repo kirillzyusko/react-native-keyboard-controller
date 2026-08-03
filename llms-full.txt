@@ -1077,6 +1077,16 @@ Multiple instances
 
 Multiple mounted `KeyboardEffects` instances share a single native keyboard state, reconciled the same way React Native's `StatusBar` reconciles multiple instances: each instance's `translucent` value sits on a shared stack, and whichever instance was mounted (or updated) most recently wins. When that instance unmounts, the keyboard falls back to the value of the next-most-recently-mounted instance still on screen — not straight to opaque.
 
+### `rounded`[​](/react-native-keyboard-controller/docs/api/components/keyboard-effects.md#rounded "Direct link to rounded")
+
+A boolean prop indicating whether the effect view should match the keyboard's rounded top corners. When `true` (default), content behind an opaque keyboard is clipped to those corners. Set it to `false` to ignore the automatic corner rounding and fully cover the keyboard bounds — useful when a scrollable surface behind the keyboard should remain completely occluded.
+
+```
+<KeyboardEffects rounded={false}>
+  <View style={{ flex: 1, backgroundColor: "purple" }} />
+</KeyboardEffects>
+```
+
 
 ---
 
