@@ -168,7 +168,6 @@ class KeyboardAnimationCallback(
 
     if (isKeyboardFullyVisible && !isKeyboardSizeEqual && !isResizeHandledInCallbackMethods) {
       Logger.i(TAG, "onApplyWindowInsets: ${this.persistentKeyboardHeight} -> $keyboardHeight")
-      layoutObserver?.syncUpLayout()
       this.onKeyboardResized(keyboardHeight)
 
       return insets
@@ -216,8 +215,6 @@ class KeyboardAnimationCallback(
       // do not update it on hide, since back progress will be invalid
       this.persistentKeyboardHeight = keyboardHeight
     }
-
-    layoutObserver?.syncUpLayout()
 
     // keyboard gets resized - we do not want to have a default animated transition
     // so we skip these animations
@@ -427,6 +424,8 @@ class KeyboardAnimationCallback(
   private fun onKeyboardResized(keyboardHeight: Double) {
     duration = 0
 
+    layoutObserver?.syncUpLayout()
+
     context.emitEvent("KeyboardController::keyboardWillShow", getEventParams(keyboardHeight))
     listOf(
       KeyboardTransitionEvent.Start,
@@ -477,6 +476,7 @@ class KeyboardAnimationCallback(
     val event = pendingStartEvent ?: return
 
     pendingStartEvent = null
+    layoutObserver?.syncUpLayout()
     context.dispatchEvent(
       eventPropagationView.id,
       KeyboardTransitionEvent(
