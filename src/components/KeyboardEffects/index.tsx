@@ -85,9 +85,9 @@ const KeyboardEffects = forwardRef<
   const containerStyle = useMemo(
     () => [
       styles.container,
-      KEYBOARD_HAS_ROUNDED_CORNERS && !translucent && rounded && styles.rounded,
+      KEYBOARD_HAS_ROUNDED_CORNERS && rounded && styles.rounded,
     ],
-    [rounded, translucent],
+    [rounded],
   );
 
   useEffect(() => {
