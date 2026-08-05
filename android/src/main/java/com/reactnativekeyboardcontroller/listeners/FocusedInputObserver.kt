@@ -43,7 +43,7 @@ class FocusedInputObserver(
   private val context: ThemedReactContext?,
 ) {
   // constructor variables
-  internal val surfaceId = UIManagerHelper.getSurfaceId(eventPropagationView)
+  private val surfaceId = UIManagerHelper.getSurfaceId(eventPropagationView)
 
   // state variables
   private var lastFocusedInput: EditText? = null
