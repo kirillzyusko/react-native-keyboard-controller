@@ -109,6 +109,17 @@ RCT_EXPORT_VIEW_PROPERTY(enabled, BOOL)
   [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+#ifdef RCT_NEW_ARCH_ENABLED
+- (void)prepareForRecycle
+{
+  _enabled = NO;
+  [self detachInputAccessoryView];
+  _sharedInputAccessoryView = nil;
+
+  [super prepareForRecycle];
+}
+#endif
+
 // MARK: Listeners
 - (void)setupObservers
 {
