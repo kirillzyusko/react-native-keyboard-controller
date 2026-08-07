@@ -1,4 +1,4 @@
-package java.com.reactnativekeyboardcontroller
+package com.reactnativekeyboardcontroller
 
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.ViewGroupManager
