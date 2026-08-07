@@ -117,7 +117,7 @@ RCT_EXPORT_VIEW_PROPERTY(enabled, BOOL)
   _enabled = NO;
   [self detachInputAccessoryView];
   _sharedInputAccessoryView = nil;
-  
+
   // clean up listeners
   [self stopObserving];
 
