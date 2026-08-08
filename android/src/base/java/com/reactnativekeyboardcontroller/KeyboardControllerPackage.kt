@@ -8,7 +8,6 @@ import com.facebook.react.module.model.ReactModuleInfoProvider
 import com.facebook.react.uimanager.ViewManager
 import com.reactnativekeyboardcontroller.modules.KeyboardControllerModuleImpl
 import com.reactnativekeyboardcontroller.modules.statusbar.StatusBarManagerCompatModuleImpl
-import java.com.reactnativekeyboardcontroller.ClippingScrollViewDecoratorViewManager
 
 class KeyboardControllerPackage : BaseReactPackage() {
   override fun getModule(
