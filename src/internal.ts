@@ -12,8 +12,10 @@ type WorkletHandler = {
   unregisterFromEvents: (viewTag: number) => void;
 };
 
-type WorkletHandlerOrWorkletHandlerObject =
-  | WorkletHandler
+type WorkletHandlerContainer =
+  | {
+      current: WorkletHandler;
+    }
   | {
       workletEventHandler: WorkletHandler;
     };
@@ -35,8 +37,7 @@ export function useEventHandlerRegistration(
   viewTagRef: React.MutableRefObject<ComponentOrHandle>,
 ) {
   const onRegisterHandler = (handler: EventHandlerProcessed<never, never>) => {
-    const currentHandler =
-      handler as unknown as WorkletHandlerOrWorkletHandlerObject;
+    const currentHandler = handler as unknown as WorkletHandlerContainer;
     let registeredViewTag: number | null = null;
     const attachWorkletHandlers = () => {
       const viewTag = findNodeHandle(viewTagRef.current);
@@ -50,8 +51,8 @@ export function useEventHandlerRegistration(
       if (viewTag) {
         if ("workletEventHandler" in currentHandler) {
           currentHandler.workletEventHandler.registerForEvents(viewTag);
-        } else {
-          currentHandler.registerForEvents(viewTag);
+        } else if ("current" in currentHandler) {
+          currentHandler.current.registerForEvents(viewTag);
         }
 
         registeredViewTag = viewTag;
@@ -71,8 +72,8 @@ export function useEventHandlerRegistration(
           currentHandler.workletEventHandler.unregisterFromEvents(
             registeredViewTag,
           );
-        } else {
-          currentHandler.unregisterFromEvents(registeredViewTag);
+        } else if ("current" in currentHandler) {
+          currentHandler.current.unregisterFromEvents(registeredViewTag);
         }
       }
     };

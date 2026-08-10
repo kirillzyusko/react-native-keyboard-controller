@@ -50,7 +50,7 @@ beforeEach(() => {
 });
 
 describe("useEventHandlerRegistration", () => {
-  it("should support a handler wrapped in workletEventHandler", () => {
+  it("should support the handler shape from Reanimated 3.8 and newer", () => {
     const viewTagRef = { current: VIEW };
     const workletEventHandler = createWorkletHandler();
     const register = renderRegistration(viewTagRef);
@@ -70,12 +70,14 @@ describe("useEventHandlerRegistration", () => {
     );
   });
 
-  it("should support a direct worklet handler", () => {
+  it("should support the ref handler shape from Reanimated 3.0 through 3.7", () => {
     const viewTagRef = { current: VIEW };
     const workletEventHandler = createWorkletHandler();
     const register = renderRegistration(viewTagRef);
 
-    const cleanup = register(workletEventHandler as unknown as EventHandler);
+    const cleanup = register({
+      current: workletEventHandler,
+    } as unknown as EventHandler);
 
     expect(workletEventHandler.registerForEvents).toHaveBeenCalledWith(
       VIEW_TAG,
