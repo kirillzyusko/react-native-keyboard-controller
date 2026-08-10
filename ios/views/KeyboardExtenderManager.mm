@@ -62,6 +62,7 @@ RCT_EXPORT_VIEW_PROPERTY(enabled, BOOL)
 @implementation KeyboardExtender {
   UIView *_contentView;
   UIView *_sharedInputAccessoryView;
+  BOOL _isObserving;
 #ifdef RCT_NEW_ARCH_ENABLED
   RCTSurfaceTouchHandler *_touchHandler;
 #else
@@ -100,18 +101,37 @@ RCT_EXPORT_VIEW_PROPERTY(enabled, BOOL)
   }
 #endif
   [_touchHandler attachToView:_contentView];
-  [self setupObservers];
+  [self startObserving];
   return self;
 }
 
 - (void)dealloc
 {
-  [[NSNotificationCenter defaultCenter] removeObserver:self];
+  [self stopObserving];
 }
 
-// MARK: Listeners
-- (void)setupObservers
+#ifdef RCT_NEW_ARCH_ENABLED
+- (void)prepareForRecycle
 {
+  // clean up local variables state
+  _enabled = NO;
+  [self detachInputAccessoryView];
+  _sharedInputAccessoryView = nil;
+
+  // clean up listeners
+  [self stopObserving];
+
+  [super prepareForRecycle];
+}
+#endif
+
+// MARK: Listeners
+- (void)startObserving
+{
+  if (_isObserving) {
+    return;
+  }
+
   [[NSNotificationCenter defaultCenter] addObserver:self
                                            selector:@selector(handleTextInputDidBeginEditing:)
                                                name:UITextFieldTextDidBeginEditingNotification
@@ -121,6 +141,19 @@ RCT_EXPORT_VIEW_PROPERTY(enabled, BOOL)
                                            selector:@selector(handleTextInputDidBeginEditing:)
                                                name:UITextViewTextDidBeginEditingNotification
                                              object:nil];
+
+  _isObserving = YES;
+}
+
+- (void)stopObserving
+{
+  if (!_isObserving) {
+    return;
+  }
+
+  [[NSNotificationCenter defaultCenter] removeObserver:self];
+
+  _isObserving = NO;
 }
 
 - (void)handleTextInputDidBeginEditing:(NSNotification *)notification
@@ -222,6 +255,8 @@ RCT_EXPORT_VIEW_PROPERTY(enabled, BOOL)
 #ifdef RCT_NEW_ARCH_ENABLED
 - (void)updateProps:(Props::Shared const &)props oldProps:(Props::Shared const &)oldProps
 {
+  [self startObserving];
+
   const auto &newViewProps = *std::static_pointer_cast<const KeyboardExtenderProps>(props);
 
   if (newViewProps.enabled != self.enabled) {
