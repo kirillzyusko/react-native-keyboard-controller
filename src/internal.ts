@@ -51,7 +51,7 @@ export function useEventHandlerRegistration(
       if (viewTag) {
         if ("workletEventHandler" in currentHandler) {
           currentHandler.workletEventHandler.registerForEvents(viewTag);
-        } else if ("current" in currentHandler) {
+        } else {
           currentHandler.current.registerForEvents(viewTag);
         }
 
@@ -72,7 +72,7 @@ export function useEventHandlerRegistration(
           currentHandler.workletEventHandler.unregisterFromEvents(
             registeredViewTag,
           );
-        } else if ("current" in currentHandler) {
+        } else {
           currentHandler.current.unregisterFromEvents(registeredViewTag);
         }
       }
