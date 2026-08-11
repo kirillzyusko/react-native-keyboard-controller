@@ -10,7 +10,7 @@ import {
   initialWindowMetrics,
 } from "react-native-safe-area-context";
 
-import RootStack from "./navigation/RootStack";
+import Issue1588Repro from "./Issue1588Repro";
 
 const styles = StyleSheet.create({
   root: {
@@ -48,7 +48,7 @@ export default function App() {
               backgroundColor={"#FFFFFF00"}
               barStyle={"dark-content"}
             />
-            <RootStack />
+            <Issue1588Repro />
           </NavigationContainer>
         </KeyboardProvider>
       </GestureHandlerRootView>

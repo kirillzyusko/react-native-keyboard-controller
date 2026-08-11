@@ -38,6 +38,8 @@ public class FocusedInputObserver: NSObject {
   private var currentInput: UIView?
   private var currentResponder: UIView?
   private var observation: NSKeyValueObservation?
+  private var delegateSubstitutionGeneration = 0
+  private weak var substitutedResponder: UIResponder?
   private var lastEventDispatched: [AnyHashable: Any] = noFocusedInputEvent
 
   @objc public init(
@@ -232,14 +234,34 @@ public class FocusedInputObserver: NSObject {
       // TextInput and inject their own delegates at that point.
       // If we substitute our delegate too early (e.g., during autoFocus), and later restore it when the keyboard hides,
       // we may accidentally overwrite a delegate injected by another library — breaking its logic.
-      DispatchQueue.main.async {
-        self.substituteDelegate(self.currentResponder)
+      // Focus can change again before this block runs, so bind the work to this
+      // specific responder and discard it when a newer focus event arrives.
+      delegateSubstitutionGeneration &+= 1
+      let generation = delegateSubstitutionGeneration
+      let scheduledResponder = currentResponder
+      DispatchQueue.main.async { [weak self, weak scheduledResponder] in
+        guard let self, let scheduledResponder else { return }
+        guard generation == self.delegateSubstitutionGeneration,
+              self.currentResponder === scheduledResponder,
+              scheduledResponder.isFirstResponder
+        else {
+          return
+        }
+        self.substituteDelegate(scheduledResponder)
       }
     }
   }
 
   private func removeObservers(newResponder: UIResponder?) {
-    if newResponder == currentResponder || observation == nil {
+    if newResponder == currentResponder {
+      return
+    }
+
+    // Invalidate any deferred delegate substitution for the responder that is
+    // losing focus. A newer focus event will schedule its own substitution.
+    delegateSubstitutionGeneration &+= 1
+
+    if observation == nil {
       return
     }
 
@@ -254,19 +276,39 @@ public class FocusedInputObserver: NSObject {
       if !(textField.delegate is KCTextInputCompositeDelegate) {
         delegate.setTextFieldDelegate(delegate: textField.delegate, textField: textField)
         textField.setForceDelegate(delegate)
+        substitutedResponder = textField
       }
     } else if let textView = input as? UITextView {
       if !(textView.delegate is KCTextInputCompositeDelegate) {
         delegate.setTextViewDelegate(delegate: textView.delegate)
         textView.setForceDelegate(delegate)
+        substitutedResponder = textView
       }
     }
   }
 
   private func substituteDelegateBack(_ input: UIResponder?) {
-    if let textField = input as? UITextField, let oldDelegate = delegate.activeDelegate as? UITextFieldDelegate {
+    // Restore only the responder on which this observer installed the
+    // composite, and only while the composite is still installed. This keeps
+    // a previous responder's delegate from being written into a newly focused
+    // input and preserves delegates replaced by other libraries.
+    guard input === substitutedResponder else {
+      return
+    }
+
+    defer {
+      substitutedResponder = nil
+    }
+
+    if let textField = input as? UITextField,
+       textField.delegate === delegate,
+       let oldDelegate = delegate.activeDelegate as? UITextFieldDelegate
+    {
       textField.setForceDelegate(oldDelegate)
-    } else if let textView = input as? UITextView, let oldDelegate = delegate.activeDelegate as? UITextViewDelegate {
+    } else if let textView = input as? UITextView,
+              textView.delegate === delegate,
+              let oldDelegate = delegate.activeDelegate as? UITextViewDelegate
+    {
       textView.setForceDelegate(oldDelegate)
     }
   }
