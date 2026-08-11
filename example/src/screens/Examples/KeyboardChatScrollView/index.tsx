@@ -1,24 +1,16 @@
-import { LegendList } from "@legendapp/list/react-native";
-import { FlashList } from "@shopify/flash-list";
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { forwardRef, useCallback, useRef, useState } from "react";
 import {
-  Dimensions,
   FlatList,
-  Image,
+  type LayoutChangeEvent,
+  type ScrollViewProps,
   StyleSheet,
+  Text,
   TextInput,
   TouchableOpacity,
-  View,
 } from "react-native";
 import {
+  KeyboardChatScrollView,
   type KeyboardChatScrollViewRef,
-  KeyboardEffects,
   KeyboardGestureArea,
   KeyboardStickyView,
 } from "react-native-keyboard-controller";
@@ -28,183 +20,144 @@ import {
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
 
-import BlurView from "../../../components/BlurView";
+import type { KeyboardChatScrollViewProps } from "react-native-keyboard-controller";
 
-import Message from "./components/Message";
-import ConfigSheet from "./config";
-import { useChatConfigStore } from "./store";
-import styles, {
-  MARGIN,
-  TEXT_INPUT_HEIGHT,
-  contentContainerStyle,
-  invertedContentContainerStyle,
-} from "./styles";
-import VirtualizedListScrollView from "./VirtualizedListScrollView";
+const MARGIN = 8;
+const INPUT_HEIGHT = 42;
+const TEXT_INPUT_HEIGHT = INPUT_HEIGHT + MARGIN;
 
-import type { LayoutChangeEvent, ScrollViewProps } from "react-native";
-
-function KeyboardChatScrollViewPlayground() {
-  const chatScrollViewRef = useRef<KeyboardChatScrollViewRef | null>(null);
-  const scrollRef = useRef<KeyboardChatScrollViewRef>(null);
-  const textInputRef = useRef<TextInput>(null);
-  const textRef = useRef("");
-  const [inputHeight, setInputHeight] = useState(TEXT_INPUT_HEIGHT);
-  const extraContentPadding = useSharedValue(0);
-  const {
-    inverted,
-    messages,
-    reversedMessages,
-    addMessage,
-    mode,
-    translucent,
-  } = useChatConfigStore();
+// Wrapper for virtualized lists
+const ChatScrollView = forwardRef<
+  KeyboardChatScrollViewRef,
+  ScrollViewProps & KeyboardChatScrollViewProps
+>((props, ref) => {
   const { bottom } = useSafeAreaInsets();
 
-  const stickyViewOffset = useMemo(
-    () => ({ opened: bottom - MARGIN }),
-    [bottom],
+  return (
+    <KeyboardChatScrollView
+      ref={ref}
+      automaticallyAdjustContentInsets={false}
+      contentInsetAdjustmentBehavior="never"
+      keyboardDismissMode="interactive"
+      offset={bottom - MARGIN}
+      {...props}
+    />
   );
+});
 
-  const onInputLayoutChanged = useCallback(
-    (e: LayoutChangeEvent) => {
-      const height = e.nativeEvent.layout.height;
+function ChatScreen() {
+  const textInputRef = useRef<TextInput>(null);
+  const textRef = useRef("");
+  const [messages, setMessages] = useState([
+    { id: "1786111174702", text: "Hello" },
+  ]);
+  const { bottom } = useSafeAreaInsets();
+  const extraContentPadding = useSharedValue(0);
 
-      // eslint-disable-next-line react-compiler/react-compiler
-      extraContentPadding.value = withTiming(
-        Math.max(height - TEXT_INPUT_HEIGHT, 0),
-        { duration: 250 },
-      );
-      setInputHeight(height);
-    },
-    [extraContentPadding],
-  );
-  const onInput = useCallback((text: string) => {
-    textRef.current = text;
-  }, []);
-  const onSend = useCallback(() => {
-    const message = textRef.current.trim();
-
-    if (message === "") {
-      return;
-    }
-
-    addMessage({ text: message, sender: true });
-    textInputRef.current?.clear();
-    textRef.current = "";
-  }, [addMessage]);
-
-  useEffect(() => {
-    chatScrollViewRef.current?.scrollToEnd({ animated: true });
-    scrollRef.current?.scrollToEnd({ animated: true });
-  }, [messages]);
-
-  const memoList = useCallback(
+  const renderScrollComponent = useCallback(
     (props: ScrollViewProps) => (
-      <VirtualizedListScrollView
-        {...props}
-        chatScrollViewRef={chatScrollViewRef}
-        extraContentPadding={extraContentPadding}
-      />
+      <ChatScrollView {...props} extraContentPadding={extraContentPadding} />
     ),
     [extraContentPadding],
   );
 
+  const onSend = useCallback(() => {
+    const text = textRef.current.trim();
+
+    if (!text) {
+      return;
+    }
+
+    setMessages((prev) => [...prev, { id: String(Date.now()), text }]);
+    textInputRef.current?.clear();
+    textRef.current = "";
+  }, []);
+
+  const onInputLayout = useCallback(
+    (e: LayoutChangeEvent) => {
+      extraContentPadding.value = withTiming(
+        Math.max(e.nativeEvent.layout.height - INPUT_HEIGHT, 0),
+        { duration: 250 },
+      );
+    },
+    [extraContentPadding],
+  );
+
   return (
-    <>
-      <SafeAreaView edges={["bottom"]} style={styles.container}>
-        <KeyboardGestureArea
-          interpolator="ios"
-          offset={inputHeight}
-          style={styles.container}
-          textInputNativeID="chat-input"
+    <SafeAreaView edges={["bottom"]} style={styles.container}>
+      <KeyboardGestureArea
+        interpolator="ios"
+        offset={INPUT_HEIGHT}
+        style={styles.container}
+        textInputNativeID="chat-input"
+      >
+        <FlatList
+          inverted
+          contentContainerStyle={{ paddingTop: TEXT_INPUT_HEIGHT }}
+          data={messages}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => <Message {...item} />}
+          renderScrollComponent={renderScrollComponent}
+        />
+        <KeyboardStickyView
+          offset={{ opened: bottom - MARGIN }}
+          style={styles.composer}
         >
-          {mode === "legend" && (
-            <LegendList
-              alignItemsAtEnd={inverted}
-              contentContainerStyle={contentContainerStyle}
-              data={messages}
-              initialScrollAtEnd={inverted}
-              keyExtractor={(item) => item.text}
-              renderItem={({ item }) => <Message {...item} />}
-              renderScrollComponent={memoList}
-            />
-          )}
-          {mode === "flash" && (
-            <FlashList
-              contentContainerStyle={
-                inverted ? invertedContentContainerStyle : contentContainerStyle
-              }
-              data={inverted ? reversedMessages : messages}
-              // use slightly bigger distance to avoid flashing for inverted case
-              // internally `KeyboardChatScrollView` re-positions content and in case
-              // of inverted it shifts it by `translateY={keyboardSize}` and adjust scroll position
-              // so real content movement can be `keyboardSize x2`, and `FlashList` may recycle wrong items
-              // using bigger distance we assure that we will not see flickering of messages
-              // during keyboard animation
-              drawDistance={Dimensions.get("screen").height}
-              inverted={inverted}
-              keyExtractor={(item) => item.text}
-              renderItem={({ item }) => <Message {...item} />}
-              renderScrollComponent={memoList}
-            />
-          )}
-          {mode === "flat" && (
-            <FlatList
-              data={inverted ? reversedMessages : messages}
-              inverted={inverted}
-              keyExtractor={(item) => item.text}
-              renderItem={({ item }) => <Message {...item} />}
-              renderScrollComponent={memoList}
-            />
-          )}
-          {mode === "scroll" && (
-            <VirtualizedListScrollView
-              ref={scrollRef}
-              extraContentPadding={extraContentPadding}
-            >
-              {messages.map((message, index) => (
-                <Message key={index} {...message} />
-              ))}
-            </VirtualizedListScrollView>
-          )}
-          <KeyboardStickyView offset={stickyViewOffset} style={styles.composer}>
-            <View
-              style={[
-                StyleSheet.absoluteFillObject,
-                { overflow: "hidden" },
-                styles.input,
-              ]}
-            >
-              <BlurView
-                blurAmount={32}
-                blurType="light"
-                reducedTransparencyFallbackColor="white"
-                style={StyleSheet.absoluteFillObject}
-              />
-            </View>
-            <TextInput
-              ref={textInputRef}
-              multiline
-              nativeID="chat-input"
-              style={styles.input}
-              testID="chat.input"
-              onChangeText={onInput}
-              onLayout={onInputLayoutChanged}
-            />
-            <TouchableOpacity style={styles.send} onPress={onSend}>
-              <Image source={require("./send.png")} style={styles.icon} />
-            </TouchableOpacity>
-          </KeyboardStickyView>
-        </KeyboardGestureArea>
-        <ConfigSheet />
-      </SafeAreaView>
-      {!translucent && (
-        <KeyboardEffects>
-          <View style={styles.keyboardBackground} />
-        </KeyboardEffects>
-      )}
-    </>
+          <TextInput
+            ref={textInputRef}
+            multiline
+            nativeID="chat-input"
+            placeholder="Type a message..."
+            style={styles.input}
+            onChangeText={(text) => (textRef.current = text)}
+            onLayout={onInputLayout}
+          />
+          <TouchableOpacity onPress={onSend}>
+            <Text>Send</Text>
+          </TouchableOpacity>
+        </KeyboardStickyView>
+      </KeyboardGestureArea>
+    </SafeAreaView>
   );
 }
 
-export default KeyboardChatScrollViewPlayground;
+const styles = StyleSheet.create({
+  container: {
+    justifyContent: "flex-end",
+    flex: 1,
+    backgroundColor: "#3A3A3C",
+  },
+  input: {
+    flex: 1,
+    margin: MARGIN,
+    marginBottom: 0,
+    padding: MARGIN,
+    borderRadius: 99,
+    borderWidth: 1,
+    borderColor: "#BCBCBC",
+    backgroundColor: "#3A3A3C66",
+  },
+  composer: {
+    position: "absolute",
+    width: "100%",
+    minHeight: TEXT_INPUT_HEIGHT,
+  },
+  send: {
+    position: "absolute",
+    top: MARGIN + (TEXT_INPUT_HEIGHT - MARGIN * 2) / 2,
+    right: MARGIN * 2,
+    padding: MARGIN,
+    backgroundColor: "white",
+    height: 24,
+    width: 24,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 99,
+  },
+  icon: {
+    width: 20,
+    height: 20,
+  },
+});
+
+export default ChatScreen;
