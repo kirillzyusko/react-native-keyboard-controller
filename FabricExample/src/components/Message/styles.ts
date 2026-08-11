@@ -5,20 +5,22 @@ const container = {
   padding: 10,
   margin: 10,
   marginVertical: 5,
+  maxWidth: "75%" as const,
 };
 
 export default StyleSheet.create({
   senderContainer: {
     alignSelf: "flex-end",
-    backgroundColor: "#e0e0e0",
+    backgroundColor: "#1be6cf",
     ...container,
   },
   recipientContainer: {
     alignSelf: "flex-start",
-    backgroundColor: "#50FF00",
+    backgroundColor: "#FFFFFF",
     ...container,
   },
   message: {
-    color: "#000000",
+    color: "rgba(0, 0, 0, 0.0)",
+    opacity: 0,
   },
 });

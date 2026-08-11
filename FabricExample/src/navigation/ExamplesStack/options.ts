@@ -9,6 +9,7 @@ export const options = {
   },
   [ScreenNames.REANIMATED_CHAT_FLAT_LIST]: {
     title: "Chat FlatList",
+    headerShown: false,
   },
   [ScreenNames.EVENTS]: {
     title: "Events",

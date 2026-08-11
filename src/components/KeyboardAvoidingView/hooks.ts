@@ -102,7 +102,7 @@ export const useTranslateAnimation = () => {
       onEnd: (e) => {
         "worklet";
 
-        padding.value = e.progress;
+        // padding.value = e.progress;
 
         if (OS !== "ios") {
           translate.value = e.progress;
