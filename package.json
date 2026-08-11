@@ -17,6 +17,7 @@
     "react-native-keyboard-controller.podspec",
     "react-native.config.js",
     "jest",
+    "AGENTS.MD",
     "!lib/typescript/example",
     "!android/detekt.yml",
     "!android/build",
