@@ -9,6 +9,8 @@ on:
     types: [opened, reopened, synchronize]
     paths:
       - ".github/workflows/label-sponsors.yml"
+  pull_request_target:
+    types: [opened, reopened]
   schedule:
     - cron: "17 2 * * *"
   workflow_dispatch:
@@ -16,10 +18,11 @@ on:
 permissions:
   contents: read
   issues: write
+  pull-requests: write
 
 jobs:
   label-sponsors:
-    name: Label sponsor issues
+    name: 💖 Label sponsor issues and pull requests
     runs-on: ubuntu-latest
     steps:
       - name: Add sponsor label
@@ -44,12 +47,13 @@ jobs:
                 },
               );
             } else {
-              issues = context.payload.issue ? [context.payload.issue] : [];
+              const issueOrPullRequest =
+                context.payload.issue ?? context.payload.pull_request;
+              issues = issueOrPullRequest ? [issueOrPullRequest] : [];
             }
 
             issues = issues.filter(
               (issue) =>
-                !issue.pull_request &&
                 issue.user?.login &&
                 !issue.labels.some((issueLabel) =>
                   typeof issueLabel === "string"
@@ -123,7 +127,12 @@ jobs:
                 issue_number: issue.number,
                 labels: [label],
               });
+              const itemType =
+                issue.pull_request ||
+                context.payload.pull_request?.number === issue.number
+                  ? "pull request"
+                  : "issue";
               core.info(
-                `Added ${label} to issue #${issue.number}; ${sponsor} is a sponsor`,
+                `Added ${label} to ${itemType} #${issue.number}; ${sponsor} is a sponsor`,
               );
             }
