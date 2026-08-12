@@ -201,7 +201,9 @@
     "fract",
     "SKSL",
     "siri",
-    "luma"
+    "luma",
+    "lockfiles",
+    "worktree"
   ],
   "ignorePaths": [
     "node_modules",
