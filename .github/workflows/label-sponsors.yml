@@ -31,6 +31,8 @@ jobs:
           retries: 3
           script: |
             const label = "Sponsor 💖";
+            const action = context.payload.action ?? "none";
+            core.info(`Trigger: ${context.eventName} (action: ${action})`);
 
             let issues;
             if (
@@ -52,15 +54,7 @@ jobs:
               issues = issueOrPullRequest ? [issueOrPullRequest] : [];
             }
 
-            issues = issues.filter(
-              (issue) =>
-                issue.user?.login &&
-                !issue.labels.some((issueLabel) =>
-                  typeof issueLabel === "string"
-                    ? issueLabel === label
-                    : issueLabel.name === label,
-                ),
-            );
+            core.info(`Loaded ${issues.length} open issue(s) and pull request(s)`);
 
             const sponsorQuery = `
               query($owner: String!, $repo: String!, $sponsor: String!) {
@@ -78,10 +72,48 @@ jobs:
             `;
 
             const sponsorStatus = new Map();
-            for (const issue of issues) {
-              const participants = new Set([issue.user.login]);
+            const totals = {
+              labeled: 0,
+              noSponsor: 0,
+              alreadyLabeled: 0,
+              missingAuthor: 0,
+            };
 
-              if (issue.comments > 0) {
+            for (const issue of issues) {
+              const itemType =
+                issue.pull_request ||
+                context.payload.pull_request?.number === issue.number
+                  ? "pull request"
+                  : "issue";
+              const author = issue.user?.login;
+              const commentCount = issue.comments ?? 0;
+
+              core.info(
+                `Checking ${itemType} #${issue.number}: author=${author ?? "unknown"}, comments=${commentCount}`,
+              );
+
+              if (!author) {
+                totals.missingAuthor += 1;
+                core.info(`Skipped ${itemType} #${issue.number}: author is missing`);
+                continue;
+              }
+
+              const alreadyLabeled = (issue.labels ?? []).some((issueLabel) =>
+                typeof issueLabel === "string"
+                  ? issueLabel === label
+                  : issueLabel.name === label,
+              );
+              if (alreadyLabeled) {
+                totals.alreadyLabeled += 1;
+                core.info(
+                  `Skipped ${itemType} #${issue.number}: ${label} is already applied`,
+                );
+                continue;
+              }
+
+              const participants = new Set([author]);
+
+              if (commentCount > 0) {
                 const comments = await github.paginate(
                   github.rest.issues.listComments,
                   {
@@ -98,9 +130,17 @@ jobs:
                 }
               }
 
+              core.info(
+                `Participants in ${itemType} #${issue.number}: ${[...participants]
+                  .map((participant) => `@${participant}`)
+                  .join(", ")}`,
+              );
+
               let sponsor;
               for (const participant of participants) {
+                let cached = true;
                 if (!sponsorStatus.has(participant)) {
+                  cached = false;
                   const result = await github.graphql(sponsorQuery, {
                     owner: context.repo.owner,
                     repo: context.repo.repo,
@@ -112,13 +152,24 @@ jobs:
                   );
                 }
 
-                if (sponsorStatus.get(participant)) {
+                const isSponsor = sponsorStatus.get(participant);
+                core.info(
+                  `Sponsor check for @${participant}: ${isSponsor ? "yes" : "no"}${
+                    cached ? " (cached)" : ""
+                  }`,
+                );
+
+                if (isSponsor) {
                   sponsor = participant;
                   break;
                 }
               }
 
               if (!sponsor) {
+                totals.noSponsor += 1;
+                core.info(
+                  `Skipped ${itemType} #${issue.number}: no participant is a sponsor`,
+                );
                 continue;
               }
 
@@ -127,12 +178,34 @@ jobs:
                 issue_number: issue.number,
                 labels: [label],
               });
-              const itemType =
-                issue.pull_request ||
-                context.payload.pull_request?.number === issue.number
-                  ? "pull request"
-                  : "issue";
+              totals.labeled += 1;
               core.info(
                 `Added ${label} to ${itemType} #${issue.number}; ${sponsor} is a sponsor`,
               );
             }
+
+            core.info(
+              `Summary: scanned=${issues.length}, labeled=${totals.labeled}, ` +
+                `no sponsor=${totals.noSponsor}, already labeled=${totals.alreadyLabeled}, ` +
+                `missing author=${totals.missingAuthor}`,
+            );
+
+            await core.summary
+              .addHeading("💖 Sponsor label scan")
+              .addTable([
+                [
+                  { data: "Scanned", header: true },
+                  { data: "Labeled", header: true },
+                  { data: "No sponsor", header: true },
+                  { data: "Already labeled", header: true },
+                  { data: "Missing author", header: true },
+                ],
+                [
+                  String(issues.length),
+                  String(totals.labeled),
+                  String(totals.noSponsor),
+                  String(totals.alreadyLabeled),
+                  String(totals.missingAuthor),
+                ],
+              ])
+              .write();
