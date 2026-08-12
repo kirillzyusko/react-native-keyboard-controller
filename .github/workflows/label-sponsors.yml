@@ -5,6 +5,10 @@ on:
     types: [opened, reopened]
   issue_comment:
     types: [created]
+  pull_request:
+    types: [opened]
+    paths:
+      - ".github/workflows/label-sponsors.yml"
   schedule:
     - cron: "17 2 * * *"
   workflow_dispatch:
@@ -28,7 +32,8 @@ jobs:
             let issues;
             if (
               context.eventName === "schedule" ||
-              context.eventName === "workflow_dispatch"
+              context.eventName === "workflow_dispatch" ||
+              context.eventName === "pull_request"
             ) {
               issues = await github.paginate(
                 github.rest.issues.listForRepo,
