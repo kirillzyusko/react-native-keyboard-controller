@@ -1,14 +1,97 @@
 name: Label sponsors
+
 on:
   issues:
-    types: [opened]
+    types: [opened, reopened]
+  issue_comment:
+    types: [created]
+  schedule:
+    - cron: "17 2 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
 jobs:
-  build:
-    name: is-sponsor-label
+  label-sponsors:
+    name: Label sponsor issues
     runs-on: ubuntu-latest
     steps:
-      - uses: JasonEtco/is-sponsor-label-action@v2.0.0
+      - name: Add sponsor label
+        uses: actions/github-script@v9
         with:
-          label: Sponsor 💖
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          retries: 3
+          script: |
+            const label = "Sponsor 💖";
+
+            let issues;
+            if (
+              context.eventName === "schedule" ||
+              context.eventName === "workflow_dispatch"
+            ) {
+              issues = await github.paginate(
+                github.rest.issues.listForRepo,
+                {
+                  ...context.repo,
+                  state: "open",
+                  per_page: 100,
+                },
+              );
+            } else {
+              issues = context.payload.issue ? [context.payload.issue] : [];
+            }
+
+            issues = issues.filter(
+              (issue) =>
+                !issue.pull_request &&
+                issue.user?.login &&
+                !issue.labels.some((issueLabel) =>
+                  typeof issueLabel === "string"
+                    ? issueLabel === label
+                    : issueLabel.name === label,
+                ),
+            );
+
+            const sponsorQuery = `
+              query($owner: String!, $repo: String!, $sponsor: String!) {
+                repository(owner: $owner, name: $repo) {
+                  owner {
+                    ... on User {
+                      isSponsoredBy(accountLogin: $sponsor)
+                    }
+                    ... on Organization {
+                      isSponsoredBy(accountLogin: $sponsor)
+                    }
+                  }
+                }
+              }
+            `;
+
+            const sponsorStatus = new Map();
+            for (const issue of issues) {
+              const author = issue.user.login;
+
+              if (!sponsorStatus.has(author)) {
+                const result = await github.graphql(sponsorQuery, {
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  sponsor: author,
+                });
+                sponsorStatus.set(
+                  author,
+                  result.repository.owner.isSponsoredBy,
+                );
+              }
+
+              if (!sponsorStatus.get(author)) {
+                continue;
+              }
+
+              await github.rest.issues.addLabels({
+                ...context.repo,
+                issue_number: issue.number,
+                labels: [label],
+              });
+              core.info(`Added ${label} to issue #${issue.number}`);
+            }
