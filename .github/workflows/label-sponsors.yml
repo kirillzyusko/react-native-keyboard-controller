@@ -70,21 +70,46 @@ jobs:
 
             const sponsorStatus = new Map();
             for (const issue of issues) {
-              const author = issue.user.login;
+              const participants = new Set([issue.user.login]);
 
-              if (!sponsorStatus.has(author)) {
-                const result = await github.graphql(sponsorQuery, {
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  sponsor: author,
-                });
-                sponsorStatus.set(
-                  author,
-                  result.repository.owner.isSponsoredBy,
+              if (issue.comments > 0) {
+                const comments = await github.paginate(
+                  github.rest.issues.listComments,
+                  {
+                    ...context.repo,
+                    issue_number: issue.number,
+                    per_page: 100,
+                  },
                 );
+
+                for (const comment of comments) {
+                  if (comment.user?.login) {
+                    participants.add(comment.user.login);
+                  }
+                }
               }
 
-              if (!sponsorStatus.get(author)) {
+              let sponsor;
+              for (const participant of participants) {
+                if (!sponsorStatus.has(participant)) {
+                  const result = await github.graphql(sponsorQuery, {
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    sponsor: participant,
+                  });
+                  sponsorStatus.set(
+                    participant,
+                    result.repository.owner.isSponsoredBy,
+                  );
+                }
+
+                if (sponsorStatus.get(participant)) {
+                  sponsor = participant;
+                  break;
+                }
+              }
+
+              if (!sponsor) {
                 continue;
               }
 
@@ -93,5 +118,7 @@ jobs:
                 issue_number: issue.number,
                 labels: [label],
               });
-              core.info(`Added ${label} to issue #${issue.number}`);
+              core.info(
+                `Added ${label} to issue #${issue.number}; ${sponsor} is a sponsor`,
+              );
             }
