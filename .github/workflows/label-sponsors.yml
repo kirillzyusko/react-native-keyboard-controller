@@ -1,4 +1,4 @@
-name: Label sponsors
+name: 💖 Label sponsors
 
 on:
   issues:
@@ -22,7 +22,7 @@ permissions:
 
 jobs:
   label-sponsors:
-    name: 💖 Label sponsor issues and pull requests
+    name: 💎 Label sponsor issues and pull requests
     runs-on: ubuntu-latest
     steps:
       - name: Add sponsor label
