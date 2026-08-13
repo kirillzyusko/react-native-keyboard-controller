@@ -35,8 +35,20 @@ def reactNativeArchitectures() {
   return value ? value.split(",") : ["armeabi-v7a", "x86", "x86_64", "arm64-v8a"]
 }
 
+// AGP 9 ships built-in Kotlin support, which is on by default but can be disabled
+// via the `android.builtInKotlin` Gradle property.
+def hasBuiltInKotlinSupport() {
+  def agpMajorVersion = com.android.Version.ANDROID_GRADLE_PLUGIN_VERSION.tokenize('.')[0].toInteger()
+  def builtInKotlin = project.findProperty('android.builtInKotlin')
+
+  return agpMajorVersion >= 9 && (builtInKotlin == null || builtInKotlin.toString().toBoolean())
+}
+
 apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
+// applying `kotlin-android` on top of AGP's built-in Kotlin support fails the build
+if (!hasBuiltInKotlinSupport()) {
+  apply plugin: 'kotlin-android'
+}
 apply from: "$projectDir/react-native-helpers.gradle"
 
 if (isNewArchitectureEnabled()) {
