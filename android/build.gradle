@@ -36,8 +36,12 @@ def reactNativeArchitectures() {
 }
 
 apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
 apply from: "$projectDir/react-native-helpers.gradle"
+
+// applying `kotlin-android` on top of AGP's built-in Kotlin support fails the build
+if (!project.ext.hasBuiltInKotlinSupport(com.android.Version.ANDROID_GRADLE_PLUGIN_VERSION)) {
+  apply plugin: 'kotlin-android'
+}
 
 if (isNewArchitectureEnabled()) {
   apply plugin: 'com.facebook.react'

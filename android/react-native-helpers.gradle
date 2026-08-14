@@ -44,3 +44,14 @@ project.ext.shouldConsumeReactNativeFromMavenCentral = { ->
 project.ext.shouldUseBaseReactPackage = { ->
   return REACT_NATIVE_MINOR_VERSION >= 74
 }
+
+// AGP 9 ships built-in Kotlin support, which is on by default but can be disabled
+// via the `android.builtInKotlin` Gradle property. The AGP version is passed in
+// because `com.android.Version` lives on the buildscript classpath of
+// `build.gradle`, which scripts applied with `apply from:` do not inherit.
+project.ext.hasBuiltInKotlinSupport = { agpVersion ->
+  def agpMajorVersion = agpVersion.tokenize('.')[0].toInteger()
+  def builtInKotlin = project.findProperty('android.builtInKotlin')
+
+  return agpMajorVersion >= 9 && (builtInKotlin == null || builtInKotlin.toString().toBoolean())
+}
