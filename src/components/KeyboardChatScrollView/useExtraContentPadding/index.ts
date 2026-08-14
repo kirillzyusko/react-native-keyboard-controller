@@ -1,6 +1,10 @@
 import { useCallback } from "react";
 import { Platform } from "react-native";
-import { scrollTo, useAnimatedReaction } from "react-native-reanimated";
+import {
+  scrollTo,
+  useAnimatedReaction,
+  useSharedValue,
+} from "react-native-reanimated";
 
 import { IS_FABRIC } from "../../../architecture";
 import { isScrollAtEnd, shouldShiftContent } from "../useChatKeyboard/helpers";
@@ -60,12 +64,28 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
     freeze,
   } = options;
 
+  // The offset we last asked the scroll view to move to, and the observed
+  // `scroll` value it was derived from. `scroll` is fed by native scroll
+  // events, but our own writes are programmatic (`contentOffsetY` through
+  // animatedProps on Fabric, a deferred `scrollTo` on Android), so a fast
+  // animation (e.g. `withTiming` on `extraContentPadding`) can run several
+  // reaction frames before a single scroll event lands. While that is the case
+  // `scroll` still reports the pre-animation offset and rebasing on it makes
+  // every frame throw away the previous frames' shifts.
+  const lastCommanded = useSharedValue<number | null>(null);
+  const lastObservedScroll = useSharedValue(0);
+
   const scrollToTarget = useCallback(
     (target: number) => {
       "worklet";
 
+      // Remember the command and the observed offset it was based on, so the
+      // next frame can tell whether a scroll event has landed since.
+      // eslint-disable-next-line react-compiler/react-compiler
+      lastCommanded.value = target;
+      lastObservedScroll.value = scroll.value;
+
       if (contentOffsetY && IS_FABRIC) {
-        // eslint-disable-next-line react-compiler/react-compiler
         contentOffsetY.value = target;
       } else if (OS === "android") {
         // Defer scrollTo so the animatedProps inset commit lands first;
@@ -82,7 +102,7 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
         scrollTo(scrollViewRef, 0, target, false);
       }
     },
-    [scrollViewRef, contentOffsetY],
+    [scrollViewRef, contentOffsetY, scroll, lastCommanded, lastObservedScroll],
   );
 
   useAnimatedReaction(
@@ -134,19 +154,30 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
         return;
       }
 
-      if (inverted) {
-        const target = Math.max(scroll.value - effectiveDelta, -currentTotal);
+      // Build on the offset we last commanded as long as no scroll event has
+      // landed since, because that write is still in flight. As soon as `scroll`
+      // moves (a real user drag, or the native view reporting our own write
+      // back) we rebase on it, so an actual gesture always wins.
+      const base =
+        lastCommanded.value !== null &&
+        scroll.value === lastObservedScroll.value
+          ? lastCommanded.value
+          : scroll.value;
 
-        scrollToTarget(target);
+      let target: number;
+
+      if (inverted) {
+        target = Math.max(base - effectiveDelta, -currentTotal);
       } else {
         const maxScroll = Math.max(
           size.value.height - layout.value.height + currentTotal,
           0,
         );
-        const target = Math.min(scroll.value + effectiveDelta, maxScroll);
 
-        scrollToTarget(target);
+        target = Math.min(base + effectiveDelta, maxScroll);
       }
+
+      scrollToTarget(target);
     },
     [inverted, keyboardLiftBehavior],
   );
