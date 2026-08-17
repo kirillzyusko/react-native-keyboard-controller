@@ -9,6 +9,8 @@ on:
       - "react-native-keyboard-controller.podspec"
       - "ios/**"
       - "example/ios/**"
+      - "example/Gemfile*"
+      - "example/.ruby-version"
       - "yarn.lock"
       - "example/yarn.lock"
       - "example/patches/**"
@@ -20,6 +22,8 @@ on:
       - "react-native-keyboard-controller.podspec"
       - "ios/**"
       - "example/ios/**"
+      - "example/Gemfile*"
+      - "example/.ruby-version"
       - "yarn.lock"
       - "example/yarn.lock"
       - "example/patches/**"
@@ -74,7 +78,7 @@ jobs:
       - name: Setup Ruby (bundle)
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 2.7.6
+          ruby-version: 3.3.0
           bundler-cache: true
           working-directory: example/ios
 
