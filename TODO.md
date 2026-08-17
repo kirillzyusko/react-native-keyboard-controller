@@ -1,0 +1,7 @@
+- [-] dismissal without animation (dismiss({animated: false}))
+- [-] interactive dismissal
+- [-] cross fade enabled (test detection?)
+- [x] toggle under feature flag
+- [x] e2e tests pass
+- [-] release after iOS 27
+- [-] iOS < 26 problem: new keyboard window doesn't have an animation when keyboardWillAppear event is fired. Because of that we can not use correct duration and we interrupt the watcher in the mid of the animation, because we use 0.25 from notification.
