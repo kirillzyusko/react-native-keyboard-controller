@@ -1,0 +1,4 @@
+interface:
+  display_name: "Build RNKC Chat Screen"
+  short_description: "Build production-ready chat keyboard layouts"
+  default_prompt: "Use $build-rnkc-chat-screen to build or refactor this chat screen around KeyboardChatScrollView and its supporting RNKC components."
