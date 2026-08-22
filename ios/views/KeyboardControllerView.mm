@@ -108,7 +108,7 @@ using namespace facebook::react;
                 self->_eventEmitter)
                 ->onFocusedInputTextChanged(
                     facebook::react::KeyboardControllerViewEventEmitter::OnFocusedInputTextChanged{
-                        .text = std::string([text UTF8String])});
+                        .text = std::string([text UTF8String] ?: "")});
 
             FocusedInputTextChangedEvent *textChangedEvent =
                 [[FocusedInputTextChangedEvent alloc] initWithReactTag:@(self.tag) text:text];

@@ -1309,10 +1309,10 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@legendapp/list@3.0.0-beta.32":
-  version "3.0.0-beta.32"
-  resolved "https://registry.yarnpkg.com/@legendapp/list/-/list-3.0.0-beta.32.tgz#33a08df134d103e7ae1920ca8385cb59323cd42b"
-  integrity sha512-lWIdQ1Z3IrR5Iv7I3qOLDYk9Uh/gc03wITNEObTpR2tIYNvgDibOL/3yAznyvkQMuwl3TLquan46Zo0t/XdmIA==
+"@legendapp/list@3.3.3":
+  version "3.3.3"
+  resolved "https://registry.yarnpkg.com/@legendapp/list/-/list-3.3.3.tgz#219531d71d0020a8e521827f072002224df8cfaa"
+  integrity sha512-p3g4xG6f//s4XQKhuus2189GCQgOHEIbJXHePqeDxj+6UQQQyij4YBjyArNSCgqoP0c03sxDPSOuCFB128Ql6g==
   dependencies:
     use-sync-external-store "^1.5.0"
 

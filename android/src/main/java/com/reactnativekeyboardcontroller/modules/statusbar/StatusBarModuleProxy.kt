@@ -31,10 +31,16 @@ class StatusBarModuleProxy(
       instance = constructor.newInstance(reactContext)
 
       setHiddenMethod = clazz.getMethod("setHidden", Boolean::class.java)
-      setColorMethod = clazz.getMethod("setColor", Double::class.java, Boolean::class.java)
-      setTranslucentMethod = clazz.getMethod("setTranslucent", Boolean::class.java)
       setStyleMethod = clazz.getMethod("setStyle", String::class.java)
       getConstantsMethod = clazz.getMethod("getConstants")
+
+      // `setColor` and `setTranslucent` were removed from `StatusBarModule` in RN 0.87, so we look
+      // them up optionally - otherwise a single `NoSuchMethodException` would abort the whole
+      // initialization and leave every other method (and the module instance) unresolved.
+      setColorMethod =
+        runCatching { clazz.getMethod("setColor", Double::class.java, Boolean::class.java) }.getOrNull()
+      setTranslucentMethod =
+        runCatching { clazz.getMethod("setTranslucent", Boolean::class.java) }.getOrNull()
     } catch (e: Exception) {
       Logger.w(TAG, "Failed to initialize StatusBarModule via reflection", e)
     }

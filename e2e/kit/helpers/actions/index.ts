@@ -137,7 +137,7 @@ export const scrollDownUntilElementIsVisible = async (
   await waitFor(element(by.id(elementId)))
     .toBeVisible()
     .whileElement(by.id(scrollViewId))
-    .scroll(100, "down", x, y);
+    .scroll(200, "down", x, y);
 };
 
 export const scrollUpUntilElementIsBarelyVisible = async (

@@ -19,6 +19,7 @@ export {
 } from "./components";
 export type {
   KeyboardChatScrollViewProps,
+  KeyboardChatScrollViewRef,
   KeyboardAvoidingViewProps,
   KeyboardStickyViewProps,
   KeyboardAwareScrollViewMode,

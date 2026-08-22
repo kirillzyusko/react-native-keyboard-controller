@@ -99,6 +99,10 @@ RCT_EXPORT_MODULE(KeyboardBackgroundViewManager)
 {
   self = [super initWithFrame:frame];
   if (self) {
+#ifdef RCT_NEW_ARCH_ENABLED
+    static const auto defaultProps = std::make_shared<const KeyboardBackgroundViewProps>();
+    _props = defaultProps;
+#endif
     [self setupBackdropView];
   }
   self.clipsToBounds = YES;

@@ -22,7 +22,7 @@ const AIKeyboard = () => (
     <SafeAreaView style={styles.hero}>
       <Text style={styles.title}>Describe an image or add a suggestion.</Text>
     </SafeAreaView>
-    <KeyboardEffects translucent>
+    <KeyboardEffects translucent rounded={false}>
       <KeyboardGradient />
     </KeyboardEffects>
     <KeyboardStickyView offset={{ opened: 16 }} style={styles.sticky}>

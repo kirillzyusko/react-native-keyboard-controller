@@ -137,6 +137,12 @@ export const renderKeyboardAwareScrollView = async (
     mockCapturedOnLayout.current?.({
       nativeEvent: { layout: { x: 0, y: 0, width: 390, height: 812 } },
     } as LayoutChangeEvent);
+
+    // Let `synchronize` continue after `await update`, then drain its scheduled frame.
+    await Promise.resolve();
+    await new Promise<void>((resolve) => {
+      requestAnimationFrame(() => resolve());
+    });
   });
 };
 

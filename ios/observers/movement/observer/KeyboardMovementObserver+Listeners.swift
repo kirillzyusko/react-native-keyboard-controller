@@ -91,6 +91,7 @@ extension KeyboardMovementObserver {
     onNotify("KeyboardController::keyboardDidHide", buildEventParams(0, duration, tag))
 
     removeKeyboardWatcher()
+    prevKeyboardPosition = 0
     animation = nil
   }
 

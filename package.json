@@ -1,6 +1,6 @@
 {
   "name": "react-native-keyboard-controller",
-  "version": "1.22.0",
+  "version": "1.22.4",
   "description": "Keyboard manager which works in identical way on both iOS and Android",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -17,6 +17,7 @@
     "react-native-keyboard-controller.podspec",
     "react-native.config.js",
     "jest",
+    "AGENTS.MD",
     "!lib/typescript/example",
     "!android/detekt.yml",
     "!android/build",

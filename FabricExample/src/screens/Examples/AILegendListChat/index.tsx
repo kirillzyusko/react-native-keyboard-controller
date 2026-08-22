@@ -1,23 +1,20 @@
 import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+  KeyboardAwareLegendList,
+  useKeyboardChatComposerInset,
+  useKeyboardScrollToEnd,
+} from "@legendapp/list/keyboard";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Button, Platform, Text, TextInput, View } from "react-native";
 import {
-  KeyboardController,
   KeyboardGestureArea,
   KeyboardStickyView,
 } from "react-native-keyboard-controller";
-import Animated, { FadeIn, useSharedValue } from "react-native-reanimated";
+import Animated, { FadeIn } from "react-native-reanimated";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { KeyboardChatLegendList } from "./KeyboardChatLegendList.tsx";
 import styles from "./styles";
 
-import type { LegendListRef } from "@legendapp/list";
+import type { LegendListRef } from "@legendapp/list/react-native";
 
 type Message = {
   id: string;
@@ -155,26 +152,15 @@ const AIChat = () => {
   const composerRef = useRef<View>(null);
   const activeTimers = useRef<ReturnType<typeof setTimeout>[]>([]);
   const insets = useSafeAreaInsets();
-  // have to set an initial value higher than it will actually end up,
-  // because reportContentInset doesn't work on android to ensure
-  // initialScrollAtEnd works with extraContentPadding
-  const composerHeight = useSharedValue(100);
-
-  useLayoutEffect(() => {
-    composerRef.current?.measure((_x, _y, _width, height) => {
-      composerHeight.value = height;
-      listRef.current?.reportContentInset({ bottom: height });
-    });
-  }, []);
-
-  const onComposerLayout = useCallback(
-    (event: { nativeEvent: { layout: { height: number } } }) => {
-      const { height } = event.nativeEvent.layout;
-
-      composerHeight.value = height;
-      listRef.current?.reportContentInset({ bottom: height });
-    },
-    [],
+  const { contentInsetEndAdjustment, onComposerLayout } =
+    useKeyboardChatComposerInset(listRef, composerRef, 100);
+  const { freeze, scrollMessageToEnd } = useKeyboardScrollToEnd({ listRef });
+  const anchoredEndSpace = useMemo(
+    () =>
+      anchorToTopIndex === undefined
+        ? undefined
+        : { anchorIndex: anchorToTopIndex },
+    [anchorToTopIndex],
   );
 
   const schedule = useCallback((fn: () => void, ms: number) => {
@@ -205,13 +191,14 @@ const AIChat = () => {
       },
     ]);
 
-    schedule(() => {
-      listRef.current?.scrollToEnd({ animated: true });
-      schedule(() => simulateAIResponse(text, rawInput), 800);
-    }, 200);
+    requestAnimationFrame(() => {
+      void scrollMessageToEnd({ animated: true, closeKeyboard: true }).then(
+        () => schedule(() => simulateAIResponse(text, rawInput), 800),
+      );
+    });
   };
 
-  const sendMessage = async () => {
+  const sendMessage = () => {
     const text = inputText.trim();
 
     if (!text) {
@@ -221,8 +208,6 @@ const AIChat = () => {
     const rawInput = inputText;
 
     setInputText("");
-
-    await KeyboardController.dismiss();
     doSendMessage(text, rawInput);
   };
 
@@ -289,18 +274,21 @@ const AIChat = () => {
         offset={60}
         style={styles.container}
       >
-        <KeyboardChatLegendList
+        <KeyboardAwareLegendList
           ref={listRef}
+          applyWorkaroundForContentInsetHitTestBug
           initialScrollAtEnd
           maintainVisibleContentPosition
-          anchorToTopIndex={anchorToTopIndex}
+          anchoredEndSpace={anchoredEndSpace}
           contentContainerStyle={styles.contentContainer}
+          contentInsetEndAdjustment={contentInsetEndAdjustment}
           data={messages}
-          extraContentPadding={composerHeight}
+          freeze={freeze}
           keyboardLiftBehavior={liftBehavior}
+          keyboardOffset={insets.bottom}
           keyExtractor={(_item, index) => `item-${index}`}
           maintainScrollAtEnd={Platform.OS === "web"}
-          offset={insets.bottom}
+          recycleItems={false}
           renderItem={({ item }) => (
             <View>
               {item.sender === "user" ? (

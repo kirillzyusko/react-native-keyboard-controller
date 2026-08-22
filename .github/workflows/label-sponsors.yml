@@ -1,14 +1,143 @@
-name: Label sponsors
+name: 💖 Label sponsors
+
 on:
   issues:
-    types: [opened]
+    types: [opened, reopened]
+  issue_comment:
+    types: [created]
+  pull_request:
+    types: [opened, reopened, synchronize]
+    paths:
+      - ".github/workflows/label-sponsors.yml"
+  pull_request_target:
+    types: [opened, reopened]
+  schedule:
+    - cron: "17 2 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
 jobs:
-  build:
-    name: is-sponsor-label
+  label-sponsors:
+    name: 💎 Label sponsor issues and pull requests
     runs-on: ubuntu-latest
     steps:
-      - uses: JasonEtco/is-sponsor-label-action@v2.0.0
+      - name: Add sponsor label
+        uses: actions/github-script@v9
         with:
-          label: Sponsor 💖
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          retries: 3
+          script: |
+            const label = "Sponsor 💖";
+
+            let issues;
+            if (
+              context.eventName === "schedule" ||
+              context.eventName === "workflow_dispatch" ||
+              context.eventName === "pull_request"
+            ) {
+              issues = await github.paginate(
+                github.rest.issues.listForRepo,
+                {
+                  ...context.repo,
+                  state: "open",
+                  per_page: 100,
+                },
+              );
+            } else {
+              const issueOrPullRequest =
+                context.payload.issue ?? context.payload.pull_request;
+              issues = issueOrPullRequest ? [issueOrPullRequest] : [];
+            }
+
+            const sponsorQuery = `
+              query($owner: String!, $repo: String!, $sponsor: String!) {
+                repository(owner: $owner, name: $repo) {
+                  owner {
+                    ... on User {
+                      isSponsoredBy(accountLogin: $sponsor)
+                    }
+                    ... on Organization {
+                      isSponsoredBy(accountLogin: $sponsor)
+                    }
+                  }
+                }
+              }
+            `;
+
+            const sponsorStatus = new Map();
+            for (const issue of issues) {
+              const itemType =
+                issue.pull_request ||
+                context.payload.pull_request?.number === issue.number
+                  ? "pull request"
+                  : "issue";
+              const author = issue.user?.login;
+
+              if (!author) {
+                continue;
+              }
+
+              const alreadyLabeled = (issue.labels ?? []).some((issueLabel) =>
+                typeof issueLabel === "string"
+                  ? issueLabel === label
+                  : issueLabel.name === label,
+              );
+              if (alreadyLabeled) {
+                continue;
+              }
+
+              const participants = new Set([author]);
+
+              if (issue.comments > 0) {
+                const comments = await github.paginate(
+                  github.rest.issues.listComments,
+                  {
+                    ...context.repo,
+                    issue_number: issue.number,
+                    per_page: 100,
+                  },
+                );
+
+                for (const comment of comments) {
+                  if (comment.user?.login) {
+                    participants.add(comment.user.login);
+                  }
+                }
+              }
+
+              let sponsor;
+              for (const participant of participants) {
+                if (!sponsorStatus.has(participant)) {
+                  const result = await github.graphql(sponsorQuery, {
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    sponsor: participant,
+                  });
+                  sponsorStatus.set(
+                    participant,
+                    result.repository.owner.isSponsoredBy,
+                  );
+                }
+
+                if (sponsorStatus.get(participant)) {
+                  sponsor = participant;
+                  break;
+                }
+              }
+
+              if (!sponsor) {
+                continue;
+              }
+
+              await github.rest.issues.addLabels({
+                ...context.repo,
+                issue_number: issue.number,
+                labels: [label],
+              });
+              core.info(
+                `Added ${label} to ${itemType} #${issue.number}; ${sponsor} is a sponsor`,
+              );
+            }

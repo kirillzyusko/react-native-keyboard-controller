@@ -5,7 +5,11 @@ import {
   StyleSheet,
   Text,
 } from "react-native";
-import { KeyboardChatScrollView } from "react-native-keyboard-controller";
+import {
+  KeyboardChatScrollView,
+  type KeyboardChatScrollViewRef,
+  KeyboardController,
+} from "react-native-keyboard-controller";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useChatConfigStore } from "./store";
@@ -20,15 +24,11 @@ import type { SharedValue } from "react-native-reanimated";
 
 type VirtualizedListScrollViewProps = ScrollViewProps & {
   extraContentPadding?: SharedValue<number>;
-  chatScrollViewRef?: { current: VirtualizedListScrollViewRef | null };
+  chatScrollViewRef?: { current: KeyboardChatScrollViewRef | null };
 };
 
-export type VirtualizedListScrollViewRef = React.ElementRef<
-  typeof KeyboardChatScrollView
->;
-
 const VirtualizedListScrollView = forwardRef<
-  VirtualizedListScrollViewRef,
+  KeyboardChatScrollViewRef,
   VirtualizedListScrollViewProps
 >(
   (
@@ -41,16 +41,16 @@ const VirtualizedListScrollView = forwardRef<
     ref,
   ) => {
     const setScrollViewRef = useCallback(
-      (instance: VirtualizedListScrollViewRef | null) => {
+      (instance: KeyboardChatScrollViewRef | null) => {
         if (chatScrollViewRef) {
           // eslint-disable-next-line react-compiler/react-compiler
           chatScrollViewRef.current =
-            instance as VirtualizedListScrollViewRef | null;
+            instance as KeyboardChatScrollViewRef | null;
         }
       },
       [chatScrollViewRef],
     );
-    const combinedRef: RefCallback<VirtualizedListScrollViewRef> = useCallback(
+    const combinedRef: RefCallback<KeyboardChatScrollViewRef> = useCallback(
       (instance) => {
         if (typeof ref === "function") {
           ref(instance);
@@ -99,7 +99,11 @@ const VirtualizedListScrollView = forwardRef<
           onLayout={onLayout}
           {...props}
         />
-        <Text style={styles.counter} testID="layout_passes">
+        <Text
+          style={styles.counter}
+          testID="layout_passes"
+          onPress={() => KeyboardController.dismiss()}
+        >
           Layout pass: {layoutPass}
         </Text>
       </>

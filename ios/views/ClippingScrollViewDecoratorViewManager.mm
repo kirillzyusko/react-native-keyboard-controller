@@ -186,6 +186,17 @@ RCT_EXPORT_VIEW_PROPERTY(applyWorkaroundForContentInsetHitTestBug, BOOL)
 @implementation ClippingScrollViewDecoratorView
 
 #ifdef RCT_NEW_ARCH_ENABLED
+- (instancetype)initWithFrame:(CGRect)frame
+{
+  if (self = [super initWithFrame:frame]) {
+    static const auto defaultProps = std::make_shared<const ClippingScrollViewDecoratorViewProps>();
+    _props = defaultProps;
+  }
+  return self;
+}
+#endif
+
+#ifdef RCT_NEW_ARCH_ENABLED
 + (ComponentDescriptorProvider)componentDescriptorProvider
 {
   return concreteComponentDescriptorProvider<ClippingScrollViewDecoratorViewComponentDescriptor>();

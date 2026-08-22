@@ -3,8 +3,11 @@ import type {
   ScrollViewContentInsets,
 } from "../ScrollViewWithBottomPadding";
 import type { KeyboardLiftBehavior } from "./useChatKeyboard/types";
-import type { ScrollViewProps } from "react-native";
+import type { ComponentRef } from "react";
+import type { ScrollView, ScrollViewProps } from "react-native";
 import type { SharedValue } from "react-native-reanimated";
+
+export type KeyboardChatScrollViewRef = ComponentRef<typeof ScrollView>;
 
 export type KeyboardChatScrollViewProps = {
   /** Custom component for `ScrollView`. Default is `ScrollView`. */

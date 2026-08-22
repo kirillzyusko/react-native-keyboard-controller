@@ -83,6 +83,8 @@ RCT_EXPORT_VIEW_PROPERTY(offset, NSNumber *)
 - (instancetype)init
 {
   if (self = [super init]) {
+    static const auto defaultProps = std::make_shared<const KeyboardGestureAreaProps>();
+    _props = defaultProps;
   }
   return self;
 }

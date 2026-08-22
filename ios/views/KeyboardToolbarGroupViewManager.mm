@@ -67,7 +67,10 @@ RCT_EXPORT_MODULE(KeyboardToolbarGroupViewManager)
 #ifdef RCT_NEW_ARCH_ENABLED
 - (instancetype)init
 {
-  self = [super init];
+  if (self = [super init]) {
+    static const auto defaultProps = std::make_shared<const KeyboardToolbarGroupViewProps>();
+    _props = defaultProps;
+  }
   return self;
 }
 #else

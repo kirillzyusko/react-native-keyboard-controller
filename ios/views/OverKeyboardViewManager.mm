@@ -89,6 +89,8 @@ RCT_EXPORT_VIEW_PROPERTY(visible, BOOL)
 - (instancetype)init
 {
   if (self = [super init]) {
+    static const auto defaultProps = std::make_shared<const OverKeyboardViewProps>();
+    _props = defaultProps;
     _touchHandler = [RCTSurfaceTouchHandler new];
     _contentView = [[UIView alloc] initWithFrame:CGRectZero];
   }
