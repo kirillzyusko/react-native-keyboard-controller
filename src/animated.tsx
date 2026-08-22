@@ -100,8 +100,8 @@ export const KeyboardProvider = (props: KeyboardProviderProps) => {
 
   useLayoutEffect(() => {
     if (!enabled) {
-      progress.setValue(0);
-      height.setValue(0);
+      progress.resetAnimation();
+      height.resetAnimation();
       // eslint-disable-next-line react-compiler/react-compiler
       progressSV.value = 0;
       heightSV.value = 0;
