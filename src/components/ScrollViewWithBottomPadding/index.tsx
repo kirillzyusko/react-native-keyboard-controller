@@ -16,6 +16,7 @@ import type { ScrollViewProps } from "react-native";
 import type { SharedValue } from "react-native-reanimated";
 
 const OS = Platform.OS;
+const ZERO_CONTENT_OFFSET = { x: 0, y: 0 };
 const ReanimatedClippingScrollView =
   OS === "android"
     ? Reanimated.createAnimatedComponent(ClippingScrollView)
@@ -75,6 +76,8 @@ const ScrollViewWithBottomPadding = forwardRef<
     ref,
   ) => {
     const prevContentOffsetY = useSharedValue<number | null>(null);
+    // Mirrored on the initial evaluation instead of omitting the key (see below).
+    const initialContentOffset = rest.contentOffset ?? ZERO_CONTENT_OFFSET;
 
     const insets = useDerivedValue(() => {
       const dynamicTop = inverted ? bottomPadding.value : 0;
@@ -149,12 +152,20 @@ const ScrollViewWithBottomPadding = forwardRef<
         const curr = contentOffsetY.value;
 
         if (prevContentOffsetY.value === null) {
-          // Swallow the initial evaluation: emitting `contentOffset {x:0,y:0}`
-          // in the first animatedProps run overrides the wrapped ScrollView's
-          // own `contentOffset` prop on Fabric (e.g. a list's initial scroll
-          // offset), making the list mount scrolled to the top natively.
+          // Initial evaluation. The key has to be present here: Reanimated's
+          // settled-props sync (FORCE_REACT_RENDER_FOR_SETTLED_ANIMATIONS, on
+          // by default in 4.x) partitions the settled bag by the keys of this
+          // first run. A key missing from it is filed as style, so the settled
+          // `contentOffset` never reaches the React props, the registry entry
+          // is dropped, and the next React commit (a keystroke in a chat
+          // composer, for instance) resets the native offset to 0 while
+          // `contentInset` stays. Emitting `{x:0,y:0}` blindly would override
+          // the wrapped ScrollView's own `contentOffset` prop on Fabric (a
+          // list's initial scroll offset), so mirror that prop: React already
+          // committed the same value, so natively this is a no-op.
           // eslint-disable-next-line react-compiler/react-compiler
           prevContentOffsetY.value = curr;
+          result.contentOffset = initialContentOffset;
         } else if (curr !== prevContentOffsetY.value) {
           prevContentOffsetY.value = curr;
           result.contentOffset = { x: 0, y: curr };
