@@ -13,8 +13,8 @@ type EventContext = Record<string, unknown>;
 export const useAnimatedKeyboardHandler: KeyboardHandlerHook<
   EventContext,
   EventWithName<NativeEvent>
-> = (handlers, dependencies) => {
-  const { context, doDependenciesDiffer } = useHandler(handlers, dependencies);
+> = (handlers) => {
+  const { context, doDependenciesDiffer } = useHandler(handlers);
 
   return useEvent(
     (event) => {
@@ -61,8 +61,8 @@ export const useAnimatedKeyboardHandler: KeyboardHandlerHook<
 export const useFocusedInputLayoutHandler: FocusedInputLayoutHandlerHook<
   EventContext,
   EventWithName<FocusedInputLayoutChangedEvent>
-> = (handlers, dependencies) => {
-  const { context, doDependenciesDiffer } = useHandler(handlers, dependencies);
+> = (handlers) => {
+  const { context, doDependenciesDiffer } = useHandler(handlers);
 
   return useEvent(
     (event) => {
