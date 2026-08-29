@@ -7,6 +7,8 @@ import type { EventHandlerProcessed } from "react-native-reanimated";
 
 type ComponentOrHandle = Parameters<typeof findNodeHandle>[0];
 
+const REGISTRATION_RETRY_COUNT = 2;
+
 type WorkletHandler = {
   registerForEvents: (viewTag: number) => void;
   unregisterFromEvents: (viewTag: number) => void;
@@ -39,8 +41,25 @@ export function useEventHandlerRegistration(
   const onRegisterHandler = (handler: EventHandlerProcessed<never, never>) => {
     const currentHandler = handler as unknown as WorkletHandlerContainer;
     let registeredViewTag: number | null = null;
-    const attachWorkletHandlers = () => {
+    let registrationFrame: number | null = null;
+    let isRegistrationCancelled = false;
+    const attachWorkletHandlers = (
+      remainingRetries = REGISTRATION_RETRY_COUNT,
+    ) => {
+      if (isRegistrationCancelled) {
+        return;
+      }
+
       const viewTag = findNodeHandle(viewTagRef.current);
+
+      if (!viewTag && remainingRetries > 0) {
+        registrationFrame = requestAnimationFrame(() => {
+          registrationFrame = null;
+          attachWorkletHandlers(remainingRetries - 1);
+        });
+
+        return;
+      }
 
       if (__DEV__ && !viewTag) {
         console.warn(
@@ -67,6 +86,12 @@ export function useEventHandlerRegistration(
     }
 
     return () => {
+      isRegistrationCancelled = true;
+
+      if (registrationFrame !== null) {
+        cancelAnimationFrame(registrationFrame);
+      }
+
       if (registeredViewTag) {
         if ("workletEventHandler" in currentHandler) {
           currentHandler.workletEventHandler.unregisterFromEvents(
