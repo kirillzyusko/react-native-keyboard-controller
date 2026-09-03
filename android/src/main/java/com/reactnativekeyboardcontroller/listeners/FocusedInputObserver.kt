@@ -100,17 +100,7 @@ class FocusedInputObserver(
     OnGlobalFocusChangeListener { oldFocus, newFocus ->
       // unfocused or focus was changed
       if (newFocus == null || oldFocus != null) {
-        lastFocusedInput?.removeOnLayoutChangeListener(layoutListener)
-        lastFocusedInput?.let { input ->
-          val watcher = textWatcher
-          // remove it asynchronously to avoid crash in stripe input
-          // see https://github.com/stripe/stripe-android/issues/10178
-          input.post {
-            watcher?.let { input.removeTextChangedListener(it) }
-          }
-        }
-        selectionSubscription?.invoke()
-        lastFocusedInput = null
+        stopObservingFocusedInput()
       }
       if (newFocus is EditText) {
         lastFocusedInput = newFocus
@@ -163,6 +153,27 @@ class FocusedInputObserver(
 
   fun destroy() {
     view.viewTreeObserver.removeOnGlobalFocusChangeListener(focusListener)
+    stopObservingFocusedInput()
+  }
+
+  private fun stopObservingFocusedInput() {
+    val input = lastFocusedInput
+    val watcher = textWatcher
+    val unsubscribeFromSelectionChanges = selectionSubscription
+
+    lastFocusedInput = null
+    textWatcher = null
+    selectionSubscription = null
+
+    input?.removeOnLayoutChangeListener(layoutListener)
+    if (input != null && watcher != null) {
+      // remove it asynchronously to avoid crash in stripe input
+      // see https://github.com/stripe/stripe-android/issues/10178
+      input.post {
+        input.removeTextChangedListener(watcher)
+      }
+    }
+    unsubscribeFromSelectionChanges?.invoke()
   }
 
   private fun dispatchEventToJS(event: FocusedInputLayoutChangedEventData) {
