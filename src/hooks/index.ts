@@ -1,5 +1,4 @@
 import { useEffect, useLayoutEffect } from "react";
-import { Platform } from "react-native";
 import { useEvent, useHandler } from "react-native-reanimated";
 
 import { AndroidSoftInputModes } from "../constants";
@@ -118,10 +117,7 @@ export function useGenericKeyboardHandler(
 ) {
   const context = useKeyboardContext();
 
-  const { doDependenciesDiffer } = useHandler(
-    handler,
-    Platform.OS === "web" ? deps : undefined,
-  );
+  const { doDependenciesDiffer } = useHandler(handler);
 
   const eventHandler = useEvent<NativeEvent>(
     (event) => {
@@ -269,10 +265,7 @@ export function useFocusedInputHandler(
 ) {
   const context = useKeyboardContext();
 
-  const { doDependenciesDiffer } = useHandler<never, never>(
-    handler,
-    Platform.OS === "web" ? deps : undefined,
-  );
+  const { doDependenciesDiffer } = useHandler<never, never>(handler);
 
   const eventHandler = useEvent<
     FocusedInputSelectionChangedEvent | FocusedInputTextChangedEvent
