@@ -6,6 +6,8 @@ import type {
   NativeEvent,
 } from "./types";
 
+export { useHandler } from "react-native-reanimated";
+
 const NOOP = () => () => {};
 
 export const useAnimatedKeyboardHandler: KeyboardHandlerHook<

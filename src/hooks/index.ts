@@ -1,9 +1,10 @@
 import { useEffect, useLayoutEffect } from "react";
-import { useEvent, useHandler } from "react-native-reanimated";
+import { useEvent } from "react-native-reanimated";
 
 import { AndroidSoftInputModes } from "../constants";
 import { useKeyboardContext } from "../context";
 import { KeyboardController } from "../module";
+import { useHandler } from "../reanimated";
 
 import type { AnimatedContext, ReanimatedContext } from "../context";
 import type {
