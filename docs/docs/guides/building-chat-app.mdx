@@ -517,18 +517,19 @@ Here is a complete chat screen that ties together all the pieces — `KeyboardCh
 import React, { forwardRef, useCallback, useRef, useState } from "react";
 import {
   FlatList,
+  type LayoutChangeEvent,
+  type ScrollViewProps,
   StyleSheet,
+  Text,
   TextInput,
   TouchableOpacity,
   View,
-  type LayoutChangeEvent,
-  type ScrollViewProps,
 } from "react-native";
 import {
   KeyboardChatScrollView,
+  type KeyboardChatScrollViewRef,
   KeyboardGestureArea,
   KeyboardStickyView,
-  type KeyboardChatScrollViewRef,
 } from "react-native-keyboard-controller";
 import { useSharedValue, withTiming } from "react-native-reanimated";
 import {
@@ -538,8 +539,17 @@ import {
 
 import type { KeyboardChatScrollViewProps } from "react-native-keyboard-controller";
 
+function Message({ text, sender }: { text: string; sender: boolean }) {
+  return (
+    <View style={sender ? styles.senderContainer : styles.recipientContainer}>
+      <Text style={styles.message}>{text}</Text>
+    </View>
+  );
+}
+
 const MARGIN = 8;
 const INPUT_HEIGHT = 42;
+const TEXT_INPUT_HEIGHT = INPUT_HEIGHT + MARGIN;
 
 // Wrapper for virtualized lists
 const ChatScrollView = forwardRef<
@@ -563,7 +573,9 @@ const ChatScrollView = forwardRef<
 function ChatScreen() {
   const textInputRef = useRef<TextInput>(null);
   const textRef = useRef("");
-  const [messages, setMessages] = useState(INITIAL_MESSAGES);
+  const [messages, setMessages] = useState([
+    { id: "1786111174702", text: "Hello", sender: false },
+  ]);
   const { bottom } = useSafeAreaInsets();
   const extraContentPadding = useSharedValue(0);
 
@@ -576,9 +588,16 @@ function ChatScreen() {
 
   const onSend = useCallback(() => {
     const text = textRef.current.trim();
-    if (!text) return;
 
-    setMessages((prev) => [...prev, { id: String(Date.now()), text }]);
+    if (!text) {
+      return;
+    }
+
+    setMessages((prev) => [
+      // for inverted list we need to insert new message in the beginning of the history
+      { id: String(Date.now()), text, sender: true },
+      ...prev,
+    ]);
     textInputRef.current?.clear();
     textRef.current = "";
   }, []);
@@ -602,9 +621,9 @@ function ChatScreen() {
         textInputNativeID="chat-input"
       >
         <FlatList
-          data={messages}
           inverted
-          contentContainerStyle={{ paddingTop: INPUT_HEIGHT + MARGIN }}
+          contentContainerStyle={{ paddingTop: TEXT_INPUT_HEIGHT }}
+          data={messages}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => <Message {...item} />}
           renderScrollComponent={renderScrollComponent}
@@ -622,7 +641,7 @@ function ChatScreen() {
             onChangeText={(text) => (textRef.current = text)}
             onLayout={onInputLayout}
           />
-          <TouchableOpacity onPress={onSend}>
+          <TouchableOpacity style={styles.send} onPress={onSend}>
             <Text>Send</Text>
           </TouchableOpacity>
         </KeyboardStickyView>
@@ -630,6 +649,62 @@ function ChatScreen() {
     </SafeAreaView>
   );
 }
+
+const container = {
+  borderRadius: 10,
+  padding: 10,
+  margin: 10,
+  marginVertical: 5,
+  maxWidth: "80%" as const,
+};
+
+const styles = StyleSheet.create({
+  container: {
+    justifyContent: "flex-end",
+    flex: 1,
+    backgroundColor: "#3A3A3C",
+  },
+  input: {
+    flex: 1,
+    margin: MARGIN,
+    marginBottom: 0,
+    padding: MARGIN,
+    borderRadius: 99,
+    borderWidth: 1,
+    borderColor: "#BCBCBC",
+    backgroundColor: "#3A3A3C66",
+  },
+  composer: {
+    position: "absolute",
+    width: "100%",
+    minHeight: TEXT_INPUT_HEIGHT,
+    flexDirection: "row",
+  },
+  send: {
+    right: MARGIN,
+    padding: MARGIN,
+    marginTop: MARGIN,
+    backgroundColor: "white",
+    justifyContent: "center",
+    borderRadius: 16,
+    marginLeft: MARGIN,
+  },
+  senderContainer: {
+    alignSelf: "flex-end",
+    backgroundColor: "#F8F8FC",
+    ...container,
+  },
+  recipientContainer: {
+    alignSelf: "flex-start",
+    backgroundColor: "#64D2FF",
+    ...container,
+  },
+  message: {
+    color: "#000000",
+  },
+});
+
+export default ChatScreen;
 ```
 
 Or play with the code in live mode directly in the browser:
