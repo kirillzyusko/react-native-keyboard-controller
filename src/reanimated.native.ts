@@ -1,4 +1,7 @@
-import { useEvent, useHandler } from "react-native-reanimated";
+import {
+  useEvent,
+  useHandler as useReanimatedHandler,
+} from "react-native-reanimated";
 
 import type {
   EventWithName,
@@ -10,11 +13,15 @@ import type {
 
 type EventContext = Record<string, unknown>;
 
+// Dependencies are only needed on Web when the Babel plugin is unavailable.
+export const useHandler: typeof useReanimatedHandler = (handlers) =>
+  useReanimatedHandler(handlers);
+
 export const useAnimatedKeyboardHandler: KeyboardHandlerHook<
   EventContext,
   EventWithName<NativeEvent>
-> = (handlers) => {
-  const { context, doDependenciesDiffer } = useHandler(handlers);
+> = (handlers, dependencies) => {
+  const { context, doDependenciesDiffer } = useHandler(handlers, dependencies);
 
   return useEvent(
     (event) => {
@@ -61,8 +68,8 @@ export const useAnimatedKeyboardHandler: KeyboardHandlerHook<
 export const useFocusedInputLayoutHandler: FocusedInputLayoutHandlerHook<
   EventContext,
   EventWithName<FocusedInputLayoutChangedEvent>
-> = (handlers) => {
-  const { context, doDependenciesDiffer } = useHandler(handlers);
+> = (handlers, dependencies) => {
+  const { context, doDependenciesDiffer } = useHandler(handlers, dependencies);
 
   return useEvent(
     (event) => {
