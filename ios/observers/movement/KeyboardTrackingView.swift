@@ -80,7 +80,9 @@ public final class KeyboardTrackingView: UIView {
 
     guard let topView = topViewController?.view else { return }
 
-    if currentAttachedView === topView { return }
+    if currentAttachedView === topView {
+      return
+    }
 
     isAttaching = true
     removeFromSuperview()
