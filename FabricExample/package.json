@@ -52,9 +52,7 @@
     "@react-native/jest-preset": "0.87.1",
     "@react-native/metro-config": "0.87.1",
     "@react-native/typescript-config": "0.87.1",
-    "@testing-library/jest-native": "5.4.3",
-    "@testing-library/react-hooks": "8.0.1",
-    "@testing-library/react-native": "14.0.1",
+    "@testing-library/react-native": "13.3.3",
     "@types/jest": "30.0.0",
     "@types/react": "19.2.18",
     "@types/react-test-renderer": "^19.1.0",
@@ -83,6 +81,10 @@
     "setupFiles": [
       "./jestSetup.js"
     ],
+    "moduleNameMapper": {
+      "^react-native-reanimated$": "<rootDir>/node_modules/react-native-reanimated/lib/module/index.js",
+      "^react-native-reanimated/mock$": "<rootDir>/node_modules/react-native-reanimated/lib/module/mock.js"
+    },
     "transformIgnorePatterns": [
       "node_modules/(?!(jest-)?@?react-native|@react-native-community|@react-navigation)"
     ],

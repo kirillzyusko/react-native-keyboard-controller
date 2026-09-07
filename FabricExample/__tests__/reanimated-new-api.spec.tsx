@@ -1,4 +1,3 @@
-import "@testing-library/jest-native/extend-expect";
 import { render } from "@testing-library/react-native";
 import React from "react";
 import {
@@ -39,14 +38,14 @@ function TestFocusedInputLayoutComponent() {
 }
 
 describe("basic keyboard interaction", () => {
-  it("should have default style with new reanimated API", () => {
-    const { getByTestId } = render(<TestKeyboardMovementComponent />);
+  it("should have default style with new reanimated API", async () => {
+    const { getByTestId } = await render(<TestKeyboardMovementComponent />);
 
     expect(getByTestId("view")).toHaveStyle({ transform: [{ translateY: 0 }] });
   });
 
-  it("should have default style with `useReanimatedFocusedInput` using new reanimated API", () => {
-    const { getByTestId } = render(<TestFocusedInputLayoutComponent />);
+  it("should have default style with `useReanimatedFocusedInput` using new reanimated API", async () => {
+    const { getByTestId } = await render(<TestFocusedInputLayoutComponent />);
 
     expect(getByTestId("view")).toHaveStyle({
       top: 0,

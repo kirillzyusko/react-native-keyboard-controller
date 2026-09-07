@@ -1,4 +1,3 @@
-import "@testing-library/jest-native/extend-expect";
 import { act, render } from "@testing-library/react-native";
 import React, { useState } from "react";
 import { Text } from "react-native";
@@ -57,7 +56,7 @@ function WhatUserSelected() {
 }
 
 describe("`useFocusedInputHandler` specification", () => {
-  it("should execute `onChangeText` handler and change corresponding elements", () => {
+  it("should execute `onChangeText` handler and change corresponding elements", async () => {
     let handlers: FocusedInputHandler = {};
 
     (useFocusedInputHandler as jest.Mock).mockImplementation(
@@ -67,27 +66,27 @@ describe("`useFocusedInputHandler` specification", () => {
     const onChangeText = (e: FocusedInputTextChangedEvent) =>
       handlers.onChangeText?.(e);
 
-    const { getByTestId } = render(<WhatUserTyped />);
+    const { getByTestId } = await render(<WhatUserTyped />);
 
     expect(getByTestId("text")).toHaveTextContent("");
-    act(() => onChangeText({ text: "1" }));
+    await act(() => onChangeText({ text: "1" }));
 
     expect(getByTestId("text")).toHaveTextContent("1");
 
-    act(() => onChangeText({ text: "12" }));
+    await act(() => onChangeText({ text: "12" }));
 
     expect(getByTestId("text")).toHaveTextContent("12");
 
-    act(() => onChangeText({ text: "123" }));
+    await act(() => onChangeText({ text: "123" }));
 
     expect(getByTestId("text")).toHaveTextContent("123");
 
-    act(() => onChangeText({ text: "" }));
+    await act(() => onChangeText({ text: "" }));
 
     expect(getByTestId("text")).toHaveTextContent("");
   });
 
-  it("should execute `onSelectionChange` handler and change corresponding elements", () => {
+  it("should execute `onSelectionChange` handler and change corresponding elements", async () => {
     let handlers: FocusedInputHandler = {};
 
     (useFocusedInputHandler as jest.Mock).mockImplementation(
@@ -97,13 +96,13 @@ describe("`useFocusedInputHandler` specification", () => {
     const onSelectionChange = (e: FocusedInputSelectionChangedEvent) =>
       handlers.onSelectionChange?.(e);
 
-    const { getByTestId } = render(<WhatUserSelected />);
+    const { getByTestId } = await render(<WhatUserSelected />);
 
     expect(getByTestId("position")).toHaveTextContent("6 to 6");
     expect(getByTestId("x")).toHaveTextContent("6 to 6");
     expect(getByTestId("y")).toHaveTextContent("6 to 6");
 
-    act(() =>
+    await act(() =>
       onSelectionChange({
         target: 1,
         selection: {
@@ -117,7 +116,7 @@ describe("`useFocusedInputHandler` specification", () => {
     expect(getByTestId("x")).toHaveTextContent("0 to 6");
     expect(getByTestId("y")).toHaveTextContent("0 to 6");
 
-    act(() =>
+    await act(() =>
       onSelectionChange({
         target: 1,
         selection: {

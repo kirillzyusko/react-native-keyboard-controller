@@ -111,47 +111,59 @@ function KeyboardEffectsTest() {
 }
 
 describe("components rendering", () => {
-  it("should render `KeyboardControllerView`", () => {
-    expect(render(<KeyboardControllerViewTest />)).toMatchSnapshot();
+  it("should render `KeyboardControllerView`", async () => {
+    expect(
+      (await render(<KeyboardControllerViewTest />)).toJSON(),
+    ).toMatchSnapshot();
   });
 
-  it("should render `KeyboardProvider`", () => {
-    expect(render(<KeyboardProviderTest />)).toMatchSnapshot();
+  it("should render `KeyboardProvider`", async () => {
+    expect((await render(<KeyboardProviderTest />)).toJSON()).toMatchSnapshot();
   });
 
-  it("should render `KeyboardAvoidingView`", () => {
-    expect(render(<KeyboardAvoidingViewTest />)).toMatchSnapshot();
+  it("should render `KeyboardAvoidingView`", async () => {
+    expect(
+      (await render(<KeyboardAvoidingViewTest />)).toJSON(),
+    ).toMatchSnapshot();
   });
 
-  it("should render `KeyboardAwareScrollView`", () => {
-    expect(render(<KeyboardAwareScrollViewTest />)).toMatchSnapshot();
+  it("should render `KeyboardAwareScrollView`", async () => {
+    expect(
+      (await render(<KeyboardAwareScrollViewTest />)).toJSON(),
+    ).toMatchSnapshot();
   });
 
-  it("should render `KeyboardStickyView`", () => {
-    expect(render(<KeyboardStickyViewTest />)).toMatchSnapshot();
+  it("should render `KeyboardStickyView`", async () => {
+    expect(
+      (await render(<KeyboardStickyViewTest />)).toJSON(),
+    ).toMatchSnapshot();
   });
 
-  it("should render `KeyboardToolbar`", () => {
-    expect(render(<KeyboardToolbarTest />)).toMatchSnapshot();
+  it("should render `KeyboardToolbar`", async () => {
+    expect((await render(<KeyboardToolbarTest />)).toJSON()).toMatchSnapshot();
   });
 
-  it("should render compound `KeyboardToolbar`", () => {
-    expect(render(<KeyboardToolbarCompoundTest />)).toMatchSnapshot();
+  it("should render compound `KeyboardToolbar`", async () => {
+    expect(
+      (await render(<KeyboardToolbarCompoundTest />)).toJSON(),
+    ).toMatchSnapshot();
   });
 
-  it("should render `OverKeyboardView`", () => {
-    expect(render(<OverKeyboardViewTest />)).toMatchSnapshot();
+  it("should render `OverKeyboardView`", async () => {
+    expect((await render(<OverKeyboardViewTest />)).toJSON()).toMatchSnapshot();
   });
 
-  it("should render `KeyboardBackgroundView`", () => {
-    expect(render(<KeyboardBackgroundViewTest />)).toMatchSnapshot();
+  it("should render `KeyboardBackgroundView`", async () => {
+    expect(
+      (await render(<KeyboardBackgroundViewTest />)).toJSON(),
+    ).toMatchSnapshot();
   });
 
-  it("should render `KeyboardExtenderTest`", () => {
-    expect(render(<KeyboardExtenderTest />)).toMatchSnapshot();
+  it("should render `KeyboardExtenderTest`", async () => {
+    expect((await render(<KeyboardExtenderTest />)).toJSON()).toMatchSnapshot();
   });
 
-  it("should render `KeyboardEffectsTest`", () => {
-    expect(render(<KeyboardEffectsTest />)).toMatchSnapshot();
+  it("should render `KeyboardEffectsTest`", async () => {
+    expect((await render(<KeyboardEffectsTest />)).toJSON()).toMatchSnapshot();
   });
 });
