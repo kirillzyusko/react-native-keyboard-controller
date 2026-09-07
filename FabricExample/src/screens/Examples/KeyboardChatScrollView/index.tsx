@@ -168,7 +168,7 @@ function KeyboardChatScrollViewPlayground() {
           <KeyboardStickyView offset={stickyViewOffset} style={styles.composer}>
             <View
               style={[
-                StyleSheet.absoluteFillObject,
+                StyleSheet.absoluteFill,
                 { overflow: "hidden" },
                 styles.input,
               ]}
@@ -177,7 +177,7 @@ function KeyboardChatScrollViewPlayground() {
                 blurAmount={32}
                 blurType="light"
                 reducedTransparencyFallbackColor="white"
-                style={StyleSheet.absoluteFillObject}
+                style={StyleSheet.absoluteFill}
               />
             </View>
             <TextInput

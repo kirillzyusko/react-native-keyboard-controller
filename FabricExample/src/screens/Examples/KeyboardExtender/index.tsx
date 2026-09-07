@@ -99,7 +99,7 @@ export default function KeyboardExtendExample() {
 
 const styles = StyleSheet.create({
   background: {
-    ...StyleSheet.absoluteFillObject,
+    ...StyleSheet.absoluteFill,
     flex: 1,
     width: "100%",
   },

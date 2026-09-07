@@ -3,11 +3,13 @@ import React from "react";
 
 import { ScreenNames } from "../../constants/screenNames";
 import ExampleMain from "../../screens/Examples/Main";
-import ExamplesStack from "../ExamplesStack";
+import ExamplesStack, { type ExamplesStackParamList } from "../ExamplesStack";
+
+import type { NavigatorScreenParams } from "@react-navigation/native";
 
 export type RootStackParamList = {
   [ScreenNames.EXAMPLES]: undefined;
-  [ScreenNames.EXAMPLES_STACK]: undefined;
+  [ScreenNames.EXAMPLES_STACK]: NavigatorScreenParams<ExamplesStackParamList>;
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
