@@ -69,3 +69,21 @@ An object containing next properties:
 
 - **closed** - additional offset to the view when keyboard is closed. Default value is `0`.
 - **opened** - additional offset to the view when keyboard is opened. Default value is `0`.
+
+## Troubleshooting
+
+### Missing animations on iOS (new arch only)
+
+Starting with version `1.21.7`, `KeyboardStickyView` uses Reanimated for its `translateY` animation. On iOS (New Architecture only), updating React state right before a keyboard event can cause this animation to be skipped entirely. This happens because a React commit can block Reanimated from applying its animated updates in the same frame.
+
+Common triggers include:
+
+- updating state in the `onFocus` callback of a `TextInput`;
+- updating state in response to the `keyboardWillShow` event;
+- using `KeyboardToolbar` or other components that trigger a state update before the keyboard appears.
+
+To fix this, enable the [DISABLE_COMMIT_PAUSING_MECHANISM](https://docs.swmansion.com/react-native-reanimated/docs/guides/feature-flags/#disable_commit_pausing_mechanism) feature flag. See the link for detailed setup instructions.
+
+:::info Do I need to enable this flag?
+This issue can occur even if the state update comes from a different screen (e.g. a parent navigator). To check, open the React Profiler and look for any React commits that happen just before the keyboard event — if you see one, you likely need this flag.
+:::

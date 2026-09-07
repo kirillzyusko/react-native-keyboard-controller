@@ -636,3 +636,17 @@ If you found any bugs or inconsistent behavior comparing to old implementation a
 ## Limitations
 
 - The order of the navigation is defined by the view hierarchy (commonly referred to as the view-tree).
+
+## Troubleshooting
+
+### Missing animations on iOS (new arch only)
+
+Starting with version `1.21.7`, `KeyboardToolbar` uses the Reanimated-based `KeyboardStickyView` for its `translateY` animation. The toolbar also updates React state when the focused input changes. On iOS (New Architecture only), that React commit can block Reanimated from applying its animated updates in the same frame, causing the toolbar animation to be skipped entirely.
+
+The same issue can occur when your app updates state in an `onFocus` callback, in response to the `keyboardWillShow` event, or anywhere else immediately before the keyboard event.
+
+To fix this, enable the [DISABLE_COMMIT_PAUSING_MECHANISM](https://docs.swmansion.com/react-native-reanimated/docs/guides/feature-flags/#disable_commit_pausing_mechanism) feature flag. See the link for detailed setup instructions.
+
+:::info Do I need to enable this flag?
+This issue can occur even if the state update comes from a different screen (e.g. a parent navigator). To check, open the React Profiler and look for any React commits that happen just before the keyboard event — if you see one, you likely need this flag.
+:::
