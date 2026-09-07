@@ -77,8 +77,6 @@ const ScrollViewWithBottomPadding = forwardRef<
     const { contentOffset } = rest;
     const prevContentOffsetY = useSharedValue<number | null>(null);
 
-    // Reanimated owns this prop, so subsequent JS requests use the same value.
-    // Depend on y: a new object with the same vertical position is not a request.
     useEffect(() => {
       if (contentOffsetY) {
         // eslint-disable-next-line react-compiler/react-compiler
