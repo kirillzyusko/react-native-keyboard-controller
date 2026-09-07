@@ -47,7 +47,7 @@ function useChatKeyboard(
 
   const padding = useSharedValue(0);
   const currentHeight = useSharedValue(0);
-  const contentOffsetY = useSharedValue(0);
+  const contentOffsetY = useSharedValue(options.initialContentOffsetY ?? 0);
   const targetKeyboardHeight = useSharedValue(0);
   const prevAbsorption = useSharedValue(0);
   const isInteractiveDismissal = useSharedValue(false);
@@ -58,7 +58,7 @@ function useChatKeyboard(
     offset: scroll,
     onLayout,
     onContentSizeChange,
-  } = useScrollState(scrollViewRef);
+  } = useScrollState(scrollViewRef, options.initialContentOffsetY);
 
   useKeyboardHandler(
     {

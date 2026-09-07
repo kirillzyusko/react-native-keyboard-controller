@@ -68,6 +68,7 @@ const KeyboardChatScrollView: React.ForwardRefExoticComponent<
       offset,
       blankSpace,
       extraContentPadding,
+      initialContentOffsetY: rest.contentOffset?.y,
     });
 
     useExtraContentPadding({
