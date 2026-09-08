@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   Dimensions,
   Image,
+  type ImageInstance,
   ScrollView,
   StyleSheet,
   TextInput,
@@ -175,7 +176,7 @@ const ImagePreview = ({
   isModalVisible,
   onShowImage,
 }: ImagePreviewProps) => {
-  const ref = useRef<Image>(null);
+  const ref = useRef<ImageInstance>(null);
   const [isModalFullyVisible, setModalFullyVisible] = useState(isModalVisible);
 
   useEffect(() => {

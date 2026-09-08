@@ -4,7 +4,15 @@ import {
   useKeyboardScrollToEnd,
 } from "@legendapp/list/keyboard";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Button, Platform, Text, TextInput, View } from "react-native";
+import {
+  Button,
+  Platform,
+  Text,
+  TextInput,
+  type TextInputInstance,
+  View,
+  type ViewInstance,
+} from "react-native";
 import {
   KeyboardGestureArea,
   KeyboardStickyView,
@@ -148,8 +156,8 @@ const AIChat = () => {
     undefined,
   );
   const listRef = useRef<LegendListRef>(null);
-  const inputRef = useRef<TextInput>(null);
-  const composerRef = useRef<View>(null);
+  const inputRef = useRef<TextInputInstance>(null);
+  const composerRef = useRef<ViewInstance>(null);
   const activeTimers = useRef<ReturnType<typeof setTimeout>[]>([]);
   const insets = useSafeAreaInsets();
   const { contentInsetEndAdjustment, onComposerLayout } =

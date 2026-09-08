@@ -3,6 +3,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  type TextInputInstance,
   View,
   findNodeHandle,
 } from "react-native";
@@ -16,7 +17,7 @@ import Reanimated, {
 
 import type {
   TextInputProps,
-  TextInputSelectionChangeEventData,
+  TextInputSelectionChangeEvent,
 } from "react-native";
 import type { MaskedTextInputProps } from "react-native-advanced-input-mask";
 
@@ -26,7 +27,7 @@ type MaskedInputState = {
 };
 
 const TextInputWithMicSelection = (props: TextInputProps) => {
-  const ref = useRef<TextInput>(null);
+  const ref = useRef<TextInputInstance>(null);
   const tag = useSharedValue(-1);
   const position0 = useSharedValue({ x: 0, y: 0 });
   const position = useSharedValue({ x: 0, y: 0 });
@@ -146,8 +147,9 @@ export default function TextInputMaskExample() {
       },
     },
   });
-  const [originalSelection, setOriginalSelection] =
-    useState<TextInputSelectionChangeEventData | null>(null);
+  const [originalSelection, setOriginalSelection] = useState<
+    TextInputSelectionChangeEvent["nativeEvent"] | null
+  >(null);
 
   useFocusedInputHandler(
     {
@@ -189,7 +191,6 @@ export default function TextInputMaskExample() {
         multiline
         style={style.input}
         testID="multiline_input"
-        onChangeText={onChangeText}
         onSelectionChange={({ nativeEvent }) =>
           setOriginalSelection(nativeEvent)
         }
