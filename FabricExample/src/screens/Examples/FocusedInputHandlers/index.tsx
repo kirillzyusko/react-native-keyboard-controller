@@ -191,6 +191,7 @@ export default function TextInputMaskExample() {
         multiline
         style={style.input}
         testID="multiline_input"
+        onChangeText={onChangeText}
         onSelectionChange={({ nativeEvent }) =>
           setOriginalSelection(nativeEvent)
         }
