@@ -11,3 +11,44 @@ index e47984a..b02c9c6 100644
      isPaused_ = true;
    }
  }
+diff --git a/node_modules/react-native-reanimated/jest/resolver.js b/node_modules/react-native-reanimated/jest/resolver.js
+new file mode 100644
+index 0000000000..8334a50c63
+--- /dev/null
++++ b/node_modules/react-native-reanimated/jest/resolver.js
+@@ -0,0 +1,35 @@
++const workletsResolver = require('react-native-worklets/jest/resolver');
++
++const WEB_ONLY_IN_JEST = new Set([
++  'initializers',
++  'mutables',
++  'mappers',
++  'ConfigHelper',
++  'UpdateLayoutAnimations',
++  'useAnimatedRef',
++  'useAnimatedStyle',
++  'JSPropsUpdater',
++  'updateProps',
++  'util',
++  'css/component/AnimatedComponent',
++]);
++
++/** @type {import('jest-resolve').SyncResolver} */
++module.exports = (request, options) => {
++  const basename = request.split('/').pop();
++  const isWebOnly = [...WEB_ONLY_IN_JEST].some((entry) =>
++    entry.includes('/') ? request.endsWith(entry) : basename === entry
++  );
++  if (
++    request.startsWith('.') &&
++    isWebOnly &&
++    options.basedir.includes('react-native-reanimated')
++  ) {
++    return options.defaultResolver(request, {
++      ...options,
++      extensions: options.extensions?.filter((ext) => !ext.includes('native')),
++    });
++  }
++
++  return workletsResolver(request, options);
++};
