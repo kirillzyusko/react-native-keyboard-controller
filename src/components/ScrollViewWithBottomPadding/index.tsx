@@ -1,4 +1,4 @@
-import React, { forwardRef } from "react";
+import React, { forwardRef, useEffect } from "react";
 import { Platform } from "react-native";
 import Reanimated, {
   runOnJS,
@@ -74,7 +74,15 @@ const ScrollViewWithBottomPadding = forwardRef<
     },
     ref,
   ) => {
+    const { contentOffset } = rest;
     const prevContentOffsetY = useSharedValue<number | null>(null);
+
+    useEffect(() => {
+      if (contentOffsetY) {
+        // eslint-disable-next-line react-compiler/react-compiler
+        contentOffsetY.value = contentOffset?.y ?? 0;
+      }
+    }, [contentOffsetY, contentOffset?.y]);
 
     const insets = useDerivedValue(() => {
       const dynamicTop = inverted ? bottomPadding.value : 0;
@@ -146,18 +154,13 @@ const ScrollViewWithBottomPadding = forwardRef<
       };
 
       if (contentOffsetY) {
-        const curr = contentOffsetY.value;
+        const y = contentOffsetY.value;
 
-        if (prevContentOffsetY.value === null) {
-          // Swallow the initial evaluation: emitting `contentOffset {x:0,y:0}`
-          // in the first animatedProps run overrides the wrapped ScrollView's
-          // own `contentOffset` prop on Fabric (e.g. a list's initial scroll
-          // offset), making the list mount scrolled to the top natively.
-          // eslint-disable-next-line react-compiler/react-compiler
-          prevContentOffsetY.value = curr;
-        } else if (curr !== prevContentOffsetY.value) {
-          prevContentOffsetY.value = curr;
-          result.contentOffset = { x: 0, y: curr };
+        // Emit the initialized offset once, then only when the target changes.
+        // Inset-only updates must not replay the previous scroll command.
+        if (y !== prevContentOffsetY.value) {
+          prevContentOffsetY.value = y;
+          result.contentOffset = { x: contentOffset?.x ?? 0, y };
         }
       }
 
@@ -169,6 +172,7 @@ const ScrollViewWithBottomPadding = forwardRef<
       scrollIndicatorInsets?.left,
       inverted,
       contentOffsetY,
+      contentOffset?.x,
     ]);
 
     return (

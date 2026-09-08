@@ -8,6 +8,8 @@ type UseChatKeyboardOptions = {
   keyboardLiftBehavior: KeyboardLiftBehavior;
   freeze: SharedValue<boolean>;
   offset: number;
+  /** Initial JS scroll position, before the native scroll handler is attached. */
+  initialContentOffsetY?: number;
   blankSpace: SharedValue<number>;
   /** Extra content padding shared value — needed on iOS to correctly clamp contentOffset. */
   extraContentPadding: SharedValue<number>;

@@ -30,8 +30,11 @@ type ScrollEvent = {
   };
 };
 
-const useScrollState = (ref: AnimatedRef<Reanimated.ScrollView>) => {
-  const offset = useSharedValue(0);
+const useScrollState = (
+  ref: AnimatedRef<Reanimated.ScrollView>,
+  initialOffset = 0,
+) => {
+  const offset = useSharedValue(initialOffset);
   const layout = useSharedValue({ width: 0, height: 0 });
   const size = useSharedValue({ width: 0, height: 0 });
 
