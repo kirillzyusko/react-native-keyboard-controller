@@ -14,11 +14,7 @@ export default function StatusBarManipulation() {
 
   return (
     <View style={{ flex: 1, backgroundColor: "pink" }}>
-      <StatusBar
-        animated={animated}
-        barStyle={barStyle}
-        hidden={hidden}
-      />
+      <StatusBar animated={animated} barStyle={barStyle} hidden={hidden} />
       <KeyboardAnimationTemplate />
       <Button
         testID="button.hidden"
