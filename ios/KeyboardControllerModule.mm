@@ -176,6 +176,11 @@ RCT_EXPORT_METHOD(viewPositionInWindow
   }
 }
 
+- (void)keepShadowNodesInSync:(NSNumber *)reactTag
+{
+  [self sendEvent:@"onUserDrivenAnimationEnded" body:@{ @"tags" : @[ reactTag ] }];
+}
+
 - (NSArray<NSString *> *)supportedEvents
 {
   return @[
@@ -189,6 +194,8 @@ RCT_EXPORT_METHOD(viewPositionInWindow
     @"KeyboardController::layoutDidSynchronize",
     // window dimensions
     @"KeyboardController::windowDidResize",
+    // native Animated/Fabric shadow tree synchronization
+    @"onUserDrivenAnimationEnded",
   ];
 }
 

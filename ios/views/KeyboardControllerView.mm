@@ -188,6 +188,7 @@ using namespace facebook::react;
                           .progress = [progress doubleValue],
                           .duration = [duration intValue],
                           .target = [target intValue]});
+              [KeyboardController.shared keepShadowNodesInSync:@(self.tag)];
             }
             if ([event isEqualToString:@"onKeyboardMoveInteractive"]) {
               std::dynamic_pointer_cast<const facebook::react::KeyboardControllerViewEventEmitter>(
