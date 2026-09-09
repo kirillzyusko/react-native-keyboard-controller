@@ -138,12 +138,17 @@ public final class KeyboardTrackingView: UIView {
 
     // for `keyboardLayoutGuide` case we can just read keyboard position directly - no interpolation needed
     if KeyboardControllerConfiguration.usesKeyboardLayoutGuideTracking {
-      if keyboardPosition > keyboardHeight {
+      // when we are the top position KVO takes `inputAccessoryView` into consideration,
+      // so we handle it here. KVO reports coordinates on the screen's pixel
+      // grid, while `keyboardHeight` can include a fractional accessory-view
+      // offset (for example, a hairline border). Treat values within one pixel
+      // as the same fully-open position instead of relying on exact equality.
+      let screenScale = trackedView.window?.screen.scale ?? UIScreen.main.scale
+      let positionTolerance = 1 / max(screenScale, 1)
+      if keyboardPosition > keyboardHeight + positionTolerance {
         return Self.invalidPosition
       }
-      // when we are the top position KVO takes `inputAccessoryView` into consideration,
-      // so we handle it here
-      if keyboardPosition == keyboardHeight {
+      if abs(keyboardPosition - keyboardHeight) <= positionTolerance {
         return keyboardPosition - KeyboardAreaExtender.shared.offset
       }
       return keyboardPosition
