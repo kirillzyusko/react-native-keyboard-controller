@@ -39,7 +39,12 @@ export function useEventHandlerRegistration(
   const onRegisterHandler = (handler: EventHandlerProcessed<never, never>) => {
     const currentHandler = handler as unknown as WorkletHandlerContainer;
     let registeredViewTag: number | null = null;
+    let isRegistrationCancelled = false;
     const attachWorkletHandlers = () => {
+      if (isRegistrationCancelled) {
+        return;
+      }
+
       const viewTag = findNodeHandle(viewTagRef.current);
 
       if (__DEV__ && !viewTag) {
@@ -67,6 +72,8 @@ export function useEventHandlerRegistration(
     }
 
     return () => {
+      isRegistrationCancelled = true;
+
       if (registeredViewTag) {
         if ("workletEventHandler" in currentHandler) {
           currentHandler.workletEventHandler.unregisterFromEvents(
