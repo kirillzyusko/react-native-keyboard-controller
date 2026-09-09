@@ -62,6 +62,7 @@ RCT_EXPORT_VIEW_PROPERTY(enabled, BOOL)
 @implementation KeyboardExtender {
   UIView *_contentView;
   UIView *_sharedInputAccessoryView;
+  NSHashTable<UIView<UITextInput> *> *_attachedInputs;
   BOOL _isObserving;
 #ifdef RCT_NEW_ARCH_ENABLED
   RCTSurfaceTouchHandler *_touchHandler;
@@ -91,17 +92,16 @@ RCT_EXPORT_VIEW_PROPERTY(enabled, BOOL)
     static const auto defaultProps = std::make_shared<const KeyboardExtenderProps>();
     _props = defaultProps;
     _touchHandler = [RCTSurfaceTouchHandler new];
-    _contentView = [[UIView alloc] initWithFrame:CGRectZero];
-  }
 #else
 - (instancetype)initWithBridge:(RCTBridge *)bridge
 {
   self = [super initWithFrame:CGRectZero];
   if (self) {
     _touchHandler = [[RCTTouchHandler alloc] initWithBridge:bridge];
-    _contentView = [[UIView alloc] initWithFrame:CGRectZero];
-  }
 #endif
+    _contentView = [[UIView alloc] initWithFrame:CGRectZero];
+    _attachedInputs = [NSHashTable weakObjectsHashTable];
+  }
   [_touchHandler attachToView:_contentView];
   [self startObserving];
   return self;
@@ -198,6 +198,7 @@ RCT_EXPORT_VIEW_PROPERTY(enabled, BOOL)
   } else if ([input isKindOfClass:[UITextView class]]) {
     ((UITextView *)input).inputAccessoryView = _sharedInputAccessoryView;
   }
+  [_attachedInputs addObject:input];
 
   // Refresh input view to apply changes
   [input reloadInputViews];
@@ -205,13 +206,9 @@ RCT_EXPORT_VIEW_PROPERTY(enabled, BOOL)
 
 - (void)detachInputAccessoryView
 {
-  // Remove the accessory view from the current text input
-  UIResponder *firstResponder = [UIResponder current];
-  if ([firstResponder isKindOfClass:[UITextField class]] ||
-      [firstResponder isKindOfClass:[UITextView class]]) {
-    UIView<UITextInput> *textInput = (UIView<UITextInput> *)firstResponder;
+  // Remove the accessory view from every text input this extender attached to
+  for (UIView<UITextInput> *textInput in _attachedInputs.allObjects) {
     if (textInput.inputAccessoryView == _sharedInputAccessoryView) {
-      // Assign the inputAccessoryView
       if ([textInput isKindOfClass:[UITextField class]]) {
         ((UITextField *)textInput).inputAccessoryView = nil;
       } else if ([textInput isKindOfClass:[UITextView class]]) {
@@ -220,6 +217,7 @@ RCT_EXPORT_VIEW_PROPERTY(enabled, BOOL)
       [textInput reloadInputViews];
     }
   }
+  [_attachedInputs removeAllObjects];
 }
 
 // MARK: touch handling
