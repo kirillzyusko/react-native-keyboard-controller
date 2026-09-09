@@ -44,6 +44,7 @@ function renderRegistration(viewTagRef: React.MutableRefObject<number | null>) {
 }
 
 beforeEach(() => {
+  mockedFindNodeHandle.mockReset();
   mockedFindNodeHandle.mockImplementation((view) =>
     view === null ? null : VIEW_TAG,
   );
@@ -128,48 +129,6 @@ describe("useEventHandlerRegistration", () => {
     );
   });
 
-  it("should retry attaching handlers when the view tag becomes available", () => {
-    jest.useFakeTimers();
-    mockedFindNodeHandle
-      .mockReturnValueOnce(null)
-      .mockReturnValueOnce(null)
-      .mockReturnValueOnce(VIEW_TAG);
-    const viewTagRef = { current: VIEW };
-    const workletEventHandler = createWorkletHandler();
-    const register = renderRegistration(viewTagRef);
-
-    register({ workletEventHandler } as unknown as EventHandler);
-
-    expect(workletEventHandler.registerForEvents).not.toHaveBeenCalled();
-
-    jest.runAllTimers();
-
-    expect(workletEventHandler.registerForEvents).toHaveBeenCalledWith(
-      VIEW_TAG,
-    );
-  });
-
-  it("should cancel a pending attachment during cleanup", () => {
-    jest.useFakeTimers();
-    mockedFindNodeHandle.mockReturnValueOnce(null);
-    const cancelAnimationFrame = jest.spyOn(global, "cancelAnimationFrame");
-    const viewTagRef = { current: VIEW };
-    const workletEventHandler = createWorkletHandler();
-    const register = renderRegistration(viewTagRef);
-
-    const cleanup = register({
-      workletEventHandler,
-    } as unknown as EventHandler);
-
-    cleanup();
-
-    expect(cancelAnimationFrame).toHaveBeenCalledTimes(1);
-
-    jest.runOnlyPendingTimers();
-
-    expect(workletEventHandler.registerForEvents).not.toHaveBeenCalled();
-  });
-
   it("should ignore a deferred attachment after cleanup", async () => {
     const viewTagRef = { current: null as number | null };
     const workletEventHandler = createWorkletHandler();
@@ -183,6 +142,51 @@ describe("useEventHandlerRegistration", () => {
     await Promise.resolve();
 
     expect(workletEventHandler.registerForEvents).not.toHaveBeenCalled();
+  });
+
+  it("should not resolve a tag or warn after provider teardown", async () => {
+    const warn = jest.spyOn(console, "warn").mockImplementation(() => {});
+    const viewTagRef = { current: null };
+    const workletEventHandler = createWorkletHandler();
+    const register = renderRegistration(viewTagRef);
+    const cleanup = register({
+      workletEventHandler,
+    } as unknown as EventHandler);
+
+    cleanup();
+    await Promise.resolve();
+
+    expect(mockedFindNodeHandle).not.toHaveBeenCalled();
+    expect(warn).not.toHaveBeenCalled();
+    expect(workletEventHandler.registerForEvents).not.toHaveBeenCalled();
+    expect(workletEventHandler.unregisterFromEvents).not.toHaveBeenCalled();
+  });
+
+  it("should keep a later registration active after an earlier one is cancelled", async () => {
+    const viewTagRef = { current: null as number | null };
+    const workletEventHandler = createWorkletHandler();
+    const handler = { workletEventHandler } as unknown as EventHandler;
+    const register = renderRegistration(viewTagRef);
+    const cancelFirstRegistration = register(handler);
+
+    cancelFirstRegistration();
+
+    const cleanup = register(handler);
+
+    viewTagRef.current = VIEW;
+    await Promise.resolve();
+
+    expect(workletEventHandler.registerForEvents).toHaveBeenCalledTimes(1);
+    expect(workletEventHandler.registerForEvents).toHaveBeenCalledWith(
+      VIEW_TAG,
+    );
+
+    cleanup();
+
+    expect(workletEventHandler.unregisterFromEvents).toHaveBeenCalledTimes(1);
+    expect(workletEventHandler.unregisterFromEvents).toHaveBeenCalledWith(
+      VIEW_TAG,
+    );
   });
 
   it("should remove handlers after the view ref is cleared", () => {
