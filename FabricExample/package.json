@@ -82,10 +82,6 @@
     "setupFiles": [
       "./jestSetup.js"
     ],
-    "moduleNameMapper": {
-      "^react-native-reanimated$": "<rootDir>/node_modules/react-native-reanimated/lib/module/index.js",
-      "^react-native-reanimated/mock$": "<rootDir>/node_modules/react-native-reanimated/lib/module/mock.js"
-    },
     "transformIgnorePatterns": [
       "node_modules/(?!(jest-)?@?react-native|@react-native-community|@react-navigation)"
     ],
