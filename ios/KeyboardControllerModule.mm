@@ -178,7 +178,7 @@ RCT_EXPORT_METHOD(viewPositionInWindow
 
 - (void)keepShadowNodesInSync:(NSNumber *)reactTag
 {
-  [self sendEvent:@"onUserDrivenAnimationEnded" body:@{ @"tags" : @[ reactTag ] }];
+  [self sendEvent:@"onUserDrivenAnimationEnded" body:@{@"tags" : @[ reactTag ]}];
 }
 
 - (NSArray<NSString *> *)supportedEvents
