@@ -14,8 +14,8 @@ function CloseKeyboard() {
 }
 
 describe("closing keyboard flow", () => {
-  it("should have a mock version of `KeyboardController.dismiss`", () => {
-    const { getByTestId } = render(<CloseKeyboard />);
+  it("should have a mock version of `KeyboardController.dismiss`", async () => {
+    const { getByTestId } = await render(<CloseKeyboard />);
 
     fireEvent.press(getByTestId("close_keyboard"));
 

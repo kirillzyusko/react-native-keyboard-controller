@@ -1,4 +1,3 @@
-import "@testing-library/jest-native/extend-expect";
 import { render } from "@testing-library/react-native";
 import React from "react";
 import { Animated } from "react-native";
@@ -16,8 +15,8 @@ function TestComponent() {
 }
 
 describe("basic keyboard interaction", () => {
-  it("should have different styles depends on position", () => {
-    const { getByTestId, update } = render(<TestComponent />);
+  it("should have different styles depends on position", async () => {
+    const { getByTestId, rerender } = await render(<TestComponent />);
 
     expect(getByTestId("view")).toHaveStyle({ transform: [{ translateY: 0 }] });
 
@@ -25,7 +24,7 @@ describe("basic keyboard interaction", () => {
       height: new Animated.Value(150),
       progress: new Animated.Value(0.5),
     });
-    update(<TestComponent />);
+    await rerender(<TestComponent />);
 
     expect(getByTestId("view")).toHaveStyle({
       transform: [{ translateY: 150 }],
@@ -35,7 +34,7 @@ describe("basic keyboard interaction", () => {
       height: new Animated.Value(300),
       progress: new Animated.Value(1),
     });
-    update(<TestComponent />);
+    await rerender(<TestComponent />);
 
     expect(getByTestId("view")).toHaveStyle({
       transform: [{ translateY: 300 }],

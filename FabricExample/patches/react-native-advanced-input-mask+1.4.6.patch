@@ -1,0 +1,10 @@
+diff --git a/node_modules/react-native-advanced-input-mask/ios/MaskedTextInput-Bridging-Header.h b/node_modules/react-native-advanced-input-mask/ios/MaskedTextInput-Bridging-Header.h
+index 2453f8c..e7b3b63 100644
+--- a/node_modules/react-native-advanced-input-mask/ios/MaskedTextInput-Bridging-Header.h
++++ b/node_modules/react-native-advanced-input-mask/ios/MaskedTextInput-Bridging-Header.h
+@@ -1,5 +1,4 @@
+ #import <React/RCTBackedTextInputDelegateAdapter.h>
+-#import <React/RCTBaseTextInputView.h>
+ #import <React/RCTBridge.h>
+ #import <React/RCTBridgeModule.h>
+ #import <React/RCTUIManager.h>

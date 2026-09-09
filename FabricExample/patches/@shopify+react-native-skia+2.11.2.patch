@@ -1,0 +1,7 @@
+diff --git a/node_modules/@shopify/react-native-skia/lib/module/Platform/Platform.web.js b/node_modules/@shopify/react-native-skia/lib/module/Platform/Platform.web.js
+index 0000000..1111111 100644
+--- a/node_modules/@shopify/react-native-skia/lib/module/Platform/Platform.web.js
++++ b/node_modules/@shopify/react-native-skia/lib/module/Platform/Platform.web.js
+@@ -48 +48 @@
+-        } = require("react-native/Libraries/Image/AssetRegistry");
++        } = require("react-native/asset-registry");

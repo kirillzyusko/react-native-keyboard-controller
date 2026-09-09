@@ -1,8 +1,8 @@
 diff --git a/node_modules/react-native/ReactCommon/react/featureflags/ReactNativeFeatureFlags.cpp b/node_modules/react-native/ReactCommon/react/featureflags/ReactNativeFeatureFlags.cpp
-index 667aec1..5cd9376 100644
+index 8e65a96..bf113f7 100644
 --- a/node_modules/react-native/ReactCommon/react/featureflags/ReactNativeFeatureFlags.cpp
 +++ b/node_modules/react-native/ReactCommon/react/featureflags/ReactNativeFeatureFlags.cpp
-@@ -215,7 +215,7 @@ double ReactNativeFeatureFlags::preparedTextCacheSize() {
+@@ -287,7 +287,7 @@ double ReactNativeFeatureFlags::preparedTextCacheSize() {
  }
  
  bool ReactNativeFeatureFlags::preventShadowTreeCommitExhaustion() {
@@ -10,4 +10,4 @@ index 667aec1..5cd9376 100644
 +  return true;
  }
  
- bool ReactNativeFeatureFlags::traceTurboModulePromiseRejectionsOnAndroid() {
+ bool ReactNativeFeatureFlags::redBoxV2Android() {

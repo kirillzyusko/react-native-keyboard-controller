@@ -5,7 +5,6 @@ global.ReanimatedDataMock = {
   now: () => 0,
 };
 
-import "@testing-library/jest-native/extend-expect";
 import { render } from "@testing-library/react-native";
 import React from "react";
 import { useKeyboardHandler } from "react-native-keyboard-controller";
@@ -66,7 +65,9 @@ describe("keyboard handler specification", () => {
     const onEnd = (e: NativeEvent) => handlers.onEnd?.(e);
     const { getByTestId } = render(<TestComponent />);
 
-    expect(getByTestId("view")).toHaveStyle({ transform: [{ translateY: 0 }] });
+    expect(getByTestId("view")).toHaveAnimatedStyle({
+      transform: [{ translateY: 0 }],
+    });
 
     onStart({ height: 100, progress: 1, duration: 250, target: 123 });
     jest.advanceTimersByTime(100);

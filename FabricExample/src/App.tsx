@@ -42,12 +42,7 @@ export default function App() {
       <GestureHandlerRootView style={styles.root}>
         <KeyboardProvider statusBarTranslucent>
           <NavigationContainer fallback={spinner} linking={linking}>
-            <StatusBar
-              animated
-              translucent
-              backgroundColor={"#FFFFFF00"}
-              barStyle={"dark-content"}
-            />
+            <StatusBar animated barStyle="dark-content" />
             <RootStack />
           </NavigationContainer>
         </KeyboardProvider>

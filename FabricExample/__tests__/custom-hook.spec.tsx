@@ -28,8 +28,8 @@ function useKeyboardAnimation() {
 }
 
 describe("custom hook creation", () => {
-  it("should render without errors", () => {
-    const { result } = renderHook(() => useKeyboardAnimation());
+  it("should render without errors", async () => {
+    const { result } = await renderHook(() => useKeyboardAnimation());
 
     expect(result).toBeDefined();
   });
