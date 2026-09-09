@@ -11,4 +11,5 @@
 @interface KeyboardController : RCTEventEmitter
 + (KeyboardController *)shared;
 - (void)sendEvent:(NSString *)name body:(id)body;
+- (void)keepShadowNodesInSync:(NSNumber *)reactTag;
 @end
