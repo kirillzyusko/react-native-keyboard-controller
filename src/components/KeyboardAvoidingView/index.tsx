@@ -120,11 +120,26 @@ const KeyboardAvoidingView = forwardRef<
       (layout: LayoutRectangle) => {
         "worklet";
 
-        if (
-          keyboard.isClosed.value ||
-          initialFrame.value === null ||
-          behavior !== "height"
-        ) {
+        // Reject out-of-order `automaticOffset` measurements to stop the onLayout flicker.
+        //
+        // With `automaticOffset`, every onLayout resolves the frame through an async
+        // native `viewPositionInWindow()` call. Those promises settle out of order, so
+        // a callback can arrive LATE carrying a stale, smaller `y`/`height` after a
+        // newer, larger one already landed. Since `initialFrame` is re-recorded on
+        // every onLayout and feeds `relativeKeyboardHeight()` (which drives the
+        // padding/offset), each stale value yanks the frame back down and produces the
+        // up-down jitter we saw while the keyboard opens.
+        //
+        // The view's bottom edge (`y + height`) only grows as the keyboard opens, so we
+        // accept a layout only when its bottom edge exceeds the stored one — this drops
+        // the late/stale callbacks and lets the frame ramp up monotonically and settle.
+        // The genuine resting frame is re-captured on the next `keyboard.isClosed` pass
+        // (or the first layout), so it never stays stuck at an inflated value across
+        // open/close cycles.
+        if (keyboard.isClosed.value || initialFrame.value === null) {
+          // eslint-disable-next-line react-compiler/react-compiler
+          initialFrame.value = layout;
+        } else if (behavior !== "height" && layout.y+layout.height > initialFrame.value.y+initialFrame.value.height) {
           // eslint-disable-next-line react-compiler/react-compiler
           initialFrame.value = layout;
         }
