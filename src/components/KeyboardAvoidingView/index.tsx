@@ -3,13 +3,12 @@ import { View } from "react-native";
 import Reanimated, {
   interpolate,
   runOnUI,
-  useAnimatedStyle,
-  useDerivedValue,
   useSharedValue,
 } from "react-native-reanimated";
 
 import { KeyboardControllerNative } from "../../bindings";
 import { useWindowDimensions } from "../../hooks";
+import { useAnimatedStyle, useDerivedValue } from "../../reanimated";
 import { findNodeHandle } from "../../utils/findNodeHandle";
 import useCombinedRef from "../hooks/useCombinedRef";
 

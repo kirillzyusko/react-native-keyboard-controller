@@ -1,12 +1,8 @@
 import { Platform } from "react-native";
-import {
-  Easing,
-  useAnimatedReaction,
-  useSharedValue,
-  withTiming,
-} from "react-native-reanimated";
+import { Easing, useSharedValue, withTiming } from "react-native-reanimated";
 
 import { useKeyboardHandler } from "../../hooks";
+import { useAnimatedReaction } from "../../reanimated";
 
 const IS_ANDROID_ELEVEN_OR_HIGHER =
   Platform.OS === "android" && Platform.Version >= 30;

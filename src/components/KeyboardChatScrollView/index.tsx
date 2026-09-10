@@ -1,13 +1,9 @@
 import React, { forwardRef, useCallback, useMemo } from "react";
 import { StyleSheet } from "react-native";
-import {
-  makeMutable,
-  useAnimatedRef,
-  useAnimatedStyle,
-  useDerivedValue,
-} from "react-native-reanimated";
+import { makeMutable, useAnimatedRef } from "react-native-reanimated";
 import Reanimated from "react-native-reanimated";
 
+import { useAnimatedStyle, useDerivedValue } from "../../reanimated";
 import useCombinedRef from "../hooks/useCombinedRef";
 import ScrollViewWithBottomPadding from "../ScrollViewWithBottomPadding";
 

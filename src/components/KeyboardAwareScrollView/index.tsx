@@ -10,10 +10,7 @@ import Reanimated, {
   interpolate,
   runOnUI,
   scrollTo,
-  useAnimatedReaction,
   useAnimatedRef,
-  useAnimatedStyle,
-  useDerivedValue,
   useSharedValue,
 } from "react-native-reanimated";
 
@@ -23,6 +20,11 @@ import {
   useReanimatedFocusedInput,
   useWindowDimensions,
 } from "../../hooks";
+import {
+  useAnimatedReaction,
+  useAnimatedStyle,
+  useDerivedValue,
+} from "../../reanimated";
 import { findNodeHandle } from "../../utils/findNodeHandle";
 import useCombinedRef from "../hooks/useCombinedRef";
 import useScrollState from "../hooks/useScrollState";
