@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { Platform } from "react-native";
 import { Easing, useSharedValue, withTiming } from "react-native-reanimated";
 
@@ -26,7 +27,7 @@ const TELEGRAM_ANDROID_TIMING_CONFIG = {
  * Hook that uses default transitions for iOS and Android > 11, and uses
  * custom interpolation on Android < 11 to achieve more smooth animation.
  *
- * @param handler - Object containing keyboard event handlers.
+ * @param unstableHandler - Object containing keyboard event handlers.
  * @param [deps] - Dependencies array for the effect.
  * @example
  * ```ts
@@ -43,9 +44,11 @@ const TELEGRAM_ANDROID_TIMING_CONFIG = {
  * ```
  */
 export const useSmoothKeyboardHandler: typeof useKeyboardHandler = (
-  handler,
+  unstableHandler,
   deps,
 ) => {
+  // eslint-disable-next-line react-compiler/react-compiler, react-hooks/exhaustive-deps
+  const handler = useMemo(() => unstableHandler, deps ?? []);
   const target = useSharedValue(-1);
   const height = useSharedValue(0);
   const persistedHeight = useSharedValue(0);
@@ -78,7 +81,6 @@ export const useSmoothKeyboardHandler: typeof useKeyboardHandler = (
       // dispatch `onEnd`
       if (evt.height === height.value) {
         handler.onEnd?.(evt);
-        // eslint-disable-next-line react-compiler/react-compiler
         persistedHeight.value = height.value;
       }
     },
