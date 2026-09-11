@@ -1,0 +1,4 @@
+interface:
+  display_name: "Migrate RNKC Keyboard Toolbar"
+  short_description: "Migrate KeyboardToolbar to compound API"
+  default_prompt: "Use $migrate-rnkc-keyboard-toolbar to migrate these KeyboardToolbar usages to the compound API without changing behavior."
