@@ -17,13 +17,23 @@ cd example
 yarn
 ```
 
-3. Start the Metro server:
+3. For iOS, install the dependencies (Ruby 3.3.0 is selected automatically by
+   rbenv and other version managers that honor `.ruby-version`):
+
+```bash
+bundle install
+cd ios
+bundle exec pod install
+cd ..
+```
+
+4. Start the Metro server:
 
 ```bash
 yarn start
 ```
 
-4. In a separate terminal, build and install the app:
+5. In a separate terminal, build and install the app:
 
 ```bash
 yarn android
