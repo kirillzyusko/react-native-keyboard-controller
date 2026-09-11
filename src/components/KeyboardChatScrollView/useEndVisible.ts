@@ -1,9 +1,7 @@
 import { useMemo } from "react";
-import {
-  runOnJS,
-  useAnimatedReaction,
-  useDerivedValue,
-} from "react-native-reanimated";
+import { runOnJS } from "react-native-reanimated";
+
+import { useAnimatedReaction, useDerivedValue } from "../../reanimated";
 
 import { isScrollAtEnd } from "./useChatKeyboard/helpers";
 

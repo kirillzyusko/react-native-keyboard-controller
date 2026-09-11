@@ -6,7 +6,13 @@ import type {
   NativeEvent,
 } from "./types";
 
-export { useHandler } from "react-native-reanimated";
+export {
+  useAnimatedProps,
+  useAnimatedReaction,
+  useAnimatedStyle,
+  useDerivedValue,
+  useHandler,
+} from "react-native-reanimated";
 
 const NOOP = () => () => {};
 

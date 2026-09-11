@@ -1,14 +1,13 @@
 import React, { forwardRef, useEffect } from "react";
 import { Platform } from "react-native";
-import Reanimated, {
-  runOnJS,
+import Reanimated, { runOnJS, useSharedValue } from "react-native-reanimated";
+
+import { ClippingScrollView } from "../../bindings";
+import {
   useAnimatedProps,
   useAnimatedReaction,
   useDerivedValue,
-  useSharedValue,
-} from "react-native-reanimated";
-
-import { ClippingScrollView } from "../../bindings";
+} from "../../reanimated";
 
 import styles from "./styles";
 

@@ -1,8 +1,9 @@
 import { useCallback } from "react";
 import { Platform } from "react-native";
-import { scrollTo, useAnimatedReaction } from "react-native-reanimated";
+import { scrollTo } from "react-native-reanimated";
 
 import { IS_FABRIC } from "../../../architecture";
+import { useAnimatedReaction } from "../../../reanimated";
 import { isScrollAtEnd, shouldShiftContent } from "../useChatKeyboard/helpers";
 
 import type { KeyboardLiftBehavior } from "../useChatKeyboard/types";

@@ -1,6 +1,7 @@
-import { useAnimatedReaction, useSharedValue } from "react-native-reanimated";
+import { useSharedValue } from "react-native-reanimated";
 
 import { useKeyboardHandler } from "../../../hooks";
+import { useAnimatedReaction } from "../../../reanimated";
 import { getEffectiveHeight } from "../useChatKeyboard/helpers";
 
 import type { SharedValue } from "react-native-reanimated";

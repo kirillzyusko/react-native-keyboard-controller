@@ -1,5 +1,9 @@
 import {
   useEvent,
+  useAnimatedProps as useReanimatedAnimatedProps,
+  useAnimatedReaction as useReanimatedAnimatedReaction,
+  useAnimatedStyle as useReanimatedAnimatedStyle,
+  useDerivedValue as useReanimatedDerivedValue,
   useHandler as useReanimatedHandler,
 } from "react-native-reanimated";
 
@@ -14,6 +18,20 @@ import type {
 type EventContext = Record<string, unknown>;
 
 // Dependencies are only needed on Web when the Babel plugin is unavailable.
+export const useAnimatedProps: typeof useReanimatedAnimatedProps = (
+  updater,
+  _dependencies,
+  adapters,
+  isAnimatedProps,
+) => useReanimatedAnimatedProps(updater, undefined, adapters, isAnimatedProps);
+export const useAnimatedReaction: typeof useReanimatedAnimatedReaction = (
+  prepare,
+  react,
+) => useReanimatedAnimatedReaction(prepare, react);
+export const useAnimatedStyle: typeof useReanimatedAnimatedStyle = (updater) =>
+  useReanimatedAnimatedStyle(updater);
+export const useDerivedValue: typeof useReanimatedDerivedValue = (updater) =>
+  useReanimatedDerivedValue(updater);
 export const useHandler: typeof useReanimatedHandler = (handlers) =>
   useReanimatedHandler(handlers);
 
