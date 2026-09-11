@@ -28,6 +28,9 @@ extension KeyboardMovementObserver {
       onNotify("KeyboardController::keyboardWillShow", buildEventParams(self.keyboardHeight, duration, tag))
 
       setupKeyboardWatcher()
+      // Observe interactive movement while the opening animation is active so
+      // a user-driven interruption can hand off from display-link tracking.
+      setupKVObserver()
       initializeAnimation(fromValue: prevKeyboardPosition, toValue: self.keyboardHeight)
       scheduleDidEvent(height: self.keyboardHeight, duration: animation?.duration ?? CGFloat(duration) / 1000)
     }
