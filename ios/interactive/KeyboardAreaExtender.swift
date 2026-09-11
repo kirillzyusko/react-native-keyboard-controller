@@ -5,6 +5,7 @@
 //  Created by Kiryl Ziusko on 02/11/2024.
 //
 
+@MainActor
 class KeyboardAreaExtender: NSObject {
   private var currentInputAccessoryView: InvisibleInputAccessoryView?
 
