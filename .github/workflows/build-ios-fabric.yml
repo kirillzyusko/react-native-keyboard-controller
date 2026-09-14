@@ -9,6 +9,8 @@ on:
       - "react-native-keyboard-controller.podspec"
       - "ios/**"
       - "FabricExample/ios/**"
+      - "FabricExample/Gemfile*"
+      - "FabricExample/.ruby-version"
       - "yarn.lock"
       - "FabricExample/yarn.lock"
       - "FabricExample/patches/**"
@@ -22,6 +24,8 @@ on:
       - "react-native-keyboard-controller.podspec"
       - "ios/**"
       - "FabricExample/ios/**"
+      - "FabricExample/Gemfile*"
+      - "FabricExample/.ruby-version"
       - "yarn.lock"
       - "FabricExample/yarn.lock"
       - "FabricExample/patches/**"
@@ -75,12 +79,11 @@ jobs:
           echo "CCACHE_DEPEND=true" >> $GITHUB_ENV
           echo "CCACHE_INODECACHE=true" >> $GITHUB_ENV
 
-      - name: Setup Ruby (bundle)
+      - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 2.7.6
           bundler-cache: true
-          working-directory: FabricExample/ios
+          working-directory: FabricExample
 
       - name: Restore Pods cache
         uses: actions/cache@v4
@@ -93,7 +96,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-fabric-pods-
       - name: Install Pods
-        run: export USE_CCACHE=1 && pod install || pod update --repo-update
+        run: |
+          if ! bundle exec pod install; then
+            bundle exec pod update --repo-update
+          fi
+        env:
+          USE_CCACHE: "1"
       - name: Restore DerivedData cache
         uses: actions/cache@v5
         with:

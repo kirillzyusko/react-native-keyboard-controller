@@ -9,6 +9,8 @@ on:
       - "react-native-keyboard-controller.podspec"
       - "ios/**"
       - "example/ios/**"
+      - "example/Gemfile*"
+      - "example/.ruby-version"
       - "yarn.lock"
       - "example/yarn.lock"
       - "example/patches/**"
@@ -20,6 +22,8 @@ on:
       - "react-native-keyboard-controller.podspec"
       - "ios/**"
       - "example/ios/**"
+      - "example/Gemfile*"
+      - "example/.ruby-version"
       - "yarn.lock"
       - "example/yarn.lock"
       - "example/patches/**"
@@ -71,12 +75,11 @@ jobs:
           echo "CCACHE_DEPEND=true" >> $GITHUB_ENV
           echo "CCACHE_INODECACHE=true" >> $GITHUB_ENV
 
-      - name: Setup Ruby (bundle)
+      - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 2.7.6
           bundler-cache: true
-          working-directory: example/ios
+          working-directory: example
 
       - name: Restore Pods cache
         uses: actions/cache@v4
@@ -89,7 +92,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pods-
       - name: Install Pods
-        run: export USE_CCACHE=1 && pod install || pod update --repo-update
+        run: |
+          if ! bundle exec pod install; then
+            bundle exec pod update --repo-update
+          fi
+        env:
+          USE_CCACHE: "1"
       - name: Install xcpretty
         run: gem install xcpretty
       - name: Restore DerivedData cache
