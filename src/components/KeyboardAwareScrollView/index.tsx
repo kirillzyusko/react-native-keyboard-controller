@@ -144,12 +144,12 @@ const KeyboardAwareScrollView = forwardRef<
     const syncScrollViewTarget = useCallback(async () => {
       const handle = findNodeHandle(scrollViewAnimatedRef.current);
 
+      // eslint-disable-next-line react-compiler/react-compiler
+      scrollViewTarget.value = handle;
+
       if (handle === null) {
         return;
       }
-
-      // eslint-disable-next-line react-compiler/react-compiler
-      scrollViewTarget.value = handle;
 
       try {
         const { y } = await KeyboardControllerNative.viewPositionInWindow(
@@ -169,9 +169,6 @@ const KeyboardAwareScrollView = forwardRef<
       [onLayout, syncScrollViewTarget],
     );
 
-    // Effects run on mount and again when a hidden `<Activity>` around the
-    // component becomes visible, both times with the ref attached. That covers
-    // a ScrollView whose only layout event arrived while the ref was detached.
     useEffect(() => {
       syncScrollViewTarget();
     }, [syncScrollViewTarget]);
