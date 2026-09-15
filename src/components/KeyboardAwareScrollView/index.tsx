@@ -141,28 +141,37 @@ const KeyboardAwareScrollView = forwardRef<
 
     const { height } = useWindowDimensions();
 
+    const syncScrollViewTarget = useCallback(async () => {
+      const handle = findNodeHandle(scrollViewAnimatedRef.current);
+
+      // eslint-disable-next-line react-compiler/react-compiler
+      scrollViewTarget.value = handle;
+
+      if (handle === null) {
+        return;
+      }
+
+      try {
+        const { y } = await KeyboardControllerNative.viewPositionInWindow(
+          handle,
+        );
+
+        scrollViewPageY.value = y;
+      } catch {
+        // ignore
+      }
+    }, []);
     const onScrollViewLayout = useCallback(
-      async (e: LayoutChangeEvent) => {
-        const handle = findNodeHandle(scrollViewAnimatedRef.current);
-
-        scrollViewTarget.value = handle;
-
+      (e: LayoutChangeEvent) => {
+        syncScrollViewTarget();
         onLayout?.(e);
-
-        if (handle !== null) {
-          try {
-            const { y } = await KeyboardControllerNative.viewPositionInWindow(
-              handle,
-            );
-
-            scrollViewPageY.value = y;
-          } catch {
-            // ignore
-          }
-        }
       },
-      [onLayout],
+      [onLayout, syncScrollViewTarget],
     );
+
+    useEffect(() => {
+      syncScrollViewTarget();
+    }, [syncScrollViewTarget]);
 
     /**
      * Function that will scroll a ScrollView as keyboard gets moving.
@@ -262,7 +271,6 @@ const KeyboardAwareScrollView = forwardRef<
 
         const prevScroll = scrollPosition.value;
 
-        // eslint-disable-next-line react-compiler/react-compiler
         scrollPosition.value = newPosition;
         maybeScroll(keyboardHeight.value, true);
         scrollPosition.value = prevScroll;
