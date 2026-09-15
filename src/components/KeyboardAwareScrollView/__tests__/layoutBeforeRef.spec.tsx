@@ -1,7 +1,7 @@
 import "../__fixtures__/mocks";
 
 import { act, render } from "@testing-library/react-native";
-import React from "react";
+import React, { Activity } from "react";
 import { View } from "react-native";
 
 import { findNodeHandle } from "../../../utils/findNodeHandle";
@@ -10,6 +10,7 @@ import {
   INPUT_LAYOUT_B,
   INPUT_TARGET_B,
   KEYBOARD_HEIGHT,
+  MOCK_SV_TARGET,
   inputEvent,
   kbEvent,
   lastScrollToY,
@@ -27,23 +28,37 @@ beforeEach(() => {
   reset();
 });
 
-// Unlike `renderKeyboardAwareScrollView`, doesn't fire `onLayout`.
-const renderScrollView = async () => {
+afterEach(() => {
+  jest.mocked(findNodeHandle).mockImplementation(() => MOCK_SV_TARGET);
+});
+
+const Screen = ({ mode }: { mode: "hidden" | "visible" }) => {
   const KeyboardAwareScrollView = require("../index").default;
 
-  render(
-    <KeyboardAwareScrollView bottomOffset={BOTTOM_OFFSET}>
-      <View />
-    </KeyboardAwareScrollView>,
+  return (
+    <Activity mode={mode}>
+      <KeyboardAwareScrollView bottomOffset={BOTTOM_OFFSET}>
+        <View />
+      </KeyboardAwareScrollView>
+    </Activity>
   );
+};
 
-  await act(async () => {
+const fireLayout = () => {
+  expect(mockCapturedOnLayout.current).not.toBeNull();
+  mockCapturedOnLayout.current?.({
+    nativeEvent: { layout: { x: 0, y: 0, width: 390, height: 812 } },
+  } as LayoutChangeEvent);
+};
+
+// Let `synchronize` continue after `await update`, then drain its scheduled frame.
+const flushFrame = () =>
+  act(async () => {
     await Promise.resolve();
     await new Promise<void>((resolve) => {
       requestAnimationFrame(() => resolve());
     });
   });
-};
 
 const focusInput = () => {
   mockInput.value = inputEvent(INPUT_TARGET_B, INPUT_LAYOUT_B);
@@ -59,8 +74,24 @@ const focusInput = () => {
 const EXPECTED_SCROLL_Y = 188.67;
 
 describe("KeyboardAwareScrollView — scroll view target", () => {
-  it("is resolved by the effect, without a layout event", async () => {
-    await renderScrollView();
+  it("is resolved when a hidden Activity becomes visible", async () => {
+    // React detaches refs inside a hidden `<Activity>`.
+    let refAttached = false;
+
+    jest
+      .mocked(findNodeHandle)
+      .mockImplementation(() => (refAttached ? MOCK_SV_TARGET : null));
+
+    const { rerender } = render(<Screen mode="hidden" />);
+
+    await act(async () => {
+      fireLayout();
+      await Promise.resolve();
+    });
+
+    refAttached = true;
+    rerender(<Screen mode="visible" />);
+    await flushFrame();
 
     focusInput();
 
@@ -68,13 +99,12 @@ describe("KeyboardAwareScrollView — scroll view target", () => {
   });
 
   it("is kept when onLayout fires with a detached ref", async () => {
-    await renderScrollView();
+    render(<Screen mode="visible" />);
+    await flushFrame();
 
     jest.mocked(findNodeHandle).mockReturnValueOnce(null);
     await act(async () => {
-      mockCapturedOnLayout.current?.({
-        nativeEvent: { layout: { x: 0, y: 0, width: 390, height: 812 } },
-      } as LayoutChangeEvent);
+      fireLayout();
       await Promise.resolve();
     });
 

@@ -36,13 +36,21 @@ const mockState = () => require("./testUtils");
 // jest.mock registrations
 // ---------------------------------------------------------------------------
 
-jest.mock("react-native-reanimated", () => ({
-  ...require("react-native-reanimated/mock"),
-  scrollTo: (...args: unknown[]) => mockState().mockScrollTo(...args),
-  interpolate: mockInterpolateFn,
-  clamp: (value: number, min: number, max: number) =>
-    Math.min(Math.max(value, min), max),
-}));
+jest.mock("react-native-reanimated", () => {
+  const reanimatedMock = require("react-native-reanimated/mock");
+  const { useState } = require("react");
+
+  return {
+    ...reanimatedMock,
+    // The stock mock creates a new shared value on every render.
+    useSharedValue: (init: unknown) =>
+      useState(() => reanimatedMock.useSharedValue(init))[0],
+    scrollTo: (...args: unknown[]) => mockState().mockScrollTo(...args),
+    interpolate: mockInterpolateFn,
+    clamp: (value: number, min: number, max: number) =>
+      Math.min(Math.max(value, min), max),
+  };
+});
 
 jest.mock("../useSmoothKeyboardHandler", () => ({
   useSmoothKeyboardHandler: jest.fn(
