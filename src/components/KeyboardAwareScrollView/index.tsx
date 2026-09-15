@@ -144,11 +144,6 @@ const KeyboardAwareScrollView = forwardRef<
     const syncScrollViewTarget = useCallback(async () => {
       const handle = findNodeHandle(scrollViewAnimatedRef.current);
 
-      // `onLayout` can fire while the ref is detached: React Navigation 8
-      // keeps paused screens laid out inside a hidden `<Activity>`, where
-      // React has removed the refs. Keep the last resolved target instead of
-      // resetting it to `null`: the effect below or a later layout event
-      // fills it in.
       if (handle === null) {
         return;
       }
