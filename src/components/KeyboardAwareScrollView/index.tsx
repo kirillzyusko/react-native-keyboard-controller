@@ -141,28 +141,45 @@ const KeyboardAwareScrollView = forwardRef<
 
     const { height } = useWindowDimensions();
 
+    const syncScrollViewTarget = useCallback(async () => {
+      const handle = findNodeHandle(scrollViewAnimatedRef.current);
+
+      // `onLayout` can fire while the ref is detached: React Navigation 8
+      // keeps paused screens laid out inside a hidden `<Activity>`, where
+      // React has removed the refs. Keep the last resolved target instead of
+      // resetting it to `null`: the effect below or a later layout event
+      // fills it in.
+      if (handle === null) {
+        return;
+      }
+
+      // eslint-disable-next-line react-compiler/react-compiler
+      scrollViewTarget.value = handle;
+
+      try {
+        const { y } = await KeyboardControllerNative.viewPositionInWindow(
+          handle,
+        );
+
+        scrollViewPageY.value = y;
+      } catch {
+        // ignore
+      }
+    }, []);
     const onScrollViewLayout = useCallback(
-      async (e: LayoutChangeEvent) => {
-        const handle = findNodeHandle(scrollViewAnimatedRef.current);
-
-        scrollViewTarget.value = handle;
-
+      (e: LayoutChangeEvent) => {
+        syncScrollViewTarget();
         onLayout?.(e);
-
-        if (handle !== null) {
-          try {
-            const { y } = await KeyboardControllerNative.viewPositionInWindow(
-              handle,
-            );
-
-            scrollViewPageY.value = y;
-          } catch {
-            // ignore
-          }
-        }
       },
-      [onLayout],
+      [onLayout, syncScrollViewTarget],
     );
+
+    // Effects run on mount and again when a hidden `<Activity>` around the
+    // component becomes visible, both times with the ref attached. That covers
+    // a ScrollView whose only layout event arrived while the ref was detached.
+    useEffect(() => {
+      syncScrollViewTarget();
+    }, [syncScrollViewTarget]);
 
     /**
      * Function that will scroll a ScrollView as keyboard gets moving.
@@ -262,7 +279,6 @@ const KeyboardAwareScrollView = forwardRef<
 
         const prevScroll = scrollPosition.value;
 
-        // eslint-disable-next-line react-compiler/react-compiler
         scrollPosition.value = newPosition;
         maybeScroll(keyboardHeight.value, true);
         scrollPosition.value = prevScroll;
