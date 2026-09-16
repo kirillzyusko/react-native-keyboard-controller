@@ -76,6 +76,11 @@ jobs:
           echo "CCACHE_FILECLONE=true" >> $GITHUB_ENV
           echo "CCACHE_DEPEND=true" >> $GITHUB_ENV
           echo "CCACHE_INODECACHE=true" >> $GITHUB_ENV
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+          working-directory: example
       - name: Restore Pods cache
         uses: actions/cache@v4
         with:
@@ -88,7 +93,12 @@ jobs:
             ${{ runner.os }}-xcode-${{ matrix.config.xcode }}-pods-
       - name: Install pods
         working-directory: ${{ env.WORKING_DIRECTORY }}/ios
-        run: export USE_CCACHE=1 && pod install || pod update --repo-update
+        run: |
+          if ! bundle exec pod install; then
+            bundle exec pod update --repo-update
+          fi
+        env:
+          USE_CCACHE: "1"
       - name: Restore DerivedData cache
         uses: actions/cache@v5
         with:

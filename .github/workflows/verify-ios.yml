@@ -7,12 +7,14 @@ on:
     paths:
       - ".github/workflows/verify-ios.yml"
       - "ios/**"
+      - "example/.ruby-version"
   pull_request:
     branches:
       - main
     paths:
       - ".github/workflows/verify-ios.yml"
       - "ios/**"
+      - "example/.ruby-version"
 
 jobs:
   swift-lint:
@@ -68,6 +70,11 @@ jobs:
           xcode-version: "16.4"
       - name: List all available simulators
         run: xcrun simctl list
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          working-directory: example
 
       - name: Install xcpretty
         run: gem install xcpretty

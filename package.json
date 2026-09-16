@@ -45,7 +45,7 @@
     "prepare": "bob build > /dev/null 2>&1",
     "release": "release-it",
     "example": "yarn --cwd example",
-    "pods": "cd example && pod-install --quiet",
+    "pods": "yarn --cwd example bundle-install && yarn --cwd example pods",
     "bootstrap": "yarn example && yarn && yarn pods"
   },
   "keywords": [
@@ -114,7 +114,6 @@
     "eslint-plugin-react-perf": "^3.3.2",
     "husky": "^6.0.0",
     "jest": "^29.6.3",
-    "pod-install": "^0.1.0",
     "prettier": "^2.8.8",
     "react": "19.3.0",
     "react-native": "0.81.4",

@@ -19,13 +19,21 @@ cd FabricExample
 yarn
 ```
 
-3. Start the Metro server:
+3. For iOS, install Ruby 3.3.10 with a version manager that reads
+   `.ruby-version`, then install the Ruby gems and Pods:
+
+```bash
+yarn bundle-install
+yarn pods
+```
+
+4. Start the Metro server:
 
 ```bash
 yarn start
 ```
 
-4. In a separate terminal, build and install the app:
+5. In a separate terminal, build and install the app:
 
 ```bash
 yarn android
