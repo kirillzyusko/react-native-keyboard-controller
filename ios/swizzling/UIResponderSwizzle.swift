@@ -8,8 +8,11 @@
 import Foundation
 import UIKit
 
+@MainActor
 private var pendingBecomeResponder: TextInput?
+@MainActor
 private var originalResignFirstResponder: IMP?
+@MainActor
 private var originalBecomeFirstResponder: IMP?
 
 @objc

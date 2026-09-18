@@ -1,3 +1,4 @@
+@MainActor
 @objc(KeyboardControllerViewManager)
 class KeyboardControllerViewManager: RCTViewManager {
   override class func requiresMainQueueSetup() -> Bool {
@@ -5,7 +6,7 @@ class KeyboardControllerViewManager: RCTViewManager {
   }
 
   override func view() -> (KeyboardControllerView) {
-    return KeyboardControllerView(frame: CGRect.zero, bridge: bridge)
+    return KeyboardControllerView(frame: .zero, bridge: bridge)
   }
 
   @objc(synchronizeFocusedInputLayout:)

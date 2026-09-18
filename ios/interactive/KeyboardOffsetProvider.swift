@@ -7,6 +7,7 @@
 
 import Foundation
 
+@MainActor
 @objc(KeyboardOffsetProvider)
 public class KeyboardOffsetProvider: NSObject {
   @objc public static let shared = KeyboardOffsetProvider()
