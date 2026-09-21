@@ -7,7 +7,7 @@
 
 extension KeyboardMovementObserver {
   @objc func keyboardWillAppear(_ notification: Notification) {
-    guard !UIResponder.isKeyboardPreloading else { return }
+    guard !notification.canBeSafelyIgnored else { return }
 
     let (duration, frame) = notification.keyboardMetaData()
     if let keyboardFrame = frame {
@@ -34,7 +34,7 @@ extension KeyboardMovementObserver {
   }
 
   @objc func keyboardWillDisappear(_ notification: Notification) {
-    guard !UIResponder.isKeyboardPreloading else { return }
+    guard !notification.canBeSafelyIgnored else { return }
     let (duration, _) = notification.keyboardMetaData()
     tag = UIResponder.current.reactViewTag
     self.notification = notification
@@ -55,7 +55,7 @@ extension KeyboardMovementObserver {
   }
 
   @objc func keyboardDidAppear(_ notification: Notification) {
-    guard !UIResponder.isKeyboardPreloading else { return }
+    guard !notification.canBeSafelyIgnored else { return }
 
     let (duration, frame) = notification.keyboardMetaData()
     if let keyboardFrame = frame {
@@ -82,7 +82,7 @@ extension KeyboardMovementObserver {
   }
 
   @objc func keyboardDidDisappear(_ notification: Notification) {
-    guard !UIResponder.isKeyboardPreloading else { return }
+    guard !notification.canBeSafelyIgnored else { return }
     let (duration, _) = notification.keyboardMetaData()
     tag = UIResponder.current.reactViewTag
 
