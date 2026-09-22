@@ -41,6 +41,9 @@ export const options = {
   [ScreenNames.KEYBOARD_AVOIDING_VIEW]: {
     title: "KAV",
   },
+  [ScreenNames.STALE_ANIMATION_REPRO]: {
+    title: "KAV stale animation",
+  },
   [ScreenNames.KEYBOARD_AVOIDING_VIEW_AUTOMATIC]: {
     title: "KAV Automatic",
   },
