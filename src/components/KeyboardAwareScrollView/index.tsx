@@ -127,6 +127,7 @@ const KeyboardAwareScrollView = forwardRef<
     const currentKeyboardFrameHeight = useSharedValue(0);
     const keyboardHeight = useSharedValue(0);
     const keyboardWillAppear = useSharedValue(false);
+    const keyboardWillHide = useSharedValue(false);
     const tag = useSharedValue(-1);
     const initialKeyboardSize = useSharedValue(0);
     const scrollBeforeKeyboardMovement = useSharedValue(0);
@@ -245,7 +246,7 @@ const KeyboardAwareScrollView = forwardRef<
         // insets mode: `ScrollViewWithBottomPadding` extends scrollable area without
         // changing layout, so when the keyboard hides and we're at the end of the
         // ScrollView we must manually scroll back.
-        if (!keyboardWillAppear.value && ghostViewSpace.value > 0) {
+        if (keyboardWillHide.value && ghostViewSpace.value > 0) {
           scrollTo(
             scrollViewAnimatedRef,
             0,
@@ -399,7 +400,8 @@ const KeyboardAwareScrollView = forwardRef<
 
           keyboardWillAppear.value = e.height > 0 && keyboardHeight.value === 0;
 
-          const keyboardWillHide = e.height === 0;
+          keyboardWillHide.value = e.height === 0;
+
           const focusWasChanged =
             (tag.value !== e.target && e.target !== -1) ||
             keyboardWillChangeSize;
@@ -408,7 +410,7 @@ const KeyboardAwareScrollView = forwardRef<
             initialKeyboardSize.value = keyboardHeight.value;
           }
 
-          if (keyboardWillHide) {
+          if (keyboardWillHide.value) {
             // on back transition need to interpolate as [0, keyboardHeight]
             initialKeyboardSize.value = 0;
             scrollPosition.value = scrollBeforeKeyboardMovement.value;
