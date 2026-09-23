@@ -10,6 +10,8 @@ import type {
 } from "react-native-keyboard-controller";
 import type { SharedValue } from "react-native-reanimated";
 
+const KeyboardAwareScrollView = require("../index").default;
+
 // ---------------------------------------------------------------------------
 // Constants (derived from real device logs)
 // ---------------------------------------------------------------------------
@@ -125,8 +127,6 @@ export const kbEvent = (height: number, target: number): NativeEvent => ({
 export const renderKeyboardAwareScrollView = async (
   bottomOffset = BOTTOM_OFFSET,
 ) => {
-  const KeyboardAwareScrollView = require("../index").default;
-
   render(
     <KeyboardAwareScrollView bottomOffset={bottomOffset}>
       <View />
