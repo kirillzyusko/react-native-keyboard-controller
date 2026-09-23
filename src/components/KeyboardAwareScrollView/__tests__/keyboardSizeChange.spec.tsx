@@ -1,6 +1,7 @@
 import "../__fixtures__/mocks";
 
 import {
+  INPUT_LAYOUT_A,
   INPUT_LAYOUT_B,
   INPUT_TARGET_B,
   KEYBOARD_HEIGHT,
@@ -10,9 +11,11 @@ import {
   lastScrollToY,
   mockInput,
   mockKeyboardHandlers,
+  mockLayout,
   mockOffset,
   mockScrollTo,
   mockSelectionHandler,
+  mockSize,
   renderKeyboardAwareScrollView,
   reset,
   selectionEvent,
@@ -43,6 +46,75 @@ const EMOJI_KEYBOARD_HEIGHT = 388;
 // Emoji keyboard (388): visibleRect = 928 - 388 = 540
 
 describe("KeyboardAwareScrollView — keyboard size change (emoji toggle)", () => {
+  it("should preserve ghost padding when switching from emoji to text keyboard", async () => {
+    await renderKeyboardAwareScrollView();
+    mockInput.value = inputEvent(INPUT_TARGET_B, INPUT_LAYOUT_A);
+
+    // Open the text keyboard and establish the focused input state.
+    mockSelectionHandler.current(selectionEvent(INPUT_TARGET_B));
+    mockKeyboardHandlers.current.onStart(
+      kbEvent(KEYBOARD_HEIGHT, INPUT_TARGET_B),
+    );
+    mockKeyboardHandlers.current.onEnd(
+      kbEvent(KEYBOARD_HEIGHT, INPUT_TARGET_B),
+    );
+
+    // Simulate being scrolled beyond the natural content end using the space
+    // provided by the keyboard inset: 500 + 600 - 900 = 200px of ghost space.
+    mockOffset.value = 500;
+    mockLayout.value = { width: 390, height: 600 };
+    mockSize.value = { width: 390, height: 900 };
+
+    mockKeyboardHandlers.current.onStart(
+      kbEvent(EMOJI_KEYBOARD_HEIGHT, INPUT_TARGET_B),
+    );
+    mockKeyboardHandlers.current.onEnd(
+      kbEvent(EMOJI_KEYBOARD_HEIGHT, INPUT_TARGET_B),
+    );
+
+    // On iOS, the first frame of the emoji -> text transition can still report
+    // the old emoji height. This is a resize, not a keyboard hide, so the
+    // existing ghost space must not be removed.
+    mockKeyboardHandlers.current.onStart(
+      kbEvent(KEYBOARD_HEIGHT, INPUT_TARGET_B),
+    );
+    mockScrollTo.mockClear();
+    mockKeyboardHandlers.current.onMove(
+      kbEvent(EMOJI_KEYBOARD_HEIGHT, INPUT_TARGET_B),
+    );
+
+    expect(mockScrollTo).not.toHaveBeenCalled();
+  });
+
+  it("should remove ghost padding while the keyboard hides", async () => {
+    await renderKeyboardAwareScrollView();
+    mockInput.value = inputEvent(INPUT_TARGET_B, INPUT_LAYOUT_A);
+
+    mockSelectionHandler.current(selectionEvent(INPUT_TARGET_B));
+    mockKeyboardHandlers.current.onStart(
+      kbEvent(KEYBOARD_HEIGHT, INPUT_TARGET_B),
+    );
+    mockKeyboardHandlers.current.onEnd(
+      kbEvent(KEYBOARD_HEIGHT, INPUT_TARGET_B),
+    );
+
+    // 500 + 600 - 900 = 200px of ghost space.
+    mockOffset.value = 500;
+    mockLayout.value = { width: 390, height: 600 };
+    mockSize.value = { width: 390, height: 900 };
+    mockScrollTo.mockClear();
+
+    mockKeyboardHandlers.current.onStart(kbEvent(0, INPUT_TARGET_B));
+    mockKeyboardHandlers.current.onMove(
+      kbEvent(KEYBOARD_HEIGHT / 2, INPUT_TARGET_B),
+    );
+
+    // Halfway through the hide transition, half of the ghost space is removed.
+    expect(mockScrollTo).toHaveBeenCalledTimes(1);
+    expect(lastScrollToY()).toBeCloseTo(400, 1);
+    expect(mockScrollTo.mock.calls[0][3]).toBe(false);
+  });
+
   it("should correctly adjust scroll across multiple emoji ↔ text keyboard toggles", async () => {
     await renderKeyboardAwareScrollView();
     mockInput.value = inputEvent(INPUT_TARGET_B, INPUT_LAYOUT_B);
