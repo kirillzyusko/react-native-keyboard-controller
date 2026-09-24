@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 
+@MainActor
 let noFocusedInputEvent: [String: Any] = [
   "target": -1,
   "parentScrollViewTarget": -1,
@@ -22,6 +23,7 @@ let noFocusedInputEvent: [String: Any] = [
   ],
 ]
 
+@MainActor
 @objc(FocusedInputObserver)
 public class FocusedInputObserver: NSObject {
   // class members
