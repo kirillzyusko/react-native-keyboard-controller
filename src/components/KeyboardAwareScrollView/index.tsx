@@ -399,7 +399,6 @@ const KeyboardAwareScrollView = forwardRef<
             keyboardHeight.value !== e.height && e.height > 0;
 
           keyboardWillAppear.value = e.height > 0 && keyboardHeight.value === 0;
-
           keyboardWillHide.value = e.height === 0;
 
           const focusWasChanged =
