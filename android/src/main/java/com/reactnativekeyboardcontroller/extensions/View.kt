@@ -59,3 +59,10 @@ val View.screenLocation get(): IntArray {
 
   return point
 }
+
+val View.windowLocation get(): IntArray {
+  val point = IntArray(2)
+  getLocationInWindow(point)
+
+  return point
+}

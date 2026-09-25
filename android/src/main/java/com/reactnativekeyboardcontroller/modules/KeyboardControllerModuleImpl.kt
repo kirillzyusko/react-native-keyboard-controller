@@ -10,8 +10,8 @@ import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.UiThreadUtil
 import com.facebook.react.uimanager.IllegalViewOperationException
 import com.reactnativekeyboardcontroller.extensions.dp
-import com.reactnativekeyboardcontroller.extensions.screenLocation
 import com.reactnativekeyboardcontroller.extensions.uiManager
+import com.reactnativekeyboardcontroller.extensions.windowLocation
 import com.reactnativekeyboardcontroller.extensions.windowSoftInputMode
 import com.reactnativekeyboardcontroller.interactive.KeyboardAnimationController
 import com.reactnativekeyboardcontroller.log.Logger
@@ -109,7 +109,7 @@ class KeyboardControllerModuleImpl(
         promise.reject("E_VIEW_NOT_FOUND", "Could not find view for tag")
         return@runOnUiThread
       }
-      val location = view.screenLocation
+      val location = view.windowLocation
       val map = Arguments.createMap()
       map.putDouble("x", location[0].toFloat().dp)
       map.putDouble("y", location[1].toFloat().dp)
