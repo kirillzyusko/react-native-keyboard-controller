@@ -1,0 +1,22 @@
+{
+  "name": "react-native-keyboard-controller",
+  "interface": {
+    "displayName": "React Native Keyboard Controller"
+  },
+  "plugins": [
+    {
+      "name": "react-native-keyboard-controller",
+      "source": {
+        "source": "npm",
+        "package": "react-native-keyboard-controller",
+        "version": "latest",
+        "registry": "https://registry.npmjs.org"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}

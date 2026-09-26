@@ -1,0 +1,4 @@
+interface:
+  display_name: "Choose RNKC Keyboard Layout"
+  short_description: "Choose the right RNKC keyboard layout"
+  default_prompt: "Use $choose-rnkc-keyboard-layout to inspect this screen and recommend the correct React Native Keyboard Controller composition."
