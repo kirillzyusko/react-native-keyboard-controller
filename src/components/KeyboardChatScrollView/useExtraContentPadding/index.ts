@@ -144,7 +144,13 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
           size.value.height - layout.value.height + currentTotal,
           0,
         );
-        const target = Math.min(scroll.value + effectiveDelta, maxScroll);
+        // Clamp at 0 as well: when the content is shorter than the viewport a
+        // shrinking padding makes `effectiveDelta` negative while `scroll.value`
+        // is already 0, so the target would go below the top of the content.
+        const target = Math.max(
+          Math.min(scroll.value + effectiveDelta, maxScroll),
+          0,
+        );
 
         scrollToTarget(target);
       }
