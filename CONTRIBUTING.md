@@ -108,7 +108,9 @@ When you're sending a pull request:
 - Verify that linters and tests are passing.
 - Review the documentation to make sure it looks good.
 - Follow the pull request template when opening a pull request.
-- For pull requests that change the API or implementation, discuss with maintainers first by opening an issue.
+- For a bug fix, include runnable reproduction code: a minimal React Native project, a focused example change, a regression test that fails without the fix, or a self-contained snippet that reproduces the bug when pasted into `example/` or `FabricExample/` without extra dependencies. Provide exact steps and confirm the bug before and after the fix.
+- If you cannot provide a runnable reproduction, open a bug report with the evidence and steps you have. You can share a proposed patch in **Additional context** and note that it is unverified.
+- You may submit a bug-fix pull request directly when it includes that reproduction. For larger API changes or new features, discuss the proposal with maintainers in an issue before implementing it.
 
 ## Code of Conduct
 
