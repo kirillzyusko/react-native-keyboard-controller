@@ -97,6 +97,29 @@ describe("useExtraContentPadding — contentOffsetY (iOS atomic path)", () => {
     expect(mockScrollTo).not.toHaveBeenCalled();
   });
 
+  it("should clamp contentOffsetY to 0 on shrink when content is shorter than the viewport (non-inverted)", () => {
+    const render = createRender();
+    const contentOffsetY = sv(0);
+
+    render({
+      extraContentPadding: sv(0),
+      keyboardPadding: sv(0),
+      scroll: sv(0),
+      layout: sv({ width: 390, height: 800 }),
+      size: sv({ width: 390, height: 200 }),
+      contentOffsetY,
+      inverted: false,
+      keyboardLiftBehavior: "always",
+      freeze: false,
+    });
+
+    // delta = -80, scroll + delta = -80, maxScroll = 0 -> target must not go below 0
+    reactionEffect(0, 80);
+
+    expect(contentOffsetY.value).toBe(0);
+    expect(mockScrollTo).not.toHaveBeenCalled();
+  });
+
   it("should clamp contentOffsetY to -totalPadding (inverted)", () => {
     const render = createRender();
     const contentOffsetY = sv(-280);
@@ -118,6 +141,27 @@ describe("useExtraContentPadding — contentOffsetY (iOS atomic path)", () => {
 
     expect(contentOffsetY.value).toBe(-330);
     expect(mockScrollTo).not.toHaveBeenCalled();
+  });
+
+  it("should clamp scrollTo target to 0 on shrink when content is shorter than the viewport (non-inverted)", async () => {
+    const render = createRender();
+
+    render({
+      extraContentPadding: sv(0),
+      keyboardPadding: sv(0),
+      scroll: sv(0),
+      layout: sv({ width: 390, height: 800 }),
+      size: sv({ width: 390, height: 200 }),
+      contentOffsetY: undefined,
+      inverted: false,
+      keyboardLiftBehavior: "always",
+      freeze: false,
+    });
+
+    reactionEffect(0, 80);
+    await flushRAF();
+
+    expect(mockScrollTo).toHaveBeenCalledWith(expect.anything(), 0, 0, false);
   });
 
   it("should fall back to scrollTo when contentOffsetY is undefined", async () => {
