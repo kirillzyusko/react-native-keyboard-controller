@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { Platform } from "react-native";
-import { scrollTo } from "react-native-reanimated";
+import { scrollTo, useSharedValue } from "react-native-reanimated";
 
 import { IS_FABRIC } from "../../../architecture";
 import { useAnimatedReaction } from "../../../reanimated";
@@ -9,6 +9,10 @@ import { isScrollAtEnd, shouldShiftContent } from "../useChatKeyboard/helpers";
 import type { KeyboardLiftBehavior } from "../useChatKeyboard/types";
 import type { AnimatedRef, SharedValue } from "react-native-reanimated";
 import type Reanimated from "react-native-reanimated";
+
+type InternalSharedValue<Value> = SharedValue<Value> & {
+  _animation?: object | null;
+};
 
 type UseExtraContentPaddingOptions = {
   scrollViewRef: AnimatedRef<Reanimated.ScrollView>;
@@ -60,6 +64,7 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
     keyboardLiftBehavior,
     freeze,
   } = options;
+  const animationOffset = useSharedValue<number | null>(null);
 
   const scrollToTarget = useCallback(
     (target: number) => {
@@ -90,7 +95,19 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
     () => extraContentPadding.value,
     (current, previous) => {
       if (freeze.value || previous === null) {
+        animationOffset.set(null);
+
         return;
+      }
+
+      // Reanimated clears this on a plain assignment; `finished` differs
+      // between Reanimated 3 and 4, so only check for the animation itself.
+      const hasAnimation = Boolean(
+        (extraContentPadding as InternalSharedValue<number>)._animation,
+      );
+
+      if (!hasAnimation) {
+        animationOffset.set(null);
       }
 
       const rawDelta = current - previous;
@@ -128,16 +145,25 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
         effectiveDelta < 0 &&
         !atEnd
       ) {
+        animationOffset.set(null);
+
         return;
       }
 
       if (!shouldShiftContent(keyboardLiftBehavior, atEnd)) {
+        animationOffset.set(null);
+
         return;
       }
 
-      if (inverted) {
-        const target = Math.max(scroll.value - effectiveDelta, -currentTotal);
+      const offset = animationOffset.value ?? scroll.value;
 
+      if (inverted) {
+        const target = Math.max(offset - effectiveDelta, -currentTotal);
+
+        if (hasAnimation) {
+          animationOffset.set(target);
+        }
         scrollToTarget(target);
       } else {
         const maxScroll = Math.max(
@@ -148,10 +174,13 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
         // shrinking padding makes `effectiveDelta` negative while `scroll.value`
         // is already 0, so the target would go below the top of the content.
         const target = Math.max(
-          Math.min(scroll.value + effectiveDelta, maxScroll),
+          Math.min(offset + effectiveDelta, maxScroll),
           0,
         );
 
+        if (hasAnimation) {
+          animationOffset.set(target);
+        }
         scrollToTarget(target);
       }
     },
