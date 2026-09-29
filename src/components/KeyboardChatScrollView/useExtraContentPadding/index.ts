@@ -71,7 +71,6 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
       "worklet";
 
       if (contentOffsetY && IS_FABRIC) {
-        // eslint-disable-next-line react-compiler/react-compiler
         contentOffsetY.value = target;
       } else if (OS === "android") {
         // Defer scrollTo so the animatedProps inset commit lands first;
@@ -95,7 +94,8 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
     () => extraContentPadding.value,
     (current, previous) => {
       if (freeze.value || previous === null) {
-        animationOffset.set(null);
+        // eslint-disable-next-line react-compiler/react-compiler
+        animationOffset.value = null;
 
         return;
       }
@@ -107,7 +107,7 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
       );
 
       if (!hasAnimation) {
-        animationOffset.set(null);
+        animationOffset.value = null;
       }
 
       const rawDelta = current - previous;
@@ -145,13 +145,13 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
         effectiveDelta < 0 &&
         !atEnd
       ) {
-        animationOffset.set(null);
+        animationOffset.value = null;
 
         return;
       }
 
       if (!shouldShiftContent(keyboardLiftBehavior, atEnd)) {
-        animationOffset.set(null);
+        animationOffset.value = null;
 
         return;
       }
@@ -162,7 +162,7 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
         const target = Math.max(offset - effectiveDelta, -currentTotal);
 
         if (hasAnimation) {
-          animationOffset.set(target);
+          animationOffset.value = target;
         }
         scrollToTarget(target);
       } else {
@@ -179,7 +179,7 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
         );
 
         if (hasAnimation) {
-          animationOffset.set(target);
+          animationOffset.value = target;
         }
         scrollToTarget(target);
       }
