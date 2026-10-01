@@ -4,7 +4,9 @@ import android.annotation.SuppressLint
 import android.graphics.Rect
 import android.os.Build
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.view.ViewCompat
+import com.facebook.react.bridge.ReactContext
 import com.reactnativekeyboardcontroller.log.Logger
 
 /**
@@ -57,12 +59,12 @@ val View.screenLocation get(): IntArray {
   val point = IntArray(2)
   getLocationOnScreen(point)
 
-  return point
-}
-
-val View.windowLocation get(): IntArray {
-  val point = IntArray(2)
-  getLocationInWindow(point)
+  // subtract the content margins added by KeyboardProvider because window dimensions
+  // already exclude them, while getLocationOnScreen still includes them
+  val contentLayoutParams =
+    (context as? ReactContext)?.content?.layoutParams as? ViewGroup.MarginLayoutParams
+  point[0] -= contentLayoutParams?.leftMargin ?: 0
+  point[1] -= contentLayoutParams?.topMargin ?: 0
 
   return point
 }
