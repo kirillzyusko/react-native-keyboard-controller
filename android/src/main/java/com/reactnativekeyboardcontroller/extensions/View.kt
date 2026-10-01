@@ -59,7 +59,8 @@ val View.screenLocation get(): IntArray {
   val point = IntArray(2)
   getLocationOnScreen(point)
 
-  // Content dimensions exclude the margins applied by KeyboardProvider.
+  // subtract the content margins added by KeyboardProvider because window dimensions
+  // already exclude them, while getLocationOnScreen still includes them
   val contentLayoutParams =
     (context as? ReactContext)?.content?.layoutParams as? ViewGroup.MarginLayoutParams
   point[0] -= contentLayoutParams?.leftMargin ?: 0
