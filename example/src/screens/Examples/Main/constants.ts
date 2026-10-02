@@ -82,6 +82,12 @@ export const examples: Example[] = [
     icons: "😶",
   },
   {
+    title: "KAV stale animation repro",
+    testID: "stale_animation_repro",
+    info: ScreenNames.STALE_ANIMATION_REPRO,
+    icons: "🐛",
+  },
+  {
     title: "KeyboardAvoidingView Automatic",
     testID: "keyboard_avoiding_view_automatic",
     info: ScreenNames.KEYBOARD_AVOIDING_VIEW_AUTOMATIC,
