@@ -45,9 +45,12 @@ const KeyboardChatScrollView: React.ForwardRefExoticComponent<
   ) => {
     const scrollViewRef = useAnimatedRef<Reanimated.ScrollView>();
     const onRef = useCombinedRef(ref, scrollViewRef);
-    const freezeSV = useDerivedValue(() =>
+    const derivedFreeze = useDerivedValue(() =>
       typeof freeze === "boolean" ? freeze : freeze.value,
     );
+    // Read a shared-value prop directly, so a UI-thread write is visible to the
+    // keyboard handlers at once rather than after the next mapper pass.
+    const freezeSV = typeof freeze === "boolean" ? derivedFreeze : freeze;
     const {
       padding,
       currentHeight,
