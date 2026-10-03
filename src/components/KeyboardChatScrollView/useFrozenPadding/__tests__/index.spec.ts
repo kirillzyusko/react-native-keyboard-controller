@@ -145,30 +145,6 @@ describe("`useFrozenPadding`", () => {
     expect(padding.value).toBe(KEYBOARD);
   });
 
-  it("should not overwrite padding owned by a live transition that starts before the thaw reaction", () => {
-    const freeze = sv(false);
-    const { padding } = render({ freeze, offset: 20 });
-
-    handlers.onStart({ height: KEYBOARD });
-    handlers.onEnd({ height: KEYBOARD });
-    padding.value = KEYBOARD - 20;
-
-    freeze.value = true;
-    flushAnimatedReactions();
-    handlers.onStart({ height: 0 });
-    handlers.onMove({ height: 0 });
-    handlers.onEnd({ height: 0 });
-
-    // `freeze` is written synchronously and a live open starts before the
-    // reaction runs; `useChatKeyboard` sets the open padding for it
-    freeze.value = false;
-    handlers.onStart({ height: KEYBOARD });
-    padding.value = KEYBOARD - 20;
-    flushAnimatedReactions();
-
-    expect(padding.value).toBe(KEYBOARD - 20);
-  });
-
   it("should not touch padding on unrelated freeze transitions", () => {
     const freeze = sv(false);
     const { padding } = render({ freeze });

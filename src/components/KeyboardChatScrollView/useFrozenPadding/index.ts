@@ -41,10 +41,6 @@ function useFrozenPadding({
 }: UseFrozenPaddingOptions): void {
   const lastHeight = useSharedValue(0);
   const targetKeyboardHeight = useSharedValue(0);
-  // Set by a live transition that starts after `freeze` turns false but before
-  // the reaction below runs. That transition already owns `padding`, so the
-  // thaw must not overwrite it with an older height.
-  const liveTransitionStarted = useSharedValue(false);
 
   useKeyboardHandler(
     {
@@ -54,10 +50,6 @@ function useFrozenPadding({
         if (e.height > 0) {
           // eslint-disable-next-line react-compiler/react-compiler
           targetKeyboardHeight.value = e.height;
-        }
-
-        if (!freeze.value) {
-          liveTransitionStarted.value = true;
         }
       },
       onMove: (e) => {
@@ -77,15 +69,13 @@ function useFrozenPadding({
   useAnimatedReaction(
     () => freeze.value,
     (isFrozen, wasFrozen) => {
-      if (!isFrozen && wasFrozen === true && !liveTransitionStarted.value) {
+      if (!isFrozen && wasFrozen === true) {
         padding.value = getEffectiveHeight(
           lastHeight.value,
           targetKeyboardHeight.value,
           offset,
         );
       }
-
-      liveTransitionStarted.value = false;
     },
     [offset],
   );
