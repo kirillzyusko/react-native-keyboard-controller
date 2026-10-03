@@ -73,8 +73,16 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
         // otherwise the native ScrollView clamps to the old range.
         requestAnimationFrame(() => {
           // check that view is still mounted and ref is actual
-          // otherwise it may lead to a crash
-          if (!scrollViewRef()) {
+          // otherwise it may lead to a crash.
+          // On the UI runtime Reanimated < 4.7 exposes the animated ref as a
+          // function, while Reanimated >= 4.7 exposes it as a shareable that
+          // holds the node in `.value`
+          const node =
+            typeof scrollViewRef === "function"
+              ? scrollViewRef()
+              : (scrollViewRef as unknown as { value: unknown }).value;
+
+          if (!node) {
             return;
           }
           scrollTo(scrollViewRef, 0, target, false);

@@ -4,7 +4,7 @@ import { useAnimatedRef } from "react-native-reanimated";
 import { useExtraContentPadding } from "..";
 import { sv } from "../../../../__fixtures__/sv";
 
-import type { SharedValue } from "react-native-reanimated";
+import type { AnimatedRef, SharedValue } from "react-native-reanimated";
 import type Reanimated from "react-native-reanimated";
 
 export const mockScrollTo = jest.fn();
@@ -36,6 +36,7 @@ type RenderOptions = Omit<
   Parameters<typeof useExtraContentPadding>[0],
   "scrollViewRef" | "blankSpace" | "freeze"
 > & {
+  scrollViewRef?: AnimatedRef<Reanimated.ScrollView>;
   blankSpace?: SharedValue<number>;
   freeze: boolean | SharedValue<boolean>;
 };
@@ -44,10 +45,10 @@ export const createRender = () => {
   return function render(options: RenderOptions) {
     return renderHook(() => {
       const ref = useAnimatedRef<Reanimated.ScrollView>();
-      const { freeze, ...rest } = options;
+      const { freeze, scrollViewRef, ...rest } = options;
 
       useExtraContentPadding({
-        scrollViewRef: ref,
+        scrollViewRef: scrollViewRef ?? ref,
         blankSpace: options.blankSpace ?? sv(0),
         freeze: typeof freeze === "boolean" ? sv(freeze) : freeze,
         ...rest,
