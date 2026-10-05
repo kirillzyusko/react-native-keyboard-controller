@@ -5,6 +5,7 @@
 //  Created by Kiryl Ziusko on 24/11/2024.
 //
 
+import React
 import Foundation
 
 @objc(KeyboardEventsIgnorer)

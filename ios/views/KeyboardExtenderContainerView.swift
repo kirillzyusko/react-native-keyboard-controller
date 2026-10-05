@@ -5,6 +5,7 @@
 //  Created by Kiryl Ziusko on 11/07/2025.
 //
 
+import React
 import UIKit
 
 @objc

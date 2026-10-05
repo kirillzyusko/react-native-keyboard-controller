@@ -1,3 +1,5 @@
+import React
+
 //
 //  String.swift
 //  Pods

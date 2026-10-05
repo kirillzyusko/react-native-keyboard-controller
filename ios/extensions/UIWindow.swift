@@ -5,6 +5,7 @@
 //  Created by Kiryl Ziusko on 12/09/2024.
 //
 
+import React
 import Foundation
 import ObjectiveC
 import UIKit

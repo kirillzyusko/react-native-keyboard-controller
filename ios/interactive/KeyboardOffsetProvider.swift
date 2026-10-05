@@ -5,6 +5,7 @@
 //  Created by Kiryl Ziusko on 01/11/2024.
 //
 
+import React
 import Foundation
 
 @objc(KeyboardOffsetProvider)

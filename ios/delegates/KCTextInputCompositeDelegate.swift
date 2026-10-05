@@ -5,6 +5,7 @@
 //  Created by Kiryl Ziusko on 24/04/2024.
 //
 
+import React
 import Foundation
 
 func textSelection(in textInput: UITextInput) -> NSDictionary? {

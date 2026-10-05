@@ -9,6 +9,9 @@
 
 #if __has_include("react_native_keyboard_controller-Swift.h")
 #import "react_native_keyboard_controller-Swift.h"
+#elif __has_include(<ReactNativeKeyboardControllerSwift/ReactNativeKeyboardControllerSwift-Swift.h>)
+// S11-SPM-SPLIT: the Swift half lives in its own target under SwiftPM.
+#import <ReactNativeKeyboardControllerSwift/ReactNativeKeyboardControllerSwift-Swift.h>
 #else
 #import <react_native_keyboard_controller/react_native_keyboard_controller-Swift.h>
 #endif

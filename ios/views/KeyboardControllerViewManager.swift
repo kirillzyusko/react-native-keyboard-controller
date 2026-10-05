@@ -1,3 +1,5 @@
+import React
+
 @objc(KeyboardControllerViewManager)
 class KeyboardControllerViewManager: RCTViewManager {
   override class func requiresMainQueueSetup() -> Bool {
