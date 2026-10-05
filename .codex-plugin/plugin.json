@@ -1,0 +1,36 @@
+{
+  "name": "react-native-keyboard-controller",
+  "version": "1.22.0",
+  "description": "Portable skills for building and migrating React Native keyboard experiences with React Native Keyboard Controller.",
+  "author": {
+    "name": "Kiryl Ziusko",
+    "email": "zyusko.kirik@gmail.com",
+    "url": "https://github.com/kirillzyusko"
+  },
+  "homepage": "https://kirillzyusko.github.io/react-native-keyboard-controller/",
+  "repository": "https://github.com/kirillzyusko/react-native-keyboard-controller",
+  "license": "MIT",
+  "keywords": [
+    "react-native",
+    "keyboard",
+    "agent-skills",
+    "codex",
+    "migration",
+    "chat"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "React Native Keyboard Controller",
+    "shortDescription": "Build reliable React Native keyboard experiences.",
+    "longDescription": "Choose the correct keyboard architecture, migrate competing keyboard solutions, build production chat layouts, modernize KeyboardToolbar, and avoid unnecessary keyboard-state renders.",
+    "developerName": "Kiryl Ziusko",
+    "category": "Developer Tools",
+    "capabilities": ["Read", "Write"],
+    "websiteURL": "https://kirillzyusko.github.io/react-native-keyboard-controller/",
+    "defaultPrompt": [
+      "Choose the right RNKC architecture for this screen.",
+      "Migrate this keyboard implementation safely to RNKC.",
+      "Build a production-ready RNKC chat keyboard layout."
+    ]
+  }
+}
