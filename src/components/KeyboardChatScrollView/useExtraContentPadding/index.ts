@@ -1,9 +1,9 @@
 import { useCallback } from "react";
 import { Platform } from "react-native";
-import { scrollTo } from "react-native-reanimated";
 
 import { IS_FABRIC } from "../../../architecture";
 import { useAnimatedReaction } from "../../../reanimated";
+import { safeScrollTo } from "../../utils/safeScrollTo";
 import { isScrollAtEnd, shouldShiftContent } from "../useChatKeyboard/helpers";
 
 import type { KeyboardLiftBehavior } from "../useChatKeyboard/types";
@@ -72,15 +72,10 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
         // Defer scrollTo so the animatedProps inset commit lands first;
         // otherwise the native ScrollView clamps to the old range.
         requestAnimationFrame(() => {
-          // check that view is still mounted and ref is actual
-          // otherwise it may lead to a crash
-          if (!scrollViewRef()) {
-            return;
-          }
-          scrollTo(scrollViewRef, 0, target, false);
+          safeScrollTo(scrollViewRef, 0, target, false);
         });
       } else {
-        scrollTo(scrollViewRef, 0, target, false);
+        safeScrollTo(scrollViewRef, 0, target, false);
       }
     },
     [scrollViewRef, contentOffsetY],
