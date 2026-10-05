@@ -9,19 +9,15 @@ assignees: kirillzyusko
 **Describe the bug**
 A clear and concise description of what the bug is.
 
-**Code snippet**
-Add your code snippet where error has been occurred.
-
-**Repo for reproducing**
-I would be highly appreciate if you can provide repository for reproducing your issue. It can significantly reduce the time for discovering and fixing the problem.
+**Reproduction code**
+If available, link a minimal runnable project or focused fork at a specific commit. You can also paste a self-contained snippet that reproduces the bug in `example/` or `FabricExample/` without extra dependencies; say where to paste it. If unavailable, explain why.
 
 **To Reproduce**
-Steps to reproduce the behavior:
+List the steps that trigger the bug, or the steps you tried and where you got blocked:
 
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+1. Setup and commands: ...
+2. Actions tried: ...
+3. Observed behavior or blocker: ...
 
 **Expected behavior**
 A clear and concise description of what you expected to happen.
@@ -40,4 +36,4 @@ If applicable, add screenshots to help explain your problem.
 - Library version: [e.g. 1.2.0]
 
 **Additional context**
-Add any other context about the problem here.
+If you cannot provide a runnable reproduction, include all evidence you have, steps you tried, and what remains uncertain. You may link or paste a proposed patch here; label it unverified if you could not reproduce the bug.
