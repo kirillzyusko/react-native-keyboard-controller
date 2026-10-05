@@ -32,6 +32,9 @@ const dismiss = async (options?: Partial<DismissOptions>): Promise<void> => {
 
   return new Promise((resolve) => {
     if (isClosed) {
+      if (!keepFocus) {
+        KeyboardControllerNative.dismiss(keepFocus, animated);
+      }
       resolve();
 
       return;
