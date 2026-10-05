@@ -22,6 +22,7 @@ jest.mock("../../../../architecture", () => ({
 
 jest.mock("react-native-reanimated", () => ({
   ...require("react-native-reanimated/mock"),
+  useAnimatedRef: () => () => 1,
   scrollTo: (...args: unknown[]) => mockScrollTo(...args),
   useAnimatedReaction: (
     producer: () => number,
