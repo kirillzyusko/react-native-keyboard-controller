@@ -67,16 +67,15 @@ function useChatKeyboard(
       onStart: (e) => {
         "worklet";
 
-        // Keyboard bookkeeping stays current while frozen; only layout is skipped.
-        if (e.height > 0) {
-          // eslint-disable-next-line react-compiler/react-compiler
-          targetKeyboardHeight.value = e.height;
-        }
-
         if (freeze.value) {
+          // eslint-disable-next-line react-compiler/react-compiler
           lastTransitionFrozen.value = true;
 
           return;
+        }
+
+        if (e.height > 0) {
+          targetKeyboardHeight.value = e.height;
         }
 
         if (lastTransitionFrozen.value) {
