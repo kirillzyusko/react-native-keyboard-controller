@@ -25,10 +25,6 @@ extension KeyboardMovementObserver {
     if UIResponder.isKeyboardPreloading {
       return
     }
-    // if we are currently animating keyboard -> we need to ignore values from KVO
-    if !displayLink.isPaused {
-      return
-    }
 
     if KeyboardEventsIgnorer.shared.shouldIgnore {
       return
@@ -45,6 +41,15 @@ extension KeyboardMovementObserver {
       // we don't need to trigger `onInteractive` handler for that
       // since it will be handled in `keyboardWillDisappear` function
       return
+    }
+
+    if !displayLink.isPaused {
+      // UIKit switched from the opening animation to interactive movement.
+      // Stop the display-link stream before emitting the observed position so
+      // only one tracker remains authoritative.
+      removeKeyboardWatcher()
+      onCancelAnimation()
+      animation = nil
     }
 
     prevKeyboardPosition = position
