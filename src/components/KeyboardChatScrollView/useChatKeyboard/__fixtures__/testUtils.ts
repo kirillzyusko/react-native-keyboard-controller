@@ -1,10 +1,12 @@
 import { renderHook } from "@testing-library/react-native";
-import { useAnimatedRef } from "react-native-reanimated";
 
 import { sv } from "../../../../__fixtures__/sv";
 
 import type { useChatKeyboard } from "..";
-import type { SharedValue } from "react-native-reanimated";
+import type {
+  SharedValue,
+  useAnimatedRef as useAnimatedRefType,
+} from "react-native-reanimated";
 import type Reanimated from "react-native-reanimated";
 
 export type KeyboardEvent = { height: number; duration?: number };
@@ -21,6 +23,8 @@ export const mockSize = { value: { width: 390, height: 2000 } };
 
 export const KEYBOARD = 300;
 export const mockScrollTo = jest.fn();
+/** Set `attached` to `false` to simulate an unmounted/detached scroll view. */
+export const mockScrollViewRef = { attached: true };
 
 /**
  * Linear interpolate mock matching Reanimated's `interpolate` signature.
@@ -52,6 +56,7 @@ export function reset() {
   mockOffset.value = 0;
   mockLayout.value = { width: 390, height: 800 };
   mockSize.value = { width: 390, height: 2000 };
+  mockScrollViewRef.attached = true;
 }
 
 /**
@@ -64,6 +69,7 @@ export function setupBeforeEach() {
 
   jest.doMock("react-native-reanimated", () => ({
     ...require("react-native-reanimated/mock"),
+    useAnimatedRef: () => () => mockScrollViewRef.attached ? 1 : null,
     scrollTo: mockScrollTo,
     interpolate: mockInterpolate,
   }));
@@ -94,6 +100,10 @@ export function createRender(modulePath: string) {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const mod = require(modulePath) as {
       useChatKeyboard: typeof useChatKeyboard;
+    };
+    // resolve after `setupBeforeEach` so the mocked `useAnimatedRef` is used
+    const { useAnimatedRef } = require("react-native-reanimated") as {
+      useAnimatedRef: typeof useAnimatedRefType;
     };
 
     return renderHook(() => {
