@@ -5,6 +5,7 @@ import {
   mockLayout,
   mockOffset,
   mockScrollTo,
+  mockScrollViewRef,
   mockSize,
   setupBeforeEach,
 } from "../__fixtures__/testUtils";
@@ -267,5 +268,34 @@ describe("`useChatKeyboard` — Android inverted + always", () => {
 
     handlers.onEnd({ height: 0 });
     expect(result.current.padding.value).toBe(0);
+  });
+});
+
+describe("`useChatKeyboard` — Android detached scroll view", () => {
+  it("should not call scrollTo in onMove when the ref is detached", () => {
+    mockOffset.value = 100;
+    mockScrollViewRef.attached = false;
+    const { result } = render({
+      inverted: false,
+      keyboardLiftBehavior: "always",
+    });
+
+    handlers.onStart({ height: KEYBOARD });
+    expect(result.current.padding.value).toBe(KEYBOARD);
+
+    handlers.onMove({ height: 150 });
+    handlers.onMove({ height: KEYBOARD });
+    expect(mockScrollTo).not.toHaveBeenCalled();
+  });
+
+  it("should not call scrollTo in onMove when the ref is detached (inverted)", () => {
+    mockOffset.value = 0;
+    mockScrollViewRef.attached = false;
+    render({ inverted: true, keyboardLiftBehavior: "always" });
+
+    handlers.onStart({ height: KEYBOARD });
+    handlers.onMove({ height: 150 });
+    handlers.onMove({ height: KEYBOARD });
+    expect(mockScrollTo).not.toHaveBeenCalled();
   });
 });

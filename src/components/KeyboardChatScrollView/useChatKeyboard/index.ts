@@ -1,7 +1,8 @@
-import { scrollTo, useSharedValue } from "react-native-reanimated";
+import { useSharedValue } from "react-native-reanimated";
 
 import { useKeyboardHandler } from "../../../hooks";
 import useScrollState from "../../hooks/useScrollState";
+import { safeScrollTo } from "../../utils/safeScrollTo";
 
 import {
   clampedScrollTarget,
@@ -73,7 +74,7 @@ function useChatKeyboard(
     );
 
     if (scroll.value > maxScroll) {
-      scrollTo(scrollViewRef, 0, maxScroll, false);
+      safeScrollTo(scrollViewRef, 0, maxScroll, false);
     }
   };
 
@@ -218,7 +219,7 @@ function useChatKeyboard(
               return;
             }
 
-            scrollTo(scrollViewRef, 0, 0, false);
+            safeScrollTo(scrollViewRef, 0, 0, false);
 
             return;
           }
@@ -247,7 +248,7 @@ function useChatKeyboard(
               // When at end, allow scrolling back (snap to end + reduce padding)
               if (wasAtEnd) {
                 padding.value = effective;
-                scrollTo(scrollViewRef, 0, 0, false);
+                safeScrollTo(scrollViewRef, 0, 0, false);
               } else if (closing.value) {
                 // Not at end: reduce padding to avoid gap
                 padding.value = effective;
@@ -261,7 +262,7 @@ function useChatKeyboard(
           const target =
             offsetBeforeScroll.value + padding.value - scrollEffective;
 
-          scrollTo(scrollViewRef, 0, target, false);
+          safeScrollTo(scrollViewRef, 0, target, false);
         } else {
           const effective = getEffectiveHeight(
             e.height,
@@ -316,7 +317,7 @@ function useChatKeyboard(
               0,
             );
 
-            scrollTo(scrollViewRef, 0, Math.min(keepAt, maxScroll), false);
+            safeScrollTo(scrollViewRef, 0, Math.min(keepAt, maxScroll), false);
 
             return;
           }
@@ -329,7 +330,7 @@ function useChatKeyboard(
             actualTotalPadding,
           );
 
-          scrollTo(scrollViewRef, 0, target, false);
+          safeScrollTo(scrollViewRef, 0, target, false);
 
           // Track actual (clamped) displacement during open for symmetric close
           if (!closing.value) {
