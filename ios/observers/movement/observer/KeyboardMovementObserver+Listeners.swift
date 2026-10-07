@@ -28,6 +28,7 @@ extension KeyboardMovementObserver {
       onNotify("KeyboardController::keyboardWillShow", buildEventParams(self.keyboardHeight, duration, tag))
 
       setupKeyboardWatcher()
+      beginTransition(to: self.keyboardHeight, duration: CGFloat(duration) / 1000)
       initializeAnimation(fromValue: prevKeyboardPosition, toValue: self.keyboardHeight)
       scheduleDidEvent(height: self.keyboardHeight, duration: animation?.duration ?? CGFloat(duration) / 1000)
     }
@@ -50,6 +51,7 @@ extension KeyboardMovementObserver {
 
     setupKeyboardWatcher()
     removeKVObserver()
+    beginTransition(to: 0, duration: CGFloat(duration) / 1000)
     initializeAnimation(fromValue: prevKeyboardPosition, toValue: 0)
     scheduleDidEvent(height: 0, duration: animation?.duration ?? CGFloat(duration) / 1000)
   }
@@ -73,6 +75,7 @@ extension KeyboardMovementObserver {
 
       removeKeyboardWatcher()
       setupKVObserver()
+      transitionTarget = nil
       animation = nil
 
       NotificationCenter.default.post(
@@ -92,6 +95,7 @@ extension KeyboardMovementObserver {
 
     removeKeyboardWatcher()
     prevKeyboardPosition = 0
+    transitionTarget = nil
     animation = nil
   }
 
@@ -113,5 +117,15 @@ extension KeyboardMovementObserver {
 
     keyboardDidTask = task
     DispatchQueue.main.asyncAfter(deadline: .now() + duration, execute: task)
+  }
+
+  /// Records the transition iOS just announced, so `updateKeyboardFrame` can
+  /// fall back to a time-driven progression when the keyboard layer carries no
+  /// CoreAnimation animation to sample.
+  @objc func beginTransition(to target: CGFloat, duration: CGFloat) {
+    transitionTarget = target
+    transitionFrom = prevKeyboardPosition
+    transitionStart = CACurrentMediaTime()
+    transitionDuration = max(duration, 0.001)
   }
 }
