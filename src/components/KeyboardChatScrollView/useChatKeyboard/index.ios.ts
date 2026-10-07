@@ -51,6 +51,8 @@ function useChatKeyboard(
   const targetKeyboardHeight = useSharedValue(0);
   const prevAbsorption = useSharedValue(0);
   const isInteractiveDismissal = useSharedValue(false);
+  // Set by a transition that ran while frozen and so applied no content shift.
+  const lastTransitionFrozen = useSharedValue(false);
 
   const {
     layout,
@@ -66,12 +68,20 @@ function useChatKeyboard(
         "worklet";
 
         if (freeze.value) {
+          // eslint-disable-next-line react-compiler/react-compiler
+          lastTransitionFrozen.value = true;
+
           return;
         }
 
         if (e.height > 0) {
-          // eslint-disable-next-line react-compiler/react-compiler
           targetKeyboardHeight.value = e.height;
+        }
+
+        if (lastTransitionFrozen.value) {
+          // The frozen transition left the content unshifted: nothing to undo.
+          lastTransitionFrozen.value = false;
+          prevAbsorption.value = padding.value;
         }
 
         const effective = getEffectiveHeight(

@@ -84,11 +84,17 @@ function useChatKeyboard(
         "worklet";
 
         if (freeze.value) {
+          if (!inverted) {
+            // The frozen transition leaves the content unshifted, so the next
+            // one must not undo a shift (same sentinel as "whenAtEnd").
+            // eslint-disable-next-line react-compiler/react-compiler
+            offsetBeforeScroll.value = -1;
+          }
+
           return;
         }
 
         if (e.height > 0) {
-          // eslint-disable-next-line react-compiler/react-compiler
           targetKeyboardHeight.value = e.height;
           closing.value = false;
         } else {
