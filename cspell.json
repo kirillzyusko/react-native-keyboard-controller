@@ -203,7 +203,8 @@
     "siri",
     "luma",
     "lockfiles",
-    "worktree"
+    "worktree",
+    "Kalash"
   ],
   "ignorePaths": [
     "node_modules",
