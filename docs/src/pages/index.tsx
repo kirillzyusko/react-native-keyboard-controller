@@ -170,7 +170,7 @@ const trustedBy = [
   {
     img: "https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/2a/e4/a9/2ae4a9e5-40b0-1ee3-1382-c7f66361d38e/AppIcon-0-0-1x_U007epad-0-1-85-220.png/512x512bb.jpg",
     alt: "Juno text chat app",
-    link: "https://apps.apple.com/us/app/juno-chronic-illness-support/id6749455368?uo=4",
+    link: "https://junocompanion.com",
     name: "Juno",
   },
   {
