@@ -203,7 +203,8 @@
     "siri",
     "luma",
     "lockfiles",
-    "worktree"
+    "worktree",
+    "keyboardchatscrollview"
   ],
   "ignorePaths": [
     "node_modules",

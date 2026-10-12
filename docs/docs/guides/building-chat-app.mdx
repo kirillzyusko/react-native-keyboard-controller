@@ -517,29 +517,41 @@ Here is a complete chat screen that ties together all the pieces — `KeyboardCh
 import React, { forwardRef, useCallback, useRef, useState } from "react";
 import {
   FlatList,
+  type LayoutChangeEvent,
+  type ScrollViewProps,
   StyleSheet,
+  Text,
   TextInput,
   TouchableOpacity,
   View,
-  type LayoutChangeEvent,
-  type ScrollViewProps,
 } from "react-native";
 import {
   KeyboardChatScrollView,
+  type KeyboardChatScrollViewRef,
+  KeyboardProvider,
   KeyboardGestureArea,
   KeyboardStickyView,
-  type KeyboardChatScrollViewRef,
 } from "react-native-keyboard-controller";
 import { useSharedValue, withTiming } from "react-native-reanimated";
 import {
+  SafeAreaProvider,
   SafeAreaView,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
 
 import type { KeyboardChatScrollViewProps } from "react-native-keyboard-controller";
 
+function Message({ text, sender }: { text: string; sender: boolean }) {
+  return (
+    <View style={sender ? styles.senderContainer : styles.recipientContainer}>
+      <Text style={styles.message}>{text}</Text>
+    </View>
+  );
+}
+
 const MARGIN = 8;
 const INPUT_HEIGHT = 42;
+const TEXT_INPUT_HEIGHT = INPUT_HEIGHT + MARGIN;
 
 // Wrapper for virtualized lists
 const ChatScrollView = forwardRef<
@@ -563,7 +575,7 @@ const ChatScrollView = forwardRef<
 function ChatScreen() {
   const textInputRef = useRef<TextInput>(null);
   const textRef = useRef("");
-  const [messages, setMessages] = useState(INITIAL_MESSAGES);
+  const [chatMessages, setMessages] = useState(() => [...messages].reverse());
   const { bottom } = useSafeAreaInsets();
   const extraContentPadding = useSharedValue(0);
 
@@ -576,9 +588,16 @@ function ChatScreen() {
 
   const onSend = useCallback(() => {
     const text = textRef.current.trim();
-    if (!text) return;
 
-    setMessages((prev) => [...prev, { id: String(Date.now()), text }]);
+    if (!text) {
+      return;
+    }
+
+    setMessages((prev) => [
+      // for inverted list we need to insert new message in the beginning of the history
+      { id: String(Date.now()), text, sender: true },
+      ...prev,
+    ]);
     textInputRef.current?.clear();
     textRef.current = "";
   }, []);
@@ -599,12 +618,12 @@ function ChatScreen() {
         interpolator="ios"
         offset={INPUT_HEIGHT}
         style={styles.container}
-        textInputNativeID="chat-input"
+        // textInputNativeID="chat-input"
       >
         <FlatList
-          data={messages}
           inverted
-          contentContainerStyle={{ paddingTop: INPUT_HEIGHT + MARGIN }}
+          contentContainerStyle={{ paddingTop: TEXT_INPUT_HEIGHT }}
+          data={chatMessages}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => <Message {...item} />}
           renderScrollComponent={renderScrollComponent}
@@ -618,11 +637,12 @@ function ChatScreen() {
             multiline
             nativeID="chat-input"
             placeholder="Type a message..."
+            placeholderTextColor={"#F8F8FC"}
             style={styles.input}
             onChangeText={(text) => (textRef.current = text)}
             onLayout={onInputLayout}
           />
-          <TouchableOpacity onPress={onSend}>
+          <TouchableOpacity style={styles.send} onPress={onSend}>
             <Text>Send</Text>
           </TouchableOpacity>
         </KeyboardStickyView>
@@ -630,13 +650,131 @@ function ChatScreen() {
     </SafeAreaView>
   );
 }
+
+const messages = [
+  { text: "Hmmm🤔" },
+  { text: "It looks like it still will be choppy..." },
+  { text: "But I don't know what should I try next" },
+  { text: "Reanimated?", sender: true },
+  { text: "A little bit disappointed 😔" },
+  { text: "🤯" },
+  { text: "Try to check it. I hope it helps you...", sender: true },
+  { text: "It really pushes you to think twice on how to design it first" },
+  {
+    text: "Looks promising!😎 I was always looking for a solution that would allow us to run animations on native thread and provide at least stable 60 FPS",
+  },
+  { text: "You have to check it!!!", sender: true },
+  { text: "Ha-ha! I'm definitely going to check it!" },
+  { text: "Hello! How are you?" },
+  { text: "Hi! I'm good. How are you?", sender: true },
+  {
+    text: "I'm fine, thank you! Have you seen new keyboard animation library?",
+  },
+  { text: "No! Let me check.", sender: true },
+  {
+    text: "Wow! I've been looking for it for a while. It's awesome!",
+    sender: true,
+  },
+  { text: "Do you any other questions?", sender: true },
+  { text: "Yes, I have a question about teleport library" },
+  { text: "Do you know anything about it?", sender: true },
+  {
+    text: "I have seen some techno demos, but haven't tried it uet",
+    sender: true,
+  },
+  { text: "Yes, I already tried it in my project" },
+  {
+    text: "It's pretty cool. We were able to built gallery with share element transitions without any flickering or any other issues",
+    sender: true,
+  },
+  { text: "So far it looks cool!", sender: true },
+  { text: "And seems to be pretty stable", sender: true },
+  {
+    text: "This is a literally missing 'move' operation in react/react-native. Before we could only create/delete elements, but now you get power of zero-overhead 'move' operation and it can bring your app performance on the next level and also significantly boost your app UI cause it unlocks the power that we didn't have before",
+  },
+  { text: "Wow! That's awesome!" },
+  { text: "Yes! Totally agree!", sender: true },
+].map((message, index) => ({
+  id: `initial-${index + 1}`,
+  sender: false,
+  ...message,
+}));
+
+const container = {
+  borderRadius: 10,
+  padding: 10,
+  margin: 10,
+  marginVertical: 5,
+  maxWidth: "80%" as const,
+};
+
+const styles = StyleSheet.create({
+  container: {
+    justifyContent: "flex-end",
+    flex: 1,
+    backgroundColor: "#3A3A3C",
+  },
+  input: {
+    flex: 1,
+    margin: MARGIN,
+    marginBottom: 0,
+    padding: MARGIN,
+    lineHeight: 20,
+    paddingVertical: 10,
+    borderRadius: 99,
+    borderWidth: 1,
+    borderColor: "#BCBCBC",
+    backgroundColor: "#3A3A3C66",
+    color: "#F8F8FC"
+  },
+  composer: {
+    position: "absolute",
+    width: "100%",
+    minHeight: TEXT_INPUT_HEIGHT,
+    flexDirection: "row",
+  },
+  send: {
+    right: MARGIN,
+    padding: MARGIN,
+    marginTop: MARGIN,
+    backgroundColor: "white",
+    justifyContent: "center",
+    borderRadius: 16,
+    marginLeft: MARGIN,
+  },
+  senderContainer: {
+    alignSelf: "flex-end",
+    backgroundColor: "#F8F8FC",
+    ...container,
+  },
+  recipientContainer: {
+    alignSelf: "flex-start",
+    backgroundColor: "#64D2FF",
+    ...container,
+  },
+  message: {
+    color: "#000000",
+  },
+});
+
+function App() {
+  return (
+    <SafeAreaProvider>
+      <KeyboardProvider>
+        <ChatScreen />
+      </KeyboardProvider>
+    </SafeAreaProvider>
+  );
+}
+
+export default App;
 ```
 
 Or play with the code in live mode directly in the browser:
 
 import ExpoSnack from "@site/src/components/ExpoSnack";
 
-<ExpoSnack id="@kirylziusko/c0b7f0" />
+<ExpoSnack id="@kirylziusko/keyboardchatscrollview" />
 
 ## API reference
 
