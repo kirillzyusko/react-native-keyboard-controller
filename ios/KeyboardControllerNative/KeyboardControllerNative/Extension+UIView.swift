@@ -6,7 +6,9 @@
 //
 
 import Foundation
-import UIKit
+
+// library sources get UIKit from the pod's umbrella header, so re-export it for them here
+@_exported import UIKit
 
 public extension UIView {
   var reactTag: NSNumber {
