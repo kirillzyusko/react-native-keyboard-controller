@@ -690,7 +690,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#BCBCBC",
     backgroundColor: "#3A3A3C66",
-    color: "#F8F8FC"
+    color: "#F8F8FC",
   },
   composer: {
     position: "absolute",
