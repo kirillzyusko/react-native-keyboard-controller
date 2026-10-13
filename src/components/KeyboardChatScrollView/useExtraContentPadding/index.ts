@@ -12,6 +12,12 @@ import type { AnimatedRef, SharedValue } from "react-native-reanimated";
 import type Reanimated from "react-native-reanimated";
 
 type InternalSharedValue<Value> = SharedValue<Value> & {
+  /**
+   * Reanimated internal: the animation that currently drives the value.
+   * A new animated assignment creates a new object, a plain assignment
+   * resets it to `null`, and it keeps pointing to a finished animation
+   * until the next assignment.
+   */
   _animation?: object | null;
 };
 
@@ -65,7 +71,15 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
     keyboardLiftBehavior,
     freeze,
   } = options;
-  const animationOffset = useSharedValue<number | null>(null);
+  // Scroll position and padding at the moment when the current animation
+  // started. The animation is kept inside of an object, because Reanimated
+  // treats an animation object assigned to a shared value as a new animation
+  // for that shared value (and starts it).
+  const anchor = useSharedValue<{
+    animation: object;
+    scroll: number;
+    padding: number;
+  } | null>(null);
 
   const scrollToTarget = useCallback(
     (target: number) => {
@@ -91,19 +105,9 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
     (current, previous) => {
       if (freeze.value || previous === null) {
         // eslint-disable-next-line react-compiler/react-compiler
-        animationOffset.value = null;
+        anchor.value = null;
 
         return;
-      }
-
-      // Reanimated clears this on a plain assignment; `finished` differs
-      // between Reanimated 3 and 4, so only check for the animation itself.
-      const hasAnimation = Boolean(
-        (extraContentPadding as InternalSharedValue<number>)._animation,
-      );
-
-      if (!hasAnimation) {
-        animationOffset.value = null;
       }
 
       const rawDelta = current - previous;
@@ -141,44 +145,55 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
         effectiveDelta < 0 &&
         !atEnd
       ) {
-        animationOffset.value = null;
-
         return;
       }
 
       if (!shouldShiftContent(keyboardLiftBehavior, atEnd)) {
-        animationOffset.value = null;
-
         return;
       }
 
-      const offset = animationOffset.value ?? scroll.value;
+      // `scroll` is updated by native scroll events, which arrive later than
+      // our frames, so in the middle of an animation it may still show an old
+      // position. That's why when an animation starts, we remember `scroll`
+      // and padding, and until it ends we scroll by the total padding change
+      // since that moment, ignoring `scroll`. A new animation, or a value set
+      // without animation, starts from `scroll` again - by that time it shows
+      // the real position (including where the user scrolled to between two
+      // animations).
+      const animation =
+        (extraContentPadding as InternalSharedValue<number>)._animation ?? null;
+
+      if (!animation || !Object.is(animation, anchor.value?.animation)) {
+        anchor.value = animation && {
+          animation,
+          scroll: scroll.value,
+          padding: previous,
+        };
+      }
+
+      const start = anchor.value?.scroll ?? scroll.value;
+      const startTotal = Math.max(
+        blankSpace.value,
+        keyboardPadding.value + (anchor.value?.padding ?? previous),
+      );
+      const delta = currentTotal - startTotal;
+      let target: number;
 
       if (inverted) {
-        const target = Math.max(offset - effectiveDelta, -currentTotal);
-
-        if (hasAnimation) {
-          animationOffset.value = target;
-        }
-        scrollToTarget(target);
+        target = Math.max(start - delta, -currentTotal);
       } else {
         const maxScroll = Math.max(
           size.value.height - layout.value.height + currentTotal,
           0,
         );
-        // Clamp at 0 as well: when the content is shorter than the viewport a
-        // shrinking padding makes `effectiveDelta` negative while `scroll.value`
-        // is already 0, so the target would go below the top of the content.
-        const target = Math.max(
-          Math.min(offset + effectiveDelta, maxScroll),
-          0,
-        );
 
-        if (hasAnimation) {
-          animationOffset.value = target;
-        }
-        scrollToTarget(target);
+        // Clamp at 0 as well: when the content is shorter than the viewport a
+        // shrinking padding makes `delta` negative while `start` is already 0,
+        // so the target would go below the top of the content.
+        target = Math.max(Math.min(start + delta, maxScroll), 0);
       }
+
+      scrollToTarget(target);
     },
     [inverted, keyboardLiftBehavior],
   );

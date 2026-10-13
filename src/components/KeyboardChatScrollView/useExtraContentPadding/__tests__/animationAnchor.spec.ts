@@ -1,144 +1,179 @@
-import { sv } from "../../../../__fixtures__/sv";
-import {
-  createRender,
-  flushRAF,
-  mockScrollTo,
-  reactionEffect,
-} from "../__fixtures__/setup";
+import { setupAnimatedPadding as setup } from "../__fixtures__/animatedPadding";
 
-describe("useExtraContentPadding — animated padding", () => {
-  it("keeps the initial offset for an inverted list despite delayed scroll events", () => {
-    const extraContentPadding = sv(1) as ReturnType<typeof sv<number>> & {
-      _animation?: { finished?: boolean } | null;
-    };
-    const scroll = sv(-317);
-    const contentOffsetY = sv(-317);
+describe("useExtraContentPadding — same animation continues from where we scrolled", () => {
+  it("should scroll the full distance while `scroll` is not updated yet", () => {
+    // #1540: before the fix only the last frame (22 - 19 = 3px) was applied
+    const { frame, startAnimation, contentOffsetY } = setup({ scroll: 100 });
 
-    extraContentPadding._animation = {};
+    startAnimation();
+    frame(4);
+    frame(9);
+    frame(14);
+    frame(19);
+    frame(22);
 
-    createRender()({
-      extraContentPadding,
-      keyboardPadding: sv(317),
-      scroll,
-      layout: sv({ width: 390, height: 500 }),
-      size: sv({ width: 390, height: 2000 }),
-      contentOffsetY,
+    expect(contentOffsetY.value).toBe(122);
+  });
+
+  it("should scroll the full distance for inverted list", () => {
+    const { frame, startAnimation, contentOffsetY } = setup({
+      scroll: -100,
+      keyboardPadding: 300,
       inverted: true,
-      keyboardLiftBehavior: "whenAtEnd",
-      freeze: false,
     });
 
-    reactionEffect(17.666687, 1);
+    startAnimation();
+    frame(4);
+    frame(9);
+    frame(14);
+    frame(19);
+    frame(22);
+
+    expect(contentOffsetY.value).toBe(-122);
+  });
+
+  it("should come back to the initial position when animation goes back", () => {
+    const { frame, startAnimation, scroll, contentOffsetY } = setup({
+      scroll: 100,
+    });
+
+    startAnimation();
+    frame(10);
+    frame(20);
+    expect(contentOffsetY.value).toBe(120);
+
+    scroll.value = 120;
+    startAnimation();
+    frame(10);
+    frame(0);
+    expect(contentOffsetY.value).toBe(100);
+  });
+
+  it("should ignore a late scroll event that reports an older position", () => {
+    // we asked for 120, then for 140, and only then event says 120
+    const { frame, startAnimation, scroll, contentOffsetY } = setup({
+      scroll: 100,
+    });
+
+    startAnimation();
+    frame(20);
+    expect(contentOffsetY.value).toBe(120);
+    frame(40);
+    expect(contentOffsetY.value).toBe(140);
+
+    scroll.value = 120;
+    frame(60);
+
+    expect(contentOffsetY.value).toBe(160);
+  });
+
+  it("should ignore a scroll event that reports a position in between", () => {
+    // numbers from a real device: -325.33 is half way from -317 to -333.67
+    const { frame, startAnimation, scroll, contentOffsetY } = setup({
+      scroll: -317,
+      padding: 1,
+      keyboardPadding: 317,
+      inverted: true,
+      keyboardLiftBehavior: "whenAtEnd",
+    });
+
+    startAnimation();
+    frame(17.666687);
     expect(contentOffsetY.value).toBeCloseTo(-333.666687);
 
     scroll.value = -325.333333;
-    reactionEffect(34.333313, 17.666687);
+    frame(34.333313);
     expect(contentOffsetY.value).toBeCloseTo(-350.333313);
 
-    extraContentPadding._animation.finished = true;
-    reactionEffect(51, 34.333313);
+    frame(51);
     expect(contentOffsetY.value).toBeCloseTo(-367);
   });
 
-  it("keeps the initial scroll offset while native events lag on iOS", () => {
-    const extraContentPadding = sv(1) as ReturnType<typeof sv<number>> & {
-      _animation?: { finished?: boolean } | null;
-    };
-    const scroll = sv(1180.333333);
-    const contentOffsetY = sv(1180.333333);
-
-    extraContentPadding._animation = {};
-
-    createRender()({
-      extraContentPadding,
-      keyboardPadding: sv(317),
-      scroll,
-      layout: sv({ width: 390, height: 500 }),
-      size: sv({ width: 390, height: 2000 }),
-      contentOffsetY,
-      inverted: false,
-      keyboardLiftBehavior: "always",
-      freeze: false,
+  it("should not accumulate an error when iOS rounds scroll events to 1/3px", () => {
+    // sequence from iOS simulator logs: events arrive every second frame
+    // and report our own scroll rounded to the screen pixel
+    const { frame, startAnimation, scroll, contentOffsetY } = setup({
+      scroll: 1092.333333,
+      padding: 1,
     });
 
-    reactionEffect(17.666687, 1);
-    expect(contentOffsetY.value).toBeCloseTo(1197.00002);
+    startAnimation();
+    frame(1.2);
+    frame(1.69);
+    scroll.value = 1093;
+    frame(3.97);
+    frame(6.62);
+    scroll.value = 1098;
+    frame(8.59);
+    frame(10.73);
+    scroll.value = 1102;
+    frame(17.67);
 
-    // Reanimated 3 can set this flag on every frame, not only at completion.
-    extraContentPadding._animation.finished = true;
-    // This event describes an older scroll command.
-    scroll.value = 1188.666666;
-    reactionEffect(34.333313, 17.666687);
-    expect(contentOffsetY.value).toBeCloseTo(1213.666646);
-
-    extraContentPadding._animation.finished = true;
-    reactionEffect(51, 34.333313);
-    expect(contentOffsetY.value).toBeCloseTo(1230.333333);
-
-    // After completion an imperative update follows the live scroll again.
-    extraContentPadding._animation = null;
-    scroll.value = 1230.333333;
-    reactionEffect(52, 51);
-    expect(contentOffsetY.value).toBeCloseTo(1231.333333);
+    // exactly start position + padding change, without rounding errors
+    expect(contentOffsetY.value).toBeCloseTo(1092.333333 + 16.67);
   });
 
-  it("uses the same anchor when scrolling through scrollTo", async () => {
-    const extraContentPadding = sv(0) as ReturnType<typeof sv<number>> & {
-      _animation?: { finished?: boolean } | null;
-    };
-    const scroll = sv(300);
-
-    extraContentPadding._animation = {};
-
-    createRender()({
-      extraContentPadding,
-      keyboardPadding: sv(0),
-      scroll,
-      layout: sv({ width: 390, height: 500 }),
-      size: sv({ width: 390, height: 2000 }),
-      inverted: false,
-      keyboardLiftBehavior: "always",
-      freeze: false,
+  it("should ignore user scroll in the middle of an animation", () => {
+    const { frame, startAnimation, scroll, contentOffsetY } = setup({
+      scroll: 100,
     });
 
-    reactionEffect(10, 0);
-    await flushRAF();
-    expect(mockScrollTo).toHaveBeenLastCalledWith(
-      expect.anything(),
-      0,
-      310,
-      false,
-    );
+    startAnimation();
+    frame(10);
+    scroll.value = 500;
+    frame(20);
 
-    scroll.value = 304;
-    reactionEffect(20, 10);
-    await flushRAF();
-    expect(mockScrollTo).toHaveBeenLastCalledWith(
-      expect.anything(),
-      0,
-      320,
-      false,
-    );
+    expect(contentOffsetY.value).toBe(120);
+  });
 
-    extraContentPadding._animation.finished = true;
-    reactionEffect(30, 20);
-    await flushRAF();
-    expect(mockScrollTo).toHaveBeenLastCalledWith(
-      expect.anything(),
-      0,
-      330,
-      false,
-    );
+  it("should not depend on `finished` flag (Reanimated 3 sets it on every frame)", () => {
+    const { frame, startAnimation, padding, scroll, contentOffsetY } = setup({
+      scroll: 1180.333333,
+      padding: 1,
+      keyboardPadding: 317,
+    });
 
-    extraContentPadding._animation = null;
-    scroll.value = 330;
-    reactionEffect(31, 30);
-    await flushRAF();
-    expect(mockScrollTo).toHaveBeenLastCalledWith(
-      expect.anything(),
-      0,
-      331,
-      false,
-    );
+    startAnimation();
+    frame(17.666687);
+    expect(contentOffsetY.value).toBeCloseTo(1197.00002);
+
+    padding._animation!.finished = true;
+    // this event describes an older scroll
+    scroll.value = 1188.666666;
+    frame(34.333313);
+    expect(contentOffsetY.value).toBeCloseTo(1213.666646);
+
+    padding._animation!.finished = true;
+    frame(51);
+    expect(contentOffsetY.value).toBeCloseTo(1230.333333);
+  });
+
+  it("should keep position when a frame doesn't change the padding", () => {
+    const { frame, startAnimation, scroll, contentOffsetY } = setup({
+      scroll: 100,
+    });
+
+    startAnimation();
+    frame(10);
+    frame(10);
+    scroll.value = 105;
+    frame(20);
+
+    expect(contentOffsetY.value).toBe(120);
+  });
+
+  it("should keep clamping at 0 while animation continues", () => {
+    // content is shorter than viewport, so there is nothing to scroll
+    const { frame, startAnimation, contentOffsetY } = setup({
+      scroll: 5,
+      padding: 20,
+      size: 500,
+    });
+
+    startAnimation();
+    frame(10);
+    expect(contentOffsetY.value).toBe(0);
+    frame(0);
+    expect(contentOffsetY.value).toBe(0);
   });
 });
