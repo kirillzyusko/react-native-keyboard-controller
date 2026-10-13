@@ -59,9 +59,6 @@ function useChatKeyboard(
     onLayout,
     onContentSizeChange,
   } = useScrollState(scrollViewRef);
-  // Kept as one function across renders: the keyboard handlers below close
-  // over it, and Reanimated rebuilds and re-registers the handler whenever a
-  // value its worklets close over changes identity.
   const clampScrollIfNeeded = useCallback(
     (effective: number, totalPaddingForMaxScroll?: number) => {
       "worklet";
