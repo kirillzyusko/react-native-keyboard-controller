@@ -99,13 +99,32 @@ RCT_EXPORT_VIEW_PROPERTY(offset, NSNumber *)
 }
 #endif
 
+// MARK: helpers
+- (NSNumber *)viewTag
+{
+#ifdef RCT_NEW_ARCH_ENABLED
+  return @(self.tag);
+#else
+  return self.reactTag;
+#endif
+}
+
 // MARK: lifecycle methods
 - (void)didMoveToSuperview
 {
+  if (_textInputNativeID == nil) {
+    return;
+  }
+
   if (self.superview == nil) {
     // unmounted
     [[KeyboardOffsetProvider shared] removeOffsetForTextInputNativeID:_textInputNativeID
-                                                              withTag:self.reactTag];
+                                                              withTag:[self viewTag]];
+  } else if (_offset != nil) {
+    // (re-)mounted, i.e. moved within the hierarchy without receiving new props
+    [[KeyboardOffsetProvider shared] setOffsetForTextInputNativeID:_textInputNativeID
+                                                            offset:_offset
+                                                           withTag:[self viewTag]];
   }
 }
 
@@ -122,7 +141,7 @@ RCT_EXPORT_VIEW_PROPERTY(offset, NSNumber *)
   NSString *oldTextInputNativeID = (oldViewPropsPtr && !oldViewPropsPtr->textInputNativeID.empty())
       ? [NSString stringWithUTF8String:oldViewPropsPtr->textInputNativeID.c_str()]
       : nil;
-  NSNumber *tag = [NSNumber numberWithInteger:self.tag];
+  NSNumber *tag = [self viewTag];
   NSNumber *newOffset = @(newViewProps.offset);
 
   if (newTextInputNativeID != oldTextInputNativeID) {
@@ -144,6 +163,10 @@ RCT_EXPORT_VIEW_PROPERTY(offset, NSNumber *)
                                                              withTag:tag];
     }
   }
+
+  // keep ivars in sync, so `didMoveToSuperview` can clean up (or restore) the registration
+  _textInputNativeID = newTextInputNativeID;
+  _offset = newOffset;
 
   [super updateProps:props oldProps:oldProps];
 }
