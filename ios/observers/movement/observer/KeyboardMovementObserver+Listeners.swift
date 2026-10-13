@@ -23,8 +23,12 @@ extension KeyboardMovementObserver {
 
       self.duration = duration
 
+      // a zero-height frame means no keyboard is visible (e.g. a foldable resizing its window while the
+      // keyboard is closed), so the event must not report the keyboard as fully open
+      let progress: NSNumber = self.keyboardHeight > 0 ? 1 : 0
+
       onRequestAnimation()
-      onEvent("onKeyboardMoveStart", Float(self.keyboardHeight) as NSNumber, 1, duration as NSNumber, tag)
+      onEvent("onKeyboardMoveStart", Float(self.keyboardHeight) as NSNumber, progress, duration as NSNumber, tag)
       onNotify("KeyboardController::keyboardWillShow", buildEventParams(self.keyboardHeight, duration, tag))
 
       setupKeyboardWatcher()
