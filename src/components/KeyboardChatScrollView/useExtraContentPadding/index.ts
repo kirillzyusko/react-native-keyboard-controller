@@ -155,6 +155,10 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
       //   - `scroll` changed -> list really moved (or user scrolled),
       //     so use `scroll`.
       //   - `lastCommanded` is `null` -> we haven't scrolled yet, use `scroll`.
+      // Limitation: this assumes that by the next frame `scroll` is either
+      // unchanged or already shows our latest scroll. If it arrives with an
+      // older one (we already asked for 140, but event says 120), we treat
+      // it as a real move, continue from 120 and stay 20px behind.
       const base =
         lastCommanded.value !== null &&
         scroll.value === lastObservedScroll.value
