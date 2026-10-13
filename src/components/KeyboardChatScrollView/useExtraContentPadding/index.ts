@@ -62,14 +62,15 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
     freeze,
   } = options;
 
-  // The offset we last asked the scroll view to move to, and the observed
-  // `scroll` value it was derived from. `scroll` is fed by native scroll
-  // events, but our own writes are programmatic (`contentOffsetY` through
-  // animatedProps on Fabric, a deferred `scrollTo` on Android), so a fast
-  // animation (e.g. `withTiming` on `extraContentPadding`) can run several
-  // reaction frames before a single scroll event lands. While that is the case
-  // `scroll` still reports the pre-animation offset and rebasing on it makes
-  // every frame throw away the previous frames' shifts.
+  // Example: list is at 100 and `extraContentPadding` animates 0 -> 60,
+  // 20px per frame. We want to scroll 100 -> 120 -> 140 -> 160.
+  // But `scroll` is updated only when native scroll event arrives, and
+  // it's slower than animation frames, so `scroll` can still be 100:
+  //   frame 1: 100 + 20 = 120 ✅
+  //   frame 2: 100 + 20 = 120 ❌ (should be 140)
+  //   frame 3: 100 + 20 = 120 ❌ (should be 160)
+  // So we remember where we scrolled last time (120) and what `scroll`
+  // was at that moment (100), to continue from 120 on the next frame.
   const lastCommanded = useSharedValue<number | null>(null);
   const lastObservedScroll = useSharedValue(0);
 
@@ -77,8 +78,7 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
     (target: number) => {
       "worklet";
 
-      // Remember the command and the observed offset it was based on, so the
-      // next frame can tell whether a scroll event has landed since.
+      // remember for the next frame (see example above)
       // eslint-disable-next-line react-compiler/react-compiler
       lastCommanded.value = target;
       lastObservedScroll.value = scroll.value;
@@ -147,10 +147,8 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
         return;
       }
 
-      // Build on the offset we last commanded as long as no scroll event has
-      // landed since, because that write is still in flight. As soon as `scroll`
-      // moves (a real user drag, or the native view reporting our own write
-      // back) we rebase on it, so an actual gesture always wins.
+      // `scroll` is still 100 -> it's outdated, continue from 120.
+      // `scroll` changed -> list really moved (or user scrolled), so use it.
       const base =
         lastCommanded.value !== null &&
         scroll.value === lastObservedScroll.value
