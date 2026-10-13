@@ -63,18 +63,6 @@ extension UIResponder {
           (self as? TextInput)?.inputAccessoryView = nil
           KeyboardAreaExtender.shared.remove()
           return self.callOriginalResignFirstResponder(originalResignSelector)
-        } else if pendingResignResponder === self {
-          // UIKit asks again before the postponed resign has been executed - it happens when
-          // input is getting removed from the window (native-stack pop on iOS 26+, unmount, etc.).
-          // A frame later input will be detached and resign will fail (window will keep a stale
-          // first responder), so we have to resign immediately while input is still attached
-          pendingResignResponder = nil
-          NotificationCenter.default.post(
-            name: .shouldIgnoreKeyboardEvents, object: nil, userInfo: ["ignore": false]
-          )
-          (self as? TextInput)?.inputAccessoryView = nil
-          KeyboardAreaExtender.shared.remove()
-          return self.callOriginalResignFirstResponder(originalResignSelector)
         }
       } else {
         // If casting to TextInput fails
@@ -103,6 +91,45 @@ extension UIResponder {
 
     let implementation = imp_implementationWithBlock(swizzledResignImplementation)
     method_setImplementation(originalResignMethod, implementation)
+
+    swizzleWillMoveToWindow(originalResignSelector)
+  }
+
+  /// If an input with a postponed resign is about to leave its window (native-stack pop on iOS 26+,
+  /// unmount, etc.), then the postponed resign will fail, because input will not be attached to the
+  /// window anymore, and window will keep a stale first responder. So we resign it immediately while
+  /// input is still attached.
+  private static func swizzleWillMoveToWindow(_ resignSelector: Selector) {
+    let selector = #selector(UIView.willMove(toWindow:))
+
+    for cls in [UITextView.self, UITextField.self] as [AnyClass] {
+      guard let method = class_getInstanceMethod(cls, selector) else { continue }
+
+      // may be inherited from `UIView` - we add own method to the class in this case,
+      // so the change doesn't affect all views
+      let originalImplementation = method_getImplementation(method)
+      typealias Function = @convention(c) (AnyObject, Selector, UIWindow?) -> Void
+      let castOriginalImplementation = unsafeBitCast(originalImplementation, to: Function.self)
+
+      let swizzledImplementation: @convention(block) (UIView, UIWindow?) -> Void = { view, newWindow in
+        if newWindow !== view.window, pendingResignResponder === view {
+          pendingResignResponder = nil
+          NotificationCenter.default.post(
+            name: .shouldIgnoreKeyboardEvents, object: nil, userInfo: ["ignore": false]
+          )
+          (view as? TextInput)?.inputAccessoryView = nil
+          KeyboardAreaExtender.shared.remove()
+          _ = view.callOriginalResignFirstResponder(resignSelector)
+        }
+
+        castOriginalImplementation(view, selector, newWindow)
+      }
+
+      let implementation = imp_implementationWithBlock(swizzledImplementation)
+      if !class_addMethod(cls, selector, implementation, method_getTypeEncoding(method)) {
+        method_setImplementation(method, implementation)
+      }
+    }
   }
 
   private func callOriginalResignFirstResponder(_ selector: Selector) -> Bool {
