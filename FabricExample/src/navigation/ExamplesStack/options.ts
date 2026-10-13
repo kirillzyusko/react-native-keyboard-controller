@@ -83,6 +83,9 @@ export const options = {
     title: "Keyboard Extender",
     headerShown: false,
   },
+  [ScreenNames.KEYBOARD_STICKY_VIEW_ROTATION]: {
+    title: "Sticky view rotation",
+  },
   [ScreenNames.CHAT_KIT]: {
     title: "Chat Kit",
     headerTintColor: "#fff",

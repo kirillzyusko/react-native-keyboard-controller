@@ -160,6 +160,12 @@ export const examples: Example[] = [
     icons: "🧩",
   },
   {
+    title: "Sticky view rotation",
+    testID: "keyboard_sticky_view_rotation",
+    info: ScreenNames.KEYBOARD_STICKY_VIEW_ROTATION,
+    icons: "🔁",
+  },
+  {
     title: "Chat Kit",
     testID: "chat_kit",
     info: ScreenNames.CHAT_KIT,
