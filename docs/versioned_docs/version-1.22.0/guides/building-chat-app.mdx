@@ -613,7 +613,7 @@ function ChatScreen() {
   );
 
   return (
-    <SafeAreaView edges={["bottom"]} style={styles.container}>
+    <SafeAreaView edges={["bottom", "top"]} style={styles.container}>
       <KeyboardGestureArea
         interpolator="ios"
         offset={INPUT_HEIGHT}
@@ -721,6 +721,7 @@ const styles = StyleSheet.create({
     padding: MARGIN,
     lineHeight: 20,
     paddingVertical: 10,
+    paddingHorizontal: 16,
     borderRadius: 99,
     borderWidth: 1,
     borderColor: "#BCBCBC",
