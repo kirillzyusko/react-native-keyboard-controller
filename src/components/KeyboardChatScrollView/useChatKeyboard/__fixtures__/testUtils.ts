@@ -1,4 +1,5 @@
 import { renderHook } from "@testing-library/react-native";
+import React from "react";
 
 import { sv } from "../../../../__fixtures__/sv";
 
@@ -66,6 +67,10 @@ export function reset() {
  */
 export function setupBeforeEach() {
   jest.resetModules();
+
+  // keep the React copy `renderHook` was loaded with, so the re-required hook
+  // module runs its React hooks against the same renderer
+  jest.doMock("react", () => React);
 
   jest.doMock("react-native-reanimated", () => ({
     ...require("react-native-reanimated/mock"),

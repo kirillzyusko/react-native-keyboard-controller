@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { useSharedValue } from "react-native-reanimated";
 
 import { useKeyboardHandler } from "../../../hooks";
@@ -58,25 +59,25 @@ function useChatKeyboard(
     onLayout,
     onContentSizeChange,
   } = useScrollState(scrollViewRef);
-  const clampScrollIfNeeded = (
-    effective: number,
-    totalPaddingForMaxScroll?: number,
-  ) => {
-    "worklet";
+  const clampScrollIfNeeded = useCallback(
+    (effective: number, totalPaddingForMaxScroll?: number) => {
+      "worklet";
 
-    const paddingForMax =
-      totalPaddingForMaxScroll !== undefined
-        ? totalPaddingForMaxScroll
-        : effective;
-    const maxScroll = Math.max(
-      size.value.height - layout.value.height + paddingForMax,
-      0,
-    );
+      const paddingForMax =
+        totalPaddingForMaxScroll !== undefined
+          ? totalPaddingForMaxScroll
+          : effective;
+      const maxScroll = Math.max(
+        size.value.height - layout.value.height + paddingForMax,
+        0,
+      );
 
-    if (scroll.value > maxScroll) {
-      safeScrollTo(scrollViewRef, 0, maxScroll, false);
-    }
-  };
+      if (scroll.value > maxScroll) {
+        safeScrollTo(scrollViewRef, 0, maxScroll, false);
+      }
+    },
+    [scrollViewRef, scroll, layout, size],
+  );
 
   useKeyboardHandler(
     {
