@@ -62,15 +62,7 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
     freeze,
   } = options;
 
-  // Example: list is at 100 and `extraContentPadding` animates 0 -> 60,
-  // 20px per frame. We want to scroll 100 -> 120 -> 140 -> 160.
-  // But `scroll` is updated only when native scroll event arrives, and
-  // it's slower than animation frames, so `scroll` can still be 100:
-  //   frame 1: 100 + 20 = 120 ✅
-  //   frame 2: 100 + 20 = 120 ❌ (should be 140)
-  //   frame 3: 100 + 20 = 120 ❌ (should be 160)
-  // So we remember where we scrolled last time (120) and what `scroll`
-  // was at that moment (100), to continue from 120 on the next frame.
+  // used to calculate `base` (see explanation there)
   const lastCommanded = useSharedValue<number | null>(null);
   const lastObservedScroll = useSharedValue(0);
 
@@ -78,7 +70,7 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
     (target: number) => {
       "worklet";
 
-      // remember for the next frame (see example above)
+      // remember for the next frame (see `base` calculation)
       // eslint-disable-next-line react-compiler/react-compiler
       lastCommanded.value = target;
       lastObservedScroll.value = scroll.value;
@@ -147,8 +139,22 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
         return;
       }
 
-      // `scroll` is still 100 -> it's outdated, continue from 120.
-      // `scroll` changed -> list really moved (or user scrolled), so use it.
+      // Example: list is at 100 and `extraContentPadding` animates 0 -> 60,
+      // 20px per frame. We want to scroll 100 -> 120 -> 140 -> 160.
+      // But `scroll` is updated only when native scroll event arrives, and
+      // it's slower than animation frames, so `scroll` can still be 100:
+      //   frame 1: 100 + 20 = 120 ✅
+      //   frame 2: 100 + 20 = 120 ❌ (should be 140)
+      //   frame 3: 100 + 20 = 120 ❌ (should be 160)
+      // To fix it, every `scrollToTarget` call saves:
+      //   - `lastCommanded` - where we scrolled (120);
+      //   - `lastObservedScroll` - what `scroll` was at that moment (100).
+      // And on the next frame we pick the `base`:
+      //   - `scroll` is still 100 -> it's outdated, so continue from
+      //     `lastCommanded`: 120 + 20 = 140 ✅
+      //   - `scroll` changed -> list really moved (or user scrolled),
+      //     so use `scroll`.
+      //   - `lastCommanded` is `null` -> we haven't scrolled yet, use `scroll`.
       const base =
         lastCommanded.value !== null &&
         scroll.value === lastObservedScroll.value
