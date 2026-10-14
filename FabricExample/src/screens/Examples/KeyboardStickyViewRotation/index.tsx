@@ -66,7 +66,6 @@ const styles = StyleSheet.create({
     top: 80,
     left: 16,
     fontSize: 20,
-    fontVariant: ["tabular-nums"],
   },
   hint: {
     position: "absolute",
