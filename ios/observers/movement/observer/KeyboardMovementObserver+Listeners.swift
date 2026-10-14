@@ -23,8 +23,7 @@ extension KeyboardMovementObserver {
 
       self.duration = duration
 
-      // a zero-height frame means no keyboard is visible (e.g. a foldable resizing its window while the
-      // keyboard is closed), so the event must not report the keyboard as fully open
+      // foldable devices can emit `keyboardWillShow` with a `0` keyboard height when the device is rotated
       let progress: NSNumber = self.keyboardHeight > 0 ? 1 : 0
 
       onRequestAnimation()
