@@ -23,8 +23,11 @@ extension KeyboardMovementObserver {
 
       self.duration = duration
 
+      // foldable devices can emit `keyboardWillShow` with a `0` keyboard height when the device is rotated
+      let progress: NSNumber = self.keyboardHeight > 0 ? 1 : 0
+
       onRequestAnimation()
-      onEvent("onKeyboardMoveStart", Float(self.keyboardHeight) as NSNumber, 1, duration as NSNumber, tag)
+      onEvent("onKeyboardMoveStart", Float(self.keyboardHeight) as NSNumber, progress, duration as NSNumber, tag)
       onNotify("KeyboardController::keyboardWillShow", buildEventParams(self.keyboardHeight, duration, tag))
 
       setupKeyboardWatcher()
