@@ -10,6 +10,10 @@ import Foundation
 import UIKit
 
 public extension UIView {
+  @objc var reactNativeTag: NSNumber {
+    return (self as UIView?).reactNativeTag
+  }
+
   var globalFrame: CGRect? {
     let rootView = UIApplication.shared.activeWindow?.rootViewController?.view
     return superview?.convert(frame, to: rootView)
@@ -49,6 +53,14 @@ public extension UIView {
 }
 
 public extension Optional where Wrapped == UIView {
+  var reactNativeTag: NSNumber {
+    #if KEYBOARD_CONTROLLER_NEW_ARCH_ENABLED
+      return (self?.tag ?? -1) as NSNumber
+    #else
+      return self?.reactTag ?? -1
+    #endif
+  }
+
   var frameTransitionInWindow: (Double, Double) {
     let areCrossFadeTransitionsEnabled = (self?.layer.presentation()?.animationKeys() ?? []).contains("opacity")
     let frameY = self?.layer.presentation()?.frame.origin.y ?? 0
