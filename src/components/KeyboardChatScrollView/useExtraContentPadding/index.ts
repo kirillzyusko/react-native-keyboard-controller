@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 import { Platform } from "react-native";
+import { useSharedValue } from "react-native-reanimated";
 
 import { IS_FABRIC } from "../../../architecture";
 import { useAnimatedReaction } from "../../../reanimated";
@@ -61,12 +62,20 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
     freeze,
   } = options;
 
+  // used to calculate `base` (see explanation there)
+  const lastCommanded = useSharedValue<number | null>(null);
+  const lastObservedScroll = useSharedValue(0);
+
   const scrollToTarget = useCallback(
     (target: number) => {
       "worklet";
 
+      // remember for the next frame (see `base` calculation)
+      // eslint-disable-next-line react-compiler/react-compiler
+      lastCommanded.value = target;
+      lastObservedScroll.value = scroll.value;
+
       if (contentOffsetY && IS_FABRIC) {
-        // eslint-disable-next-line react-compiler/react-compiler
         contentOffsetY.value = target;
       } else if (OS === "android") {
         // Defer scrollTo so the animatedProps inset commit lands first;
@@ -78,7 +87,7 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
         safeScrollTo(scrollViewRef, 0, target, false);
       }
     },
-    [scrollViewRef, contentOffsetY],
+    [scrollViewRef, contentOffsetY, scroll, lastCommanded, lastObservedScroll],
   );
 
   useAnimatedReaction(
@@ -130,25 +139,49 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
         return;
       }
 
-      if (inverted) {
-        const target = Math.max(scroll.value - effectiveDelta, -currentTotal);
+      // Example: list is at 100 and `extraContentPadding` animates 0 -> 60,
+      // 20px per frame. We want to scroll 100 -> 120 -> 140 -> 160.
+      // But `scroll` is updated only when native scroll event arrives, and
+      // it's slower than animation frames, so `scroll` can still be 100:
+      //   frame 1: 100 + 20 = 120 ✅
+      //   frame 2: 100 + 20 = 120 ❌ (should be 140)
+      //   frame 3: 100 + 20 = 120 ❌ (should be 160)
+      // To fix it, every `scrollToTarget` call saves:
+      //   - `lastCommanded` - where we scrolled (120);
+      //   - `lastObservedScroll` - what `scroll` was at that moment (100).
+      // And on the next frame we pick the `base`:
+      //   - `scroll` is still 100 -> it's outdated, so continue from
+      //     `lastCommanded`: 120 + 20 = 140 ✅
+      //   - `scroll` changed -> list really moved (or user scrolled),
+      //     so use `scroll`.
+      //   - `lastCommanded` is `null` -> we haven't scrolled yet, use `scroll`.
+      // Limitation: this assumes that by the next frame `scroll` is either
+      // unchanged or already shows our latest scroll. If it arrives with an
+      // older one (we already asked for 140, but event says 120), we treat
+      // it as a real move, continue from 120 and stay 20px behind.
+      const base =
+        lastCommanded.value !== null &&
+        scroll.value === lastObservedScroll.value
+          ? lastCommanded.value
+          : scroll.value;
 
-        scrollToTarget(target);
+      let target: number;
+
+      if (inverted) {
+        target = Math.max(base - effectiveDelta, -currentTotal);
       } else {
         const maxScroll = Math.max(
           size.value.height - layout.value.height + currentTotal,
           0,
         );
-        // Clamp at 0 as well: when the content is shorter than the viewport a
-        // shrinking padding makes `effectiveDelta` negative while `scroll.value`
-        // is already 0, so the target would go below the top of the content.
-        const target = Math.max(
-          Math.min(scroll.value + effectiveDelta, maxScroll),
-          0,
-        );
 
-        scrollToTarget(target);
+        // Clamp at 0 as well: when the content is shorter than the viewport a
+        // shrinking padding makes `effectiveDelta` negative while `base` is
+        // already 0, so the target would go below the top of the content.
+        target = Math.max(Math.min(base + effectiveDelta, maxScroll), 0);
       }
+
+      scrollToTarget(target);
     },
     [inverted, keyboardLiftBehavior],
   );
