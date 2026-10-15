@@ -11,10 +11,6 @@ import UIKit
 
 public extension UIScrollView {
   var reactViewTag: NSNumber {
-    #if KEYBOARD_CONTROLLER_NEW_ARCH_ENABLED
-      return (superview?.tag ?? -1) as NSNumber
-    #else
-      return superview?.reactTag ?? -1
-    #endif
+    return superview.reactNativeTag
   }
 }

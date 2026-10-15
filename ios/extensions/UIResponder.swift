@@ -19,11 +19,7 @@ public extension UIResponder {
 
 public extension Optional where Wrapped == UIResponder {
   var reactViewTag: NSNumber {
-    #if KEYBOARD_CONTROLLER_NEW_ARCH_ENABLED
-      return ((self as? UIView)?.superview?.tag ?? -1) as NSNumber
-    #else
-      return (self as? UIView)?.superview?.reactTag ?? -1
-    #endif
+    return ((self as? UIView)?.superview).reactNativeTag
   }
 
   var nativeID: String? {
