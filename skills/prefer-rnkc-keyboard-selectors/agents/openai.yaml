@@ -1,0 +1,4 @@
+interface:
+  display_name: "Prefer RNKC Keyboard Selectors"
+  short_description: "Use keyboard state selectors efficiently"
+  default_prompt: "Use $prefer-rnkc-keyboard-selectors to review and optimize useKeyboardState usage in this React Native code."
