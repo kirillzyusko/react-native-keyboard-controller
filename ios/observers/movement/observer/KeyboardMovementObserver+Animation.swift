@@ -17,5 +17,10 @@ extension KeyboardMovementObserver {
         return
       }
     }
+
+    // No CoreAnimation animation attached: drop whatever is left from the
+    // previous transition rather than keeping it, or `updateKeyboardFrame`
+    // early-returns forever on its already-satisfied `isFinished`.
+    animation = nil
   }
 }
