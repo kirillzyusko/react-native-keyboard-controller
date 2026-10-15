@@ -91,6 +91,32 @@ describe("blankSpace — Android non-inverted + always", () => {
     expect(mockScrollTo).toHaveBeenCalledWith(expect.anything(), 0, 100, false);
   });
 
+  it("partial visibility: absorbs only the visible portion of blankSpace", () => {
+    // Scrolled into the inset area, but not far enough to reveal all of it
+    // (pastContentEnd = 800+800-1500 = 100, fraction = 100/500 = 0.2)
+    mockSize.value = { width: 390, height: 1500 };
+    mockOffset.value = 800;
+    render({
+      inverted: false,
+      keyboardLiftBehavior: "always",
+      blankSpace: sv(500),
+    });
+
+    handlers.onStart({ height: KEYBOARD });
+    // visiblePadding = 0.2 * 500 = 100, minimumPaddingAbsorbed = 100
+    // scrollEff = max(0, 300 - 100) = 200
+    // actualTotalPadding = max(500, 300+0) = 500
+    // target = clampedScrollTarget(800, 200, 1500, 800, 500)
+    //        = min(max(800+200, 0), max(1500-800+500, 0)) = min(1000, 1200) = 1000
+    handlers.onMove({ height: KEYBOARD });
+    expect(mockScrollTo).toHaveBeenCalledWith(
+      expect.anything(),
+      0,
+      1000,
+      false,
+    );
+  });
+
   it("full absorption with extraContentPadding: absorbed = blankSpace - extraContentPadding", () => {
     // Small content so minimum padding fills viewport (pastContentEnd = 0+800-300 = 500, fraction = 1)
     mockSize.value = { width: 390, height: 300 };
@@ -188,6 +214,23 @@ describe("blankSpace — Android never behavior", () => {
 });
 
 describe("blankSpace — Android whenAtEnd behavior", () => {
+  it("partial visibility: full absorption when visiblePadding >= keyboard", () => {
+    // (pastContentEnd = 1000+800-1500 = 300, fraction = 300/500 = 0.6)
+    // visiblePadding = 300 >= keyboard = 300 -> full absorption -> no shift
+    mockSize.value = { width: 390, height: 1500 };
+    mockOffset.value = 1000;
+    render({
+      inverted: false,
+      keyboardLiftBehavior: "whenAtEnd",
+      blankSpace: sv(500),
+    });
+
+    handlers.onStart({ height: KEYBOARD });
+    // scrollEff = max(0, 300 - 300) = 0 -> sentinel -> no scroll
+    handlers.onMove({ height: KEYBOARD });
+    expect(mockScrollTo).not.toHaveBeenCalled();
+  });
+
   it("full absorption prevents scroll even when at end", () => {
     // Small content so minimum padding fills viewport (pastContentEnd = 0+800-300 = 500, fraction = 1)
     // Position at end: 0 + 800 >= 300 - 20

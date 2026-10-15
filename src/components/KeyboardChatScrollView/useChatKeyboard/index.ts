@@ -118,13 +118,10 @@ function useChatKeyboard(
           blankSpace.value,
           inverted,
         );
-        const minimumPaddingAbsorbed =
-          visibleFraction >= 1
-            ? getMinimumPaddingAbsorbed(
-                blankSpace.value,
-                extraContentPadding.value,
-              )
-            : 0;
+        const minimumPaddingAbsorbed = getMinimumPaddingAbsorbed(
+          visibleFraction * blankSpace.value,
+          extraContentPadding.value,
+        );
         const scrollEffective = getScrollEffective(
           effective,
           minimumPaddingAbsorbed,
@@ -137,7 +134,7 @@ function useChatKeyboard(
           return;
         } else if (e.height > 0) {
           // Android: keyboard opening — set padding + capture scroll position
-          minimumPaddingFractionOnOpen.value = visibleFraction >= 1 ? 1 : 0;
+          minimumPaddingFractionOnOpen.value = visibleFraction;
           padding.value = effective;
           offsetBeforeScroll.value = scroll.value;
 
@@ -186,11 +183,10 @@ function useChatKeyboard(
             offset,
           );
 
-          const minimumPaddingAbsorbed =
-            getMinimumPaddingAbsorbed(
-              blankSpace.value,
-              extraContentPadding.value,
-            ) * minimumPaddingFractionOnOpen.value;
+          const minimumPaddingAbsorbed = getMinimumPaddingAbsorbed(
+            blankSpace.value * minimumPaddingFractionOnOpen.value,
+            extraContentPadding.value,
+          );
           const scrollEffective = getScrollEffective(
             effective,
             minimumPaddingAbsorbed,
@@ -271,11 +267,10 @@ function useChatKeyboard(
             offset,
           );
 
-          const minimumPaddingAbsorbed =
-            getMinimumPaddingAbsorbed(
-              blankSpace.value,
-              extraContentPadding.value,
-            ) * minimumPaddingFractionOnOpen.value;
+          const minimumPaddingAbsorbed = getMinimumPaddingAbsorbed(
+            blankSpace.value * minimumPaddingFractionOnOpen.value,
+            extraContentPadding.value,
+          );
           const scrollEffective = getScrollEffective(
             effective,
             minimumPaddingAbsorbed,
