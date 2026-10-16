@@ -99,26 +99,27 @@ class KeyboardControllerModuleImpl(
     viewTag: Double,
     promise: Promise,
   ) {
-    val measure = Runnable {
-      val view =
-        try {
-          uiManager?.resolveView(viewTag.toInt())
-        } catch (e: IllegalViewOperationException) {
-          Logger.w(TAG, "Could not resolve view for tag ${viewTag.toInt()}", e)
-          null
+    val measure =
+      Runnable {
+        val view =
+          try {
+            uiManager?.resolveView(viewTag.toInt())
+          } catch (e: IllegalViewOperationException) {
+            Logger.w(TAG, "Could not resolve view for tag ${viewTag.toInt()}", e)
+            null
+          }
+        if (view == null || !view.isAttachedToWindow) {
+          promise.reject("E_VIEW_NOT_FOUND", "Could not find view for tag")
+          return@Runnable
         }
-      if (view == null || !view.isAttachedToWindow) {
-        promise.reject("E_VIEW_NOT_FOUND", "Could not find view for tag")
-        return@Runnable
+        val location = view.screenLocation
+        val map = Arguments.createMap()
+        map.putDouble("x", location[0].toFloat().dp)
+        map.putDouble("y", location[1].toFloat().dp)
+        map.putDouble("width", view.width.toFloat().dp)
+        map.putDouble("height", view.height.toFloat().dp)
+        promise.resolve(map)
       }
-      val location = view.screenLocation
-      val map = Arguments.createMap()
-      map.putDouble("x", location[0].toFloat().dp)
-      map.putDouble("y", location[1].toFloat().dp)
-      map.putDouble("width", view.width.toFloat().dp)
-      map.putDouble("height", view.height.toFloat().dp)
-      promise.resolve(map)
-    }
     UiThreadUtil.runOnUiThread {
       if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
         // Fabric mounts during frame callbacks; read the attached view after those callbacks finish.
