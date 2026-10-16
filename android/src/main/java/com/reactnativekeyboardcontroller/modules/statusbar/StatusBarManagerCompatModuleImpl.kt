@@ -31,7 +31,10 @@ class StatusBarManagerCompatModuleImpl(
   fun setHidden(hidden: Boolean) {
     UiThreadUtil.runOnUiThread {
       if (hidden) {
-        getController()?.hide(WindowInsetsCompat.Type.statusBars())
+        getController()?.run {
+          systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+          hide(WindowInsetsCompat.Type.statusBars())
+        }
       } else {
         getController()?.show(WindowInsetsCompat.Type.statusBars())
       }
