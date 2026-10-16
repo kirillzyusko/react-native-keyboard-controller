@@ -126,13 +126,11 @@ RCT_EXPORT_METHOD(setFocusTo : (nonnull NSString *)direction)
                      resolve:(RCTPromiseResolveBlock)resolve
                       reject:(RCTPromiseRejectBlock)reject
 #else
-RCT_EXPORT_METHOD(viewPositionInWindow
-                  : (nonnull NSNumber *)viewTag resolve
-                  : (RCTPromiseResolveBlock)resolve reject
-                  : (RCTPromiseRejectBlock)reject)
+RCT_EXPORT_METHOD(viewPositionInWindow : (nonnull NSNumber *)viewTag resolve : (
+    RCTPromiseResolveBlock)resolve reject : (RCTPromiseRejectBlock)reject)
 #endif
 {
-  dispatch_async(dispatch_get_main_queue(), ^{
+  dispatch_block_t measure = ^{
     UIView *view = nil;
 #ifdef RCT_NEW_ARCH_ENABLED
     NSInteger tag = (NSInteger)viewTag;
@@ -151,6 +149,16 @@ RCT_EXPORT_METHOD(viewPositionInWindow
       @"width" : @(frame.size.width),
       @"height" : @(frame.size.height),
     });
+  };
+  dispatch_async(dispatch_get_main_queue(), ^{
+#ifdef RCT_NEW_ARCH_ENABLED
+    // Layout events can precede Fabric mounting. Allow a display interval before the only lookup.
+    dispatch_after(
+        dispatch_time(DISPATCH_TIME_NOW, (int64_t)(UIUtils.nextFrame * NSEC_PER_SEC)),
+        dispatch_get_main_queue(), measure);
+#else
+    measure();
+#endif
   });
 }
 

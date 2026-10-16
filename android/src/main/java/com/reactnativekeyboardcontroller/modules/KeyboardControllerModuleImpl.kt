@@ -2,6 +2,7 @@ package com.reactnativekeyboardcontroller.modules
 
 import android.content.Context
 import android.os.Build
+import android.view.Choreographer
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import com.facebook.react.bridge.Arguments
@@ -9,6 +10,7 @@ import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.UiThreadUtil
 import com.facebook.react.uimanager.IllegalViewOperationException
+import com.reactnativekeyboardcontroller.BuildConfig
 import com.reactnativekeyboardcontroller.extensions.dp
 import com.reactnativekeyboardcontroller.extensions.screenLocation
 import com.reactnativekeyboardcontroller.extensions.uiManager
@@ -97,7 +99,7 @@ class KeyboardControllerModuleImpl(
     viewTag: Double,
     promise: Promise,
   ) {
-    UiThreadUtil.runOnUiThread {
+    val measure = Runnable {
       val view =
         try {
           uiManager?.resolveView(viewTag.toInt())
@@ -105,9 +107,9 @@ class KeyboardControllerModuleImpl(
           Logger.w(TAG, "Could not resolve view for tag ${viewTag.toInt()}", e)
           null
         }
-      if (view == null) {
+      if (view == null || !view.isAttachedToWindow) {
         promise.reject("E_VIEW_NOT_FOUND", "Could not find view for tag")
-        return@runOnUiThread
+        return@Runnable
       }
       val location = view.screenLocation
       val map = Arguments.createMap()
@@ -116,6 +118,14 @@ class KeyboardControllerModuleImpl(
       map.putDouble("width", view.width.toFloat().dp)
       map.putDouble("height", view.height.toFloat().dp)
       promise.resolve(map)
+    }
+    UiThreadUtil.runOnUiThread {
+      if (BuildConfig.IS_NEW_ARCHITECTURE_ENABLED) {
+        // Fabric mounts during frame callbacks; read the attached view after those callbacks finish.
+        Choreographer.getInstance().postFrameCallback { UiThreadUtil.runOnUiThread(measure) }
+      } else {
+        measure.run()
+      }
     }
   }
   // endregion
