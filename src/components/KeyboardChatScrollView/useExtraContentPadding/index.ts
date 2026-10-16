@@ -112,10 +112,15 @@ function useExtraContentPadding(options: UseExtraContentPaddingOptions): void {
         blankSpace.value,
         keyboardPadding.value + current,
       );
-      const effectiveDelta = currentTotal - previousTotal;
+      // Native scroll offsets are pixel-rounded. Feeding their fractions back
+      // into each animation step accumulates drift depending on frame timing.
+      // Round absolute totals before subtracting so the total movement stays
+      // consistent; rounding individual deltas would lose small changes.
+      const effectiveDelta =
+        Math.round(currentTotal) - Math.round(previousTotal);
 
       if (effectiveDelta === 0) {
-        // blankSpace absorbed the change
+        // blankSpace or rounding absorbed the change
         return;
       }
 

@@ -71,8 +71,7 @@ describe("`KeyboardChatScrollView` specs", () => {
     });
   });
 
-  // TODO: this test is flaky on iOS, so temporarily skip it
-  it.skip("should change content position when input grows", async () => {
+  it("should change content position when input grows", async () => {
     await waitAndTap("chat.input");
     await waitAndType("chat.input", "\n\n\n\n");
     await waitForExpect(async () => {
