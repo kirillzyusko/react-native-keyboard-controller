@@ -264,9 +264,15 @@ public class FocusedInputObserver: NSObject {
   }
 
   private func substituteDelegateBack(_ input: UIResponder?) {
-    if let textField = input as? UITextField, let oldDelegate = delegate.activeDelegate as? UITextFieldDelegate {
+    // substitution is deferred, so the input may lose focus before it gets our delegate;
+    // in this case `activeDelegate` belongs to another input and must not be assigned
+    if let textField = input as? UITextField, textField.delegate === delegate,
+       let oldDelegate = delegate.activeDelegate as? UITextFieldDelegate
+    {
       textField.setForceDelegate(oldDelegate)
-    } else if let textView = input as? UITextView, let oldDelegate = delegate.activeDelegate as? UITextViewDelegate {
+    } else if let textView = input as? UITextView, textView.delegate === delegate,
+              let oldDelegate = delegate.activeDelegate as? UITextViewDelegate
+    {
       textView.setForceDelegate(oldDelegate)
     }
   }
