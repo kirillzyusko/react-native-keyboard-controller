@@ -164,9 +164,11 @@ jobs:
           disable-animations: false
           avd-name: e2e_emulator_${{ matrix.devices.api }}
           arch: x86_64
-          script: SOFT_CHECK=${{ matrix.devices.soft-check }} yarn test-example:android-${{ matrix.devices.api }}
+          script: SOFT_CHECK=${{ matrix.devices.soft-check }} yarn test-example:android-${{ matrix.devices.api }} kit/017-keyboard-chat-scroll-view.e2e.ts
       - uses: actions/upload-artifact@v4
         if: ${{ always() }}
         with:
-          name: android-fail-screen-shoots
-          path: e2e/artifacts
+          name: android-chat-input-growth-${{ matrix.devices.api }}
+          path: |
+            e2e/artifacts
+            e2e/kit/assets/android/**/KeyboardChatScrollViewAlwaysInputGrown.png
