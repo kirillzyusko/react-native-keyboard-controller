@@ -5,6 +5,7 @@ import android.os.Build
 import android.view.Choreographer
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import androidx.core.view.ViewCompat
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReactApplicationContext
@@ -108,7 +109,7 @@ class KeyboardControllerModuleImpl(
             Logger.w(TAG, "Could not resolve view for tag ${viewTag.toInt()}", e)
             null
           }
-        if (view == null || !view.isAttachedToWindow) {
+        if (view == null || !ViewCompat.isAttachedToWindow(view)) {
           promise.reject("E_VIEW_NOT_FOUND", "Could not find view for tag")
           return@Runnable
         }
