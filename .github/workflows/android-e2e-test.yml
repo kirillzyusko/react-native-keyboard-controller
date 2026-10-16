@@ -166,7 +166,7 @@ jobs:
           arch: x86_64
           script: SOFT_CHECK=${{ matrix.devices.soft-check }} yarn test-example:android-${{ matrix.devices.api }}
       - uses: actions/upload-artifact@v4
-        if: ${{ failure() }}
+        if: ${{ always() }}
         with:
           name: android-fail-screen-shoots
           path: e2e/artifacts
