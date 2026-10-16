@@ -6,6 +6,9 @@
 //  Copyright © 2024 Facebook. All rights reserved.
 //
 
-enum UIUtils {
-  static let nextFrame = 1.0 / 60
+import Foundation
+
+@objc(UIUtils)
+public final class UIUtils: NSObject {
+  @objc public static let nextFrame = 1.0 / 60
 }
