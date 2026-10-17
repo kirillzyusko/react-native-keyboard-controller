@@ -37,11 +37,22 @@ class ClippingScrollViewDecoratorView(
       paddingScrollWorkaroundActive = shouldUsePaddingScrollWorkaround(scrollView, event)
     }
 
+    // ScrollView.inChild() ignores its direct child's translationY when it
+    // initializes a gesture. contentInsetTop is represented by translating
+    // that child, so the translated portion is visible but cannot start a
+    // scroll (the gap appears at the top once the ScrollView is inverted).
+    // Include the translated visual range only while dispatching ACTION_DOWN;
+    // subsequent events use the real bounds after ScrollView has initialized
+    // the gesture.
+    val translatedContentNeedsExpandedHitRange =
+      event.actionMasked == MotionEvent.ACTION_DOWN && appliedTopInsetPx > 0
+
     val handled =
-      if (paddingScrollWorkaroundActive) {
-        dispatchWithExpandedContentRange(scrollView, event)
-      } else {
-        super.dispatchTouchEvent(event)
+      when {
+        paddingScrollWorkaroundActive -> dispatchWithExpandedContentRange(scrollView, event)
+        translatedContentNeedsExpandedHitRange ->
+          dispatchWithTranslatedContentRange(scrollView, event)
+        else -> super.dispatchTouchEvent(event)
       }
 
     if (
@@ -123,6 +134,27 @@ class ClippingScrollViewDecoratorView(
     val originalBottom = contentView?.bottom ?: 0
     val expandedBottom =
       max(originalBottom, scrollView.height + scrollView.scrollY + MIN_SCROLL_RANGE_PX)
+
+    return dispatchWithTemporaryContentBottom(contentView, event, expandedBottom)
+  }
+
+  private fun dispatchWithTranslatedContentRange(
+    scrollView: ViewGroup,
+    event: MotionEvent,
+  ): Boolean {
+    val contentView = scrollView.getChildAt(0)
+    val originalBottom = contentView?.bottom ?: 0
+    val translatedBottom = originalBottom + appliedTopInsetPx + MIN_SCROLL_RANGE_PX
+
+    return dispatchWithTemporaryContentBottom(contentView, event, translatedBottom)
+  }
+
+  private fun dispatchWithTemporaryContentBottom(
+    contentView: View?,
+    event: MotionEvent,
+    expandedBottom: Int,
+  ): Boolean {
+    val originalBottom = contentView?.bottom ?: 0
 
     if (contentView == null || expandedBottom == originalBottom) {
       return super.dispatchTouchEvent(event)
