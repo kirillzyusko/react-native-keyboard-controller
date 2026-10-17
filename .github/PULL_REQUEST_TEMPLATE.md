@@ -28,6 +28,16 @@
 -
 -
 
+## 🧪 Bug Reproduction (bug fixes only)
+
+<!-- For other changes, write "Not applicable". For a bug fix, provide a minimal project, focused example change, failing regression test, or self-contained snippet that reproduces the bug when pasted into example/ or FabricExample/ without extra dependencies. -->
+
+- Reproduction code (link to a specific commit, paths in this PR, or paste the snippet and name its target file):
+- Setup commands and exact steps to reproduce:
+- Environment (platform/device, OS, React Native version, architecture, JS engine, library version):
+- Before the fix (observed behavior; confirm the reproduction fails):
+- After the fix (expected behavior; confirm the same reproduction passes):
+
 ## 🤔 How Has This Been Tested?
 
 <!-- Please describe in detail how you tested your changes. -->
