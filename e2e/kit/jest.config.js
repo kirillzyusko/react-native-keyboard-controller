@@ -4,6 +4,7 @@ module.exports = {
   testMatch: ["<rootDir>/**/*.e2e.ts"],
   testTimeout: 120000,
   maxWorkers: 1,
+  sandboxInjectedGlobals: ["Math"],
   globalSetup: "detox/runners/jest/globalSetup",
   globalTeardown: "detox/runners/jest/globalTeardown",
   reporters: ["detox/runners/jest/reporter"],

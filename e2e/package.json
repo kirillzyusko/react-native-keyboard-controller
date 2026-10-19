@@ -4,6 +4,7 @@
   "description": "Set of E2E tests for react-native-keyboard-controller package",
   "main": "index.js",
   "scripts": {
+    "benchmark:screenshots": "node benchmarks/screenshots.js",
     "build-example:android": "detox build --configuration example.android.emu-28.release",
     "build-example-fabric:android": "detox build --configuration example-fabric.android.emu-28.release",
     "test-example-fabric:android-28": "detox test --configuration example-fabric.android.emu-28.release --loglevel verbose --take-screenshots failing --record-videos failing --retries 2",
