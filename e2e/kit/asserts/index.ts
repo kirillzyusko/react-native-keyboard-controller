@@ -84,7 +84,10 @@ function verifyBitmapsToBeEqual(
     const SCREEN_DIFF_IMAGE_PATH = `artifacts/${screenName}-diff.png`;
 
     // Trying every PNG filter is expensive inside Jest's VM on large screenshots.
-    writeToFile(SCREEN_DIFF_IMAGE_PATH, PNG.sync.write(diff, { filterType: 0 }));
+    writeToFile(
+      SCREEN_DIFF_IMAGE_PATH,
+      PNG.sync.write(diff, { filterType: 0 }),
+    );
 
     throw new Error(
       `Expected image at ${tempImagePath} to match to image at ${expectedImagePath}, but it had ${percentDiff}% pixel diff!`,
