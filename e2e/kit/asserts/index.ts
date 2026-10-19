@@ -26,22 +26,6 @@ const writeToFile = (path: string, buffer: Buffer, onWrite?: () => void) => {
   return buffer;
 };
 
-const readFromFileOrCreateNew = (
-  path: string,
-  buffer: Buffer,
-  onWrite: () => void,
-): Buffer => {
-  let bitmapBuffer;
-
-  try {
-    bitmapBuffer = fs.readFileSync(path);
-  } catch (e) {
-    bitmapBuffer = writeToFile(path, buffer, onWrite);
-  }
-
-  return bitmapBuffer;
-};
-
 const checkIsScreenShotMatch = (
   expectedBitmapBuffer: Buffer,
   bitmapBuffer: Buffer,
@@ -81,18 +65,8 @@ function verifyBitmapsToBeEqual(
   const expectedImagePath = `${SCREENS_DIR}/${screenName}.png`;
   const expectedBitmapBuffer = fs.readFileSync(tempImagePath);
 
-  const onWrite = () =>
-    console.debug(
-      colors.green(
-        `Generated an image for the '${screenName}' screen on the path '${SCREENS_DIR}'`,
-      ),
-    );
-
-  const bitmapBuffer = readFromFileOrCreateNew(
-    expectedImagePath,
-    expectedBitmapBuffer,
-    onWrite,
-  );
+  // Validation must never create a baseline from the app under test.
+  const bitmapBuffer = fs.readFileSync(expectedImagePath);
 
   const { diff, matched, percentDiff } = checkIsScreenShotMatch(
     expectedBitmapBuffer,
