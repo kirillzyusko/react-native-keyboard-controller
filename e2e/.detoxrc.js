@@ -46,6 +46,13 @@ module.exports = {
       build:
         "cd ../example/android && ./gradlew assembleRelease assembleAndroidTest -DtestBuildType=release --build-cache",
     },
+    "example-fabric.android.release": {
+      type: "android.apk",
+      binaryPath:
+        "../FabricExample/android/app/build/outputs/apk/release/app-release.apk",
+      build:
+        "cd ../FabricExample/android && ./gradlew assembleRelease assembleAndroidTest -DtestBuildType=release --build-cache",
+    },
   },
   devices: {
     simulator15: {
@@ -119,6 +126,10 @@ module.exports = {
       device: "simulator15",
       app: "example.ios.release",
     },
+    "example-fabric.ios.sim-15.release": {
+      device: "simulator15",
+      app: "example-fabric.ios.release",
+    },
     "example.ios.sim-16.debug": {
       device: "simulator16",
       app: "example.ios.debug",
@@ -126,6 +137,10 @@ module.exports = {
     "example.ios.sim-16.release": {
       device: "simulator16",
       app: "example.ios.release",
+    },
+    "example-fabric.ios.sim-16.release": {
+      device: "simulator16",
+      app: "example-fabric.ios.release",
     },
     "example.ios.sim-17.debug": {
       device: "simulator17",
@@ -147,6 +162,10 @@ module.exports = {
       device: "simulator18",
       app: "example.ios.release",
     },
+    "example-fabric.ios.sim-18.release": {
+      device: "simulator18",
+      app: "example-fabric.ios.release",
+    },
     "example.ios.sim-26.debug": {
       device: "simulator26",
       app: "example.ios.debug",
@@ -155,6 +174,10 @@ module.exports = {
       device: "simulator26",
       app: "example.ios.release",
     },
+    "example-fabric.ios.sim-26.release": {
+      device: "simulator26",
+      app: "example-fabric.ios.release",
+    },
     "example.ios.sim-26e.debug": {
       device: "simulator26e",
       app: "example.ios.debug",
@@ -162,6 +185,10 @@ module.exports = {
     "example.ios.sim-26e.release": {
       device: "simulator26e",
       app: "example.ios.release",
+    },
+    "example-fabric.ios.sim-26e.release": {
+      device: "simulator26e",
+      app: "example-fabric.ios.release",
     },
     "example.android.att.debug": {
       device: "attached",
@@ -179,6 +206,10 @@ module.exports = {
       device: "emulator28",
       app: "example.android.release",
     },
+    "example-fabric.android.emu-28.release": {
+      device: "emulator28",
+      app: "example-fabric.android.release",
+    },
     "example.android.emu-31.debug": {
       device: "emulator31",
       app: "example.android.debug",
@@ -186,6 +217,10 @@ module.exports = {
     "example.android.emu-31.release": {
       device: "emulator31",
       app: "example.android.release",
+    },
+    "example-fabric.android.emu-31.release": {
+      device: "emulator31",
+      app: "example-fabric.android.release",
     },
   },
 };
