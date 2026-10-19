@@ -1,3 +1,6 @@
+const androidArchitectures =
+  process.env.REACT_NATIVE_ARCHITECTURES || "arm64-v8a";
+
 /** @type {Detox.DetoxConfig} */
 module.exports = {
   testRunner: {
@@ -22,36 +25,33 @@ module.exports = {
       binaryPath:
         "../example/ios/build/Build/Products/Release-iphonesimulator/KeyboardControllerExample.app",
       build:
-        "xcodebuild CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ -workspace ../example/ios/KeyboardControllerExample.xcworkspace -scheme KeyboardControllerExample -configuration Release -sdk iphonesimulator -derivedDataPath ../example/ios/build",
+        "xcodebuild CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ -workspace ../example/ios/KeyboardControllerExample.xcworkspace -scheme KeyboardControllerExample -configuration Release -sdk iphonesimulator -derivedDataPath ../example/ios/build IPHONEOS_DEPLOYMENT_TARGET=15.1",
     },
     "example-fabric.ios.release": {
       type: "ios.app",
       binaryPath:
         "../FabricExample/ios/build/Build/Products/Release-iphonesimulator/KeyboardControllerFabricExample.app",
       build:
-        "xcodebuild CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ -workspace ../FabricExample/ios/KeyboardControllerFabricExample.xcworkspace -scheme KeyboardControllerFabricExample -configuration Release -sdk iphonesimulator -derivedDataPath ../FabricExample/ios/build",
+        "xcodebuild CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ -workspace ../FabricExample/ios/KeyboardControllerFabricExample.xcworkspace -scheme KeyboardControllerFabricExample -configuration Release -sdk iphonesimulator -derivedDataPath ../FabricExample/ios/build IPHONEOS_DEPLOYMENT_TARGET=15.1",
     },
     "example.android.debug": {
       type: "android.apk",
       binaryPath:
         "../example/android/app/build/outputs/apk/debug/app-debug.apk",
-      build:
-        "cd ../example/android && ./gradlew assembleDebug assembleAndroidTest -DtestBuildType=debug --build-cache",
+      build: `cd ../example/android && ./gradlew assembleDebug assembleAndroidTest -DtestBuildType=debug -PreactNativeArchitectures=${androidArchitectures} --build-cache`,
       reversePorts: [8081],
     },
     "example.android.release": {
       type: "android.apk",
       binaryPath:
         "../example/android/app/build/outputs/apk/release/app-release.apk",
-      build:
-        "cd ../example/android && ./gradlew assembleRelease assembleAndroidTest -DtestBuildType=release --build-cache",
+      build: `cd ../example/android && ./gradlew assembleRelease assembleAndroidTest -DtestBuildType=release -PreactNativeArchitectures=${androidArchitectures} --build-cache`,
     },
     "example-fabric.android.release": {
       type: "android.apk",
       binaryPath:
         "../FabricExample/android/app/build/outputs/apk/release/app-release.apk",
-      build:
-        "cd ../FabricExample/android && ./gradlew assembleRelease assembleAndroidTest -DtestBuildType=release --build-cache",
+      build: `cd ../FabricExample/android && ./gradlew assembleRelease assembleAndroidTest -DtestBuildType=release -PreactNativeArchitectures=${androidArchitectures} --build-cache`,
     },
   },
   devices: {
