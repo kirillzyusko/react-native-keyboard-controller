@@ -19,6 +19,29 @@ preference("ApplePasscodeKeyboards", "-array", ...keyboards);
 preference("AppleLanguages", "-array", "en-US");
 preference("AppleLocale", "en_US");
 preference("AppleICUForce24HourTime", "-bool", "YES");
+const keyboardPreference = (...args) =>
+  simctl(
+    "spawn",
+    udid,
+    "defaults",
+    "write",
+    "com.apple.keyboard.preferences",
+    ...args,
+  );
+
+keyboardPreference("KeyboardLastUsed", keyboards[0]);
+keyboardPreference("KeyboardsCurrentAndNext", "-array", ...keyboards);
+keyboardPreference(
+  "KeyboardLastUsedForLanguage",
+  "-dict",
+  "en_US",
+  keyboards[0],
+  "ASCIICapable",
+  keyboards[0],
+  "NonASCII",
+  keyboards[1],
+);
+keyboardPreference("HardwareKeyboardLastSeen", "-bool", "NO");
 execFileSync("defaults", [
   "write",
   "com.apple.iphonesimulator",
