@@ -257,7 +257,8 @@ jobs:
         working-directory: e2e
         run: SOFT_CHECK=false yarn test-${{ matrix.app.script }}:ios-${{ matrix.devices.ios }}
       - uses: actions/upload-artifact@v4
-        if: ${{ failure() }}
+        if: ${{ always() }}
         with:
           name: ios-fail-screen-shoots-${{ matrix.app.script }}-${{ matrix.devices.ios }}
           path: e2e/artifacts
+          if-no-files-found: ignore
