@@ -7,7 +7,9 @@
 
 #import "KeyboardBackgroundViewManager.h"
 
-#if __has_include("react_native_keyboard_controller-Swift.h")
+#if SWIFT_PACKAGE
+#import "KeyboardControllerSwift.h"
+#elif __has_include("react_native_keyboard_controller-Swift.h")
 #import "react_native_keyboard_controller-Swift.h"
 #else
 #import <react_native_keyboard_controller/react_native_keyboard_controller-Swift.h>
@@ -19,7 +21,7 @@
 #import <react/renderer/components/RNKC/RCTComponentViewHelpers.h>
 #import <react/renderer/components/RNKC/RNKCKeyboardBackgroundViewComponentDescriptor.h>
 
-#import "RCTFabricComponentsPlugins.h"
+#import <React/RCTFabricComponentsPlugins.h>
 #endif
 
 #import <React/RCTView.h>
