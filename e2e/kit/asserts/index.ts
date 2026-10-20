@@ -144,6 +144,9 @@ async function expectElementBitmapsToBeEqual(
     }
   }
 
+  // Wait for keyboard/modal transitions before sampling screen coordinates,
+  // just as full-screen comparisons wait for the displayed pixels to settle.
+  await delay(1000);
   const attributes = await view.getAttributes();
 
   if (!("frame" in attributes)) {
