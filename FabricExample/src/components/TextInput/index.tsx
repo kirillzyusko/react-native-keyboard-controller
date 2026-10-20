@@ -16,14 +16,14 @@ type CustomTextInputProps = {
 const TextInput = (props: CustomTextInputProps) => {
   const { title, ...rest } = props;
   const [contentHeight, setContentHeight] = useState<number>();
-  const autoGrow = Platform.OS === "android" && rest.style === undefined;
+  const autoGrow = rest.style === undefined;
 
   return (
     <>
       {!!title && <Text style={styles.title}>{title}</Text>}
       <TextInputRN
         multiline
-        numberOfLines={10}
+        numberOfLines={Platform.OS === "android" ? 10 : undefined}
         placeholderTextColor="#6c6c6c"
         testID={props.placeholder}
         {...rest}
@@ -43,6 +43,13 @@ const TextInput = (props: CustomTextInputProps) => {
             setContentHeight(event.nativeEvent.contentSize.height + 4);
           }
           rest.onContentSizeChange?.(event);
+        }}
+        onChangeText={(text) => {
+          if (autoGrow && Platform.OS === "ios") {
+            // Let Fabric remeasure the edited text before applying its new content size.
+            setContentHeight(undefined);
+          }
+          rest.onChangeText?.(text);
         }}
       />
     </>
