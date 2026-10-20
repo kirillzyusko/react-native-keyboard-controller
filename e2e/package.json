@@ -4,6 +4,7 @@
   "description": "Set of E2E tests for react-native-keyboard-controller package",
   "main": "index.js",
   "scripts": {
+    "test:helpers": "jest --config jest.helpers.config.js --runInBand",
     "setup:ios-simulator": "node scripts/prepare-ios-simulator.js",
     "benchmark:screenshots": "node benchmarks/screenshots.js",
     "build-example:android": "detox build --configuration example.android.emu-28.release",

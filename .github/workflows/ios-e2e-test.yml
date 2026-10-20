@@ -44,8 +44,12 @@ jobs:
           cache: yarn
       - name: Install E2E dependencies
         run: yarn install --frozen-lockfile --cwd e2e
+      - name: Verify screenshot and artifact helpers
+        run: yarn --cwd e2e test:helpers
       - name: Compare original and optimized screenshot processing
-        run: yarn --cwd e2e benchmark:screenshots | tee screenshot-benchmark.log
+        run: |
+          set -o pipefail
+          yarn --cwd e2e benchmark:screenshots | tee screenshot-benchmark.log
       - uses: actions/upload-artifact@v4
         with:
           name: screenshot-benchmark
