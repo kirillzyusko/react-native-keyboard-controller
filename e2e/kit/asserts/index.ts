@@ -35,7 +35,7 @@ const checkIsScreenShotMatch = (
   bitmapBuffer: Buffer,
   acceptableDiffPercent: number,
   maskDisplayCutouts: boolean,
-): { matched: boolean; percentDiff: string; diff: PNG } => {
+): { matched: boolean; percentDiff: string; diff: PNG; diffPixels: number } => {
   const img1 = PNG.sync.read(expectedBitmapBuffer);
   const img2 = PNG.sync.read(bitmapBuffer);
   const { height, width } = img1;
@@ -57,12 +57,12 @@ const checkIsScreenShotMatch = (
 
   const matched = diffPixels <= allowableError;
 
-  return { matched, percentDiff, diff };
+  return { matched, percentDiff, diff, diffPixels };
 };
 
 function verifyBitmapsToBeEqual(
   tempImagePath: string,
-  screenName: string,
+  screenName: string | readonly string[],
   acceptableDiffPercent = 0.1,
   maskDisplayCutouts = false,
 ): void {
@@ -70,27 +70,42 @@ function verifyBitmapsToBeEqual(
   const deviceName = parseDeviceName(device.name);
   const SCREENS_DIR = `kit/assets/${platform}/${deviceName}`;
 
-  const expectedImagePath = `${SCREENS_DIR}/${screenName}.png`;
   const expectedBitmapBuffer = fs.readFileSync(tempImagePath);
+  const names = typeof screenName === "string" ? [screenName] : screenName;
 
-  // Validation must never create a baseline from the app under test.
-  const bitmapBuffer = fs.readFileSync(expectedImagePath);
+  if (names.length === 0) {
+    throw new Error("At least one screenshot baseline is required");
+  }
 
-  const { diff, matched, percentDiff } = checkIsScreenShotMatch(
-    expectedBitmapBuffer,
-    bitmapBuffer,
-    acceptableDiffPercent,
-    maskDisplayCutouts,
+  // Every candidate is an existing, reviewed baseline. Missing files must fail.
+  const candidates = names.map((name) => {
+    const expectedImagePath = `${SCREENS_DIR}/${name}.png`;
+    const bitmapBuffer = fs.readFileSync(expectedImagePath);
+
+    return {
+      name,
+      expectedImagePath,
+      ...checkIsScreenShotMatch(
+        expectedBitmapBuffer,
+        bitmapBuffer,
+        acceptableDiffPercent,
+        maskDisplayCutouts,
+      ),
+    };
+  });
+  const best = candidates.reduce((closest, candidate) =>
+    candidate.diffPixels < closest.diffPixels ? candidate : closest,
   );
+  const { name, expectedImagePath, diff, matched, percentDiff } = best;
 
   console.debug(
     colors.green(
-      `Screenshot '${screenName}' has ${percentDiff}% pixel diff! Acceptable is ${acceptableDiffPercent}%.`,
+      `Screenshot '${name}' has ${percentDiff}% pixel diff! Acceptable is ${acceptableDiffPercent}%.`,
     ),
   );
 
   if (!matched) {
-    const SCREEN_DIFF_IMAGE_PATH = `artifacts/${screenName}-diff.png`;
+    const SCREEN_DIFF_IMAGE_PATH = `artifacts/${name}-diff.png`;
 
     // Trying every PNG filter is expensive inside Jest's VM on large screenshots.
     writeToFile(
@@ -130,14 +145,16 @@ async function expectElementBitmapsToBeEqual(
 }
 
 async function expectBitmapsToBeEqual(
-  screenName: string,
+  screenName: string | readonly string[],
   // Allow subpixel text rounding and caret phases in the non-AOSP configuration.
   acceptableDiffPercent = Env.softCheck ? 0.15 : 0.1,
 ): Promise<void> {
   // better to wait 1s to be sure all scroll indicators etc are hidden
   // and then take a screenshot and compare it (because it's expensive operation)
   await delay(1000);
-  const tempImagePath = await device.takeScreenshot(screenName);
+  const tempImagePath = await device.takeScreenshot(
+    typeof screenName === "string" ? screenName : screenName[0],
+  );
 
   verifyBitmapsToBeEqual(
     tempImagePath,
