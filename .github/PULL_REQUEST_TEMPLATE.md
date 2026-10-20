@@ -1,6 +1,6 @@
 ## 📜 Description
 
-<!-- Describe your changes in detail -->
+<!-- Describe your changes in detail. For bug fixes, include runnable reproduction code or a reference, setup commands, exact steps, and before-and-after results. -->
 
 ## 💡 Motivation and Context
 
@@ -30,14 +30,15 @@
 
 ## 🤔 How Has This Been Tested?
 
-<!-- Please describe in detail how you tested your changes. -->
-<!-- Include details of your testing environment, and the tests you ran to -->
-<!-- see how your change affects other areas of the code, etc. -->
+<!-- List only the devices used for verification: device model, OS version, and whether testing was manual or performed by an agent. Identify simulators or emulators as such. -->
+<!-- Format: Device model (OS version/manual or agent). If no device verification was performed, say so and explain why. -->
+<!-- Do not list unit-test, lint, type-check, or other CI results here; CI reports those checks. -->
 
 ## 📸 Screenshots (if appropriate):
 
-<!-- Add screenshots/video if needed -->
-<!-- That would be highly appreciated if you can add how it looked before and after your changes -->
+<!-- Always attach before-and-after screenshots captured during the verification listed above to visually confirm the changes. Use the same scenario and device for both, and label each attachment with before/after, the device model, and OS version. -->
+<!-- Recordings may supplement the screenshots and must also show before and after. -->
+<!-- For optimizations, also attach profiler sessions from before and after the change, captured using the same workload, device, and profiling configuration. -->
 
 ## 📝 Checklist
 
