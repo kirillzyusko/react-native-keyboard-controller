@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { PixelRatio, Platform, StyleSheet } from "react-native";
 
 export const TEXT_INPUT_HEIGHT = 50;
 
@@ -18,9 +18,13 @@ export default StyleSheet.create({
   },
   input: {
     flex: 1,
+    minHeight:
+      Platform.OS === "android"
+        ? PixelRatio.roundToNearestPixel(61.7)
+        : TEXT_INPUT_HEIGHT,
     margin: MARGIN,
     marginBottom: 0,
-    padding: MARGIN,
+    padding: Platform.OS === "android" ? MARGIN - 1 : MARGIN,
     borderRadius: 99,
     borderWidth: 1,
     borderColor: "#BCBCBC",

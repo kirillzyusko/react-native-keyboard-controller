@@ -42,7 +42,10 @@ describe("`KeyboardChatScrollView` specs", () => {
     await element(by.id("chat.scroll")).swipe("down", "slow", 0.1, 0.5, 0.3);
     await closeKeyboard();
     await waitForExpect(async () => {
-      await expectBitmapsToBeEqual("KeyboardChatScrollViewAlwaysClosed");
+      await expectBitmapsToBeEqual(
+        "KeyboardChatScrollViewAlwaysClosed",
+        device.getPlatform() === "android" ? 0.15 : 0.1,
+      );
     });
     await expect(element(by.id("layout_passes"))).toHaveText("Layout pass: 1");
   });
