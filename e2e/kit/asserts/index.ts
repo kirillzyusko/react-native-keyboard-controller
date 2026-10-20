@@ -6,8 +6,10 @@ import pixelmatch from "pixelmatch";
 import { PNG } from "pngjs";
 
 import { delay } from "../helpers";
+import { getDevicePreference } from "../helpers/env/devicePreferences";
 import parseDeviceName from "../utils/parseDeviceName";
 
+import { cropScreenshot } from "./cropScreenshot";
 import { applyDisplayMask } from "./displayMask";
 
 const getDirFromFilePath = (path: string) =>
@@ -107,7 +109,22 @@ async function expectElementBitmapsToBeEqual(
   bitmapName: string,
   acceptableDiffPercent = 0.1,
 ): Promise<void> {
-  const imagePath = await element(by.id(elementId)).takeScreenshot(bitmapName);
+  const attributes = await element(by.id(elementId)).getAttributes();
+
+  if (!("frame" in attributes)) {
+    throw new Error(`No screen frame for element ${elementId}`);
+  }
+  // A software draw of a Fabric view can omit its hardware-rendered children.
+  const imagePath = await device.takeScreenshot(bitmapName);
+  const screen = PNG.sync.read(fs.readFileSync(imagePath));
+  const preference = getDevicePreference();
+  const logicalWidth =
+    screen.width > screen.height ? preference.height : preference.width;
+  const scale =
+    device.getPlatform() === "ios" ? screen.width / logicalWidth : 1;
+  const crop = cropScreenshot(screen, attributes.frame, scale);
+
+  fs.writeFileSync(imagePath, PNG.sync.write(crop, { filterType: 0 }));
 
   verifyBitmapsToBeEqual(imagePath, bitmapName, acceptableDiffPercent);
 }
