@@ -27,7 +27,11 @@ describe("`KeyboardAvoidingView` specification", () => {
   it("should have expected UI when keyboard opened - package/padding", async () => {
     await waitAndTap("keyboard_avoiding_view.username");
     await waitForExpect(async () => {
-      await expectBitmapsToBeEqual("AvoidingViewPackagePaddingOpened");
+      // A one-pixel input border, caret and IME switch icon vary on Android.
+      await expectBitmapsToBeEqual(
+        "AvoidingViewPackagePaddingOpened",
+        device.getPlatform() === "android" ? 0.15 : 0.1,
+      );
     });
   });
 
@@ -60,7 +64,10 @@ describe("`KeyboardAvoidingView` specification", () => {
   it("should have expected UI when keyboard opened - RN/padding", async () => {
     await waitAndTap("keyboard_avoiding_view.username");
     await waitForExpect(async () => {
-      await expectBitmapsToBeEqual("AvoidingViewRNPaddingOpened");
+      await expectBitmapsToBeEqual(
+        "AvoidingViewRNPaddingOpened",
+        device.getPlatform() === "android" ? 0.15 : 0.1,
+      );
     });
   });
 

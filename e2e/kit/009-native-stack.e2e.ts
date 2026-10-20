@@ -21,14 +21,21 @@ describe("Native stack", () => {
   it("should have expected state when keyboard is opened", async () => {
     await waitAndTap("keyboard_animation_text_input");
     await waitForExpect(async () => {
-      await expectBitmapsToBeEqual("NativeStackKeyboardIsShown");
+      // Emulator status text and the IME switch icon vary with system setup.
+      await expectBitmapsToBeEqual(
+        "NativeStackKeyboardIsShown",
+        device.getPlatform() === "ios" ? 0.1 : 0.15,
+      );
     });
   });
 
   it("should have expected state when emoji keyboard is opened", async () => {
     await switchToEmojiKeyboard();
     await waitForExpect(async () => {
-      await expectBitmapsToBeEqual("NativeStackEmojiKeyboard");
+      await expectBitmapsToBeEqual(
+        "NativeStackEmojiKeyboard",
+        device.getPlatform() === "ios" ? 0.1 : 0.15,
+      );
     });
   });
 
