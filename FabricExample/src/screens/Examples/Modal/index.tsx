@@ -1,6 +1,9 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { Button, Modal, StyleSheet, View } from "react-native";
-import { useKeyboardContext } from "react-native-keyboard-controller";
+import {
+  KeyboardController,
+  useKeyboardContext,
+} from "react-native-keyboard-controller";
 
 import KeyboardAnimationTemplate from "../../../components/KeyboardAnimation";
 
@@ -13,14 +16,16 @@ const useKeyboardAnimation = () => {
 
 export default function ModalExample() {
   const [modalVisible, setModalVisible] = useState(false);
+  const openModal = useCallback(async () => {
+    // Clear the underlying input before transferring window focus to the modal.
+    // Otherwise Android can reopen its keyboard when the modal is dismissed.
+    await KeyboardController.dismiss();
+    setModalVisible(true);
+  }, []);
 
   return (
     <View style={styles.container}>
-      <Button
-        testID="show_button"
-        title={"Show Modal"}
-        onPress={() => setModalVisible(true)}
-      />
+      <Button testID="show_button" title={"Show Modal"} onPress={openModal} />
 
       <View style={styles.animationContainer}>
         <KeyboardAnimationTemplate />
