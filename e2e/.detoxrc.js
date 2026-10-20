@@ -26,6 +26,7 @@ module.exports = {
     "example.ios.release": {
       type: "ios.app",
       binaryPath:
+        process.env.EXAMPLE_IOS_BINARY_PATH ||
         "../example/ios/build/Build/Products/Release-iphonesimulator/KeyboardControllerExample.app",
       build:
         "xcodebuild CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ -workspace ../example/ios/KeyboardControllerExample.xcworkspace -scheme KeyboardControllerExample -configuration Release -sdk iphonesimulator -derivedDataPath ../example/ios/build IPHONEOS_DEPLOYMENT_TARGET=15.1",
@@ -33,6 +34,7 @@ module.exports = {
     "example-fabric.ios.release": {
       type: "ios.app",
       binaryPath:
+        process.env.FABRIC_IOS_BINARY_PATH ||
         "../FabricExample/ios/build/Build/Products/Release-iphonesimulator/KeyboardControllerFabricExample.app",
       build:
         "xcodebuild CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ -workspace ../FabricExample/ios/KeyboardControllerFabricExample.xcworkspace -scheme KeyboardControllerFabricExample -configuration Release -sdk iphonesimulator -derivedDataPath ../FabricExample/ios/build IPHONEOS_DEPLOYMENT_TARGET=15.1",
