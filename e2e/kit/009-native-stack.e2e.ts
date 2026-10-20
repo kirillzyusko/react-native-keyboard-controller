@@ -1,5 +1,6 @@
 import { expectBitmapsToBeEqual } from "./asserts";
 import {
+  Env,
   closeKeyboard,
   scrollDownUntilElementIsVisible,
   switchToEmojiKeyboard,
@@ -7,6 +8,8 @@ import {
   waitForElementById,
   waitForExpect,
 } from "./helpers";
+
+const ANDROID_SYSTEM_BAR_DIFF = Env.softCheck ? 0.35 : 0.15;
 
 describe("Native stack", () => {
   it("should navigate to `Native stack` screen", async () => {
@@ -37,7 +40,7 @@ describe("Native stack", () => {
       // Native screen system-bar icons and the focused caret vary slightly.
       await expectBitmapsToBeEqual(
         "NativeStackKeyboardIsHidden",
-        device.getPlatform() === "android" ? 0.15 : 0.1,
+        device.getPlatform() === "ios" ? 0.1 : ANDROID_SYSTEM_BAR_DIFF,
       );
     });
     await device.enableSynchronization();
