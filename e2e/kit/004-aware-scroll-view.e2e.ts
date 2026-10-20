@@ -114,9 +114,9 @@ describe("AwareScrollView test cases", () => {
     await element(by.id("aware_scroll_view_container")).scroll(40, "up");
 
     if (device.getPlatform() === "ios") {
-      // Paper can focus the first input during the scroll gesture. Make that
-      // setup explicit, then move the focused input down to exercise typing.
-      await waitAndTap("TextInput#0");
+      // Make the focus transition explicit. Input #2 remains visible on smaller
+      // displays where input #0 can sit behind the navigation bar.
+      await waitAndTap("TextInput#2");
       scrollOffsetBeforeTyping = await scrollViewOffset();
 
       await waitAndTap("TextInput#4");
