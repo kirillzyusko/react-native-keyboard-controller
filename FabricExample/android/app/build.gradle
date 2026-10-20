@@ -56,6 +56,12 @@ react {
     autolinkLibrariesWithApp()
 }
 
+// The linked library lives outside the app root watched by the bundle task.
+tasks.withType(com.facebook.react.tasks.BundleHermesCTask).configureEach {
+    inputs.dir(rootProject.file("../../src")).withPathSensitivity(PathSensitivity.RELATIVE)
+    inputs.file(rootProject.file("../../package.json")).withPathSensitivity(PathSensitivity.RELATIVE)
+}
+
 /**
  * Set this to true to create four separate APKs instead of one,
  * one for each native architecture. This is useful if you don't
