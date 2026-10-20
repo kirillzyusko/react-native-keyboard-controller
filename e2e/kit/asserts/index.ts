@@ -11,6 +11,7 @@ import parseDeviceName from "../utils/parseDeviceName";
 
 import { cropScreenshot } from "./cropScreenshot";
 import { applyDisplayMask } from "./displayMask";
+import { isElementScreenshotUsable } from "./elementScreenshot";
 import { normalizeScreenshotOrientation } from "./normalizeScreenshotOrientation";
 
 const getDirFromFilePath = (path: string) =>
@@ -128,7 +129,22 @@ async function expectElementBitmapsToBeEqual(
   bitmapName: string,
   acceptableDiffPercent = 0.1,
 ): Promise<void> {
-  const attributes = await element(by.id(elementId)).getAttributes();
+  const view = element(by.id(elementId));
+
+  if (device.getPlatform() === "ios") {
+    const imagePath = await view.takeScreenshot(bitmapName);
+    const native = PNG.sync.read(fs.readFileSync(imagePath));
+
+    // Native capture preserves rounded corners and subpixel text rendering.
+    // Older-SDK Fabric builds can instead return a translucent placeholder.
+    if (isElementScreenshotUsable(native)) {
+      verifyBitmapsToBeEqual(imagePath, bitmapName, acceptableDiffPercent);
+
+      return;
+    }
+  }
+
+  const attributes = await view.getAttributes();
 
   if (!("frame" in attributes)) {
     throw new Error(`No screen frame for element ${elementId}`);
