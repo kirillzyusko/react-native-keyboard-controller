@@ -82,8 +82,9 @@ jobs:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: ${{ runner.os }}-e2e-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          key: ${{ runner.os }}-${{ matrix.app.script }}-e2e-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
+            ${{ runner.os }}-${{ matrix.app.script }}-e2e-gradle-
             ${{ runner.os }}-e2e-gradle-
       - name: Build app
         working-directory: e2e
