@@ -1,6 +1,6 @@
 import { PNG } from "pngjs";
 
-/** Newer simctl versions rotate landscape captures; reviewed baselines use the portrait pixel buffer. */
+/** Newer Xcode versions rotate landscape captures; reviewed baselines use the portrait pixel buffer. */
 export function normalizeScreenshotOrientation(
   captured: PNG,
   expected: { width: number; height: number },

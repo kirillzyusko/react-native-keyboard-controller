@@ -3,7 +3,7 @@ import { PNG } from "pngjs";
 
 import { normalizeScreenshotOrientation } from "./normalizeScreenshotOrientation";
 
-it("rotates a landscape simctl buffer clockwise without changing pixels or alpha", () => {
+it("rotates a landscape screenshot buffer clockwise without changing pixels or alpha", () => {
   const capture = new PNG({ width: 3, height: 2 });
 
   for (let pixel = 0; pixel < 6; pixel += 1) {
