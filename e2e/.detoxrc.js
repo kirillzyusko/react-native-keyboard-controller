@@ -1,5 +1,6 @@
 const androidArchitectures =
-  process.env.REACT_NATIVE_ARCHITECTURES || "arm64-v8a";
+  process.env.REACT_NATIVE_ARCHITECTURES ||
+  (process.env.CI ? "x86_64" : "arm64-v8a");
 
 /** @type {Detox.DetoxConfig} */
 module.exports = {

@@ -6,9 +6,6 @@ on:
       - "package.json"
       - "android/**"
       - "example/**"
-      - "FabricExample/**"
-      - "common/**"
-      - "cpp/**"
       - "e2e/**"
       - "src/**"
   push:
@@ -19,9 +16,6 @@ on:
       - "package.json"
       - "android/**"
       - "example/**"
-      - "FabricExample/**"
-      - "common/**"
-      - "cpp/**"
       - "e2e/**"
       - "src/**"
 
@@ -30,16 +24,10 @@ jobs:
     name: 🏗️ Build E2E apk
     runs-on: ubuntu-latest
     env:
-      WORKING_DIRECTORY: ${{ matrix.app.directory }}
-      REACT_NATIVE_ARCHITECTURES: x86_64
+      WORKING_DIRECTORY: example
     concurrency:
-      group: android-e2e-build-${{ matrix.app.script }}-${{ github.ref }}
+      group: android-e2e-${{ github.ref }}
       cancel-in-progress: true
-    strategy:
-      matrix:
-        app:
-          - { directory: example, script: example }
-          - { directory: FabricExample, script: example-fabric }
     steps:
       - uses: actions/checkout@v4
       - name: Free Disk Space (Ubuntu)
@@ -82,33 +70,31 @@ jobs:
           path: |
             ~/.gradle/caches
             ~/.gradle/wrapper
-          key: ${{ runner.os }}-${{ matrix.app.script }}-e2e-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          key: ${{ runner.os }}-e2e-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
           restore-keys: |
-            ${{ runner.os }}-${{ matrix.app.script }}-e2e-gradle-
             ${{ runner.os }}-e2e-gradle-
+      - name: Set app active arch
+        run: sed -i.bak 's/reactNativeArchitectures=.*/reactNativeArchitectures=x86_64/' example/android/gradle.properties
       - name: Build app
         working-directory: e2e
-        run: yarn build-${{ matrix.app.script }}:android
+        run: yarn build-example:android
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: android-e2e-apk-${{ matrix.app.script }}
-          path: ${{ env.WORKING_DIRECTORY }}/android/app/build/outputs/apk/**
+          name: android-e2e-apk
+          path: example/android/app/build/outputs/apk/**
 
   e2e-test:
     name: ⚙️ Automated test cases
     runs-on: ubuntu-latest
     timeout-minutes: 90
     env:
-      WORKING_DIRECTORY: ${{ matrix.app.directory }}
+      WORKING_DIRECTORY: example
     concurrency:
-      group: android-e2e-${{ matrix.app.script }}-${{ matrix.devices.api }}-${{ github.ref }}
+      group: android-e2e-${{ matrix.devices.api }}-${{ github.ref }}
       cancel-in-progress: true
     strategy:
       matrix:
-        app:
-          - { directory: example, script: example }
-          - { directory: FabricExample, script: example-fabric }
         devices:
           [
             { api: 28, target: default, soft-check: false },
@@ -127,8 +113,8 @@ jobs:
       - name: Download a single artifact
         uses: actions/download-artifact@v4
         with:
-          name: android-e2e-apk-${{ matrix.app.script }}
-          path: ${{ env.WORKING_DIRECTORY }}/android/app/build/outputs/apk/
+          name: android-e2e-apk
+          path: example/android/app/build/outputs/apk/
       - uses: actions/setup-node@v4
         with:
           node-version: 22.x
@@ -178,10 +164,9 @@ jobs:
           disable-animations: false
           avd-name: e2e_emulator_${{ matrix.devices.api }}
           arch: x86_64
-          script: SOFT_CHECK=${{ matrix.devices.soft-check }} yarn test-${{ matrix.app.script }}:android-${{ matrix.devices.api }}
+          script: SOFT_CHECK=${{ matrix.devices.soft-check }} yarn test-example:android-${{ matrix.devices.api }}
       - uses: actions/upload-artifact@v4
-        if: ${{ always() }}
+        if: ${{ failure() }}
         with:
-          name: android-fail-screen-shoots-${{ matrix.app.script }}-${{ matrix.devices.api }}
+          name: android-fail-screen-shoots
           path: e2e/artifacts
-          if-no-files-found: ignore
