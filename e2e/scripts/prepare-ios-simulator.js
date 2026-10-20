@@ -30,7 +30,13 @@ const keyboardPreference = (...args) =>
   );
 
 keyboardPreference("KeyboardLastUsed", keyboards[0]);
-keyboardPreference("KeyboardsCurrentAndNext", "-array", ...keyboards);
+// The cache stores the current keyboard followed by the cycling order.
+keyboardPreference(
+  "KeyboardsCurrentAndNext",
+  "-array",
+  keyboards[0],
+  ...keyboards,
+);
 keyboardPreference(
   "KeyboardLastUsedForLanguage",
   "-dict",
@@ -40,8 +46,9 @@ keyboardPreference(
   keyboards[0],
   "NonASCII",
   keyboards[1],
+  "emoji",
+  keyboards[1],
 );
-keyboardPreference("HardwareKeyboardLastSeen", "-bool", "NO");
 execFileSync("defaults", [
   "write",
   "com.apple.iphonesimulator",
