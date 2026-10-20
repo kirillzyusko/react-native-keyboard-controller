@@ -1,7 +1,9 @@
+import { expect as jestExpect } from "@jest/globals";
 import { expect } from "detox";
 
 import { expectBitmapsToBeEqual } from "./asserts";
 import {
+  Env,
   scrollDownUntilElementIsVisible,
   waitAndReplace,
   waitAndTap,
@@ -12,6 +14,20 @@ import {
 
 const closeKeyboard = async () => {
   await waitAndTap("layout_passes");
+};
+
+const inputTop = async () => {
+  const attributes = await element(by.id("chat.input")).getAttributes();
+
+  if (!("frame" in attributes)) {
+    throw new Error("Chat input did not expose its screen frame");
+  }
+
+  return attributes.frame.y;
+};
+
+const expectKeyboardDismissed = async (closedTop: number) => {
+  jestExpect(await inputTop()).toBeCloseTo(closedTop, 0);
 };
 
 describe("`KeyboardChatScrollView` specs", () => {
@@ -64,9 +80,18 @@ describe("`KeyboardChatScrollView` specs", () => {
   });
 
   it("should close keyboard interactively", async () => {
+    const closedTop = await inputTop();
+
     await waitAndTap("chat.input");
     await element(by.id("chat.scroll")).swipe("up", "fast", 0.2, 0.5, 0.2);
     await element(by.id("chat.scroll")).swipe("down", "fast", 0.4, 0.5, 0.2);
+    await waitForExpect(() => expectKeyboardDismissed(closedTop));
+
+    if (device.getPlatform() === "android" && Env.softCheck) {
+      // API 31 fling displacement differs between renderers. Dismissal is
+      // verified above; reuse the reviewed top-of-list viewport for the image.
+      await element(by.id("chat.scroll")).scrollTo("top");
+    }
     await waitForExpect(async () => {
       await expectBitmapsToBeEqual(
         "KeyboardChatScrollViewAlwaysClosedInteractively",
