@@ -107,8 +107,10 @@ When you're sending a pull request:
 - Prefer small pull requests focused on one change.
 - Verify that linters and tests are passing.
 - Review the documentation to make sure it looks good.
-- Follow the pull request template when opening a pull request.
-- For a bug fix, include runnable reproduction code: a minimal React Native project, a focused example change, a regression test that fails without the fix, or a self-contained snippet that reproduces the bug when pasted into `example/` or `FabricExample/` without extra dependencies. Provide exact steps and confirm the bug before and after the fix.
+- Follow the pull request template when opening a pull request. Preserve its existing headings and section order.
+- For a bug fix, include runnable reproduction code: a minimal React Native project, a focused example change, a regression test that fails without the fix, or a self-contained snippet that reproduces the bug when pasted into `example/` or `FabricExample/` without extra dependencies. Put the reproduction reference or code, setup commands, exact steps, and before-and-after results in **📜 Description**.
+- In **🤔 How Has This Been Tested?**, list only the device models, their OS versions, and whether you verified the changes manually or through an agent. Identify simulators or emulators as such. Leave unit-test, lint, type-check, and other CI results to CI. If no device verification was performed, say so and explain why.
+- For changes with visible behavior, attach screenshots or recordings from that device verification in **📸 Screenshots (if appropriate):** to visually confirm the changes. Label each attachment with the device and OS version. For bug fixes, show the same reproduction before and after the fix.
 - If you cannot provide a runnable reproduction, open a bug report with the evidence and steps you have. You can share a proposed patch in **Additional context** and note that it is unverified.
 - You may submit a bug-fix pull request directly when it includes that reproduction. For larger API changes or new features, discuss the proposal with maintainers in an issue before implementing it.
 

@@ -2,6 +2,8 @@
 
 These instructions apply to the entire repository. Follow direct user or maintainer instructions when they are more specific.
 
+- Preserve the existing issue and pull request template structure. Do not add, remove, rename, or reorder sections to accommodate reproduction or verification details. Do not modify template files unless explicitly requested.
+
 ## GitHub issues
 
 - Create a GitHub issue only when the user explicitly asks for one. Diagnosing a problem, discussing a feature, or drafting an issue does not authorize publishing it.
@@ -17,12 +19,14 @@ These instructions apply to the entire repository. Follow direct user or maintai
 
 ### Bug report evidence
 
+- For every bug report or bug-fix request, check whether a runnable reproduction is provided. If it is missing, explicitly ask the reporter for one. If it is already provided, use and verify it instead of requesting it again.
+- Request a minimal runnable project, a focused example change, or a self-contained snippet with the exact target file, setup commands, and interaction steps.
 - Try to prepare and verify a minimal runnable reproduction. It may be:
   - A bare React Native project containing only the dependencies, configuration, and code needed to reproduce the bug.
   - A focused fork of this repository with the reproduction added to the corresponding `example/` or `FabricExample/` application.
   - A self-contained snippet that can be pasted into `example/` or `FabricExample/` and reproduces the bug without extra dependencies.
-- If you have a reproduction, remove unrelated code and private data, run it from a clean setup, and document the exact steps. In **Reproduction code**, link the project or fork at a specific commit, or include the snippet and where to paste it.
-- If a runnable reproduction is unavailable, say why in **Reproduction code**. Include all known symptoms, attempted steps, logs, environment details, and relevant evidence in the report. Put any proposed patch in **Additional context** and label it unverified. Distinguish observed facts from hypotheses.
+- If you have a reproduction, remove unrelated code and private data, run it from a clean setup, and document the exact steps. Put snippets and their target files in **Code snippet**, repository links and the relevant branch or commit in **Repo for reproducing**, and setup commands and interaction steps in **To Reproduce**.
+- If a runnable reproduction is unavailable, say why in **Repo for reproducing**. Include all known symptoms, attempted steps, logs, environment details, and relevant evidence in the report. Put any proposed patch in **Additional context** and label it unverified. Distinguish observed facts from hypotheses.
 
 ### Issue preflight
 
@@ -68,9 +72,11 @@ For native or example-app changes, also run the narrowest applicable platform bu
 ## Pull requests and commits
 
 - Follow `.github/PULL_REQUEST_TEMPLATE.md` and retain all applicable sections when preparing a pull request.
-- Keep pull requests small and focused. Describe how the change was tested and include screenshots or recordings for visible UI changes when appropriate.
+- Keep pull requests small and focused.
 - For a bug-fix pull request, include runnable reproduction code: a minimal React Native project, a focused example change, a regression test that fails without the fix, or a self-contained snippet that reproduces the bug when pasted into `example/` or `FabricExample/` without extra dependencies.
-- Verify the reproduction against the unfixed code, then run the same steps or test with the fix. In the pull request, link to the reproduction at a specific commit, identify the files included in the pull request, or include the snippet and where to paste it. Document setup commands, exact interaction steps, the affected platform and versions, the observed and expected behavior, and the before-and-after results.
+- Verify the reproduction against the unfixed code, then run the same steps or test with the fix. In **📜 Description**, link to the reproduction at a specific commit, identify the files included in the pull request, or include the snippet and where to paste it. Document setup commands, exact interaction steps, the affected platform and versions, the observed and expected behavior, and the before-and-after results there.
+- In **🤔 How Has This Been Tested?**, include only a list of device models, their OS versions, and whether verification was performed manually or by an agent. Identify simulators or emulators as such. Do not list unit-test, lint, type-check, or other CI results; CI reports those checks. If no device verification was performed, state that and explain why.
+- For changes with visible behavior, attach screenshots or recordings from the device verification listed above in **📸 Screenshots (if appropriate):** as visual confirmation of the changes. Label the evidence with the device and OS version. For bug fixes, show the same reproduction before and after the fix.
 - Do not open a bug-fix pull request without a verified runnable reproduction. If it is unavailable, recommend a bug report with the known evidence and any proposed patch in **Additional context**; create the issue only if the user explicitly asks. Do not claim the fix is verified.
 - Use Conventional Commit types documented in `CONTRIBUTING.md`: `fix`, `feat`, `refactor`, `docs`, `test`, or `chore`.
 - Do not commit, push, open a pull request, publish a release, or create an issue unless the user explicitly asks for that action.

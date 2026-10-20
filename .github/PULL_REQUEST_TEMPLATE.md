@@ -1,6 +1,6 @@
 ## 📜 Description
 
-<!-- Describe your changes in detail -->
+<!-- Describe your changes in detail. For bug fixes, include runnable reproduction code or a reference, setup commands, exact steps, and before-and-after results. -->
 
 ## 💡 Motivation and Context
 
@@ -28,26 +28,16 @@
 -
 -
 
-## 🧪 Bug Reproduction (bug fixes only)
-
-<!-- For other changes, write "Not applicable". For a bug fix, provide a minimal project, focused example change, failing regression test, or self-contained snippet that reproduces the bug when pasted into example/ or FabricExample/ without extra dependencies. -->
-
-- Reproduction code (link to a specific commit, paths in this PR, or paste the snippet and name its target file):
-- Setup commands and exact steps to reproduce:
-- Environment (platform/device, OS, React Native version, architecture, JS engine, library version):
-- Before the fix (observed behavior; confirm the reproduction fails):
-- After the fix (expected behavior; confirm the same reproduction passes):
-
 ## 🤔 How Has This Been Tested?
 
-<!-- Please describe in detail how you tested your changes. -->
-<!-- Include details of your testing environment, and the tests you ran to -->
-<!-- see how your change affects other areas of the code, etc. -->
+<!-- List only the devices used for verification: device model, OS version, and whether testing was manual or performed by an agent. Identify simulators or emulators as such. -->
+<!-- Format: Device model — OS version — manual / agent. If no device verification was performed, say so and explain why. -->
+<!-- Do not list unit-test, lint, type-check, or other CI results here; CI reports those checks. -->
 
 ## 📸 Screenshots (if appropriate):
 
-<!-- Add screenshots/video if needed -->
-<!-- That would be highly appreciated if you can add how it looked before and after your changes -->
+<!-- For changes with visible behavior, attach screenshots or recordings captured during the device verification listed above to visually confirm the changes. Label each attachment with the device and OS version. -->
+<!-- For bug fixes, show the same reproduction before and after the fix. -->
 
 ## 📝 Checklist
 
