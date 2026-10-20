@@ -1,5 +1,11 @@
-import React from "react";
-import { StyleSheet, Text, TextInput as TextInputRN } from "react-native";
+import React, { useState } from "react";
+import {
+  PixelRatio,
+  Platform,
+  StyleSheet,
+  Text,
+  TextInput as TextInputRN,
+} from "react-native";
 
 import type { TextInputProps } from "react-native";
 
@@ -9,6 +15,8 @@ type CustomTextInputProps = {
 
 const TextInput = (props: CustomTextInputProps) => {
   const { title, ...rest } = props;
+  const [contentHeight, setContentHeight] = useState<number>();
+  const autoGrow = Platform.OS === "android" && rest.style === undefined;
 
   return (
     <>
@@ -17,12 +25,27 @@ const TextInput = (props: CustomTextInputProps) => {
         multiline
         numberOfLines={10}
         placeholderTextColor="#6c6c6c"
-        style={[styles.container, rest.editable === false && styles.disabled]}
         testID={props.placeholder}
-        {...props}
+        {...rest}
         placeholder={`${props.placeholder} (${
           props.keyboardType === "default" ? "text" : "numeric"
         })`}
+        style={[
+          rest.style ?? [
+            styles.container,
+            rest.editable === false && styles.disabled,
+          ],
+          autoGrow && contentHeight !== undefined && { height: contentHeight },
+        ]}
+        onContentSizeChange={(event) => {
+          if (autoGrow) {
+            // Paper measures its borders outside the native text padding.
+            setContentHeight(
+              event.nativeEvent.contentSize.height + 4,
+            );
+          }
+          rest.onContentSizeChange?.(event);
+        }}
       />
     </>
   );
@@ -37,7 +60,11 @@ const styles = StyleSheet.create({
   },
   container: {
     width: "100%",
-    minHeight: 50,
+    // Paper reserves two lines on Android; Fabric measures only the current text.
+    minHeight:
+      Platform.OS === "android"
+        ? PixelRatio.roundToNearestPixel(56.75) + 4
+        : 50,
     maxHeight: 200,
     marginBottom: 50,
     borderColor: "black",
@@ -45,7 +72,8 @@ const styles = StyleSheet.create({
     marginRight: 160,
     borderRadius: 10,
     color: "black",
-    paddingHorizontal: 12,
+    paddingHorizontal: Platform.OS === "android" ? 10 : 12,
+    ...Platform.select({ android: { paddingTop: 8, paddingBottom: 9.1 } }),
   },
   disabled: {
     opacity: 0.5,

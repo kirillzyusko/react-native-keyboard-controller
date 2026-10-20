@@ -131,7 +131,8 @@ describe("AwareScrollView test cases", () => {
     await waitForExpect(async () => {
       await expectBitmapsToBeEqual(
         "AwareScrollViewKeyboardClosedWithoutBackScroll",
-        BLINKING_CURSOR,
+        // Retained fractional offsets can round one pixel apart on Android.
+        device.getPlatform() === "android" ? 0.5 : BLINKING_CURSOR,
       );
     });
   });
@@ -151,7 +152,7 @@ describe("AwareScrollView test cases", () => {
     await waitForExpect(async () => {
       await expectBitmapsToBeEqual(
         "AwareScrollViewDisabledStateKeyboardClosed",
-        BLINKING_CURSOR,
+        device.getPlatform() === "android" ? 0.5 : BLINKING_CURSOR,
       );
     });
   });
