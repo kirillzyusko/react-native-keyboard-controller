@@ -1,3 +1,4 @@
+import { expect, it } from "@jest/globals";
 import { PNG } from "pngjs";
 
 import { cropScreenshot } from "./cropScreenshot";
