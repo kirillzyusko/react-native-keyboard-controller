@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Platform, StyleSheet, Text, View } from "react-native";
+import { PixelRatio, Platform, StyleSheet, Text, View } from "react-native";
 
 import type { MessageProps } from "../../../../components/Message/types";
 
@@ -16,17 +16,19 @@ export default function Message({ text, sender }: MessageProps) {
           styles.message,
           textWidth !== undefined && { width: textWidth },
         ]}
-        onTextLayout={
-          Platform.OS === "android"
-            ? ({ nativeEvent }) => {
-                setTextWidth(
-                  Math.ceil(
-                    Math.max(...nativeEvent.lines.map(({ width }) => width)),
-                  ),
-                );
-              }
-            : undefined
-        }
+        onTextLayout={({ nativeEvent }) => {
+          const width = Math.max(
+            ...nativeEvent.lines.map((line) => line.width),
+          );
+
+          if (Platform.OS === "android") {
+            setTextWidth(Math.ceil(width));
+          } else if (nativeEvent.lines.length > 1) {
+            const scale = PixelRatio.get();
+
+            setTextWidth(Math.ceil(width * scale) / scale);
+          }
+        }}
       >
         {text}
       </Text>
@@ -49,7 +51,7 @@ const styles = StyleSheet.create({
     ...container,
   },
   recipientContainer: {
-    alignSelf: Platform.OS === "android" ? "flex-start" : undefined,
+    alignSelf: "flex-start",
     backgroundColor: "#64D2FF",
     ...container,
   },

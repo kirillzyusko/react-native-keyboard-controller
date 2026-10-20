@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { PixelRatio, Platform, Text, View } from "react-native";
+import { PixelRatio, Text, View } from "react-native";
 
 import styles from "./styles";
 
@@ -15,20 +15,16 @@ export default function Message({ text, sender }: MessageProps) {
           styles.message,
           textWidth !== undefined && { width: textWidth },
         ]}
-        onTextLayout={
-          Platform.OS === "android"
-            ? ({ nativeEvent }) => {
-                if (nativeEvent.lines.length > 1) {
-                  const scale = PixelRatio.get();
-                  const width = Math.max(
-                    ...nativeEvent.lines.map((line) => line.width),
-                  );
+        onTextLayout={({ nativeEvent }) => {
+          if (nativeEvent.lines.length > 1) {
+            const scale = PixelRatio.get();
+            const width = Math.max(
+              ...nativeEvent.lines.map((line) => line.width),
+            );
 
-                  setTextWidth(Math.ceil(width * scale) / scale);
-                }
-              }
-            : undefined
-        }
+            setTextWidth(Math.ceil(width * scale) / scale);
+          }
+        }}
       >
         {text}
       </Text>
