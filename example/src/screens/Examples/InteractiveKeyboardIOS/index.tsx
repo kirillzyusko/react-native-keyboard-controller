@@ -1,5 +1,12 @@
 import React, { useCallback, useRef, useState } from "react";
-import { TextInput } from "react-native";
+import {
+  Keyboard,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import {
   KeyboardGestureArea,
   useKeyboardHandler,
@@ -82,7 +89,7 @@ const useKeyboardAnimation = () => {
   return { height, progress, onScroll, inset, offset };
 };
 
-const TEXT_INPUT_HEIGHT = 50;
+const TEXT_INPUT_HEIGHT = 60;
 
 const contentContainerStyle = {
   paddingBottom: TEXT_INPUT_HEIGHT,
@@ -93,6 +100,7 @@ function InteractiveKeyboard() {
   const { height, onScroll, inset, offset } = useKeyboardAnimation();
   const [inputHeight, setInputHeight] = useState(TEXT_INPUT_HEIGHT);
   const [text, setText] = useState("");
+  const [fractional, setFractional] = useState(1);
 
   const onInputLayoutChanged = useCallback((e: LayoutChangeEvent) => {
     setInputHeight(e.nativeEvent.layout.height);
@@ -105,7 +113,6 @@ function InteractiveKeyboard() {
   const textInputStyle = useAnimatedStyle(
     () => ({
       position: "absolute",
-      minHeight: TEXT_INPUT_HEIGHT,
       width: "100%",
       backgroundColor: "#BCBCBC",
       transform: [{ translateY: -height.value }],
@@ -124,37 +131,85 @@ function InteractiveKeyboard() {
   }));
 
   return (
-    <KeyboardGestureArea
-      offset={inputHeight}
-      style={styles.container}
-      textInputNativeID="chat-input"
-    >
-      <Reanimated.ScrollView
-        ref={ref}
-        // simulation of `automaticallyAdjustKeyboardInsets` behavior on RN < 0.73
-        animatedProps={props}
-        automaticallyAdjustContentInsets={false}
-        contentContainerStyle={contentContainerStyle}
-        contentInsetAdjustmentBehavior="never"
-        keyboardDismissMode="interactive"
-        testID="chat.scroll"
-        onContentSizeChange={scrollToBottom}
-        onScroll={onScroll}
+    <View style={styles.container}>
+      <View
+        style={{
+          backgroundColor: "white",
+          padding: 8,
+        }}
       >
-        {history.map((message, index) => (
-          <Message key={index} {...message} />
-        ))}
-      </Reanimated.ScrollView>
-      <AnimatedTextInput
-        multiline
-        nativeID="chat-input"
-        style={textInputStyle}
-        testID="chat.input"
-        value={text}
-        onChangeText={setText}
-        onLayout={onInputLayoutChanged}
-      />
-    </KeyboardGestureArea>
+        <Text testID="offset.value">Offset: {inputHeight.toFixed(6)}</Text>
+        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+          <Pressable
+            testID="offset.integer"
+            onPress={() => {
+              Keyboard.dismiss();
+              setFractional(0);
+            }}
+          >
+            <Text>60</Text>
+          </Pressable>
+          <Pressable
+            testID="offset.fractional"
+            onPress={() => {
+              Keyboard.dismiss();
+              setFractional(1);
+            }}
+          >
+            <Text>60⅓</Text>
+          </Pressable>
+          <Pressable
+            testID="offset.fractional2"
+            onPress={() => {
+              Keyboard.dismiss();
+              setFractional(2);
+            }}
+          >
+            <Text>60⅔</Text>
+          </Pressable>
+          <Pressable testID="keyboard.hide" onPress={() => Keyboard.dismiss()}>
+            <Text>Hide keyboard</Text>
+          </Pressable>
+        </View>
+      </View>
+      <KeyboardGestureArea
+        offset={inputHeight}
+        style={styles.container}
+        textInputNativeID="chat-input"
+      >
+        <Reanimated.ScrollView
+          ref={ref}
+          // simulation of `automaticallyAdjustKeyboardInsets` behavior on RN < 0.73
+          animatedProps={props}
+          automaticallyAdjustContentInsets={false}
+          contentContainerStyle={contentContainerStyle}
+          contentInsetAdjustmentBehavior="never"
+          keyboardDismissMode="interactive"
+          testID="chat.scroll"
+          onContentSizeChange={scrollToBottom}
+          onScroll={onScroll}
+        >
+          {history.map((message, index) => (
+            <Message key={index} {...message} />
+          ))}
+        </Reanimated.ScrollView>
+        <AnimatedTextInput
+          multiline
+          nativeID="chat-input"
+          style={[
+            textInputStyle,
+            {
+              minHeight:
+                TEXT_INPUT_HEIGHT + fractional * StyleSheet.hairlineWidth,
+            },
+          ]}
+          testID="chat.input"
+          value={text}
+          onChangeText={setText}
+          onLayout={onInputLayoutChanged}
+        />
+      </KeyboardGestureArea>
+    </View>
   );
 }
 
