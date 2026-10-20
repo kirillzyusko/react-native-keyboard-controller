@@ -7,7 +7,7 @@ index 551b026..2234d1c 100644
    async takeScreenshot(udid, destination) {
      await this._execSimctl({
 -      cmd: `io ${udid} screenshot "${destination}"`,
-+      cmd: `io ${udid} screenshot --mask=black "${destination}"`,
++      cmd: `io ${udid} screenshot --mask=alpha "${destination}"`,
        silent: destination === '/dev/null',
      });
    }

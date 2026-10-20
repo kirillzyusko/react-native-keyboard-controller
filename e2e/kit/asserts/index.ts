@@ -8,6 +8,8 @@ import { PNG } from "pngjs";
 import { delay } from "../helpers";
 import parseDeviceName from "../utils/parseDeviceName";
 
+import { applyDisplayMask } from "./displayMask";
+
 const getDirFromFilePath = (path: string) =>
   path.substring(0, path.lastIndexOf("/"));
 
@@ -30,12 +32,15 @@ const checkIsScreenShotMatch = (
   expectedBitmapBuffer: Buffer,
   bitmapBuffer: Buffer,
   acceptableDiffPercent: number,
+  maskDisplayCutouts: boolean,
 ): { matched: boolean; percentDiff: string; diff: PNG } => {
   const img1 = PNG.sync.read(expectedBitmapBuffer);
   const img2 = PNG.sync.read(bitmapBuffer);
   const { height, width } = img1;
 
-  const totalPixels = width * height;
+  const totalPixels = maskDisplayCutouts
+    ? applyDisplayMask(img1, img2)
+    : width * height;
   const allowableError = (totalPixels / 100) * acceptableDiffPercent;
   const diff = new PNG({ width, height });
   const diffPixels = pixelmatch(
@@ -57,6 +62,7 @@ function verifyBitmapsToBeEqual(
   tempImagePath: string,
   screenName: string,
   acceptableDiffPercent = 0.1,
+  maskDisplayCutouts = false,
 ): void {
   const platform = device.getPlatform();
   const deviceName = parseDeviceName(device.name);
@@ -72,6 +78,7 @@ function verifyBitmapsToBeEqual(
     expectedBitmapBuffer,
     bitmapBuffer,
     acceptableDiffPercent,
+    maskDisplayCutouts,
   );
 
   console.debug(
@@ -114,7 +121,12 @@ async function expectBitmapsToBeEqual(
   await delay(1000);
   const tempImagePath = await device.takeScreenshot(screenName);
 
-  verifyBitmapsToBeEqual(tempImagePath, screenName, acceptableDiffPercent);
+  verifyBitmapsToBeEqual(
+    tempImagePath,
+    screenName,
+    acceptableDiffPercent,
+    device.getPlatform() === "ios",
+  );
 }
 
 export { expectBitmapsToBeEqual, expectElementBitmapsToBeEqual };
