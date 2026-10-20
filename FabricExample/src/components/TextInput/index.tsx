@@ -40,9 +40,7 @@ const TextInput = (props: CustomTextInputProps) => {
         onContentSizeChange={(event) => {
           if (autoGrow) {
             // Paper measures its borders outside the native text padding.
-            setContentHeight(
-              event.nativeEvent.contentSize.height + 4,
-            );
+            setContentHeight(event.nativeEvent.contentSize.height + 4);
           }
           rest.onContentSizeChange?.(event);
         }}

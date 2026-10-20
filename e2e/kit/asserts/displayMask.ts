@@ -9,7 +9,7 @@ export function applyDisplayMask(actual: Bitmap, expected: Bitmap): number {
 
   let visiblePixels = width * height;
 
-  // simctl marks the rounded display corners and camera cutout with alpha.
+  // The simulator marks rounded display corners and the camera cutout with alpha.
   // These pixels are outside the display; older SDKs captured them differently.
   for (let offset = 0; offset < actual.data.length; offset += 4) {
     if (actual.data[offset + 3] < 255) {

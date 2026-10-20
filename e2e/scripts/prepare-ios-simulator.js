@@ -1,3 +1,4 @@
+// cspell:words xcrun simctl bootstatus udid
 const { execFileSync } = require("child_process");
 
 const udid = process.argv[2];
