@@ -23,7 +23,7 @@ const TextInput = (props: CustomTextInputProps) => {
       {!!title && <Text style={styles.title}>{title}</Text>}
       <TextInputRN
         multiline
-        numberOfLines={Platform.OS === "android" ? 10 : undefined}
+        numberOfLines={Platform.OS === "android" ? 2 : undefined}
         placeholderTextColor="#6c6c6c"
         testID={props.placeholder}
         {...rest}

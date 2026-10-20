@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { PixelRatio, Platform, StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
   container: {
@@ -40,5 +40,8 @@ export const styles = StyleSheet.create({
   inputInFooter: {
     width: 200,
     backgroundColor: "yellow",
+    ...Platform.select({
+      android: { minHeight: PixelRatio.roundToNearestPixel(56.75) },
+    }),
   },
 });
