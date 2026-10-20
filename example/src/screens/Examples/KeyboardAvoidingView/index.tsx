@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  Platform,
   KeyboardAvoidingView as RNKeyboardAvoidingView,
   Text,
   TextInput,
@@ -68,6 +69,12 @@ export default function KeyboardAvoidingViewExample({ navigation }: Props) {
         <Text style={styles.heading}>Header</Text>
         <View style={styles.inputs}>
           <TextInput
+            // Keep the second keyboard session's case stable across RN versions.
+            autoCapitalize={
+              Platform.OS === "ios" && !isPackageImplementation
+                ? "characters"
+                : undefined
+            }
             placeholder="Username"
             placeholderTextColor="#7C7C7C"
             style={styles.textInput}
