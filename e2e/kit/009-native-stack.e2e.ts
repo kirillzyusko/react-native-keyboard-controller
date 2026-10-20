@@ -34,7 +34,11 @@ describe("Native stack", () => {
     await device.disableSynchronization();
     await closeKeyboard("keyboard_animation_text_input");
     await waitForExpect(async () => {
-      await expectBitmapsToBeEqual("NativeStackKeyboardIsHidden");
+      // Native screen system-bar icons and the focused caret vary slightly.
+      await expectBitmapsToBeEqual(
+        "NativeStackKeyboardIsHidden",
+        device.getPlatform() === "android" ? 0.15 : 0.1,
+      );
     });
     await device.enableSynchronization();
   });
