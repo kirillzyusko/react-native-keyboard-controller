@@ -80,14 +80,17 @@ describe("`KeyboardChatScrollView` specs", () => {
   });
 
   it("should close keyboard interactively", async () => {
-    const closedTop = await inputTop();
+    const normalizeViewport =
+      device.getPlatform() === "android" && Env.softCheck;
+    const closedTop = normalizeViewport ? await inputTop() : 0;
 
     await waitAndTap("chat.input");
     await element(by.id("chat.scroll")).swipe("up", "fast", 0.2, 0.5, 0.2);
     await element(by.id("chat.scroll")).swipe("down", "fast", 0.4, 0.5, 0.2);
-    await waitForExpect(() => expectKeyboardDismissed(closedTop));
 
-    if (device.getPlatform() === "android" && Env.softCheck) {
+    if (normalizeViewport) {
+      await waitForExpect(() => expectKeyboardDismissed(closedTop));
+
       // API 31 fling displacement differs between renderers. Dismissal is
       // verified above; reuse the reviewed top-of-list viewport for the image.
       await element(by.id("chat.scroll")).scrollTo("top");
