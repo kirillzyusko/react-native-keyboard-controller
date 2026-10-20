@@ -11,6 +11,7 @@ import parseDeviceName from "../utils/parseDeviceName";
 
 import { cropScreenshot } from "./cropScreenshot";
 import { applyDisplayMask } from "./displayMask";
+import { normalizeScreenshotOrientation } from "./normalizeScreenshotOrientation";
 
 const getDirFromFilePath = (path: string) =>
   path.substring(0, path.lastIndexOf("/"));
@@ -36,8 +37,11 @@ const checkIsScreenShotMatch = (
   acceptableDiffPercent: number,
   maskDisplayCutouts: boolean,
 ): { matched: boolean; percentDiff: string; diff: PNG; diffPixels: number } => {
-  const img1 = PNG.sync.read(expectedBitmapBuffer);
   const img2 = PNG.sync.read(bitmapBuffer);
+  const captured = PNG.sync.read(expectedBitmapBuffer);
+  const img1 = maskDisplayCutouts
+    ? normalizeScreenshotOrientation(captured, img2)
+    : captured;
   const { height, width } = img1;
 
   const totalPixels = maskDisplayCutouts
