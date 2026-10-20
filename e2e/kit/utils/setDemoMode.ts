@@ -6,6 +6,7 @@ export default async function setDemoMode(): Promise<void> {
   if (device.getPlatform() === "android") {
     const shell = (command: string) =>
       execFileSync("adb", ["-s", device.id, "shell", command]);
+
     // enter demo mode
     shell("settings put global sysui_demo_allowed 1");
     // display time 12:00

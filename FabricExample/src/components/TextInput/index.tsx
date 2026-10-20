@@ -37,19 +37,19 @@ const TextInput = (props: CustomTextInputProps) => {
           ],
           autoGrow && contentHeight !== undefined && { height: contentHeight },
         ]}
-        onContentSizeChange={(event) => {
-          if (autoGrow) {
-            // Paper measures its borders outside the native text padding.
-            setContentHeight(event.nativeEvent.contentSize.height + 4);
-          }
-          rest.onContentSizeChange?.(event);
-        }}
         onChangeText={(text) => {
           if (autoGrow && Platform.OS === "ios") {
             // Let Fabric remeasure the edited text before applying its new content size.
             setContentHeight(undefined);
           }
           rest.onChangeText?.(text);
+        }}
+        onContentSizeChange={(event) => {
+          if (autoGrow) {
+            // Paper measures its borders outside the native text padding.
+            setContentHeight(event.nativeEvent.contentSize.height + 4);
+          }
+          rest.onContentSizeChange?.(event);
         }}
       />
     </>
