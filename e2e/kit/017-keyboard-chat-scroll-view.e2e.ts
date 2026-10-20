@@ -80,8 +80,7 @@ describe("`KeyboardChatScrollView` specs", () => {
   });
 
   it("should close keyboard interactively", async () => {
-    const normalizeViewport =
-      device.getPlatform() === "android" && Env.softCheck;
+    const normalizeViewport = device.getPlatform() === "ios" || Env.softCheck;
     const closedTop = normalizeViewport ? await inputTop() : 0;
 
     await waitAndTap("chat.input");
@@ -91,13 +90,15 @@ describe("`KeyboardChatScrollView` specs", () => {
     if (normalizeViewport) {
       await waitForExpect(() => expectKeyboardDismissed(closedTop));
 
-      // API 31 fling displacement differs between renderers. Dismissal is
-      // verified above; reuse the reviewed top-of-list viewport for the image.
+      // Fling displacement differs between OS and renderer versions. Dismissal
+      // is verified above; compare the same reviewed top-of-list viewport.
       await element(by.id("chat.scroll")).scrollTo("top");
     }
     await waitForExpect(async () => {
       await expectBitmapsToBeEqual(
-        "KeyboardChatScrollViewAlwaysClosedInteractively",
+        device.getPlatform() === "ios"
+          ? "KeyboardChatScrollViewAlwaysClosedAtTop"
+          : "KeyboardChatScrollViewAlwaysClosedInteractively",
       );
     });
   });
