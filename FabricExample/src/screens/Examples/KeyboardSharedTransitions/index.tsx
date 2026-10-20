@@ -1,5 +1,5 @@
 import React from "react";
-import { TextInput, View } from "react-native";
+import { Platform, TextInput, View } from "react-native";
 import {
   KeyboardBackgroundView,
   KeyboardStickyView,
@@ -68,6 +68,7 @@ const KeyboardSharedTransitionExample = () => {
             style={[
               {
                 width: "100%",
+                minHeight: Platform.OS === "android" ? 48 : undefined,
                 padding: 10,
                 borderRadius: 8,
                 textAlign: "center",
