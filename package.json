@@ -14,6 +14,7 @@
     "ios",
     "common",
     "cpp",
+    "Package.swift",
     "react-native-keyboard-controller.podspec",
     "react-native.config.js",
     "jest",
@@ -23,6 +24,7 @@
     "!android/build",
     "!android/src/test",
     "!android/.gradle",
+    "!android/.cxx",
     "!android/gradle",
     "!android/gradlew",
     "!android/gradlew.bat",
@@ -180,6 +182,9 @@
         }
       ]
     ]
+  },
+  "swiftpmConfig": {
+    "name": "ReactNativeKeyboardController"
   },
   "codegenConfig": {
     "name": "RNKC",

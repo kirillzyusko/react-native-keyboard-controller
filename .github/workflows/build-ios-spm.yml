@@ -1,0 +1,87 @@
+name: 🍎 Build iOS SwiftPM
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/build-ios-spm.yml"
+      - "Package.swift"
+      - "package.json"
+      - "yarn.lock"
+      - "react-native.config.js"
+      - "ios/**"
+      - "common/**"
+      - "src/**"
+      - "e2e/spm/**"
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ios-spm-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: macos-26
+    timeout-minutes: 60
+    env:
+      YARN_IGNORE_PATH: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: yarn
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+      - name: Install library dependencies
+        run: corepack yarn@1.22.22 install --frozen-lockfile
+      - name: Pack library
+        run: |
+          mkdir -p build/spm
+          npm pack --ignore-scripts --pack-destination build/spm
+      - name: Create focused app
+        run: |
+          npx @react-native-community/cli@20.2.0 init RNKCSpmExample \
+            --version 0.88.0 --directory build/spm/RNKCSpmExample \
+            --pm yarn --skip-install --install-pods false --skip-git-init
+          node <<'NODE'
+          const fs = require('fs');
+          const app = 'build/spm/RNKCSpmExample';
+          const file = `${app}/package.json`;
+          const json = JSON.parse(fs.readFileSync(file));
+          delete json.dependencies['@react-native/new-app-screen'];
+          delete json.dependencies['react-native-safe-area-context'];
+          const tarball = fs.readdirSync('build/spm').find(name => name.endsWith('.tgz'));
+          Object.assign(json.dependencies, {
+            'react-native-keyboard-controller': `file:../${tarball}`,
+            'react-native-reanimated': '4.7.1',
+            'react-native-worklets': '0.13.0',
+          });
+          fs.writeFileSync(file, JSON.stringify(json, null, 2));
+          fs.copyFileSync('e2e/spm/App.tsx', `${app}/App.tsx`);
+          fs.writeFileSync(`${app}/babel.config.js`, `module.exports = {
+            presets: ['module:@react-native/babel-preset'],
+            plugins: ['react-native-worklets/plugin'],
+          };`);
+          NODE
+      - name: Install app dependencies
+        working-directory: build/spm/RNKCSpmExample
+        run: corepack yarn@1.22.22 install --non-interactive
+      - name: Enable SwiftPM
+        working-directory: build/spm/RNKCSpmExample
+        run: node node_modules/react-native/scripts/setup-apple-spm.js add --deintegrate --yes
+      - name: Build Debug and Release
+        working-directory: build/spm/RNKCSpmExample
+        run: |
+          for configuration in Debug Release; do
+            xcodebuild build \
+              -project ios/RNKCSpmExample.xcodeproj \
+              -scheme RNKCSpmExample \
+              -configuration "$configuration" \
+              -sdk iphonesimulator \
+              -destination 'generic/platform=iOS Simulator' \
+              -derivedDataPath ios/build/DerivedData \
+              ARCHS=arm64 CODE_SIGNING_ALLOWED=NO -quiet
+          done

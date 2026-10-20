@@ -1,0 +1,32 @@
+steps:
+  - launch: org.reactjs.native.example.RNKCSpmExample
+  - await: { visible: { text: Keyboard hidden } }
+  - await: { idle: true }
+  - echo: Focus First input, type 111, and verify keyboard events and the moving toolbar.
+  - tap: { text: First input }
+  - await: { visible: { text: Keyboard visible } }
+  - await: { idle: true }
+  - tool: keyboard
+    args: { text: "111", delayMs: 250 }
+  # The accessibility tree includes input values; the UIView flow tree does not.
+  - tool: await-ui-element
+    args:
+      condition: text
+      selector: { identifier: first-input }
+      expectedText: "111"
+      textMatch: contains
+  - echo: Tap Next input and type 222; verify Second input receives it.
+  - tap: { id: next-input }
+  - await: { idle: true }
+  - tool: keyboard
+    args: { text: "222", delayMs: 250 }
+  - tool: await-ui-element
+    args:
+      condition: text
+      selector: { identifier: second-input }
+      expectedText: "222"
+      textMatch: contains
+  - echo: Dismiss the keyboard; expect Keyboard hidden and the toolbar at the bottom.
+  - tap: { id: dismiss-keyboard }
+  - await: { visible: { text: Keyboard hidden } }
+  - await: { idle: true }
