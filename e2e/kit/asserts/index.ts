@@ -5,7 +5,7 @@ import { device } from "detox";
 import pixelmatch from "pixelmatch";
 import { PNG } from "pngjs";
 
-import { delay } from "../helpers";
+import { Env, delay } from "../helpers";
 import { getDevicePreference } from "../helpers/env/devicePreferences";
 import parseDeviceName from "../utils/parseDeviceName";
 
@@ -131,7 +131,8 @@ async function expectElementBitmapsToBeEqual(
 
 async function expectBitmapsToBeEqual(
   screenName: string,
-  acceptableDiffPercent = 0.1,
+  // Allow subpixel text rounding and caret phases in the non-AOSP configuration.
+  acceptableDiffPercent = Env.softCheck ? 0.15 : 0.1,
 ): Promise<void> {
   // better to wait 1s to be sure all scroll indicators etc are hidden
   // and then take a screenshot and compare it (because it's expensive operation)
