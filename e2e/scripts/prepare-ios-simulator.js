@@ -1,0 +1,30 @@
+const { execFileSync } = require("child_process");
+
+const udid = process.argv[2];
+
+if (!udid || !/^[A-F0-9-]{36}$/i.test(udid)) {
+  throw new Error("Usage: yarn setup:ios-simulator <simulator-udid>");
+}
+
+const simctl = (...args) =>
+  execFileSync("xcrun", ["simctl", ...args], { stdio: "inherit" });
+const preference = (...args) =>
+  simctl("spawn", udid, "defaults", "write", "NSGlobalDomain", ...args);
+const keyboards = ["en_US@sw=QWERTY;hw=Automatic", "emoji@sw=Emoji"];
+
+simctl("bootstatus", udid, "-b");
+preference("AppleKeyboards", "-array", ...keyboards);
+preference("ApplePasscodeKeyboards", "-array", ...keyboards);
+preference("AppleLanguages", "-array", "en-US");
+preference("AppleLocale", "en_US");
+preference("AppleICUForce24HourTime", "-bool", "YES");
+execFileSync("defaults", [
+  "write",
+  "com.apple.iphonesimulator",
+  "ConnectHardwareKeyboard",
+  "-bool",
+  "NO",
+]);
+// SpringBoard and the keyboard service cache these preferences until reboot.
+simctl("shutdown", udid);
+simctl("bootstatus", udid, "-b");
