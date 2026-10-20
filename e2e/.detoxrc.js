@@ -3,6 +3,9 @@ const androidArchitectures =
 
 /** @type {Detox.DetoxConfig} */
 module.exports = {
+  artifacts: {
+    pathBuilder: "./kit/utils/artifactPathBuilder.js",
+  },
   testRunner: {
     args: {
       $0: "jest",
