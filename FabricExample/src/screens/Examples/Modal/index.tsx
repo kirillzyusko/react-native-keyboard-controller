@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from "react";
-import { Button, Modal, StyleSheet, View } from "react-native";
+import { Button, Modal, Platform, StyleSheet, View } from "react-native";
 import {
   KeyboardController,
   useKeyboardContext,
@@ -19,7 +19,9 @@ export default function ModalExample() {
   const openModal = useCallback(async () => {
     // Clear the underlying input before transferring window focus to the modal.
     // Otherwise Android can reopen its keyboard when the modal is dismissed.
-    await KeyboardController.dismiss();
+    if (Platform.OS === "android") {
+      await KeyboardController.dismiss();
+    }
     setModalVisible(true);
   }, []);
 
