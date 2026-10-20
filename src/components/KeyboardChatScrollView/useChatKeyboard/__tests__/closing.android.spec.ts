@@ -275,4 +275,31 @@ describe("`useChatKeyboard` — Android closing behaviors", () => {
       false,
     );
   });
+
+  it("always non-inverted: should not scroll on a close event when the keyboard is already closed", () => {
+    // At end: 1200 + 800 >= 2000 - 20
+    mockOffset.value = 1200;
+    render({ inverted: false, keyboardLiftBehavior: "always" });
+
+    // Open and fully close the keyboard once
+    handlers.onStart({ height: KEYBOARD });
+    handlers.onMove({ height: KEYBOARD });
+    mockOffset.value = 1500;
+    handlers.onEnd({ height: KEYBOARD });
+
+    handlers.onStart({ height: 0 });
+    handlers.onMove({ height: 0 });
+    mockOffset.value = 1200;
+    handlers.onEnd({ height: 0 });
+    mockScrollTo.mockClear();
+
+    // Android sends another close event when a Modal closes and gives the focus back
+    handlers.onStart({ height: 0 });
+    handlers.onMove({ height: 0 });
+    handlers.onEnd({ height: 0 });
+
+    for (const [, , y] of mockScrollTo.mock.calls) {
+      expect(y).toBe(1200);
+    }
+  });
 });

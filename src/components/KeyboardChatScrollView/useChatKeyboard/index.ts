@@ -357,6 +357,10 @@ function useChatKeyboard(
         // Record actual scroll displacement so close can be symmetric
         if (effective > 0 && offsetBeforeScroll.value !== -1) {
           actualOpenShift.value = scroll.value - offsetBeforeScroll.value;
+        } else if (effective === 0) {
+          // Fully closed: a later close event (Android sends one when a Modal
+          // gives the focus back) must not reuse the previous shift
+          actualOpenShift.value = 0;
         }
       },
     },
