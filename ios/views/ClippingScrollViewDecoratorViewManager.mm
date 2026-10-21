@@ -183,7 +183,9 @@ RCT_EXPORT_VIEW_PROPERTY(applyWorkaroundForContentInsetHitTestBug, BOOL)
 #endif
 @end
 
-@implementation ClippingScrollViewDecoratorView
+@implementation ClippingScrollViewDecoratorView {
+  __weak UIScrollView *_scrollView;
+}
 
 #ifdef RCT_NEW_ARCH_ENABLED
 - (instancetype)initWithFrame:(CGRect)frame
@@ -193,6 +195,16 @@ RCT_EXPORT_VIEW_PROPERTY(applyWorkaroundForContentInsetHitTestBug, BOOL)
     _props = defaultProps;
   }
   return self;
+}
+
+- (void)prepareForRecycle
+{
+  Class scrollViewClass = object_getClass(_scrollView);
+  if (scrollViewClass && [NSStringFromClass(scrollViewClass) hasPrefix:@"KC_NoScrollRect_"]) {
+    object_setClass(_scrollView, class_getSuperclass(scrollViewClass));
+  }
+  _scrollView = nil;
+  [super prepareForRecycle];
 }
 #endif
 
@@ -230,6 +242,7 @@ RCT_EXPORT_VIEW_PROPERTY(applyWorkaroundForContentInsetHitTestBug, BOOL)
     return;
 #else
     UIScrollView *scrollView = KCFindFirstScrollView(self);
+    _scrollView = scrollView;
     KCApplyNoopScrollRectToVisible(scrollView);
     if (self.applyWorkaroundForContentInsetHitTestBug) {
       KCApplyFixedHitTest(scrollView);
