@@ -79,7 +79,7 @@ function useChatKeyboard(
         }
 
         if (lastTransitionFrozen.value) {
-          // The frozen transition left the content unshifted: nothing to undo.
+          // The frozen transition didn't shift the content: nothing to undo.
           lastTransitionFrozen.value = false;
           prevAbsorption.value = padding.value;
         }

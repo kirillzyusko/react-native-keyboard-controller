@@ -84,7 +84,7 @@ function useChatKeyboard(
 
         if (freeze.value) {
           if (!inverted) {
-            // The frozen transition leaves the content unshifted, so the next
+            // The frozen transition doesn't shift the content, so the next
             // one must not undo a shift (same sentinel as "whenAtEnd").
             // eslint-disable-next-line react-compiler/react-compiler
             offsetBeforeScroll.value = -1;
