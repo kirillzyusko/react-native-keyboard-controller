@@ -2,7 +2,7 @@
 
 These instructions apply to the entire repository. Follow direct user or maintainer instructions when they are more specific.
 
-- Preserve the existing issue and pull request template structure. Do not add, remove, rename, or reorder sections to accommodate reproduction or verification details. Do not modify template files unless explicitly requested.
+- Preserve the existing issue template structure and the pull request template's top-level headings and order. Within pull request bodies, remove unaffected Changelog subsections, add subsections for affected areas such as Docs or E2E, and use `###` case headings within Screenshots as described below. Do not modify template files unless explicitly requested.
 
 ## GitHub issues
 
@@ -71,13 +71,31 @@ For native or example-app changes, also run the narrowest applicable platform bu
 
 ## Pull requests and commits
 
-- Follow `.github/PULL_REQUEST_TEMPLATE.md` and retain all applicable sections when preparing a pull request.
+- Follow `.github/PULL_REQUEST_TEMPLATE.md` when preparing a pull request. If its instructional comments conflict with the section responsibilities below, follow these rules while preserving the top-level headings and order.
 - Keep pull requests small and focused.
+- Write in the maintainer's concise, direct style: use concrete facts, explain the problem in enough detail to understand it, and omit filler, generic claims, repeated summaries, and AI boilerplate. Use these PR descriptions as style references; the current rules below govern section contents:
+  - [#1304](https://github.com/kirillzyusko/react-native-keyboard-controller/pull/1304)
+  - [#1047](https://github.com/kirillzyusko/react-native-keyboard-controller/pull/1047)
+  - [#1016](https://github.com/kirillzyusko/react-native-keyboard-controller/pull/1016)
+  - [#257](https://github.com/kirillzyusko/react-native-keyboard-controller/pull/257)
+- In **📜 Description**, summarize the PR's idea and resulting behavior in one or two sentences. Put reproduction steps, implementation reasoning, and alternatives in **💡 Motivation and Context**.
+- In **💡 Motivation and Context**, describe the exact steps that trigger the bug, the observed and expected behavior, why the chosen solution addresses it, and which alternatives were considered and why they did not fit. Include only alternatives actually considered; do not invent a comparison to fill the section. Link the issues and PRs this change fixes, closes, or supersedes, using `Fixes` or `Closes` where appropriate and explaining related PRs' relevance.
 - For a bug-fix pull request, include runnable reproduction code: a minimal React Native project, a focused example change, a regression test that fails without the fix, or a self-contained snippet that reproduces the bug when pasted into `example/` or `FabricExample/` without extra dependencies.
-- Verify the reproduction against the unfixed code, then run the same steps or test with the fix. In **📜 Description**, link to the reproduction at a specific commit, identify the files included in the pull request, or include the snippet and where to paste it. Document setup commands, exact interaction steps, the affected platform and versions, the observed and expected behavior, and the before-and-after results there.
+- Verify the reproduction against the unfixed code, then run the same steps or test with the fix. In **💡 Motivation and Context**, link to the reproduction at a specific commit, identify the reproduction files included in the pull request, or include the snippet and where to paste it. Document setup commands, exact interaction steps, the affected platform and versions, the observed and expected behavior, and the before-and-after results there.
+- In **📢 Changelog**, briefly describe changes by file: name the affected files and what was added, moved, or fixed. Group related files when that keeps the list concise. Keep only affected platform or language subsections (`JS`, `iOS`, `Android`); remove unaffected ones instead of writing "No changes". Add appropriate subsections such as `Docs` or `E2E` when those areas change. Remove empty placeholder bullets.
 - In **🤔 How Has This Been Tested?**, include only a list of device models, their OS versions, and whether verification was performed manually or by an agent, using the format `Device model (OS version/manual or agent)`. Identify simulators or emulators as such. Do not list unit-test, lint, type-check, or other CI results; CI reports those checks. If no device verification was performed, state that and explain why.
 - Always attach before-and-after screenshots from the verification listed above in **📸 Screenshots (if appropriate):** as visual confirmation of the changes. Use the same scenario and device for both, and label each attachment with before/after, the device model, and OS version. Recordings may supplement the screenshots and must also show before and after.
+- Prefer side-by-side `Before` / `After` tables for screenshots and recordings. For videos, use this format with real attachment URLs:
+
+  ```markdown
+  | Before                                      | After                                      |
+  | ------------------------------------------- | ------------------------------------------ |
+  | <video src="BEFORE_ATTACHMENT_URL"></video> | <video src="AFTER_ATTACHMENT_URL"></video> |
+  ```
+
+- When comparing multiple cases, add a descriptive `###` heading and a separate before-and-after table for each case within Screenshots. Cover each issue fixed, distinct interactions, and relevant existing behavior that should remain unchanged; include before-and-after evidence for those unchanged cases too.
 - For optimizations, also attach profiler sessions from before and after the change in **📸 Screenshots (if appropriate):**, captured using the same workload, device, and profiling configuration.
+- In **📝 Checklist**, preserve the template's existing items, wording, and order. Only mark existing checkboxes as complete when supported by evidence; leave pending items unchecked. Do not rewrite, remove, or add checklist items or append explanations to them.
 - Do not open a bug-fix pull request without a verified runnable reproduction. If it is unavailable, recommend a bug report with the known evidence and any proposed patch in **Additional context**; create the issue only if the user explicitly asks. Do not claim the fix is verified.
 - Use Conventional Commit types documented in `CONTRIBUTING.md`: `fix`, `feat`, `refactor`, `docs`, `test`, or `chore`.
 - Do not commit, push, open a pull request, publish a release, or create an issue unless the user explicitly asks for that action.
