@@ -88,8 +88,8 @@ For native or example-app changes, also run the narrowest applicable platform bu
 - Prefer side-by-side `Before` / `After` tables for screenshots and recordings. For videos, use this format with real attachment URLs:
 
   ```markdown
-  | Before | After |
-  | ------ | ----- |
+  | Before                                      | After                                      |
+  | ------------------------------------------- | ------------------------------------------ |
   | <video src="BEFORE_ATTACHMENT_URL"></video> | <video src="AFTER_ATTACHMENT_URL"></video> |
   ```
 
