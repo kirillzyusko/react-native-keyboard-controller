@@ -140,12 +140,13 @@ public final class KeyboardTrackingView: UIView {
 
     // for `keyboardLayoutGuide` case we can just read keyboard position directly - no interpolation needed
     if KeyboardControllerConfiguration.usesKeyboardLayoutGuideTracking {
-      if keyboardPosition > keyboardHeight {
+      // KVO and keyboard notifications can round fractional accessory heights differently.
+      if round(keyboardPosition) > round(keyboardHeight) {
         return Self.invalidPosition
       }
       // when we are the top position KVO takes `inputAccessoryView` into consideration,
       // so we handle it here
-      if keyboardPosition == keyboardHeight {
+      if round(keyboardPosition) == round(keyboardHeight) {
         return keyboardPosition - KeyboardAreaExtender.shared.offset
       }
       return keyboardPosition
