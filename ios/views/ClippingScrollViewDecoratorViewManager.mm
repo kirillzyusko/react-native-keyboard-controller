@@ -203,6 +203,11 @@ RCT_EXPORT_VIEW_PROPERTY(applyWorkaroundForContentInsetHitTestBug, BOOL)
   if (scrollViewClass && [NSStringFromClass(scrollViewClass) hasPrefix:@"KC_NoScrollRect_"]) {
     object_setClass(_scrollView, class_getSuperclass(scrollViewClass));
   }
+  UIView *container = _scrollView.superview;
+  Class containerClass = object_getClass(container);
+  if (containerClass && [NSStringFromClass(containerClass) hasPrefix:@"KC_FixedHitTest_"]) {
+    object_setClass(container, class_getSuperclass(containerClass));
+  }
   _scrollView = nil;
   [super prepareForRecycle];
 }
