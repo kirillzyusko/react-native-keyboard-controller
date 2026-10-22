@@ -102,9 +102,25 @@ export const clearAndType = async (id: string, text: string): Promise<void> => {
 export const switchToEmojiKeyboard = async () => {
   if (device.getPlatform() === "ios") {
     // device.tap() launches a separate XCTest runner for each tap.
-    await element(
-      by.label("Emoji").withAncestor(by.type("UIRemoteKeyboardWindow")),
-    ).tap();
+    const emojiButtons = element(by.label("Emoji"));
+    const attributes = await emojiButtons.getAttributes();
+    const candidates =
+      "elements" in attributes ? attributes.elements : [attributes];
+    const hittableIndices = candidates.flatMap((candidate, index) =>
+      candidate.visible && "hittable" in candidate && candidate.hittable
+        ? [index]
+        : [],
+    );
+
+    console.debug("Emoji button candidates:", JSON.stringify(attributes));
+
+    if (hittableIndices.length !== 1) {
+      throw new Error(
+        `Expected one visible, hittable Emoji button, found ${hittableIndices.length}`,
+      );
+    }
+
+    await emojiButtons.atIndex(hittableIndices[0]).tap();
 
     return;
   }
