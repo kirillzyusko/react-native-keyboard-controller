@@ -123,8 +123,8 @@ jobs:
         id: set-matrix
         run: |
           if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-            # Subset for PRs: Only ios 15, 26, 26e (adjust as needed)
-            echo 'matrix={"devices": [{"ios": 15, artifact: "16.4", "xcode": "16.4", "macos": 15, "runtime": "15.5", "iphone": "iPhone 13 Pro", "os": "15.5"}, {"ios": 17, artifact: "16.4", "xcode": "16.4", "macos": 15, "runtime": "17.5", "iphone": "iPhone 15 Pro", "os": "17.5"}, {"ios": "26e", artifact: "26.4", "xcode": "26.1", "macos": 15, "iphone": "iPhone 16e", "os": "26.1"}]}' >> $GITHUB_OUTPUT
+            # Subset for PRs: iOS 15, 16, 17, 26e
+            echo 'matrix={"devices": [{"ios": 15, artifact: "16.4", "xcode": "16.4", "macos": 15, "runtime": "15.5", "iphone": "iPhone 13 Pro", "os": "15.5"}, {"ios": 16, artifact: "16.4", "xcode": "16.4", "macos": 15, "runtime": "16.4", "iphone": "iPhone 14 Pro", "os": "16.4"}, {"ios": 17, artifact: "16.4", "xcode": "16.4", "macos": 15, "runtime": "17.5", "iphone": "iPhone 15 Pro", "os": "17.5"}, {"ios": "26e", artifact: "26.4", "xcode": "26.1", "macos": 15, "iphone": "iPhone 16e", "os": "26.1"}]}' >> $GITHUB_OUTPUT
           else
             # Full set for main
             echo 'matrix={"devices": [{"ios": 15, artifact: "16.4", "xcode": "16.4", "macos": 15, "runtime": "15.5", "iphone": "iPhone 13 Pro", "os": "15.5"}, {"ios": 16, artifact: "16.4", "xcode": "16.4", "macos": 15, "runtime": "16.4", "iphone": "iPhone 14 Pro", "os": "16.4"}, {"ios": 17, artifact: "16.4", "xcode": "16.4", "macos": 15, "runtime": "17.5", "iphone": "iPhone 15 Pro", "os": "17.5"}, {"ios": 18, artifact: "16.4", "xcode": "16.4", "macos": 15, "iphone": "iPhone 16 Pro", "os": "18.5"}, {"ios": 26, artifact: "16.4", "xcode": "26.0", "macos": 15, "iphone": "iPhone 17 Pro", "os": "26.2"}, {"ios": "26e", artifact: "26.4", "xcode": "26.1", "macos": 15, "iphone": "iPhone 16e", "os": "26.1"}]}' >> $GITHUB_OUTPUT
@@ -202,9 +202,12 @@ jobs:
         run: defaults write com.apple.iphonesimulator ConnectHardwareKeyboard -bool NO
       - name: Test app
         working-directory: e2e
-        run: SOFT_CHECK=false yarn test-example:ios-${{ matrix.devices.ios }}
+        run: |
+          mkdir -p artifacts
+          SOFT_CHECK=false yarn test-example:ios-${{ matrix.devices.ios }} 2>&1 | tee artifacts/ios-e2e.log
       - uses: actions/upload-artifact@v4
-        if: ${{ failure() }}
+        if: ${{ always() }}
         with:
-          name: ios-fail-screen-shoots
+          name: ios-e2e-artifacts-${{ matrix.devices.ios }}-attempt-${{ github.run_attempt }}
           path: e2e/artifacts
+          if-no-files-found: ignore
