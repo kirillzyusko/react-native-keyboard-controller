@@ -26,6 +26,9 @@ using namespace facebook::react;
 
 #pragma mark - Helpers
 
+static NSString *const KCNoScrollRectClassPrefix = @"KC_NoScrollRect_";
+static NSString *const KCFixedHitTestClassPrefix = @"KC_FixedHitTest_";
+
 static UIScrollView *KCFindFirstScrollView(UIView *view)
 {
   for (UIView *subview in view.subviews) {
@@ -51,11 +54,11 @@ static void KCApplyNoopScrollRectToVisible(UIScrollView *scrollView)
   NSString *originalClassName = NSStringFromClass(originalClass);
 
   // Already patched — nothing to do
-  if ([originalClassName hasPrefix:@"KC_NoScrollRect_"]) {
+  if ([originalClassName hasPrefix:KCNoScrollRectClassPrefix]) {
     return;
   }
 
-  NSString *subclassName = [@"KC_NoScrollRect_" stringByAppendingString:originalClassName];
+  NSString *subclassName = [KCNoScrollRectClassPrefix stringByAppendingString:originalClassName];
   Class subclass = NSClassFromString(subclassName);
 
   if (!subclass) {
@@ -98,11 +101,11 @@ static void KCApplyFixedHitTest(UIScrollView *scrollView)
   NSString *originalClassName = NSStringFromClass(originalClass);
 
   // Already patched — nothing to do
-  if ([originalClassName hasPrefix:@"KC_FixedHitTest_"]) {
+  if ([originalClassName hasPrefix:KCFixedHitTestClassPrefix]) {
     return;
   }
 
-  NSString *subclassName = [@"KC_FixedHitTest_" stringByAppendingString:originalClassName];
+  NSString *subclassName = [KCFixedHitTestClassPrefix stringByAppendingString:originalClassName];
   Class subclass = NSClassFromString(subclassName);
 
   if (!subclass) {
@@ -183,7 +186,9 @@ RCT_EXPORT_VIEW_PROPERTY(applyWorkaroundForContentInsetHitTestBug, BOOL)
 #endif
 @end
 
-@implementation ClippingScrollViewDecoratorView
+@implementation ClippingScrollViewDecoratorView {
+  __weak UIScrollView *_scrollView;
+}
 
 #ifdef RCT_NEW_ARCH_ENABLED
 - (instancetype)initWithFrame:(CGRect)frame
@@ -193,6 +198,21 @@ RCT_EXPORT_VIEW_PROPERTY(applyWorkaroundForContentInsetHitTestBug, BOOL)
     _props = defaultProps;
   }
   return self;
+}
+
+- (void)prepareForRecycle
+{
+  Class scrollViewClass = object_getClass(_scrollView);
+  if (scrollViewClass && [NSStringFromClass(scrollViewClass) hasPrefix:KCNoScrollRectClassPrefix]) {
+    object_setClass(_scrollView, class_getSuperclass(scrollViewClass));
+  }
+  UIView *container = _scrollView.superview;
+  Class containerClass = object_getClass(container);
+  if (containerClass && [NSStringFromClass(containerClass) hasPrefix:KCFixedHitTestClassPrefix]) {
+    object_setClass(container, class_getSuperclass(containerClass));
+  }
+  _scrollView = nil;
+  [super prepareForRecycle];
 }
 #endif
 
@@ -230,6 +250,7 @@ RCT_EXPORT_VIEW_PROPERTY(applyWorkaroundForContentInsetHitTestBug, BOOL)
     return;
 #else
     UIScrollView *scrollView = KCFindFirstScrollView(self);
+    _scrollView = scrollView;
     KCApplyNoopScrollRectToVisible(scrollView);
     if (self.applyWorkaroundForContentInsetHitTestBug) {
       KCApplyFixedHitTest(scrollView);
