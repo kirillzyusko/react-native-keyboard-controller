@@ -100,6 +100,13 @@ export const clearAndType = async (id: string, text: string): Promise<void> => {
 };
 
 export const switchToEmojiKeyboard = async () => {
+  if (device.getPlatform() === "ios") {
+    // device.tap() launches a separate XCTest runner for each tap.
+    await element(by.label("Emoji")).tap();
+
+    return;
+  }
+
   const emojiButtonCoordinates = getDevicePreference().emojiButtonCoordinates;
 
   // emoji button is not available
@@ -109,13 +116,9 @@ export const switchToEmojiKeyboard = async () => {
 
   // on Android we need to use UiDevice, because keyboard is a third party application,
   // so we have to press through the screen (not the app)
-  if (device.getPlatform() === "android") {
-    const uiDevice = device.getUiDevice();
+  const uiDevice = device.getUiDevice();
 
-    await uiDevice.click(emojiButtonCoordinates.x, emojiButtonCoordinates.y);
-  } else {
-    await device.tap(emojiButtonCoordinates);
-  }
+  await uiDevice.click(emojiButtonCoordinates.x, emojiButtonCoordinates.y);
 };
 
 export const scrollDownUntilElementIsVisible = async (
