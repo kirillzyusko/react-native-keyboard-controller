@@ -102,7 +102,9 @@ export const clearAndType = async (id: string, text: string): Promise<void> => {
 export const switchToEmojiKeyboard = async () => {
   if (device.getPlatform() === "ios") {
     // device.tap() launches a separate XCTest runner for each tap.
-    await element(by.label("Emoji")).tap();
+    await element(
+      by.label("Emoji").withAncestor(by.type("UIRemoteKeyboardWindow")),
+    ).tap();
 
     return;
   }
