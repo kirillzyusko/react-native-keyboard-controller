@@ -178,7 +178,6 @@ jobs:
       - name: Install CoreUtils
         run: brew install coreutils
       - name: Boot simulator
-        id: boot-simulator
         uses: ./.github/actions/boot-simulator
         with:
           simulator-name: ${{ matrix.devices.iphone }}
@@ -203,25 +202,8 @@ jobs:
       - name: Use software keyboard
         run: defaults write com.apple.iphonesimulator ConnectHardwareKeyboard -bool NO
       - name: Test app
-        shell: bash
         working-directory: e2e
-        run: |
-          mkdir -p artifacts
-          SOFT_CHECK=false yarn test-example:ios-${{ matrix.devices.ios }} 2>&1 | tee artifacts/ios-e2e.log
-      - name: Collect iOS 16 XCTest diagnostics
-        if: ${{ always() && matrix.devices.ios == 16 }}
-        working-directory: e2e
-        env:
-          SIMULATOR_ID: ${{ steps.boot-simulator.outputs.simulator-id }}
-        run: |
-          mkdir -p artifacts/xcuitest-results
-          shopt -s nullglob
-          for result in "$HOME"/Library/Developer/Xcode/DerivedData/DetoxXCUITestRunner-*/Logs/Test/*.xcresult; do
-            cp -R "$result" artifacts/xcuitest-results/
-          done
-          if [[ -n "$SIMULATOR_ID" ]]; then
-            xcrun simctl spawn "$SIMULATOR_ID" log show --style compact --last 1h --predicate 'process == "DetoxXCUITestRunner-Runner"' > artifacts/xcuitest-runner.log 2>&1 || true
-          fi
+        run: SOFT_CHECK=false yarn test-example:ios-${{ matrix.devices.ios }}
       - uses: actions/upload-artifact@v4
         if: ${{ always() }}
         with:
