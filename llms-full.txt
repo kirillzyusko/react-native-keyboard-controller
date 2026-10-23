@@ -647,6 +647,16 @@ When `true`, freezes all keyboard-driven layout changes. This is useful when dis
 
 Accepts either a plain `boolean` or a [Reanimated `SharedValue<boolean>`](https://docs.swmansion.com/react-native-reanimated/docs/core/useSharedValue/). Using a `SharedValue` allows you to toggle freezing from the UI thread (e.g., inside a worklet or gesture handler) without triggering a React re-render.
 
+Keyboard state continues to be tracked while frozen:
+
+| Moment                         | Behavior                                                                                                                                                                                  |
+| ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `freeze = true`                | Observe keyboard events without updating keyboard padding or scroll position.                                                                                                             |
+| `true -> false`                | Synchronize padding with the latest keyboard height, accounting for `offset`. Keep the current content position, except when the native scroll view must clamp it to the available range. |
+| Subsequent keyboard animations | Resume `keyboardLiftBehavior`, accounting for scroll adjustments that were actually applied.                                                                                              |
+
+Skipped scroll adjustments are not replayed. For example, if the keyboard closes while frozen, its padding is removed when you unfreeze without replaying the skipped closing scroll.
+
 ### `inverted`[​](/react-native-keyboard-controller/docs/api/components/keyboard-chat-scroll-view.md#inverted "Direct link to inverted")
 
 Set to `true` if your list uses the `inverted` prop (the standard pattern for chat-style lists where the newest messages appear at the bottom).
