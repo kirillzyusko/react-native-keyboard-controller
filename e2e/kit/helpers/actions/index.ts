@@ -114,7 +114,8 @@ export const switchToEmojiKeyboard = async () => {
 
     await uiDevice.click(emojiButtonCoordinates.x, emojiButtonCoordinates.y);
   } else {
-    await device.tap(emojiButtonCoordinates);
+    // iOS exposes a hidden duplicate after the active Emoji button.
+    await element(by.label("Emoji")).atIndex(0).tap();
   }
 };
 
