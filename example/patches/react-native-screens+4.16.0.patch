@@ -1,0 +1,92 @@
+diff --git a/node_modules/react-native-screens/ios/RNSScreen.h b/node_modules/react-native-screens/ios/RNSScreen.h
+--- a/node_modules/react-native-screens/ios/RNSScreen.h
++++ b/node_modules/react-native-screens/ios/RNSScreen.h
+@@ -49,6 +49,8 @@
+ - (BOOL)hasNestedStack;
+ - (void)calculateAndNotifyHeaderHeightChangeIsModal:(BOOL)isModal;
+ - (void)notifyFinishTransitioning;
++- (void)prepareKeyboardForSwipe;
++- (void)restoreKeyboardAfterSwipe;
+ - (RNSScreenView *)screenView;
+ #ifdef RCT_NEW_ARCH_ENABLED
+ - (void)setViewToSnapshot;
+diff --git a/node_modules/react-native-screens/ios/RNSScreen.mm b/node_modules/react-native-screens/ios/RNSScreen.mm
+--- a/node_modules/react-native-screens/ios/RNSScreen.mm
++++ b/node_modules/react-native-screens/ios/RNSScreen.mm
+@@ -1424,6 +1424,7 @@
+ 
+ @implementation RNSScreen {
+   __weak id _previousFirstResponder;
++  __weak UIView *_swipeFirstResponder;
+   CGRect _lastViewFrame;
+   RNSScreenView *_initialView;
+   UIView *_fakeView;
+@@ -1672,6 +1673,31 @@
+ {
+   CGFloat totalHeight = [self calculateHeaderHeightIsModal:isModal];
+   [self.screenView notifyHeaderHeightChange:totalHeight];
++}
++
++- (void)prepareKeyboardForSwipe
++{
++  if (self.screenView.hideKeyboardOnSwipe && self.navigationController.topViewController == self &&
++      self.navigationController.viewControllers.count > 1) {
++    _swipeFirstResponder = [self findFirstResponder:self.screenView];
++    [_swipeFirstResponder resignFirstResponder];
++  }
++}
++
++- (void)restoreKeyboardAfterSwipe
++{
++  UIView *responder = _swipeFirstResponder;
++  _swipeFirstResponder = nil;
++  if (responder == nil) {
++    return;
++  }
++  // On cancellation, restore outside UIKit's transition transaction.
++  dispatch_async(dispatch_get_main_queue(), ^{
++    if (responder.window != nil && self.navigationController.topViewController == self &&
++        [self findFirstResponder:self.screenView] == nil) {
++      [responder becomeFirstResponder];
++    }
++  });
+ }
+ 
+ - (void)notifyFinishTransitioning
+diff --git a/node_modules/react-native-screens/ios/RNSScreenStack.mm b/node_modules/react-native-screens/ios/RNSScreenStack.mm
+--- a/node_modules/react-native-screens/ios/RNSScreenStack.mm
++++ b/node_modules/react-native-screens/ios/RNSScreenStack.mm
+@@ -976,6 +976,7 @@
+   if ([gestureRecognizer isKindOfClass:[RNSPanGestureRecognizer class]]) {
+     if ([self isInGestureResponseDistance:gestureRecognizer topScreen:topScreen]) {
+       _isFullWidthSwiping = YES;
++      [topScreen.controller prepareKeyboardForSwipe];
+       [self cancelTouchesInParent];
+       return YES;
+     }
+@@ -994,6 +995,7 @@
+           (!isRTL && isSlideFromLeft && edges == UIRectEdgeRight) ||
+           (isRTL && isSlideFromLeft && edges == UIRectEdgeLeft) || (!isRTL && edges == UIRectEdgeLeft);
+       if (isCorrectEdge) {
++        [topScreen.controller prepareKeyboardForSwipe];
+         [self cancelTouchesInParent];
+         return YES;
+       }
+@@ -1005,6 +1007,7 @@
+       return NO;
+     }
+     // _UIParallaxTransitionPanGestureRecognizer (other...)
++    [topScreen.controller prepareKeyboardForSwipe];
+     [self cancelTouchesInParent];
+     return YES;
+   }
+@@ -1140,6 +1143,9 @@
+        didShowViewController:(UIViewController *)viewController
+                     animated:(BOOL)animated
+ {
++  if ([viewController isKindOfClass:[RNSScreen class]]) {
++    [(RNSScreen *)viewController restoreKeyboardAfterSwipe];
++  }
+   [self emitOnFinishTransitioningEvent];
+   [RNSScreenWindowTraits updateWindowTraits];
+   // Because of the bug that caused view to have incorrect dimensions while changing the orientation,

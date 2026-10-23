@@ -70,6 +70,12 @@ export const examples: Example[] = [
     icons: "👆📱",
   },
   {
+    title: "Interactive back swipe",
+    testID: "interactive_back_swipe",
+    info: ScreenNames.INTERACTIVE_BACK_SWIPE,
+    icons: "👈⌨️",
+  },
+  {
     title: "Native stack",
     testID: "native_stack",
     info: ScreenNames.NATIVE_STACK,

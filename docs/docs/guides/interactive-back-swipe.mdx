@@ -1,0 +1,148 @@
+---
+sidebar_position: 4
+keywords: [interactive back swipe, keyboard, native stack, iOS, predictive back]
+---
+
+# Interactive back swipe
+
+A back gesture can move two things: the screen and the keyboard. A chat also has to decide what happens to its messages and composer while that gesture is in progress, and when the user changes their mind and swipes back.
+
+This guide compares three iOS interactions and explains how to pair `KeyboardController.setInteractiveBackSwipe` with React Navigation. The API is experimental and applies to horizontal **native-stack** back gestures.
+
+import VideoComparison from "@site/src/components/VideoComparison";
+
+## Android
+
+Android handles a system Back gesture before it reaches navigation when the keyboard is open: Back dismisses the keyboard, and another Back can leave the screen. On recent versions with predictive IME Back, dragging from either edge makes the keyboard move down a little. Canceling brings it back; completing the gesture finishes dismissal.
+
+That small movement is intentional. Android's [IME predictive-back implementation](https://android.googlesource.com/platform/frameworks/base/+/refs/heads/main/core/java/android/view/ImeBackAnimationController.java) uses a preview of up to 10% of the keyboard height before the gesture is committed. Availability and appearance depend on Android, the IME and the window configuration.
+
+This API leaves that system behavior in place and offers no Android mode selector. `setInteractiveBackSwipe` is a no-op on Android. Dragging down through chat content with [`KeyboardGestureArea`](../api/views/keyboard-gesture-area) is a separate interaction, covered in the [Interactive Keyboard guide](./interactive-keyboard).
+
+## iOS: choose the interaction
+
+| Mode            | While dragging back                                                                                                              | If the gesture is canceled                                    | Interaction references |
+| --------------- | -------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- | ---------------------- |
+| `close`         | The keyboard closes when the gesture starts. The content returns to its keyboard-hidden position without waiting for the finger. | Focus returns and the keyboard opens again with an animation. | Telegram, Notes        |
+| `none`          | Keep the content at its keyboard-open vertical position. Navigation can carry the screen and keyboard sideways together.         | Return to the same keyboard-open layout.                      | WhatsApp, Messages     |
+| `interactively` | Lower the messages and composer together with the keyboard as the finger moves. Reversing the gesture raises them again.         | Return the content and keyboard to their original positions.  | Instagram              |
+
+<VideoComparison
+  clips={[
+    { label: "Notes · close", src: "/video/interactive-back-swipe/notes.mp4" },
+    {
+      label: "Messages · none",
+      src: "/video/interactive-back-swipe/messages.mp4",
+    },
+    {
+      label: "Instagram · interactively",
+      src: "/video/interactive-back-swipe/instagram.mp4",
+    },
+  ]}
+/>
+
+These are three separate recordings of Notes, Messages and Instagram on an iPhone 16 Pro with iOS 26.6.1. Each shows a short back swipe and cancellation with the keyboard open. The clips have the same duration and start together; use **Replay together** to compare them again. The apps demonstrate the interactions, while the playground below implements the corresponding policies. Individual app versions can behave differently.
+
+### What React Native does by default
+
+There is no single default across navigators. React Navigation's JS stack and native stack use different transition implementations, and iOS and `react-native-screens` versions also affect the result.
+
+| Navigator                                                                                              | Keyboard handling                                                                                                                                                                                          | Is this API needed?                                                                                                                                         |
+| ------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`@react-navigation/stack`](https://reactnavigation.org/docs/stack-navigator/#keyboardhandlingenabled) | `keyboardHandlingEnabled` defaults to `true`. The stack blurs the input at gesture start and restores focus after cancellation.                                                                            | No, for the usual close-on-back interaction. This native-stack policy does not control JS stack transitions.                                                |
+| `@react-navigation/native-stack`, default options                                                      | UIKit and screens own the keyboard transition; keyboard-controller normally forwards their layout events. The keyboard's visible motion and the content's vertical adjustment can differ during the swipe. | Choose a policy when you need a particular relationship between the content and keyboard.                                                                   |
+| Native stack with `keyboardHandlingEnabled: true`                                                      | Requests keyboard dismissal when leaving the screen.                                                                                                                                                       | The navigation option already requests closing. `close` is optional when the navigation option already gives you the desired close-and-restore interaction. |
+
+<VideoComparison
+  clips={[
+    {
+      label: "Native stack defaults",
+      src: "/video/interactive-back-swipe/native-default.mp4",
+    },
+    {
+      label: "Native stack · dismissal enabled",
+      src: "/video/interactive-back-swipe/native-dismiss.mp4",
+    },
+    {
+      label: "JS stack defaults",
+      src: "/video/interactive-back-swipe/js-default.mp4",
+    },
+  ]}
+/>
+
+These baseline recordings use the same chat with the policy set to `null`: native defaults, native dismissal enabled, and JS stack defaults. Compare the content as well as the keyboard; a keyboard that stays visible while the messages drop is a different interaction from keeping both at their original vertical positions.
+
+## Configure native stack
+
+The navigator chooses the transition and moves the system keyboard. The policy controls the keyboard-controller animation callbacks that your layout consumes. Both parts need to agree:
+
+| Policy          | `keyboardHandlingEnabled` | `fullScreenGestureEnabled` | `animation`     | `animationMatchesGesture` |
+| --------------- | ------------------------- | -------------------------- | --------------- | ------------------------- |
+| `close`         | `true`                    | `true`                     | `"default"`     | `false`                   |
+| `none`          | `false`                   | `true`                     | `"default"`     | `false`                   |
+| `interactively` | `false`                   | `true`                     | `"simple_push"` | `true`                    |
+
+```tsx
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+
+const Stack = createNativeStackNavigator();
+
+function Navigation({ mode }) {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="Inbox" component={Inbox} />
+      <Stack.Screen
+        name="Chat"
+        component={Chat}
+        options={{
+          fullScreenGestureEnabled: true,
+          keyboardHandlingEnabled: mode === "close",
+          animation: mode === "interactively" ? "simple_push" : "default",
+          animationMatchesGesture: mode === "interactively",
+        }}
+      />
+    </Stack.Navigator>
+  );
+}
+```
+
+Configure the matching policy in the screen:
+
+```tsx
+import { useEffect } from "react";
+import { KeyboardController } from "react-native-keyboard-controller";
+
+useEffect(() => {
+  KeyboardController.setInteractiveBackSwipe(mode);
+}, [mode]);
+```
+
+The setting persists until explicitly changed. Passing `null` restores the normal event handling. See the [API reference](../api/keyboard-controller#setinteractivebackswipe-) for the method signature.
+
+Your existing keyboard-aware layout still handles placement. The playground uses [`useReanimatedKeyboardAnimation`](../api/hooks/keyboard/use-reanimated-keyboard-animation) to translate the chat above the keyboard. The policy changes the values delivered to keyboard-controller's animation handlers; it does not filter UIKit notifications or `KeyboardEvents`.
+
+### Do I need `close`?
+
+If you only want to dismiss the keyboard, use the navigator's keyboard handling first. A separate close policy is unnecessary for the JS stack. In the tested native-stack configuration with the screens patch, the navigation flag alone also gives the same close-and-restore interaction.
+The experiment retains `close` as an explicit layout-callback policy and a third playground choice. It schedules the content adjustment outside the interactive navigation transaction; it does not replace `keyboardHandlingEnabled` or introduce a new way to dismiss the system keyboard. Use it when you need that explicit callback policy, rather than as a requirement for closing.
+
+Animated focus restoration after a canceled native-stack `close` gesture currently also requires the experimental screens patch included in the examples: `react-native-screens+4.27.0.patch` in FabricExample and `react-native-screens+4.16.0.patch` in example. Those patches dismiss the responder before UIKit starts the pop and restore focus after cancellation. The policy alone does not fix instant keyboard restoration in unpatched screens.
+
+### Version and gesture differences
+
+The React Native baseline recordings use an iPhone 17 Pro simulator with iOS 26.5, React Native 0.87.1 and screens 4.27.0. The configuration table describes that tested setup; the app references above were recorded separately on the physical iPhone.
+
+`fullScreenGestureEnabled` chooses more than the area where the gesture begins. Depending on screens and iOS versions, it can select a native or custom interactive transition, which also changes keyboard movement. `animationMatchesGesture` and `simple_push` select the custom transition used by the `interactively` example. Read the navigator's [gesture options](https://reactnavigation.org/docs/native-stack-navigator/#fullscreengestureenabled) and check your installed screens version before applying the table to an older stack.
+
+The older `example` application uses screens 4.16.0. Its custom full-screen transition lowers the keyboard even in `none` mode, so that version does not reproduce the Messages interaction: keeping the content up can leave a gap above the keyboard. Use FabricExample with screens 4.27.0 for the native full-screen comparison on iOS 26. The policy controls the content's vertical position; the navigator determines the keyboard's movement. Older iOS versions need separate verification.
+
+The current experiment assumes a horizontal push/pop and one configured navigation flow. Modals, overlapping transitions and nested navigation need separate verification.
+
+## Try the playground
+
+Open **Interactive back swipe** in either example application. Select a policy, open the chat and focus Message. Drag right, pause halfway, then reverse to cancel. Repeat and complete the swipe.
+
+- All three policies use the same chat layout, so differences in vertical movement are easy to compare.
+- The **Native stack**, **Dismiss** and **JS stack** controls use no policy. **Dismiss** only enables native-stack keyboard dismissal, for comparison with `close`.
+
+The [visual E2E test](https://github.com/kirillzyusko/react-native-keyboard-controller/blob/main/e2e/kit/018-interactive-back-swipe.e2e.ts) asserts that each canceled gesture returns to one common keyboard-open screenshot and each completed swipe returns to the same setup screenshot. This experimental regression suite is currently failing under Detox on iOS 26.5; see the [verification notes](https://github.com/kirillzyusko/react-native-keyboard-controller/blob/main/experiments/keyboard-transitions/README.md#verification) for the observed failures.

@@ -76,32 +76,9 @@ Experimental policy for keyboard layout events during a horizontal native-stack 
 - `none`: preserve the outgoing screen's vertical keyboard layout while the screen and keyboard slide horizontally.
 - `interactively`: update the layout alongside the keyboard's vertical dismissal, including a reversed gesture and the completion animation.
 
-The FabricExample playground includes an experimental patch for `react-native-screens` 4.27.0 to animate keyboard restoration after a canceled `close` gesture. That restoration currently requires the screens patch as well as this policy.
+The setting controls keyboard-controller animation callbacks; UIKit notifications and `KeyboardEvents` retain their normal lifecycle. The navigator still owns keyboard dismissal and movement. Pair the policy with the native-stack configuration shown in the [Interactive back swipe guide](../guides/interactive-back-swipe).
 
-The navigator owns the keyboard animation. Pair the policy with these native-stack options:
-
-```tsx
-<Stack.Screen
-  name="Chat"
-  component={Chat}
-  options={{
-    fullScreenGestureEnabled: true,
-    keyboardHandlingEnabled: mode === "close",
-    animation: mode === "interactively" ? "simple_push" : "default",
-    animationMatchesGesture: mode === "interactively",
-  }}
-/>
-```
-
-Configure the corresponding policy inside the screen:
-
-```tsx
-useEffect(() => {
-  KeyboardController.setInteractiveBackSwipe(mode);
-}, [mode]);
-```
-
-This experiment uses public UIKit transition APIs and does not change keyboard materials. It affects keyboard-controller animation handlers; UIKit keyboard notifications and `KeyboardEvents` continue to report the system events. The policy is global, opt-in, and currently intended for one configured navigation flow at a time. The **Interactive back swipe** screen in FabricExample demonstrates all three modes.
+Both example applications include a playground with all three modes and React Navigation baselines. Animated keyboard restoration after a canceled `close` gesture currently requires their experimental `react-native-screens` patch.
 
 ### `dismiss`
 
