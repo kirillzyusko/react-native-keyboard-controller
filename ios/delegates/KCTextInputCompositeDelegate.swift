@@ -7,21 +7,31 @@
 
 import Foundation
 
+/// `caretRect(for:)` is in `textInputView`'s coordinates. For a `UITextField` that is its inner text area, which
+/// starts below the field's top padding, so the caret came out higher than it is. Android measures y from the
+/// field's top, and so does `KeyboardAwareScrollView` when it adds the caret to the input's layout.
+func caretYOffset(in textInput: UITextInput) -> CGFloat {
+  guard let textField = textInput as? UITextField else { return 0 }
+
+  return textField.textInputView.convert(CGPoint.zero, to: textField).y
+}
+
 func textSelection(in textInput: UITextInput) -> NSDictionary? {
   if let selectedRange = textInput.selectedTextRange {
     let caretRectStart = textInput.caretRect(for: selectedRange.start)
     let caretRectEnd = textInput.caretRect(for: selectedRange.end)
+    let yOffset = caretYOffset(in: textInput)
 
     return [
       "selection": [
         "start": [
           "x": caretRectStart.origin.x,
-          "y": caretRectStart.origin.y,
+          "y": caretRectStart.origin.y + yOffset,
           "position": textInput.offset(from: textInput.beginningOfDocument, to: selectedRange.start),
         ],
         "end": [
           "x": caretRectEnd.origin.x + caretRectEnd.size.width,
-          "y": caretRectEnd.origin.y + caretRectEnd.size.height,
+          "y": caretRectEnd.origin.y + caretRectEnd.size.height + yOffset,
           "position": textInput.offset(from: textInput.beginningOfDocument, to: selectedRange.end),
         ],
       ],
