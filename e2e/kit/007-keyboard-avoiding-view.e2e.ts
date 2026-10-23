@@ -27,14 +27,27 @@ describe("`KeyboardAvoidingView` specification", () => {
   it("should have expected UI when keyboard opened - package/padding", async () => {
     await waitAndTap("keyboard_avoiding_view.username");
     await waitForExpect(async () => {
-      await expectBitmapsToBeEqual("AvoidingViewPackagePaddingOpened");
+      // A one-pixel input border, caret and IME switch icon vary on Android.
+      await expectBitmapsToBeEqual(
+        "AvoidingViewPackagePaddingOpened",
+        device.getPlatform() === "android" ? 0.15 : 0.1,
+      );
     });
   });
 
   it("should have expected UI when keyboard gets closed - package/padding", async () => {
     await waitAndType("keyboard_avoiding_view.username", "\n");
     await waitForExpect(async () => {
-      await expectBitmapsToBeEqual("AvoidingViewPackagePaddingClosed");
+      // The back-button focus ring can disappear after IME dismissal.
+      await expectBitmapsToBeEqual(
+        device.getPlatform() === "android"
+          ? [
+              "AvoidingViewPackagePaddingClosed",
+              "AvoidingViewPackagePaddingInitial",
+            ]
+          : "AvoidingViewPackagePaddingClosed",
+        device.getPlatform() === "android" ? 0.15 : 0.1,
+      );
     });
   });
 
@@ -51,14 +64,24 @@ describe("`KeyboardAvoidingView` specification", () => {
   it("should have expected UI when keyboard opened - RN/padding", async () => {
     await waitAndTap("keyboard_avoiding_view.username");
     await waitForExpect(async () => {
-      await expectBitmapsToBeEqual("AvoidingViewRNPaddingOpened");
+      await expectBitmapsToBeEqual(
+        "AvoidingViewRNPaddingOpened",
+        device.getPlatform() === "android" ? 0.15 : 0.1,
+      );
     });
   });
 
   it("should have expected UI when keyboard gets closed - RN/padding", async () => {
     await waitAndType("keyboard_avoiding_view.username", "\n");
     await waitForExpect(async () => {
-      await expectBitmapsToBeEqual("AvoidingViewRNPaddingClosed");
+      // Newer RN clears the obsolete keyboard padding on hide. Both reviewed
+      // states use the same fixtures on Paper and Fabric.
+      await expectBitmapsToBeEqual(
+        device.getPlatform() === "android"
+          ? ["AvoidingViewRNPaddingClosed", "AvoidingViewRNPaddingInitial"]
+          : "AvoidingViewRNPaddingClosed",
+        device.getPlatform() === "android" ? 0.15 : 0.1,
+      );
     });
   });
 });

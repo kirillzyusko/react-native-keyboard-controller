@@ -147,6 +147,11 @@ export const scrollUpUntilElementIsBarelyVisible = async (
 ): Promise<void> => {
   const distanceToScroll = device.getPlatform() === "ios" ? 80 : 50;
 
+  // Selection updates schedule a scroll after a 200 ms debounce on the UI thread.
+  if (device.getPlatform() === "android") {
+    await delay(250);
+  }
+
   for (;;) {
     await element(by.id(scrollViewId)).scroll(
       distanceToScroll,
@@ -162,6 +167,7 @@ export const scrollUpUntilElementIsBarelyVisible = async (
       } else {
         // on Android visible is always true
         await element(by.id(elementId)).tap({ x: 0, y: 25 });
+        await delay(250);
       }
     } catch (e) {
       await element(by.id(scrollViewId)).scroll(50, "down", 0.01, 0.5);

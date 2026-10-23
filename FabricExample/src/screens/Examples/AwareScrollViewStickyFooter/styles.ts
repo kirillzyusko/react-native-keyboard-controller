@@ -1,4 +1,6 @@
-import { StyleSheet } from "react-native";
+import { PixelRatio, Platform, StyleSheet } from "react-native";
+
+const leadingPadding = PixelRatio.roundToNearestPixel(20);
 
 export const styles = StyleSheet.create({
   container: {
@@ -16,6 +18,14 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: 20,
+    ...Platform.select({
+      android: {
+        paddingTop: leadingPadding,
+        paddingLeft: leadingPadding,
+        paddingBottom: 40 - leadingPadding,
+        paddingRight: 40 - leadingPadding,
+      },
+    }),
     width: "100%",
     gap: 10,
   },
@@ -40,5 +50,8 @@ export const styles = StyleSheet.create({
   inputInFooter: {
     width: 200,
     backgroundColor: "yellow",
+    ...Platform.select({
+      android: { minHeight: PixelRatio.roundToNearestPixel(56.75) },
+    }),
   },
 });

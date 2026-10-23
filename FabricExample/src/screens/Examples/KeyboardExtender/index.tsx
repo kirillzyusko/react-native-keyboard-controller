@@ -3,6 +3,8 @@ import {
   Alert,
   Image,
   Keyboard,
+  PixelRatio,
+  Platform,
   StyleSheet,
   Text,
   TextInput,
@@ -106,15 +108,20 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: 20,
+    ...Platform.select({
+      android: { paddingLeft: PixelRatio.roundToNearestPixel(20) },
+    }),
   },
   input: {
     height: 40,
     borderWidth: 2,
     borderColor: "#1c1c1c",
     borderRadius: 8,
-    padding: 10,
+    // Fabric includes the border in the native input's padding.
+    padding: Platform.OS === "android" ? 8 : 10,
     fontSize: 18,
-    marginBottom: 20,
+    marginBottom:
+      Platform.OS === "android" ? PixelRatio.roundToNearestPixel(20) : 20,
   },
   keyboardExtend: {
     width: "100%",

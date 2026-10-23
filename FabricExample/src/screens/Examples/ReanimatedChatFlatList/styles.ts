@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { PixelRatio, Platform, StyleSheet } from "react-native";
 
 export default StyleSheet.create({
   container: {
@@ -9,7 +9,11 @@ export default StyleSheet.create({
     marginRight: 12,
   },
   contentContainer: { justifyContent: "flex-end", flexGrow: 1 },
-  textInput: { height: 50, width: "100%", backgroundColor: "#BCBCBC" },
+  textInput: {
+    height: Platform.OS === "android" ? PixelRatio.roundToNearestPixel(50) : 50,
+    width: "100%",
+    backgroundColor: "#BCBCBC",
+  },
   fab: {
     position: "absolute",
     bottom: 50,

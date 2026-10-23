@@ -1,6 +1,8 @@
 import { useRef, useState } from "react";
 import {
   Button,
+  PixelRatio,
+  Platform,
   StyleSheet,
   TextInput,
   type TextInputInstance,
@@ -65,13 +67,13 @@ function CloseScreen() {
 
 const styles = StyleSheet.create({
   input: {
-    height: 50,
+    height: Platform.OS === "android" ? PixelRatio.roundToNearestPixel(50) : 50,
     width: "84%",
     borderWidth: 2,
     borderColor: "#3C3C3C",
     borderRadius: 8,
     alignSelf: "center",
-    paddingHorizontal: 8,
+    paddingHorizontal: Platform.OS === "android" ? 6 : 8,
     marginTop: 16,
   },
 });

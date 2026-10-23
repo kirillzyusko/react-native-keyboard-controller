@@ -314,19 +314,24 @@ const KeyboardAwareScrollView = forwardRef<
 
       return true;
     }, [input, lastSelection, layout]);
-    const scrollFromCurrentPosition = useCallback(() => {
-      "worklet";
+    const scrollFromCurrentPosition = useCallback(
+      (measuredPosition?: number) => {
+        "worklet";
 
-      const prevLayout = layout.value;
+        const prevLayout = layout.value;
 
-      if (!updateLayoutFromSelection()) {
-        return;
-      }
+        if (!updateLayoutFromSelection()) {
+          return;
+        }
 
-      performScrollWithPositionRestoration(position.value);
+        performScrollWithPositionRestoration(
+          measuredPosition ?? position.value,
+        );
 
-      layout.value = prevLayout;
-    }, [performScrollWithPositionRestoration]);
+        layout.value = prevLayout;
+      },
+      [performScrollWithPositionRestoration, position],
+    );
     const onChangeText = useCallback(() => {
       "worklet";
       scrollFromCurrentPosition();
@@ -543,15 +548,18 @@ const KeyboardAwareScrollView = forwardRef<
 
     const synchronize = useCallback(async () => {
       await update();
+      // Keep the measured layout and its scroll offset together. A keyboard
+      // callback can scroll again before the animation frame runs.
+      const measuredPosition = position.value;
 
       requestAnimationFrame(() => {
         runOnUI(() => {
           "worklet";
 
-          scrollFromCurrentPosition();
+          scrollFromCurrentPosition(measuredPosition);
         })();
       });
-    }, [update, scrollFromCurrentPosition]);
+    }, [update, scrollFromCurrentPosition, position]);
 
     useImperativeHandle(
       ref,
