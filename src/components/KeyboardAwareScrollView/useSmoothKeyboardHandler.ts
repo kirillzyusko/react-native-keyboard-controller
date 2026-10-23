@@ -72,8 +72,15 @@ export const useSmoothKeyboardHandler: typeof useKeyboardHandler = (
 
       return event;
     },
-    (evt) => {
-      if (!evt) {
+    (evt, previous) => {
+      // A dependency change restarts the mapper with the same keyboard frame.
+      // Replaying it can race with a pending focused-input layout measurement.
+      if (
+        !evt ||
+        (evt.height === previous?.height &&
+          evt.target === previous?.target &&
+          evt.progress === previous?.progress)
+      ) {
         return;
       }
       handler.onMove?.(evt);
