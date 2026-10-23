@@ -1,6 +1,7 @@
 package com.reactnativekeyboardcontroller.listeners
 
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.view.View.OnLayoutChangeListener
 import android.view.ViewTreeObserver.OnGlobalFocusChangeListener
@@ -136,6 +137,13 @@ class FocusedInputObserver(
     val input = lastFocusedInput ?: return
 
     val (x, y) = input.screenLocation
+    var ancestor = input.parent
+    val path = mutableListOf<String>()
+    while (ancestor is View) {
+      path.add("${ancestor.javaClass.simpleName}#${ancestor.id}:scrollY=${ancestor.scrollY},height=${ancestor.height},paddingBottom=${ancestor.paddingBottom},top=${ancestor.top}")
+      ancestor = ancestor.parent
+    }
+    Log.i("KC_TRACE_NATIVE", "${System.currentTimeMillis()} measure input=${input.id} y=$y attached=${input.isAttachedToWindow} focused=${input.hasFocus()} path=$path")
     val event =
       FocusedInputLayoutChangedEventData(
         x = input.x.dp,

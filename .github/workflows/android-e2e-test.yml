@@ -1,5 +1,6 @@
 name: 🛠 Android e2e tests
 on:
+  workflow_dispatch:
   pull_request:
     paths:
       - ".github/workflows/android-e2e-test.yml"
@@ -11,6 +12,7 @@ on:
   push:
     branches:
       - main
+      - codex/android-sticky-offset-race
     paths:
       - ".github/workflows/android-e2e-test.yml"
       - "package.json"
@@ -95,11 +97,7 @@ jobs:
       cancel-in-progress: true
     strategy:
       matrix:
-        devices:
-          [
-            { api: 28, target: default, soft-check: false },
-            { api: 31, target: google_apis, soft-check: true },
-          ]
+        devices: [{ api: 28, target: default, soft-check: false }]
     needs: build
     steps:
       - uses: actions/checkout@v4
@@ -164,9 +162,9 @@ jobs:
           disable-animations: false
           avd-name: e2e_emulator_${{ matrix.devices.api }}
           arch: x86_64
-          script: SOFT_CHECK=${{ matrix.devices.soft-check }} yarn test-example:android-${{ matrix.devices.api }}
+          script: bash ../.github/scripts/android-sticky-diagnostic.sh
       - uses: actions/upload-artifact@v4
-        if: ${{ failure() }}
+        if: ${{ always() }}
         with:
-          name: android-fail-screen-shoots
+          name: android-sticky-diagnostics-${{ github.run_id }}-${{ github.run_attempt }}
           path: e2e/artifacts

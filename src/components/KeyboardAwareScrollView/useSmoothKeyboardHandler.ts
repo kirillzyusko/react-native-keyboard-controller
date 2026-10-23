@@ -76,6 +76,7 @@ export const useSmoothKeyboardHandler: typeof useKeyboardHandler = (
       if (!evt) {
         return;
       }
+      console.log("KC_TRACE_SMOOTH_REACTION", Date.now(), JSON.stringify(evt));
       handler.onMove?.(evt);
 
       // dispatch `onEnd`
@@ -93,6 +94,7 @@ export const useSmoothKeyboardHandler: typeof useKeyboardHandler = (
       onStart: (e) => {
         "worklet";
 
+        console.log("KC_TRACE_KEYBOARD_START", Date.now(), JSON.stringify(e));
         // immediately dispatch onStart/onEnd events if onStart dispatched with the same height
         // and don't wait for animation 250ms
         if (

@@ -43,6 +43,7 @@ const useScrollState = (
   const eventHandler = useEvent((event: ScrollEvent) => {
     "worklet";
 
+    console.log("KC_TRACE_SCROLL", Date.now(), JSON.stringify(event));
     // eslint-disable-next-line react-compiler/react-compiler
     offset.value = event.contentOffset.y;
     layout.value = event.layoutMeasurement;
