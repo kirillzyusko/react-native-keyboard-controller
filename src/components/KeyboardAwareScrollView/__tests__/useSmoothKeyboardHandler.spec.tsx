@@ -24,43 +24,35 @@ jest.mock("react-native/Libraries/Utilities/Platform", () => ({
   },
 }));
 
-jest.mock("react-native-reanimated", () => {
+jest.mock("react-native-reanimated/src/hook/useSharedValue", () => {
   const { useRef } = jest.requireActual("react");
 
   return {
-    ...jest.requireActual("react-native-reanimated/mock"),
     useSharedValue: (value: unknown) => useRef({ value }).current,
-    withTiming: (value: number) => value,
   };
 });
 
-jest.mock("../../../reanimated", () => {
-  const { useEffect, useRef } = jest.requireActual("react");
+jest.mock("react-native-reanimated", () => ({
+  ...jest.requireActual("react-native-reanimated/mock"),
+  ...jest.requireMock("react-native-reanimated/src/hook/useSharedValue"),
+  withTiming: (value: number) => value,
+}));
 
-  return {
-    useAnimatedReaction: (
-      prepare: () => unknown,
-      react: (current: unknown, previous: unknown) => void,
-      dependencies: unknown[],
-    ) => {
-      // Reanimated preserves the previous value when it restarts a mapper.
-      // Each new mapper also runs immediately, without a native keyboard event.
-      const previous = useRef(null);
+jest.mock("react-native-reanimated/src/core", () => ({
+  ...jest.requireActual("react-native-reanimated/src/core"),
+  // Run the UI mapper synchronously; useAnimatedReaction itself is real.
+  startMapper: (mapper: () => void) => {
+    mockRunReaction = mapper;
+    mapper();
 
-      useEffect(() => {
-        mockRunReaction = () => {
-          const current = prepare();
+    return 1;
+  },
+  stopMapper: jest.fn(),
+}));
 
-          react(current, previous.current);
-          previous.current = current;
-        };
-        mockRunReaction();
-        // Match Reanimated's mapper restart when handler dependencies change.
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, dependencies);
-    },
-  };
-});
+jest.mock("../../../reanimated", () =>
+  jest.requireActual("react-native-reanimated/src/hook/useAnimatedReaction"),
+);
 
 const event = (height: number, target = 1): NativeEvent => ({
   height,
