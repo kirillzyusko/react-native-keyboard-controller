@@ -18,26 +18,32 @@ const DEVICE_PREFERENCES: Record<string, Preference> = {
     height: 1920,
   },
   "iPhone 17 Pro": {
+    emojiButtonCoordinates: { x: 40, y: 830 },
     width: 393,
     height: 852,
   },
   "iPhone 16e": {
+    emojiButtonCoordinates: { x: 40, y: 830 },
     width: 390,
     height: 844,
   },
   "iPhone 16 Pro": {
+    emojiButtonCoordinates: { x: 40, y: 830 },
     width: 393,
     height: 852,
   },
   "iPhone 15 Pro": {
+    emojiButtonCoordinates: { x: 40, y: 830 },
     width: 393,
     height: 852,
   },
   "iPhone 14 Pro": {
+    emojiButtonCoordinates: { x: 40, y: 830 },
     width: 393,
     height: 852,
   },
   "iPhone 13 Pro": {
+    emojiButtonCoordinates: { x: 40, y: 830 },
     width: 390,
     height: 844,
   },

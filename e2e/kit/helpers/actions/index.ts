@@ -100,13 +100,6 @@ export const clearAndType = async (id: string, text: string): Promise<void> => {
 };
 
 export const switchToEmojiKeyboard = async () => {
-  if (device.getPlatform() === "ios") {
-    // iOS exposes a hidden duplicate after the active Emoji button.
-    await element(by.label("Emoji")).atIndex(0).tap();
-
-    return;
-  }
-
   const emojiButtonCoordinates = getDevicePreference().emojiButtonCoordinates;
 
   // emoji button is not available
@@ -116,9 +109,14 @@ export const switchToEmojiKeyboard = async () => {
 
   // on Android we need to use UiDevice, because keyboard is a third party application,
   // so we have to press through the screen (not the app)
-  const uiDevice = device.getUiDevice();
+  if (device.getPlatform() === "android") {
+    const uiDevice = device.getUiDevice();
 
-  await uiDevice.click(emojiButtonCoordinates.x, emojiButtonCoordinates.y);
+    await uiDevice.click(emojiButtonCoordinates.x, emojiButtonCoordinates.y);
+  } else {
+    // iOS exposes a hidden duplicate after the active Emoji button.
+    await element(by.label("Emoji")).atIndex(0).tap();
+  }
 };
 
 export const scrollDownUntilElementIsVisible = async (
