@@ -41,14 +41,10 @@ Keyboard state continues to be tracked while frozen:
 | Moment                         | Behavior                                                                                                                                                                                  |
 | ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `freeze = true`                | Observe keyboard events without updating keyboard padding or scroll position.                                                                                                             |
-| `true → false`                 | Synchronize padding with the latest keyboard height, accounting for `offset`. Keep the current content position, except when the native scroll view must clamp it to the available range. |
+| `true -> false`                | Synchronize padding with the latest keyboard height, accounting for `offset`. Keep the current content position, except when the native scroll view must clamp it to the available range. |
 | Subsequent keyboard animations | Resume `keyboardLiftBehavior`, accounting for scroll adjustments that were actually applied.                                                                                              |
 
 Skipped scroll adjustments are not replayed. For example, if the keyboard closes while frozen, its padding is removed when you unfreeze without replaying the skipped closing scroll.
-
-:::note
-`freeze` does not prevent user scrolling or calls to scroll methods.
-:::
 
 ### `inverted`
 
