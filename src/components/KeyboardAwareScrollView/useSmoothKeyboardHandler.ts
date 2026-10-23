@@ -72,8 +72,15 @@ export const useSmoothKeyboardHandler: typeof useKeyboardHandler = (
 
       return event;
     },
-    (evt) => {
-      if (!evt) {
+    (evt, previous) => {
+      // A dependency change restarts the mapper with the same keyboard frame.
+      // Replaying it can race with a pending focused-input layout measurement.
+      if (
+        !evt ||
+        (evt.height === previous?.height &&
+          evt.target === previous?.target &&
+          evt.progress === previous?.progress)
+      ) {
         return;
       }
       console.log("KC_TRACE_SMOOTH_REACTION", Date.now(), JSON.stringify(evt));
@@ -95,6 +102,7 @@ export const useSmoothKeyboardHandler: typeof useKeyboardHandler = (
         "worklet";
 
         console.log("KC_TRACE_KEYBOARD_START", Date.now(), JSON.stringify(e));
+
         // immediately dispatch onStart/onEnd events if onStart dispatched with the same height
         // and don't wait for animation 250ms
         if (
