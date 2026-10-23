@@ -28,20 +28,14 @@ permissions:
 
 jobs:
   e2e-test:
-    name: API 31 focus comparison (${{ matrix.variant.name }})
+    name: Android API 31 standard full suite
     runs-on: ubuntu-latest
     timeout-minutes: 90
     env:
       WORKING_DIRECTORY: example
     concurrency:
-      group: android-e2e-focus-${{ matrix.variant.name }}-${{ github.ref }}
+      group: android-e2e-standard-31-${{ github.ref }}
       cancel-in-progress: true
-    strategy:
-      fail-fast: false
-      matrix:
-        variant:
-          - { name: baseline, run: 39921548162 }
-          - { name: fixed, run: 39947588356 }
     steps:
       - uses: actions/checkout@v4
       - name: Free Disk Space (Ubuntu)
@@ -57,7 +51,7 @@ jobs:
           name: android-e2e-apk
           path: example/android/app/build/outputs/apk/
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          run-id: ${{ matrix.variant.run }}
+          run-id: 39947588356
       - uses: actions/setup-node@v4
         with:
           node-version: 22.x
@@ -107,9 +101,9 @@ jobs:
           disable-animations: false
           avd-name: e2e_emulator_31
           arch: x86_64
-          script: SOFT_CHECK=true APK_VARIANT=${{ matrix.variant.name }} bash ../.github/scripts/android-api31-focus-comparison.sh
+          script: SOFT_CHECK=true bash ../.github/scripts/android-api31-standard.sh
       - uses: actions/upload-artifact@v4
         if: ${{ always() }}
         with:
-          name: android-api31-focus-${{ matrix.variant.name }}-${{ github.run_id }}
+          name: android-api31-standard-${{ github.run_id }}-${{ github.run_attempt }}
           path: e2e/artifacts
