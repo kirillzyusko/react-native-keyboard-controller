@@ -5,7 +5,11 @@ import { KeyboardController } from "../../module";
 
 import type { IKeyboardState } from "../../types";
 
-const EVENTS = ["keyboardWillShow", "keyboardDidHide"] as const;
+const EVENTS = [
+  "keyboardWillShow",
+  "keyboardDidShow",
+  "keyboardDidHide",
+] as const;
 
 const getLatestState = () => ({
   ...KeyboardController.state(),
