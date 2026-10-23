@@ -25,17 +25,17 @@ jest.mock("react-native/Libraries/Utilities/Platform", () => ({
 }));
 
 jest.mock("react-native-reanimated", () => {
-  const { useRef } = require("react");
+  const { useRef } = jest.requireActual("react");
 
   return {
-    ...require("react-native-reanimated/mock"),
+    ...jest.requireActual("react-native-reanimated/mock"),
     useSharedValue: (value: unknown) => useRef({ value }).current,
     withTiming: (value: number) => value,
   };
 });
 
 jest.mock("../../../reanimated", () => {
-  const { useEffect, useRef } = require("react");
+  const { useEffect, useRef } = jest.requireActual("react");
 
   return {
     useAnimatedReaction: (

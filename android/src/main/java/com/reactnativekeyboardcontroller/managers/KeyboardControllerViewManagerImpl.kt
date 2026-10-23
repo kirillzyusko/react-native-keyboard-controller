@@ -1,6 +1,5 @@
 package com.reactnativekeyboardcontroller.managers
 
-import android.util.Log
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.common.MapBuilder
 import com.facebook.react.uimanager.ThemedReactContext
@@ -33,10 +32,8 @@ class KeyboardControllerViewManagerImpl {
   }
 
   fun synchronizeFocusedInputLayout(view: EdgeToEdgeReactViewGroup) {
-    Log.i("KC_TRACE_NATIVE", "${System.currentTimeMillis()} synchronize start")
     view.callback?.layoutObserver?.syncUpLayout()
     view.reactContext.emitEvent("KeyboardController::layoutDidSynchronize", Arguments.createMap())
-    Log.i("KC_TRACE_NATIVE", "${System.currentTimeMillis()} synchronize ack")
   }
 
   fun setEnabled(

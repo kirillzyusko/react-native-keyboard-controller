@@ -212,21 +212,6 @@ const KeyboardAwareScrollView = forwardRef<
           const targetScrollY =
             Math.max(interpolatedScrollTo, 0) + scrollPosition.value;
 
-          if (animated) {
-            console.log(
-              "KC_TRACE_TARGET_BELOW",
-              Date.now(),
-              JSON.stringify({
-                bottomOffset,
-                height,
-                keyboardHeight: keyboardHeight.value,
-                scrollPosition: scrollPosition.value,
-                position: position.value,
-                targetScrollY,
-                layout: layout.value,
-              }),
-            );
-          }
           scrollTo(scrollViewAnimatedRef, 0, targetScrollY, animated);
 
           return interpolatedScrollTo;
@@ -236,22 +221,6 @@ const KeyboardAwareScrollView = forwardRef<
           const positionOnScreen = visibleRect - bottomOffset;
           const topOfScreen = scrollPosition.value + point;
 
-          if (animated) {
-            console.log(
-              "KC_TRACE_TARGET_ABOVE",
-              Date.now(),
-              JSON.stringify({
-                bottomOffset,
-                height,
-                keyboardHeight: keyboardHeight.value,
-                scrollViewPageY: scrollViewPageY.value,
-                scrollPosition: scrollPosition.value,
-                position: position.value,
-                targetScrollY: topOfScreen - positionOnScreen,
-                layout: layout.value,
-              }),
-            );
-          }
           scrollTo(
             scrollViewAnimatedRef,
             0,
@@ -348,17 +317,6 @@ const KeyboardAwareScrollView = forwardRef<
     const scrollFromCurrentPosition = useCallback(() => {
       "worklet";
 
-      console.log(
-        "KC_TRACE_RESTORE",
-        Date.now(),
-        JSON.stringify({
-          bottomOffset,
-          position: position.value,
-          scrollPosition: scrollPosition.value,
-          input: input.value,
-          selection: lastSelection.value,
-        }),
-      );
       const prevLayout = layout.value;
 
       if (!updateLayoutFromSelection()) {
@@ -584,7 +542,6 @@ const KeyboardAwareScrollView = forwardRef<
     );
 
     const synchronize = useCallback(async () => {
-      console.log("KC_TRACE_SYNC", Date.now(), bottomOffset);
       await update();
 
       requestAnimationFrame(() => {

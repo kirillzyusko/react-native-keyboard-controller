@@ -62,6 +62,8 @@ jobs:
             ${{ runner.os }}-yarn-
       - name: Install root dependencies
         run: yarn install
+      - name: Verify keyboard resubscription regression
+        run: yarn test --runInBand --watchman=false --runTestsByPath src/components/KeyboardAwareScrollView/__tests__/smoothHandlerResubscription.spec.tsx
       - name: Install example project dependencies
         working-directory: ${{ env.WORKING_DIRECTORY }}
         run: yarn
@@ -171,5 +173,5 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: ${{ always() }}
         with:
-          name: android-sticky-diagnostics-${{ github.run_id }}-${{ github.run_attempt }}
+          name: android-sticky-diagnostics-${{ matrix.devices.api }}-${{ github.run_id }}-${{ github.run_attempt }}
           path: e2e/artifacts

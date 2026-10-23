@@ -97,7 +97,6 @@ export const KeyboardProvider = (props: KeyboardProviderProps) => {
   const setKeyboardHandlers = useEventHandlerRegistration(viewRef);
   const setInputHandlers = useEventHandlerRegistration(viewRef);
   const update = useCallback(async () => {
-    console.log("KC_TRACE_REQUEST", Date.now());
     KeyboardControllerViewCommands.synchronizeFocusedInputLayout(
       viewRef.current,
     );
@@ -106,7 +105,6 @@ export const KeyboardProvider = (props: KeyboardProviderProps) => {
       const subscription = FocusedInputEvents.addListener(
         "layoutDidSynchronize",
         () => {
-          console.log("KC_TRACE_ACK", Date.now());
           subscription.remove();
           resolve(null);
         },
@@ -190,7 +188,6 @@ export const KeyboardProvider = (props: KeyboardProviderProps) => {
       onFocusedInputLayoutChanged: (e) => {
         "worklet";
 
-        console.log("KC_TRACE_INPUT", Date.now(), JSON.stringify(e));
         if (e.target !== -1) {
           layout.value = e;
         } else {
