@@ -118,6 +118,8 @@ The opt-in debug launch argument `--issue243-trace` enables `InteractiveSwipeTra
 
 The preserved `.argent/flows/interactive-back-swipe-*.yaml` recordings use their original Metro port **8097**, not the project's normal 8083. Start the matching diagnostic config on 8097 to replay those exact recordings. The `menu` flow needs `ARGENT_BACK_SWIPE_FULL_APP=1`; the individual mode flows need the standalone entry. The flows target an iPhone 17 Pro on iOS 26.5. They use semantic selectors, explicit keyboard/destination checks and deliberate raw back gestures. The unlabeled LogBox X has a documented, device-specific coordinate fallback.
 
+The newer `.argent/flows/keyboard-transitions-menu.yaml` uses **8083** with `keyboard-transitions.metro.config.js`. It checks the combined review menu, opens both examples, focuses the input before and after enabling the snapshot API, checks the software keyboard and returns to the menu. It uses semantic targets throughout. The two Feedback idle checks warn because the Lottie backdrop intentionally keeps moving; the following accessibility checks establish keyboard readiness. This smoke test does not establish a visual before/after fix.
+
 Published current/proposed recordings are in [#1699](https://github.com/kirillzyusko/react-native-keyboard-controller/issues/1699). Each proposed mode includes a canceled and a completed swipe. Back-swipe verification was performed on an iPhone 17 Pro simulator, iOS 26.5, RN 0.87.1 and screens 4.27.0. The gray snapshot API was previously checked on an iPhone 17 Pro simulator, iOS 26.2, including repeated pushes and text input. Those earlier runs are evidence of the experiments, not broad platform coverage.
 
 The `patches/` directory preserves the tested external reproduction's API and Lottie backdrop changes. These historical patches target `rhinck/keyboard-example`, not this repository. That temporary reproduction checkout is no longer present; the current native implementations live under `ios/` in this branch. The Lottie patch includes its generated animation JSON so the backdrop experiment can be inspected in full.
@@ -128,6 +130,7 @@ The `patches/` directory preserves the tested external reproduction's API and Lo
 - Library Jest tests passed: 33 suites, 274 tests.
 - SwiftFormat and SwiftLint passed for the six changed library Swift files.
 - FabricExample Debug built for the existing iPhone 17 Pro simulator, iOS 26.5.
+- The combined menu flow replayed end to end on that simulator: 31 passed, 0 failed/errored; two expected idle warnings for the looping Lottie. The snapshot API returned `true`.
 - FabricExample Release built and installed on the connected iPhone 16 Pro, iOS 26.6.1, with the standalone entry and bundled JS.
 - Physical-device UI verification initially stopped before the first screen read: the Argent/XCTest runner timed out enabling automation mode. Installation is verified; on-device interaction and visual behavior are not yet verified by that attempt.
 

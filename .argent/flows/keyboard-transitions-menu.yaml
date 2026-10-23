@@ -1,0 +1,111 @@
+steps:
+  - echo: Metro 8083 uses keyboard-transitions.metro.config.js. This smoke test
+      covers the review menu, both examples, autofocus and snapshot
+      installation. It does not establish a visual before/after fix.
+  - launch:
+      native: org.reactjs.native.example.KeyboardControllerFabricExample
+      ios:
+        app: org.reactjs.native.example.KeyboardControllerFabricExample
+        args:
+          - -RCT_jsLocation
+          - localhost:8083
+  - await:
+      visible:
+        id: transitions.swipe
+      timeout: 30000
+  - await:
+      idle: true
+      timeout: 10000
+  - tap:
+      id: transitions.swipe
+  - await:
+      visible:
+        id: back-swipe.open
+      timeout: 7500
+  - await:
+      idle: true
+      timeout: 10000
+  - tap:
+      id: transitions.home
+  - await:
+      visible:
+        id: transitions.gray
+      timeout: 7500
+  - await:
+      idle: true
+      timeout: 10000
+  - tap:
+      id: transitions.gray
+  - await:
+      visible:
+        id: issue1215.push.package
+      timeout: 7500
+  - await:
+      idle: true
+      timeout: 10000
+  - echo: Feedback intentionally contains a looping Lottie backdrop. Its idle
+      warning can indicate that expected motion; the following input and AX
+      keyboard checks prove readiness.
+  - tap:
+      id: issue1215.push.package
+  - await:
+      visible:
+        id: issue1215.input
+      timeout: 10000
+  - await:
+      idle: true
+      timeout: 3000
+  - tool: await-ui-element
+    args:
+      condition: visible
+      selector:
+        identifier: Return
+      timeoutMs: 10000
+  - tap:
+      id: transitions.home
+  - await:
+      visible:
+        id: transitions.snapshot.enable
+      timeout: 7500
+  - await:
+      idle: true
+      timeout: 10000
+  - tap:
+      id: transitions.snapshot.enable
+  - await:
+      visible:
+        text: "Live snapshot: on"
+      timeout: 7500
+  - tap:
+      id: transitions.gray
+  - await:
+      visible:
+        id: issue1215.push.package
+      timeout: 7500
+  - await:
+      idle: true
+      timeout: 10000
+  - tap:
+      id: issue1215.push.package
+  - await:
+      visible:
+        id: issue1215.input
+      timeout: 10000
+  - await:
+      idle: true
+      timeout: 3000
+  - tool: await-ui-element
+    args:
+      condition: visible
+      selector:
+        identifier: Return
+      timeoutMs: 10000
+  - tap:
+      id: transitions.home
+  - await:
+      visible:
+        id: transitions.swipe
+      timeout: 7500
+  - await:
+      idle: true
+      timeout: 10000
