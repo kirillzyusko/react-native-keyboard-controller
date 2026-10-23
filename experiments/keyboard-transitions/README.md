@@ -126,7 +126,7 @@ The `patches/` directory preserves the tested external reproduction's API and Lo
 
 ### Snapshot verification (2026-10-23)
 
-- TypeScript and ESLint for the selected JS/TS files passed.
+- Library TypeScript passed (`tsconfig.build.json` excludes example apps). ESLint passed for the selected JS/TS files, including the review app.
 - Library Jest tests passed: 33 suites, 274 tests.
 - SwiftFormat and SwiftLint passed for the six changed library Swift files.
 - FabricExample Debug built for the existing iPhone 17 Pro simulator, iOS 26.5.
