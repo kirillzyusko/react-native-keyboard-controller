@@ -153,12 +153,6 @@ function Chat() {
   useEffect(() => {
     KeyboardController.setInteractiveBackSwipe(mode);
   }, [mode]);
-  useEffect(
-    () => () => {
-      KeyboardController.setInteractiveBackSwipe(null);
-    },
-    [],
-  );
 
   return (
     <SafeAreaView edges={bottomEdges} style={styles.container}>

@@ -30,11 +30,6 @@ class KeyboardControllerModule(
     module.preload()
   }
 
-  @ReactMethod
-  fun fixKeyboardTransition(promise: Promise) {
-    promise.resolve(false)
-  }
-
   @Suppress("detekt:UnusedParameter")
   @ReactMethod
   fun setInteractiveBackSwipe(mode: String?) {

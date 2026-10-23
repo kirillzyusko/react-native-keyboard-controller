@@ -1,25 +1,27 @@
-# Keyboard transition experiments
+# Interactive back swipe
 
-Review snapshot for [#1699](https://github.com/kirillzyusko/react-native-keyboard-controller/issues/1699) and the gray keyboard investigation that followed [#1215](https://github.com/kirillzyusko/react-native-keyboard-controller/issues/1215). Both APIs are experimental and opt-in.
-
-## Interactive back swipe
+Experimental iOS keyboard policies for [#1699](https://github.com/kirillzyusko/react-native-keyboard-controller/issues/1699).
 
 ```ts
 KeyboardController.setInteractiveBackSwipe("close");
 KeyboardController.setInteractiveBackSwipe("none");
 KeyboardController.setInteractiveBackSwipe("interactively");
 
-// Restore normal keyboard-controller event handling:
+// Explicitly restore default event handling:
 KeyboardController.setInteractiveBackSwipe(null);
 ```
 
+The setting is global and persists until explicitly changed.
+
 | Mode            | Behavior                                                                                     | Interaction reference |
 | --------------- | -------------------------------------------------------------------------------------------- | --------------------- |
-| `close`         | Close the keyboard at gesture start, independently of finger progress.                       | Telegram, Notes       |
+| `close`         | Close the keyboard when the back gesture starts; restore focus when the gesture is canceled. | Telegram, Notes       |
 | `none`          | Preserve the chat's vertical layout while the screen and keyboard slide horizontally.        | WhatsApp, Messages    |
-| `interactively` | Move the messages and input down with the keyboard; follow a pause, reversal and completion. | Instagram             |
+| `interactively` | Move the messages and input down with the keyboard, following the gesture and its reversal.  | Instagram             |
 
-The navigator owns the keyboard transition. Pair the API with these native-stack options:
+## Native-stack configuration
+
+The navigator owns the keyboard transition. The FabricExample playground pairs each policy with these options:
 
 | Mode            | `fullScreenGestureEnabled` | `keyboardHandlingEnabled` | `animation`     | `animationMatchesGesture` |
 | --------------- | -------------------------- | ------------------------- | --------------- | ------------------------- |
@@ -27,124 +29,64 @@ The navigator owns the keyboard transition. Pair the API with these native-stack
 | `none`          | `true`                     | `false`                   | `"default"`     | `false`                   |
 | `interactively` | `true`                     | `false`                   | `"simple_push"` | `true`                    |
 
-The **Interactive back swipe** screen in FabricExample sets these options, exposes the three modes and resets the policy when Chat unmounts. A radio selector also works with the keyboard already open.
+The **Interactive back swipe** screen exposes all three modes, including a selector that works with the keyboard already open.
 
-### Native path
+## Native behavior
 
-1. Cache the focused input's controller through `UIResponder.parentViewController`.
-2. When a keyboard event arrives, look for that controller's interactive transition and its removal from the navigation stack. The keyboard notification itself has no back-swipe origin field.
-3. Keep the selected mode until transition completion or cancellation. Continue the observer lifecycle and real UIKit notifications; gate only keyboard-controller's animation callbacks.
-4. For `none`, hold the outgoing screen's keyboard height until the transition ends.
-5. For `interactively`, sample the source screen's presentation layer with `CADisplayLink` and emit intermediate heights from its horizontal displacement. On the tested iOS 26.5 path, `keyboardLayoutGuide` did not track the keyboard's visible descent.
-6. For `close`, dispatch the closing layout animation in a separate UIKit animation transaction, so it does not inherit the interactive navigation transaction.
-7. Synchronize the final height after completion or cancellation. A new focused controller takes precedence over the outgoing screen's policy.
+- Cache the focused input and its controller through `UIResponder.parentViewController`.
+- Identify an interactive pop using the controller's transition coordinator and removal from its navigation stack. Keyboard notifications have no back-swipe origin field.
+- Latch the policy until completion or cancellation. UIKit notifications and `KeyboardEvents` retain their normal lifecycle; the policy controls keyboard-controller's animation callbacks.
+- `none` holds the outgoing screen's keyboard height until the transition ends.
+- `interactively` samples the source screen's presentation layer with `CADisplayLink` and derives intermediate keyboard heights from horizontal displacement. On the tested iOS 26.5 path, `keyboardLayoutGuide` did not track the visible descent.
+- `close` observes cancellation through `notifyWhenInteractionChanges` and forwards the restored keyboard's real animation instead of forcing a zero-duration final layout correction.
+- A newly focused controller takes precedence over an outgoing screen's policy. Display links and transition callbacks are invalidated when their observer unmounts.
 
-This part uses public UIKit APIs. The setting is global and currently intended for one configured navigation flow. The progress calculation assumes a horizontal push. Nested navigation, overlapping transitions, other presentation styles and other OS versions need coverage before this can become a stable API.
+The implementation uses public UIKit APIs. The global setting currently supports one configured navigation flow. The progress calculation assumes a horizontal push; nested navigation, overlapping transitions and other presentation styles need further coverage.
 
-## Gray keyboard transition snapshot
+## Canceled `close` gestures and screens
 
-```ts
-const installed = await KeyboardController.fixKeyboardTransition();
-```
+The playground includes `FabricExample/patches/react-native-screens+4.27.0.patch`, applied by its existing `patch-package` postinstall. Animated restoration after a canceled `close` gesture currently requires that experimental dependency patch.
 
-Call this before navigation/focus to install the experiment. It returns `false` on unsupported platforms or when the expected UIKit classes/selectors are absent. Installation lasts for the process; reload JavaScript alone does not disable it. Restart the app for an API-off comparison.
+Screens previously called `endEditing` in `viewWillDisappear`, after UIKit had captured the keyboard for the pop. On cancellation UIKit restored that state instantly, with zero-duration keyboard notifications. Removing keyboard-controller's `performWithoutAnimation` calls did not change that behavior.
 
-UIKit's keyboard transition snapshot can show an opaque gray background when an input focuses early during a standard push. The experiment replaces the snapshot view inside `UIKBViewTreeSnapshotter` with a live `_UIPortalView` whose source is the keyboard container. UIKit still animates its transition snapshot, and the portal keeps sampling the live native material and content beneath it.
+The patch saves and resigns the input before an accepted back gesture starts the pop. If the gesture is canceled, screens restores focus after the navigation transaction completes. A completed pop does not restore the outgoing screen's input. The patch respects `keyboardHandlingEnabled`, leaving `none` and `interactively` unchanged, and preserves the standard navigation animation. It adds no UIKit swizzling or private API calls.
 
-**This experiment uses private UIKit APIs:** `_UIPortalView`, `snapshotterForKeyboardView:afterScreenUpdates:` and the snapshotter's `_snapshotView`. It is disabled by default and is included here for review, without a claim of App Store suitability. It does not implement the back-swipe modes above.
+## Run
 
-The original late KAV movement from #1215 and this gray snapshot are separate symptoms. PR [#1598](https://github.com/kirillzyusko/react-native-keyboard-controller/pull/1598) addressed the former; this prototype investigates the latter.
+Use Yarn 1 and the existing FabricExample dependency/Pods setup. Keep the shared `FabricExample/ios/build` cache.
 
-## Run in the current checkout
-
-Use Yarn 1. Install the root and FabricExample dependencies if needed, then run CocoaPods without removing the shared build caches:
-
-```sh
-yarn
-cd FabricExample
-yarn
-yarn bundle-install
-yarn pods
-```
-
-Run the normal app on Metro 8083 and choose **Interactive back swipe** from the Examples menu:
-
-```sh
-cd FabricExample
-yarn start --port 8083
-# In another terminal, choose an existing allowed simulator explicitly:
-yarn ios --udid <existing-iPhone-17-Pro-UDID> --port 8083
-```
-
-For just this playground, use the diagnostic entry/config:
+For the normal Examples menu, run Metro on **8083** and choose **Interactive back swipe**. For the standalone playground:
 
 ```sh
 cd FabricExample
 yarn start --port 8083 --config back-swipe-playground.metro.config.js
 ```
 
-Pass `ARGENT_BACK_SWIPE_FULL_APP=1` to that command to load the normal Examples menu with the same resolver configuration.
+`ARGENT_BACK_SWIPE_FULL_APP=1` loads the normal menu with the same resolver configuration. A standalone Release build can embed `back-swipe-playground.index.js` with `BUNDLE_CONFIG=back-swipe-playground.metro.config.js` to run without Metro. Native API changes require CocoaPods/codegen and a native rebuild.
 
-Other retained entries:
+## Diagnostics and verification
 
-- `issue243.interactive.metro.config.js`: the original Interactive Keyboard iOS screen inside a native stack, with the four combinations of full-screen gesture and explicit keyboard dismissal. No back-swipe policy is enabled there. The two full-screen recordings in #1699 show the same visible history jump; they do not demonstrate a visual difference between `keyboardHandlingEnabled: true` and `false`.
-- `issue1215.metro.config.js`: the in-repository native-stack/autofocus/KAV reproduction. It compares the package and RN avoiding views. The gray snapshot API is not enabled automatically; call `KeyboardController.fixKeyboardTransition()` before pushing to test it.
+`back-swipe-playground.index.js` records RN keyboard events and keyboard-controller callbacks in `globalThis.__backSwipePlaygroundTrace`. `issue243.interactive.index.js` preserves the original **Interactive Keyboard iOS** example with four native-stack flag combinations and no policy enabled.
 
-Always restart the app against the intended Metro port after changing entries. Native API additions require a native rebuild/codegen.
+The debug launch argument `--issue243-trace` records native keyboard notifications, responder calls and presentation-layer geometry in the app's Documents directory as `interactive-swipe-native.json`.
 
-### Standalone review app on an iPhone
+Published current/proposed recordings are in [#1699](https://github.com/kirillzyusko/react-native-keyboard-controller/issues/1699). The proposed recordings cover canceled and completed gestures on an iPhone 17 Pro simulator, iOS 26.5, RN 0.87.1 and screens 4.27.0.
 
-`FabricExample/keyboard-transitions.index.js` combines both experiments in one small menu. It includes the back-swipe playground and the native push/autofocus example with the preserved live Lottie backdrop. The snapshot workaround starts **off** and has an explicit enable button. Force quit and reopen to compare with it off again.
+`.argent/flows/interactive-back-swipe-cancel.yaml` uses Metro **8083** and covers `close` cancellation. `.argent/flows/interactive-back-swipe-modes.yaml` covers canceled and completed gestures in all three modes on the same port. Its final replay passed 61 checks on an iPhone 17 Pro simulator, iOS 26.5.
 
-Build Release with this entry to embed JavaScript and run without Metro:
+The cancellation recording and native trace confirm a real keyboard animation: before the screens patch, restoration jumped from Y=874 to Y=539 with duration 0; afterward, presentation-layer positions passed through Y=859, 771, 650 and subsequent intermediate values over about 383 ms. A control build without either `performWithoutAnimation` call still reproduced the original jump.
 
-```sh
-cd FabricExample
-ENTRY_FILE=keyboard-transitions.index.js \
-BUNDLE_CONFIG=keyboard-transitions.metro.config.js \
-xcodebuild -workspace ios/KeyboardControllerFabricExample.xcworkspace \
-  -scheme KeyboardControllerFabricExample -configuration Release \
-  -destination 'id=<connected-iPhone-UDID>' -derivedDataPath ios/build \
-  IPHONEOS_DEPLOYMENT_TARGET=15.1 DEVELOPMENT_TEAM=<your-team-id> build
-```
+The iOS build, TypeScript, scoped ESLint/SwiftLint and all 245 tracked library tests passed. Full-workspace lint and Jest remain blocked by unrelated diagnostics, generated artifacts and example/docs test setup. Physical iPhone verification was unavailable because the paired iPhone 16 Pro was disconnected.
 
-The app is named **KeyboardControllerFabricExample**. Open **Interactive back swipe**, choose a mode, open Chat, focus Message, then swipe right from the message history. A short slow drag cancels; a long drag completes. **All experiments** returns to the menu. To compare keyboard materials, open the gray keyboard example before enabling the live snapshot, then enable it from the menu and repeat the same push.
+The earlier `interactive-back-swipe-*.yaml` flows retain their original **8097** launch arguments; their individual-mode entries use the standalone configuration, and the menu flow needs `ARGENT_BACK_SWIPE_FULL_APP=1`. Gesture paths intentionally use raw back gestures; app controls use semantic selectors.
 
-## Diagnostics and evidence
+## Files
 
-`back-swipe-playground.index.js` records UIKit/RN keyboard events and keyboard-controller callbacks in `globalThis.__backSwipePlaygroundTrace`. `issue243.interactive.index.js` records the baseline configurations in `globalThis.__issue243Trace`.
-
-The opt-in debug launch argument `--issue243-trace` enables `InteractiveSwipeTrace` in FabricExample's AppDelegate. It records native notifications, responder calls, transition progress, model/presentation geometry and scroll state to the app's Documents directory as `interactive-swipe-native.json`. Leave it off for ordinary use.
-
-The preserved `.argent/flows/interactive-back-swipe-*.yaml` recordings use their original Metro port **8097**, not the project's normal 8083. Start the matching diagnostic config on 8097 to replay those exact recordings. The `menu` flow needs `ARGENT_BACK_SWIPE_FULL_APP=1`; the individual mode flows need the standalone entry. The flows target an iPhone 17 Pro on iOS 26.5. They use semantic selectors, explicit keyboard/destination checks and deliberate raw back gestures. The unlabeled LogBox X has a documented, device-specific coordinate fallback.
-
-The newer `.argent/flows/keyboard-transitions-menu.yaml` uses **8083** with `keyboard-transitions.metro.config.js`. It checks the combined review menu, opens both examples, focuses the input before and after enabling the snapshot API, checks the software keyboard and returns to the menu. It uses semantic targets throughout. The two Feedback idle checks warn because the Lottie backdrop intentionally keeps moving; the following accessibility checks establish keyboard readiness. This smoke test does not establish a visual before/after fix.
-
-Published current/proposed recordings are in [#1699](https://github.com/kirillzyusko/react-native-keyboard-controller/issues/1699). Each proposed mode includes a canceled and a completed swipe. Back-swipe verification was performed on an iPhone 17 Pro simulator, iOS 26.5, RN 0.87.1 and screens 4.27.0. The gray snapshot API was previously checked on an iPhone 17 Pro simulator, iOS 26.2, including repeated pushes and text input. Those earlier runs are evidence of the experiments, not broad platform coverage.
-
-The `patches/` directory preserves the tested external reproduction's API and Lottie backdrop changes. These historical patches target `rhinck/keyboard-example`, not this repository. That temporary reproduction checkout is no longer present; the current native implementations live under `ios/` in this branch. The Lottie patch includes its generated animation JSON so the backdrop experiment can be inspected in full.
-
-### Snapshot verification (2026-10-23)
-
-- Library TypeScript passed (`tsconfig.build.json` excludes example apps). ESLint passed for the selected JS/TS files, including the review app.
-- Library Jest tests passed: 33 suites, 274 tests.
-- SwiftFormat and SwiftLint passed for the six changed library Swift files.
-- FabricExample Debug built for the existing iPhone 17 Pro simulator, iOS 26.5.
-- The combined menu flow replayed end to end on that simulator: 31 passed, 0 failed/errored; two expected idle warnings for the looping Lottie. The snapshot API returned `true`.
-- FabricExample Release built and installed on the connected iPhone 16 Pro, iOS 26.6.1, with the standalone entry and bundled JS.
-- Physical-device UI verification initially stopped before the first screen read: the Argent/XCTest runner timed out enabling automation mode. Installation is verified; on-device interaction and visual behavior are not yet verified by that attempt.
-
-The full workspace lint and Jest commands fail outside the selected changes: lint includes unrelated diagnostics and generated coverage/E2E artifacts; Jest includes standalone evidence specs and example/docs tests with missing native-module mocks. The scoped checks above passed. Builds used the shared `FabricExample/ios/build` cache and the existing local dependency setup; unrelated worktree changes are excluded from this snapshot.
-
-## Files to review
-
-- `ios/observers/movement/KeyboardBackSwipeTransition.swift`: back-swipe classification, policy and intermediate heights.
-- `ios/observers/movement/observer/KeyboardMovementObserver*.swift`: event routing and cleanup.
-- `ios/extensions/UIResponder.swift`: input owner lookup.
-- `ios/swizzling/KeyboardTransitionSnapshot.swift`: private UIKit snapshot experiment.
-- `ios/KeyboardControllerModule*` and `src/{module,types/module,specs/NativeKeyboardController,bindings}.ts`: exported APIs and platform fallbacks.
-- Android Paper/Fabric modules and `jest/index.js`: no-op methods and mocks for the iOS APIs.
-- `FabricExample/src/screens/Examples/InteractiveBackSwipe/`: working three-mode playground.
-- `docs/docs/api/keyboard-controller.md`: API usage and limits.
-
-This branch is a review snapshot. It does not enable either experiment by default outside its playground, and it includes no release or production-readiness claim.
+- `ios/observers/movement/KeyboardBackSwipeTransition.swift`: transition classification, layout policy and cancellation handling.
+- `ios/observers/movement/observer/KeyboardMovementObserver*.swift`: event routing and observer cleanup.
+- `ios/extensions/UIResponder.swift`: focused controller lookup.
+- `ios/KeyboardControllerModule*`, `src/module.ts`, `src/types/module.ts`, `src/specs/NativeKeyboardController.ts`: public API and native export.
+- Android Paper/Fabric modules, web bindings and Jest mocks: iOS API fallbacks.
+- `FabricExample/src/screens/Examples/InteractiveBackSwipe/`: three-mode playground.
+- `FabricExample/patches/react-native-screens+4.27.0.patch`: keyboard dismissal before the pop and animated restoration after cancellation.
+- `docs/docs/api/keyboard-controller.md`: API usage.

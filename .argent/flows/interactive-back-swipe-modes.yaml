@@ -1,0 +1,31 @@
+steps:
+  - launch:
+      native: org.reactjs.native.example.KeyboardControllerFabricExample
+      ios:
+        app: org.reactjs.native.example.KeyboardControllerFabricExample
+        args:
+          - -RCT_jsLocation
+          - localhost:8083
+          - --issue243-trace
+  - await:
+      visible:
+        id: back-swipe.open
+      timeout: 30000
+  - await:
+      idle: true
+      timeout: 12000
+  - run: interactive-back-swipe-cycle.yaml
+  - tap:
+      id: back-swipe.setup.mode.none
+  - await:
+      visible:
+        text: Keep the chat above the keyboard as both slide sideways.
+      timeout: 12000
+  - run: interactive-back-swipe-cycle.yaml
+  - tap:
+      id: back-swipe.setup.mode.interactively
+  - await:
+      visible:
+        text: Move the chat down with the keyboard as you drag. Reverse to cancel.
+      timeout: 12000
+  - run: interactive-back-swipe-cycle.yaml

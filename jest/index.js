@@ -83,7 +83,6 @@ const mock = {
     setInputMode: jest.fn(),
     setDefaultMode: jest.fn(),
     preload: jest.fn(),
-    fixKeyboardTransition: jest.fn().mockResolvedValue(false),
     setInteractiveBackSwipe: jest.fn(),
     dismiss: jest.fn().mockReturnValue(Promise.resolve()),
     setFocusTo: jest.fn(),

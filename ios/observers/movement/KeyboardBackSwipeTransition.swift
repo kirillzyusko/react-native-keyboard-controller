@@ -21,6 +21,7 @@ final class KeyboardBackSwipeTransition: NSObject {
   private weak var sourceView: UIView?
   private var sourceOriginX: CGFloat = 0
   private var closeScheduled = false
+  private var restoringClose = false
 
   init(dispatch: @escaping Dispatch, animationOptions: @escaping () -> UIView.AnimationOptions) {
     self.dispatch = dispatch
@@ -35,6 +36,7 @@ final class KeyboardBackSwipeTransition: NSObject {
     activeMode = nil
     sourceView = nil
     closeScheduled = false
+    restoringClose = false
   }
 
   func send(_ name: NSString, _ height: NSNumber, _ progress: NSNumber, _ duration: NSNumber, _ target: NSNumber) {
@@ -61,6 +63,10 @@ final class KeyboardBackSwipeTransition: NSObject {
     lastHeight = CGFloat(truncating: height)
     if target.intValue != -1 {
       tag = target
+    }
+    if activeMode == .close, restoringClose {
+      dispatch(name, height, progress, duration, target)
+      return
     }
     if activeMode == .close, name == "onKeyboardMoveStart", height.doubleValue == 0, !closeScheduled {
       closeScheduled = true
@@ -90,6 +96,9 @@ final class KeyboardBackSwipeTransition: NSObject {
       link?.preferredFramesPerSecond = 120
       link?.add(to: .main, forMode: .common)
     }
+    if mode == .close {
+      observeCancellation(coordinator)
+    }
     coordinator.animate(alongsideTransition: nil) { [weak self] context in
       guard let self, self.generation == currentGeneration else { return }
       let cancelled = context.isCancelled
@@ -101,13 +110,27 @@ final class KeyboardBackSwipeTransition: NSObject {
         } else {
           height = cancelled ? self.heldHeight : self.lastHeight
         }
+        let restoringClose = self.restoringClose
         self.invalidate()
         self.lastHeight = height
+        // The real keyboard animation is still delivering its own frames and end event.
+        if restoringClose {
+          return
+        }
         UIView.performWithoutAnimation {
           self.dispatch("onKeyboardMoveStart", height as NSNumber, height > 0 ? 1 : 0, 0, self.tag)
           self.dispatch("onKeyboardMoveEnd", height as NSNumber, height > 0 ? 1 : 0, 0, self.tag)
         }
       }
+    }
+  }
+
+  private func observeCancellation(_ coordinator: UIViewControllerTransitionCoordinator) {
+    let currentGeneration = generation
+    coordinator.notifyWhenInteractionChanges { [weak self] context in
+      guard let self, self.generation == currentGeneration, context.isCancelled else { return }
+      // Forward the keyboard's own restoration animation instead of a zero-duration final correction.
+      self.restoringClose = true
     }
   }
 
