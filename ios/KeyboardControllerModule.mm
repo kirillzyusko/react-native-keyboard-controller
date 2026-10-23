@@ -102,6 +102,29 @@ RCT_EXPORT_METHOD(setTranslucent : (BOOL)translucent)
 }
 
 #ifdef RCT_NEW_ARCH_ENABLED
+- (void)fixKeyboardTransition:(RCTPromiseResolveBlock)resolve reject:(RCTPromiseRejectBlock)reject
+#else
+RCT_EXPORT_METHOD(fixKeyboardTransition : (RCTPromiseResolveBlock)
+                      resolve reject : (RCTPromiseRejectBlock)reject)
+#endif
+{
+  dispatch_async(dispatch_get_main_queue(), ^{
+    resolve(@([KeyboardControllerModuleImpl fixKeyboardTransition]));
+  });
+}
+
+#ifdef RCT_NEW_ARCH_ENABLED
+- (void)setInteractiveBackSwipe:(NSString *)mode
+#else
+RCT_EXPORT_METHOD(setInteractiveBackSwipe : (NSString *)mode)
+#endif
+{
+  dispatch_async(dispatch_get_main_queue(), ^{
+    [KeyboardControllerModuleImpl setInteractiveBackSwipe:mode];
+  });
+}
+
+#ifdef RCT_NEW_ARCH_ENABLED
 - (void)dismiss:(BOOL)keepFocus animated:(BOOL)animated
 #else
 RCT_EXPORT_METHOD(dismiss : (BOOL)keepFocus animated : (BOOL)animated)

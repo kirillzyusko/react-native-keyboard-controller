@@ -1,0 +1,48 @@
+import { StyleSheet } from "react-native";
+
+export default StyleSheet.create({
+  container: { flex: 1, backgroundColor: "#f3f5f8" },
+  intro: { flex: 1, justifyContent: "center", paddingHorizontal: 20, gap: 20 },
+  title: { fontSize: 28, fontWeight: "700", color: "#172130" },
+  body: { fontSize: 17, lineHeight: 25, color: "#49576b" },
+  settings: { padding: 14, gap: 10 },
+  choices: { flexDirection: "row", gap: 6 },
+  choice: {
+    flex: 1,
+    alignItems: "center",
+    paddingVertical: 12,
+    borderRadius: 10,
+    backgroundColor: "#e0e5ec",
+  },
+  selected: { backgroundColor: "#204ba5" },
+  choiceText: { fontSize: 14, fontWeight: "600", color: "#273449" },
+  selectedText: { color: "white" },
+  description: {
+    minHeight: 40,
+    fontSize: 14,
+    lineHeight: 20,
+    color: "#49576b",
+  },
+  open: {
+    padding: 16,
+    borderRadius: 12,
+    backgroundColor: "#204ba5",
+    alignItems: "center",
+  },
+  openText: { color: "white", fontSize: 17, fontWeight: "600" },
+  back: { color: "#204ba5", fontSize: 16 },
+  viewport: { flex: 1, overflow: "hidden" },
+  chat: { flex: 1 },
+  messages: { flexGrow: 1, justifyContent: "flex-end" },
+  composer: { padding: 10, backgroundColor: "#e3e8ef" },
+  input: {
+    minHeight: 44,
+    maxHeight: 110,
+    paddingHorizontal: 14,
+    paddingTop: 12,
+    paddingBottom: 12,
+    borderRadius: 18,
+    backgroundColor: "white",
+    fontSize: 17,
+  },
+});

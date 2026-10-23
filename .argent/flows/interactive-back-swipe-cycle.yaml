@@ -1,0 +1,92 @@
+steps:
+  - await:
+      visible:
+        id: back-swipe.open
+      timeout: 12000
+  - await:
+      idle: true
+      timeout: 12000
+  - tap:
+      id: back-swipe.open
+  - await:
+      visible:
+        id: chat.input
+      timeout: 12000
+  - await:
+      idle: true
+      timeout: 12000
+  - tap:
+      id: chat.input
+  - tool: await-ui-element
+    args:
+      condition: visible
+      selector:
+        identifier: Return
+      timeoutMs: 12000
+  - await:
+      idle: true
+      timeout: 12000
+  - echo: Drag right, hold halfway, then reverse; expect the chat and keyboard to
+      remain open.
+  - tool: gesture-custom
+    args:
+      events:
+        - type: Down
+          x: 0.15
+          y: 0.4
+        - type: Move
+          x: 0.55
+          y: 0.4
+          delayMs: 600
+        - type: Move
+          x: 0.55
+          y: 0.4
+          delayMs: 500
+        - type: Move
+          x: 0.16
+          y: 0.4
+          delayMs: 600
+        - type: Up
+          x: 0.16
+          y: 0.4
+          delayMs: 100
+      interpolate: 24
+  - await:
+      visible:
+        id: chat.input
+      timeout: 12000
+  - await:
+      idle: true
+      timeout: 12000
+  - tool: await-ui-element
+    args:
+      condition: visible
+      selector:
+        identifier: Return
+      timeoutMs: 12000
+  - await:
+      idle: true
+      timeout: 12000
+  - echo: Complete the same back swipe; expect the chat screen to disappear and the
+      setup button to return.
+  - tool: gesture-swipe
+    args:
+      fromX: 0.15
+      fromY: 0.4
+      toX: 0.95
+      toY: 0.4
+      durationMs: 1000
+      momentum: false
+  - await:
+      hidden:
+        id: chat.input
+      timeout: 6000
+  - await:
+      visible:
+        id: back-swipe.open
+      timeout: 12000
+  - await:
+      idle: true
+      timeout: 12000
+executionPrerequisite: Interactive back swipe Setup is visible on iOS 26.5 with
+  the desired mode selected, in FabricExample or its diagnostic entry.

@@ -22,6 +22,8 @@ export const KeyboardControllerNative: KeyboardControllerNativeModule = {
   setInputMode: NOOP,
   preload: NOOP,
   setTranslucent: NOOP,
+  fixKeyboardTransition: () => Promise.resolve(false),
+  setInteractiveBackSwipe: NOOP,
   dismiss: NOOP,
   setFocusTo: NOOP,
   viewPositionInWindow: () =>

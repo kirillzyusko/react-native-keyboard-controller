@@ -25,6 +25,14 @@ class KeyboardControllerModule(
     module.preload()
   }
 
+  override fun fixKeyboardTransition(promise: Promise) {
+    promise.resolve(false)
+  }
+
+  override fun setInteractiveBackSwipe(mode: String?) {
+    // iOS only.
+  }
+
   override fun setTranslucent(translucent: Boolean) {
     module.setTranslucent(translucent)
   }

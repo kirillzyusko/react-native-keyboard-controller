@@ -82,3 +82,10 @@ public extension UIResponder {
     }
   }
 }
+
+/// Resolve the owner of the input, including screens inside native container controllers.
+extension UIResponder {
+  var parentViewController: UIViewController? {
+    (self as? UIViewController) ?? next?.parentViewController
+  }
+}

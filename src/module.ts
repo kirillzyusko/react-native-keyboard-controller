@@ -60,6 +60,8 @@ export const KeyboardController: KeyboardControllerModule = {
   setFocusTo: KeyboardControllerNative.setFocusTo,
   preload: KeyboardControllerNative.preload,
   setTranslucent: KeyboardControllerNative.setTranslucent,
+  fixKeyboardTransition: KeyboardControllerNative.fixKeyboardTransition,
+  setInteractiveBackSwipe: KeyboardControllerNative.setInteractiveBackSwipe,
   dismiss,
   isVisible,
   state,

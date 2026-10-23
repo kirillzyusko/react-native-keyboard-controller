@@ -31,6 +31,17 @@ class KeyboardControllerModule(
   }
 
   @ReactMethod
+  fun fixKeyboardTransition(promise: Promise) {
+    promise.resolve(false)
+  }
+
+  @Suppress("detekt:UnusedParameter")
+  @ReactMethod
+  fun setInteractiveBackSwipe(mode: String?) {
+    // iOS only.
+  }
+
+  @ReactMethod
   fun setTranslucent(translucent: Boolean) {
     module.setTranslucent(translucent)
   }

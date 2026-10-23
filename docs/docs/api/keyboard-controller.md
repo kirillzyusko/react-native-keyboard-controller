@@ -64,6 +64,61 @@ This method preloads the keyboard to prevent noticeable delay when the user focu
 KeyboardController.preload();
 ```
 
+### `fixKeyboardTransition` <div className="label ios"></div>
+
+```ts
+static fixKeyboardTransition(): Promise<boolean>;
+```
+
+Enables an experimental workaround for an opaque gray keyboard during iOS 26 navigation transitions. It preserves the system keyboard material and its movement with the screen by using a live representation for UIKit's keyboard transition snapshot.
+
+The workaround is disabled by default and uses private UIKit APIs. Enable it explicitly before navigation, for example during app initialization:
+
+```ts
+await KeyboardController.fixKeyboardTransition();
+```
+
+The promise resolves to `true` when the workaround is installed, or `false` on unsupported platforms or UIKit versions. Repeated calls are safe. Installation lasts for the app process. It does not configure swipe-back behavior or restore focus after a canceled gesture.
+
+### `setInteractiveBackSwipe` <div className="label ios"></div>
+
+```ts
+static setInteractiveBackSwipe(mode: "close" | "none" | "interactively" | null): void;
+```
+
+Experimental policy for keyboard layout events during a horizontal native-stack back gesture. Pass `null` to restore the default event behavior. Reset the policy when the configured screen unmounts.
+
+- `close`: close the keyboard when navigation starts, independently of the finger's progress.
+- `none`: preserve the outgoing screen's vertical keyboard layout while the screen and keyboard slide horizontally.
+- `interactively`: update the layout alongside the keyboard's vertical dismissal, including a reversed gesture and the completion animation.
+
+The navigator owns the keyboard animation. Pair the policy with these native-stack options:
+
+```tsx
+<Stack.Screen
+  name="Chat"
+  component={Chat}
+  options={{
+    fullScreenGestureEnabled: true,
+    keyboardHandlingEnabled: mode === "close",
+    animation: mode === "interactively" ? "simple_push" : "default",
+    animationMatchesGesture: mode === "interactively",
+  }}
+/>
+```
+
+Configure the corresponding policy inside the screen:
+
+```tsx
+useEffect(() => {
+  KeyboardController.setInteractiveBackSwipe(mode);
+}, [mode]);
+
+useEffect(() => () => KeyboardController.setInteractiveBackSwipe(null), []);
+```
+
+This experiment uses public UIKit transition APIs and does not change keyboard materials. It affects keyboard-controller animation handlers; UIKit keyboard notifications and `KeyboardEvents` continue to report the system events. The policy is global, opt-in, and currently intended for one configured navigation flow at a time. The **Interactive back swipe** screen in FabricExample demonstrates all three modes.
+
 ### `dismiss`
 
 ```ts
