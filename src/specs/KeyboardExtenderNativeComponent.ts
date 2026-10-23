@@ -5,6 +5,7 @@ import type { ViewProps } from "react-native/Libraries/Components/View/ViewPropT
 
 export interface NativeProps extends ViewProps {
   enabled?: boolean;
+  transparent?: boolean;
 }
 
 export default codegenNativeComponent<NativeProps>("KeyboardExtender", {

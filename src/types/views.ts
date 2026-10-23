@@ -48,6 +48,8 @@ export type KeyboardBackgroundViewProps = PropsWithChildren<ViewProps>;
 export type KeyboardExtenderProps = PropsWithChildren<{
   /** Controls whether this `KeyboardExtender` instance should take an effect. Default is `true`. */
   enabled?: boolean;
+  /** Removes the keyboard-styled background (the glass capsule on iOS 26+) so the content draws its own surface. Default is `false`. */
+  transparent?: boolean;
 }>;
 export type KeyboardToolbarGroupViewProps = PropsWithChildren<ViewProps>;
 export type ClippingScrollViewProps = PropsWithChildren<
