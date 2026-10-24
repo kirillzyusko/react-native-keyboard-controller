@@ -54,6 +54,12 @@ While both components serve similar purposes they are intended for different use
 
 A boolean prop indicating whether the component is enabled or disabled. If it's `true`, the component attaches to the keyboard. If it's `false`, it detaches.
 
+### `transparent`
+
+A boolean prop that removes the keyboard-styled background, so your content draws its own surface (for example a floating "Done" button). Default is `false`.
+
+On iOS 26+ it removes the glass capsule while keeping its position above the keyboard; on earlier iOS versions and Android it removes the keyboard background color.
+
 ## Usage
 
 ```jsx

@@ -27,14 +27,15 @@ const AnimatedKeyboardBackgroundView = Animated.createAnimatedComponent(
  * ```
  */
 const KeyboardExtender = (props: PropsWithChildren<KeyboardExtenderProps>) => {
-  const { children, enabled = true } = props;
+  const { children, enabled = true, transparent = false } = props;
   const { progress } = useKeyboardAnimation();
+  const Container = transparent
+    ? Animated.View
+    : AnimatedKeyboardBackgroundView;
 
   return (
     <KeyboardStickyView enabled={enabled}>
-      <AnimatedKeyboardBackgroundView style={{ opacity: progress }}>
-        {children}
-      </AnimatedKeyboardBackgroundView>
+      <Container style={{ opacity: progress }}>{children}</Container>
     </KeyboardStickyView>
   );
 };

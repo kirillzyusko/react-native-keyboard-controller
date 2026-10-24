@@ -22,11 +22,11 @@ import type { PropsWithChildren } from "react";
  * ```
  */
 const KeyboardExtender = (props: PropsWithChildren<KeyboardExtenderProps>) => {
-  const { children, enabled = true } = props;
+  const { children, enabled = true, transparent = false } = props;
   const { width } = useWindowDimensions();
 
   return (
-    <RCTKeyboardExtender enabled={enabled}>
+    <RCTKeyboardExtender enabled={enabled} transparent={transparent}>
       <View style={{ width }}>{children}</View>
     </RCTKeyboardExtender>
   );

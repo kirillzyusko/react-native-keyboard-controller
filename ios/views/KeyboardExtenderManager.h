@@ -26,4 +26,5 @@
 
 #endif
 @property (nonatomic, assign) BOOL enabled;
+@property (nonatomic, assign) BOOL transparent;
 @end

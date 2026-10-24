@@ -38,6 +38,7 @@ RCT_EXPORT_MODULE(KeyboardExtenderManager)
 
 // Expose the `enabled` prop to React Native
 RCT_EXPORT_VIEW_PROPERTY(enabled, BOOL)
+RCT_EXPORT_VIEW_PROPERTY(transparent, BOOL)
 
 + (BOOL)requiresMainQueueSetup
 {
@@ -117,6 +118,7 @@ RCT_EXPORT_VIEW_PROPERTY(enabled, BOOL)
 {
   // clean up local variables state
   _enabled = NO;
+  _transparent = NO;
   [self detachInputAccessoryView];
   _sharedInputAccessoryView = nil;
 
@@ -182,7 +184,8 @@ RCT_EXPORT_VIEW_PROPERTY(enabled, BOOL)
   _sharedInputAccessoryView = [KeyboardExtenderContainerView
       createWithFrame:CGRectMake(
                           0, 0, UIScreen.mainScreen.bounds.size.width, internalFrame.size.height)
-          contentView:_contentView];
+          contentView:_contentView
+          transparent:_transparent];
 }
 
 - (void)attachInputAccessoryViewTo:(UIView<UITextInput> *)input
@@ -259,6 +262,10 @@ RCT_EXPORT_VIEW_PROPERTY(enabled, BOOL)
 
   const auto &newViewProps = *std::static_pointer_cast<const KeyboardExtenderProps>(props);
 
+  if (newViewProps.transparent != self.transparent) {
+    [self updateTransparentState:newViewProps.transparent];
+  }
+
   if (newViewProps.enabled != self.enabled) {
     [self updateEnabledState:newViewProps.enabled];
   }
@@ -272,7 +279,30 @@ RCT_EXPORT_VIEW_PROPERTY(enabled, BOOL)
 
   [self updateEnabledState:enabled];
 }
+
+- (void)setTransparent:(BOOL)transparent
+{
+  [self updateTransparentState:transparent];
+}
 #endif
+
+- (void)updateTransparentState:(BOOL)transparent
+{
+  _transparent = transparent;
+
+  if (!_sharedInputAccessoryView) {
+    return;
+  }
+
+  // the container background is fixed at creation, so re-create it with the new value
+  [self detachInputAccessoryView];
+  [_contentView removeFromSuperview];
+  _sharedInputAccessoryView = nil;
+
+  if (_enabled) {
+    [self updateEnabledState:YES];
+  }
+}
 
 - (void)updateEnabledState:(BOOL)enabled
 {
