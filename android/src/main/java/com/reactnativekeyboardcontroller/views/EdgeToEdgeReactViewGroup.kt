@@ -5,7 +5,6 @@ import android.content.res.Configuration
 import android.os.Handler
 import android.os.Looper
 import android.view.WindowManager
-import android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
 import android.widget.FrameLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
@@ -14,6 +13,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.views.view.ReactViewGroup
 import com.reactnativekeyboardcontroller.extensions.content
+import com.reactnativekeyboardcontroller.extensions.isAdjustResize
 import com.reactnativekeyboardcontroller.extensions.removeSelf
 import com.reactnativekeyboardcontroller.extensions.requestApplyInsetsWhenAttached
 import com.reactnativekeyboardcontroller.extensions.rootView
@@ -112,7 +112,7 @@ class EdgeToEdgeReactViewGroup(
           )
 
         val shouldApplyBottomPadding =
-          !active && reactContext.windowSoftInputMode == SOFT_INPUT_ADJUST_RESIZE && !isPreservingEdgeToEdge
+          !active && reactContext.windowSoftInputMode.isAdjustResize && !isPreservingEdgeToEdge
         val navBarInsets = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
         val systemBarInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
         val keyboardInsets =
