@@ -91,6 +91,14 @@ jobs:
           key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
           restore-keys: |
             ${{ runner.os }}-pods-
+      - name: Restore DerivedData cache
+        # Restore before pod install so cached codegen files are regenerated.
+        uses: actions/cache@v5
+        with:
+          path: example/ios/build
+          key: ${{ runner.os }}-derived-data-xcode-${{ env.XCODE_VERSION }}-${{ hashFiles('**/Podfile.lock', '**/Gemfile.lock', '**/package.json', '**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-derived-data-xcode-${{ env.XCODE_VERSION }}-
       - name: Install Pods
         run: |
           if ! bundle exec pod install; then
@@ -100,13 +108,6 @@ jobs:
           USE_CCACHE: "1"
       - name: Install xcpretty
         run: gem install xcpretty
-      - name: Restore DerivedData cache
-        uses: actions/cache@v5
-        with:
-          path: example/ios/build
-          key: ${{ runner.os }}-derived-data-xcode-${{ env.XCODE_VERSION }}-${{ hashFiles('**/Podfile.lock', '**/Gemfile.lock', '**/package.json', '**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-derived-data-xcode-${{ env.XCODE_VERSION }}-
       - name: Build App
         run: "set -o pipefail && xcodebuild \
           CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ \

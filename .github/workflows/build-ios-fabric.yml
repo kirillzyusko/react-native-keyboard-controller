@@ -95,6 +95,14 @@ jobs:
           key: ${{ runner.os }}-fabric-pods-${{ hashFiles('**/Podfile.lock') }}
           restore-keys: |
             ${{ runner.os }}-fabric-pods-
+      - name: Restore DerivedData cache
+        # Restore before pod install so cached codegen files are regenerated.
+        uses: actions/cache@v5
+        with:
+          path: FabricExample/ios/build
+          key: ${{ runner.os }}-fabric-derived-data-xcode-${{ env.XCODE_VERSION }}-${{ hashFiles('**/Podfile.lock', '**/Gemfile.lock', '**/package.json', '**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-fabric-derived-data-xcode-${{ env.XCODE_VERSION }}-
       - name: Install Pods
         run: |
           if ! bundle exec pod install; then
@@ -102,13 +110,6 @@ jobs:
           fi
         env:
           USE_CCACHE: "1"
-      - name: Restore DerivedData cache
-        uses: actions/cache@v5
-        with:
-          path: FabricExample/ios/build
-          key: ${{ runner.os }}-fabric-derived-data-xcode-${{ env.XCODE_VERSION }}-${{ hashFiles('**/Podfile.lock', '**/Gemfile.lock', '**/package.json', '**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-fabric-derived-data-xcode-${{ env.XCODE_VERSION }}-
       - name: Install xcpretty
         run: gem install xcpretty
       - name: Build App
