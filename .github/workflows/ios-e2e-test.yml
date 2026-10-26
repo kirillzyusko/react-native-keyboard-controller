@@ -91,6 +91,14 @@ jobs:
           key: ${{ runner.os }}-xcode-${{ matrix.config.xcode }}-pods-${{ hashFiles('**/Podfile.lock') }}
           restore-keys: |
             ${{ runner.os }}-xcode-${{ matrix.config.xcode }}-pods-
+      - name: Restore DerivedData cache
+        # Restore before pod install so cached codegen files are regenerated.
+        uses: actions/cache@v5
+        with:
+          path: example/ios/build
+          key: ${{ runner.os }}-e2e-derived-data-xcode-${{ matrix.config.xcode }}-${{ hashFiles('**/Podfile.lock', '**/Gemfile.lock', '**/package.json', '**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-e2e-derived-data-xcode-${{ matrix.config.xcode }}-
       - name: Install pods
         working-directory: ${{ env.WORKING_DIRECTORY }}/ios
         run: |
@@ -99,13 +107,6 @@ jobs:
           fi
         env:
           USE_CCACHE: "1"
-      - name: Restore DerivedData cache
-        uses: actions/cache@v5
-        with:
-          path: example/ios/build
-          key: ${{ runner.os }}-e2e-derived-data-xcode-${{ matrix.config.xcode }}-${{ hashFiles('**/Podfile.lock', '**/Gemfile.lock', '**/package.json', '**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-e2e-derived-data-xcode-${{ matrix.config.xcode }}-
       - name: Build app
         working-directory: e2e
         run: yarn build-example:ios
