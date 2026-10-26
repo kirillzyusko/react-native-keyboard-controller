@@ -176,7 +176,6 @@ export default function TextInputMaskExample() {
   return (
     <View style={style.container}>
       <MaskedTextInput
-        autocompleteOnFocus
         keyboardType="phone-pad"
         mask="+1 ([000]) [000] [00] [00]"
         placeholder="+1 (___) ___ __ __"

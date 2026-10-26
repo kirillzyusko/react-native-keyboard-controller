@@ -33,7 +33,7 @@ Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots 
 
 export default function AwareScrollView({ navigation }: Props) {
   const bottomSheetModalRef = useRef<BottomSheet>(null);
-  const [text, setText] = useState<Record<number, string>>({});
+  const [_, setText] = useState("");
 
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.expand();
@@ -96,19 +96,14 @@ export default function AwareScrollView({ navigation }: Props) {
             contextMenuHidden={i === 4 && Platform.OS === "ios"}
             keyboardType={i % 2 === 0 ? "numeric" : "default"}
             placeholder={`TextInput#${i}`}
-            value={Platform.OS === "ios" ? text[i] ?? "" : undefined}
-            onChangeText={(value) =>
-              setText((previous) => ({ ...previous, [i]: value }))
-            }
+            onChangeText={setText}
           />
         ))}
         <TextInput
           defaultValue={BIG_TEXT}
           placeholder="TextInput#10"
           style={styles.input}
-          onChangeText={(value) =>
-            setText((previous) => ({ ...previous, 10: value }))
-          }
+          onChangeText={setText}
         />
       </KeyboardAwareScrollView>
       <BottomSheet ref={bottomSheetModalRef} index={-1} snapPoints={["40%"]}>

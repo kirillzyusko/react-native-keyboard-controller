@@ -21,11 +21,7 @@ describe("`KeyboardExtender` specification", () => {
   it("should have `KeyboardExtender` above the keyboard", async () => {
     await waitAndTap("donation_amount");
     await waitForExpect(async () => {
-      // The system home indicator color varies between keyboard sessions.
-      await expectBitmapsToBeEqual(
-        "KeyboardExtenderIsAttached",
-        device.getPlatform() === "ios" ? 0.25 : 0.1,
-      );
+      await expectBitmapsToBeEqual("KeyboardExtenderIsAttached");
     });
   });
 
@@ -42,10 +38,7 @@ describe("`KeyboardExtender` specification", () => {
   it("should disappear when disabled", async () => {
     await waitAndTap("postal_code");
     await waitForExpect(async () => {
-      await expectBitmapsToBeEqual(
-        "KeyboardExtenderIsDetached",
-        device.getPlatform() === "ios" ? 0.25 : 0.1,
-      );
+      await expectBitmapsToBeEqual("KeyboardExtenderIsDetached");
     });
   });
 

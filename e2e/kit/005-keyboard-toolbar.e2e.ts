@@ -26,7 +26,6 @@ describe("`KeyboardToolbar` specification", () => {
     await expectElementBitmapsToBeEqual(
       "keyboard.toolbar",
       "ToolbarFirstInputFocused",
-      device.getPlatform() === "ios" ? 0.2 : 0.1,
     );
   });
 
@@ -108,11 +107,7 @@ describe("`KeyboardToolbar` specification", () => {
   it("should close keyboard when press `Done`", async () => {
     await tap("keyboard.toolbar.done");
     await waitForExpect(async () => {
-      // Fabric rounds the long form's input borders at different pixel edges.
-      await expectBitmapsToBeEqual(
-        "ToolbarKeyboardClosed",
-        device.getPlatform() === "android" ? 0.55 : 0.25,
-      );
+      await expectBitmapsToBeEqual("ToolbarKeyboardClosed");
     });
   });
 });

@@ -1,7 +1,4 @@
-import { PixelRatio, Platform, StyleSheet } from "react-native";
-
-const inputHeight =
-  Platform.OS === "android" ? PixelRatio.roundToNearestPixel(45) : 45;
+import { StyleSheet } from "react-native";
 
 export default StyleSheet.create({
   header: {
@@ -30,11 +27,11 @@ export default StyleSheet.create({
     justifyContent: "space-between",
   },
   textInput: {
-    height: inputHeight,
+    height: 45,
     borderColor: "#000000",
     borderWidth: 1,
     borderRadius: 10,
-    paddingLeft: Platform.OS === "android" ? 9 : 10,
+    paddingLeft: 10,
   },
   inputs: {
     gap: 36,
@@ -42,7 +39,7 @@ export default StyleSheet.create({
   },
   button: {
     marginTop: 12,
-    height: inputHeight,
+    height: 45,
     borderRadius: 10,
     backgroundColor: "rgb(40, 64, 147)",
     justifyContent: "center",

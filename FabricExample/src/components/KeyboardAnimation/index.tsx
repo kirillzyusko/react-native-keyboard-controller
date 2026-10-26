@@ -12,8 +12,6 @@ import Reanimated, {
 
 import styles from "./styles";
 
-import type { StyleProp, ViewStyle } from "react-native";
-
 const useGradualKeyboardAnimation = () => {
   const height = useSharedValue(0);
 
@@ -39,13 +37,11 @@ const useGradualKeyboardAnimation = () => {
 
 type Props = {
   provider?: typeof useKeyboardAnimation;
-  style?: StyleProp<ViewStyle>;
 };
 
 export default function KeyboardAnimation({
   // eslint-disable-next-line react-compiler/react-compiler
   provider = useKeyboardAnimation,
-  style,
 }: Props) {
   // eslint-disable-next-line react-compiler/react-compiler
   const { height, progress } = provider();
@@ -65,7 +61,7 @@ export default function KeyboardAnimation({
   return (
     <TouchableOpacity
       activeOpacity={1}
-      style={[styles.container, style]}
+      style={styles.container}
       onPress={KeyboardController.dismiss}
     >
       <>

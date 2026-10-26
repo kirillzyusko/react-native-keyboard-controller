@@ -1,5 +1,3 @@
-import { expect as jestExpect } from "@jest/globals";
-
 import { expectBitmapsToBeEqual } from "./asserts";
 import {
   Env,
@@ -29,26 +27,7 @@ const closeKeyboard = async () => {
   await tap("aware_scroll_view_container", { x: 0, y: 100 });
 };
 
-const scrollViewOffset = async () => {
-  const attributes = await element(
-    by.id("aware_scroll_view_container"),
-  ).getAttributes();
-
-  if (!("contentOffset" in attributes) || !attributes.contentOffset) {
-    throw new Error("The iOS scroll view did not expose its content offset");
-  }
-
-  return attributes.contentOffset.y;
-};
-
-const expectRestoredOffset = async (expected: number | undefined) => {
-  jestExpect(expected).toBeDefined();
-  jestExpect(await scrollViewOffset()).toBeCloseTo(expected!, 0);
-};
-
 describe("AwareScrollView test cases", () => {
-  let scrollOffsetBeforeTyping: number | undefined;
-
   it("should push input above keyboard on focus", async () => {
     await waitAndTap("aware_scroll_view");
     await waitAndTap("TextInput#3");
@@ -112,21 +91,6 @@ describe("AwareScrollView test cases", () => {
 
   it("should auto-scroll when user types a text", async () => {
     await element(by.id("aware_scroll_view_container")).scroll(40, "up");
-
-    if (device.getPlatform() === "ios") {
-      // Make the focus transition explicit. Input #2 remains visible on smaller
-      // displays where input #0 can sit behind the navigation bar.
-      await waitAndTap("TextInput#2");
-      scrollOffsetBeforeTyping = await scrollViewOffset();
-
-      await waitAndTap("TextInput#4");
-      await element(by.id("aware_scroll_view_container")).scroll(
-        40,
-        "up",
-        0.02,
-        0.4,
-      );
-    }
     await typeText("TextInput#4", "1");
     await waitForExpect(async () => {
       await expectBitmapsToBeEqual(
@@ -139,11 +103,7 @@ describe("AwareScrollView test cases", () => {
   it("should scroll back when keyboard dismissed", async () => {
     await closeKeyboard();
 
-    if (device.getPlatform() === "ios") {
-      // The drag starts at a fractional native offset that differs between
-      // renderers. Verify restoration against the actual pre-focus position.
-      await expectRestoredOffset(scrollOffsetBeforeTyping);
-    } else if (Env.softCheck) {
+    if (Env.softCheck) {
       await waitForElementById("TextInput#2");
       await waitForElementById("TextInput#6");
     } else {
@@ -171,8 +131,7 @@ describe("AwareScrollView test cases", () => {
     await waitForExpect(async () => {
       await expectBitmapsToBeEqual(
         "AwareScrollViewKeyboardClosedWithoutBackScroll",
-        // Retained fractional offsets can round one pixel apart on Android.
-        device.getPlatform() === "android" ? 0.5 : BLINKING_CURSOR,
+        BLINKING_CURSOR,
       );
     });
   });
@@ -192,7 +151,7 @@ describe("AwareScrollView test cases", () => {
     await waitForExpect(async () => {
       await expectBitmapsToBeEqual(
         "AwareScrollViewDisabledStateKeyboardClosed",
-        device.getPlatform() === "android" ? 0.5 : BLINKING_CURSOR,
+        BLINKING_CURSOR,
       );
     });
   });
