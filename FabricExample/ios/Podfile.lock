@@ -1316,7 +1316,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - react-native-keyboard-controller (1.22.8):
+  - react-native-keyboard-controller (1.22.9):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -1329,7 +1329,7 @@ PODS:
     - React-graphics
     - React-ImageManager
     - React-jsi
-    - react-native-keyboard-controller/common (= 1.22.8)
+    - react-native-keyboard-controller/common (= 1.22.9)
     - React-NativeModulesApple
     - React-RCTFabric
     - React-renderercss
@@ -1339,7 +1339,7 @@ PODS:
     - ReactCommon/turbomodule/core
     - ReactNativeDependencies
     - Yoga
-  - react-native-keyboard-controller/common (1.22.8):
+  - react-native-keyboard-controller/common (1.22.9):
     - hermes-engine
     - RCTRequired
     - RCTTypeSafety
@@ -2175,7 +2175,7 @@ DEPENDENCIES:
   - React-mutationobservernativemodule (from `../node_modules/react-native/ReactCommon/react/nativemodule/mutationobserver`)
   - react-native-advanced-input-mask (from `../node_modules/react-native-advanced-input-mask`)
   - "react-native-blur (from `../node_modules/@react-native-community/blur`)"
-  - react-native-keyboard-controller (from `../..`)
+  - react-native-keyboard-controller (from `../node_modules/react-native-keyboard-controller`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - "react-native-skia (from `../node_modules/@shopify/react-native-skia`)"
   - react-native-webview (from `../node_modules/react-native-webview`)
@@ -2332,7 +2332,7 @@ EXTERNAL SOURCES:
   react-native-blur:
     :path: "../node_modules/@react-native-community/blur"
   react-native-keyboard-controller:
-    :path: "../.."
+    :path: "../node_modules/react-native-keyboard-controller"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-skia:
@@ -2481,7 +2481,7 @@ SPEC CHECKSUMS:
   React-mutationobservernativemodule: 2dcf0e333fe6621c3ffea838fcc48d54435724a1
   react-native-advanced-input-mask: 9a8a43833aa0f4a17d2a8e6e3e0a78ab4f840824
   react-native-blur: 8fade3c195ce83cfa6578e3e77b01bbcf935a8e1
-  react-native-keyboard-controller: 960b384bc7c513396264712d08a35e809e114e68
+  react-native-keyboard-controller: d381c5816e6160a914ae3cbe5074edcea1ff265f
   react-native-safe-area-context: 352ca3a1d913db1068dcd86669bf60d59608d6eb
   react-native-skia: adc530ff3d0cf7214d4fbf079a850cfa996a1e22
   react-native-webview: 3e750a1f0c41f792a219131b9ddab41d04cfdd8b
