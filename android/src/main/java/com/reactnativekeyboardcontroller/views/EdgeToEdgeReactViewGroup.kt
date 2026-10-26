@@ -112,7 +112,7 @@ class EdgeToEdgeReactViewGroup(
           )
 
         val shouldApplyBottomPadding =
-          !active && isAdjustResize(reactContext.windowSoftInputMode) && !isPreservingEdgeToEdge
+          !active && reactContext.windowSoftInputMode.isAdjustResize && !isPreservingEdgeToEdge
         val navBarInsets = insets.getInsets(WindowInsetsCompat.Type.navigationBars())
         val systemBarInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars())
         val keyboardInsets =
