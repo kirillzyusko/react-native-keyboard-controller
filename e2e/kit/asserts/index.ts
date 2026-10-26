@@ -5,7 +5,7 @@ import { device } from "detox";
 import pixelmatch from "pixelmatch";
 import { PNG } from "pngjs";
 
-import { delay } from "../helpers";
+import { Env, delay } from "../helpers";
 import parseDeviceName from "../utils/parseDeviceName";
 
 import { applyDisplayMask } from "./displayMask";
@@ -116,7 +116,8 @@ async function expectElementBitmapsToBeEqual(
 
 async function expectBitmapsToBeEqual(
   screenName: string,
-  acceptableDiffPercent = 0.1,
+  // The Google APIs image differs slightly in native text rendering and caret pixels.
+  acceptableDiffPercent = Env.softCheck ? 0.15 : 0.1,
 ): Promise<void> {
   // better to wait 1s to be sure all scroll indicators etc are hidden
   // and then take a screenshot and compare it (because it's expensive operation)
