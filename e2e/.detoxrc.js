@@ -2,6 +2,10 @@ const androidArchitectures =
   process.env.REACT_NATIVE_ARCHITECTURES ||
   (process.env.CI ? "x86_64" : "arm64-v8a");
 
+const fabricTestRunner = {
+  args: { config: "kit/jest.fabric.config.js" },
+};
+
 /** @type {Detox.DetoxConfig} */
 module.exports = {
   artifacts: {
@@ -53,11 +57,12 @@ module.exports = {
         "../example/android/app/build/outputs/apk/release/app-release.apk",
       build: `cd ../example/android && ./gradlew :app:assembleRelease :app:assembleAndroidTest -DtestBuildType=release -PreactNativeArchitectures=${androidArchitectures} --build-cache`,
     },
+    // Keep the shared screenshot insets specific to the E2E build.
     "example-fabric.android.release": {
       type: "android.apk",
       binaryPath:
         "../FabricExample/android/app/build/outputs/apk/release/app-release.apk",
-      build: `cd ../FabricExample/android && ./gradlew :app:assembleRelease :app:assembleAndroidTest -DtestBuildType=release -PreactNativeArchitectures=${androidArchitectures} --build-cache`,
+      build: `cd ../FabricExample/android && ./gradlew :app:assembleRelease :app:assembleAndroidTest -DtestBuildType=release -PreactNativeArchitectures=${androidArchitectures} -PedgeToEdgeEnabled=false --build-cache`,
     },
   },
   devices: {
@@ -135,6 +140,7 @@ module.exports = {
     "example-fabric.ios.sim-15.release": {
       device: "simulator15",
       app: "example-fabric.ios.release",
+      testRunner: fabricTestRunner,
     },
     "example.ios.sim-16.debug": {
       device: "simulator16",
@@ -147,6 +153,7 @@ module.exports = {
     "example-fabric.ios.sim-16.release": {
       device: "simulator16",
       app: "example-fabric.ios.release",
+      testRunner: fabricTestRunner,
     },
     "example.ios.sim-17.debug": {
       device: "simulator17",
@@ -159,6 +166,7 @@ module.exports = {
     "example-fabric.ios.sim-17.release": {
       device: "simulator17",
       app: "example-fabric.ios.release",
+      testRunner: fabricTestRunner,
     },
     "example.ios.sim-18.debug": {
       device: "simulator18",
@@ -171,6 +179,7 @@ module.exports = {
     "example-fabric.ios.sim-18.release": {
       device: "simulator18",
       app: "example-fabric.ios.release",
+      testRunner: fabricTestRunner,
     },
     "example.ios.sim-26.debug": {
       device: "simulator26",
@@ -183,6 +192,7 @@ module.exports = {
     "example-fabric.ios.sim-26.release": {
       device: "simulator26",
       app: "example-fabric.ios.release",
+      testRunner: fabricTestRunner,
     },
     "example.ios.sim-26e.debug": {
       device: "simulator26e",
@@ -195,6 +205,7 @@ module.exports = {
     "example-fabric.ios.sim-26e.release": {
       device: "simulator26e",
       app: "example-fabric.ios.release",
+      testRunner: fabricTestRunner,
     },
     "example.android.att.debug": {
       device: "attached",
@@ -215,6 +226,7 @@ module.exports = {
     "example-fabric.android.emu-28.release": {
       device: "emulator28",
       app: "example-fabric.android.release",
+      testRunner: fabricTestRunner,
     },
     "example.android.emu-31.debug": {
       device: "emulator31",
@@ -227,6 +239,7 @@ module.exports = {
     "example-fabric.android.emu-31.release": {
       device: "emulator31",
       app: "example-fabric.android.release",
+      testRunner: fabricTestRunner,
     },
   },
 };
