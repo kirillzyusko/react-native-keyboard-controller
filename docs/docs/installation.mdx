@@ -63,6 +63,22 @@ After adding the package don't forget to **re-install** `pods` and **re-assemble
 If you still experience issues like **package doesn't seem to be linked** try performing a [fresh build](https://github.com/kirillzyusko/react-native-keyboard-controller/issues/786#issuecomment-2741464142) to clear any outdated cache.
 :::
 
+### Swift Package Manager (iOS)
+
+Swift Package Manager integration requires **React Native 0.88 or later** and the New Architecture. Use an Xcode version supported by your React Native release, and install versions of your other native dependencies that support SwiftPM.
+
+After installing the JavaScript dependencies, enable React Native's SwiftPM integration from your application directory:
+
+```shell
+yarn react-native spm add --deintegrate
+```
+
+This command migrates the application's Xcode project from CocoaPods to SwiftPM and generates its native dependencies. Review the changes to your Xcode project and Podfile, then build the `.xcodeproj`. No keyboard-controller feature flag is required.
+
+The library's `Package.swift` is consumed through React Native's autolinker. Its React Native and generated-code dependencies resolve through the application's generated build directory; adding this repository directly as a standalone Xcode package is not supported.
+
+For a complete build and runtime verification procedure, see the [SwiftPM smoke test](https://github.com/kirillzyusko/react-native-keyboard-controller/tree/main/e2e/spm).
+
 ## Adding provider
 
 In order to use it you'll need to wrap your app with `KeyboardProvider` component.
