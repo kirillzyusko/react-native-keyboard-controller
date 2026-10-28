@@ -1,5 +1,16 @@
+const androidArchitectures =
+  process.env.REACT_NATIVE_ARCHITECTURES ||
+  (process.env.CI ? "x86_64" : "arm64-v8a");
+
+const fabricTestRunner = {
+  args: { config: "kit/jest.fabric.config.js" },
+};
+
 /** @type {Detox.DetoxConfig} */
 module.exports = {
+  artifacts: {
+    pathBuilder: "./kit/utils/artifactPathBuilder.js",
+  },
   testRunner: {
     args: {
       $0: "jest",
@@ -20,24 +31,38 @@ module.exports = {
     "example.ios.release": {
       type: "ios.app",
       binaryPath:
+        process.env.EXAMPLE_IOS_BINARY_PATH ||
         "../example/ios/build/Build/Products/Release-iphonesimulator/KeyboardControllerExample.app",
       build:
-        "xcodebuild CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ -workspace ../example/ios/KeyboardControllerExample.xcworkspace -scheme KeyboardControllerExample -configuration Release -sdk iphonesimulator -derivedDataPath ../example/ios/build",
+        "xcodebuild CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ -workspace ../example/ios/KeyboardControllerExample.xcworkspace -scheme KeyboardControllerExample -configuration Release -sdk iphonesimulator -derivedDataPath ../example/ios/build IPHONEOS_DEPLOYMENT_TARGET=15.1",
+    },
+    "example-fabric.ios.release": {
+      type: "ios.app",
+      binaryPath:
+        process.env.FABRIC_IOS_BINARY_PATH ||
+        "../FabricExample/ios/build/Build/Products/Release-iphonesimulator/KeyboardControllerFabricExample.app",
+      build:
+        "xcodebuild CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ -workspace ../FabricExample/ios/KeyboardControllerFabricExample.xcworkspace -scheme KeyboardControllerFabricExample -configuration Release -sdk iphonesimulator -derivedDataPath ../FabricExample/ios/build IPHONEOS_DEPLOYMENT_TARGET=15.1",
     },
     "example.android.debug": {
       type: "android.apk",
       binaryPath:
         "../example/android/app/build/outputs/apk/debug/app-debug.apk",
-      build:
-        "cd ../example/android && ./gradlew assembleDebug assembleAndroidTest -DtestBuildType=debug --build-cache",
+      build: `cd ../example/android && ./gradlew :app:assembleDebug :app:assembleAndroidTest -DtestBuildType=debug -PreactNativeArchitectures=${androidArchitectures} --build-cache`,
       reversePorts: [8081],
     },
     "example.android.release": {
       type: "android.apk",
       binaryPath:
         "../example/android/app/build/outputs/apk/release/app-release.apk",
-      build:
-        "cd ../example/android && ./gradlew assembleRelease assembleAndroidTest -DtestBuildType=release --build-cache",
+      build: `cd ../example/android && ./gradlew :app:assembleRelease :app:assembleAndroidTest -DtestBuildType=release -PreactNativeArchitectures=${androidArchitectures} --build-cache`,
+    },
+    // Keep the shared screenshot insets specific to the E2E build.
+    "example-fabric.android.release": {
+      type: "android.apk",
+      binaryPath:
+        "../FabricExample/android/app/build/outputs/apk/release/app-release.apk",
+      build: `cd ../FabricExample/android && ./gradlew :app:assembleRelease :app:assembleAndroidTest -DtestBuildType=release -PreactNativeArchitectures=${androidArchitectures} -PedgeToEdgeEnabled=false --build-cache`,
     },
   },
   devices: {
@@ -112,6 +137,11 @@ module.exports = {
       device: "simulator15",
       app: "example.ios.release",
     },
+    "example-fabric.ios.sim-15.release": {
+      device: "simulator15",
+      app: "example-fabric.ios.release",
+      testRunner: fabricTestRunner,
+    },
     "example.ios.sim-16.debug": {
       device: "simulator16",
       app: "example.ios.debug",
@@ -119,6 +149,11 @@ module.exports = {
     "example.ios.sim-16.release": {
       device: "simulator16",
       app: "example.ios.release",
+    },
+    "example-fabric.ios.sim-16.release": {
+      device: "simulator16",
+      app: "example-fabric.ios.release",
+      testRunner: fabricTestRunner,
     },
     "example.ios.sim-17.debug": {
       device: "simulator17",
@@ -128,6 +163,11 @@ module.exports = {
       device: "simulator17",
       app: "example.ios.release",
     },
+    "example-fabric.ios.sim-17.release": {
+      device: "simulator17",
+      app: "example-fabric.ios.release",
+      testRunner: fabricTestRunner,
+    },
     "example.ios.sim-18.debug": {
       device: "simulator18",
       app: "example.ios.debug",
@@ -135,6 +175,11 @@ module.exports = {
     "example.ios.sim-18.release": {
       device: "simulator18",
       app: "example.ios.release",
+    },
+    "example-fabric.ios.sim-18.release": {
+      device: "simulator18",
+      app: "example-fabric.ios.release",
+      testRunner: fabricTestRunner,
     },
     "example.ios.sim-26.debug": {
       device: "simulator26",
@@ -144,6 +189,11 @@ module.exports = {
       device: "simulator26",
       app: "example.ios.release",
     },
+    "example-fabric.ios.sim-26.release": {
+      device: "simulator26",
+      app: "example-fabric.ios.release",
+      testRunner: fabricTestRunner,
+    },
     "example.ios.sim-26e.debug": {
       device: "simulator26e",
       app: "example.ios.debug",
@@ -151,6 +201,11 @@ module.exports = {
     "example.ios.sim-26e.release": {
       device: "simulator26e",
       app: "example.ios.release",
+    },
+    "example-fabric.ios.sim-26e.release": {
+      device: "simulator26e",
+      app: "example-fabric.ios.release",
+      testRunner: fabricTestRunner,
     },
     "example.android.att.debug": {
       device: "attached",
@@ -168,6 +223,11 @@ module.exports = {
       device: "emulator28",
       app: "example.android.release",
     },
+    "example-fabric.android.emu-28.release": {
+      device: "emulator28",
+      app: "example-fabric.android.release",
+      testRunner: fabricTestRunner,
+    },
     "example.android.emu-31.debug": {
       device: "emulator31",
       app: "example.android.debug",
@@ -175,6 +235,11 @@ module.exports = {
     "example.android.emu-31.release": {
       device: "emulator31",
       app: "example.android.release",
+    },
+    "example-fabric.android.emu-31.release": {
+      device: "emulator31",
+      app: "example-fabric.android.release",
+      testRunner: fabricTestRunner,
     },
   },
 };
