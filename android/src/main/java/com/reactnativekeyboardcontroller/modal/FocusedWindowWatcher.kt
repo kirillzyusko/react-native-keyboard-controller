@@ -2,7 +2,6 @@ package com.reactnativekeyboardcontroller.modal
 
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver
 import android.widget.EditText
 import androidx.core.view.ViewCompat
 import com.facebook.react.uimanager.ThemedReactContext
@@ -105,10 +104,14 @@ class FocusedWindowWatcher(
 
   private inner class AttachedWindow(
     private val rootView: ViewGroup,
-  ) : ViewTreeObserver.OnWindowFocusChangeListener,
-    View.OnAttachStateChangeListener {
+  ) : View.OnAttachStateChangeListener {
     private val eventView =
-      ReactViewGroup(reactContext).apply {
+      object : ReactViewGroup(reactContext) {
+        override fun onWindowFocusChanged(hasWindowFocus: Boolean) {
+          super.onWindowFocusChanged(hasWindowFocus)
+          this@AttachedWindow.onWindowFocusChanged(hasWindowFocus)
+        }
+      }.apply {
         layoutParams = ViewGroup.LayoutParams(0, 0)
       }
     private val windowCallback =
@@ -123,14 +126,13 @@ class FocusedWindowWatcher(
       rootView.addView(eventView)
       ViewCompat.setWindowInsetsAnimationCallback(rootView, windowCallback)
       ViewCompat.setOnApplyWindowInsetsListener(eventView, windowCallback)
-      rootView.viewTreeObserver.addOnWindowFocusChangeListener(this)
       eventView.addOnAttachStateChangeListener(this)
-      // an input can only gain focus after its window did, so the listener above
-      // won't be called for the current state
+      // an input can only gain focus after its window did, so `eventView`
+      // won't be notified about the current state
       onWindowFocusChanged(rootView.hasWindowFocus())
     }
 
-    override fun onWindowFocusChanged(hasFocus: Boolean) {
+    fun onWindowFocusChanged(hasFocus: Boolean) {
       windowCallback.suspend(!hasFocus)
       if (hasFocus) {
         SecondaryKeyboardWindows.focusedRootViews.add(rootView)
@@ -152,9 +154,6 @@ class FocusedWindowWatcher(
 
     fun detach() {
       eventView.removeOnAttachStateChangeListener(this)
-      if (rootView.viewTreeObserver.isAlive) {
-        rootView.viewTreeObserver.removeOnWindowFocusChangeListener(this)
-      }
       ViewCompat.setWindowInsetsAnimationCallback(rootView, null)
       windowCallback.destroy()
       eventView.removeSelf()
