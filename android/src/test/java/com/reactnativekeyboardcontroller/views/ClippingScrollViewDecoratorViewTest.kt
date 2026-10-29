@@ -1,6 +1,7 @@
 package com.reactnativekeyboardcontroller.views
 
 import android.content.Context
+import android.content.res.Resources
 import android.os.SystemClock
 import android.view.MotionEvent
 import android.view.View
@@ -111,6 +112,31 @@ class ClippingScrollViewDecoratorViewTest {
     assertEquals(1, scrollView.scrollY)
   }
 
+  @Test
+  fun `visible translated content in an inverted scroll view can start a drag`() {
+    assertTranslatedContentCanScroll(nested = false)
+  }
+
+  @Test
+  fun `visible translated content in an inverted nested scroll view can start a drag`() {
+    assertTranslatedContentCanScroll(nested = true)
+  }
+
+  private fun assertTranslatedContentCanScroll(nested: Boolean) {
+    val (decorator, scrollView) = createScrollView(contentHeight = 200, paddingBottom = 0, nested = nested)
+
+    // Inversion maps the translated content onto the top 200 pixels of the screen.
+    scrollView.scaleY = -1f
+    decorator.setContentInsetTop(700.0 / Resources.getSystem().displayMetrics.density)
+    scrollView.scrollTo(0, 100)
+    val offsetBeforeDrag = scrollView.scrollY
+
+    val offsets = dragUp(decorator, scrollView, listOf(100, 90, 80, 70, 60, 50, 50))
+
+    assertTrue("The message must move from $offsetBeforeDrag; observed $offsets", scrollView.scrollY < offsetBeforeDrag)
+    assertTrue("The drag must stay inside the real scroll range", offsets.all { it in 0..100 })
+  }
+
   private fun assertInterruptedDrag(nested: Boolean) {
     val (decorator, scrollView) = createScrollView(contentHeight = 200, paddingBottom = 700, nested = nested)
 
@@ -142,7 +168,7 @@ class ClippingScrollViewDecoratorViewTest {
     val themedContext = ThemedReactContext(BridgeReactContext(context), context)
     val decorator = ClippingScrollViewDecoratorView(themedContext)
     val scrollView = if (nested) NestedScrollView(context) else ScrollView(context)
-    val content = View(context).apply { isClickable = clickable }
+    val content = FrameLayout(context).apply { isClickable = clickable }
 
     scrollView.overScrollMode = View.OVER_SCROLL_NEVER
     scrollView.clipToPadding = false
