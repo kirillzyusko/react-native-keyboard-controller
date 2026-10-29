@@ -132,6 +132,20 @@ class FocusedInputObserver(
     view.viewTreeObserver.addOnGlobalFocusChangeListener(focusListener)
   }
 
+  /**
+   * Starts observing the input that holds focus in [view]'s window, as if it had just gained focus.
+   * Needed when the observer is created after that input gained focus, or when the window regains
+   * window focus while its input kept view focus: in both cases no focus change is delivered, and
+   * another window may have dispatched its own input layout and selection in the meantime.
+   */
+  fun observeFocusedInput() {
+    val focused = view.findFocus() as? EditText ?: return
+
+    stopObservingFocusedInput()
+    lastEventDispatched = noFocusedInputEvent
+    focusListener.onGlobalFocusChanged(null, focused)
+  }
+
   fun syncUpLayout() {
     val input = lastFocusedInput ?: return
 
