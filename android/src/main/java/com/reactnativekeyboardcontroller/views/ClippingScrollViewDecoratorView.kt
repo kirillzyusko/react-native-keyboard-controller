@@ -19,6 +19,9 @@ class ClippingScrollViewDecoratorView(
   private var insetTop = 0.0
   private var appliedTopInsetPx = 0
   private var paddingScrollWorkaroundActive = false
+  private var expandedContentView: View? = null
+  private var contentBottomBeforeExpansion = 0
+  private var expansionTouchAction = MotionEvent.ACTION_CANCEL
 
   override fun onAttachedToWindow() {
     super.onAttachedToWindow()
@@ -35,6 +38,10 @@ class ClippingScrollViewDecoratorView(
 
     if (event.actionMasked == MotionEvent.ACTION_DOWN) {
       paddingScrollWorkaroundActive = shouldUsePaddingScrollWorkaround(scrollView, event)
+    } else if (scrollView.scrollY != 0) {
+      // Only expand the range to start the drag. Once scrolling begins, use the
+      // real content bounds so padding does not keep extending the drag range.
+      paddingScrollWorkaroundActive = false
     }
 
     val handled =
@@ -52,6 +59,17 @@ class ClippingScrollViewDecoratorView(
     }
 
     return handled
+  }
+
+  override fun requestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {
+    if (disallowIntercept && expansionTouchAction == MotionEvent.ACTION_MOVE) {
+      // ScrollView has taken the drag. Restore the bounds before onTouchEvent
+      // calculates its range, including on the first movement of a tiny range.
+      paddingScrollWorkaroundActive = false
+      expandedContentView?.bottom = contentBottomBeforeExpansion
+    }
+
+    super.requestDisallowInterceptTouchEvent(disallowIntercept)
   }
 
   fun setContentInsetBottom(value: Double) {
@@ -129,10 +147,15 @@ class ClippingScrollViewDecoratorView(
     }
 
     return try {
+      expandedContentView = contentView
+      contentBottomBeforeExpansion = originalBottom
+      expansionTouchAction = event.actionMasked
       contentView.bottom = expandedBottom
       super.dispatchTouchEvent(event)
     } finally {
       contentView.bottom = originalBottom
+      expandedContentView = null
+      expansionTouchAction = MotionEvent.ACTION_CANCEL
     }
   }
 
