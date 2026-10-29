@@ -23,6 +23,7 @@ import com.reactnativekeyboardcontroller.extensions.emitEvent
 import com.reactnativekeyboardcontroller.extensions.isKeyboardAnimation
 import com.reactnativekeyboardcontroller.extensions.keepShadowNodesInSync
 import com.reactnativekeyboardcontroller.extensions.keyboardType
+import com.reactnativekeyboardcontroller.extensions.progress
 import com.reactnativekeyboardcontroller.interactive.InteractiveKeyboardProvider
 import com.reactnativekeyboardcontroller.log.Logger
 import com.reactnativekeyboardcontroller.traversal.FocusedInputHolder
@@ -96,7 +97,7 @@ class KeyboardAnimationCallback(
               eventPropagationView.id,
               KeyboardTransitionEvent.Start,
               this.persistentKeyboardHeight,
-              if (this.persistentKeyboardHeight > 0.0) 1.0 else 0.0,
+              this.persistentKeyboardHeight.progress,
               0,
               viewTagFocused,
             ),
@@ -108,7 +109,7 @@ class KeyboardAnimationCallback(
               eventPropagationView.id,
               KeyboardTransitionEvent.End,
               this.persistentKeyboardHeight,
-              if (this.persistentKeyboardHeight > 0.0) 1.0 else 0.0,
+              this.persistentKeyboardHeight.progress,
               0,
               viewTagFocused,
             ),
@@ -239,7 +240,7 @@ class KeyboardAnimationCallback(
     pendingStartEvent =
       PendingKeyboardStartEvent(
         keyboardHeight,
-        if (keyboardHeight > 0.0) 1.0 else 0.0,
+        keyboardHeight.progress,
         duration,
         viewTagFocused,
       )
@@ -353,7 +354,7 @@ class KeyboardAnimationCallback(
             eventPropagationView.id,
             KeyboardTransitionEvent.End,
             keyboardHeight,
-            if (keyboardHeight > 0.0) 1.0 else 0.0,
+            keyboardHeight.progress,
             duration,
             viewTagFocused,
           ),
@@ -404,7 +405,7 @@ class KeyboardAnimationCallback(
           eventPropagationView.id,
           eventName,
           keyboardHeight,
-          if (keyboardHeight > 0.0) 1.0 else 0.0,
+          keyboardHeight.progress,
           duration,
           viewTagFocused,
         ),
@@ -439,7 +440,7 @@ class KeyboardAnimationCallback(
           eventPropagationView.id,
           eventName,
           keyboardHeight,
-          if (keyboardHeight > 0.0) 1.0 else 0.0,
+          keyboardHeight.progress,
           0,
           viewTagFocused,
         ),
