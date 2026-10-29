@@ -42,7 +42,7 @@ const trustedBy = [
     name: "Expensify",
   },
   {
-    img: "https://play-lh.googleusercontent.com/VsgCCgW-ct98JhgVoQzndWCAaXxlP6uMwcjzINYPmeja8cCNISsJDqDFNQrF2IRq9xM=w200-h480-rw",
+    img: "https://lh3.googleusercontent.com/VsgCCgW-ct98JhgVoQzndWCAaXxlP6uMwcjzINYPmeja8cCNISsJDqDFNQrF2IRq9xM=w200-h480-rw",
     alt: "Bluesky mobile app",
     link: "https://github.com/bluesky-social/social-app",
     name: "Bluesky",
@@ -150,19 +150,19 @@ const trustedBy = [
     name: "Edge",
   },
   {
-    img: "https://play-lh.googleusercontent.com/4G1ZS2y5ekD1eRgpOahOj6v_vq1UlN0VVNcmHFFIS2SFGotr3vbZStS_6RZU8l4G7Ryy=w200-h480-rw",
+    img: "https://lh3.googleusercontent.com/4G1ZS2y5ekD1eRgpOahOj6v_vq1UlN0VVNcmHFFIS2SFGotr3vbZStS_6RZU8l4G7Ryy=w200-h480-rw",
     alt: "Pixelfed App",
     link: "https://github.com/pixelfed/pixelfed-rn",
     name: "Pixelfed",
   },
   {
-    img: "https://play-lh.googleusercontent.com/xs4ZUIOATV_bGfdl2yd0mWev9bcK2_a4ofnUEIIQe2_BecUqOVQ7YmtXu41Ereg0Kg=w200-h480-rw",
+    img: "https://lh3.googleusercontent.com/xs4ZUIOATV_bGfdl2yd0mWev9bcK2_a4ofnUEIIQe2_BecUqOVQ7YmtXu41Ereg0Kg=w200-h480-rw",
     alt: "Trezor Suite App",
     link: "https://github.com/trezor/trezor-suite",
     name: "Trezor Suite",
   },
   {
-    img: "https://play-lh.googleusercontent.com/BFYQT9Pugt8shdo75MjFZh5F_IMn7btSj8mXknbvSfmVV6JASCKQqcLcERvGdD0iN8A=w200-h480-rw",
+    img: "https://lh3.googleusercontent.com/BFYQT9Pugt8shdo75MjFZh5F_IMn7btSj8mXknbvSfmVV6JASCKQqcLcERvGdD0iN8A=w200-h480-rw",
     alt: "PocketPal AI App",
     link: "https://github.com/a-ghorbani/pocketpal-ai",
     name: "PocketPal AI",
@@ -174,7 +174,7 @@ const trustedBy = [
     name: "Juno",
   },
   {
-    img: "https://play-lh.googleusercontent.com/KsXljWMtBXw131OcLT44ByxwznfdgM1a-2gZVYNBzPBKz9gqOCxEIhC83IpS35OIZQc=w200-h480-rw",
+    img: "https://lh3.googleusercontent.com/KsXljWMtBXw131OcLT44ByxwznfdgM1a-2gZVYNBzPBKz9gqOCxEIhC83IpS35OIZQc=w200-h480-rw",
     alt: "Drakula: Watch Videos App",
     link: "https://play.google.com/store/apps/details?id=app.drakula",
     name: "Drakula",
@@ -186,7 +186,7 @@ const trustedBy = [
     name: "Swan",
   },
   {
-    img: "https://play-lh.googleusercontent.com/N2Rh_iRbYkX4a5l4u3kMqFu6n5Wk7KkVQnWwXh0MmSGdAfau4IiGFlLmzVU_oeoV9Lo=w240-h480-rw",
+    img: "https://lh3.googleusercontent.com/N2Rh_iRbYkX4a5l4u3kMqFu6n5Wk7KkVQnWwXh0MmSGdAfau4IiGFlLmzVU_oeoV9Lo=w240-h480-rw",
     alt: "Kwibo: Fast Kwai HD Videos Downloader",
     link: "https://play.google.com/store/apps/details?id=com.kwai.video.downloader.nowatermark",
     name: "Kwibo",
