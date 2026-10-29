@@ -42,6 +42,24 @@ const trustedBy = [
     name: "Expensify",
   },
   {
+    img: "https://avatars.githubusercontent.com/u/89191727?s=200&v=4",
+    alt: "T3 Code mobile app",
+    link: "https://github.com/pingdotgg/t3code",
+    name: "T3 Code",
+  },
+  {
+    img: "https://avatars.githubusercontent.com/u/60330232?s=200&v=4",
+    alt: "PostHog mobile app",
+    link: "https://github.com/PostHog/posthog",
+    name: "PostHog",
+  },
+  {
+    img: "https://avatars.githubusercontent.com/u/245328954?s=200&v=4",
+    alt: "Reactive Resume mobile app",
+    link: "https://github.com/reactive-resume/reactive-resume",
+    name: "Reactive Resume",
+  },
+  {
     img: "https://play-lh.googleusercontent.com/VsgCCgW-ct98JhgVoQzndWCAaXxlP6uMwcjzINYPmeja8cCNISsJDqDFNQrF2IRq9xM=w200-h480-rw",
     alt: "Bluesky mobile app",
     link: "https://github.com/bluesky-social/social-app",
