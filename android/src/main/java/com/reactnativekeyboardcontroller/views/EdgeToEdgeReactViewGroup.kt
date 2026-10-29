@@ -21,6 +21,7 @@ import com.reactnativekeyboardcontroller.extensions.windowSoftInputMode
 import com.reactnativekeyboardcontroller.listeners.KeyboardAnimationCallback
 import com.reactnativekeyboardcontroller.listeners.KeyboardAnimationCallbackConfig
 import com.reactnativekeyboardcontroller.log.Logger
+import com.reactnativekeyboardcontroller.modal.FocusedWindowWatcher
 import com.reactnativekeyboardcontroller.modal.ModalAttachedWatcher
 import java.lang.ref.WeakReference
 import kotlin.math.max
@@ -70,6 +71,7 @@ class EdgeToEdgeReactViewGroup(
 
   // managers/watchers
   private val modalAttachedWatcher = ModalAttachedWatcher(this, reactContext, config, ::getKeyboardCallback)
+  private val focusedWindowWatcher = FocusedWindowWatcher(this, reactContext, config, ::getKeyboardCallback)
 
   init {
     EdgeToEdgeViewRegistry.register(this)
@@ -211,11 +213,13 @@ class EdgeToEdgeReactViewGroup(
   private fun activate() {
     this.setupKeyboardCallbacks()
     modalAttachedWatcher.enable()
+    focusedWindowWatcher.enable()
   }
 
   private fun deactivate() {
     this.removeKeyboardCallbacks()
     modalAttachedWatcher.disable()
+    focusedWindowWatcher.disable()
   }
   // endregion
 
