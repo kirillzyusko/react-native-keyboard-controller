@@ -92,7 +92,7 @@ class ClippingScrollViewDecoratorViewTest {
   }
 
   @Test
-  fun `a one pixel padding-created range cannot overscroll on the first move`() {
+  fun `a one pixel padding-created range cannot be exceeded on the first move`() {
     val (decorator, scrollView) = createScrollView(contentHeight = 200, paddingBottom = 601)
 
     val offsets = dragUp(decorator, scrollView, listOf(180) + (170 downTo -30 step 10) + -30)
