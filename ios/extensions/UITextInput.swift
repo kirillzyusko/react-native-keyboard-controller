@@ -39,9 +39,3 @@ public extension UITextInput {
     return firstRect(for: range).isFinite
   }
 }
-
-extension CGRect {
-  var isFinite: Bool {
-    return origin.x.isFinite && origin.y.isFinite && size.width.isFinite && size.height.isFinite
-  }
-}
