@@ -183,7 +183,8 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
 
   private func sendSelectionPosition(for textView: UITextView) {
     // read the caret geometry before probing the layout: a `firstRect` query issued before `caretRect`
-    // leaves TextKit 2 with an unpositioned paragraph fragment, and both caret rects then describe the old layout
+    // leaves the edited TextKit 2 paragraph fragment at origin zero, and both caret rectangles then
+    // describe the old layout
     if let selection = textSelection(in: textView), textView.isSelectionLaidOut {
       onSelectionChange(selection)
     } else {
