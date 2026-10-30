@@ -50,9 +50,3 @@ public extension UITextView {
     return caret.maxY >= lastLineBottom - caret.height / 2
   }
 }
-
-public extension CGRect {
-  var isFinite: Bool {
-    return origin.x.isFinite && origin.y.isFinite && size.width.isFinite && size.height.isFinite
-  }
-}
