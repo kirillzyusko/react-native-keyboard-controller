@@ -66,10 +66,6 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
   /// Keep track of which textField we’re observing (iOS < 13 only)
   private weak var observedTextFieldForSelection: UITextField?
 
-  /// `true` between `textView(_:shouldChangeTextIn:replacementText:)` and `textViewDidChange(_:)`
-  private var isApplyingTextChange = false
-  /// a selection callback arrived while the text was changing and still has to be reported
-  private var hasSkippedSelectionUpdate = false
   private var pendingSelectionUpdate: DispatchWorkItem?
 
   init(
@@ -83,7 +79,7 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
   // MARK: setters/getters
 
   func setTextViewDelegate(delegate: UITextViewDelegate?) {
-    resetSelectionTracking()
+    cancelPendingSelectionUpdate()
     // remove KVO from any old textField
     if let oldTextField = observedTextFieldForSelection {
       removeSelectionRangeObserver(from: oldTextField)
@@ -95,7 +91,7 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
   }
 
   func setTextFieldDelegate(delegate: UITextFieldDelegate?, textField: UITextField?) {
-    resetSelectionTracking()
+    cancelPendingSelectionUpdate()
     // remove KVO from any old textField
     if let oldTextField = observedTextFieldForSelection {
       removeSelectionRangeObserver(from: oldTextField)
@@ -121,77 +117,26 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
 
   // MARK: UITextViewDelegate
 
-  func textView(
-    _ textView: UITextView,
-    shouldChangeTextIn range: NSRange,
-    replacementText text: String
-  ) -> Bool {
-    // UIKit reports the new selection before it finishes applying the edit, so the caret geometry read from
-    // `textViewDidChangeSelection` can still describe the old layout. Mark the edit and read the geometry in
-    // `textViewDidChange`, which UIKit sends after `UITextView` has updated its layout.
-    isApplyingTextChange = true
-    let shouldChange = textViewDelegate?.textView?(textView, shouldChangeTextIn: range, replacementText: text) ?? true
-    if !shouldChange {
-      // the edit was rejected or applied by the delegate itself (e.g. RN `maxLength`) - UIKit will not
-      // send `textViewDidChange`, the pending async update (if any) delivers the selection instead
-      isApplyingTextChange = false
-    }
-
-    return shouldChange
-  }
-
   func textViewDidChangeSelection(_ textView: UITextView) {
-    cancelPendingSelectionUpdate()
     textViewDelegate?.textViewDidChangeSelection?(textView)
 
-    if isApplyingTextChange {
-      // read in `textViewDidChange`; the async update is a fallback in case UIKit never sends it
-      hasSkippedSelectionUpdate = true
-      scheduleSelectionUpdate(for: textView)
-      return
-    }
-    if textView.isUpdatingTextFromJS {
-      // RN is re-applying the attributed string and will restore the selection in the same call
-      scheduleSelectionUpdate(for: textView)
-      return
-    }
-
-    sendSelectionPosition(for: textView)
+    // For an edit UIKit sends this callback before `UITextView` has updated its layout, so the caret
+    // geometry is not safe to read here. Read it on the next run loop turn; several callbacks in one turn
+    // (RN re-applying the attributed string from JS) collapse into one read.
+    scheduleSelectionUpdate(for: textView)
   }
 
   func textViewDidChange(_ textView: UITextView) {
-    defer {
-      self.onTextChange(textView.text)
-    }
-
     textViewDelegate?.textViewDidChange?(textView)
-
-    isApplyingTextChange = false
-    if hasSkippedSelectionUpdate {
-      hasSkippedSelectionUpdate = false
-      cancelPendingSelectionUpdate()
-      sendSelectionPosition(for: textView)
-    }
+    onTextChange(textView.text)
   }
 
   func textViewDidEndEditing(_ textView: UITextView) {
-    resetSelectionTracking()
+    cancelPendingSelectionUpdate()
     textViewDelegate?.textViewDidEndEditing?(textView)
   }
 
   // MARK: selection dispatch
-
-  private func sendSelectionPosition(for textView: UITextView) {
-    // read the caret geometry before probing the layout: a `firstRect` query issued before `caretRect`
-    // leaves the edited TextKit 2 paragraph fragment at origin zero, and both caret rectangles then
-    // describe the old layout
-    if let selection = textSelection(in: textView), textView.isSelectionLaidOut {
-      onSelectionChange(selection)
-    } else {
-      // the caret is not laid out yet (the input has to grow first) - wait for the next layout pass
-      scheduleSelectionUpdate(for: textView, after: UIUtils.nextFrame)
-    }
-  }
 
   private func scheduleSelectionUpdate(for textView: UITextView, after delay: TimeInterval = 0) {
     cancelPendingSelectionUpdate()
@@ -199,12 +144,18 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
     let update = DispatchWorkItem { [weak self, weak textView] in
       guard let self = self else { return }
       self.pendingSelectionUpdate = nil
-      self.isApplyingTextChange = false
-      self.hasSkippedSelectionUpdate = false
       guard let textView = textView, textView.isFirstResponder, textView.delegate === self else { return }
 
-      // read the current selection - a range captured earlier can be stale by now
-      updateSelectionPosition(textInput: textView, sendEvent: self.onSelectionChange)
+      // read the current selection - a range captured earlier can be stale by now; read the caret geometry
+      // before probing the layout (see `isSelectionLaidOut`)
+      let selection = textSelection(in: textView)
+      let laidOut = textView.isSelectionLaidOut
+      if let selection = selection, laidOut {
+        self.onSelectionChange(selection)
+      } else {
+        // the caret is not laid out yet (the input has to grow first) - wait for the next layout pass
+        self.scheduleSelectionUpdate(for: textView, after: UIUtils.nextFrame)
+      }
     }
 
     pendingSelectionUpdate = update
@@ -218,12 +169,6 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
   private func cancelPendingSelectionUpdate() {
     pendingSelectionUpdate?.cancel()
     pendingSelectionUpdate = nil
-  }
-
-  private func resetSelectionTracking() {
-    cancelPendingSelectionUpdate()
-    isApplyingTextChange = false
-    hasSkippedSelectionUpdate = false
   }
 
   // MARK: UITextFieldDelegate
