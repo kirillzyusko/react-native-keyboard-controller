@@ -20,8 +20,6 @@ func textSelection(in textInput: UITextInput) -> NSDictionary? {
   if let selectedRange = textInput.selectedTextRange {
     let caretRectStart = textInput.caretRect(for: selectedRange.start)
     let caretRectEnd = textInput.caretRect(for: selectedRange.end)
-    // `caretRect` is `CGRectNull` (infinite origin) for a position that is not laid out yet
-    guard caretRectStart.isFinite, caretRectEnd.isFinite else { return nil }
     let yOffset = caretYOffset(in: textInput)
 
     return [
@@ -79,7 +77,6 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
   // MARK: setters/getters
 
   func setTextViewDelegate(delegate: UITextViewDelegate?) {
-    cancelPendingSelectionUpdate()
     // remove KVO from any old textField
     if let oldTextField = observedTextFieldForSelection {
       removeSelectionRangeObserver(from: oldTextField)
@@ -91,7 +88,6 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
   }
 
   func setTextFieldDelegate(delegate: UITextFieldDelegate?, textField: UITextField?) {
-    cancelPendingSelectionUpdate()
     // remove KVO from any old textField
     if let oldTextField = observedTextFieldForSelection {
       removeSelectionRangeObserver(from: oldTextField)
@@ -120,55 +116,27 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
   func textViewDidChangeSelection(_ textView: UITextView) {
     textViewDelegate?.textViewDidChangeSelection?(textView)
 
-    // For an edit UIKit sends this callback before `UITextView` has updated its layout, so the caret
-    // geometry is not safe to read here. Read it on the next run loop turn; several callbacks in one turn
-    // (RN re-applying the attributed string from JS) collapse into one read.
-    scheduleSelectionUpdate(for: textView)
+    // UIKit sends this callback before it has laid out an edit. Probing the layout here (`firstRect`) to
+    // pick a synchronous read left a paragraph split by Enter at origin zero, so the caret was reported in
+    // the line above and `KeyboardAwareScrollView` scrolled there (#1593). Read a frame later instead, the
+    // delay a growing input needed anyway (#489). The callbacks of one run loop turn (RN re-applying the
+    // text from JS moves the selection to the end and restores it) collapse into one read.
+    pendingSelectionUpdate?.cancel()
+    let update = DispatchWorkItem { [weak self, weak textView] in
+      guard let self = self, let textView = textView else { return }
+      guard textView.isFirstResponder, textView.delegate === self else { return }
+      updateSelectionPosition(textInput: textView, sendEvent: self.onSelectionChange)
+    }
+    pendingSelectionUpdate = update
+    DispatchQueue.main.asyncAfter(deadline: .now() + UIUtils.nextFrame, execute: update)
   }
 
   func textViewDidChange(_ textView: UITextView) {
+    defer {
+      self.onTextChange(textView.text)
+    }
+
     textViewDelegate?.textViewDidChange?(textView)
-    onTextChange(textView.text)
-  }
-
-  func textViewDidEndEditing(_ textView: UITextView) {
-    cancelPendingSelectionUpdate()
-    textViewDelegate?.textViewDidEndEditing?(textView)
-  }
-
-  // MARK: selection dispatch
-
-  private func scheduleSelectionUpdate(for textView: UITextView, after delay: TimeInterval = 0) {
-    cancelPendingSelectionUpdate()
-
-    let update = DispatchWorkItem { [weak self, weak textView] in
-      guard let self = self else { return }
-      self.pendingSelectionUpdate = nil
-      guard let textView = textView, textView.isFirstResponder, textView.delegate === self else { return }
-
-      // read the current selection - a range captured earlier can be stale by now; read the caret geometry
-      // before probing the layout (see `isSelectionLaidOut`)
-      let selection = textSelection(in: textView)
-      let laidOut = textView.isSelectionLaidOut
-      if let selection = selection, laidOut {
-        self.onSelectionChange(selection)
-      } else {
-        // the caret is not laid out yet (the input has to grow first) - wait for the next layout pass
-        self.scheduleSelectionUpdate(for: textView, after: UIUtils.nextFrame)
-      }
-    }
-
-    pendingSelectionUpdate = update
-    if delay == 0 {
-      DispatchQueue.main.async(execute: update)
-    } else {
-      DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: update)
-    }
-  }
-
-  private func cancelPendingSelectionUpdate() {
-    pendingSelectionUpdate?.cancel()
-    pendingSelectionUpdate = nil
   }
 
   // MARK: UITextFieldDelegate
