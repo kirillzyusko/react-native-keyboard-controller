@@ -181,25 +181,19 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
 
   // MARK: selection dispatch
 
-  /// Reads the caret geometry and reports it. When the selection is not laid out yet (the input has to grow
-  /// first) the read is repeated on the next frame; that retry reports whatever it reads.
-  private func sendSelectionPosition(for textView: UITextView, retryWhenNotLaidOut: Bool = true) {
+  private func sendSelectionPosition(for textView: UITextView) {
     // read the caret geometry before probing the layout: a `firstRect` query issued before `caretRect`
     // leaves the edited TextKit 2 paragraph fragment at origin zero, and both caret rectangles then
     // describe the old layout
-    let selection = textSelection(in: textView)
-    if let selection = selection, textView.isSelectionLaidOut || !retryWhenNotLaidOut {
+    if let selection = textSelection(in: textView), textView.isSelectionLaidOut {
       onSelectionChange(selection)
-    } else if retryWhenNotLaidOut {
-      scheduleSelectionUpdate(for: textView, after: UIUtils.nextFrame, retryWhenNotLaidOut: false)
+    } else {
+      // the caret is not laid out yet (the input has to grow first) - wait for the next layout pass
+      scheduleSelectionUpdate(for: textView, after: UIUtils.nextFrame)
     }
   }
 
-  private func scheduleSelectionUpdate(
-    for textView: UITextView,
-    after delay: TimeInterval = 0,
-    retryWhenNotLaidOut: Bool = true
-  ) {
+  private func scheduleSelectionUpdate(for textView: UITextView, after delay: TimeInterval = 0) {
     cancelPendingSelectionUpdate()
 
     let update = DispatchWorkItem { [weak self, weak textView] in
@@ -210,7 +204,7 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
       guard let textView = textView, textView.isFirstResponder, textView.delegate === self else { return }
 
       // read the current selection - a range captured earlier can be stale by now
-      self.sendSelectionPosition(for: textView, retryWhenNotLaidOut: retryWhenNotLaidOut)
+      updateSelectionPosition(textInput: textView, sendEvent: self.onSelectionChange)
     }
 
     pendingSelectionUpdate = update

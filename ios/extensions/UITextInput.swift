@@ -24,29 +24,24 @@ public extension UITextInput {
 
     return comingFromJS
   }
-}
 
-public extension UITextView {
-  /// `false` while the selected position has no final layout yet, i.e. a multiline input that still has to grow
-  /// to fit a new line. Query it after reading `caretRect`: the `firstRect` probe advances TextKit 2's soft
-  /// invalidation and can leave a freshly split paragraph at origin zero for the reads that follow it.
+  /// `false` while the selected position has no layout yet (`firstRect` is `CGRectNull`): a multiline input
+  /// that still has to grow to fit a new line reports a bogus finite `caretRect` for it. Query it after reading
+  /// `caretRect`: the probe advances TextKit 2's soft invalidation and can leave a freshly split paragraph
+  /// at origin zero for the reads that follow it.
   var isSelectionLaidOut: Bool {
     guard let selectedRange = selectedTextRange,
-          let range = textRange(from: selectedRange.start, to: selectedRange.end),
-          firstRect(for: range).isFinite
+          let range = textRange(from: selectedRange.start, to: selectedRange.end)
     else {
       return false
     }
 
-    // A new empty line at the end of the document is the one case where both probes stay finite: `caretRect`
-    // still describes the previous line. `UITextView` updates `contentSize` before `textViewDidChange`, so the
-    // caret has to reach the bottom of the content to count as laid out.
-    guard compare(selectedRange.end, to: endOfDocument) == .orderedSame, text.hasSuffix("\n") else {
-      return true
-    }
-    let caret = caretRect(for: selectedRange.end)
-    let lastLineBottom = contentSize.height - textContainerInset.bottom
+    return firstRect(for: range).isFinite
+  }
+}
 
-    return caret.maxY >= lastLineBottom - caret.height / 2
+extension CGRect {
+  var isFinite: Bool {
+    return origin.x.isFinite && origin.y.isFinite && size.width.isFinite && size.height.isFinite
   }
 }
