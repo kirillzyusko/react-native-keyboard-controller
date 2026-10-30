@@ -64,7 +64,7 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
   /// Keep track of which textField we’re observing (iOS < 13 only)
   private weak var observedTextFieldForSelection: UITextField?
 
-  private var pendingSelectionUpdate: DispatchWorkItem?
+  private var pendingSelectionUpdate = DispatchWorkItem {}
 
   init(
     onSelectionChange: @escaping (_ event: NSDictionary) -> Void,
@@ -116,19 +116,18 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
   func textViewDidChangeSelection(_ textView: UITextView) {
     textViewDelegate?.textViewDidChangeSelection?(textView)
 
-    // UIKit sends this callback before it has laid out an edit. Probing the layout here (`firstRect`) to
-    // pick a synchronous read left a paragraph split by Enter at origin zero, so the caret was reported in
-    // the line above and `KeyboardAwareScrollView` scrolled there (#1593). Read a frame later instead, the
-    // delay a growing input needed anyway (#489). The callbacks of one run loop turn (RN re-applying the
-    // text from JS moves the selection to the end and restores it) collapse into one read.
-    pendingSelectionUpdate?.cancel()
-    let update = DispatchWorkItem { [weak self, weak textView] in
+    // The selection is reported before UIKit lays out the edit, and asking the layout whether it is ready
+    // (`firstRect`) is what broke the split paragraph in #1593, so every read waits a frame; a growing
+    // input needs that frame anyway (#489). The delay also replaces the old `_comingFromJS` check: RN
+    // re-applying the text from JS moves the selection to the end and restores it within one call, and a
+    // read a frame later sees only the restored selection (#1148).
+    pendingSelectionUpdate.cancel()
+    pendingSelectionUpdate = DispatchWorkItem { [weak self, weak textView] in
       guard let self = self, let textView = textView else { return }
       guard textView.isFirstResponder, textView.delegate === self else { return }
       updateSelectionPosition(textInput: textView, sendEvent: self.onSelectionChange)
     }
-    pendingSelectionUpdate = update
-    DispatchQueue.main.asyncAfter(deadline: .now() + UIUtils.nextFrame, execute: update)
+    DispatchQueue.main.asyncAfter(deadline: .now() + UIUtils.nextFrame, execute: pendingSelectionUpdate)
   }
 
   func textViewDidChange(_ textView: UITextView) {
