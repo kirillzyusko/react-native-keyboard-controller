@@ -151,10 +151,8 @@ public class FocusedInputObserver: NSObject {
 
     setupObservers()
     // dispatch onSelectionChange on focus
-    if let textInput = responder as? UITextInput {
-      DispatchQueue.main.async {
-        updateSelectionPosition(textInput: textInput, sendEvent: self.onSelectionChange)
-      }
+    DispatchQueue.main.async {
+      self.syncUpSelection()
     }
 
     syncUpLayout()
@@ -202,14 +200,9 @@ public class FocusedInputObserver: NSObject {
     dispatchLayoutEventToJS(data: data)
   }
 
-  private func syncUpSelection(event: [String: Any]) {
-    let target: [String: Any] = [
-      "target": (currentResponder as UIResponder?).reactViewTag,
-    ]
-
-    let data = target.merging(event) { _, new in new }
-
-    dispatchSelectionEventToJS(data: data)
+  private func syncUpSelection() {
+    guard let textInput = currentResponder as? UITextInput else { return }
+    updateSelectionPosition(textInput: textInput, sendEvent: onSelectionChange)
   }
 
   private func onTextChanged(text: String?) {
@@ -309,9 +302,7 @@ public class FocusedInputObserver: NSObject {
       // iOS can report selection before the input resizes, leaving stale caret coordinates.
       // Re-read selection after layout to dispatch updated coordinates even when
       // the selection range has not changed.
-      if let textInput = self.currentResponder as? UITextInput {
-        updateSelectionPosition(textInput: textInput, sendEvent: self.onSelectionChange)
-      }
+      self.syncUpSelection()
     }
   }
 
@@ -322,6 +313,13 @@ public class FocusedInputObserver: NSObject {
     }
 
     syncUpLayout()
-    syncUpSelection(event: eventDict)
+
+    let target: [String: Any] = [
+      "target": (currentResponder as UIResponder?).reactViewTag,
+    ]
+
+    let data = target.merging(eventDict) { _, new in new }
+
+    dispatchSelectionEventToJS(data: data)
   }
 }
