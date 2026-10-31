@@ -40,7 +40,7 @@ public class FocusedInputObserver: NSObject {
   private var currentInput: UIView?
   private var currentResponder: UIView?
   private var observation: NSKeyValueObservation?
-  private var lastEventDispatched: [AnyHashable: Any] = noFocusedInputEvent
+  private var lastLayoutEventDispatched: [AnyHashable: Any] = noFocusedInputEvent
   private var lastSelectionEventDispatched: [AnyHashable: Any] = noFocusedInputSelectionEvent
 
   @objc public init(
@@ -176,7 +176,7 @@ public class FocusedInputObserver: NSObject {
     currentInput = nil
     currentResponder = nil
     lastSelectionEventDispatched = noFocusedInputSelectionEvent
-    dispatchEventToJS(data: noFocusedInputEvent)
+    dispatchLayoutEventToJS(data: noFocusedInputEvent)
   }
 
   @objc public func syncUpLayout() {
@@ -199,7 +199,17 @@ public class FocusedInputObserver: NSObject {
       ],
     ]
 
-    dispatchEventToJS(data: data)
+    dispatchLayoutEventToJS(data: data)
+  }
+
+  private func syncUpSelection(event: [String: Any]) {
+    let target: [String: Any] = [
+      "target": (currentResponder as UIResponder?).reactViewTag,
+    ]
+
+    let data = target.merging(event) { _, new in new }
+
+    dispatchSelectionEventToJS(data: data)
   }
 
   private func onTextChanged(text: String?) {
@@ -210,13 +220,22 @@ public class FocusedInputObserver: NSObject {
     }
   }
 
-  private func dispatchEventToJS(data: [String: Any]) {
-    if NSDictionary(dictionary: data).isEqual(to: lastEventDispatched) {
+  private func dispatchLayoutEventToJS(data: [String: Any]) {
+    if NSDictionary(dictionary: data).isEqual(to: lastLayoutEventDispatched) {
       return
     }
 
-    lastEventDispatched = data
+    lastLayoutEventDispatched = data
     onLayoutChangedHandler(data as NSDictionary)
+  }
+
+  private func dispatchSelectionEventToJS(data: [String: Any]) {
+    if NSDictionary(dictionary: data).isEqual(to: lastSelectionEventDispatched) {
+      return
+    }
+
+    lastSelectionEventDispatched = data
+    onSelectionChangedHandler(data as NSDictionary)
   }
 
   private func setupObservers() {
@@ -300,18 +319,6 @@ public class FocusedInputObserver: NSObject {
     }
 
     syncUpLayout()
-
-    let target: [String: Any] = [
-      "target": (currentResponder as UIResponder?).reactViewTag,
-    ]
-
-    let data = target.merging(eventDict) { _, new in new }
-
-    if NSDictionary(dictionary: data).isEqual(to: lastSelectionEventDispatched) {
-      return
-    }
-
-    lastSelectionEventDispatched = data
-    onSelectionChangedHandler(data as NSDictionary)
+    syncUpSelection(event: eventDict)
   }
 }
