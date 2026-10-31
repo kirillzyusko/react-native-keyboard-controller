@@ -22,6 +22,8 @@ let noFocusedInputEvent: [String: Any] = [
   ],
 ]
 
+let noFocusedInputSelectionEvent: [AnyHashable: Any] = [:]
+
 @objc(FocusedInputObserver)
 public class FocusedInputObserver: NSObject {
   // class members
@@ -39,7 +41,7 @@ public class FocusedInputObserver: NSObject {
   private var currentResponder: UIView?
   private var observation: NSKeyValueObservation?
   private var lastEventDispatched: [AnyHashable: Any] = noFocusedInputEvent
-  private var lastSelectionEventDispatched: [AnyHashable: Any] = [:]
+  private var lastSelectionEventDispatched: [AnyHashable: Any] = noFocusedInputSelectionEvent
 
   @objc public init(
     onLayoutChangedHandler: @escaping (NSDictionary) -> Void,
@@ -146,7 +148,6 @@ public class FocusedInputObserver: NSObject {
     removeObservers(newResponder: responder)
     currentResponder = responder
     currentInput = currentResponder?.superview as UIView?
-    lastSelectionEventDispatched = [:]
 
     setupObservers()
     // dispatch onSelectionChange on focus
@@ -174,6 +175,7 @@ public class FocusedInputObserver: NSObject {
     removeObservers(newResponder: nil)
     currentInput = nil
     currentResponder = nil
+    lastSelectionEventDispatched = noFocusedInputSelectionEvent
     dispatchEventToJS(data: noFocusedInputEvent)
   }
 
