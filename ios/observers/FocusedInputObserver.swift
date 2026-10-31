@@ -22,6 +22,8 @@ let noFocusedInputEvent: [String: Any] = [
   ],
 ]
 
+let noFocusedInputSelectionEvent: [AnyHashable: Any] = [:]
+
 @objc(FocusedInputObserver)
 public class FocusedInputObserver: NSObject {
   // class members
@@ -38,7 +40,8 @@ public class FocusedInputObserver: NSObject {
   private var currentInput: UIView?
   private var currentResponder: UIView?
   private var observation: NSKeyValueObservation?
-  private var lastEventDispatched: [AnyHashable: Any] = noFocusedInputEvent
+  private var lastLayoutEventDispatched: [AnyHashable: Any] = noFocusedInputEvent
+  private var lastSelectionEventDispatched: [AnyHashable: Any] = noFocusedInputSelectionEvent
 
   @objc public init(
     onLayoutChangedHandler: @escaping (NSDictionary) -> Void,
@@ -148,10 +151,8 @@ public class FocusedInputObserver: NSObject {
 
     setupObservers()
     // dispatch onSelectionChange on focus
-    if let textInput = responder as? UITextInput {
-      DispatchQueue.main.async {
-        updateSelectionPosition(textInput: textInput, sendEvent: self.onSelectionChange)
-      }
+    DispatchQueue.main.async {
+      self.syncUpSelection()
     }
 
     syncUpLayout()
@@ -172,7 +173,8 @@ public class FocusedInputObserver: NSObject {
     removeObservers(newResponder: nil)
     currentInput = nil
     currentResponder = nil
-    dispatchEventToJS(data: noFocusedInputEvent)
+    lastSelectionEventDispatched = noFocusedInputSelectionEvent
+    dispatchLayoutEventToJS(data: noFocusedInputEvent)
   }
 
   @objc public func syncUpLayout() {
@@ -195,7 +197,12 @@ public class FocusedInputObserver: NSObject {
       ],
     ]
 
-    dispatchEventToJS(data: data)
+    dispatchLayoutEventToJS(data: data)
+  }
+
+  private func syncUpSelection() {
+    guard let textInput = currentResponder as? UITextInput else { return }
+    updateSelectionPosition(textInput: textInput, sendEvent: onSelectionChange)
   }
 
   private func onTextChanged(text: String?) {
@@ -206,13 +213,22 @@ public class FocusedInputObserver: NSObject {
     }
   }
 
-  private func dispatchEventToJS(data: [String: Any]) {
-    if NSDictionary(dictionary: data).isEqual(to: lastEventDispatched) {
+  private func dispatchLayoutEventToJS(data: [String: Any]) {
+    if NSDictionary(dictionary: data).isEqual(to: lastLayoutEventDispatched) {
       return
     }
 
-    lastEventDispatched = data
+    lastLayoutEventDispatched = data
     onLayoutChangedHandler(data as NSDictionary)
+  }
+
+  private func dispatchSelectionEventToJS(data: [String: Any]) {
+    if NSDictionary(dictionary: data).isEqual(to: lastSelectionEventDispatched) {
+      return
+    }
+
+    lastSelectionEventDispatched = data
+    onSelectionChangedHandler(data as NSDictionary)
   }
 
   private func setupObservers() {
@@ -255,11 +271,9 @@ public class FocusedInputObserver: NSObject {
         delegate.setTextFieldDelegate(delegate: textField.delegate, textField: textField)
         textField.setForceDelegate(delegate)
       }
-    } else if let textView = input as? UITextView {
-      if !(textView.delegate is KCTextInputCompositeDelegate) {
-        delegate.setTextViewDelegate(delegate: textView.delegate)
-        textView.setForceDelegate(delegate)
-      }
+    } else if let textView = input as? UITextView, !(textView.delegate is KCTextInputCompositeDelegate) {
+      delegate.setTextViewDelegate(delegate: textView.delegate)
+      textView.setForceDelegate(delegate)
     }
   }
 
@@ -282,6 +296,11 @@ public class FocusedInputObserver: NSObject {
     // layout values
     DispatchQueue.main.async {
       self.syncUpLayout()
+
+      // iOS can report selection before the input resizes, leaving stale caret coordinates.
+      // Re-read selection after layout to dispatch updated coordinates even when
+      // the selection range has not changed.
+      self.syncUpSelection()
     }
   }
 
@@ -299,6 +318,6 @@ public class FocusedInputObserver: NSObject {
 
     let data = target.merging(eventDict) { _, new in new }
 
-    onSelectionChangedHandler(data as NSDictionary)
+    dispatchSelectionEventToJS(data: data)
   }
 }

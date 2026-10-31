@@ -19,9 +19,8 @@ public extension UITextInput {
       return false
     }
 
-    guard let selectedRange = selectedTextRange else { return false }
-
-    guard let range = textRange(from: selectedRange.start, to: selectedRange.end) else { return false }
+    guard let selectedRange = selectedTextRange,
+          let range = textRange(from: selectedRange.start, to: selectedRange.end) else { return false }
     let rect = firstRect(for: range)
 
     return rect.origin.x.isFinite && rect.origin.y.isFinite

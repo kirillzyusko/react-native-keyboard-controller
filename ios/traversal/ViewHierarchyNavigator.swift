@@ -51,7 +51,7 @@ public class ViewHierarchyNavigator: NSObject {
 
     let isGroupRoot = isGroupView(rootView)
 
-    /// Helper function to recursively search for TextInput views
+    // Helper function to recursively search for TextInput views
     func findTextInputs(in view: UIView?) {
       guard let view = view else { return }
 

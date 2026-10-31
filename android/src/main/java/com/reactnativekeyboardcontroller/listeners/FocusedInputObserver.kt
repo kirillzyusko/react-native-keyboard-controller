@@ -47,7 +47,7 @@ class FocusedInputObserver(
 
   // state variables
   private var lastFocusedInput: EditText? = null
-  private var lastEventDispatched: FocusedInputLayoutChangedEventData = noFocusedInputEvent
+  private var lastLayoutEventDispatched: FocusedInputLayoutChangedEventData = noFocusedInputEvent
   private var textWatcher: TextWatcher? = null
   private var selectionSubscription: (() -> Unit)? = null
 
@@ -124,7 +124,7 @@ class FocusedInputObserver(
       }
       // unfocused
       if (newFocus == null) {
-        dispatchEventToJS(noFocusedInputEvent)
+        dispatchLayoutEventToJS(noFocusedInputEvent)
       }
     }
 
@@ -148,7 +148,7 @@ class FocusedInputObserver(
         parentScrollViewTarget = input.parentScrollViewTarget,
       )
 
-    dispatchEventToJS(event)
+    dispatchLayoutEventToJS(event)
   }
 
   fun destroy() {
@@ -176,9 +176,9 @@ class FocusedInputObserver(
     unsubscribeFromSelectionChanges?.invoke()
   }
 
-  private fun dispatchEventToJS(event: FocusedInputLayoutChangedEventData) {
-    if (event != lastEventDispatched) {
-      lastEventDispatched = event
+  private fun dispatchLayoutEventToJS(event: FocusedInputLayoutChangedEventData) {
+    if (event != lastLayoutEventDispatched) {
+      lastLayoutEventDispatched = event
       context.dispatchEvent(
         eventPropagationView.id,
         FocusedInputLayoutChangedEvent(
