@@ -39,6 +39,7 @@ public class FocusedInputObserver: NSObject {
   private var currentResponder: UIView?
   private var observation: NSKeyValueObservation?
   private var lastEventDispatched: [AnyHashable: Any] = noFocusedInputEvent
+  private var lastSelectionEventDispatched: [AnyHashable: Any] = [:]
 
   @objc public init(
     onLayoutChangedHandler: @escaping (NSDictionary) -> Void,
@@ -145,6 +146,7 @@ public class FocusedInputObserver: NSObject {
     removeObservers(newResponder: responder)
     currentResponder = responder
     currentInput = currentResponder?.superview as UIView?
+    lastSelectionEventDispatched = [:]
 
     setupObservers()
     // dispatch onSelectionChange on focus
@@ -282,6 +284,10 @@ public class FocusedInputObserver: NSObject {
     // layout values
     DispatchQueue.main.async {
       self.syncUpLayout()
+
+      if let textInput = self.currentResponder as? UITextInput {
+        updateSelectionPosition(textInput: textInput, sendEvent: self.onSelectionChange)
+      }
     }
   }
 
@@ -299,6 +305,11 @@ public class FocusedInputObserver: NSObject {
 
     let data = target.merging(eventDict) { _, new in new }
 
+    if NSDictionary(dictionary: data).isEqual(to: lastSelectionEventDispatched) {
+      return
+    }
+
+    lastSelectionEventDispatched = data
     onSelectionChangedHandler(data as NSDictionary)
   }
 }
