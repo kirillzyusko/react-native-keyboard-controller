@@ -123,8 +123,8 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
     // read a frame later sees only the restored selection (#1148).
     pendingSelectionUpdate.cancel()
     pendingSelectionUpdate = DispatchWorkItem { [weak self, weak textView] in
-      guard let self = self, let textView = textView else { return }
-      guard textView.isFirstResponder, textView.delegate === self else { return }
+      guard let self = self, let textView = textView,
+            textView.isFirstResponder, textView.delegate === self else { return }
       updateSelectionPosition(textInput: textView, sendEvent: self.onSelectionChange)
     }
     DispatchQueue.main.asyncAfter(deadline: .now() + UIUtils.nextFrame, execute: pendingSelectionUpdate)
