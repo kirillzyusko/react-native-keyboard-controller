@@ -98,11 +98,9 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
     if #available(iOS 13.0, *) {
       // rely on textFieldDidChangeSelection
       observedTextFieldForSelection = nil
-    } else {
-      if let realTextField = textField {
-        addSelectionRangeObserver(to: realTextField)
-        observedTextFieldForSelection = realTextField
-      }
+    } else if let realTextField = textField {
+      addSelectionRangeObserver(to: realTextField)
+      observedTextFieldForSelection = realTextField
     }
   }
 

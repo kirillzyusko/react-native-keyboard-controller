@@ -271,11 +271,9 @@ public class FocusedInputObserver: NSObject {
         delegate.setTextFieldDelegate(delegate: textField.delegate, textField: textField)
         textField.setForceDelegate(delegate)
       }
-    } else if let textView = input as? UITextView {
-      if !(textView.delegate is KCTextInputCompositeDelegate) {
-        delegate.setTextViewDelegate(delegate: textView.delegate)
-        textView.setForceDelegate(delegate)
-      }
+    } else if let textView = input as? UITextView, !(textView.delegate is KCTextInputCompositeDelegate) {
+      delegate.setTextViewDelegate(delegate: textView.delegate)
+      textView.setForceDelegate(delegate)
     }
   }
 
