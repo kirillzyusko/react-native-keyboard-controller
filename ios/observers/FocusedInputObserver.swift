@@ -306,6 +306,9 @@ public class FocusedInputObserver: NSObject {
     DispatchQueue.main.async {
       self.syncUpLayout()
 
+      // iOS can report selection before the input resizes, leaving stale caret coordinates.
+      // Re-read selection after layout to dispatch updated coordinates even when
+      // the selection range has not changed.
       if let textInput = self.currentResponder as? UITextInput {
         updateSelectionPosition(textInput: textInput, sendEvent: self.onSelectionChange)
       }
