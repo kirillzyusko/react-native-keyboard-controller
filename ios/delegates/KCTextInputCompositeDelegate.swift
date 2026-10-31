@@ -64,6 +64,8 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
   /// Keep track of which textField we’re observing (iOS < 13 only)
   private weak var observedTextFieldForSelection: UITextField?
 
+  private var pendingSelectionUpdate = DispatchWorkItem {}
+
   init(
     onSelectionChange: @escaping (_ event: NSDictionary) -> Void,
     onTextChange: @escaping (_ text: String?) -> Void
@@ -113,15 +115,19 @@ class KCTextInputCompositeDelegate: NSObject, UITextViewDelegate, UITextFieldDel
 
   func textViewDidChangeSelection(_ textView: UITextView) {
     textViewDelegate?.textViewDidChangeSelection?(textView)
-    if textView.canSelectionFitIntoLayout {
-      updateSelectionPosition(textInput: textView, sendEvent: onSelectionChange)
-    } else {
-      // when multiline input grows we need to wait for layout to be updated
-      // otherwise start/end positions will be incorrect (0/-1)
-      DispatchQueue.main.asyncAfter(deadline: .now() + UIUtils.nextFrame) {
-        updateSelectionPosition(textInput: textView, sendEvent: self.onSelectionChange)
-      }
+
+    // The selection is reported before UIKit lays out the edit, and asking the layout whether it is ready
+    // (`firstRect`) is what broke the split paragraph in #1593, so every read waits a frame; a growing
+    // input needs that frame anyway (#489). The delay also replaces the old `_comingFromJS` check: RN
+    // re-applying the text from JS moves the selection to the end and restores it within one call, and a
+    // read a frame later sees only the restored selection (#1148).
+    pendingSelectionUpdate.cancel()
+    pendingSelectionUpdate = DispatchWorkItem { [weak self, weak textView] in
+      guard let self = self, let textView = textView,
+            textView.isFirstResponder, textView.delegate === self else { return }
+      updateSelectionPosition(textInput: textView, sendEvent: self.onSelectionChange)
     }
+    DispatchQueue.main.asyncAfter(deadline: .now() + UIUtils.nextFrame, execute: pendingSelectionUpdate)
   }
 
   func textViewDidChange(_ textView: UITextView) {
