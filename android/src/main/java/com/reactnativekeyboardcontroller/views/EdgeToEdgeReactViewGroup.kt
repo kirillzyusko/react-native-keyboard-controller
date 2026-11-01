@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.os.Handler
 import android.os.Looper
+import android.view.WindowInsets
 import android.view.WindowManager
 import android.widget.FrameLayout
 import androidx.core.view.ViewCompat
@@ -94,6 +95,21 @@ class EdgeToEdgeReactViewGroup(
     this.deactivate()
   }
 
+  override fun dispatchApplyWindowInsets(insets: WindowInsets): WindowInsets {
+    val compatInsets = WindowInsetsCompat.toWindowInsetsCompat(insets, this)
+    val navigationBars = compatInsets.getInsets(WindowInsetsCompat.Type.navigationBars())
+    if (navigationBars.left == 0 && navigationBars.right == 0) {
+      return super.dispatchApplyWindowInsets(insets)
+    }
+
+    // The activity content margins already exclude the side navigation bar.
+    // Rebase only this subtree and return the original insets so Android < 30
+    // does not pass the consumed side insets to sibling native views.
+    val remainingInsets = compatInsets.inset(navigationBars.left, 0, navigationBars.right, 0)
+    super.dispatchApplyWindowInsets(remainingInsets.toWindowInsets() ?: insets)
+    return insets
+  }
+
   override fun onConfigurationChanged(newConfig: Configuration) {
     this.reApplyWindowInsets()
   }
@@ -134,7 +150,7 @@ class EdgeToEdgeReactViewGroup(
         )
         content?.layoutParams = params
 
-        ViewCompat.onApplyWindowInsets(v, insets).inset(navBarInsets.left, 0, navBarInsets.right, 0)
+        ViewCompat.onApplyWindowInsets(v, insets)
       }
     }
   }
