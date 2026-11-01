@@ -109,12 +109,25 @@ jest.mock("../../ScrollViewWithBottomPadding", () => {
     __esModule: true,
     default: forwardRef(
       (
-        props: { onLayout?: (e: never) => void; children?: unknown },
+        props: {
+          testID?: string;
+          onLayout?: (e: never) => void;
+          onScrollBeginDrag?: (e: never) => void;
+          children?: unknown;
+        },
         ref: unknown,
       ) => {
         mockState().mockCapturedOnLayout.current = props.onLayout ?? null;
 
-        return createElement(MockView, { ref }, props.children);
+        return createElement(
+          MockView,
+          {
+            ref,
+            testID: props.testID,
+            onScrollBeginDrag: props.onScrollBeginDrag,
+          },
+          props.children,
+        );
       },
     ),
   };

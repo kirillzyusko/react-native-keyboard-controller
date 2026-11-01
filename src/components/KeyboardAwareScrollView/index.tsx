@@ -3,11 +3,14 @@ import React, {
   useCallback,
   useEffect,
   useImperativeHandle,
+  useLayoutEffect,
   useMemo,
+  useRef,
 } from "react";
 import Reanimated, {
   clamp,
   interpolate,
+  runOnJS,
   runOnUI,
   scrollTo,
   useAnimatedRef,
@@ -103,6 +106,7 @@ const KeyboardAwareScrollView = forwardRef<
     {
       children,
       onLayout,
+      onScrollBeginDrag,
       bottomOffset = 0,
       disableScrollOnKeyboardHide = false,
       enabled = true,
@@ -145,7 +149,6 @@ const KeyboardAwareScrollView = forwardRef<
     const syncScrollViewTarget = useCallback(async () => {
       const handle = findNodeHandle(scrollViewAnimatedRef.current);
 
-      // eslint-disable-next-line react-compiler/react-compiler
       scrollViewTarget.value = handle;
 
       if (handle === null) {
@@ -541,17 +544,84 @@ const KeyboardAwareScrollView = forwardRef<
       ],
     );
 
+    const synchronizationGeneration = useRef(0);
+    const pendingMeasurement = useRef<ReturnType<typeof update> | null>(null);
+    const currentScroll = useRef(scrollFromCurrentPosition);
+
+    const handleScrollBeginDrag = useCallback<
+      NonNullable<KeyboardAwareScrollViewProps["onScrollBeginDrag"]>
+    >(
+      (event) => {
+        synchronizationGeneration.current += 1;
+        onScrollBeginDrag?.(event);
+      },
+      [onScrollBeginDrag],
+    );
+
+    useLayoutEffect(() => {
+      currentScroll.current = scrollFromCurrentPosition;
+    }, [scrollFromCurrentPosition]);
+    useLayoutEffect(
+      () => () => {
+        synchronizationGeneration.current += 1;
+      },
+      [],
+    );
+
     const synchronize = useCallback(async () => {
-      await update();
+      const generation = ++synchronizationGeneration.current;
+      const isCurrent = () => generation === synchronizationGeneration.current;
+      const measureAndScroll = async () => {
+        if (!isCurrent()) {
+          return;
+        }
+        // A shared native acknowledgement must not release two local measurements.
+        if (pendingMeasurement.current) {
+          await pendingMeasurement.current;
 
-      requestAnimationFrame(() => {
-        runOnUI(() => {
-          "worklet";
+          if (!isCurrent()) {
+            return;
+          }
+        }
+        const measuredPosition = position.value;
+        const measurement = update();
 
-          scrollFromCurrentPosition();
-        })();
-      });
-    }, [update, scrollFromCurrentPosition]);
+        pendingMeasurement.current = measurement;
+
+        try {
+          await measurement;
+        } finally {
+          if (pendingMeasurement.current === measurement) {
+            pendingMeasurement.current = null;
+          }
+        }
+
+        if (!isCurrent()) {
+          return;
+        }
+
+        requestAnimationFrame(() => {
+          if (!isCurrent()) {
+            return;
+          }
+          const scroll = currentScroll.current;
+
+          runOnUI((expectedPosition: number) => {
+            "worklet";
+
+            // Remeasure if the observed scroll position changed.
+            if (position.value !== expectedPosition) {
+              runOnJS(measureAndScroll)();
+
+              return;
+            }
+            scroll();
+          })(measuredPosition);
+        });
+      };
+
+      await measureAndScroll();
+    }, [position, update]);
 
     useImperativeHandle(
       ref,
@@ -621,6 +691,7 @@ const KeyboardAwareScrollView = forwardRef<
           {...rest}
           scrollEventThrottle={16}
           onLayout={onScrollViewLayout}
+          onScrollBeginDrag={handleScrollBeginDrag}
         >
           {children}
           {enabled && <Reanimated.View style={layoutSpacerStyle} />}
@@ -636,6 +707,7 @@ const KeyboardAwareScrollView = forwardRef<
         scrollEventThrottle={16}
         ScrollViewComponent={ScrollViewComponent}
         onLayout={onScrollViewLayout}
+        onScrollBeginDrag={handleScrollBeginDrag}
       >
         {children}
       </ScrollViewWithBottomPadding>
