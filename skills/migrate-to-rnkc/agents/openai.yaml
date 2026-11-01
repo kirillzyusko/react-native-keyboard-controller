@@ -1,0 +1,4 @@
+interface:
+  display_name: "Migrate to RNKC"
+  short_description: "Migrate keyboard handling to RNKC safely"
+  default_prompt: "Use $migrate-to-rnkc to audit this React Native keyboard implementation and migrate it safely to React Native Keyboard Controller."
