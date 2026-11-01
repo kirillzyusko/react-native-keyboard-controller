@@ -28,6 +28,7 @@ import NonUIProps from "../../screens/Examples/NonUIProps";
 import OverKeyboardView from "../../screens/Examples/OverKeyboardView";
 import ReanimatedChat from "../../screens/Examples/ReanimatedChat";
 import ReanimatedChatFlatList from "../../screens/Examples/ReanimatedChatFlatList";
+import StaleAnimationRepro from "../../screens/Examples/StaleAnimationRepro";
 import StatusBar from "../../screens/Examples/StatusBar";
 import ToolbarExample from "../../screens/Examples/Toolbar";
 import BottomTabBar from "../BottomTabBar";
@@ -66,6 +67,7 @@ export type ExamplesStackParamList = {
   [ScreenNames.AI_LEGEND_LIST_CHAT]: undefined;
   [ScreenNames.KEYBOARD_EFFECTS]: undefined;
   [ScreenNames.AI_KEYBOARD]: undefined;
+  [ScreenNames.STALE_ANIMATION_REPRO]: undefined;
 };
 
 const Stack = createStackNavigator<ExamplesStackParamList>();
@@ -221,6 +223,11 @@ const ExamplesStack = () => (
       component={AIKeyboard}
       name={ScreenNames.AI_KEYBOARD}
       options={options[ScreenNames.AI_KEYBOARD]}
+    />
+    <Stack.Screen
+      component={StaleAnimationRepro}
+      name={ScreenNames.STALE_ANIMATION_REPRO}
+      options={options[ScreenNames.STALE_ANIMATION_REPRO]}
     />
   </Stack.Navigator>
 );

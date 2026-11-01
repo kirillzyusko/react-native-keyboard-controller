@@ -20,6 +20,14 @@ public class KeyboardMovementObserver: NSObject {
   // progress tracker
   @objc public var keyboardTrackingView = KeyboardTrackingView()
   var animation: KeyboardAnimation?
+  // The transition currently in flight. `transitionTarget` is the keyboard
+  // height while showing and 0 while hiding, `nil` while idle; the rest lets
+  // `updateKeyboardFrame` drive the progression from elapsed time when the
+  // keyboard layer turns out not to be animated at all.
+  var transitionTarget: Double?
+  var transitionFrom = 0.0
+  var transitionStart: CFTimeInterval = 0
+  var transitionDuration = 0.0
 
   var prevKeyboardPosition = 0.0
   var displayLink: CADisplayLink!
