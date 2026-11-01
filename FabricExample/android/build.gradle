@@ -19,3 +19,11 @@ buildscript {
 }
 
 apply plugin: "com.facebook.react.rootproject"
+
+allprojects {
+    repositories {
+        maven {
+            url("$rootDir/../../e2e/node_modules/detox/Detox-android")
+        }
+    }
+}

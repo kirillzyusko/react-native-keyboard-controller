@@ -56,6 +56,12 @@ react {
     autolinkLibrariesWithApp()
 }
 
+// The linked library lives outside the app root watched by the bundle task.
+tasks.withType(com.facebook.react.tasks.BundleHermesCTask).configureEach {
+    inputs.dir(rootProject.file("../../src")).withPathSensitivity(PathSensitivity.RELATIVE)
+    inputs.file(rootProject.file("../../package.json")).withPathSensitivity(PathSensitivity.RELATIVE)
+}
+
 /**
  * Set this to true to create four separate APKs instead of one,
  * one for each native architecture. This is useful if you don't
@@ -105,6 +111,8 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+        testBuildType System.getProperty('testBuildType', 'debug')
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
 
     splits {
@@ -133,6 +141,7 @@ android {
             signingConfig signingConfigs.debug
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+            proguardFile "${rootProject.projectDir}/../../e2e/node_modules/detox/android/detox/proguard-rules-app.pro"
         }
     }
 
@@ -154,6 +163,7 @@ android {
 }
 
 dependencies {
+    androidTestImplementation('com.wix:detox:+')
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
 

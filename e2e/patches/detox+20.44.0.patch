@@ -1,0 +1,13 @@
+diff --git a/node_modules/detox/src/devices/common/drivers/ios/tools/AppleSimUtils.js b/node_modules/detox/src/devices/common/drivers/ios/tools/AppleSimUtils.js
+index 551b026..2234d1c 100644
+--- a/node_modules/detox/src/devices/common/drivers/ios/tools/AppleSimUtils.js
++++ b/node_modules/detox/src/devices/common/drivers/ios/tools/AppleSimUtils.js
+@@ -432,7 +432,7 @@ class AppleSimUtils {
+ 
+   async takeScreenshot(udid, destination) {
+     await this._execSimctl({
+-      cmd: `io ${udid} screenshot "${destination}"`,
++      cmd: `io ${udid} screenshot --mask=alpha "${destination}"`,
+       silent: destination === '/dev/null',
+     });
+   }
