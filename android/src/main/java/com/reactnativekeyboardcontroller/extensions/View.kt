@@ -55,6 +55,27 @@ fun View.copyBoundsInWindow(rect: Rect) {
   }
 }
 
+/**
+ * React tag of the view, or `-1` when there is no view.
+ */
+val View?.reactViewTag: Int
+  get() = this?.id ?: -1
+
+/**
+ * Location of the view inside the content of the given `ScrollView`, so it depends neither on the
+ * scroll position nor on where the `ScrollView` is on the screen. `(0, 0)` when there is no `ScrollView`.
+ */
+fun View.locationInScrollView(scrollView: View?): IntArray {
+  if (scrollView == null) {
+    return intArrayOf(0, 0)
+  }
+
+  val (x, y) = screenLocation
+  val (scrollViewX, scrollViewY) = scrollView.screenLocation
+
+  return intArrayOf(x - scrollViewX + scrollView.scrollX, y - scrollViewY + scrollView.scrollY)
+}
+
 val View.screenLocation get(): IntArray {
   val point = IntArray(2)
   getLocationOnScreen(point)

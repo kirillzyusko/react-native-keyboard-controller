@@ -95,12 +95,6 @@ jest.mock("../../../utils/findNodeHandle", () => ({
   findNodeHandle: jest.fn(() => MOCK_SV),
 }));
 
-jest.mock("../../../bindings", () => ({
-  KeyboardControllerNative: {
-    viewPositionInWindow: jest.fn().mockResolvedValue({ y: 0 }),
-  },
-}));
-
 jest.mock("../../ScrollViewWithBottomPadding", () => {
   const { forwardRef, createElement } = require("react");
   const { View: MockView } = require("react-native");

@@ -17,7 +17,7 @@ public extension UIResponder {
   }
 }
 
-public extension Optional where Wrapped == UIResponder {
+public extension Optional where Wrapped: UIResponder {
   var reactViewTag: NSNumber {
     return ((self as? UIView)?.superview).reactNativeTag
   }
@@ -34,17 +34,17 @@ public extension Optional where Wrapped == UIResponder {
 }
 
 public extension Optional where Wrapped: UIResponder {
-  var parentScrollViewTarget: NSNumber {
+  var parentScrollView: UIScrollView? {
     var currentResponder: UIResponder? = self
 
     while let currentView = currentResponder {
-      // If the current responder is a vertical, scrollable UIScrollView (excluding UITextView), return its tag
+      // If the current responder is a vertical, scrollable UIScrollView (excluding UITextView), return it
       if let scrollView = currentView as? UIScrollView,
          !(currentView is UITextView),
          scrollView.frame.width >= scrollView.contentSize.width,
          scrollView.isScrollEnabled
       {
-        return scrollView.reactViewTag
+        return scrollView
       }
 
       // Move to the next responder in the chain
@@ -52,7 +52,7 @@ public extension Optional where Wrapped: UIResponder {
     }
 
     // UIScrollView is not found
-    return -1
+    return nil
   }
 }
 

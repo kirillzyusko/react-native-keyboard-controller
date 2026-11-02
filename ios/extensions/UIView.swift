@@ -19,6 +19,15 @@ public extension UIView {
     return superview?.convert(frame, to: rootView)
   }
 
+  /// Location of the view inside the content of the given `UIScrollView` (the coordinate system of
+  /// a `UIScrollView` is its content space), so it depends neither on the scroll position nor on
+  /// where the `UIScrollView` is on the screen. `.zero` when there is no `UIScrollView`.
+  func locationInScrollView(_ scrollView: UIScrollView?) -> CGPoint {
+    guard let scrollView = scrollView else { return .zero }
+
+    return convert(bounds.origin, to: scrollView)
+  }
+
   func isVisibleInHierarchy(initial: Bool = true) -> Bool {
     guard let window = window else {
       return false

@@ -30,6 +30,8 @@ export const INPUT_LAYOUT_A = {
   x: 0,
   absoluteX: 16,
   width: 394.67,
+  contentX: 16,
+  contentY: 165.67,
 };
 
 export const INPUT_LAYOUT_B = {
@@ -39,6 +41,8 @@ export const INPUT_LAYOUT_B = {
   x: 0,
   absoluteX: 16,
   width: 121,
+  contentX: 16,
+  contentY: 579.67,
 };
 
 // ---------------------------------------------------------------------------

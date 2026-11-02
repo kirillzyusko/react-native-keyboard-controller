@@ -20,6 +20,8 @@ const inputData = {
     height: 40,
     absoluteX: 0,
     absoluteY: 100,
+    contentX: 0,
+    contentY: 0,
   },
 };
 const focusedInput = {

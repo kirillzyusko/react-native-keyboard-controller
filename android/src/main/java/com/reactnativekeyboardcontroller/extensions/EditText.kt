@@ -97,7 +97,7 @@ fun EditText.addOnTextChangedListener(action: (String) -> Unit): TextWatcher {
   return listener
 }
 
-val EditText.parentScrollViewTarget: Int
+val EditText.parentScrollView: View?
   get() {
     var currentView: View? = this
 
@@ -105,8 +105,8 @@ val EditText.parentScrollViewTarget: Int
       val parentView = currentView.parent as? View
 
       if (parentView != null && parentView.isEnabledReactScrollView()) {
-        // If the parent is a vertical, scrollable ScrollView - return its id
-        return parentView.id
+        // If the parent is a vertical, scrollable ScrollView - return it
+        return parentView
       }
 
       // Move to the next parent view
@@ -114,7 +114,7 @@ val EditText.parentScrollViewTarget: Int
     }
 
     // ScrollView was not found
-    return -1
+    return null
   }
 
 fun EditText?.focus() {

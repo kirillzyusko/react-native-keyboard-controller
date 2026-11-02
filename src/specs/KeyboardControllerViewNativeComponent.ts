@@ -26,6 +26,8 @@ type FocusedInputLayoutChangedEvent = Readonly<{
     height: Double;
     absoluteX: Double;
     absoluteY: Double;
+    contentX: Double;
+    contentY: Double;
   };
 }>;
 
