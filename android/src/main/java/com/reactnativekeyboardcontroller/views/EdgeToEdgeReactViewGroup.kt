@@ -2,11 +2,13 @@ package com.reactnativekeyboardcontroller.views
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
+import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.view.WindowInsets
 import android.view.WindowManager
 import android.widget.FrameLayout
+import androidx.annotation.RequiresApi
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsAnimationCompat
@@ -95,6 +97,7 @@ class EdgeToEdgeReactViewGroup(
     this.deactivate()
   }
 
+  @RequiresApi(Build.VERSION_CODES.KITKAT_WATCH)
   override fun dispatchApplyWindowInsets(insets: WindowInsets): WindowInsets {
     val compatInsets = WindowInsetsCompat.toWindowInsetsCompat(insets, this)
     val navigationBars = compatInsets.getInsets(WindowInsetsCompat.Type.navigationBars())
