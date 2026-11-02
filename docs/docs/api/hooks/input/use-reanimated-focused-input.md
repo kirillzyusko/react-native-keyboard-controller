@@ -35,7 +35,7 @@ The `input` property from this hook is returned as `SharedValue`. The returned d
 ```ts
 type FocusedInputLayoutChangedEvent = {
   target: number; // tag of the focused TextInput
-  parentScrollViewTarget: number; // tag of the parent vertical ScrollView (-1 if there is none)
+  parentScrollViewTarget: number; // tag of the parent ScrollView
 
   // layout of the focused TextInput
   layout: {
@@ -45,8 +45,8 @@ type FocusedInputLayoutChangedEvent = {
     height: number; // `height` of the TextInput
     absoluteX: number; // `x` coordinate on the screen
     absoluteY: number; // `y` coordinate on the screen
-    contentX: number; // `x` coordinate inside the content of the parent vertical `ScrollView` (`0` if there is no parent `ScrollView`)
-    contentY: number; // `y` coordinate inside the content of the parent vertical `ScrollView`, doesn't depend on the scroll offset (`0` if there is no parent `ScrollView`)
+    contentX: number; // `x` coordinate inside the content of the parent `ScrollView` (`0` if there is no parent `ScrollView`)
+    contentY: number; // `y` coordinate inside the content of the vertical `ScrollView`, doesn't depend on the scroll offset (`0` if there is no parent `ScrollView`)
   };
 };
 ```

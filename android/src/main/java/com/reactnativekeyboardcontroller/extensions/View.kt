@@ -62,9 +62,8 @@ val View?.reactViewTag: Int
   get() = this?.id ?: -1
 
 /**
- * Location of this view inside the content of the given `ScrollView` (in px): the screen location
- * relative to the `ScrollView` plus its scroll offset, so it depends neither on the scroll position
- * nor on where the `ScrollView` is on the screen. `(0, 0)` when there is no `ScrollView`.
+ * Location of the view inside the content of the given `ScrollView`, so it depends neither on the
+ * scroll position nor on where the `ScrollView` is on the screen. `(0, 0)` when there is no `ScrollView`.
  */
 fun View.locationInScrollView(scrollView: View?): IntArray {
   if (scrollView == null) {

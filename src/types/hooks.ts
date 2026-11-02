@@ -14,7 +14,7 @@ export type NativeEvent = {
 export type FocusedInputLayoutChangedEvent = {
   /** Tag of the focused `TextInput`. */
   target: number;
-  /** Tag of the parent vertical `ScrollView` (`-1` when there is none). */
+  /** Tag of the parent `ScrollView`. */
   parentScrollViewTarget: number;
   layout: {
     /** X coordinate of the focused `TextInput`. */
@@ -30,14 +30,13 @@ export type FocusedInputLayoutChangedEvent = {
     /** Y coordinate of the focused `TextInput` relative to the screen. */
     absoluteY: number;
     /**
-     * X coordinate of the focused `TextInput` inside the content of the parent vertical `ScrollView`
-     * (see `parentScrollViewTarget`). `0` when there is no parent `ScrollView`.
+     * X coordinate of the focused `TextInput` inside the content of the parent `ScrollView`
+     * (`0` if there is no parent `ScrollView`).
      */
     contentX: number;
     /**
-     * Y coordinate of the focused `TextInput` inside the content of the parent vertical `ScrollView`
-     * (see `parentScrollViewTarget`). Unlike `absoluteY` it doesn't depend on the scroll offset.
-     * `0` when there is no parent `ScrollView`.
+     * Y coordinate of the focused `TextInput` inside the content of the vertical `ScrollView`,
+     * doesn't depend on the scroll offset (`0` if there is no parent `ScrollView`).
      */
     contentY: number;
   };
