@@ -14,7 +14,6 @@ import Reanimated, {
   useSharedValue,
 } from "react-native-reanimated";
 
-import { KeyboardControllerNative } from "../../bindings";
 import {
   useFocusedInputHandler,
   useReanimatedFocusedInput,
@@ -138,29 +137,12 @@ const KeyboardAwareScrollView = forwardRef<
     const ghostViewSpace = useSharedValue(-1);
     const pendingSelectionForFocus = useSharedValue(false);
     const selectionUpdatedSinceHide = useSharedValue(false);
-    const scrollViewPageY = useSharedValue(0);
 
     const { height } = useWindowDimensions();
 
-    const syncScrollViewTarget = useCallback(async () => {
-      const handle = findNodeHandle(scrollViewAnimatedRef.current);
-
+    const syncScrollViewTarget = useCallback(() => {
       // eslint-disable-next-line react-compiler/react-compiler
-      scrollViewTarget.value = handle;
-
-      if (handle === null) {
-        return;
-      }
-
-      try {
-        const { y } = await KeyboardControllerNative.viewPositionInWindow(
-          handle,
-        );
-
-        scrollViewPageY.value = y;
-      } catch {
-        // ignore
-      }
+      scrollViewTarget.value = findNodeHandle(scrollViewAnimatedRef.current);
     }, []);
     const onScrollViewLayout = useCallback(
       (e: LayoutChangeEvent) => {
@@ -217,7 +199,14 @@ const KeyboardAwareScrollView = forwardRef<
           return interpolatedScrollTo;
         }
 
-        if (point < scrollViewPageY.value) {
+        // the caret is hidden above the top edge of the ScrollView. We compare
+        // coordinates inside the ScrollView content (`contentY` + current scroll
+        // offset) instead of screen coordinates, because the position of the
+        // ScrollView on the screen may be measured while the screen is still
+        // animating (e.g. during a modal transition) and then becomes stale
+        const contentY = layout.value?.layout.contentY || 0;
+
+        if (contentY + inputHeight < scrollPosition.value) {
           const positionOnScreen = visibleRect - bottomOffset;
           const topOfScreen = scrollPosition.value + point;
 

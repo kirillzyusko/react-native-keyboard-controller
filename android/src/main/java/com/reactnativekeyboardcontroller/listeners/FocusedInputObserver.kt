@@ -19,7 +19,7 @@ import com.reactnativekeyboardcontroller.extensions.addOnTextChangedListener
 import com.reactnativekeyboardcontroller.extensions.dispatchEvent
 import com.reactnativekeyboardcontroller.extensions.dp
 import com.reactnativekeyboardcontroller.extensions.emitEvent
-import com.reactnativekeyboardcontroller.extensions.parentScrollViewTarget
+import com.reactnativekeyboardcontroller.extensions.parentScrollView
 import com.reactnativekeyboardcontroller.extensions.rootView
 import com.reactnativekeyboardcontroller.extensions.screenLocation
 import com.reactnativekeyboardcontroller.traversal.FocusedInputHolder
@@ -33,6 +33,8 @@ val noFocusedInputEvent =
     height = 0.0,
     absoluteX = 0.0,
     absoluteY = 0.0,
+    contentX = 0.0,
+    contentY = 0.0,
     target = -1,
     parentScrollViewTarget = -1,
   )
@@ -136,6 +138,16 @@ class FocusedInputObserver(
     val input = lastFocusedInput ?: return
 
     val (x, y) = input.screenLocation
+    val parentScrollView = input.parentScrollView
+    // Position of the input inside the content of the parent `ScrollView`. Unlike
+    // `absoluteX`/`absoluteY` it doesn't depend on where the `ScrollView` is on the
+    // screen (which may be captured while the screen is still animating).
+    val (contentX, contentY) =
+      parentScrollView?.let { scrollView ->
+        val (scrollViewX, scrollViewY) = scrollView.screenLocation
+
+        intArrayOf(x - scrollViewX + scrollView.scrollX, y - scrollViewY + scrollView.scrollY)
+      } ?: intArrayOf(0, 0)
     val event =
       FocusedInputLayoutChangedEventData(
         x = input.x.dp,
@@ -144,8 +156,10 @@ class FocusedInputObserver(
         height = input.height.toFloat().dp,
         absoluteX = x.toFloat().dp,
         absoluteY = y.toFloat().dp,
+        contentX = contentX.toFloat().dp,
+        contentY = contentY.toFloat().dp,
         target = input.id,
-        parentScrollViewTarget = input.parentScrollViewTarget,
+        parentScrollViewTarget = parentScrollView?.id ?: -1,
       )
 
     dispatchLayoutEventToJS(event)

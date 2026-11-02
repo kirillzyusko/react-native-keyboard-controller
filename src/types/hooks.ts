@@ -29,6 +29,17 @@ export type FocusedInputLayoutChangedEvent = {
     absoluteX: number;
     /** Y coordinate of the focused `TextInput` relative to the screen. */
     absoluteY: number;
+    /**
+     * X coordinate of the focused `TextInput` inside the content of the parent `ScrollView`.
+     * `0` when the input is not inside a `ScrollView`.
+     */
+    contentX: number;
+    /**
+     * Y coordinate of the focused `TextInput` inside the content of the parent `ScrollView`.
+     * Unlike `absoluteY` it doesn't depend on the scroll offset or on the position of the
+     * `ScrollView` on the screen. `0` when the input is not inside a `ScrollView`.
+     */
+    contentY: number;
   };
 };
 export type FocusedInputTextChangedEvent = {

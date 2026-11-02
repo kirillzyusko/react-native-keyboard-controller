@@ -11,6 +11,8 @@ data class FocusedInputLayoutChangedEventData(
   val height: Double,
   val absoluteX: Double,
   val absoluteY: Double,
+  val contentX: Double,
+  val contentY: Double,
   val target: Int,
   val parentScrollViewTarget: Int,
 )
@@ -38,6 +40,8 @@ class FocusedInputLayoutChangedEvent(
           putDouble("height", event.height)
           putDouble("absoluteX", event.absoluteX)
           putDouble("absoluteY", event.absoluteY)
+          putDouble("contentX", event.contentX)
+          putDouble("contentY", event.contentY)
         },
       )
     }

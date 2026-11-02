@@ -48,7 +48,13 @@ const EMOJI_KEYBOARD_HEIGHT = 388;
 describe("KeyboardAwareScrollView — keyboard size change (emoji toggle)", () => {
   it("should preserve ghost padding when switching from emoji to text keyboard", async () => {
     await renderKeyboardAwareScrollView();
-    mockInput.value = inputEvent(INPUT_TARGET_B, INPUT_LAYOUT_A);
+    // the content is scrolled to 500 below: input B is still visible there
+    // (input A would be hidden above the ScrollView and KASV would
+    // legitimately scroll it back into view)
+    mockInput.value = inputEvent(INPUT_TARGET_B, {
+      ...INPUT_LAYOUT_B,
+      absoluteY: INPUT_LAYOUT_B.y - 500 + MOCK_SV_PAGE_Y,
+    });
 
     // Open the text keyboard and establish the focused input state.
     mockSelectionHandler.current(selectionEvent(INPUT_TARGET_B));
