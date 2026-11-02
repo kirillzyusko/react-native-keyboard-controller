@@ -599,8 +599,9 @@ const KeyboardAwareScrollView = forwardRef<
     );
 
     const padding = useDerivedValue(
-      () => (enabled ? currentKeyboardFrameHeight.value : 0),
-      [enabled],
+      () =>
+        enabled && mode === "insets" ? currentKeyboardFrameHeight.value : 0,
+      [enabled, mode],
     );
     // layout mode only: a spacer view whose paddingBottom grows with the keyboard.
     // The `+ 1` ensures the scroll view never reaches its absolute end during animation,
@@ -614,20 +615,6 @@ const KeyboardAwareScrollView = forwardRef<
       [enabled, mode],
     );
 
-    if (mode === "layout") {
-      return (
-        <ScrollViewComponent
-          ref={onRef}
-          {...rest}
-          scrollEventThrottle={16}
-          onLayout={onScrollViewLayout}
-        >
-          {children}
-          {enabled && <Reanimated.View style={layoutSpacerStyle} />}
-        </ScrollViewComponent>
-      );
-    }
-
     return (
       <ScrollViewWithBottomPadding
         ref={onRef}
@@ -638,6 +625,9 @@ const KeyboardAwareScrollView = forwardRef<
         onLayout={onScrollViewLayout}
       >
         {children}
+        {enabled && mode === "layout" && (
+          <Reanimated.View style={layoutSpacerStyle} />
+        )}
       </ScrollViewWithBottomPadding>
     );
   },
