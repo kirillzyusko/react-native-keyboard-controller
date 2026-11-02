@@ -49,7 +49,7 @@ describe("KeyboardAwareScrollView — keyboard size change (emoji toggle)", () =
   it("should preserve ghost padding when switching from emoji to text keyboard", async () => {
     await renderKeyboardAwareScrollView();
     // the content is scrolled to 500 below: input B is still visible there
-    // (input A would be hidden above the ScrollView and KASV would
+    // (input A would be hidden above the ScrollView and the component would
     // legitimately scroll it back into view)
     mockInput.value = inputEvent(INPUT_TARGET_B, {
       ...INPUT_LAYOUT_B,
