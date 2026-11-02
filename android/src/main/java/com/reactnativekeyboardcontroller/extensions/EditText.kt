@@ -97,9 +97,6 @@ fun EditText.addOnTextChangedListener(action: (String) -> Unit): TextWatcher {
   return listener
 }
 
-/**
- * The closest vertical, scrollable `ScrollView` ancestor of this input (or `null`).
- */
 val EditText.parentScrollView: View?
   get() {
     var currentView: View? = this

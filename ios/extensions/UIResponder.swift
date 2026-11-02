@@ -34,7 +34,6 @@ public extension Optional where Wrapped: UIResponder {
 }
 
 public extension Optional where Wrapped: UIResponder {
-  /// The closest vertical, scrollable `UIScrollView` (excluding `UITextView`) in the responder chain.
   var parentScrollView: UIScrollView? {
     var currentResponder: UIResponder? = self
 

@@ -199,11 +199,6 @@ const KeyboardAwareScrollView = forwardRef<
           return interpolatedScrollTo;
         }
 
-        // the caret is hidden above the top edge of the ScrollView. We compare
-        // coordinates inside the ScrollView content (`contentY` + current scroll
-        // offset) instead of screen coordinates, because the position of the
-        // ScrollView on the screen may be measured while the screen is still
-        // animating (e.g. during a modal transition) and then becomes stale
         const contentY = layout.value?.layout.contentY || 0;
 
         if (contentY + inputHeight < scrollPosition.value) {

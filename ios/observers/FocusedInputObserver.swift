@@ -187,9 +187,6 @@ public class FocusedInputObserver: NSObject {
     guard let frame = globalFrame, let input = focusedInput else { return }
 
     let parentScrollView = responder.parentScrollView
-    // unlike `globalFrame` the location inside the `ScrollView` content doesn't depend on
-    // the position of the `ScrollView` on the screen, which may be captured while the
-    // screen is still animating (e.g. during a modal transition)
     let location = input.locationInScrollView(parentScrollView)
 
     let data: [String: Any] = [

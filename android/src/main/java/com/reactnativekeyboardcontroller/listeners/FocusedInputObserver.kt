@@ -141,9 +141,6 @@ class FocusedInputObserver(
 
     val (x, y) = input.screenLocation
     val parentScrollView = input.parentScrollView
-    // unlike `absoluteX`/`absoluteY` the location inside the `ScrollView` content doesn't
-    // depend on where the `ScrollView` is on the screen (which may be captured while the
-    // screen is still animating)
     val (contentX, contentY) = input.locationInScrollView(parentScrollView)
     val event =
       FocusedInputLayoutChangedEventData(
