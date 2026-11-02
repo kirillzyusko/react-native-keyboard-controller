@@ -35,7 +35,7 @@ export type FocusedInputLayoutChangedEvent = {
      */
     contentX: number;
     /**
-     * Y coordinate of the focused `TextInput` inside the content of the vertical `ScrollView`,
+     * Y coordinate of the focused `TextInput` inside the content of the `ScrollView`,
      * doesn't depend on the scroll offset (`0` if there is no parent `ScrollView`).
      */
     contentY: number;
