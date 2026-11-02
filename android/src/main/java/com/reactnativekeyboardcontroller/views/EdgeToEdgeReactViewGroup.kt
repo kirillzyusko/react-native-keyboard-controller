@@ -8,7 +8,6 @@ import android.os.Looper
 import android.view.WindowInsets
 import android.view.WindowManager
 import android.widget.FrameLayout
-import androidx.annotation.RequiresApi
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsAnimationCompat
@@ -97,19 +96,21 @@ class EdgeToEdgeReactViewGroup(
     this.deactivate()
   }
 
-  @RequiresApi(Build.VERSION_CODES.KITKAT_WATCH)
+  @SuppressLint("ObsoleteSdkInt")
   override fun dispatchApplyWindowInsets(insets: WindowInsets): WindowInsets {
-    val compatInsets = WindowInsetsCompat.toWindowInsetsCompat(insets, this)
-    val navigationBars = compatInsets.getInsets(WindowInsetsCompat.Type.navigationBars())
-    if (navigationBars.left == 0 && navigationBars.right == 0) {
-      return super.dispatchApplyWindowInsets(insets)
-    }
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
+      val compatInsets = WindowInsetsCompat.toWindowInsetsCompat(insets, this)
+      val navigationBars = compatInsets.getInsets(WindowInsetsCompat.Type.navigationBars())
+      if (navigationBars.left == 0 && navigationBars.right == 0) {
+        return super.dispatchApplyWindowInsets(insets)
+      }
 
-    // The activity content margins already exclude the side navigation bar.
-    // Rebase only this subtree and return the original insets so Android < 30
-    // does not pass the consumed side insets to sibling native views.
-    val remainingInsets = compatInsets.inset(navigationBars.left, 0, navigationBars.right, 0)
-    super.dispatchApplyWindowInsets(remainingInsets.toWindowInsets() ?: insets)
+      // The activity content margins already exclude the side navigation bar.
+      // Rebase only this subtree and return the original insets so Android < 30
+      // does not pass the consumed side insets to sibling native views.
+      val remainingInsets = compatInsets.inset(navigationBars.left, 0, navigationBars.right, 0)
+      super.dispatchApplyWindowInsets(remainingInsets.toWindowInsets() ?: insets)
+    }
     return insets
   }
 
