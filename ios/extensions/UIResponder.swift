@@ -17,7 +17,7 @@ public extension UIResponder {
   }
 }
 
-public extension Optional where Wrapped == UIResponder {
+public extension Optional where Wrapped: UIResponder {
   var reactViewTag: NSNumber {
     return ((self as? UIView)?.superview).reactNativeTag
   }
@@ -54,12 +54,6 @@ public extension Optional where Wrapped: UIResponder {
 
     // UIScrollView is not found
     return nil
-  }
-
-  var parentScrollViewTarget: NSNumber {
-    guard let scrollView = parentScrollView else { return -1 }
-
-    return scrollView.reactViewTag
   }
 }
 
