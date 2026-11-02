@@ -39,6 +39,7 @@ public extension Optional where Wrapped: UIResponder {
     var currentResponder: UIResponder? = self
 
     while let currentView = currentResponder {
+      // If the current responder is a vertical, scrollable UIScrollView (excluding UITextView), return it
       if let scrollView = currentView as? UIScrollView,
          !(currentView is UITextView),
          scrollView.frame.width >= scrollView.contentSize.width,
@@ -56,7 +57,9 @@ public extension Optional where Wrapped: UIResponder {
   }
 
   var parentScrollViewTarget: NSNumber {
-    return (parentScrollView as UIResponder?).reactViewTag
+    guard let scrollView = parentScrollView else { return -1 }
+
+    return scrollView.reactViewTag
   }
 }
 

@@ -19,7 +19,8 @@ import com.reactnativekeyboardcontroller.extensions.addOnTextChangedListener
 import com.reactnativekeyboardcontroller.extensions.dispatchEvent
 import com.reactnativekeyboardcontroller.extensions.dp
 import com.reactnativekeyboardcontroller.extensions.emitEvent
-import com.reactnativekeyboardcontroller.extensions.parentScrollView
+import com.reactnativekeyboardcontroller.extensions.locationInScrollViewContent
+import com.reactnativekeyboardcontroller.extensions.parentScrollViewTarget
 import com.reactnativekeyboardcontroller.extensions.rootView
 import com.reactnativekeyboardcontroller.extensions.screenLocation
 import com.reactnativekeyboardcontroller.traversal.FocusedInputHolder
@@ -138,16 +139,10 @@ class FocusedInputObserver(
     val input = lastFocusedInput ?: return
 
     val (x, y) = input.screenLocation
-    val parentScrollView = input.parentScrollView
-    // Position of the input inside the content of the parent `ScrollView`. Unlike
-    // `absoluteX`/`absoluteY` it doesn't depend on where the `ScrollView` is on the
-    // screen (which may be captured while the screen is still animating).
-    val (contentX, contentY) =
-      parentScrollView?.let { scrollView ->
-        val (scrollViewX, scrollViewY) = scrollView.screenLocation
-
-        intArrayOf(x - scrollViewX + scrollView.scrollX, y - scrollViewY + scrollView.scrollY)
-      } ?: intArrayOf(0, 0)
+    // unlike `absoluteX`/`absoluteY` the location inside the `ScrollView` content doesn't
+    // depend on where the `ScrollView` is on the screen (which may be captured while the
+    // screen is still animating)
+    val (contentX, contentY) = input.locationInScrollViewContent
     val event =
       FocusedInputLayoutChangedEventData(
         x = input.x.dp,
@@ -159,7 +154,7 @@ class FocusedInputObserver(
         contentX = contentX.toFloat().dp,
         contentY = contentY.toFloat().dp,
         target = input.id,
-        parentScrollViewTarget = parentScrollView?.id ?: -1,
+        parentScrollViewTarget = input.parentScrollViewTarget,
       )
 
     dispatchLayoutEventToJS(event)

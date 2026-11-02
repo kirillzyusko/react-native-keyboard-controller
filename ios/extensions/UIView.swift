@@ -19,6 +19,16 @@ public extension UIView {
     return superview?.convert(frame, to: rootView)
   }
 
+  /// Frame of the view inside the content of the closest vertical, scrollable `UIScrollView`
+  /// (the coordinate system of a `UIScrollView` is its content space), so it depends neither on
+  /// the scroll position nor on where the `UIScrollView` is on the screen. `nil` when the view is
+  /// not inside a scrollable `UIScrollView`.
+  var frameInScrollViewContent: CGRect? {
+    guard let scrollView = (self as UIView?).parentScrollView else { return nil }
+
+    return convert(bounds, to: scrollView)
+  }
+
   func isVisibleInHierarchy(initial: Bool = true) -> Bool {
     guard let window = window else {
       return false

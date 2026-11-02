@@ -108,6 +108,7 @@ val EditText.parentScrollView: View?
       val parentView = currentView.parent as? View
 
       if (parentView != null && parentView.isEnabledReactScrollView()) {
+        // If the parent is a vertical, scrollable ScrollView - return it
         return parentView
       }
 
@@ -121,6 +122,20 @@ val EditText.parentScrollView: View?
 
 val EditText.parentScrollViewTarget: Int
   get() = parentScrollView?.id ?: -1
+
+/**
+ * Location of this input inside the content of the parent `ScrollView` (in px): the screen location
+ * relative to the `ScrollView` plus its scroll offset, so it depends neither on the scroll position
+ * nor on where the `ScrollView` is on the screen. `(0, 0)` when the input is not inside a `ScrollView`.
+ */
+val EditText.locationInScrollViewContent: IntArray
+  get() {
+    val scrollView = parentScrollView ?: return intArrayOf(0, 0)
+    val (x, y) = screenLocation
+    val (scrollViewX, scrollViewY) = scrollView.screenLocation
+
+    return intArrayOf(x - scrollViewX + scrollView.scrollX, y - scrollViewY + scrollView.scrollY)
+  }
 
 fun EditText?.focus() {
   if (this is ReactEditText) {
