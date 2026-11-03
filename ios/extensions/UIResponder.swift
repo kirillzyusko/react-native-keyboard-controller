@@ -71,13 +71,21 @@ public extension UIResponder {
     DispatchQueue.main.async {
       defer { isKeyboardPreloading = false }
       guard let window = UIApplication.shared.activeWindow else { return }
+      // a field is already being edited (e.g. `autoFocus`), the dummy field would steal its focus
+      guard UIResponder.current == nil else { return }
 
       let lagFreeField = UITextField(frame: .zero)
       lagFreeField.isHidden = true
       window.addSubview(lagFreeField)
 
       lagFreeField.becomeFirstResponder()
-      lagFreeField.resignFirstResponder()
+      // When the app is launched while a keyboard is already on screen (Spotlight, another app),
+      // UIKit hands that keyboard to the dummy field and the regular `resignFirstResponder` hides
+      // it with an animated slide that is rendered on top of the app. Disabling animations makes
+      // the hide happen in the same transaction, so nothing reaches the screen.
+      UIView.performWithoutAnimation {
+        lagFreeField.resignFirstResponder()
+      }
       lagFreeField.removeFromSuperview()
     }
   }
