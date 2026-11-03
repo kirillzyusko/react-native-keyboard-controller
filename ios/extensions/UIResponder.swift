@@ -71,13 +71,17 @@ public extension UIResponder {
     DispatchQueue.main.async {
       defer { isKeyboardPreloading = false }
       guard let window = UIApplication.shared.activeWindow else { return }
+      // a field is already being edited (e.g. `autoFocus`), the dummy field would steal its focus
+      guard UIResponder.current == nil else { return }
 
       let lagFreeField = UITextField(frame: .zero)
       lagFreeField.isHidden = true
       window.addSubview(lagFreeField)
 
       lagFreeField.becomeFirstResponder()
-      lagFreeField.resignFirstResponder()
+      UIView.performWithoutAnimation {
+        lagFreeField.resignFirstResponder()
+      }
       lagFreeField.removeFromSuperview()
     }
   }
