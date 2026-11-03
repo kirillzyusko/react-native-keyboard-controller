@@ -79,10 +79,6 @@ public extension UIResponder {
       window.addSubview(lagFreeField)
 
       lagFreeField.becomeFirstResponder()
-      // When the app is launched while a keyboard is already on screen (Spotlight, another app),
-      // UIKit hands that keyboard to the dummy field and the regular `resignFirstResponder` hides
-      // it with an animated slide that is rendered on top of the app. Disabling animations makes
-      // the hide happen in the same transaction, so nothing reaches the screen.
       UIView.performWithoutAnimation {
         lagFreeField.resignFirstResponder()
       }
