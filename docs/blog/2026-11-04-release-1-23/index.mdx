@@ -2,7 +2,15 @@
 slug: release-1-23
 title: Version 1.23 — precise input tracking, fewer preload artifacts, and transparent KeyboardExtender 🎯
 authors: [kirill]
-tags: [react-native, keyboard, KeyboardAwareScrollView, KeyboardExtender, ios]
+tags:
+  [
+    react-native,
+    keyboard,
+    preload,
+    KeyboardAwareScrollView,
+    KeyboardExtender,
+    ios,
+  ]
 keywords:
   [
     react-native-keyboard-controller,
@@ -16,7 +24,6 @@ keywords:
   ]
 ---
 
-import ComparisonTable from "@site/src/components/ComparisonTable";
 import Image from "@site/src/components/Image";
 
 `1.23.0` is intentionally a small release. There is no big new component this
@@ -26,29 +33,13 @@ precisely, removes the remaining visual artifacts of the keyboard preload, and l
 
 <!-- truncate -->
 
-## More precise focused input tracking
+## 🎯 More precise focused input tracking
 
 `KeyboardAwareScrollView` scrolls to the caret of the focused input, so its
 accuracy depends entirely on how precisely the native side reports where that
-caret is. This release reworks how iOS collects this information:
-
-- the caret position is read **once UIKit has finished the edit**, instead of in
-  the middle of the text change. Pressing Enter in the middle of a paragraph no
-  longer makes the scroll view jump to the top
-  ([#1593](https://github.com/kirillzyusko/react-native-keyboard-controller/issues/1593));
-- when a multiline input grows, the caret geometry is refreshed right away, so
-  the scroll follows the new line without waiting for the next keystroke
-  ([#1129](https://github.com/kirillzyusko/react-native-keyboard-controller/issues/1129));
-- the "caret is hidden above the scroll view" check now works in `ScrollView`
-  content coordinates instead of relying on the position of the scroll view on
-  the screen, so it no longer breaks while a screen is still animating in
-  ([#1561](https://github.com/kirillzyusko/react-native-keyboard-controller/issues/1561));
-- for single-line inputs iOS now reports the caret from the top of the field,
-  including `paddingTop` — the same way Android always did.
-
-As a result the code became more consistent between platforms: iOS now reports
-the same geometry as Android, and `KeyboardAwareScrollView` doesn't need to
-guess anymore.
+caret is. This release reworks how iOS collects this information: iOS now
+reports the same geometry as Android, and `KeyboardAwareScrollView` becomes
+more consistent across platforms.
 
 :::warning `bottomOffset` and `paddingTop`
 Previously iOS reported the caret of a single-line `TextInput` `paddingTop`
@@ -58,24 +49,14 @@ compensated for that with a bigger `bottomOffset`, you may now be able to
 reduce it on iOS.
 :::
 
-One side effect worth knowing about: on iOS, `onSelectionChange` from
-`useFocusedInputHandler` now arrives one frame after React Native's own
-`onSelectionChange`/`onChangeText` for every selection change, because that is
-the moment when the geometry is guaranteed to be final.
-
-## Preload with fewer artifacts
+## 🧹 Preload with fewer artifacts
 
 `KeyboardProvider` preloads the keyboard on iOS by default to remove the lag of
-the very first focus. Some of you reported that the preload itself could be
+the very first focus. Some developers reported that the preload itself could be
 visible: the keyboard flashed over the first screen when the app was launched
 from Spotlight with the Spotlight keyboard still open
-([#1077](https://github.com/kirillzyusko/react-native-keyboard-controller/issues/1077)),
-and an `autoFocus` input could lose its focus to the preload.
-
-Both cases are fixed in `1.23.0`: the hidden preload field is now resigned
-without animation, so nothing reaches the screen, and the preload is skipped
-entirely when something is already being edited. The warm-up effect is still
-there — the first focus after a preload is roughly twice as fast as a cold one.
+([#1077](https://github.com/kirillzyusko/react-native-keyboard-controller/issues/1077)).
+This is fixed in `1.23.0`.
 
 If you disabled `preload` or called `KeyboardController.preload()` manually at
 a "safe" moment to work around these artifacts, give the default behavior
@@ -86,10 +67,11 @@ another try:
 +<KeyboardProvider>
 ```
 
-If you still see the keyboard flashing or any other side effect — please open
-an issue with the steps to reproduce it. I'd like to fix the remaining cases.
+If you still see the keyboard flashing or any other side effect — please
+[open an issue](https://github.com/kirillzyusko/react-native-keyboard-controller/issues/new?template=bug_report.md)
+with the steps to reproduce it. I'd like to fix the remaining cases.
 
-## `transparent` prop for `KeyboardExtender`
+## 🪟 `transparent` prop for `KeyboardExtender`
 
 `KeyboardExtender` always wrapped its content in a keyboard-styled container: a
 full-width glass capsule on iOS 26+, and a keyboard background on earlier iOS
@@ -97,34 +79,17 @@ versions and Android. That's a good default for a bar with several controls,
 but not for a lone control that should sit on the keyboard on its own — a
 floating "Done" pill like the native `UIToolbar` draws for a single trailing
 item, or a row of buttons similar to the ones WhatsApp attaches to the keyboard
-in its image editor. The only way to get rid of the capsule was
-`UIDesignRequiresCompatibility`, which turns Liquid Glass off for the whole app.
+in its image editor:
+
+<Image
+  src="/img/keyboard-extender-whatsapp.png"
+  width={35}
+  alt="WhatsApp image editor: a row of font buttons sits right on top of the keyboard without any container"
+  style={{ marginBottom: 20 }}
+/>
 
 The new `transparent` prop removes that container, so your content draws its
 own surface:
-
-<ComparisonTable
-  left={
-    <Image
-      src="/img/keyboard-extender-glass.png"
-      width={65}
-      alt="KeyboardExtender with the default glass capsule on iOS 26"
-    />
-  }
-  right={
-    <Image
-      src="/img/keyboard-extender-transparent.png"
-      width={65}
-      alt="KeyboardExtender with the transparent prop on iOS 26"
-    />
-  }
-  leftText={<i>Default container</i>}
-  rightText={
-    <i>
-      <code>transparent</code> container
-    </i>
-  }
-/>
 
 ```tsx
 import { KeyboardExtender } from "react-native-keyboard-controller";
@@ -152,8 +117,10 @@ You can read more on the
 
 ## 🤔 What's next?
 
-As always, my top focus is **resolving open issues** and keeping the library
-stable for everyone:
+With the era of AI I've started to receive more bug reports — and I actually
+like it. Now I can be confident that every next release produces fewer and
+fewer bugs and the package handles even more edge cases. Open issues remain my
+top priority:
 
 - Issues with more 👍 reactions are prioritized first — that's how I track what
   matters most to the community.
