@@ -42,21 +42,20 @@ reports the same geometry as Android, and `KeyboardAwareScrollView` becomes
 more consistent across platforms.
 
 :::warning `bottomOffset` and `paddingTop`
-Previously iOS reported the caret of a single-line `TextInput` `paddingTop`
-points higher than it actually was, so `KeyboardAwareScrollView` stopped
-scrolling a bit too early and the text could end up under the keyboard. If you
-compensated for that with a bigger `bottomOffset`, you may now be able to
-reduce it on iOS.
+Previously, on iOS the caret position of a single-line `TextInput` ignored its
+`paddingTop`, so the caret was reported higher than it really was. Because of
+that `KeyboardAwareScrollView` stopped scrolling a bit too early and the text
+could end up under the keyboard. If you compensated for that with a bigger
+`bottomOffset`, you may now be able to reduce it on iOS.
 :::
 
-## 🧹 Preload with fewer artifacts
+## 🧹 `preload` with fewer artifacts
 
 `KeyboardProvider` preloads the keyboard on iOS by default to remove the lag of
 the very first focus. Some developers reported that the preload itself could be
 visible: the keyboard flashed over the first screen when the app was launched
-from Spotlight with the Spotlight keyboard still open
-([#1077](https://github.com/kirillzyusko/react-native-keyboard-controller/issues/1077)).
-This is fixed in `1.23.0`.
+from Spotlight with the Spotlight keyboard still open. This is fixed in
+`1.23.0`.
 
 If you disabled `preload` or called `KeyboardController.preload()` manually at
 a "safe" moment to work around these artifacts, give the default behavior
@@ -71,7 +70,7 @@ If you still see the keyboard flashing or any other side effect — please
 [open an issue](https://github.com/kirillzyusko/react-native-keyboard-controller/issues/new?template=bug_report.md)
 with the steps to reproduce it. I'd like to fix the remaining cases.
 
-## 🪟 `transparent` prop for `KeyboardExtender`
+## ⬜ `transparent` prop for `KeyboardExtender`
 
 `KeyboardExtender` always wrapped its content in a keyboard-styled container: a
 full-width glass capsule on iOS 26+, and a keyboard background on earlier iOS
@@ -126,6 +125,10 @@ top priority:
   matters most to the community.
 - Issues labeled "sponsor 💖" receive **highest priority** as part of dedicated
   sponsor support.
+
+I'm also working on new exciting features and will be publishing previews of
+how they work on [Twitter](https://twitter.com/ziusko), so don't forget to
+subscribe.
 
 Stay tuned and follow me on [Twitter](https://twitter.com/ziusko) and
 [GitHub](https://github.com/kirillzyusko) for updates. Thank you for your
