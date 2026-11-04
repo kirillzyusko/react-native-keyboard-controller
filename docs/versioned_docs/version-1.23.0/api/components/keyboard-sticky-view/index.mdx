@@ -1,0 +1,89 @@
+---
+keywords:
+  [
+    react-native-keyboard-controller,
+    KeyboardStickyView,
+    keyboard sticky view,
+    keyboard accessory view,
+    KeyboardAccessoryView,
+    keyboard sticky footer,
+    sticky view,
+    sticky footer,
+    keyboard,
+    android,
+  ]
+---
+
+# KeyboardStickyView
+
+A `KeyboardStickyView` component seamlessly ensures that a designated view sticks to the keyboard's movements, maintaining visibility and interaction. Often referred to as a **keyboard accessory** or **keyboard accessory view**, it helps you enhance the user experience by preventing important UI elements from being obscured by the keyboard, creating a smooth and user-friendly interface in your React Native application.
+
+:::info `KeyboardAvoidingView` vs `KeyboardStickyView`
+Unlike [KeyboardAvoidingView](../keyboard-avoiding-view.mdx) the `KeyboardStickyView` just moves the content along with keyboard and not resizing the inner view. Try to compare animations of `KeyboardStickyView` and `KeyboardAvoidingView` to see a difference in details on how it works and which component is suitable for your needs.
+:::
+
+import ksv from "./ksv.lottie.json";
+import kav from "@site/src/components/KeyboardAvoidingViewComparison/kav-animated.lottie.json";
+import ComparisonTable from "@site/src/components/ComparisonTable";
+import Lottie from "@site/src/components/Lottie";
+
+<ComparisonTable
+  left={<Lottie src={ksv} />}
+  right={<Lottie src={kav} />}
+  leftText={
+    <i>
+      <code>KeyboardStickyView</code> - only footer is moving (container is not
+      resized)
+    </i>
+  }
+  rightText={
+    <i>
+      <code>KeyboardAvoidingView</code> - entire container is getting resized
+    </i>
+  }
+/>
+
+## Example
+
+```tsx
+const offset = { closed: 0, opened: 20 };
+
+const StickyFooter = () => {
+  return (
+    <KeyboardStickyView offset={offset}>
+      <Footer />
+    </KeyboardStickyView>
+  );
+};
+```
+
+## Props
+
+### `enabled`
+
+A boolean prop indicating whether `KeyboardStickyView` is enabled or disabled. If disabled then view will be moved to its initial position (as keyboard would be closed) and will not react on keyboard movements. Default is `true`.
+
+### `offset`
+
+An object containing next properties:
+
+- **closed** - additional offset to the view when keyboard is closed. Default value is `0`.
+- **opened** - additional offset to the view when keyboard is opened. Default value is `0`.
+
+## Troubleshooting
+
+### Missing animations on iOS (new arch only)
+
+Starting with version `1.21.7`, `KeyboardStickyView` uses Reanimated for its `translateY` animation. On iOS (New Architecture only), updating React state right before a keyboard event can cause this animation to be skipped entirely. This happens because a React commit can block Reanimated from applying its animated updates in the same frame.
+
+Common triggers include:
+
+- updating state in the `onFocus` callback of a `TextInput`;
+- updating state in response to the `keyboardWillShow` event;
+- using `KeyboardToolbar` or other components that trigger a state update before the keyboard appears.
+
+To fix this, enable the [DISABLE_COMMIT_PAUSING_MECHANISM](https://docs.swmansion.com/react-native-reanimated/docs/guides/feature-flags/#disable_commit_pausing_mechanism) feature flag. See the link for detailed setup instructions.
+
+:::info Do I need to enable this flag?
+This issue can occur even if the state update comes from a different screen (e.g. a parent navigator). To check, open the React Profiler and look for any React commits that happen just before the keyboard event — if you see one, you likely need this flag.
+:::
