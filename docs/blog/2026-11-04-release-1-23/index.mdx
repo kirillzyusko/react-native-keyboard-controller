@@ -38,7 +38,7 @@ precisely, removes the remaining visual artifacts of the keyboard preload, and l
 `KeyboardAwareScrollView` scrolls to the caret of the focused input, so its
 accuracy depends entirely on how precisely the native side reports where that
 caret is. This release reworks how iOS collects this information: iOS now
-reports the same geometry as Android, and `KeyboardAwareScrollView` becomes
+reports geometry similar to Android, and `KeyboardAwareScrollView` becomes
 more consistent across platforms.
 
 :::warning `bottomOffset` and `paddingTop`
