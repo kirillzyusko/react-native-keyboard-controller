@@ -1,0 +1,165 @@
+---
+slug: release-1-23
+title: Version 1.23 — precise input tracking, fewer preload artifacts, and transparent KeyboardExtender 🎯
+authors: [kirill]
+tags: [react-native, keyboard, KeyboardAwareScrollView, KeyboardExtender, ios]
+keywords:
+  [
+    react-native-keyboard-controller,
+    KeyboardAwareScrollView,
+    bottomOffset,
+    caret position,
+    keyboard preload,
+    KeyboardExtender,
+    transparent keyboard extender,
+    liquid glass,
+  ]
+---
+
+import ComparisonTable from "@site/src/components/ComparisonTable";
+import Image from "@site/src/components/Image";
+
+`1.23.0` is intentionally a small release. There is no big new component this
+time — instead it makes `KeyboardAwareScrollView` track the focused input more
+precisely, removes the remaining visual artifacts of the keyboard preload, and lets
+`KeyboardExtender` drop its background.
+
+<!-- truncate -->
+
+## More precise focused input tracking
+
+`KeyboardAwareScrollView` scrolls to the caret of the focused input, so its
+accuracy depends entirely on how precisely the native side reports where that
+caret is. This release reworks how iOS collects this information:
+
+- the caret position is read **once UIKit has finished the edit**, instead of in
+  the middle of the text change. Pressing Enter in the middle of a paragraph no
+  longer makes the scroll view jump to the top
+  ([#1593](https://github.com/kirillzyusko/react-native-keyboard-controller/issues/1593));
+- when a multiline input grows, the caret geometry is refreshed right away, so
+  the scroll follows the new line without waiting for the next keystroke
+  ([#1129](https://github.com/kirillzyusko/react-native-keyboard-controller/issues/1129));
+- the "caret is hidden above the scroll view" check now works in `ScrollView`
+  content coordinates instead of relying on the position of the scroll view on
+  the screen, so it no longer breaks while a screen is still animating in
+  ([#1561](https://github.com/kirillzyusko/react-native-keyboard-controller/issues/1561));
+- for single-line inputs iOS now reports the caret from the top of the field,
+  including `paddingTop` — the same way Android always did.
+
+As a result the code became more consistent between platforms: iOS now reports
+the same geometry as Android, and `KeyboardAwareScrollView` doesn't need to
+guess anymore.
+
+:::warning `bottomOffset` and `paddingTop`
+Previously iOS reported the caret of a single-line `TextInput` `paddingTop`
+points higher than it actually was, so `KeyboardAwareScrollView` stopped
+scrolling a bit too early and the text could end up under the keyboard. If you
+compensated for that with a bigger `bottomOffset`, you may now be able to
+reduce it on iOS.
+:::
+
+One side effect worth knowing about: on iOS, `onSelectionChange` from
+`useFocusedInputHandler` now arrives one frame after React Native's own
+`onSelectionChange`/`onChangeText` for every selection change, because that is
+the moment when the geometry is guaranteed to be final.
+
+## Preload with fewer artifacts
+
+`KeyboardProvider` preloads the keyboard on iOS by default to remove the lag of
+the very first focus. Some of you reported that the preload itself could be
+visible: the keyboard flashed over the first screen when the app was launched
+from Spotlight with the Spotlight keyboard still open
+([#1077](https://github.com/kirillzyusko/react-native-keyboard-controller/issues/1077)),
+and an `autoFocus` input could lose its focus to the preload.
+
+Both cases are fixed in `1.23.0`: the hidden preload field is now resigned
+without animation, so nothing reaches the screen, and the preload is skipped
+entirely when something is already being edited. The warm-up effect is still
+there — the first focus after a preload is roughly twice as fast as a cold one.
+
+If you disabled `preload` or called `KeyboardController.preload()` manually at
+a "safe" moment to work around these artifacts, give the default behavior
+another try:
+
+```diff
+-<KeyboardProvider preload={false}>
++<KeyboardProvider>
+```
+
+If you still see the keyboard flashing or any other side effect — please open
+an issue with the steps to reproduce it. I'd like to fix the remaining cases.
+
+## `transparent` prop for `KeyboardExtender`
+
+`KeyboardExtender` always wrapped its content in a keyboard-styled container: a
+full-width glass capsule on iOS 26+, and a keyboard background on earlier iOS
+versions and Android. That's a good default for a bar with several controls,
+but not for a lone control that should sit on the keyboard on its own — a
+floating "Done" pill like the native `UIToolbar` draws for a single trailing
+item, or a row of buttons similar to the ones WhatsApp attaches to the keyboard
+in its image editor. The only way to get rid of the capsule was
+`UIDesignRequiresCompatibility`, which turns Liquid Glass off for the whole app.
+
+The new `transparent` prop removes that container, so your content draws its
+own surface:
+
+<ComparisonTable
+  left={
+    <Image
+      src="/img/keyboard-extender-glass.png"
+      width={65}
+      alt="KeyboardExtender with the default glass capsule on iOS 26"
+    />
+  }
+  right={
+    <Image
+      src="/img/keyboard-extender-transparent.png"
+      width={65}
+      alt="KeyboardExtender with the transparent prop on iOS 26"
+    />
+  }
+  leftText={<i>Default container</i>}
+  rightText={
+    <i>
+      <code>transparent</code> container
+    </i>
+  }
+/>
+
+```tsx
+import { KeyboardExtender } from "react-native-keyboard-controller";
+
+function DoneExtender() {
+  return (
+    <KeyboardExtender transparent>
+      <DonePill />
+    </KeyboardExtender>
+  );
+}
+```
+
+- **iOS 26+**: the glass capsule is skipped, the content keeps the same offset
+  above the keyboard.
+- **iOS < 26**: no keyboard background is drawn behind the content.
+- **Android**: the keyboard background view is skipped.
+
+The prop defaults to `false`, so nothing changes for existing usages, and it
+can be toggled at runtime — even while the keyboard is open. Thanks to
+[kylesuss](https://github.com/kylesuss) for proposing and implementing it
+([#1714](https://github.com/kirillzyusko/react-native-keyboard-controller/pull/1714)).
+You can read more on the
+[`KeyboardExtender` API page](/docs/next/api/views/keyboard-extender).
+
+## 🤔 What's next?
+
+As always, my top focus is **resolving open issues** and keeping the library
+stable for everyone:
+
+- Issues with more 👍 reactions are prioritized first — that's how I track what
+  matters most to the community.
+- Issues labeled "sponsor 💖" receive **highest priority** as part of dedicated
+  sponsor support.
+
+Stay tuned and follow me on [Twitter](https://twitter.com/ziusko) and
+[GitHub](https://github.com/kirillzyusko) for updates. Thank you for your
+support! 😊
