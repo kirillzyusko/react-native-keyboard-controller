@@ -24,7 +24,7 @@ keywords:
   ]
 ---
 
-import Image from "@site/src/components/Image";
+import Video from "@site/src/components/Video";
 
 `1.23.0` is intentionally a small release. There is no big new component this
 time — instead it makes `KeyboardAwareScrollView` track the focused input more
@@ -80,12 +80,7 @@ floating "Done" pill like the native `UIToolbar` draws for a single trailing
 item, or a row of buttons similar to the ones WhatsApp attaches to the keyboard
 in its image editor:
 
-<Image
-  src="/img/keyboard-extender-whatsapp.png"
-  width={35}
-  alt="WhatsApp image editor: a row of font buttons sits right on top of the keyboard without any container"
-  style={{ marginBottom: 20 }}
-/>
+<Video src="/video/keyboard-extender-whatsapp.mp4" width={35} />
 
 The new `transparent` prop removes that container, so your content draws its
 own surface:
