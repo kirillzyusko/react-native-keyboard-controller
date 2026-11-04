@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://www.googletagmanager.com">
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-4JH9YK1X2Q"></script>
 <script>function gtag(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],gtag("js",new Date),gtag("config","G-4JH9YK1X2Q",{anonymize_ip:!0})</script><link rel="stylesheet" href="/react-native-keyboard-controller/pr-preview/pr-1746/assets/css/styles.120a151b.css">
-<script src="/react-native-keyboard-controller/pr-preview/pr-1746/assets/js/runtime~main.a4e6215e.js" defer="defer"></script>
+<script src="/react-native-keyboard-controller/pr-preview/pr-1746/assets/js/runtime~main.6e6a9554.js" defer="defer"></script>
 <script src="/react-native-keyboard-controller/pr-preview/pr-1746/assets/js/main.33f010b3.js" defer="defer"></script>
 </head>
 <body class="navigation-with-keyboard">
@@ -22,7 +22,7 @@ precisely, removes the remaining visual artifacts of the keyboard preload, and l
 <p><code>KeyboardAwareScrollView</code> scrolls to the caret of the focused input, so its
 accuracy depends entirely on how precisely the native side reports where that
 caret is. This release reworks how iOS collects this information: iOS now
-reports the same geometry as Android, and <code>KeyboardAwareScrollView</code> becomes
+reports geometry similar to Android, and <code>KeyboardAwareScrollView</code> becomes
 more consistent across platforms.</p>
 <div class="theme-admonition theme-admonition-warning admonition_xJq3 alert alert--warning"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8.893 1.5c-.183-.31-.52-.5-.887-.5s-.703.19-.886.5L.138 13.499a.98.98 0 0 0 0 1.001c.193.31.53.501.886.501h13.964c.367 0 .704-.19.877-.5a1.03 1.03 0 0 0 .01-1.002L8.893 1.5zm.133 11.497H6.987v-2.003h2.039v2.003zm0-3.004H6.987V5.987h2.039v4.006z"></path></svg></span><code>bottomOffset</code> and <code>paddingTop</code></div><div class="admonitionContent_BuS1"><p>Previously, on iOS the caret position of a single-line <code>TextInput</code> ignored its
 <code>paddingTop</code>, so the caret was reported higher than it really was. Because of
