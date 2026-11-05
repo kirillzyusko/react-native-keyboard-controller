@@ -2018,7 +2018,7 @@ useKeyboardHandler(
 );
 ```
 
-![](/react-native-keyboard-controller/pr-preview/pr-1747/assets/images/start-248e42535bfd2e754a9613698b7a1891.png)
+![](/react-native-keyboard-controller/pr-preview/pr-1747/assets/images/start-8fc615df1c4a3168c53cd03002ff5b34.png)
 
 ```
 useKeyboardHandler(
@@ -2051,7 +2051,7 @@ useKeyboardHandler(
 );
 ```
 
-![](/react-native-keyboard-controller/pr-preview/pr-1747/assets/images/move-0ffa0c0f69b1d89c8fd476bc8ba0b54f.png)
+![](/react-native-keyboard-controller/pr-preview/pr-1747/assets/images/move-1c0d4be3d94e9a63067d691025fce9f9.png)
 
 ```
 useKeyboardHandler(
@@ -2087,7 +2087,7 @@ useKeyboardHandler(
 );
 ```
 
-![](/react-native-keyboard-controller/pr-preview/pr-1747/assets/images/interactive-1996275d3a3c9ea3ccbeb3f3f91548a8.png)
+![](/react-native-keyboard-controller/pr-preview/pr-1747/assets/images/interactive-68b80f7c75246c4f04c6612ad96464dc.png)
 
 ```
 useKeyboardHandler(
