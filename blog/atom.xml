@@ -2,11 +2,97 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://kirillzyusko.github.io/react-native-keyboard-controller/blog</id>
     <title>Keyboard Controller Blog</title>
-    <updated>2026-07-09T00:00:00.000Z</updated>
+    <updated>2026-11-04T00:00:00.000Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog"/>
     <subtitle>Keyboard Controller Blog</subtitle>
     <icon>https://kirillzyusko.github.io/react-native-keyboard-controller/favicon.ico</icon>
+    <entry>
+        <title type="html"><![CDATA[Version 1.23 — precise input tracking, fewer preload artifacts, and transparent KeyboardExtender 🎯]]></title>
+        <id>https://kirillzyusko.github.io/react-native-keyboard-controller/blog/release-1-23</id>
+        <link href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/release-1-23"/>
+        <updated>2026-11-04T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[1.23.0 is intentionally a small release. There is no big new component this]]></summary>
+        <content type="html"><![CDATA[<p><code>1.23.0</code> is intentionally a small release. There is no big new component this
+time — instead it makes <code>KeyboardAwareScrollView</code> track the focused input more
+precisely, removes the remaining visual artifacts of the keyboard preload, and lets
+<code>KeyboardExtender</code> drop its background.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="-more-precise-focused-input-tracking">🎯 More precise focused input tracking<a class="hash-link" aria-label="Direct link to 🎯 More precise focused input tracking" title="Direct link to 🎯 More precise focused input tracking" href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/release-1-23#-more-precise-focused-input-tracking">​</a></h2>
+<p><code>KeyboardAwareScrollView</code> scrolls to the caret of the focused input, so its
+accuracy depends entirely on how precisely the native side reports where that
+caret is. This release reworks how iOS collects this information: iOS now
+reports geometry similar to Android, and <code>KeyboardAwareScrollView</code> becomes
+more consistent across platforms.</p>
+<div class="theme-admonition theme-admonition-warning admonition_xJq3 alert alert--warning"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8.893 1.5c-.183-.31-.52-.5-.887-.5s-.703.19-.886.5L.138 13.499a.98.98 0 0 0 0 1.001c.193.31.53.501.886.501h13.964c.367 0 .704-.19.877-.5a1.03 1.03 0 0 0 .01-1.002L8.893 1.5zm.133 11.497H6.987v-2.003h2.039v2.003zm0-3.004H6.987V5.987h2.039v4.006z"></path></svg></span><code>bottomOffset</code> and <code>paddingTop</code></div><div class="admonitionContent_BuS1"><p>Previously, on iOS the caret position of a single-line <code>TextInput</code> ignored its
+<code>paddingTop</code>, so the caret was reported higher than it really was. Because of
+that <code>KeyboardAwareScrollView</code> stopped scrolling a bit too early and the text
+could end up under the keyboard. If you compensated for that with a bigger
+<code>bottomOffset</code>, you may now be able to reduce it on iOS.</p></div></div>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="-preload-with-fewer-artifacts">🧹 <code>preload</code> with fewer artifacts<a class="hash-link" aria-label="Direct link to -preload-with-fewer-artifacts" title="Direct link to -preload-with-fewer-artifacts" href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/release-1-23#-preload-with-fewer-artifacts">​</a></h2>
+<p><code>KeyboardProvider</code> preloads the keyboard on iOS by default to remove the lag of
+the very first focus. Some developers reported that the preload itself could be
+visible: the keyboard flashed over the first screen when the app was launched
+from Spotlight with the Spotlight keyboard still open. This is fixed in
+<code>1.23.0</code>.</p>
+<p>If you disabled <code>preload</code> or called <code>KeyboardController.preload()</code> manually at
+a "safe" moment to work around these artifacts, give the default behavior
+another try:</p>
+<div class="language-diff codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_biex"><pre tabindex="0" class="prism-code language-diff codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token deleted-sign deleted prefix deleted" style="color:#d73a49">-</span><span class="token deleted-sign deleted line" style="color:#d73a49">&lt;KeyboardProvider preload={false}&gt;</span><br></span><span class="token-line" style="color:#393A34"><span class="token deleted-sign deleted line" style="color:#d73a49"></span><span class="token inserted-sign inserted prefix inserted" style="color:#36acaa">+</span><span class="token inserted-sign inserted line" style="color:#36acaa">&lt;KeyboardProvider&gt;</span><br></span></code></pre><div class="buttonGroup__atx"><button type="button" aria-label="Copy code to clipboard" title="Copy" class="clean-btn"><span class="copyButtonIcons_eSgA" aria-hidden="true"><svg viewBox="0 0 24 24" class="copyButtonIcon_y97N"><path fill="currentColor" d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"></path></svg><svg viewBox="0 0 24 24" class="copyButtonSuccessIcon_LjdS"><path fill="currentColor" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"></path></svg></span></button></div></div></div>
+<p>If you still see the keyboard flashing or any other side effect — please
+<a href="https://github.com/kirillzyusko/react-native-keyboard-controller/issues/new?template=bug_report.md" target="_blank" rel="noopener noreferrer">open an issue</a>
+with the steps to reproduce it. I'd like to fix the remaining cases.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="-transparent-prop-for-keyboardextender">⬜ <code>transparent</code> prop for <code>KeyboardExtender</code><a class="hash-link" aria-label="Direct link to -transparent-prop-for-keyboardextender" title="Direct link to -transparent-prop-for-keyboardextender" href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/release-1-23#-transparent-prop-for-keyboardextender">​</a></h2>
+<p><code>KeyboardExtender</code> always wrapped its content in a keyboard-styled container: a
+full-width glass capsule on iOS 26+, and a keyboard background on earlier iOS
+versions and Android. That's a good default for a bar with several controls,
+but not for a lone control that should sit on the keyboard on its own — a
+floating "Done" pill like the native <code>UIToolbar</code> draws for a single trailing
+item, or a row of buttons similar to the ones WhatsApp attaches to the keyboard
+in its image editor:</p>
+<div class="center video"><video autoplay="" loop="" muted="" playsinline="" height="100%" src="/react-native-keyboard-controller/video/keyboard-extender-whatsapp.mp4" width="35%"></video></div>
+<p>The new <code>transparent</code> prop removes that container, so your content draws its
+own surface:</p>
+<div class="language-tsx codeBlockContainer_Ckt0 theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_biex"><pre tabindex="0" class="prism-code language-tsx codeBlock_bY9V thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_e6Vv"><span class="token-line" style="color:#393A34"><span class="token keyword" style="color:#00009f">import</span><span class="token plain"> </span><span class="token imports punctuation" style="color:#393A34">{</span><span class="token imports"> </span><span class="token imports maybe-class-name">KeyboardExtender</span><span class="token imports"> </span><span class="token imports punctuation" style="color:#393A34">}</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">from</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">"react-native-keyboard-controller"</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">function</span><span class="token plain"> </span><span class="token function" style="color:#d73a49">DoneExtender</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token keyword" style="color:#00009f">return</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">(</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token tag punctuation" style="color:#393A34">&lt;</span><span class="token tag class-name" style="color:#00009f">KeyboardExtender</span><span class="token tag" style="color:#00009f"> </span><span class="token tag attr-name" style="color:#00a4db">transparent</span><span class="token tag punctuation" style="color:#393A34">&gt;</span><span class="token plain-text"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain-text">      </span><span class="token tag punctuation" style="color:#393A34">&lt;</span><span class="token tag class-name" style="color:#00009f">DonePill</span><span class="token tag" style="color:#00009f"> </span><span class="token tag punctuation" style="color:#393A34">/&gt;</span><span class="token plain-text"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain-text">    </span><span class="token tag punctuation" style="color:#393A34">&lt;/</span><span class="token tag class-name" style="color:#00009f">KeyboardExtender</span><span class="token tag punctuation" style="color:#393A34">&gt;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">}</span><br></span></code></pre><div class="buttonGroup__atx"><button type="button" aria-label="Copy code to clipboard" title="Copy" class="clean-btn"><span class="copyButtonIcons_eSgA" aria-hidden="true"><svg viewBox="0 0 24 24" class="copyButtonIcon_y97N"><path fill="currentColor" d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z"></path></svg><svg viewBox="0 0 24 24" class="copyButtonSuccessIcon_LjdS"><path fill="currentColor" d="M21,7L9,19L3.5,13.5L4.91,12.09L9,16.17L19.59,5.59L21,7Z"></path></svg></span></button></div></div></div>
+<ul>
+<li><strong>iOS 26+</strong>: the glass capsule is skipped, the content keeps the same offset
+above the keyboard.</li>
+<li><strong>iOS &lt; 26</strong>: no keyboard background is drawn behind the content.</li>
+<li><strong>Android</strong>: the keyboard background view is skipped.</li>
+</ul>
+<p>The prop defaults to <code>false</code>, so nothing changes for existing usages, and it
+can be toggled at runtime — even while the keyboard is open. Thanks to
+<a href="https://github.com/kylesuss" target="_blank" rel="noopener noreferrer">kylesuss</a> for proposing and implementing it
+(<a href="https://github.com/kirillzyusko/react-native-keyboard-controller/pull/1714" target="_blank" rel="noopener noreferrer">#1714</a>).
+You can read more on the
+<a href="https://kirillzyusko.github.io/react-native-keyboard-controller/docs/next/api/views/keyboard-extender"><code>KeyboardExtender</code> API page</a>.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="-whats-next">🤔 What's next?<a class="hash-link" aria-label="Direct link to 🤔 What's next?" title="Direct link to 🤔 What's next?" href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/release-1-23#-whats-next">​</a></h2>
+<p>With the era of AI I've started to receive more bug reports — and I actually
+like it. Now I can be confident that every next release produces fewer and
+fewer bugs and the package handles even more edge cases. Open issues remain my
+top priority:</p>
+<ul>
+<li>Issues with more 👍 reactions are prioritized first — that's how I track what
+matters most to the community.</li>
+<li>Issues labeled "sponsor 💖" receive <strong>highest priority</strong> as part of dedicated
+sponsor support.</li>
+</ul>
+<p>I'm also working on new exciting features and will be publishing previews of
+how they work on <a href="https://twitter.com/ziusko" target="_blank" rel="noopener noreferrer">Twitter</a>, so don't forget to
+subscribe.</p>
+<p>Stay tuned and follow me on <a href="https://twitter.com/ziusko" target="_blank" rel="noopener noreferrer">Twitter</a> and
+<a href="https://github.com/kirillzyusko" target="_blank" rel="noopener noreferrer">GitHub</a> for updates. Thank you for your
+support! 😊</p>]]></content>
+        <author>
+            <name>Kirill Zyusko</name>
+            <uri>https://github.com/kirillzyusko</uri>
+        </author>
+        <category label="react-native" term="react-native"/>
+        <category label="keyboard" term="keyboard"/>
+        <category label="preload" term="preload"/>
+        <category label="KeyboardAwareScrollView" term="KeyboardAwareScrollView"/>
+        <category label="KeyboardExtender" term="KeyboardExtender"/>
+        <category label="ios" term="ios"/>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Enhancing keyboard UI with KeyboardEffects]]></title>
         <id>https://kirillzyusko.github.io/react-native-keyboard-controller/blog/keyboard-effects</id>
@@ -1024,22 +1110,5 @@ without container layout shifts" src="https://kirillzyusko.github.io/react-nativ
         <category label="interactive" term="interactive"/>
         <category label="android" term="android"/>
         <category label="ios" term="ios"/>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Version 1.4.0 with new hook]]></title>
-        <id>https://kirillzyusko.github.io/react-native-keyboard-controller/blog/new-hook</id>
-        <link href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/new-hook"/>
-        <updated>2022-10-15T00:00:00.000Z</updated>
-        <summary type="html"><![CDATA[New 1.4.0 release enhance API and adds new useKeyboardHandler hook. While keeping no breaking changes this release (via new hook) adds an ability to have intermediate values on iOS for height and progress values (before it was not possible and it was a restriction of the library).]]></summary>
-        <content type="html"><![CDATA[<p>New 1.4.0 release enhance API and adds new <code>useKeyboardHandler</code> hook. While keeping no breaking changes this release (via new hook) adds an ability to have intermediate values on iOS for <code>height</code> and <code>progress</code> values (before it was not possible and it was a restriction of the library).</p>
-<p>Also this hooks allow to track keyboard lifecycle and it's better suit for complex animations 😎</p>
-<p>Check out the new documentation for this hook, upgrade library version to <code>1.4.0</code> and start using it today!</p>]]></content>
-        <author>
-            <name>Kirill Zyusko</name>
-            <uri>https://github.com/kirillzyusko</uri>
-        </author>
-        <category label="new hook" term="new hook"/>
-        <category label="iOS" term="iOS"/>
-        <category label="intermediate values" term="intermediate values"/>
     </entry>
 </feed>
