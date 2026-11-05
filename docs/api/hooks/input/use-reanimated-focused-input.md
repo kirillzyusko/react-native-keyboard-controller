@@ -33,6 +33,8 @@ type FocusedInputLayoutChangedEvent = {
     height: number; // `height` of the TextInput
     absoluteX: number; // `x` coordinate on the screen
     absoluteY: number; // `y` coordinate on the screen
+    contentX: number; // `x` coordinate inside the content of the parent `ScrollView` (`0` if there is no parent `ScrollView`)
+    contentY: number; // `y` coordinate inside the content of the `ScrollView`, doesn't depend on the scroll offset (`0` if there is no parent `ScrollView`)
   };
 };
 ```
