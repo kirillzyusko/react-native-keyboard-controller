@@ -24,7 +24,7 @@ type AnimatedScrollViewProps = React.ComponentProps<
   typeof Reanimated.ScrollView
 >;
 
-export type AnimatedScrollViewComponent = React.ForwardRefExoticComponent<
+export type AnimatedScrollViewComponent = React.JSXElementConstructor<
   AnimatedScrollViewProps & React.RefAttributes<Reanimated.ScrollView>
 >;
 
