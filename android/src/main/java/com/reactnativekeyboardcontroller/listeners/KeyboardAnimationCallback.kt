@@ -131,6 +131,16 @@ class KeyboardAnimationCallback(
   }
 
   /**
+   * Picks up the input that holds focus in [view]'s window. Needed when the callback is created
+   * after that input gained focus, or when the window regains window focus while its input kept
+   * view focus: in both cases the focus change is never delivered to it.
+   */
+  fun observeFocusedInput() {
+    (view.findFocus() as? EditText)?.let { viewTagFocused = it.id }
+    layoutObserver?.observeFocusedInput()
+  }
+
+  /**
    * When keyboard changes its size we have different behavior per APIs.
    * On 21<=API<30 - WindowInsetsAnimationCompat dispatches onStart/onProgress/onEnd events.
    * On API>=30 - WindowInsetsAnimationCompat doesn't dispatch anything. As a result behavior
