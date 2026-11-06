@@ -206,7 +206,6 @@ RCT_EXPORT_VIEW_PROPERTY(applyWorkaroundForContentInsetHitTestBug, BOOL)
 
 - (void)prepareForRecycle
 {
-  // Only remove our own top class; preserve runtime subclasses owned by KVO or others.
   Class scrollViewClass = object_getClass(_scrollView);
   if (scrollViewClass && [NSStringFromClass(scrollViewClass) hasPrefix:KCNoScrollRectClassPrefix]) {
     object_setClass(_scrollView, class_getSuperclass(scrollViewClass));
