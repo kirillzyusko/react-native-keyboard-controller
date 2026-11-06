@@ -20,7 +20,7 @@ on:
       - "src/**"
 
 concurrency:
-  group: ${{ github.workflow_ref }}-${{ github.event.pull_request.number || github.run_id }}
+  group: android-e2e-${{ github.event.pull_request.number || github.run_id }}
   cancel-in-progress: true
 
 jobs:
