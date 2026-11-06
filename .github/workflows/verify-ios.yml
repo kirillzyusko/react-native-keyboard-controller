@@ -16,6 +16,10 @@ on:
       - "ios/**"
       - "example/.ruby-version"
 
+concurrency:
+  group: verify-ios-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: true
+
 jobs:
   swift-lint:
     runs-on: ubuntu-latest

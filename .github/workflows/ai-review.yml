@@ -20,6 +20,10 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: ai-review-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: true
+
 jobs:
   review:
     name: 🕵️ Finding bugs
@@ -29,10 +33,6 @@ jobs:
     env:
       MODEL: deepseek-r1:14b
       INCLUDE_REGEX: '^(\.github/workflows/|package\.json|react-native-keyboard-controller\.podspec|react-native\.config\.js|android/|common/|ios/|src/|jest/|docs/docs/|docs/src/|docs/blog/)'
-
-    concurrency:
-      group: ai-review-${{ github.event.pull_request.number }}
-      cancel-in-progress: true
 
     steps:
       - name: Checkout

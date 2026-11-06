@@ -17,6 +17,10 @@ on:
       - ".github/workflows/verify-android.yml"
       - "android/**"
 
+concurrency:
+  group: verify-android-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: true
+
 jobs:
   ktlint:
     runs-on: ubuntu-latest
