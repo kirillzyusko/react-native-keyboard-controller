@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		174900000000000000000001 /* ClippingScrollViewDecoratorTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 174900000000000000000002 /* ClippingScrollViewDecoratorTests.m */; };
 		080373072D56C9450013CC14 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080373062D56C9450013CC14 /* AppDelegate.swift */; };
 		080373092D56C9450013CC14 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 080373082D56C9450013CC14 /* SceneDelegate.swift */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
@@ -26,6 +27,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		174900000000000000000002 /* ClippingScrollViewDecoratorTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KeyboardControllerFabricExampleTests/ClippingScrollViewDecoratorTests.m; sourceTree = SOURCE_ROOT; };
 		00E356EE1AD99517003FC87E /* KeyboardControllerFabricExampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KeyboardControllerFabricExampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		080373062D56C9450013CC14 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		080373082D56C9450013CC14 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -92,6 +94,7 @@
 			isa = PBXGroup;
 			children = (
 				13B07FAE1A68108700A75B9A /* KeyboardControllerFabricExample */,
+				174900000000000000000002 /* ClippingScrollViewDecoratorTests.m */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
@@ -318,6 +321,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				174900000000000000000001 /* ClippingScrollViewDecoratorTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -349,7 +353,7 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				INFOPLIST_FILE = KeyboardControllerFabricExampleTests/Info.plist;
+				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -372,7 +376,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
-				INFOPLIST_FILE = KeyboardControllerFabricExampleTests/Info.plist;
+				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

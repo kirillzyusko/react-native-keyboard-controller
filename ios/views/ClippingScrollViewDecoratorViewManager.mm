@@ -53,9 +53,11 @@ static void KCApplyNoopScrollRectToVisible(UIScrollView *scrollView)
   Class originalClass = object_getClass(scrollView);
   NSString *originalClassName = NSStringFromClass(originalClass);
 
-  // Already patched — nothing to do
-  if ([originalClassName hasPrefix:KCNoScrollRectClassPrefix]) {
-    return;
+  // KVO and other runtime subclasses can sit above our patch.
+  for (Class cls = originalClass; cls; cls = class_getSuperclass(cls)) {
+    if ([NSStringFromClass(cls) hasPrefix:KCNoScrollRectClassPrefix]) {
+      return;
+    }
   }
 
   NSString *subclassName = [KCNoScrollRectClassPrefix stringByAppendingString:originalClassName];
@@ -100,9 +102,11 @@ static void KCApplyFixedHitTest(UIScrollView *scrollView)
   Class originalClass = object_getClass(container);
   NSString *originalClassName = NSStringFromClass(originalClass);
 
-  // Already patched — nothing to do
-  if ([originalClassName hasPrefix:KCFixedHitTestClassPrefix]) {
-    return;
+  // KVO and other runtime subclasses can sit above our patch.
+  for (Class cls = originalClass; cls; cls = class_getSuperclass(cls)) {
+    if ([NSStringFromClass(cls) hasPrefix:KCFixedHitTestClassPrefix]) {
+      return;
+    }
   }
 
   NSString *subclassName = [KCFixedHitTestClassPrefix stringByAppendingString:originalClassName];
@@ -202,6 +206,7 @@ RCT_EXPORT_VIEW_PROPERTY(applyWorkaroundForContentInsetHitTestBug, BOOL)
 
 - (void)prepareForRecycle
 {
+  // Only remove our own top class; preserve runtime subclasses owned by KVO or others.
   Class scrollViewClass = object_getClass(_scrollView);
   if (scrollViewClass && [NSStringFromClass(scrollViewClass) hasPrefix:KCNoScrollRectClassPrefix]) {
     object_setClass(_scrollView, class_getSuperclass(scrollViewClass));
