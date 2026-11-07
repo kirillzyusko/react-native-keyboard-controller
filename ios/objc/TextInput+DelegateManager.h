@@ -5,6 +5,8 @@
 //  Created by Kiryl Ziusko on 24/04/2024.
 //
 
+#import <UIKit/UIKit.h>
+
 @interface UITextView (DelegateManager)
 
 - (void)setForceDelegate:(id<UITextViewDelegate>)delegate;
