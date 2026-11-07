@@ -232,6 +232,7 @@ export const clampedScrollTarget = (
  * @param layoutHeight - Visible height of the scroll view.
  * @param inverted - Whether the list is inverted.
  * @param totalPaddingForMaxScroll - Total padding to use for maxScroll calculation. When provided, used instead of keyboardHeight for the scrollable range. Defaults to keyboardHeight.
+ * @param minScroll - Lowest scroll offset for non-inverted lists (`-contentInset.top`). Defaults to 0.
  * @returns The absolute contentOffset.y to set.
  * @example
  * ```ts
@@ -245,6 +246,7 @@ export const computeIOSContentOffset = (
   layoutHeight: number,
   inverted: boolean,
   totalPaddingForMaxScroll?: number,
+  minScroll = 0,
 ): number => {
   "worklet";
 
@@ -262,7 +264,13 @@ export const computeIOSContentOffset = (
     );
   }
 
-  const maxScroll = Math.max(contentHeight - layoutHeight + paddingForMax, 0);
+  const maxScroll = Math.max(
+    contentHeight - layoutHeight + paddingForMax,
+    minScroll,
+  );
 
-  return Math.min(Math.max(keyboardHeight + relativeScroll, 0), maxScroll);
+  return Math.min(
+    Math.max(keyboardHeight + relativeScroll, minScroll),
+    maxScroll,
+  );
 };
