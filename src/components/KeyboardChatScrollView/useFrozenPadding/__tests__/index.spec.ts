@@ -33,24 +33,32 @@ jest.mock("../../../../hooks", () => ({
   useResizeMode: jest.fn(),
 }));
 
-jest.mock("react-native-reanimated", () => ({
-  ...require("react-native-reanimated/mock"),
-  interpolate: (value: number, input: number[], output: number[]) => {
-    const progress = (value - input[0]) / (input[1] - input[0]);
+jest.mock("react-native-reanimated", () => {
+  const reanimatedMock = require("react-native-reanimated/mock");
+  const { useState } = require("react");
 
-    return output[0] + progress * (output[1] - output[0]);
-  },
-  useAnimatedReaction: (
-    producer: () => unknown,
-    effect: (current: unknown, previous: unknown | null) => void,
-  ) => {
-    reactions.push({
-      producer,
-      effect,
-      previous: producer(),
-    });
-  },
-}));
+  return {
+    ...reanimatedMock,
+    // The stock mock creates a new shared value on every render.
+    useSharedValue: (init: unknown) =>
+      useState(() => reanimatedMock.useSharedValue(init))[0],
+    interpolate: (value: number, input: number[], output: number[]) => {
+      const progress = (value - input[0]) / (input[1] - input[0]);
+
+      return output[0] + progress * (output[1] - output[0]);
+    },
+    useAnimatedReaction: (
+      producer: () => unknown,
+      effect: (current: unknown, previous: unknown | null) => void,
+    ) => {
+      reactions.push({
+        producer,
+        effect,
+        previous: producer(),
+      });
+    },
+  };
+});
 
 /** Run registered Reanimated reactions after mutating mocked shared values. */
 function flushAnimatedReactions() {
@@ -143,6 +151,30 @@ describe("`useFrozenPadding`", () => {
     flushAnimatedReactions();
 
     expect(padding.value).toBe(KEYBOARD);
+  });
+
+  it("should apply a new `offset` while the keyboard stays open", () => {
+    const freeze = sv(false);
+    const padding = sv(0);
+    const { rerender } = renderHook(
+      ({ offset }: { offset: number }) =>
+        useFrozenPadding({ freeze, offset, padding }),
+      { initialProps: { offset: 0 } },
+    );
+
+    handlers.onStart({ height: KEYBOARD });
+    handlers.onMove({ height: KEYBOARD });
+    handlers.onEnd({ height: KEYBOARD });
+    // `useChatKeyboard` applied the open-keyboard padding for `offset` 0
+    padding.value = KEYBOARD;
+
+    // the new `offset` re-registers the reaction: Reanimated keeps `previous`
+    // (`false`) and runs the new mapper once, without any keyboard event
+    rerender({ offset: 50 });
+    flushAnimatedReactions();
+
+    // getEffectiveHeight(300, 300, 50)
+    expect(padding.value).toBe(KEYBOARD - 50);
   });
 
   it("should not touch padding on unrelated freeze transitions", () => {
