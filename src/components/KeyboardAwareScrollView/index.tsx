@@ -381,6 +381,7 @@ const KeyboardAwareScrollView = forwardRef<
 
           const keyboardWillChangeSize =
             keyboardHeight.value !== e.height && e.height > 0;
+          const hideWasInterrupted = keyboardWillHide.value && e.height > 0;
 
           keyboardWillAppear.value = e.height > 0 && keyboardHeight.value === 0;
           keyboardWillHide.value = e.height === 0;
@@ -466,6 +467,12 @@ const KeyboardAwareScrollView = forwardRef<
             if (ghostViewSpace.value > 0) {
               scrollPosition.value = position.value;
             }
+          }
+
+          if (hideWasInterrupted && !focusWasChanged) {
+            // The unchanged input keeps its pre-animation layout, so its scroll
+            // base must also come from before keyboard movement.
+            scrollPosition.value = scrollBeforeKeyboardMovement.value;
           }
         },
         onMove: (e) => {

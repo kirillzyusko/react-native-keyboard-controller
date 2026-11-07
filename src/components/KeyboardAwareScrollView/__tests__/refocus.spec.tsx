@@ -9,9 +9,11 @@ import {
   lastScrollToY,
   mockInput,
   mockKeyboardHandlers,
+  mockLayout,
   mockOffset,
   mockScrollTo,
   mockSelectionHandler,
+  mockSize,
   renderKeyboardAwareScrollView,
   reset,
   selectionEvent,
@@ -24,6 +26,71 @@ beforeEach(() => {
 describe("KeyboardAwareScrollView — refocus same input", () => {
   // Input B: point = 695.67 + 47 = 742.67
   //   relativeScrollTo = 312 - (928 - 742.67) + 62 = 188.67
+
+  describe("refocus before keyboard hide completes", () => {
+    it.each([0.2, 0.5, 0.8])(
+      "should preserve the scroll target when refocused at %s of keyboard height",
+      async (progress) => {
+        await renderKeyboardAwareScrollView();
+        // A short form fills the viewport; scrolling uses only the keyboard inset.
+        mockSize.value = { ...mockLayout.value };
+        mockInput.value = inputEvent(INPUT_TARGET_B, INPUT_LAYOUT_B);
+        mockSelectionHandler.current(selectionEvent(INPUT_TARGET_B));
+        mockKeyboardHandlers.current.onStart(
+          kbEvent(KEYBOARD_HEIGHT, INPUT_TARGET_B),
+        );
+        mockKeyboardHandlers.current.onMove(
+          kbEvent(KEYBOARD_HEIGHT, INPUT_TARGET_B),
+        );
+
+        const initialScroll = lastScrollToY()!;
+
+        expect(initialScroll).toBeCloseTo(188.67, 1);
+        mockOffset.value = initialScroll;
+        mockKeyboardHandlers.current.onEnd(
+          kbEvent(KEYBOARD_HEIGHT, INPUT_TARGET_B),
+        );
+
+        // Repeat to ensure each interrupted hide uses the same original base.
+        for (let cycle = 0; cycle < 3; cycle++) {
+          mockKeyboardHandlers.current.onStart(kbEvent(0, INPUT_TARGET_B));
+          mockKeyboardHandlers.current.onMove(
+            kbEvent(KEYBOARD_HEIGHT * progress, INPUT_TARGET_B),
+          );
+          mockOffset.value = lastScrollToY()!;
+          expect(mockOffset.value).toBeCloseTo(initialScroll * progress, 1);
+
+          // Native focus reports the current input frame, but the target and
+          // keyboard height are unchanged. No hide onEnd(0) was delivered.
+          mockInput.value = inputEvent(INPUT_TARGET_B, {
+            ...INPUT_LAYOUT_B,
+            absoluteY: INPUT_LAYOUT_B.absoluteY - mockOffset.value,
+          });
+          mockScrollTo.mockClear();
+          mockKeyboardHandlers.current.onStart(
+            kbEvent(KEYBOARD_HEIGHT, INPUT_TARGET_B),
+          );
+          mockKeyboardHandlers.current.onMove(
+            kbEvent(KEYBOARD_HEIGHT, INPUT_TARGET_B),
+          );
+
+          expect(lastScrollToY()).toBeCloseTo(initialScroll, 1);
+          mockOffset.value = lastScrollToY()!;
+          mockKeyboardHandlers.current.onEnd(
+            kbEvent(KEYBOARD_HEIGHT, INPUT_TARGET_B),
+          );
+        }
+
+        // A subsequent uninterrupted hide must still remove the entire inset.
+        mockKeyboardHandlers.current.onStart(kbEvent(0, INPUT_TARGET_B));
+        mockKeyboardHandlers.current.onMove(kbEvent(0, INPUT_TARGET_B));
+        mockOffset.value = lastScrollToY()!;
+        mockKeyboardHandlers.current.onEnd(kbEvent(0, INPUT_TARGET_B));
+
+        expect(lastScrollToY()).toBeCloseTo(0, 1);
+      },
+    );
+  });
 
   describe("iOS 15: refocus after keyboard hide", () => {
     it("should use fresh selection data on refocus", async () => {
