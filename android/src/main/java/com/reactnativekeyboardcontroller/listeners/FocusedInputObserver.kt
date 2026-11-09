@@ -107,12 +107,12 @@ class FocusedInputObserver(
         stopObservingFocusedInput()
       }
       if (newFocus is EditText) {
+        FocusedInputHolder.set(newFocus)
         lastFocusedInput = newFocus
         newFocus.addOnLayoutChangeListener(layoutListener)
         this.syncUpLayout()
         textWatcher = newFocus.addOnTextChangedListener(textListener)
         selectionSubscription = newFocus.addOnSelectionChangedListener(selectionListener)
-        FocusedInputHolder.set(newFocus)
 
         val groupAncestor = ViewHierarchyNavigator.findGroupAncestor(newFocus)
         val allInputFields = ViewHierarchyNavigator.getAllInputFields(groupAncestor ?: context?.rootView)
@@ -136,8 +136,8 @@ class FocusedInputObserver(
     view.viewTreeObserver.addOnGlobalFocusChangeListener(focusListener)
   }
 
-  fun syncUpLayout(focusedInput: EditText? = null) {
-    val input = focusedInput ?: lastFocusedInput ?: return
+  fun syncUpLayout() {
+    val input = FocusedInputHolder.get()?.takeIf { it.isFocused } ?: return
 
     val (x, y) = input.screenLocation
     val parentScrollView = input.parentScrollView
