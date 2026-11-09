@@ -9,6 +9,7 @@ import com.reactnativekeyboardcontroller.events.FocusedInputTextChangedEvent
 import com.reactnativekeyboardcontroller.events.KeyboardTransitionEvent
 import com.reactnativekeyboardcontroller.extensions.emitEvent
 import com.reactnativekeyboardcontroller.listeners.WindowDimensionListener
+import com.reactnativekeyboardcontroller.traversal.FocusedInputHolder
 import com.reactnativekeyboardcontroller.views.EdgeToEdgeReactViewGroup
 
 class KeyboardControllerViewManagerImpl {
@@ -32,7 +33,8 @@ class KeyboardControllerViewManagerImpl {
   }
 
   fun synchronizeFocusedInputLayout(view: EdgeToEdgeReactViewGroup) {
-    view.callback?.layoutObserver?.syncUpLayout()
+    // A Modal's focused input belongs to a different window observer.
+    view.callback?.layoutObserver?.syncUpLayout(FocusedInputHolder.get()?.takeIf { it.isFocused })
     view.reactContext.emitEvent("KeyboardController::layoutDidSynchronize", Arguments.createMap())
   }
 

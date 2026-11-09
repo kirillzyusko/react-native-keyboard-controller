@@ -136,8 +136,8 @@ class FocusedInputObserver(
     view.viewTreeObserver.addOnGlobalFocusChangeListener(focusListener)
   }
 
-  fun syncUpLayout() {
-    val input = lastFocusedInput ?: return
+  fun syncUpLayout(focusedInput: EditText? = null) {
+    val input = focusedInput ?: lastFocusedInput ?: return
 
     val (x, y) = input.screenLocation
     val parentScrollView = input.parentScrollView
