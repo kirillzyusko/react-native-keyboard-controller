@@ -19,6 +19,10 @@ on:
       - "src/**"
       - "e2e/**"
 
+concurrency:
+  group: web-e2e-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: true
+
 jobs:
   build-web:
     name: 🏗️ Build web

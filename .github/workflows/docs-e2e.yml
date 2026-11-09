@@ -12,12 +12,13 @@ on:
       - ".github/workflows/docs-e2e.yml"
       - "docs/**"
 
+concurrency:
+  group: docs-e2e-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: true
+
 jobs:
   take-screenshots:
     runs-on: ubuntu-24.04
-    concurrency:
-      group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
-      cancel-in-progress: true
     defaults:
       run:
         working-directory: ./docs

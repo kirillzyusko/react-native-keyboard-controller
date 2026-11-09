@@ -19,15 +19,16 @@ on:
       - "e2e/**"
       - "src/**"
 
+concurrency:
+  group: android-e2e-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: true
+
 jobs:
   build:
     name: 🏗️ Build E2E apk
     runs-on: ubuntu-latest
     env:
       WORKING_DIRECTORY: example
-    concurrency:
-      group: android-e2e-${{ github.ref }}
-      cancel-in-progress: true
     steps:
       - uses: actions/checkout@v4
       - name: Free Disk Space (Ubuntu)
@@ -90,9 +91,6 @@ jobs:
     timeout-minutes: 90
     env:
       WORKING_DIRECTORY: example
-    concurrency:
-      group: android-e2e-${{ matrix.devices.api }}-${{ github.ref }}
-      cancel-in-progress: true
     strategy:
       matrix:
         devices:
