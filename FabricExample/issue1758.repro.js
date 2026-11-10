@@ -1,3 +1,4 @@
+// cspell:words Pressable
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   AppRegistry,
