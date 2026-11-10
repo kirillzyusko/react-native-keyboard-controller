@@ -86,6 +86,11 @@ android {
         java.srcDirs += ['src/turbo']
       }
     }
+    test {
+      if (isNewArchitectureEnabled()) {
+        java.srcDirs += ['src/test/fabric/java']
+      }
+    }
   }
 
   buildTypes {
