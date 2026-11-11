@@ -9,6 +9,7 @@ import androidx.core.widget.NestedScrollView
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.views.view.ReactViewGroup
 import com.reactnativekeyboardcontroller.extensions.px
+import com.reactnativekeyboardcontroller.extensions.syncContentInsetState
 import kotlin.math.max
 
 @SuppressLint("ViewConstructor")
@@ -127,6 +128,8 @@ class ClippingScrollViewDecoratorView(
     }
 
     appliedTopInsetPx = newTopInsetPx
+
+    scrollView.syncContentInsetState(newTopInsetPx)
   }
 
   private fun shouldUsePaddingScrollWorkaround(
