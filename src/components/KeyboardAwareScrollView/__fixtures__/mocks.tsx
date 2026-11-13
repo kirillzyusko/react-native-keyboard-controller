@@ -21,8 +21,8 @@ const mockInterpolateFn = (
 ): number => {
   "worklet";
 
-  if (input[1] === 0) {
-    return 0;
+  if (input[1] === input[0]) {
+    return output[0];
   }
 
   const progress = (value - input[0]) / (input[1] - input[0]);
