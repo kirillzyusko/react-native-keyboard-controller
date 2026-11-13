@@ -107,6 +107,10 @@ class StatusBarManagerCompatModuleImpl(
     UiThreadUtil.runOnUiThread {
       getController()?.isAppearanceLightStatusBars = style == "dark-content"
     }
+    // The controller above only styles the activity window. React Native's module also applies
+    // the style to the extra windows it tracks (open `Modal`s), which otherwise keep the
+    // appearance they copied from the activity when they were shown.
+    original.setStyle(style)
   }
 
   fun getConstants(): MutableMap<String, Any>? = original.getConstants()
