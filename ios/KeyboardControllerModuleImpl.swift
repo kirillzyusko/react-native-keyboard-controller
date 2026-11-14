@@ -13,6 +13,9 @@ public class KeyboardControllerModuleImpl: NSObject {
   private static let keyboardRevealGestureName = "keyboardRevealGesture"
 
   @objc
+  public static func generatedHeaderVerificationProbe() {}
+
+  @objc
   public static func setTranslucent(_ translucent: Bool) {
     KeyboardBackdropController.shared.setTranslucent(translucent)
   }
