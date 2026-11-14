@@ -230,7 +230,12 @@ const KeyboardAwareScrollView = forwardRef<
         // insets mode: `ScrollViewWithBottomPadding` extends scrollable area without
         // changing layout, so when the keyboard hides and we're at the end of the
         // ScrollView we must manually scroll back.
-        if (keyboardWillHide.value && ghostViewSpace.value > 0) {
+        if (
+          enabled &&
+          keyboardWillHide.value &&
+          keyboardHeight.value > 0 &&
+          ghostViewSpace.value > 0
+        ) {
           scrollTo(
             scrollViewAnimatedRef,
             0,
@@ -248,7 +253,7 @@ const KeyboardAwareScrollView = forwardRef<
 
         return false;
       },
-      [mode],
+      [enabled, mode],
     );
     const performScrollWithPositionRestoration = useCallback(
       (newPosition: number) => {
