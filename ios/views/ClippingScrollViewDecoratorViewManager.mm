@@ -13,7 +13,7 @@
 #import <react/renderer/components/RNKC/RCTComponentViewHelpers.h>
 #import <react/renderer/components/RNKC/RNKCClippingScrollViewDecoratorViewComponentDescriptor.h>
 
-#import "RCTFabricComponentsPlugins.h"
+#import <React/RCTFabricComponentsPlugins.h>
 #endif
 
 #import <TargetConditionals.h>
