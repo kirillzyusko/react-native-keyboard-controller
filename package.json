@@ -40,6 +40,7 @@
   ],
   "scripts": {
     "format": "prettier '**/*' --ignore-unknown --write",
+    "generate-ios-header": "node scripts/generate-ios-header.js",
     "test": "jest",
     "typescript": "tsc --noEmit --project tsconfig.build.json",
     "lint": "eslint --quiet \"**/*.{js,ts,tsx}\"",

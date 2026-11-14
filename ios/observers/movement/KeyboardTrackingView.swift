@@ -11,7 +11,6 @@ import UIKit
  * A compatibility view that resolves to `KeyboardView` for the legacy path
  * and uses `keyboardLayoutGuide` for configured iOS 26+ behavior.
  */
-@objc(KeyboardTrackingView)
 public final class KeyboardTrackingView: UIView {
   private var keyboardView: UIView? {
     KeyboardViewLocator.shared.resolve()

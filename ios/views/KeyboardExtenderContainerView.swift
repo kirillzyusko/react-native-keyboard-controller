@@ -7,7 +7,7 @@
 
 import UIKit
 
-@objc(KeyboardExtenderContainerView)
+@objc
 public class KeyboardExtenderContainerView: NSObject {
   private static func usesModernKeyboard() -> Bool {
     #if canImport(UIKit.UIGlassEffect)
