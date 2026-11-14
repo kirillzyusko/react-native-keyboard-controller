@@ -28,6 +28,16 @@ class KeyboardAreaExtender: NSObject {
       name: UIResponder.keyboardDidHideNotification,
       object: nil
     )
+    if #available(iOS 26.0, *) {
+      for name in [UITextField.textDidBeginEditingNotification, UITextView.textDidBeginEditingNotification] {
+        NotificationCenter.default.addObserver(
+          self,
+          selector: #selector(keyboardDidAppear),
+          name: name,
+          object: nil
+        )
+      }
+    }
   }
 
   deinit {

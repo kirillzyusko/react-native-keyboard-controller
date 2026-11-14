@@ -88,9 +88,26 @@ final class KeyboardAreaExtenderTests: XCTestCase {
     let otherInput = UITextField(frame: CGRect(x: 0, y: 200, width: 300, height: 44))
     controller.view.addSubview(otherInput)
     XCTAssertTrue(otherInput.becomeFirstResponder())
-    NotificationCenter.default.post(name: .keyboardDidAppear, object: nil)
 
     XCTAssertEqual(controller.view.keyboardLayoutGuide.keyboardDismissPadding, 12)
+    XCTAssertNil(otherInput.inputAccessoryView)
+  }
+
+  func testSwitchingRegisteredInputsAppliesTheNewOffsetOnFocus() {
+    NotificationCenter.default.post(name: .keyboardDidAppear, object: nil)
+    let otherNativeID = "other-dismiss-padding-input"
+    let otherTag: NSNumber = 43
+    let container = UIView(frame: CGRect(x: 0, y: 200, width: 300, height: 44))
+    container.accessibilityIdentifier = otherNativeID
+    let otherInput = UITextField(frame: container.bounds)
+    container.addSubview(otherInput)
+    controller.view.addSubview(container)
+    KeyboardOffsetProvider.shared.setOffset(forTextInputNativeID: otherNativeID, offset: 61, withTag: otherTag)
+    defer { KeyboardOffsetProvider.shared.removeOffset(forTextInputNativeID: otherNativeID, withTag: otherTag) }
+
+    XCTAssertTrue(otherInput.becomeFirstResponder())
+
+    XCTAssertEqual(controller.view.keyboardLayoutGuide.keyboardDismissPadding, 61)
     XCTAssertNil(otherInput.inputAccessoryView)
   }
 
