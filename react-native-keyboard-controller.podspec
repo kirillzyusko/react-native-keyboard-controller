@@ -20,6 +20,7 @@ Pod::Spec.new do |s|
   s.source_files = "ios/**/*.{h,m,mm,swift}"
   s.exclude_files = "ios/KeyboardControllerNative/**/*"
   s.public_header_files = "ios/**/*.h"
+  s.private_header_files = "ios/KeyboardControllerSwiftInterop.h"
 
   # This guard prevent to install the dependencies when we run `pod install` in the old architecture.
   if new_arch_enabled then
