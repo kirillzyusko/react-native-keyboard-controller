@@ -20,6 +20,7 @@ type Behavior = KeyboardAvoidingViewProps["behavior"];
 const behaviors: Behavior[] = ["padding", "height", "position"];
 
 export default function KeyboardAvoidingViewExample({ navigation }: Props) {
+  const [enabled, setEnabled] = useState(true);
   const [behavior, setBehavior] = useState<Behavior>(behaviors[0]);
   const [isPackageImplementation, setPackageImplementation] = useState(true);
 
@@ -27,6 +28,13 @@ export default function KeyboardAvoidingViewExample({ navigation }: Props) {
     navigation.setOptions({
       headerRight: () => (
         <View style={styles.row}>
+          <Text
+            style={styles.header}
+            testID="keyboard_avoiding_view.enabled"
+            onPress={() => setEnabled((value) => !value)}
+          >
+            {enabled ? "On" : "Off"}
+          </Text>
           <Text
             style={styles.header}
             testID="keyboard_avoiding_view.implementation"
@@ -50,7 +58,7 @@ export default function KeyboardAvoidingViewExample({ navigation }: Props) {
         </View>
       ),
     });
-  }, [isPackageImplementation, behavior]);
+  }, [isPackageImplementation, behavior, enabled]);
 
   const Container = isPackageImplementation
     ? KeyboardAvoidingView
@@ -60,6 +68,7 @@ export default function KeyboardAvoidingViewExample({ navigation }: Props) {
     <Container
       behavior={behavior}
       contentContainerStyle={styles.container}
+      enabled={enabled}
       keyboardVerticalOffset={100}
       style={styles.content}
       testID="keyboard_avoiding_view.container"
