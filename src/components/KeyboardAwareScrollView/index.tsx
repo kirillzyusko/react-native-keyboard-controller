@@ -463,10 +463,16 @@ const KeyboardAwareScrollView = forwardRef<
           }
 
           if (mode === "insets") {
+            // content shorter than the ScrollView has no ghost space: removing it would
+            // target an offset above the top, which is clamped to 0 natively and makes
+            // the content jump by the header inset
             ghostViewSpace.value =
-              position.value +
-              scrollViewLayout.value.height -
-              scrollViewContentSize.value.height;
+              position.value -
+              Math.max(
+                scrollViewContentSize.value.height -
+                  scrollViewLayout.value.height,
+                0,
+              );
 
             if (ghostViewSpace.value > 0) {
               scrollPosition.value = position.value;
