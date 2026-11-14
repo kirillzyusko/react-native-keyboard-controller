@@ -1,4 +1,4 @@
-// cspell:words swiftc swiftmodule mkdtemp
+// cspell:words swiftc swiftmodule mkdtemp xcrun
 const { execFileSync } = require("child_process");
 const fs = require("fs");
 const os = require("os");
