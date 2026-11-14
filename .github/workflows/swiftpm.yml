@@ -1,9 +1,10 @@
-name: 🍎 Build iOS SwiftPM
+name: 📦 Swift Package Manager
 
 on:
   pull_request:
     paths:
-      - ".github/workflows/build-ios-spm.yml"
+      - ".github/workflows/swiftpm.yml"
+      - "scripts/generate-ios-spm-header.js"
       - "Package.swift"
       - "package.json"
       - "yarn.lock"
@@ -20,7 +21,23 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  generated-header:
+    runs-on: macos-26
+    name: 📄 Generated Swift header
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: "26.6"
+      - name: Generate Swift header
+        run: node scripts/generate-ios-spm-header.js
+      - name: Verify that the generated header hasn't changed
+        run: git diff --exit-code HEAD -- ios/KeyboardControllerSwift.h
   build:
+    name: 🏗️ Build example
     runs-on: macos-26
     timeout-minutes: 60
     env:
