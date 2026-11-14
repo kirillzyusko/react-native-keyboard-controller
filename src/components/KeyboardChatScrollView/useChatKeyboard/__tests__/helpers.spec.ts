@@ -157,6 +157,35 @@ describe("`computeIOSContentOffset` specification", () => {
       // maxScroll = max(200 - 800 + 300, 0) = 0
       expect(computeIOSContentOffset(0, 300, 200, 800, false)).toBe(0);
     });
+
+    describe("with `minScroll` (`contentInset.top`)", () => {
+      it("should clamp to minScroll instead of 0", () => {
+        // relativeScroll=-400, keyboardHeight=0 → -400, clamped to -100
+        expect(
+          computeIOSContentOffset(-400, 0, 1000, 800, false, undefined, -100),
+        ).toBe(-100);
+      });
+
+      it("should allow a target between minScroll and 0", () => {
+        // relativeScroll=-400, keyboardHeight=300 → -100
+        expect(
+          computeIOSContentOffset(-400, 300, 1000, 800, false, undefined, -150),
+        ).toBe(-100);
+      });
+
+      it("should keep single-message case at minScroll", () => {
+        // maxScroll = max(200 - 800 + 300, -100) = -100
+        expect(
+          computeIOSContentOffset(-100, 300, 200, 800, false, undefined, -100),
+        ).toBe(-100);
+      });
+
+      it("should not change a target above 0", () => {
+        expect(
+          computeIOSContentOffset(100, 300, 1000, 800, false, undefined, -100),
+        ).toBe(400);
+      });
+    });
   });
 
   describe("inverted", () => {

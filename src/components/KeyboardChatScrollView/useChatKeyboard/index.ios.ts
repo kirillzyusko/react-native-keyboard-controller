@@ -41,6 +41,7 @@ function useChatKeyboard(
     keyboardLiftBehavior,
     freeze,
     offset,
+    minScroll = 0,
     blankSpace,
     extraContentPadding,
   } = options;
@@ -152,11 +153,11 @@ function useChatKeyboard(
           } else {
             const maxScroll = Math.max(
               size.value.height - layout.value.height + actualTotalPadding,
-              0,
+              minScroll,
             );
 
             contentOffsetY.value = Math.max(
-              0,
+              minScroll,
               Math.min(scroll.value, maxScroll),
             );
           }
@@ -187,11 +188,11 @@ function useChatKeyboard(
           } else {
             const maxScroll = Math.max(
               size.value.height - layout.value.height + actualTotalPadding,
-              0,
+              minScroll,
             );
 
             contentOffsetY.value = Math.max(
-              0,
+              minScroll,
               Math.min(scroll.value, maxScroll),
             );
           }
@@ -241,6 +242,7 @@ function useChatKeyboard(
           layout.value.height,
           inverted,
           actualTotalPadding,
+          minScroll,
         );
       },
       onInteractive: () => {
@@ -269,7 +271,7 @@ function useChatKeyboard(
         padding.value = effective;
       },
     },
-    [inverted, keyboardLiftBehavior, offset, extraContentPadding],
+    [inverted, keyboardLiftBehavior, offset, minScroll, extraContentPadding],
   );
 
   return {
