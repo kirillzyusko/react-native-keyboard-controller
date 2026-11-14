@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, StatusBar, View } from "react-native";
+import { Button, Modal, StatusBar, Text, View } from "react-native";
 import { useKeyboardController } from "react-native-keyboard-controller";
 
 import KeyboardAnimationTemplate from "../../../components/KeyboardAnimation";
@@ -11,6 +11,8 @@ export default function StatusBarManipulation() {
   const [hidden, setHidden] = useState(false);
   const [animated, setAnimated] = useState(true);
   const { setEnabled, enabled } = useKeyboardController();
+  const [darkModalVisible, setDarkModalVisible] = useState(false);
+  const [modalBarStyle, setModalBarStyle] = useState<StatusBarStyle>();
 
   return (
     <View style={{ flex: 1, backgroundColor: "pink" }}>
@@ -40,6 +42,46 @@ export default function StatusBarManipulation() {
         title={`${enabled ? "Disable" : "Enable"} module`}
         onPress={() => setEnabled(!enabled)}
       />
+      <Button
+        testID="button.dark_modal"
+        title="Show dark modal"
+        onPress={() => {
+          setModalBarStyle(undefined);
+          setDarkModalVisible(true);
+        }}
+      />
+      <Modal
+        statusBarTranslucent
+        animationType="fade"
+        visible={darkModalVisible}
+        onRequestClose={() => setDarkModalVisible(false)}
+      >
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: "black",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          {modalBarStyle ? <StatusBar barStyle={modalBarStyle} /> : null}
+          <Text style={{ color: "white", marginBottom: 16 }}>
+            {modalBarStyle
+              ? `StatusBar inside the modal: ${modalBarStyle}`
+              : "No StatusBar inside the modal yet"}
+          </Text>
+          <Button
+            testID="button.modal_light_content"
+            title="Set light-content"
+            onPress={() => setModalBarStyle("light-content")}
+          />
+          <Button
+            testID="button.close_dark_modal"
+            title="Close"
+            onPress={() => setDarkModalVisible(false)}
+          />
+        </View>
+      </Modal>
     </View>
   );
 }
