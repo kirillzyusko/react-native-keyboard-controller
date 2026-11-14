@@ -6,7 +6,7 @@ on:
       - main
     paths:
       - ".github/workflows/verify-ios.yml"
-      - "scripts/generate-ios-header.js"
+      - "scripts/generate-ios-spm-header.js"
       - "Package.swift"
       - "ios/**"
       - "example/.ruby-version"
@@ -15,7 +15,7 @@ on:
       - main
     paths:
       - ".github/workflows/verify-ios.yml"
-      - "scripts/generate-ios-header.js"
+      - "scripts/generate-ios-spm-header.js"
       - "Package.swift"
       - "ios/**"
       - "example/.ruby-version"
@@ -35,9 +35,9 @@ jobs:
           node-version: 24
       - uses: maxim-lobanov/setup-xcode@v1
         with:
-          xcode-version: "27.0"
+          xcode-version: "26.6"
       - name: Generate Swift header
-        run: node scripts/generate-ios-header.js
+        run: node scripts/generate-ios-spm-header.js
       - name: Verify that the generated header hasn't changed
         run: git diff --exit-code HEAD -- ios/KeyboardControllerSwift.h
   swift-lint:
