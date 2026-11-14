@@ -325,7 +325,6 @@ typedef unsigned int swift_uint4  __attribute__((__ext_vector_type__(4)));
 #endif
 #pragma clang diagnostic ignored "-Wunknown-pragmas"
 #pragma clang diagnostic ignored "-Wnullability"
-#pragma clang diagnostic ignored "-Warc-bridge-casts-disallowed-in-nonarc"
 #pragma clang diagnostic ignored "-Wdollar-in-identifier-extension"
 #pragma clang diagnostic ignored "-Wunsafe-buffer-usage"
 
@@ -364,7 +363,6 @@ extern "C" {
 #endif
 #pragma clang diagnostic ignored "-Wunknown-pragmas"
 #pragma clang diagnostic ignored "-Wnullability"
-#pragma clang diagnostic ignored "-Warc-bridge-casts-disallowed-in-nonarc"
 #pragma clang diagnostic ignored "-Wdollar-in-identifier-extension"
 #pragma clang diagnostic ignored "-Wunsafe-buffer-usage"
 
