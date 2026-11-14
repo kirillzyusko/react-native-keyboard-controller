@@ -417,7 +417,7 @@ SWIFT_CLASS_PROPERTY(@property (nonatomic, class, readonly, strong) KeyboardEven
 SWIFT_CLASS("_TtC32react_native_keyboard_controller29KeyboardExtenderContainerView")
 @interface KeyboardExtenderContainerView : NSObject
 + (CGFloat)keyboardBorderRadius SWIFT_WARN_UNUSED_RESULT;
-+ (UIView * _Nonnull)createWithFrame:(CGRect)frame contentView:(UIView * _Nonnull)contentView SWIFT_WARN_UNUSED_RESULT;
++ (UIView * _Nonnull)createWithFrame:(CGRect)frame contentView:(UIView * _Nonnull)contentView transparent:(BOOL)transparent SWIFT_WARN_UNUSED_RESULT;
 - (nonnull instancetype)init OBJC_DESIGNATED_INITIALIZER;
 @end
 
