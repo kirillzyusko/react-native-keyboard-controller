@@ -29,7 +29,7 @@ const AnimatedKeyboardBackgroundView = Animated.createAnimatedComponent(
 const KeyboardExtender = (props: PropsWithChildren<KeyboardExtenderProps>) => {
   const { children, enabled = true, transparent = false } = props;
   const { progress } = useKeyboardAnimation();
-  // AOSP's predictive-back preview stays near 0.9 progress. Finish fading
+  // Android's predictive-back preview stays near 0.9 progress. Finish fading
   // earlier to keep the extender opaque, allowing for pixel rounding.
   const opacity = progress.interpolate({
     inputRange: [0, 0.8],
