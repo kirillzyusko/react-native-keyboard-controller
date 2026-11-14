@@ -206,13 +206,10 @@
     "lockfiles",
     "worktree",
     "keyboardchatscrollview",
-    "autolinker",
     "deintegrate",
     "NDEBUG",
-    "Podfile",
     "subpaths",
     "swiftpm",
-    "udid",
     "xcframeworks"
   ],
   "ignorePaths": [

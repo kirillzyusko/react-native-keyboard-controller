@@ -8,10 +8,10 @@ let swiftSources = try FileManager.default.subpathsOfDirectory(atPath: "\(Contex
   .map { "ios/\($0)" }.sorted()
 
 let package = Package(
-  name: "ReactNativeKeyboardController",
+  name: "KeyboardController",
   platforms: [.iOS("15.1")],
   products: [
-    .library(name: "ReactNativeKeyboardController", type: .static, targets: ["ReactNativeKeyboardController"]),
+    .library(name: "KeyboardController", type: .static, targets: ["KeyboardController"]),
   ],
   dependencies: [
     // Resolved through React Native's build/generated/autolinking/libs symlink.
@@ -35,7 +35,7 @@ let package = Package(
       linkerSettings: [.linkedFramework("UIKit"), .linkedFramework("QuartzCore")]
     ),
     .target(
-      name: "ReactNativeKeyboardController",
+      name: "KeyboardController",
       dependencies: [
         .product(name: "ReactHeaders", package: "ReactNative"),
         .product(name: "ReactNativeHeaders", package: "ReactNative"),

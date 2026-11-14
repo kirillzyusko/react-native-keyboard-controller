@@ -184,7 +184,7 @@
     ]
   },
   "swiftpmConfig": {
-    "name": "ReactNativeKeyboardController"
+    "name": "KeyboardController"
   },
   "codegenConfig": {
     "name": "RNKC",
