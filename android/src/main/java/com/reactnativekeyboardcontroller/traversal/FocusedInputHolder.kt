@@ -7,7 +7,7 @@ import java.lang.ref.WeakReference
 object FocusedInputHolder {
   private var input: WeakReference<EditText?>? = null
 
-  fun set(textInput: EditText?) {
+  fun set(textInput: EditText) {
     input = WeakReference(textInput)
   }
 

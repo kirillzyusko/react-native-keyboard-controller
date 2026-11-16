@@ -129,6 +129,7 @@ class KeyboardAnimationCallback(
 
     layoutObserver = FocusedInputObserver(view = view, eventPropagationView = eventPropagationView, context = context)
     view.viewTreeObserver.addOnGlobalFocusChangeListener(focusListener)
+    // input can be focused before we attach the listener (e.g. `autoFocus` inside `Modal`)
     focusListener.onGlobalFocusChanged(null, view.findFocus())
   }
 
