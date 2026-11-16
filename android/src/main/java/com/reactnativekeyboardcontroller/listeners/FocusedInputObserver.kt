@@ -1,5 +1,6 @@
 package com.reactnativekeyboardcontroller.listeners
 
+import android.os.Build
 import android.text.TextWatcher
 import android.view.View
 import android.view.View.OnLayoutChangeListener
@@ -138,15 +139,21 @@ class FocusedInputObserver(
       }
     }
   private val windowFocusListener =
-    OnWindowFocusChangeListener { hasFocus ->
-      if (hasFocus) {
-        syncFocusedInput()
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+      OnWindowFocusChangeListener { hasFocus ->
+        if (hasFocus) {
+          syncFocusedInput()
+        }
       }
+    } else {
+      null
     }
 
   init {
     view.viewTreeObserver.addOnGlobalFocusChangeListener(focusListener)
-    view.viewTreeObserver.addOnWindowFocusChangeListener(windowFocusListener)
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+      view.viewTreeObserver.addOnWindowFocusChangeListener(windowFocusListener)
+    }
     // The input may already be focused when this observer attaches to a Modal.
     syncFocusedInput()
   }
@@ -190,7 +197,9 @@ class FocusedInputObserver(
 
   fun destroy() {
     view.viewTreeObserver.removeOnGlobalFocusChangeListener(focusListener)
-    view.viewTreeObserver.removeOnWindowFocusChangeListener(windowFocusListener)
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+      view.viewTreeObserver.removeOnWindowFocusChangeListener(windowFocusListener)
+    }
     stopObservingFocusedInput()
   }
 

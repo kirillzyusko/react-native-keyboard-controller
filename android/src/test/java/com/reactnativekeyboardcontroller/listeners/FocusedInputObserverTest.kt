@@ -124,6 +124,7 @@ class FocusedInputObserverTest {
 }
 
 @Implements(Arguments::class)
+@Suppress("detekt:UtilityClassWithPublicConstructor") // Robolectric creates shadow instances reflectively.
 class ArgumentsShadow {
   companion object {
     @JvmStatic
@@ -133,6 +134,7 @@ class ArgumentsShadow {
 }
 
 @Implements(UIManagerHelper::class)
+@Suppress("detekt:UtilityClassWithPublicConstructor") // Robolectric creates shadow instances reflectively.
 class UIManagerHelperShadow {
   companion object {
     var dispatchedEvents = 0
