@@ -4,6 +4,7 @@ import android.text.TextWatcher
 import android.view.View
 import android.view.View.OnLayoutChangeListener
 import android.view.ViewTreeObserver.OnGlobalFocusChangeListener
+import android.view.ViewTreeObserver.OnWindowFocusChangeListener
 import android.widget.EditText
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.uimanager.ThemedReactContext
@@ -51,7 +52,7 @@ class FocusedInputObserver(
 
   // state variables
   private var lastFocusedInput: EditText? = null
-  private var lastLayoutEventDispatched: FocusedInputLayoutChangedEventData = noFocusedInputEvent
+  private var lastLayoutEventDispatched: FocusedInputLayoutChangedEventData? = noFocusedInputEvent
   private var textWatcher: TextWatcher? = null
   private var selectionSubscription: (() -> Unit)? = null
 
@@ -101,18 +102,23 @@ class FocusedInputObserver(
     )
   }
   private val focusListener =
-    OnGlobalFocusChangeListener { oldFocus, newFocus ->
+    OnGlobalFocusChangeListener { _, newFocus ->
+      val inputChanged = lastFocusedInput !== newFocus
       // unfocused or focus was changed
-      if (newFocus == null || oldFocus != null) {
+      if (inputChanged) {
         stopObservingFocusedInput()
       }
       if (newFocus is EditText) {
         FocusedInputHolder.set(newFocus)
         lastFocusedInput = newFocus
-        newFocus.addOnLayoutChangeListener(layoutListener)
+        if (inputChanged) {
+          newFocus.addOnLayoutChangeListener(layoutListener)
+        }
         this.syncUpLayout()
-        textWatcher = newFocus.addOnTextChangedListener(textListener)
-        selectionSubscription = newFocus.addOnSelectionChangedListener(selectionListener)
+        if (inputChanged) {
+          textWatcher = newFocus.addOnTextChangedListener(textListener)
+          selectionSubscription = newFocus.addOnSelectionChangedListener(selectionListener)
+        }
 
         val groupAncestor = ViewHierarchyNavigator.findGroupAncestor(newFocus)
         val allInputFields = ViewHierarchyNavigator.getAllInputFields(groupAncestor ?: context?.rootView)
@@ -131,11 +137,32 @@ class FocusedInputObserver(
         dispatchLayoutEventToJS(noFocusedInputEvent)
       }
     }
+  private val windowFocusListener =
+    OnWindowFocusChangeListener { hasFocus ->
+      if (hasFocus) {
+        syncFocusedInput()
+      }
+    }
 
   init {
     view.viewTreeObserver.addOnGlobalFocusChangeListener(focusListener)
+    view.viewTreeObserver.addOnWindowFocusChangeListener(windowFocusListener)
     // The input may already be focused when this observer attaches to a Modal.
-    focusListener.onGlobalFocusChanged(null, view.findFocus())
+    syncFocusedInput()
+  }
+
+  private fun syncFocusedInput() {
+    val input = view.findFocus() as? EditText
+    if (lastFocusedInput === input && FocusedInputHolder.get() === input) {
+      return
+    }
+
+    // Another window may have dispatched its layout since this observer last did.
+    lastLayoutEventDispatched = null
+    if (input == null) {
+      FocusedInputHolder.set(null)
+    }
+    focusListener.onGlobalFocusChanged(lastFocusedInput, input)
   }
 
   fun syncUpLayout() {
@@ -163,6 +190,7 @@ class FocusedInputObserver(
 
   fun destroy() {
     view.viewTreeObserver.removeOnGlobalFocusChangeListener(focusListener)
+    view.viewTreeObserver.removeOnWindowFocusChangeListener(windowFocusListener)
     stopObservingFocusedInput()
   }
 
