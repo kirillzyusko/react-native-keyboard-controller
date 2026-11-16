@@ -134,6 +134,8 @@ class FocusedInputObserver(
 
   init {
     view.viewTreeObserver.addOnGlobalFocusChangeListener(focusListener)
+    // The input may already be focused when this observer attaches to a Modal.
+    focusListener.onGlobalFocusChanged(null, view.findFocus())
   }
 
   fun syncUpLayout() {

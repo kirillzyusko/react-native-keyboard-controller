@@ -129,6 +129,7 @@ class KeyboardAnimationCallback(
 
     layoutObserver = FocusedInputObserver(view = view, eventPropagationView = eventPropagationView, context = context)
     view.viewTreeObserver.addOnGlobalFocusChangeListener(focusListener)
+    focusListener.onGlobalFocusChanged(null, view.findFocus())
   }
 
   /**
