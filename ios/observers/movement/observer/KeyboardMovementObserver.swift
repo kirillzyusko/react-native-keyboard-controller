@@ -14,9 +14,6 @@ public class KeyboardMovementObserver: NSObject {
   // class members
   var onEvent: (NSString, NSNumber, NSNumber, NSNumber, NSNumber) -> Void
   var onNotify: (String, Any) -> Void
-  // animation
-  var onRequestAnimation: () -> Void
-  var onCancelAnimation: () -> Void
   // progress tracker
   @objc public var keyboardTrackingView = KeyboardTrackingView()
   var animation: KeyboardAnimation?
@@ -40,14 +37,10 @@ public class KeyboardMovementObserver: NSObject {
 
   @objc public init(
     handler: @escaping (NSString, NSNumber, NSNumber, NSNumber, NSNumber) -> Void,
-    onNotify: @escaping (String, Any) -> Void,
-    onRequestAnimation: @escaping () -> Void,
-    onCancelAnimation: @escaping () -> Void
+    onNotify: @escaping (String, Any) -> Void
   ) {
     onEvent = handler
     self.onNotify = onNotify
-    self.onRequestAnimation = onRequestAnimation
-    self.onCancelAnimation = onCancelAnimation
 
     super.init()
 
