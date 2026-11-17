@@ -4,6 +4,7 @@ on:
     paths:
       - ".github/workflows/android-e2e-test.yml"
       - "package.json"
+      - "yarn.lock"
       - "android/**"
       - "example/**"
       - "e2e/**"
@@ -14,6 +15,7 @@ on:
     paths:
       - ".github/workflows/android-e2e-test.yml"
       - "package.json"
+      - "yarn.lock"
       - "android/**"
       - "example/**"
       - "e2e/**"
