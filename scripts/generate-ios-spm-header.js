@@ -1,4 +1,4 @@
-// cspell:words swiftc swiftmodule mkdtemp xcrun cstdbool Warc nonarc
+// cspell:words swiftc swiftmodule mkdtemp xcrun cstdbool Warc nonarc modulemap
 const { execFileSync } = require("child_process");
 const fs = require("fs");
 const os = require("os");
@@ -50,6 +50,15 @@ try {
   const defines = target.settings.flatMap(({ tool, kind }) =>
     tool === "swift" && kind.define ? ["-D", kind.define._0] : [],
   );
+  // Match SwiftPM's automatic umbrella map for the Objective-C helper target.
+  const helperHeaders = JSON.stringify(
+    path.resolve(root, helper.path, helper.publicHeadersPath),
+  );
+
+  fs.writeFileSync(
+    path.join(temporary, "module.modulemap"),
+    `module ${helper.name} { umbrella ${helperHeaders} export * }\n`,
+  );
   const headerPath = path.join(temporary, "KeyboardControllerSwift.h");
   const sdk = xcrun(["--sdk", "iphonesimulator", "--show-sdk-path"]).trim();
 
@@ -70,7 +79,7 @@ try {
       "SWIFT_PACKAGE",
       ...defines,
       "-I",
-      path.resolve(root, helper.path, helper.publicHeadersPath),
+      temporary,
       "-emit-objc-header-path",
       headerPath,
       "-emit-module-path",

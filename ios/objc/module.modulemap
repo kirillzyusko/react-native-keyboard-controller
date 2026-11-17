@@ -1,5 +1,0 @@
-module KeyboardControllerObjC {
-  header "NSObject+SafeKVC.h"
-  header "TextInput+DelegateManager.h"
-  export *
-}

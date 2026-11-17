@@ -424,7 +424,7 @@ SWIFT_CLASS("_TtC32react_native_keyboard_controller29KeyboardExtenderContainerVi
 SWIFT_CLASS_NAMED("KeyboardMovementObserver")
 @interface KeyboardMovementObserver : NSObject
 @property (nonatomic, strong) KeyboardTrackingView * _Nonnull keyboardTrackingView;
-- (nonnull instancetype)initWithHandler:(void (^ _Nonnull)(NSString * _Nonnull, NSNumber * _Nonnull, NSNumber * _Nonnull, NSNumber * _Nonnull, NSNumber * _Nonnull))handler onNotify:(void (^ _Nonnull)(NSString * _Nonnull, id _Nonnull))onNotify onRequestAnimation:(void (^ _Nonnull)(void))onRequestAnimation onCancelAnimation:(void (^ _Nonnull)(void))onCancelAnimation OBJC_DESIGNATED_INITIALIZER;
+- (nonnull instancetype)initWithHandler:(void (^ _Nonnull)(NSString * _Nonnull, NSNumber * _Nonnull, NSNumber * _Nonnull, NSNumber * _Nonnull, NSNumber * _Nonnull))handler onNotify:(void (^ _Nonnull)(NSString * _Nonnull, id _Nonnull))onNotify OBJC_DESIGNATED_INITIALIZER;
 - (nonnull instancetype)init SWIFT_UNAVAILABLE;
 + (nonnull instancetype)new SWIFT_UNAVAILABLE_MSG("-init is unavailable");
 @end

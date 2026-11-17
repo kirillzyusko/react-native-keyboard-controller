@@ -22,7 +22,6 @@ let package = Package(
     .target(
       name: "KeyboardControllerObjC",
       path: "ios/objc",
-      exclude: ["RCTUIManager+LayoutAnimationManager.m"],
       publicHeadersPath: "."
     ),
     .target(
