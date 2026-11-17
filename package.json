@@ -14,6 +14,7 @@
     "ios",
     "common",
     "cpp",
+    "Package.swift",
     "react-native-keyboard-controller.podspec",
     "react-native.config.js",
     "jest",
@@ -23,6 +24,7 @@
     "!android/build",
     "!android/src/test",
     "!android/.gradle",
+    "!android/.cxx",
     "!android/gradle",
     "!android/gradlew",
     "!android/gradlew.bat",
@@ -38,6 +40,7 @@
   ],
   "scripts": {
     "format": "prettier '**/*' --ignore-unknown --write",
+    "generate-ios-spm-header": "node scripts/generate-ios-spm-header.js",
     "test": "jest",
     "typescript": "tsc --noEmit --project tsconfig.build.json",
     "lint": "eslint --quiet \"**/*.{js,ts,tsx}\"",
@@ -180,6 +183,9 @@
         }
       ]
     ]
+  },
+  "swiftpmConfig": {
+    "name": "KeyboardController"
   },
   "codegenConfig": {
     "name": "RNKC",

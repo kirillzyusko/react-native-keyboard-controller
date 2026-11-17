@@ -205,7 +205,12 @@
     "luma",
     "lockfiles",
     "worktree",
-    "keyboardchatscrollview"
+    "keyboardchatscrollview",
+    "deintegrate",
+    "NDEBUG",
+    "subpaths",
+    "swiftpm",
+    "xcframeworks"
   ],
   "ignorePaths": [
     "node_modules",

@@ -7,11 +7,7 @@
 
 #import "KeyboardGestureAreaManager.h"
 
-#if __has_include("react_native_keyboard_controller-Swift.h")
-#import "react_native_keyboard_controller-Swift.h"
-#else
-#import <react_native_keyboard_controller/react_native_keyboard_controller-Swift.h>
-#endif
+#import "KeyboardControllerSwiftInterop.h"
 
 #ifdef RCT_NEW_ARCH_ENABLED
 #import <react/renderer/components/RNKC/EventEmitters.h>
@@ -19,7 +15,7 @@
 #import <react/renderer/components/RNKC/RCTComponentViewHelpers.h>
 #import <react/renderer/components/RNKC/RNKCKeyboardGestureAreaComponentDescriptor.h>
 
-#import "RCTFabricComponentsPlugins.h"
+#import <React/RCTFabricComponentsPlugins.h>
 #endif
 
 #import <UIKit/UIKit.h>
