@@ -26,7 +26,6 @@ extension KeyboardMovementObserver {
       // foldable devices can emit `keyboardWillShow` with a `0` keyboard height when the device is rotated
       let progress: NSNumber = self.keyboardHeight > 0 ? 1 : 0
 
-      onRequestAnimation()
       onEvent("onKeyboardMoveStart", Float(self.keyboardHeight) as NSNumber, progress, duration as NSNumber, tag)
       onNotify("KeyboardController::keyboardWillShow", buildEventParams(self.keyboardHeight, duration, tag))
 
@@ -47,7 +46,6 @@ extension KeyboardMovementObserver {
       NSValue(cgRect: CGRect(x: 0, y: 0, width: 0, height: 0))
     self.duration = duration
 
-    onRequestAnimation()
     onEvent("onKeyboardMoveStart", 0, 0, duration as NSNumber, tag)
     onNotify("KeyboardController::keyboardWillHide", buildEventParams(0, duration, tag))
 
@@ -70,7 +68,6 @@ extension KeyboardMovementObserver {
       // always limit progress to the maximum possible value
       let progress = min(height / self.keyboardHeight, 1.0)
 
-      onCancelAnimation()
       onEvent("onKeyboardMoveEnd", height as NSNumber, progress as NSNumber, duration as NSNumber, tag)
       onNotify("KeyboardController::keyboardDidShow", buildEventParams(height, duration, tag))
 
@@ -89,7 +86,6 @@ extension KeyboardMovementObserver {
     let (duration, _) = notification.keyboardMetaData()
     tag = UIResponder.current.reactViewTag
 
-    onCancelAnimation()
     onEvent("onKeyboardMoveEnd", 0 as NSNumber, 0, duration as NSNumber, tag)
     onNotify("KeyboardController::keyboardDidHide", buildEventParams(0, duration, tag))
 
