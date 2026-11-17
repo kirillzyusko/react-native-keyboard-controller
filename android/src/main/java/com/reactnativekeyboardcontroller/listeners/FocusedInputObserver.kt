@@ -1,9 +1,12 @@
 package com.reactnativekeyboardcontroller.listeners
 
+import android.annotation.SuppressLint
+import android.os.Build
 import android.text.TextWatcher
 import android.view.View
 import android.view.View.OnLayoutChangeListener
 import android.view.ViewTreeObserver.OnGlobalFocusChangeListener
+import android.view.ViewTreeObserver.OnWindowFocusChangeListener
 import android.widget.EditText
 import com.facebook.react.bridge.Arguments
 import com.facebook.react.uimanager.ThemedReactContext
@@ -41,6 +44,7 @@ val noFocusedInputEvent =
     parentScrollViewTarget = -1,
   )
 
+@SuppressLint("ObsoleteSdkInt")
 class FocusedInputObserver(
   val view: View,
   private val eventPropagationView: ReactViewGroup,
@@ -131,9 +135,25 @@ class FocusedInputObserver(
         dispatchLayoutEventToJS(noFocusedInputEvent)
       }
     }
+  private val windowFocusListener =
+    OnWindowFocusChangeListener { hasFocus ->
+      val input = view.findFocus()
+      // `focusListener` is not called when window gets its focus back (e.g. `Modal` was closed),
+      // so if another window has replaced the input, we need to restore the one focused in this window
+      if (hasFocus && input is EditText && input !== FocusedInputHolder.get()) {
+        // JS may hold a layout from another window, so the layout has to be dispatched again
+        lastLayoutEventDispatched = noFocusedInputEvent
+        focusListener.onGlobalFocusChanged(lastFocusedInput, input)
+      }
+    }
 
   init {
     view.viewTreeObserver.addOnGlobalFocusChangeListener(focusListener)
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+      view.viewTreeObserver.addOnWindowFocusChangeListener(windowFocusListener)
+    }
+    // input can be focused before we attach the listener (e.g. `autoFocus` inside `Modal`)
+    focusListener.onGlobalFocusChanged(null, view.findFocus())
   }
 
   fun syncUpLayout() {
@@ -161,6 +181,9 @@ class FocusedInputObserver(
 
   fun destroy() {
     view.viewTreeObserver.removeOnGlobalFocusChangeListener(focusListener)
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+      view.viewTreeObserver.removeOnWindowFocusChangeListener(windowFocusListener)
+    }
     stopObservingFocusedInput()
   }
 
