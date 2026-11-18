@@ -65,6 +65,7 @@ extension KeyboardMovementObserver {
         case (.withGesture, true):
           if let shown = shown, shown.name == UIResponder.keyboardWillShowNotification {
             self.keyboardWillAppear(shown.withoutAnimation)
+            self.restoredNotification = shown
           }
         case (.withGesture, false):
           self.keyboardDidDisappear(notification)
@@ -88,6 +89,23 @@ extension KeyboardMovementObserver {
     transitionTrackingView?.removeFromSuperview()
     transitionTrackingView = nil
     animation = nil
+  }
+
+  /// After a cancelled transition UIKit announces the keyboard that came back. We don't wait for that: the
+  /// keyboard is restored as soon as the transition is over, so this announcement doesn't bring anything new
+  /// (and a repeated event moves the views that count their position from the previous one).
+  func isRestored(_ notification: Notification) -> Bool {
+    let (duration, frame) = notification.keyboardMetaData()
+    let isRestored = duration == 0
+      && frame != nil
+      && frame == restoredNotification?.keyboardMetaData().1
+      && UIResponder.current.reactViewTag == tag
+
+    if !isRestored {
+      restoredNotification = nil
+    }
+
+    return isRestored
   }
 
   /// Dispatches a position of the keyboard that is moved by the transition.
