@@ -9,6 +9,10 @@ extension KeyboardMovementObserver {
   @objc func keyboardWillAppear(_ notification: Notification) {
     guard !UIResponder.isKeyboardPreloading else { return }
 
+    if isAnimatedByItself(notification) {
+      endTransition()
+    }
+
     // the screen that gets revealed brings its own keyboard, but only if the transition gets finished
     if isKeyboardInTransition {
       transitionNotification = notification

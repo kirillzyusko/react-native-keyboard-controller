@@ -76,6 +76,7 @@ extension KeyboardMovementObserver {
     guard isTracked else { return nil }
 
     transitionCoordinator = coordinator
+    self.transition = transition
     if transition == .withGesture {
       trackKeyboard(in: coordinator.containerView)
     }
@@ -85,10 +86,18 @@ extension KeyboardMovementObserver {
 
   func endTransition() {
     transitionCoordinator = nil
+    transition = nil
     transitionNotification = nil
     transitionTrackingView?.removeFromSuperview()
     transitionTrackingView = nil
     animation = nil
+  }
+
+  /// A custom transition doesn't bring the keyboard of the revealed screen: UIKit shows this keyboard with
+  /// a regular animation when the screen has arrived, so the notification has to be handled when it's posted
+  /// (inside the animation of the keyboard), and not when the transition is finished.
+  func isAnimatedByItself(_ notification: Notification) -> Bool {
+    return transition == .withGesture && notification.keyboardMetaData().0 > 0
   }
 
   /// After a cancelled transition UIKit announces the keyboard that came back. We don't wait for that: the
