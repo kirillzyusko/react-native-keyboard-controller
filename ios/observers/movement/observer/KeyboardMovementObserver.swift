@@ -38,6 +38,7 @@ public class KeyboardMovementObserver: NSObject {
   weak var transitionCoordinator: UIViewControllerTransitionCoordinator?
   var transitionTrackingView: UIView?
   var transitionNotification: Notification?
+  var restoredNotification: Notification?
 
   @objc public init(
     handler: @escaping (NSString, NSNumber, NSNumber, NSNumber, NSNumber) -> Void,

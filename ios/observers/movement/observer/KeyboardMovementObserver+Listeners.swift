@@ -32,6 +32,8 @@ extension KeyboardMovementObserver {
         return
       }
 
+      guard !isRestored(notification) else { return }
+
       self.duration = duration
 
       // foldable devices can emit `keyboardWillShow` with a `0` keyboard height when the device is rotated
@@ -48,6 +50,7 @@ extension KeyboardMovementObserver {
 
   @objc func keyboardWillDisappear(_ notification: Notification) {
     guard !UIResponder.isKeyboardPreloading, !isKeyboardInTransition else { return }
+    restoredNotification = nil
     let (duration, _) = notification.keyboardMetaData()
     let transition = beginTransition(hidingKeyboardWith: notification)
 
