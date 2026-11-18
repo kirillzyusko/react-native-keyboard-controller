@@ -46,8 +46,6 @@ export default StyleSheet.create({
   },
   initial: { fontSize: 15, fontWeight: "600", color: "#204ba5" },
   name: { fontSize: 17, fontWeight: "600", color: "#19191c" },
-  viewport: { flex: 1, overflow: "hidden" },
-  chat: { flex: 1 },
   messages: { flexGrow: 1, justifyContent: "flex-end", padding: 16, gap: 10 },
   bubble: {
     maxWidth: "80%",

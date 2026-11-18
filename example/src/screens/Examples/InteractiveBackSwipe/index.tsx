@@ -1,7 +1,7 @@
 import { HeaderBackButton } from "@react-navigation/elements";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import React, { useRef, useState } from "react";
+import React, { useMemo, useState } from "react";
 import {
   ScrollView,
   Text,
@@ -9,8 +9,10 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { useReanimatedKeyboardAnimation } from "react-native-keyboard-controller";
-import Reanimated, { useAnimatedStyle } from "react-native-reanimated";
+import {
+  KeyboardChatScrollView,
+  KeyboardStickyView,
+} from "react-native-keyboard-controller";
 import {
   SafeAreaView,
   useSafeAreaInsets,
@@ -169,11 +171,7 @@ function Setup() {
 
 function Chat() {
   const { bottom } = useSafeAreaInsets();
-  const { height } = useReanimatedKeyboardAnimation();
-  const translation = useAnimatedStyle(() => ({
-    transform: [{ translateY: height.value + Math.min(bottom, -height.value) }],
-  }));
-  const scroll = useRef<React.ComponentRef<typeof ScrollView>>(null);
+  const offset = useMemo(() => ({ opened: bottom }), [bottom]);
   const [text, setText] = useState("");
 
   return (
@@ -182,48 +180,43 @@ function Chat() {
       style={[styles.container, styles.chatBackground]}
       testID="back-swipe.chat"
     >
-      <View style={styles.viewport}>
-        <Reanimated.View style={[styles.chat, translation]}>
-          <ScrollView
-            ref={scroll}
-            automaticallyAdjustContentInsets={false}
-            contentContainerStyle={styles.messages}
-            contentInsetAdjustmentBehavior="never"
-            keyboardDismissMode="interactive"
-            testID="back-swipe.messages"
-            onContentSizeChange={() =>
-              scroll.current?.scrollToEnd({ animated: false })
-            }
+      <KeyboardChatScrollView
+        contentContainerStyle={styles.messages}
+        keyboardDismissMode="interactive"
+        offset={bottom}
+        testID="back-swipe.messages"
+      >
+        {messages.map((message, index) => (
+          <View
+            key={index}
+            style={[
+              styles.bubble,
+              message.sent ? styles.sent : styles.received,
+            ]}
           >
-            {messages.map((message, index) => (
-              <View
-                key={index}
-                style={[
-                  styles.bubble,
-                  message.sent ? styles.sent : styles.received,
-                ]}
-              >
-                <Text style={[styles.message, message.sent && styles.sentText]}>
-                  {message.text}
-                </Text>
-              </View>
-            ))}
-          </ScrollView>
-          <View style={styles.composer} testID="back-swipe.composer">
-            <Text style={styles.plus}>＋</Text>
-            <TextInput
-              multiline
-              placeholder="Message"
-              placeholderTextColor="#85858b"
-              style={styles.input}
-              testID="chat.input"
-              value={text}
-              onChangeText={setText}
-            />
-            <Text style={styles.send}>↑</Text>
+            <Text style={[styles.message, message.sent && styles.sentText]}>
+              {message.text}
+            </Text>
           </View>
-        </Reanimated.View>
-      </View>
+        ))}
+      </KeyboardChatScrollView>
+      <KeyboardStickyView
+        offset={offset}
+        style={styles.composer}
+        testID="back-swipe.composer"
+      >
+        <Text style={styles.plus}>＋</Text>
+        <TextInput
+          multiline
+          placeholder="Message"
+          placeholderTextColor="#85858b"
+          style={styles.input}
+          testID="chat.input"
+          value={text}
+          onChangeText={setText}
+        />
+        <Text style={styles.send}>↑</Text>
+      </KeyboardStickyView>
     </SafeAreaView>
   );
 }
@@ -243,6 +236,7 @@ function Profile() {
         </Text>
       </View>
       <TextInput
+        autoCorrect={false}
         defaultValue={contact}
         placeholder="Name"
         placeholderTextColor="#85858b"
