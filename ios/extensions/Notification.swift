@@ -14,6 +14,13 @@ extension Notification {
 
     return (duration, keyboardFrame)
   }
+
+  /// The same keyboard notification, but with zero animation duration.
+  var withoutAnimation: Notification {
+    var notification = self
+    notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] = 0.0
+    return notification
+  }
 }
 
 extension Notification.Name {
