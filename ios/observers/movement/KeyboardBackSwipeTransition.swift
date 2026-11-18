@@ -1,111 +1,80 @@
 import UIKit
 
 /// Layout callbacks for keyboard movement during an interactive navigation transition.
-final class KeyboardBackSwipeTransition: NSObject {
+final class KeyboardBackSwipeTransition {
   enum Mode: String {
     case close, none, interactively
   }
 
   static var mode: Mode? {
     didSet {
-      KeyboardBackSwipeGesture.shared.setMode(mode)
+      KeyboardBackSwipeGesture.shared.setEnabled(mode == .close)
     }
   }
 
   typealias Dispatch = (NSString, NSNumber, NSNumber, NSNumber, NSNumber) -> Void
   private let dispatch: Dispatch
   private weak var owner: UIViewController?
-  private var activeMode: Mode?
-  private var generation = 0
+  private var transition: ObjectIdentifier?
   private var lastHeight: CGFloat = 0
-  private var heldHeight: CGFloat = 0
   private var tag: NSNumber = -1
-  private var link: CADisplayLink?
-  private weak var sourceView: UIView?
-  private var sourceOriginX: CGFloat = 0
 
   init(dispatch: @escaping Dispatch) {
     self.dispatch = dispatch
-    super.init()
   }
 
   func invalidate() {
-    generation += 1
-    link?.invalidate()
-    link = nil
-    activeMode = nil
-    sourceView = nil
+    transition = nil
   }
 
   func send(_ name: NSString, _ height: NSNumber, _ progress: NSNumber, _ duration: NSNumber, _ target: NSNumber) {
     if name == "onKeyboardMoveStart" {
-      KeyboardBackSwipeGesture.shared.keyboardWillChange(visible: height.doubleValue > 0)
-    }
-    let focusedOwner = name == "onKeyboardMoveStart" && height.doubleValue > 0
-      ? UIResponder.current?.parentViewController : nil
-    // Focus on a different screen takes precedence over an outgoing screen's policy.
-    if activeMode != nil, height.doubleValue > 0, name == "onKeyboardMoveStart",
-       let focusedOwner, focusedOwner !== owner
-    {
-      invalidate()
-    }
-    if activeMode == nil {
-      if name == "onKeyboardMoveStart", height.doubleValue > 0, let focusedOwner {
+      let visible = height.doubleValue > 0
+      KeyboardBackSwipeGesture.shared.keyboardWillChange(visible: visible)
+      if visible, let focusedOwner = UIResponder.current?.parentViewController, focusedOwner !== owner {
+        invalidate()
         owner = focusedOwner
       }
-      if let mode = Self.mode, mode != .close, let owner, let coordinator = owner.transitionCoordinator,
-         coordinator.isInteractive,
-         let from = coordinator.viewController(forKey: .from), from === owner,
-         let navigation = owner.navigationController, !navigation.viewControllers.contains(from)
-      {
-        begin(mode, coordinator: coordinator)
-      }
     }
-    lastHeight = CGFloat(truncating: height)
     if target.intValue != -1 {
       tag = target
     }
-    guard activeMode == nil else { return }
-    dispatch(name, height, progress, duration, target)
+    if transition == nil, lastHeight > 0, let mode = Self.mode, mode != .close,
+       let owner, let navigation = owner.navigationController, let coordinator = owner.transitionCoordinator,
+       coordinator.isInteractive, coordinator.viewController(forKey: .from) === owner,
+       !navigation.viewControllers.contains(owner)
+    {
+      begin(mode, coordinator: coordinator)
+    }
+    lastHeight = CGFloat(truncating: height)
+    if transition == nil {
+      dispatch(name, height, progress, duration, target)
+    }
   }
 
   private func begin(_ mode: Mode, coordinator: UIViewControllerTransitionCoordinator) {
-    activeMode = mode
-    heldHeight = lastHeight
-    generation += 1
-    let currentGeneration = generation
-    sourceView = coordinator.viewController(forKey: .from)?.view
-    sourceOriginX = sourceView?.superview?.convert(.zero, to: nil).x ?? 0
-    if mode == .interactively {
-      link = CADisplayLink(target: self, selector: #selector(sample))
-      link?.preferredFramesPerSecond = 120
-      link?.add(to: .main, forMode: .common)
-    }
-    coordinator.animate(alongsideTransition: nil) { [weak self] context in
-      guard let self, self.generation == currentGeneration else { return }
+    let coordinatorID = ObjectIdentifier(coordinator)
+    let initialHeight = lastHeight
+    transition = coordinatorID
+
+    // UIKit scrubs and reverses animations in this block with the navigation gesture.
+    let queued = coordinator.animate(alongsideTransition: { [weak self] context in
+      guard let self, self.transition == coordinatorID, mode == .interactively else { return }
+      self.dispatch("onKeyboardMoveStart", 0, 0, (context.transitionDuration * 1000) as NSNumber, self.tag)
+    }, completion: { [weak self] context in
       let cancelled = context.isCancelled
       DispatchQueue.main.async {
-        guard self.generation == currentGeneration else { return }
-        let height = cancelled ? self.heldHeight : self.lastHeight
-        self.invalidate()
+        guard let self, self.transition == coordinatorID else { return }
+        self.transition = nil
+        let height = cancelled ? initialHeight : self.lastHeight
         self.lastHeight = height
-        UIView.performWithoutAnimation {
-          self.dispatch("onKeyboardMoveStart", height as NSNumber, height > 0 ? 1 : 0, 0, self.tag)
-          self.dispatch("onKeyboardMoveEnd", height as NSNumber, height > 0 ? 1 : 0, 0, self.tag)
-        }
+        let progress: NSNumber = height > 0 ? 1 : 0
+        self.dispatch("onKeyboardMoveStart", height as NSNumber, progress, 0, self.tag)
+        self.dispatch("onKeyboardMoveEnd", height as NSNumber, progress, 0, self.tag)
       }
-    }
-  }
-
-  @objc private func sample() {
-    guard let sourceView, sourceView.bounds.width > 0 else { return }
-    let layer = sourceView.layer.presentation() ?? sourceView.layer
-    let frame = layer.convert(layer.bounds, to: nil)
-    let transitionProgress = min(1, max(0, abs(frame.minX - sourceOriginX) / sourceView.bounds.width))
-    let height = heldHeight * (1 - transitionProgress)
-    let progress = heldHeight > 0 ? height / heldHeight : 0
-    UIView.performWithoutAnimation {
-      dispatch("onKeyboardMoveInteractive", height as NSNumber, progress as NSNumber, -1, tag)
+    })
+    if !queued {
+      transition = nil
     }
   }
 }

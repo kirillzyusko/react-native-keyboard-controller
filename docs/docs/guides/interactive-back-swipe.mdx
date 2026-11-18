@@ -79,7 +79,7 @@ The navigator chooses the transition. `close` handles keyboard dismissal and foc
 | Policy          | `keyboardHandlingEnabled` | `fullScreenGestureEnabled` | `animation`     | `animationMatchesGesture` |
 | --------------- | ------------------------- | -------------------------- | --------------- | ------------------------- |
 | `close`         | `true`                    | `true`                     | `"default"`     | `false`                   |
-| `none`          | `false`                   | `true`                     | `"default"`     | `false`                   |
+| `none`          | `false`                   | Omit (system default)      | `"default"`     | `false`                   |
 | `interactively` | `false`                   | `true`                     | `"simple_push"` | `true`                    |
 
 ```tsx
@@ -95,7 +95,7 @@ function Navigation({ mode }) {
         name="Chat"
         component={Chat}
         options={{
-          fullScreenGestureEnabled: true,
+          fullScreenGestureEnabled: mode === "none" ? undefined : true,
           keyboardHandlingEnabled: mode === "close",
           animation: mode === "interactively" ? "simple_push" : "default",
           animationMatchesGesture: mode === "interactively",
@@ -133,13 +133,17 @@ This runs in native code using public UIKit gesture and transition APIs. It requ
 
 The React Native baseline recordings use an iPhone 17 Pro simulator with iOS 26.5, React Native 0.87.1 and screens 4.27.0. The configuration table describes that tested setup; the app references above were recorded separately on the physical iPhone.
 
-`fullScreenGestureEnabled` chooses more than the area where the gesture begins. Depending on screens and iOS versions, it can select a native or custom interactive transition, which also changes keyboard movement. `animationMatchesGesture` and `simple_push` select the custom transition used by the `interactively` example. Read the navigator's [gesture options](https://reactnavigation.org/docs/native-stack-navigator/#fullscreengestureenabled) and check your installed screens version before applying the table to an older stack.
+With an open keyboard and the default horizontal pop animation, screens 4.27.0 selects the following transitions. The option controls where a swipe can begin and, on older iOS versions, which animator moves the keyboard.
 
-Before iOS 26, `none` also adapts the full-screen gesture to UIKit's native pop driver. The screen and the real keyboard then move horizontally together; suppressing layout callbacks alone would leave the keyboard dismissing vertically. The adapter applies to horizontal navigation with the default animation, preserves the navigator's gesture guards and response distance, and restores its original pan when the policy changes or the keyboard observer unmounts.
+| `fullScreenGestureEnabled` | iOS 18.5                                                                     | iOS 26.2                                                                   |
+| -------------------------- | ---------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| `false`                    | UIKit edge swipe. The keyboard slides sideways with the screen.              | UIKit edge swipe. The keyboard slides sideways with the screen.            |
+| `true`                     | Screens handles the pan. The screen slides sideways and the keyboard lowers. | UIKit accepts a swipe inside the screen and carries the keyboard sideways. |
+| Omitted                    | Uses the edge swipe.                                                         | Uses the full-screen UIKit gesture.                                        |
 
-This compatibility path uses the undocumented UIKit gesture target (`targets` / `target`) and `handleNavigationTransition:` entry point, checked at runtime. If they are unavailable, the original navigator gesture is left intact. iOS 26 keeps its native content-pop gesture.
+For the Messages interaction, choose `none` and the system default. If you explicitly enable a full-screen swipe on iOS 18, `none` still holds the content at its original height and the descending keyboard exposes space below it. For the Instagram interaction, choose `interactively` with `simple_push` and `animationMatchesGesture`. This selects the custom transition on both versions. Older screens releases can choose a different animator for the same options. [React Navigation gesture options](https://reactnavigation.org/docs/native-stack-navigator/#fullscreengestureenabled)
 
-On iOS 26, the older `example` application with screens 4.16.0 still uses a different custom full-screen transition. Use FabricExample with screens 4.27.0 for the native full-screen comparison there; the pre-iOS-26 adapter does not replace that older navigator's transition on iOS 26.
+For `interactively`, keyboard-controller sends the keyboard-hidden layout once inside UIKit’s coordinated animation. UIKit moves a `KeyboardStickyView` through that animation as the finger advances or reverses and settles it after release. A worklet that needs a numeric sample for every change of gesture progress needs its own navigation progress source. [UIKit transition coordinator](<https://developer.apple.com/documentation/uikit/uiviewcontrollertransitioncoordinator/animate(alongsidetransition:completion:)>)
 
 The current experiment assumes a horizontal push/pop and one configured navigation flow. Modals, overlapping transitions and nested navigation need separate verification.
 
@@ -147,7 +151,7 @@ The current experiment assumes a horizontal push/pop and one configured navigati
 
 Open **Interactive back swipe** in either example application. Select a policy, open the chat and focus Message. Drag right, pause halfway, then reverse to cancel. Repeat and complete the swipe.
 
-- All three policies use the same chat layout, so differences in vertical movement are easy to compare.
+- In `none`, switch **Native-stack back gesture** between **System default**, **Edge** and **Full screen**. Swipe from the edge for **Edge** and try starting inside the chat for **Full screen**. The layout policy stays the same in each case.
 - The **Native stack**, **Dismiss** and **JS stack** controls use no policy. **Dismiss** only enables native-stack keyboard dismissal, for comparison with `close`.
 
-The [visual E2E test](https://github.com/kirillzyusko/react-native-keyboard-controller/blob/main/e2e/kit/018-interactive-back-swipe.e2e.ts) captures one common keyboard-open reference at the beginning of the run. Each canceled gesture must return to it, and each completed swipe must return to one common setup reference. In `none` and `close`, the completed swipe is held partway through the transition while the test checks the screenshot: the composer and real keyboard must stay at their original vertical positions in `none`, and the composer must reach its keyboard-hidden position in `close`. Continuous keyboard/composer alignment in `interactively` remains a separate known issue; its E2E checks cancellation and completion. See the [verification notes](https://github.com/kirillzyusko/react-native-keyboard-controller/blob/main/experiments/keyboard-transitions/README.md#verification) for tested versions and compatibility limits.
+The [visual E2E test](https://github.com/kirillzyusko/react-native-keyboard-controller/blob/main/e2e/kit/018-interactive-back-swipe.e2e.ts) compares each canceled gesture with the original keyboard-open chat and each completed pop with the setup screen. A held gesture shows whether the footer keeps its height, follows the keyboard down or reaches its keyboard-hidden position. See the [verification notes](https://github.com/kirillzyusko/react-native-keyboard-controller/blob/main/experiments/keyboard-transitions/README.md#verification) for the tested configurations.

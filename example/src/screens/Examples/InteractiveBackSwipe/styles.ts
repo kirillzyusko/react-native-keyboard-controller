@@ -45,12 +45,12 @@ export default StyleSheet.create({
   received: { alignSelf: "flex-start", backgroundColor: "#ededf0" },
   message: { fontSize: 16, lineHeight: 22, color: "#19191c" },
   sentText: { color: "white" },
+  footer: { backgroundColor: "#fafafa" },
   composer: {
     flexDirection: "row",
     alignItems: "center",
     padding: 10,
     gap: 10,
-    backgroundColor: "#fafafa",
     borderTopWidth: StyleSheet.hairlineWidth,
     borderTopColor: "#dddde2",
   },

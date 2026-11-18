@@ -6,7 +6,7 @@ import { PNG } from "pngjs";
 import { delay } from "../helpers";
 
 type Frame = { x: number; y: number; width: number; height: number };
-type Policy = "close" | "none";
+type Policy = "close" | "none" | "interactively";
 
 export const readScreenshot = async (name: string) =>
   PNG.sync.read(fs.readFileSync(await device.takeScreenshot(name)));
@@ -57,17 +57,22 @@ const expectComposer = (
   actual: PNG,
   frame: Frame,
   x: number,
-  y: number,
   scale: number,
 ) => {
-  const rect = { x: 8, y: frame.y + 3, width: 140, height: frame.height - 6 };
+  // Compare the controls above the home indicator and rounded screen corners.
+  const rect = {
+    x: 8,
+    y: frame.y + 3,
+    width: 140,
+    height: Math.min(48, frame.height - 6),
+  };
   const expected = crop(reference, rect, scale);
   let best = 1;
 
   for (const adjustment of [-1, 0, 1]) {
     const current = crop(
       actual,
-      { ...rect, x: rect.x + x, y: rect.y + y + adjustment },
+      { ...rect, x: rect.x + x, y: rect.y + adjustment },
       scale,
     );
     const changed = pixelmatch(
@@ -114,6 +119,7 @@ const expectKeyboard = (
   x: number,
   y: number,
   scale: number,
+  maxY = y,
 ) => {
   const points: [number, number][] = [];
 
@@ -132,7 +138,7 @@ const expectKeyboard = (
   }
   let best = 1;
 
-  for (let dy = -4; dy <= 4; dy += 1) {
+  for (let dy = Math.round(y) - 4; dy <= Math.round(maxY) + 4; dy += 1) {
     for (let dx = -1; dx <= 1; dx += 1) {
       let missed = 0;
 
@@ -141,12 +147,7 @@ const expectKeyboard = (
 
         for (let row = -1; row <= 1 && !matched; row += 1) {
           for (let column = -1; column <= 1 && !matched; column += 1) {
-            matched = dark(
-              actual,
-              px + x + dx + column,
-              py + y + dy + row,
-              scale,
-            );
+            matched = dark(actual, px + x + dx + column, py + dy + row, scale);
           }
         }
 
@@ -167,6 +168,36 @@ const expectKeyboard = (
   }
 };
 
+// Sample the solid leading margin of the footer, clear of the input and key legends.
+const footerBottom = (
+  image: PNG,
+  screenX: number,
+  openY: number,
+  scale: number,
+) => {
+  const x = Math.round((screenX + 4) * scale);
+  let footerPixels = 0;
+
+  for (let y = Math.round(openY * scale); y < image.height; y++) {
+    const i = (y * image.width + x) * 4;
+
+    if (
+      image.data[i] === 250 &&
+      image.data[i + 1] === 250 &&
+      image.data[i + 2] === 250
+    ) {
+      footerPixels++;
+    } else {
+      if (footerPixels > 25 * scale) {
+        return y / scale;
+      }
+      footerPixels = 0;
+    }
+  }
+
+  throw new Error("Could not locate the moving composer in the screenshot");
+};
+
 export const expectMidSwipeLayout = async (
   mode: Policy,
   screenFrame: Frame,
@@ -174,24 +205,26 @@ export const expectMidSwipeLayout = async (
   openComposer: Frame,
   closed: PNG,
   opened: PNG,
+  useScreensPan: boolean,
 ) => {
   const screen = element(by.id("back-swipe.gesture"));
   // takeScreenshot uses simctl, so it can observe a held EarlGrey gesture.
+  const start = mode === "none" && !useScreensPan ? 0 : 0.2;
   const gesture = screen.longPressAndDrag(
     100,
-    0.2,
+    start,
     0.25,
     screen,
-    0.8,
+    start + 0.6,
     0.25,
     "slow",
-    8000,
+    14000,
   );
   const completion = gesture.then(
     () => undefined,
     (error: Error) => error,
   );
-  const deadline = Date.now() + 9000;
+  const deadline = Date.now() + 16000;
   let previous = -1;
   let middle: PNG | undefined;
   let x = 0;
@@ -228,12 +261,28 @@ export const expectMidSwipeLayout = async (
 
     const scale = opened.width / screenFrame.width;
     const keyboardTop = openComposer.y + openComposer.height;
+    const travel = middle.height / scale - keyboardTop;
 
     if (mode === "close") {
-      expectComposer(closed, middle, closedComposer, x, 0, scale);
+      expectComposer(closed, middle, closedComposer, x, scale);
+    } else if (mode === "interactively") {
+      const shift =
+        footerBottom(middle, x, openComposer.y, scale) - keyboardTop;
+
+      if (shift < travel * 0.2 || shift > travel * 0.85) {
+        throw new Error(
+          `Expected a partially lowered composer, got ${shift}pt of ${travel}pt`,
+        );
+      }
+      expectKeyboard(opened, middle, keyboardTop, 0, shift, scale);
     } else {
-      expectComposer(opened, middle, openComposer, x, 0, scale);
-      expectKeyboard(opened, middle, keyboardTop, x, 0, scale);
+      expectComposer(opened, middle, openComposer, x, scale);
+
+      const xShift = useScreensPan ? 0 : x;
+      const minY = useScreensPan ? travel * 0.2 : 0;
+      const maxY = useScreensPan ? travel * 0.85 : 0;
+
+      expectKeyboard(opened, middle, keyboardTop, xShift, minY, scale, maxY);
     }
   } finally {
     gestureError = await completion;

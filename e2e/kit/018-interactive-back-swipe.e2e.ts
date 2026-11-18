@@ -1,3 +1,4 @@
+import { execFileSync } from "child_process";
 import fs from "fs";
 
 import { expect } from "detox";
@@ -100,6 +101,22 @@ describeIOS("Interactive back swipe", () => {
     "restores the original layout after a canceled %s swipe",
     async (mode) => {
       await waitAndTap(`back-swipe.setup.mode.${mode}`);
+      // EarlGrey's in-app touches can drive the screens pan. A system edge swipe
+      // before iOS 26 needs real system input (XCUITest).
+      const useScreensPan =
+        mode === "none" &&
+        parseInt(
+          execFileSync(
+            "xcrun",
+            ["simctl", "getenv", device.id, "SIMULATOR_RUNTIME_VERSION"],
+            { encoding: "utf8" },
+          ),
+          10,
+        ) < 26;
+
+      if (useScreensPan) {
+        await waitAndTap("back-swipe.gesture-area.full");
+      }
       await waitAndTap("back-swipe.open");
       const closedComposer = await composerFrame();
       const closedY = closedComposer.y;
@@ -157,21 +174,15 @@ describeIOS("Interactive back swipe", () => {
         );
       });
 
-      if (mode === "interactively") {
-        // Continuous keyboard/composer alignment is a separate known issue.
-        await screen.swipe("right", "slow", 0.9, 0.02, 0.25);
-      } else {
-        // Hold beyond both navigators' completion thresholds. Inspect the layout
-        // before releasing, then verify the completed pop independently.
-        await expectMidSwipeLayout(
-          mode,
-          screenAttributes.frame,
-          closedComposer,
-          openComposer,
-          closed,
-          opened,
-        );
-      }
+      await expectMidSwipeLayout(
+        mode,
+        screenAttributes.frame,
+        closedComposer,
+        openComposer,
+        closed,
+        opened,
+        useScreensPan,
+      );
       await waitForElementById("back-swipe.open");
       await expect(element(by.id("chat.input"))).not.toExist();
       await waitAndTap("back-swipe.setup.mode.close");

@@ -19,6 +19,7 @@ import {
 } from "react-native";
 import {
   KeyboardController,
+  KeyboardStickyView,
   useReanimatedKeyboardAnimation,
 } from "react-native-keyboard-controller";
 import Reanimated, { useAnimatedStyle } from "react-native-reanimated";
@@ -34,7 +35,10 @@ import type { NativeStackNavigationOptions } from "@react-navigation/native-stac
 import type { InteractiveBackSwipeMode } from "react-native-keyboard-controller";
 
 type Routes = { Setup: undefined; Chat: undefined };
+type GestureArea = "system" | "edge" | "full";
 type Settings = {
+  gestureArea: GestureArea;
+  setGestureArea: (area: GestureArea) => void;
   mode: InteractiveBackSwipeMode | null;
   setMode: (mode: InteractiveBackSwipeMode | null) => void;
   jsStack: boolean;
@@ -50,10 +54,15 @@ const bottomEdges = ["bottom"] as const;
 const modes: InteractiveBackSwipeMode[] = ["close", "none", "interactively"];
 const descriptions = {
   close: "Close the keyboard when the back transition starts.",
-  none: "Keep the chat above the keyboard as both slide sideways.",
+  none: "Keep the chat at its keyboard-open height while the screen slides back.",
   interactively:
     "Move the chat down with the keyboard as you drag. Reverse to cancel.",
 };
+const gestureAreas = [
+  { value: "system", label: "System default" },
+  { value: "edge", label: "Edge" },
+  { value: "full", label: "Full screen" },
+] as const;
 const baselines = [
   { value: "native", label: "Native stack" },
   { value: "native-dismiss", label: "Dismiss" },
@@ -106,6 +115,8 @@ function Setup() {
     setJSStack,
     nativeDismiss,
     setNativeDismiss,
+    gestureArea,
+    setGestureArea,
   } = useSettings();
   let selectedBaseline = "native";
   let navigatorName = "native stack";
@@ -159,6 +170,35 @@ function Setup() {
             ? descriptions[mode]
             : `React Navigation defaults · ${navigatorName} · no policy`}
         </Text>
+        {mode === "none" && (
+          <View>
+            <Text style={styles.label}>Native-stack back gesture</Text>
+            <View accessibilityRole="radiogroup" style={styles.choices}>
+              {gestureAreas.map(({ value, label }) => (
+                <Pressable
+                  key={value}
+                  accessibilityRole="radio"
+                  accessibilityState={{ checked: gestureArea === value }}
+                  style={[
+                    styles.choice,
+                    gestureArea === value && styles.selected,
+                  ]}
+                  testID={`back-swipe.gesture-area.${value}`}
+                  onPress={() => setGestureArea(value)}
+                >
+                  <Text
+                    style={[
+                      styles.choiceText,
+                      gestureArea === value && styles.selectedText,
+                    ]}
+                  >
+                    {label}
+                  </Text>
+                </Pressable>
+              ))}
+            </View>
+          </View>
+        )}
         <Text style={styles.label}>Compare with React Navigation defaults</Text>
         <View style={styles.choices}>
           {baselines.map(({ value, label }) => (
@@ -207,9 +247,9 @@ function Setup() {
 function Chat() {
   const { mode } = useSettings();
   const { bottom } = useSafeAreaInsets();
-  const { height } = useReanimatedKeyboardAnimation();
-  const translation = useAnimatedStyle(() => ({
-    transform: [{ translateY: height.value + Math.min(bottom, -height.value) }],
+  const { progress } = useReanimatedKeyboardAnimation();
+  const safeArea = useAnimatedStyle(() => ({
+    height: bottom * (1 - progress.value),
   }));
   const scroll = useRef<React.ComponentRef<typeof ScrollView>>(null);
   const [text, setText] = useState("");
@@ -219,13 +259,12 @@ function Chat() {
   }, [mode]);
 
   return (
-    <SafeAreaView
-      edges={bottomEdges}
+    <View
       style={[styles.container, styles.chatBackground]}
       testID="back-swipe.gesture"
     >
       <View style={styles.viewport}>
-        <Reanimated.View style={[styles.chat, translation]}>
+        <KeyboardStickyView style={styles.chat}>
           <ScrollView
             ref={scroll}
             automaticallyAdjustContentInsets={false}
@@ -251,28 +290,31 @@ function Chat() {
               </View>
             ))}
           </ScrollView>
-          <View style={styles.composer} testID="back-swipe.composer">
-            <Text style={styles.plus}>＋</Text>
-            <TextInput
-              multiline
-              nativeID="back-swipe-input"
-              placeholder="Message"
-              placeholderTextColor="#85858b"
-              style={styles.input}
-              testID="chat.input"
-              value={text}
-              onChangeText={setText}
-            />
-            <Text style={styles.send}>↑</Text>
+          <View style={styles.footer} testID="back-swipe.composer">
+            <View style={styles.composer}>
+              <Text style={styles.plus}>＋</Text>
+              <TextInput
+                multiline
+                nativeID="back-swipe-input"
+                placeholder="Message"
+                placeholderTextColor="#85858b"
+                style={styles.input}
+                testID="chat.input"
+                value={text}
+                onChangeText={setText}
+              />
+              <Text style={styles.send}>↑</Text>
+            </View>
+            <Reanimated.View style={safeArea} />
           </View>
-        </Reanimated.View>
+        </KeyboardStickyView>
       </View>
-    </SafeAreaView>
+    </View>
   );
 }
 
 function NativeNavigator() {
-  const { mode, nativeDismiss } = useSettings();
+  const { mode, nativeDismiss, gestureArea } = useSettings();
   const chatOptions = useMemo<NativeStackNavigationOptions>(() => {
     const options: NativeStackNavigationOptions = {
       title: "Chat",
@@ -282,7 +324,10 @@ function NativeNavigator() {
     if (mode) {
       return {
         ...options,
-        fullScreenGestureEnabled: true,
+        fullScreenGestureEnabled:
+          mode === "none"
+            ? { system: undefined, edge: false, full: true }[gestureArea]
+            : true,
         keyboardHandlingEnabled: mode === "close",
         animation: mode === "interactively" ? "simple_push" : "default",
         animationMatchesGesture: mode === "interactively",
@@ -297,7 +342,7 @@ function NativeNavigator() {
     }
 
     return options;
-  }, [mode, nativeDismiss]);
+  }, [mode, nativeDismiss, gestureArea]);
 
   return (
     <NativeStack.Navigator>
@@ -326,6 +371,7 @@ function JSNavigator() {
 
 export default function InteractiveBackSwipe() {
   const [mode, setMode] = useState<InteractiveBackSwipeMode | null>("close");
+  const [gestureArea, setGestureArea] = useState<GestureArea>("system");
   const [jsStack, setJSStack] = useState(false);
   const [nativeDismiss, setNativeDismiss] = useState(false);
   const settings = useMemo(
@@ -336,8 +382,10 @@ export default function InteractiveBackSwipe() {
       setJSStack,
       nativeDismiss,
       setNativeDismiss,
+      gestureArea,
+      setGestureArea,
     }),
-    [mode, jsStack, nativeDismiss],
+    [mode, jsStack, nativeDismiss, gestureArea],
   );
 
   return (
