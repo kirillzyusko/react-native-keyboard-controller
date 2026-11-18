@@ -22,7 +22,7 @@ extension KeyboardMovementObserver {
   }
 
   private func keyboardDidMoveInteractively(changeValue: CGPoint) {
-    if UIResponder.isKeyboardPreloading {
+    if UIResponder.isKeyboardPreloading || isKeyboardInTransition {
       return
     }
     // if we are currently animating keyboard -> we need to ignore values from KVO
