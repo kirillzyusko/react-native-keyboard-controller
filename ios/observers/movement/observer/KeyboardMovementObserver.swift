@@ -36,6 +36,7 @@ public class KeyboardMovementObserver: NSObject {
   var keyboardDidTask: DispatchWorkItem?
   // interactive transition
   weak var transitionCoordinator: UIViewControllerTransitionCoordinator?
+  var transitionTrackingView: UIView?
   var transitionNotification: Notification?
 
   @objc public init(
