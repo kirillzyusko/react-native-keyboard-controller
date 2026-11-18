@@ -1,3 +1,4 @@
+import { HeaderBackButton } from "@react-navigation/elements";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React, { useRef, useState } from "react";
@@ -64,20 +65,6 @@ const messages = [
   { text: "Sure, I'll send it in a minute.", sent: true },
 ];
 
-function ParentBackButton() {
-  const navigation = useNavigation<NavigationProp<Routes>>();
-
-  return (
-    <TouchableOpacity
-      accessibilityRole="button"
-      testID="back-swipe.exit"
-      onPress={() => navigation.getParent()?.goBack()}
-    >
-      <Text style={styles.back}>Examples</Text>
-    </TouchableOpacity>
-  );
-}
-
 function Contact() {
   const navigation = useNavigation<NavigationProp<Routes>>();
   const { params } = useRoute<RouteProp<Routes, "Chat">>();
@@ -97,10 +84,22 @@ function Contact() {
   );
 }
 
-const setupOptions = {
+// the first screen of the nested stack has nothing to go back to, so its button leaves the example
+const setupOptions = ({
+  navigation,
+}: {
+  navigation: NavigationProp<Routes>;
+}): NativeStackNavigationOptions => ({
   title: "Interactive back swipe",
-  headerLeft: () => <ParentBackButton />,
-};
+  headerLeft: (props) => (
+    <HeaderBackButton
+      {...props}
+      displayMode="minimal"
+      testID="back-swipe.exit"
+      onPress={navigation.goBack}
+    />
+  ),
+});
 // the chat and the profile are swiped back in the same way
 const screenOptions = ({ route }: Screen): NativeStackNavigationOptions => ({
   headerBackButtonDisplayMode: "minimal",

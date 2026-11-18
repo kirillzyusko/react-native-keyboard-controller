@@ -35,7 +35,6 @@ export default StyleSheet.create({
     alignItems: "center",
   },
   openText: { color: "white", fontSize: 17, fontWeight: "600" },
-  back: { color: "#204ba5", fontSize: 16 },
   contact: { flexDirection: "row", alignItems: "center", gap: 8 },
   avatar: {
     alignItems: "center",
