@@ -3,14 +3,16 @@ package com.reactnativekeyboardcontroller.modules.statusbar
 import android.animation.ArgbEvaluator
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.os.Build
+import android.view.Window
+import android.view.WindowInsetsController
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.UiThreadUtil
 import com.reactnativekeyboardcontroller.BuildConfig
 import com.reactnativekeyboardcontroller.log.Logger
+import com.reactnativekeyboardcontroller.modal.ActiveWindowHolder
 import com.reactnativekeyboardcontroller.views.EdgeToEdgeReactViewGroup
 import com.reactnativekeyboardcontroller.views.EdgeToEdgeViewRegistry
 import java.lang.ref.WeakReference
@@ -22,7 +24,7 @@ class StatusBarManagerCompatModuleImpl(
 ) {
   private var original = StatusBarModuleProxy(mReactContext)
   private var controller: WindowInsetsControllerCompat? = null
-  private var lastActivity = WeakReference<Activity?>(null)
+  private var controllerWindow = WeakReference<Window?>(null)
 
   /**
    * This method always uses new API, because original implementation may mess up system insets
@@ -105,31 +107,37 @@ class StatusBarManagerCompatModuleImpl(
     }
 
     UiThreadUtil.runOnUiThread {
-      getController()?.isAppearanceLightStatusBars = style == "dark-content"
+      val isLight = style == "dark-content"
+      // keeps the legacy flag in sync: React Native reads it when it copies the style to a new `Modal`
+      getController()?.isAppearanceLightStatusBars = isLight
+      // on Android 11-14 `WindowInsetsControllerCompat(window, view)` only toggles the legacy flag, which
+      // is ignored once the window appearance was set through the platform API (React Native does it
+      // for `Modal` windows and while this module is disabled), so the platform API is used as well
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        controllerWindow.get()?.insetsController?.setSystemBarsAppearance(
+          if (isLight) WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS else 0,
+          WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS,
+        )
+      }
     }
-    // The controller above only styles the activity window. React Native's module also applies
-    // the style to the extra windows it tracks (open `Modal`s), which otherwise keep the
-    // appearance they copied from the activity when they were shown.
-    original.setStyle(style)
   }
 
   fun getConstants(): MutableMap<String, Any>? = original.getConstants()
 
   private fun getController(): WindowInsetsControllerCompat? {
-    val activity = mReactContext.currentActivity
+    // the window of a shown `Modal` covers the activity, so the status bar of that window is visible
+    val window = ActiveWindowHolder.get() ?: mReactContext.currentActivity?.window
 
-    if (this.controller == null || activity != lastActivity.get()) {
-      if (activity == null) {
-        Logger.w(
-          TAG,
-          "StatusBarManagerCompatModule: can not get `WindowInsetsControllerCompat` because current activity is null.",
-        )
-        return this.controller
-      }
+    if (window == null) {
+      Logger.w(
+        TAG,
+        "StatusBarManagerCompatModule: can not get `WindowInsetsControllerCompat` because current activity is null.",
+      )
+      return this.controller
+    }
 
-      val window = activity.window
-      lastActivity = WeakReference(activity)
-
+    if (this.controller == null || window != controllerWindow.get()) {
+      controllerWindow = WeakReference(window)
       this.controller = WindowInsetsControllerCompat(window, window.decorView)
     }
 
