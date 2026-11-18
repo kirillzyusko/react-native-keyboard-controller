@@ -1,0 +1,34 @@
+.comparison {
+  margin-block: 1.5rem;
+}
+
+.clips {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+  gap: 1rem;
+  align-items: start;
+}
+
+.clip {
+  margin: 0;
+  min-width: 0;
+}
+
+.clip figcaption {
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.clip video {
+  display: block;
+  width: 100%;
+  border-radius: 1rem;
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}

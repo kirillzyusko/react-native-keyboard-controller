@@ -400,6 +400,7 @@ SWIFT_CLASS("_TtC32react_native_keyboard_controller27InvisibleInputAccessoryView
 SWIFT_CLASS_NAMED("KeyboardControllerModuleImpl")
 @interface KeyboardControllerModuleImpl : NSObject
 + (void)setTranslucent:(BOOL)translucent;
++ (void)setInteractiveBackSwipe:(NSString * _Nullable)mode;
 + (void)dismiss:(BOOL)keepFocus animated:(BOOL)animated;
 - (nonnull instancetype)init OBJC_DESIGNATED_INITIALIZER;
 @end

@@ -28,6 +28,7 @@ public extension KeyboardMovementObserver {
   }
 
   @objc func unmount() {
+    backSwipeTransition.invalidate()
     isMounted = false
     // swiftlint:disable:next notification_center_detachment
     NotificationCenter.default.removeObserver(self)

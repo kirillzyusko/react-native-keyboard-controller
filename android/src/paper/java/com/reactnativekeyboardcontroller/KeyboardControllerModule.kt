@@ -30,6 +30,12 @@ class KeyboardControllerModule(
     module.preload()
   }
 
+  @Suppress("detekt:UnusedParameter")
+  @ReactMethod
+  fun setInteractiveBackSwipe(mode: String?) {
+    // iOS only.
+  }
+
   @ReactMethod
   fun setTranslucent(translucent: Boolean) {
     module.setTranslucent(translucent)

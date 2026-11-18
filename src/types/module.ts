@@ -58,6 +58,8 @@ export type DismissOptions = {
    */
   animated: boolean;
 };
+export type InteractiveBackSwipeMode = "close" | "none" | "interactively";
+
 export type KeyboardControllerModule = {
   // android only
   /**
@@ -88,6 +90,14 @@ export type KeyboardControllerModule = {
    * @platform ios
    */
   setTranslucent: (translucent: boolean) => void;
+  /**
+   * Experimental iOS interactive back-swipe policy. Pass null to restore default behavior.
+   * Pair with the native-stack options demonstrated in the Interactive back swipe playground.
+   * The setting persists until explicitly changed; pass null to restore default event handling.
+   *
+   * @platform ios
+   */
+  setInteractiveBackSwipe: (mode: InteractiveBackSwipeMode | null) => void;
   // all platforms
   /**
    * Dismisses the active keyboard. Removes a focus by default, but allows to pass `{keepFocus: true}` to keep focus.
@@ -128,6 +138,7 @@ export type KeyboardControllerNativeModule = {
   // ios only
   preload: () => void;
   setTranslucent: (translucent: boolean) => void;
+  setInteractiveBackSwipe: (mode: InteractiveBackSwipeMode | null) => void;
   // all platforms
   dismiss: (keepFocus: boolean, animated: boolean) => void;
   setFocusTo: (direction: Direction) => void;

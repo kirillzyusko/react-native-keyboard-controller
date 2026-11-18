@@ -12,6 +12,7 @@ export interface Spec extends TurboModule {
   setDefaultMode(): void;
   preload(): void;
   setTranslucent(translucent: boolean): void;
+  setInteractiveBackSwipe(mode: string | null): void;
   dismiss(keepFocus: boolean, animated: boolean): void;
   setFocusTo(direction: string): void;
   viewPositionInWindow(viewTag: number): Promise<object>;

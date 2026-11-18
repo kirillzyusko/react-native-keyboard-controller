@@ -18,6 +18,11 @@ public class KeyboardControllerModuleImpl: NSObject {
   }
 
   @objc
+  public static func setInteractiveBackSwipe(_ mode: String?) {
+    KeyboardBackSwipeTransition.mode = mode.flatMap(KeyboardBackSwipeTransition.Mode.init(rawValue:))
+  }
+
+  @objc
   public static func dismiss(_ keepFocus: Bool, animated: Bool) {
     let work = {
       let responder = UIResponder.current

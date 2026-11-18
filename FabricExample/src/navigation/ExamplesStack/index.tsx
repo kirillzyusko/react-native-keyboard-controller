@@ -11,6 +11,7 @@ import EnabledDisabled from "../../screens/Examples/EnabledDisabled";
 import Events from "../../screens/Examples/Events";
 import FocusedInputHandlers from "../../screens/Examples/FocusedInputHandlers";
 import ImageGallery from "../../screens/Examples/ImageGallery";
+import InteractiveBackSwipe from "../../screens/Examples/InteractiveBackSwipe";
 import InteractiveKeyboard from "../../screens/Examples/InteractiveKeyboard";
 import InteractiveKeyboardIOS from "../../screens/Examples/InteractiveKeyboardIOS";
 import KeyboardAnimation from "../../screens/Examples/KeyboardAnimation";
@@ -47,6 +48,7 @@ export type ExamplesStackParamList = {
   [ScreenNames.NON_UI_PROPS]: undefined;
   [ScreenNames.INTERACTIVE_KEYBOARD]: undefined;
   [ScreenNames.INTERACTIVE_KEYBOARD_IOS]: undefined;
+  [ScreenNames.INTERACTIVE_BACK_SWIPE]: undefined;
   [ScreenNames.NATIVE_STACK]: undefined;
   [ScreenNames.KEYBOARD_AVOIDING_VIEW]: undefined;
   [ScreenNames.KEYBOARD_AVOIDING_VIEW_AUTOMATIC]: undefined;
@@ -126,6 +128,11 @@ const ExamplesStack = () => (
       component={InteractiveKeyboardIOS}
       name={ScreenNames.INTERACTIVE_KEYBOARD_IOS}
       options={options[ScreenNames.INTERACTIVE_KEYBOARD_IOS]}
+    />
+    <Stack.Screen
+      component={InteractiveBackSwipe}
+      name={ScreenNames.INTERACTIVE_BACK_SWIPE}
+      options={options[ScreenNames.INTERACTIVE_BACK_SWIPE]}
     />
     <Stack.Screen
       component={NativeStack}
