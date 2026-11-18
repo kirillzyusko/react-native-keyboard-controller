@@ -30,7 +30,7 @@ type Screen = { route: RouteProp<Routes, "Chat" | "Profile"> };
 
 const Stack = createNativeStackNavigator<Routes>();
 const bottomEdges = ["bottom"] as const;
-const contact = "Kate";
+const contact = "Ksu";
 // the keyboard is a part of the transition, so its behavior is selected by the screen options
 const keyboards: Record<
   Keyboard,
