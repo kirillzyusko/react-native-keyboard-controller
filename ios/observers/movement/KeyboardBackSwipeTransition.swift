@@ -8,7 +8,7 @@ final class KeyboardBackSwipeTransition: NSObject {
 
   static var mode: Mode? {
     didSet {
-      KeyboardBackSwipeGesture.shared.setEnabled(mode == .close)
+      KeyboardBackSwipeGesture.shared.setMode(mode)
     }
   }
 

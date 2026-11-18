@@ -76,7 +76,7 @@ Experimental keyboard policy for a horizontal native-stack back gesture. Pass `n
 - `none`: preserve the outgoing screen's vertical keyboard layout while the screen and keyboard slide horizontally.
 - `interactively`: update the layout alongside the keyboard's vertical dismissal, including a reversed gesture and the completion animation.
 
-`close` manages dismissal and focus restoration in native code. It preserves the navigator's existing gesture decisions and leaves ordinary taps alone. `none` and `interactively` control the animation callbacks consumed by your layout. UIKit notifications and `KeyboardEvents` retain their normal lifecycle in all modes. Pair the policy with the native-stack configuration shown in the [Interactive back swipe guide](../guides/interactive-back-swipe).
+`close` manages dismissal and focus restoration in native code. It preserves the navigator's existing gesture decisions and leaves ordinary taps alone. `none` and `interactively` control the animation callbacks consumed by your layout. Before iOS 26, `none` also routes the full-screen gesture through UIKit's native pop driver using an undocumented gesture entry point; see the guide's compatibility details. UIKit notifications and `KeyboardEvents` retain their normal lifecycle in all modes. Pair the policy with the native-stack configuration shown in the [Interactive back swipe guide](../guides/interactive-back-swipe).
 
 Both example applications include a playground with all three modes and React Navigation baselines. No JavaScript gesture listeners or react-native-screens patches are needed.
 

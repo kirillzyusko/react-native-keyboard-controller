@@ -4,6 +4,7 @@ import { expect } from "detox";
 import pixelmatch from "pixelmatch";
 import { PNG } from "pngjs";
 
+import { expectMidSwipeLayout, readScreenshot } from "./asserts/backSwipe";
 import {
   delay,
   scrollDownUntilElementIsVisible,
@@ -55,7 +56,7 @@ const expectInitialLayout = async (
   }
 };
 
-const composerY = async () => {
+const composerFrame = async () => {
   const attributes = await element(
     by.id("back-swipe.composer"),
   ).getAttributes();
@@ -64,11 +65,11 @@ const composerY = async () => {
     throw new Error("Expected a single iOS composer frame");
   }
 
-  return attributes.frame.y;
+  return attributes.frame;
 };
 
 const expectKeyboardOpen = async (closedY: number) => {
-  const y = await composerY();
+  const { y } = await composerFrame();
 
   if (y < 0 || y > closedY - 100) {
     throw new Error(
@@ -95,12 +96,23 @@ describeIOS("Interactive back swipe", () => {
     await expectInitialLayout("InteractiveBackSwipeSetup");
   });
 
-  it.each(["close", "none", "interactively"])(
+  it.each(["close", "none", "interactively"] as const)(
     "restores the original layout after a canceled %s swipe",
     async (mode) => {
       await waitAndTap(`back-swipe.setup.mode.${mode}`);
       await waitAndTap("back-swipe.open");
-      const closedY = await composerY();
+      const closedComposer = await composerFrame();
+      const closedY = closedComposer.y;
+      const closed = await readScreenshot(
+        `InteractiveBackSwipe-${mode}-closed`,
+      );
+      const screenAttributes = await element(
+        by.id("back-swipe.gesture"),
+      ).getAttributes();
+
+      if (!("frame" in screenAttributes)) {
+        throw new Error("Expected an iOS screen frame");
+      }
 
       await focusInput();
       await waitForExpect(async () => {
@@ -114,6 +126,11 @@ describeIOS("Interactive back swipe", () => {
           BLINKING_CURSOR,
         );
       });
+
+      const openComposer = await composerFrame();
+      const opened = await readScreenshot(
+        `InteractiveBackSwipe-${mode}-opened`,
+      );
 
       // A short drag starts the transition but stays below the pop threshold.
       const screen = element(by.id("back-swipe.gesture"));
@@ -140,13 +157,21 @@ describeIOS("Interactive back swipe", () => {
         );
       });
 
-      await element(by.id("back-swipe.gesture")).swipe(
-        "right",
-        "slow",
-        0.9,
-        0.02,
-        0.25,
-      );
+      if (mode === "interactively") {
+        // Continuous keyboard/composer alignment is a separate known issue.
+        await screen.swipe("right", "slow", 0.9, 0.02, 0.25);
+      } else {
+        // Hold beyond both navigators' completion thresholds. Inspect the layout
+        // before releasing, then verify the completed pop independently.
+        await expectMidSwipeLayout(
+          mode,
+          screenAttributes.frame,
+          closedComposer,
+          openComposer,
+          closed,
+          opened,
+        );
+      }
       await waitForElementById("back-swipe.open");
       await expect(element(by.id("chat.input"))).not.toExist();
       await waitAndTap("back-swipe.setup.mode.close");

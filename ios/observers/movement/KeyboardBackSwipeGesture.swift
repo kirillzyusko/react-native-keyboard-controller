@@ -1,16 +1,23 @@
 import UIKit
 
-/// Dismisses before the navigator captures the keyboard in an interactive pop.
-/// The navigator's gesture delegate remains responsible for accepting the gesture.
+/// Applies keyboard policies to the navigator's accepted native back gestures.
 final class KeyboardBackSwipeGesture: NSObject {
   static let shared = KeyboardBackSwipeGesture()
 
-  private var enabled = false
+  private var mode: KeyboardBackSwipeTransition.Mode?
   private var mounts = 0
   private var keyboardVisible = false
   private weak var navigation: UINavigationController?
   private var delegates: [BackSwipeGestureDelegate] = []
   private var restoration: FocusRestoration?
+  private var nativeGesture: NativeBackSwipeGesture?
+
+  private var needsNativeGesture: Bool {
+    if #available(iOS 26.0, *) {
+      return false
+    }
+    return mode == KeyboardBackSwipeTransition.Mode.none
+  }
 
   override private init() {
     super.init()
@@ -29,8 +36,11 @@ final class KeyboardBackSwipeGesture: NSObject {
     }
   }
 
-  func setEnabled(_ enabled: Bool) {
-    self.enabled = enabled
+  func setMode(_ mode: KeyboardBackSwipeTransition.Mode?) {
+    if self.mode != mode {
+      detach()
+    }
+    self.mode = mode
     refresh()
   }
 
@@ -42,19 +52,38 @@ final class KeyboardBackSwipeGesture: NSObject {
   }
 
   func refresh() {
-    guard enabled, mounts > 0 else {
+    guard mode == .close || needsNativeGesture, mounts > 0 else {
       detach()
       return
     }
     // A disappearing input temporarily has no navigation controller. Keep the
     // accepted gesture's completion handler until its transition has finished.
     guard restoration == nil else { return }
+    if nativeGesture?.navigation?.transitionCoordinator != nil {
+      return
+    }
     guard let input = UIResponder.current as? TextInput,
           let navigation = input.parentViewController?.navigationController,
           let screen = navigation.topViewController,
           input.isDescendant(of: screen.view)
     else {
       detach()
+      return
+    }
+
+    if needsNativeGesture {
+      if nativeGesture?.navigation === navigation, nativeGesture?.isAttached == true {
+        return
+      }
+      if let coordinator = navigation.transitionCoordinator {
+        coordinator.animate(alongsideTransition: nil) { [weak self] _ in
+          DispatchQueue.main.async { self?.refresh() }
+        }
+        return
+      }
+      detach()
+      self.navigation = navigation
+      nativeGesture = NativeBackSwipeGesture(navigation: navigation)
       return
     }
 
@@ -83,9 +112,8 @@ final class KeyboardBackSwipeGesture: NSObject {
       }
     #endif
 
-    // Custom native-stack transitions install their pan recognizers on the
-    // navigation container. Match its existing pop delegate, without depending
-    // on react-native-screens classes or modifying its recognizers' settings.
+    // Match custom pans on the navigation container by their existing pop
+    // delegate, without depending on react-native-screens classes.
     let popDelegate = (gestures.first?.delegate as? BackSwipeGestureDelegate)?.original
       ?? gestures.first?.delegate
     if let popDelegate {
@@ -102,7 +130,7 @@ final class KeyboardBackSwipeGesture: NSObject {
   }
 
   fileprivate func accepted(_ gesture: UIGestureRecognizer) {
-    guard enabled, mounts > 0, keyboardVisible, restoration == nil,
+    guard mode == .close, mounts > 0, keyboardVisible, restoration == nil,
           let navigation, navigation.viewControllers.count > 1,
           navigation.transitionCoordinator == nil,
           let screen = navigation.topViewController,
@@ -133,8 +161,7 @@ final class KeyboardBackSwipeGesture: NSObject {
     {
       restoration.fallbackResponder = fallback
     }
-    // Gesture targets start pop synchronously after shouldBegin returns. Read
-    // the coordinator after all targets, independent of their invocation order.
+    // Read the coordinator after every gesture target has had a chance to start pop.
     DispatchQueue.main.async { [weak self] in
       self?.observeTransition(for: gesture, restoration: restoration)
     }
@@ -171,7 +198,7 @@ final class KeyboardBackSwipeGesture: NSObject {
     guard self.restoration === restoration else { return }
     self.restoration = nil
     let responder = UIResponder.current
-    guard cancelled, enabled, mounts > 0,
+    guard cancelled, mode == .close, mounts > 0,
           let screen = restoration.screen,
           restoration.navigation?.topViewController === screen,
           screen.presentedViewController == nil,
@@ -184,6 +211,8 @@ final class KeyboardBackSwipeGesture: NSObject {
 
   private func detach() {
     restoration = nil
+    nativeGesture?.detach()
+    nativeGesture = nil
     for delegate in delegates {
       guard let gesture = delegate.gesture else { continue }
       gesture.removeTarget(self, action: #selector(gestureChanged(_:)))
@@ -194,6 +223,130 @@ final class KeyboardBackSwipeGesture: NSObject {
     }
     delegates.removeAll()
     navigation = nil
+  }
+}
+
+/// Before iOS 26, native-stack's full-screen pan selects a custom animator.
+/// UIKit then dismisses the keyboard vertically. Use its existing native pop
+/// driver so the real keyboard stays associated with the outgoing screen.
+private final class NativeBackSwipeGesture: NSObject, UIGestureRecognizerDelegate {
+  weak var navigation: UINavigationController?
+  private weak var edge: UIGestureRecognizer?
+  private weak var sourcePan: UIPanGestureRecognizer?
+  private weak var sourceDelegate: UIGestureRecognizerDelegate?
+  private let pan: UIPanGestureRecognizer
+  private let sourceEnabled: Bool
+
+  var isAttached: Bool {
+    guard let navigation, let screen = navigation.topViewController?.viewIfLoaded else { return false }
+    return pan.view === navigation.view && sourcePan?.delegate === sourceDelegate
+      && (screen.safeValue(forKey: "stackAnimation") as? NSNumber)?.intValue == 0
+      && (screen.safeValue(forKey: "swipeDirection") as? NSNumber)?.intValue == 0
+  }
+
+  init?(navigation: UINavigationController) {
+    guard navigation.viewControllers.count > 1,
+          navigation.transitionCoordinator == nil,
+          let screen = navigation.topViewController?.viewIfLoaded,
+          (screen.safeValue(forKey: "stackAnimation") as? NSNumber)?.intValue == 0,
+          (screen.safeValue(forKey: "swipeDirection") as? NSNumber)?.intValue == 0,
+          let edge = navigation.interactivePopGestureRecognizer,
+          let delegate = edge.delegate,
+          let source = navigation.view.superview?.gestureRecognizers?.first(where: {
+            $0 is UIPanGestureRecognizer && !($0 is UIScreenEdgePanGestureRecognizer) && $0.delegate === delegate
+          }) as? UIPanGestureRecognizer,
+          let targets = edge.safeValue(forKey: "targets") as? [NSObject]
+    else { return nil }
+
+    // Before iOS 26, reuse UIKit's undocumented full-screen pop entry point.
+    let action = NSSelectorFromString("handleNavigationTransition:")
+    guard let target = targets.compactMap({ $0.safeValue(forKey: "target") as? NSObject })
+      .first(where: { $0.responds(to: action) })
+    else { return nil }
+
+    self.navigation = navigation
+    self.edge = edge
+    sourcePan = source
+    sourceDelegate = delegate
+    sourceEnabled = source.isEnabled
+    pan = UIPanGestureRecognizer(target: target, action: action)
+    super.init()
+    pan.maximumNumberOfTouches = 1
+    pan.delegate = self
+    source.isEnabled = false
+    navigation.view.addGestureRecognizer(pan)
+  }
+
+  func detach() {
+    pan.view?.removeGestureRecognizer(pan)
+    if sourcePan?.isEnabled == false {
+      sourcePan?.isEnabled = sourceEnabled
+    }
+    pan.delegate = nil
+  }
+
+  func gestureRecognizerShouldBegin(_: UIGestureRecognizer) -> Bool {
+    guard let navigation, navigation.viewControllers.count > 1,
+          navigation.transitionCoordinator == nil,
+          let edge, edge.isEnabled,
+          let sourceView = sourcePan?.view
+    else { return false }
+
+    let translation = pan.translation(in: sourceView)
+    let rtl = navigation.view.effectiveUserInterfaceLayoutDirection == .rightToLeft
+    guard abs(translation.x) > abs(translation.y), rtl ? translation.x < 0 : translation.x > 0 else { return false }
+
+    if let limits = navigation.topViewController?.view
+      .safeValue(forKey: "gestureResponseDistance") as? [String: NSNumber]
+    {
+      let point = pan.location(in: sourceView)
+      let horizontal = rtl ? sourceView.bounds.width - point.x : point.x
+      let minimums = ["start": horizontal, "top": point.y]
+      let maximums = ["end": horizontal, "bottom": point.y]
+      guard minimums.allSatisfy({ key, value in
+        guard let limit = limits[key], limit.doubleValue != -1 else { return true }
+        return value >= CGFloat(truncating: limit)
+      }), maximums.allSatisfy({ key, value in
+        guard let limit = limits[key], limit.doubleValue != -1 else { return true }
+        return value <= CGFloat(truncating: limit)
+      }) else { return false }
+    }
+    // Query the navigator's native gesture decision without selecting screens'
+    // custom full-width animator. UIKit keeps ownership of the transition.
+    return sourceDelegate?.gestureRecognizerShouldBegin?(edge) ?? true
+  }
+
+  func gestureRecognizer(_: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+    guard let sourcePan else { return false }
+    return sourceDelegate?.gestureRecognizer?(sourcePan, shouldReceive: touch) ?? true
+  }
+
+  @available(iOS 13.4, *)
+  func gestureRecognizer(_: UIGestureRecognizer, shouldReceive event: UIEvent) -> Bool {
+    guard let sourcePan else { return false }
+    // Preserve gestureEnabled/fullScreenGestureEnabled and modal/root guards.
+    return sourceDelegate?.gestureRecognizer?(sourcePan, shouldReceive: event) ?? true
+  }
+
+  func gestureRecognizer(_: UIGestureRecognizer, shouldBeRequiredToFailBy other: UIGestureRecognizer) -> Bool {
+    if other === edge {
+      return true
+    }
+    guard let edge else { return false }
+    return sourceDelegate?.gestureRecognizer?(edge, shouldBeRequiredToFailBy: other) ?? false
+  }
+
+  func gestureRecognizer(_: UIGestureRecognizer, shouldRequireFailureOf other: UIGestureRecognizer) -> Bool {
+    if other === edge {
+      return false
+    }
+    guard let edge else { return false }
+    return sourceDelegate?.gestureRecognizer?(edge, shouldRequireFailureOf: other) ?? false
+  }
+
+  func gestureRecognizer(_: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith other: UIGestureRecognizer) -> Bool {
+    guard let edge else { return false }
+    return sourceDelegate?.gestureRecognizer?(edge, shouldRecognizeSimultaneouslyWith: other) ?? false
   }
 }
 
