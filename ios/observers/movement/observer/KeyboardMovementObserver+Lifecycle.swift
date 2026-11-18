@@ -12,6 +12,7 @@ public extension KeyboardMovementObserver {
     }
 
     isMounted = true
+    KeyboardBackSwipeGesture.shared.mount()
 
     NotificationCenter.default.addObserver(
       self,
@@ -28,7 +29,9 @@ public extension KeyboardMovementObserver {
   }
 
   @objc func unmount() {
+    guard isMounted else { return }
     backSwipeTransition.invalidate()
+    KeyboardBackSwipeGesture.shared.unmount()
     isMounted = false
     // swiftlint:disable:next notification_center_detachment
     NotificationCenter.default.removeObserver(self)

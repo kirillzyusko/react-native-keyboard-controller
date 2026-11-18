@@ -45,13 +45,7 @@ public class KeyboardMovementObserver: NSObject {
 
     super.init()
 
-    backSwipeTransition = KeyboardBackSwipeTransition(
-      dispatch: handler,
-      animationOptions: { [weak self] in
-        let curve = self?.notification?.userInfo?[UIResponder.keyboardAnimationCurveUserInfoKey] as? UInt ?? 0
-        return UIView.AnimationOptions(rawValue: curve << 16)
-      }
-    )
+    backSwipeTransition = KeyboardBackSwipeTransition(dispatch: handler)
     onEvent = { [weak self] name, height, progress, duration, tag in
       self?.backSwipeTransition.send(name, height, progress, duration, tag)
     }
@@ -63,6 +57,9 @@ public class KeyboardMovementObserver: NSObject {
   }
 
   deinit {
+    if isMounted {
+      KeyboardBackSwipeGesture.shared.unmount()
+    }
     backSwipeTransition?.invalidate()
     displayLink.invalidate()
     displayLink = nil

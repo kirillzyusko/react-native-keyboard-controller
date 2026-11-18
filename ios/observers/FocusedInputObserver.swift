@@ -160,6 +160,7 @@ public class FocusedInputObserver: NSObject {
     syncUpLayout()
 
     FocusedInputHolder.shared.set(currentResponder as? TextInput)
+    KeyboardBackSwipeGesture.shared.refresh()
 
     let groupAncestor = ViewHierarchyNavigator.findGroupAncestor(currentResponder)
     let allInputFields = ViewHierarchyNavigator.getAllInputFields(root: groupAncestor)

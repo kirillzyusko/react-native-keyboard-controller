@@ -74,7 +74,7 @@ These baseline recordings use the same chat with the policy set to `null`: nativ
 
 ## Configure native stack
 
-The navigator chooses the transition and moves the system keyboard. The policy controls the keyboard-controller animation callbacks that your layout consumes. Both parts need to agree:
+The navigator chooses the transition. `close` handles keyboard dismissal and focus restoration natively; `none` and `interactively` control the animation callbacks your layout consumes while the navigator moves the keyboard. Pair each policy with these options:
 
 | Policy          | `keyboardHandlingEnabled` | `fullScreenGestureEnabled` | `animation`     | `animationMatchesGesture` |
 | --------------- | ------------------------- | -------------------------- | --------------- | ------------------------- |
@@ -119,14 +119,15 @@ useEffect(() => {
 
 The setting persists until explicitly changed. Passing `null` restores the normal event handling. See the [API reference](../api/keyboard-controller#setinteractivebackswipe-) for the method signature.
 
-Your existing keyboard-aware layout still handles placement. The playground uses [`useReanimatedKeyboardAnimation`](../api/hooks/keyboard/use-reanimated-keyboard-animation) to translate the chat above the keyboard. The policy changes the values delivered to keyboard-controller's animation handlers; it does not filter UIKit notifications or `KeyboardEvents`.
+Your existing keyboard-aware layout still handles placement. The playground uses [`useReanimatedKeyboardAnimation`](../api/hooks/keyboard/use-reanimated-keyboard-animation) to translate the chat above the keyboard. `none` and `interactively` change the values delivered to keyboard-controller's animation handlers. `close` delivers the keyboard's regular animation events. UIKit notifications and `KeyboardEvents` are not filtered.
 
 ### Do I need `close`?
 
-If you only want to dismiss the keyboard, use the navigator's keyboard handling first. A separate close policy is unnecessary for the JS stack. Native stack also provides `keyboardHandlingEnabled`; its dismissal and focus-restoration behavior depends on iOS and the installed screens version.
-The experiment retains `close` as an explicit layout-callback policy and a third playground choice. It schedules the content adjustment outside the interactive navigation transaction; it does not replace `keyboardHandlingEnabled` or introduce a new way to dismiss the system keyboard. Use it when you need that explicit callback policy, rather than as a requirement for closing.
+Use the navigator's keyboard handling if its behavior already meets your needs. A separate `close` policy is unnecessary for the JS stack. For native stack, `close` also controls the timing of focus restoration after cancellation, which `keyboardHandlingEnabled` alone does not configure.
 
-The examples use the installed `react-native-screens` implementation without local keyboard-transition patches. The Notes recording shows the reference interaction, including animated keyboard restoration. The playground's `close` mode can restore the keyboard instantly after cancellation: UIKit and screens own that transition, and the layout policy does not change its timing. This limitation does not require a screens patch for `none` or `interactively`.
+In `close`, keyboard-controller first asks the existing native gesture delegate whether the back gesture can begin. After it accepts, the input resigns before pop starts. If the transition is canceled, focus returns after the full transition completion, outside its animation transaction. UIKit then opens the keyboard with its regular animation. A completed pop does not restore focus, and an ordinary touch does not trigger this policy.
+
+This runs in native code using public UIKit gesture and transition APIs. It requires no JavaScript gesture listeners or local react-native-screens patches. Focus is restored only if the original screen is visible, its input still exists and another input has not taken focus.
 
 ### Version and gesture differences
 
@@ -145,4 +146,4 @@ Open **Interactive back swipe** in either example application. Select a policy, 
 - All three policies use the same chat layout, so differences in vertical movement are easy to compare.
 - The **Native stack**, **Dismiss** and **JS stack** controls use no policy. **Dismiss** only enables native-stack keyboard dismissal, for comparison with `close`.
 
-The [visual E2E test](https://github.com/kirillzyusko/react-native-keyboard-controller/blob/main/e2e/kit/018-interactive-back-swipe.e2e.ts) asserts that each canceled gesture returns to one common keyboard-open screenshot and each completed swipe returns to the same setup screenshot. Earlier Detox runs failed on iOS 26.5, and the suite has not been rerun after removing the experimental dependency changes. See the [verification notes](https://github.com/kirillzyusko/react-native-keyboard-controller/blob/main/experiments/keyboard-transitions/README.md#verification) for the observed failures and the separate gesture verification with unmodified screens.
+The [visual E2E test](https://github.com/kirillzyusko/react-native-keyboard-controller/blob/main/e2e/kit/018-interactive-back-swipe.e2e.ts) captures one common keyboard-open reference at the beginning of the run. Each canceled gesture must return to it, and each completed swipe must return to one common setup reference. This checks restoration on the current OS and keyboard layout. See the [verification notes](https://github.com/kirillzyusko/react-native-keyboard-controller/blob/main/experiments/keyboard-transitions/README.md#verification) for tested versions and compatibility limits.

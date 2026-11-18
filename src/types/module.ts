@@ -92,6 +92,7 @@ export type KeyboardControllerModule = {
   setTranslucent: (translucent: boolean) => void;
   /**
    * Experimental iOS interactive back-swipe policy. Pass null to restore default behavior.
+   * `close` dismisses before native pop and restores focus after a canceled transition completes.
    * Pair with the native-stack options demonstrated in the Interactive back swipe playground.
    * The setting persists until explicitly changed; pass null to restore default event handling.
    *

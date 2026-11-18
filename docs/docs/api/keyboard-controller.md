@@ -70,15 +70,15 @@ KeyboardController.preload();
 static setInteractiveBackSwipe(mode: "close" | "none" | "interactively" | null): void;
 ```
 
-Experimental policy for keyboard layout events during a horizontal native-stack back gesture. Pass `null` to restore the default event behavior. The setting persists until explicitly changed.
+Experimental keyboard policy for a horizontal native-stack back gesture. Pass `null` to restore default handling. The setting persists until explicitly changed.
 
-- `close`: close the keyboard when navigation starts, independently of the finger's progress.
+- `close`: dismiss the keyboard after the native back gesture is accepted, before pop starts. If the transition is canceled, restore focus after it fully completes so UIKit animates the keyboard opening again.
 - `none`: preserve the outgoing screen's vertical keyboard layout while the screen and keyboard slide horizontally.
 - `interactively`: update the layout alongside the keyboard's vertical dismissal, including a reversed gesture and the completion animation.
 
-The setting controls keyboard-controller animation callbacks; UIKit notifications and `KeyboardEvents` retain their normal lifecycle. The navigator still owns keyboard dismissal and movement. Pair the policy with the native-stack configuration shown in the [Interactive back swipe guide](../guides/interactive-back-swipe).
+`close` manages dismissal and focus restoration in native code. It preserves the navigator's existing gesture decisions and leaves ordinary taps alone. `none` and `interactively` control the animation callbacks consumed by your layout. UIKit notifications and `KeyboardEvents` retain their normal lifecycle in all modes. Pair the policy with the native-stack configuration shown in the [Interactive back swipe guide](../guides/interactive-back-swipe).
 
-Both example applications include a playground with all three modes and React Navigation baselines. Keyboard dismissal and focus restoration belong to the navigator. A canceled `close` gesture can restore the keyboard without an animation, depending on the installed `react-native-screens` version; this policy does not change that native behavior.
+Both example applications include a playground with all three modes and React Navigation baselines. No JavaScript gesture listeners or react-native-screens patches are needed.
 
 ### `dismiss`
 
