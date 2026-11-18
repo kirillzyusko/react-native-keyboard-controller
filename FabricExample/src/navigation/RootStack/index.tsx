@@ -1,4 +1,3 @@
-import { getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
 
@@ -30,12 +29,7 @@ const RootStack = () => (
     <Stack.Screen
       component={ExamplesStack}
       name={ScreenNames.EXAMPLES_STACK}
-      options={({ route }) => ({
-        ...options[ScreenNames.EXAMPLES_STACK],
-        gestureEnabled:
-          getFocusedRouteNameFromRoute(route) !==
-          ScreenNames.INTERACTIVE_BACK_SWIPE,
-      })}
+      options={options[ScreenNames.EXAMPLES_STACK]}
     />
   </Stack.Navigator>
 );

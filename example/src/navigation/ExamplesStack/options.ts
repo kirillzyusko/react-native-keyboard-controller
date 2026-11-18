@@ -38,7 +38,6 @@ export const options = {
   [ScreenNames.INTERACTIVE_BACK_SWIPE]: {
     title: "Interactive back swipe",
     headerShown: false,
-    gestureEnabled: false,
   },
   [ScreenNames.NATIVE_STACK]: {
     title: "Native stack",

@@ -2,7 +2,6 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React, { useRef, useState } from "react";
 import {
-  Platform,
   ScrollView,
   Text,
   TextInput,
@@ -158,14 +157,11 @@ function Setup() {
           {keyboards[keyboard].description}
         </Text>
         <TouchableOpacity
-          disabled={Platform.OS !== "ios"}
           style={styles.open}
           testID="back-swipe.open"
           onPress={() => navigation.navigate("Chat", { keyboard })}
         >
-          <Text style={styles.openText}>
-            {Platform.OS === "ios" ? "Open chat" : "Available on iOS"}
-          </Text>
+          <Text style={styles.openText}>Open chat</Text>
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
