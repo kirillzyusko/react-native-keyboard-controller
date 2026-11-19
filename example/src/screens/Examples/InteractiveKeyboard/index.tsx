@@ -15,7 +15,7 @@ import { history } from "../../../components/Message/data";
 import styles from "./styles";
 
 import type { ExamplesStackParamList } from "../../../navigation/ExamplesStack";
-import type { StackScreenProps } from "@react-navigation/stack";
+import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 const AnimatedTextInput = Reanimated.createAnimatedComponent(TextInput);
 
@@ -51,7 +51,7 @@ const useKeyboardAnimation = () => {
   return { height, progress };
 };
 
-type Props = StackScreenProps<ExamplesStackParamList>;
+type Props = NativeStackScreenProps<ExamplesStackParamList>;
 
 function InteractiveKeyboard({ navigation }: Props) {
   const [interpolator, setInterpolator] = useState<"ios" | "linear">("linear");
