@@ -9,7 +9,7 @@ export const styles = StyleSheet.create({
   },
   header: {
     color: "black",
-    paddingRight: 12,
+    paddingHorizontal: 12,
   },
   switchContainer: {
     flexDirection: "row",

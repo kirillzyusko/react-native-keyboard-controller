@@ -7,7 +7,7 @@ export default StyleSheet.create({
   },
   header: {
     color: "black",
-    marginRight: 12,
+    marginHorizontal: 12,
   },
   inverted: {
     transform: [
