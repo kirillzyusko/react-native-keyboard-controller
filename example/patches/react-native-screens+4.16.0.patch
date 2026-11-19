@@ -1,0 +1,43 @@
+diff --git a/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/Screen.kt b/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/Screen.kt
+index 2b7dcff..7b4f870 100644
+--- a/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/Screen.kt
++++ b/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/Screen.kt
+@@ -532,7 +532,13 @@ class Screen(
+         val surfaceId = UIManagerHelper.getSurfaceId(screenContext)
+         UIManagerHelper
+             .getEventDispatcherForReactTag(screenContext, id)
+-            ?.dispatchEvent(HeaderHeightChangeEvent(surfaceId, id, headerHeight))
++            ?.dispatchEvent(
++                HeaderHeightChangeEvent(
++                    surfaceId,
++                    id,
++                    PixelUtil.toDIPFromPixel(headerHeight.toFloat()).toDouble(),
++                ),
++            )
+     }
+ 
+     internal fun onSheetDetentChanged(
+diff --git a/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/events/HeaderHeightChangeEvent.kt b/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/events/HeaderHeightChangeEvent.kt
+index 857c83a..7357675 100644
+--- a/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/events/HeaderHeightChangeEvent.kt
++++ b/node_modules/react-native-screens/android/src/main/java/com/swmansion/rnscreens/events/HeaderHeightChangeEvent.kt
+@@ -7,16 +7,16 @@ import com.facebook.react.uimanager.events.Event
+ class HeaderHeightChangeEvent(
+     surfaceId: Int,
+     viewId: Int,
+-    private val headerHeight: Int,
++    private val headerHeightInDp: Double,
+ ) : Event<HeaderHeightChangeEvent>(surfaceId, viewId) {
+     override fun getEventName() = EVENT_NAME
+ 
+     // As the same header height could appear twice, use header height as a coalescing key.
+-    override fun getCoalescingKey(): Short = headerHeight.toShort()
++    override fun getCoalescingKey(): Short = headerHeightInDp.toInt().toShort()
+ 
+     override fun getEventData(): WritableMap? =
+         Arguments.createMap().apply {
+-            putDouble("headerHeight", headerHeight.toDouble())
++            putDouble("headerHeight", headerHeightInDp)
+         }
+ 
+     companion object {
