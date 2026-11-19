@@ -17,27 +17,31 @@ final class KeyboardSwipeBackObserver {
   private var observations = [NSKeyValueObservation]()
   /// The gesture that has dismissed the keyboard, but hasn't started the transition yet.
   private weak var pendingRecognizer: UIGestureRecognizer?
+  /// The input that has lost the keyboard because of this gesture.
+  private weak var dismissedInput: UIView?
 
   private init() {}
 
   /// Starts to observe "swipe back" gestures of the screens that contain `input`.
+  ///
+  /// - Note: It's called in the middle of a gesture too: the input of the revealed screen takes the focus
+  ///   as soon as the transition begins, so the gesture that has dismissed the keyboard is not forgotten.
   func observe(_ input: UIView) {
     let navigationControllers = sequence(first: input as UIResponder, next: { $0.next })
       .compactMap { $0 as? UINavigationController }
 
-    pendingRecognizer = nil
     observations = navigationControllers.flatMap { navigationController in
       let recognizers = navigationController.swipeBackGestureRecognizers
         + navigationController.customSwipeBackGestureRecognizers
 
       return recognizers.map { recognizer in
         recognizer.observe(\.state) { [weak input, weak navigationController] recognizer, _ in
-          guard let input = input, let navigationController = navigationController else { return }
+          guard let navigationController = navigationController else { return }
 
-          if recognizer.state == .began {
+          if recognizer.state == .began, let input = input {
             self.dismissKeyboard(of: input, by: recognizer, in: navigationController)
           } else if recognizer === self.pendingRecognizer {
-            self.returnKeyboard(to: input, after: recognizer, in: navigationController)
+            self.returnKeyboard(after: recognizer, in: navigationController)
           }
         }
       }
@@ -56,6 +60,7 @@ final class KeyboardSwipeBackObserver {
 
     if resign(input) {
       pendingRecognizer = recognizer
+      dismissedInput = input
     }
   }
 
@@ -75,10 +80,8 @@ final class KeyboardSwipeBackObserver {
 
   /// A recognized gesture starts the transition, but not necessarily at once. The focus has to be returned
   /// if this transition gets cancelled (or if the gesture is over and the transition hasn't been started).
-  private func returnKeyboard(
-    to input: UIView, after recognizer: UIGestureRecognizer, in navigationController: UINavigationController
-  ) {
-    let focus = { [weak input] in
+  private func returnKeyboard(after recognizer: UIGestureRecognizer, in navigationController: UINavigationController) {
+    let focus = { [weak input = dismissedInput] in
       // nobody else has taken the focus
       if !(UIResponder.current is TextInput) {
         input?.becomeFirstResponder()
