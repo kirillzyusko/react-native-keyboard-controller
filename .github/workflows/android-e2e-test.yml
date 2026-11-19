@@ -94,13 +94,12 @@ jobs:
     env:
       WORKING_DIRECTORY: example
     strategy:
-      fail-fast: false
       matrix:
         devices:
           [
             { api: 28, target: default, soft-check: false },
             { api: 31, target: google_apis, soft-check: true },
-            { api: 37, target: google_apis, soft-check: true },
+            { api: "37.0", target: google_apis, soft-check: true },
           ]
     needs: build
     steps:
@@ -158,8 +157,7 @@ jobs:
         uses: reactivecircus/android-emulator-runner@v2.33.0
         with:
           working-directory: e2e
-          # Android 17 system images use "37.0" in their SDK package path.
-          api-level: ${{ matrix.devices.api == 37 && '37.0' || matrix.devices.api }}
+          api-level: ${{ matrix.devices.api }}
           target: ${{ matrix.devices.target }}
           profile: pixel_2
           ram-size: "4096M"
@@ -167,19 +165,9 @@ jobs:
           disable-animations: false
           avd-name: e2e_emulator_${{ matrix.devices.api }}
           arch: x86_64
-          script: |
-            if [ "${{ matrix.devices.api }}" = "37" ]; then adb -s "$ANDROID_SERIAL" shell cmd overlay enable-exclusive --category com.android.internal.systemui.navbar.gestural; fi
-            mkdir -p artifacts
-            trap 'adb -s "$ANDROID_SERIAL" logcat -d > artifacts/logcat.txt' EXIT; SOFT_CHECK=${{ matrix.devices.soft-check }} yarn test-example:android-${{ matrix.devices.api }}
-      - name: Upload screenshot assets
-        uses: actions/upload-artifact@v4
-        if: ${{ always() }}
-        with:
-          name: android-e2e-assets-${{ matrix.devices.api }}
-          path: e2e/kit/assets/android/e2e_emulator_${{ matrix.devices.api }}
-          if-no-files-found: error
+          script: SOFT_CHECK=${{ matrix.devices.soft-check }} yarn test-example:android-${{ matrix.devices.api }}
       - uses: actions/upload-artifact@v4
-        if: ${{ always() }}
+        if: ${{ failure() }}
         with:
-          name: android-fail-screen-shoots-${{ matrix.devices.api }}
+          name: android-fail-screen-shoots
           path: e2e/artifacts

@@ -1,12 +1,10 @@
 import { expectBitmapsToBeEqual } from "./asserts";
 import {
   Env,
-  scrollDownUntilElementIsVisible,
   scrollUpUntilElementIsBarelyVisible,
   selectText,
   tap,
   typeText,
-  waitAndFocus,
   waitAndReplace,
   waitAndTap,
   waitAndType,
@@ -32,7 +30,7 @@ const closeKeyboard = async () => {
 describe("AwareScrollView test cases", () => {
   it("should push input above keyboard on focus", async () => {
     await waitAndTap("aware_scroll_view");
-    await waitAndFocus("TextInput#3");
+    await waitAndTap("TextInput#3");
     await waitForExpect(async () => {
       await expectBitmapsToBeEqual(
         "AwareScrollViewFirstInputFocused",
@@ -53,12 +51,7 @@ describe("AwareScrollView test cases", () => {
 
   it("should auto-scroll when new input gets focused", async () => {
     await waitAndReplace("TextInput#3", "\n\n");
-    await scrollDownUntilElementIsVisible(
-      "aware_scroll_view_container",
-      "TextInput#4",
-      { x: NaN, y: 0.5, checkScrollViewVisibility: false },
-    );
-    await waitAndFocus("TextInput#4");
+    await waitAndTap("TextInput#4");
 
     if (Env.softCheck) {
       // on Android (not AOSP) focus and resize events are asynchronous

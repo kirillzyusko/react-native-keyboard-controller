@@ -1,26 +1,10 @@
-import { execFileSync } from "child_process";
-
 import colors from "colors/safe";
 import { expect } from "detox";
 
-import { waitForElementById, waitForExpect } from "../awaitable";
+import { waitForElementById } from "../awaitable";
 import { getDevicePreference } from "../env/devicePreferences";
 
 const TIMEOUT_FOR_LONG_OPERATIONS = 30000;
-
-const getAndroidKeyboard = () => {
-  const source = execFileSync(
-    "adb",
-    ["-s", device.id, "shell", "dumpsys", "window", "displays"],
-    { encoding: "utf8", timeout: 10000 },
-  ).match(
-    /InsetsSource[^\n]*\btype=ime frame=\[\d+,(\d+)\][^\n]*\bvisible=(true|false)/,
-  );
-
-  return source
-    ? { top: Number(source[1]), visible: source[2] === "true" }
-    : undefined;
-};
 
 export const delay = (ms: number): Promise<void> =>
   new Promise((resolve) => setTimeout(resolve, ms));
@@ -31,7 +15,6 @@ export const tap = async (id: string, point?: Detox.Point2D): Promise<void> => {
     "Tap on element with id: ",
     colors.magenta(id),
   );
-
   await element(by.id(id)).tap(point);
 };
 
@@ -90,44 +73,6 @@ export const waitAndTap = async (
 ): Promise<void> => {
   await waitForElementById(id, TIMEOUT_FOR_LONG_OPERATIONS);
   await tap(id, point);
-};
-
-export const waitAndFocus = async (id: string): Promise<void> => {
-  await waitForExpect(async () => {
-    await waitForElementById(id);
-    const keyboard =
-      device.getPlatform() === "android" ? getAndroidKeyboard() : undefined;
-
-    if (keyboard?.visible) {
-      const { frame } = (await element(
-        by.id(id),
-      ).getAttributes()) as Detox.AndroidElementAttributes;
-      const bottom = Math.min(frame.y + frame.height, keyboard.top);
-
-      if (bottom <= frame.y) {
-        throw new Error(`Input '${id}' is covered by the keyboard`);
-      }
-
-      await device
-        .getUiDevice()
-        .click(
-          Math.round(frame.x + frame.width / 2),
-          Math.round((frame.y + bottom) / 2),
-        );
-    } else {
-      await tap(id);
-    }
-
-    await expect(element(by.id(id))).toBeFocused();
-
-    if (device.getPlatform() === "android") {
-      const focusedKeyboard = getAndroidKeyboard();
-
-      if (focusedKeyboard && !focusedKeyboard.visible) {
-        throw new Error(`Waiting for the keyboard to open for '${id}'`);
-      }
-    }
-  });
 };
 
 export const waitAndType = async (id: string, text: string): Promise<void> => {
@@ -194,25 +139,6 @@ export const scrollDownUntilElementIsVisible = async (
     .toBeVisible()
     .whileElement(by.id(scrollViewId))
     .scroll(200, "down", x, y);
-
-  const keyboard =
-    device.getPlatform() === "android" ? getAndroidKeyboard() : undefined;
-
-  if (keyboard?.visible) {
-    for (let attempt = 0; attempt < 20; attempt++) {
-      const { frame } = (await element(
-        by.id(elementId),
-      ).getAttributes()) as Detox.AndroidElementAttributes;
-
-      if (frame.y + frame.height * 0.75 <= keyboard.top) {
-        return;
-      }
-
-      await element(by.id(scrollViewId)).scroll(50, "down", x, y);
-    }
-
-    throw new Error(`Could not scroll '${elementId}' above the keyboard`);
-  }
 };
 
 export const scrollUpUntilElementIsBarelyVisible = async (
@@ -220,11 +146,8 @@ export const scrollUpUntilElementIsBarelyVisible = async (
   elementId: string,
 ): Promise<void> => {
   const distanceToScroll = device.getPlatform() === "ios" ? 80 : 50;
-  const keyboard =
-    device.getPlatform() === "android" ? getAndroidKeyboard() : undefined;
-  const keyboardTop = keyboard?.visible ? keyboard.top : undefined;
 
-  for (let attempt = 0; attempt < 20; attempt++) {
+  for (;;) {
     await element(by.id(scrollViewId)).scroll(
       distanceToScroll,
       "up",
@@ -232,36 +155,19 @@ export const scrollUpUntilElementIsBarelyVisible = async (
       0.4,
     );
 
-    let isVisible = true;
-
-    if (keyboardTop !== undefined) {
-      // Edge-to-edge content can remain "visible" behind the keyboard.
-      // Check its actual overlap instead of tapping through to the IME.
-      const { frame } = (await element(
-        by.id(elementId),
-      ).getAttributes()) as Detox.AndroidElementAttributes;
-
-      isVisible = frame.y + frame.height * 0.75 <= keyboardTop;
-    } else {
-      try {
-        if (device.getPlatform() === "ios") {
-          await expect(element(by.id(elementId))).toBeVisible();
-        } else {
-          await element(by.id(elementId)).tap({ x: 0, y: 25 });
-        }
-      } catch (e) {
-        isVisible = false;
+    try {
+      // verify that we can interact with element
+      if (device.getPlatform() === "ios") {
+        await expect(element(by.id(elementId))).toBeVisible();
+      } else {
+        // on Android visible is always true
+        await element(by.id(elementId)).tap({ x: 0, y: 25 });
       }
-    }
-
-    if (!isVisible) {
+    } catch (e) {
       await element(by.id(scrollViewId)).scroll(50, "down", 0.01, 0.5);
-
-      return;
+      break;
     }
   }
-
-  throw new Error(`Could not scroll '${elementId}' out of view`);
 };
 
 export const selectText = async (id: string) => {

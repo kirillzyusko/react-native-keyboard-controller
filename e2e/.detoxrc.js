@@ -102,10 +102,10 @@ module.exports = {
         avdName: "e2e_emulator_31",
       },
     },
-    emulator37: {
+    emulator37_0: {
       type: "android.emulator",
       device: {
-        avdName: "e2e_emulator_37",
+        avdName: "e2e_emulator_37.0",
       },
     },
   },
@@ -182,12 +182,12 @@ module.exports = {
       device: "emulator31",
       app: "example.android.release",
     },
-    "example.android.emu-37.debug": {
-      device: "emulator37",
+    "example.android.emu-37.0.debug": {
+      device: "emulator37_0",
       app: "example.android.debug",
     },
-    "example.android.emu-37.release": {
-      device: "emulator37",
+    "example.android.emu-37.0.release": {
+      device: "emulator37_0",
       app: "example.android.release",
     },
   },
