@@ -54,9 +54,23 @@ final class KeyboardSwipeBackObserver {
       screen.value(forKeyIfExists: "hideKeyboardOnSwipe") as? Bool == true
     else { return }
 
-    if input.resignFirstResponder() {
+    if resign(input) {
       pendingRecognizer = recognizer
     }
+  }
+
+  /// The keyboard has to be gone before the transition begins, but an input with the accessory view is
+  /// resigned with a delay. So this view is removed here, and since the removal moves the keyboard, the
+  /// position of the keyboard is ignored in the meantime (it's not an interactive dismissal).
+  private func resign(_ input: UIView) -> Bool {
+    guard KeyboardAreaExtender.shared.detach(from: input) else {
+      return input.resignFirstResponder()
+    }
+
+    KeyboardEventsIgnorer.shared.shouldIgnoreKeyboardEvents = true
+    defer { KeyboardEventsIgnorer.shared.shouldIgnoreKeyboardEvents = false }
+
+    return input.resignFirstResponder()
   }
 
   /// A recognized gesture starts the transition, but not necessarily at once. The focus has to be returned
