@@ -94,6 +94,7 @@ jobs:
     env:
       WORKING_DIRECTORY: example
     strategy:
+      fail-fast: false
       matrix:
         devices:
           [
@@ -168,5 +169,10 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: ${{ failure() }}
         with:
-          name: android-fail-screen-shoots
+          name: android-fail-screen-shoots-${{ matrix.devices.api }}
           path: e2e/artifacts
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() }}
+        with:
+          name: android-e2e-baselines-${{ matrix.devices.api }}
+          path: e2e/kit/assets/android
