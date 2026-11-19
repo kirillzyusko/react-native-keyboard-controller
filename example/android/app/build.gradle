@@ -156,6 +156,8 @@ android {
 dependencies {
   // detox
   androidTestImplementation('com.wix:detox:+')
+  // Avoid the removed InputManager.getInstance API on Android 17.
+  androidTestImplementation('androidx.test.espresso:espresso-core:3.7.0')
   implementation 'androidx.appcompat:appcompat:1.1.0'
   // The version of react-native is set by the React Native Gradle Plugin
   implementation("com.facebook.react:react-android")
