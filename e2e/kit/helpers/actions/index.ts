@@ -1,3 +1,5 @@
+import { execFileSync } from "child_process";
+
 import colors from "colors/safe";
 import { expect } from "detox";
 
@@ -146,8 +148,18 @@ export const scrollUpUntilElementIsBarelyVisible = async (
   elementId: string,
 ): Promise<void> => {
   const distanceToScroll = device.getPlatform() === "ios" ? 80 : 50;
+  const keyboardTop =
+    device.getPlatform() === "android"
+      ? execFileSync(
+          "adb",
+          ["-s", device.id, "shell", "dumpsys", "window", "displays"],
+          { encoding: "utf8" },
+        ).match(
+          /InsetsSource[^\n]*\btype=ime frame=\[\d+,(\d+)\][^\n]*\bvisible=true/,
+        )?.[1]
+      : undefined;
 
-  for (;;) {
+  for (let attempt = 0; attempt < 20; attempt++) {
     await element(by.id(scrollViewId)).scroll(
       distanceToScroll,
       "up",
@@ -155,19 +167,36 @@ export const scrollUpUntilElementIsBarelyVisible = async (
       0.4,
     );
 
-    try {
-      // verify that we can interact with element
-      if (device.getPlatform() === "ios") {
-        await expect(element(by.id(elementId))).toBeVisible();
-      } else {
-        // on Android visible is always true
-        await element(by.id(elementId)).tap({ x: 0, y: 25 });
+    let isVisible = true;
+
+    if (keyboardTop !== undefined) {
+      // Edge-to-edge content can remain "visible" behind the keyboard.
+      // Check its actual overlap instead of tapping through to the IME.
+      const { frame } = (await element(
+        by.id(elementId),
+      ).getAttributes()) as Detox.AndroidElementAttributes;
+
+      isVisible = frame.y + frame.height * 0.75 <= Number(keyboardTop);
+    } else {
+      try {
+        if (device.getPlatform() === "ios") {
+          await expect(element(by.id(elementId))).toBeVisible();
+        } else {
+          await element(by.id(elementId)).tap({ x: 0, y: 25 });
+        }
+      } catch (e) {
+        isVisible = false;
       }
-    } catch (e) {
+    }
+
+    if (!isVisible) {
       await element(by.id(scrollViewId)).scroll(50, "down", 0.01, 0.5);
-      break;
+
+      return;
     }
   }
+
+  throw new Error(`Could not scroll '${elementId}' out of view`);
 };
 
 export const selectText = async (id: string) => {
