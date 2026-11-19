@@ -69,6 +69,7 @@
     "unmock",
     "gradlew",
     "dumpsys",
+    "uiautomator",
     "gifs",
     "Werror",
     "alloc",

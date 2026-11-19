@@ -31,6 +31,7 @@ export const tap = async (id: string, point?: Detox.Point2D): Promise<void> => {
     "Tap on element with id: ",
     colors.magenta(id),
   );
+
   await element(by.id(id)).tap(point);
 };
 
@@ -93,13 +94,36 @@ export const waitAndTap = async (
 
 export const waitAndFocus = async (id: string): Promise<void> => {
   await waitForExpect(async () => {
-    await waitAndTap(id);
+    await waitForElementById(id);
+    const keyboard =
+      device.getPlatform() === "android" ? getAndroidKeyboard() : undefined;
+
+    if (keyboard?.visible) {
+      const { frame } = (await element(
+        by.id(id),
+      ).getAttributes()) as Detox.AndroidElementAttributes;
+      const bottom = Math.min(frame.y + frame.height, keyboard.top);
+
+      if (bottom <= frame.y) {
+        throw new Error(`Input '${id}' is covered by the keyboard`);
+      }
+
+      await device
+        .getUiDevice()
+        .click(
+          Math.round(frame.x + frame.width / 2),
+          Math.round((frame.y + bottom) / 2),
+        );
+    } else {
+      await tap(id);
+    }
+
     await expect(element(by.id(id))).toBeFocused();
 
     if (device.getPlatform() === "android") {
-      const keyboard = getAndroidKeyboard();
+      const focusedKeyboard = getAndroidKeyboard();
 
-      if (keyboard && !keyboard.visible) {
+      if (focusedKeyboard && !focusedKeyboard.visible) {
         throw new Error(`Waiting for the keyboard to open for '${id}'`);
       }
     }
@@ -170,6 +194,25 @@ export const scrollDownUntilElementIsVisible = async (
     .toBeVisible()
     .whileElement(by.id(scrollViewId))
     .scroll(200, "down", x, y);
+
+  const keyboard =
+    device.getPlatform() === "android" ? getAndroidKeyboard() : undefined;
+
+  if (keyboard?.visible) {
+    for (let attempt = 0; attempt < 20; attempt++) {
+      const { frame } = (await element(
+        by.id(elementId),
+      ).getAttributes()) as Detox.AndroidElementAttributes;
+
+      if (frame.y + frame.height * 0.75 <= keyboard.top) {
+        return;
+      }
+
+      await element(by.id(scrollViewId)).scroll(50, "down", x, y);
+    }
+
+    throw new Error(`Could not scroll '${elementId}' above the keyboard`);
+  }
 };
 
 export const scrollUpUntilElementIsBarelyVisible = async (

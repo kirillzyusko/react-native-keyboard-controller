@@ -1,6 +1,7 @@
 import { expectBitmapsToBeEqual } from "./asserts";
 import {
   Env,
+  scrollDownUntilElementIsVisible,
   scrollUpUntilElementIsBarelyVisible,
   selectText,
   tap,
@@ -52,7 +53,12 @@ describe("AwareScrollView test cases", () => {
 
   it("should auto-scroll when new input gets focused", async () => {
     await waitAndReplace("TextInput#3", "\n\n");
-    await waitAndTap("TextInput#4");
+    await scrollDownUntilElementIsVisible(
+      "aware_scroll_view_container",
+      "TextInput#4",
+      { x: NaN, y: 0.5, checkScrollViewVisibility: false },
+    );
+    await waitAndFocus("TextInput#4");
 
     if (Env.softCheck) {
       // on Android (not AOSP) focus and resize events are asynchronous
