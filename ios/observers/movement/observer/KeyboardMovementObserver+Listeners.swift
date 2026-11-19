@@ -9,6 +9,11 @@ extension KeyboardMovementObserver {
   @objc func keyboardWillAppear(_ notification: Notification) {
     guard !UIResponder.isKeyboardPreloading else { return }
 
+    // UIKit announces a keyboard that belongs to nobody while it rearranges the input views of the screens
+    if UIResponder.current == nil, isKeyboardInTransition || isScreenInTransition {
+      return
+    }
+
     if isAnimatedByItself(notification) {
       endTransition()
     }
@@ -19,12 +24,18 @@ extension KeyboardMovementObserver {
       return
     }
 
-    // the keyboard arrives together with its screen, so the screen has to be ready before it becomes visible
-    if keyboardTransition(for: notification)?.kind == .withScreen {
-      return UIView.performWithoutAnimation { dispatchWillAppear(notification.withoutAnimation) }
+    guard let transition = keyboardTransition(for: notification) else {
+      return dispatchWillAppear(notification)
     }
 
-    dispatchWillAppear(notification)
+    if transition.kind == .withScreen {
+      // the keyboard arrives together with its screen, so the screen has to be ready before it becomes visible
+      UIView.performWithoutAnimation { dispatchWillAppear(notification.withoutAnimation) }
+    } else {
+      dispatchWillAppear(notification)
+    }
+
+    restoredKeyboard = (tag, keyboardHeight)
   }
 
   func dispatchWillAppear(_ notification: Notification) {
@@ -40,7 +51,7 @@ extension KeyboardMovementObserver {
         return
       }
 
-      guard !isRestored(notification) else { return }
+      guard !isKeyboardRestored() else { return }
 
       self.duration = duration
 
@@ -58,7 +69,7 @@ extension KeyboardMovementObserver {
 
   @objc func keyboardWillDisappear(_ notification: Notification) {
     guard !UIResponder.isKeyboardPreloading, !isKeyboardInTransition else { return }
-    restoredNotification = nil
+    restoredKeyboard = nil
     var (duration, _) = notification.keyboardMetaData()
     let transition = beginTransition(hidingKeyboardWith: notification)
 

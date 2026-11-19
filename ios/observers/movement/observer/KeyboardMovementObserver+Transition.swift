@@ -60,28 +60,14 @@ extension KeyboardMovementObserver {
 
     let isTracked = coordinator.animate(alongsideTransition: nil) { [weak self] context in
       guard let self = self, self.isKeyboardInTransition else { return }
-      let arrived = context.isCancelled ? nil : self.transitionNotification
-      let isKeyboardBack = context.isCancelled && UIResponder.current is TextInput
+      let announced = self.transitionNotification
       self.endTransition()
 
       UIView.performWithoutAnimation {
-        // the keyboard of the revealed screen replaces the keyboard of the screen that is gone
-        if let arrived = arrived {
-          return self.dispatchWillAppear(arrived.withoutAnimation)
-        }
-
-        switch (transition, isKeyboardBack) {
-        case (.withScreen, true):
-          break
-        case (.withScreen, false):
-          self.keyboardWillDisappear(notification.withoutAnimation)
-        case (.withGesture, true):
-          if let shown = shown, shown.name == UIResponder.keyboardWillShowNotification {
-            self.dispatchWillAppear(shown.withoutAnimation)
-            self.restoredNotification = shown
-          }
-        case (.withGesture, false):
-          self.keyboardDidDisappear(notification)
+        if context.isCancelled {
+          self.cancelTransition(transition, hiddenBy: notification, shownBy: announced ?? shown)
+        } else {
+          self.finishTransition(transition, hiddenBy: notification, shownBy: announced)
         }
       }
     }
@@ -95,6 +81,38 @@ extension KeyboardMovementObserver {
     }
 
     return transition
+  }
+
+  /// The screen is gone together with its keyboard, but the revealed screen can bring its own one.
+  private func finishTransition(
+    _ transition: KeyboardTransition, hiddenBy hidden: Notification, shownBy arrived: Notification?
+  ) {
+    if let arrived = arrived {
+      dispatchWillAppear(arrived.withoutAnimation)
+      restoredKeyboard = (tag, keyboardHeight)
+    } else if transition == .withScreen {
+      keyboardWillDisappear(hidden.withoutAnimation)
+    } else {
+      keyboardDidDisappear(hidden)
+    }
+  }
+
+  /// The screen is back, and so is its keyboard if the input has the focus.
+  private func cancelTransition(
+    _ transition: KeyboardTransition, hiddenBy hidden: Notification, shownBy returned: Notification?
+  ) {
+    guard UIResponder.current is TextInput else {
+      return finishTransition(transition, hiddenBy: hidden, shownBy: nil)
+    }
+
+    // the keyboard that travelled with its screen is where it was, and nobody was told that it had moved.
+    // The keyboard that went down is announced again: it can differ from the one that was hidden (i. e. it
+    // has no accessory view anymore)
+    if transition == .withGesture, let returned = returned, returned.name == UIResponder.keyboardWillShowNotification {
+      dispatchWillAppear(returned.withoutAnimation)
+    }
+
+    restoredKeyboard = (tag, keyboardHeight)
   }
 
   func endTransition() {
@@ -113,18 +131,17 @@ extension KeyboardMovementObserver {
     return transition == .withGesture && notification.keyboardMetaData().0 > 0
   }
 
-  /// After a cancelled transition UIKit announces the keyboard that came back. We don't wait for that: the
-  /// keyboard is restored as soon as the transition is over, so this announcement doesn't bring anything new
-  /// (and a repeated event moves the views that count their position from the previous one).
-  func isRestored(_ notification: Notification) -> Bool {
-    let (duration, frame) = notification.keyboardMetaData()
-    let isRestored = duration == 0
-      && frame != nil
-      && frame == restoredNotification?.keyboardMetaData().1
-      && UIResponder.current.reactViewTag == tag
+  /// A transition puts a keyboard on the screen when the revealed screen brings its own one, or when the
+  /// gesture is cancelled and the keyboard comes back. UIKit announces such a keyboard more than once, but
+  /// only the first announcement is dispatched: the others don't bring anything new, and a repeated event
+  /// moves the views that count their position from the previous one.
+  ///
+  /// - Returns: `true` if the keyboard described by `tag` and `keyboardHeight` has been dispatched already.
+  func isKeyboardRestored() -> Bool {
+    let isRestored = restoredKeyboard?.tag == tag && restoredKeyboard?.height == keyboardHeight
 
     if !isRestored {
-      restoredNotification = nil
+      restoredKeyboard = nil
     }
 
     return isRestored
