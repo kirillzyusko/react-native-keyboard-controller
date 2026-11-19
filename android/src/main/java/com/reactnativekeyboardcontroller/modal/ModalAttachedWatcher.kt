@@ -63,6 +63,7 @@ class ModalAttachedWatcher(
         )
 
       rootView.addView(eventView)
+      SecondaryKeyboardWindows.modalRootViews.add(rootView)
 
       if (areEventsComingFromOwnWindow) {
         // on Android < 12 all events for `WindowInsetsAnimationCallback`
@@ -91,9 +92,11 @@ class ModalAttachedWatcher(
         callback.syncKeyboardPosition()
         callback.destroy()
         eventView.removeSelf()
+        SecondaryKeyboardWindows.modalRootViews.remove(rootView)
         // un-pause it in next frame because straight away `onApplyWindowInsets` will be called
         view.post {
-          this.callback()?.suspend(false)
+          // another secondary window (e.g. a focused overlay) may still own the keyboard
+          this.callback()?.suspend(SecondaryKeyboardWindows.isActivityWindowSuspended)
         }
       }
 
