@@ -1,0 +1,115 @@
+diff --git a/node_modules/@react-native-community/blur/android/src/main/java/com/reactnativecommunity/blurview/BlurViewManagerImpl.java b/node_modules/@react-native-community/blur/android/src/main/java/com/reactnativecommunity/blurview/BlurViewManagerImpl.java
+index 4444313..5fec356 100644
+--- a/node_modules/@react-native-community/blur/android/src/main/java/com/reactnativecommunity/blurview/BlurViewManagerImpl.java
++++ b/node_modules/@react-native-community/blur/android/src/main/java/com/reactnativecommunity/blurview/BlurViewManagerImpl.java
+@@ -1,11 +1,14 @@
+ package com.reactnativecommunity.blurview;
+ 
+ import android.view.View;
++import android.view.ViewGroup;
++import android.view.ViewParent;
+ import com.facebook.react.uimanager.ThemedReactContext;
+ 
+ import eightbitlab.com.blurview.BlurView;
+ 
+ import java.util.Objects;
++import java.util.WeakHashMap;
+ import javax.annotation.Nonnull;
+ 
+ @SuppressWarnings("unused")
+@@ -16,20 +19,76 @@ class BlurViewManagerImpl {
+   public static final int defaultRadius = 10;
+   public static final int defaultSampling = 10;
+ 
+-  public static @Nonnull BlurView createViewInstance(@Nonnull ThemedReactContext ctx) {
+-    BlurView blurView = new BlurView(ctx);
++  private static final String SCREEN_CLASS = "com.swmansion.rnscreens.Screen";
++
++  private static final class Settings {
++    int radius = defaultRadius;
++    boolean autoUpdate = true;
++    boolean enabled = true;
++  }
++
++  // the props are set before the view is attached, and the blur is set up only after that
++  private static final WeakHashMap<BlurView, Settings> settings = new WeakHashMap<>();
++
++  public static @Nonnull BlurView createViewInstance(@Nonnull final ThemedReactContext ctx) {
++    final BlurView blurView = new BlurView(ctx);
++    settings.put(blurView, new Settings());
++    // the root of the blur depends on the place of the view in the hierarchy
++    blurView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
++      @Override
++      public void onViewAttachedToWindow(View view) {
++        setup(blurView, ctx);
++      }
++
++      @Override
++      public void onViewDetachedFromWindow(View view) {}
++    });
++    return blurView;
++  }
++
++  private static void setup(BlurView blurView, ThemedReactContext ctx) {
+     View decorView = Objects
+       .requireNonNull(ctx.getCurrentActivity())
+       .getWindow()
+       .getDecorView();
++    Settings props = getSettings(blurView);
+     blurView
+-      .setupWith(decorView.findViewById(android.R.id.content))
++      .setupWith(findBlurRoot(blurView, decorView))
+       .setFrameClearDrawable(decorView.getBackground())
+-      .setBlurRadius(defaultRadius);
+-    return blurView;
++      .setBlurRadius(props.radius)
++      .setBlurEnabled(props.enabled)
++      .setBlurAutoUpdate(props.autoUpdate);
++  }
++
++  /**
++   * The blur is captured by drawing its root into a bitmap before every frame. If the root is the
++   * content of the activity, a screen of `react-native-screens` that is being animated gets drawn
++   * there too, and it breaks the animation of its alpha: the screen stays transparent after the
++   * transition. So the closest screen is used as the root (the same is done in `expo-blur`,
++   * https://github.com/expo/expo/pull/37904).
++   */
++  private static ViewGroup findBlurRoot(BlurView blurView, View decorView) {
++    ViewParent parent = blurView.getParent();
++    while (parent != null) {
++      if (SCREEN_CLASS.equals(parent.getClass().getName())) {
++        return (ViewGroup) parent;
++      }
++      parent = parent.getParent();
++    }
++    return decorView.findViewById(android.R.id.content);
++  }
++
++  private static Settings getSettings(BlurView view) {
++    Settings props = settings.get(view);
++    if (props == null) {
++      props = new Settings();
++      settings.put(view, props);
++    }
++    return props;
+   }
+ 
+   public static void setRadius(BlurView view, int radius) {
++    getSettings(view).radius = radius;
+     view.setBlurRadius(radius);
+     view.invalidate();
+   }
+@@ -42,11 +101,13 @@ class BlurViewManagerImpl {
+   public static void setDownsampleFactor(BlurView view, int factor) {}
+ 
+   public static void setAutoUpdate(BlurView view, boolean autoUpdate) {
++    getSettings(view).autoUpdate = autoUpdate;
+     view.setBlurAutoUpdate(autoUpdate);
+     view.invalidate();
+   }
+ 
+   public static void setBlurEnabled(BlurView view, boolean enabled) {
++    getSettings(view).enabled = enabled;
+     view.setBlurEnabled(enabled);
+   }
+ }
