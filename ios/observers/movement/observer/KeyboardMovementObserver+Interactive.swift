@@ -40,10 +40,11 @@ extension KeyboardMovementObserver {
       return
     }
 
-    if position == 0 {
+    if position <= 0 {
       // it will be triggered before `keyboardWillDisappear` and
       // we don't need to trigger `onInteractive` handler for that
       // since it will be handled in `keyboardWillDisappear` function
+      // (the position is negative when only the accessory view is left on the screen)
       return
     }
 
