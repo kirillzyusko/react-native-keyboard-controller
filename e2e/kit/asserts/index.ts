@@ -17,7 +17,9 @@ const writeToFile = (path: string, buffer: Buffer, onWrite?: () => void) => {
   try {
     fs.accessSync(dir);
   } catch (error) {
-    fs.mkdirSync(dir);
+    // TEMPORARY (baseline regeneration): `kit/assets` does not exist while
+    // all baselines are deleted, so create the whole path
+    fs.mkdirSync(dir, { recursive: true });
   } finally {
     fs.writeFileSync(path, buffer);
     onWrite?.();
@@ -68,6 +70,55 @@ const checkIsScreenShotMatch = (
 
   return { matched, percentDiff, diff };
 };
+
+const getExpectedImagePath = (screenName: string) => {
+  const platform = device.getPlatform();
+  const deviceName = parseDeviceName(device.name);
+
+  return `kit/assets/${platform}/${deviceName}/${screenName}.png`;
+};
+
+// TEMPORARY (baseline regeneration): a missing baseline is written from the
+// current screenshot on the first attempt, so take screenshots until two
+// consecutive ones match before it gets stored.
+const NEW_BASELINE_ATTEMPTS = 10;
+const NEW_BASELINE_INTERVAL = 1000;
+
+async function takeSettledScreenshot(
+  takeScreenshot: (name: string) => Promise<string>,
+  screenName: string,
+  acceptableDiffPercent: number,
+): Promise<string> {
+  if (fs.existsSync(getExpectedImagePath(screenName))) {
+    return takeScreenshot(screenName);
+  }
+
+  await delay(NEW_BASELINE_INTERVAL);
+  let previousPath = await takeScreenshot(`${screenName}-settle-0`);
+
+  for (let attempt = 1; attempt <= NEW_BASELINE_ATTEMPTS; attempt++) {
+    await delay(NEW_BASELINE_INTERVAL);
+    const currentPath = await takeScreenshot(`${screenName}-settle-${attempt}`);
+    const { matched } = checkIsScreenShotMatch(
+      fs.readFileSync(previousPath),
+      fs.readFileSync(currentPath),
+      acceptableDiffPercent,
+    );
+
+    if (matched) {
+      return currentPath;
+    }
+
+    console.debug(
+      colors.yellow(
+        `New baseline '${screenName}' is not settled yet (attempt ${attempt})`,
+      ),
+    );
+    previousPath = currentPath;
+  }
+
+  return previousPath;
+}
 
 function verifyBitmapsToBeEqual(
   tempImagePath: string,
@@ -122,7 +173,11 @@ async function expectElementBitmapsToBeEqual(
   bitmapName: string,
   acceptableDiffPercent = 0.1,
 ): Promise<void> {
-  const imagePath = await element(by.id(elementId)).takeScreenshot(bitmapName);
+  const imagePath = await takeSettledScreenshot(
+    (name) => element(by.id(elementId)).takeScreenshot(name),
+    bitmapName,
+    acceptableDiffPercent,
+  );
 
   verifyBitmapsToBeEqual(imagePath, bitmapName, acceptableDiffPercent);
 }
@@ -134,7 +189,11 @@ async function expectBitmapsToBeEqual(
   // better to wait 1s to be sure all scroll indicators etc are hidden
   // and then take a screenshot and compare it (because it's expensive operation)
   await delay(1000);
-  const tempImagePath = await device.takeScreenshot(screenName);
+  const tempImagePath = await takeSettledScreenshot(
+    (name) => device.takeScreenshot(name),
+    screenName,
+    acceptableDiffPercent,
+  );
 
   verifyBitmapsToBeEqual(tempImagePath, screenName, acceptableDiffPercent);
 }
