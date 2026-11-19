@@ -100,7 +100,7 @@ jobs:
           [
             { api: 28, target: default, soft-check: false },
             { api: 31, target: google_apis, soft-check: true },
-            { api: 37, sdk: "37.0", target: google_apis, soft-check: true },
+            { api: 37, target: google_apis, soft-check: true },
           ]
     needs: build
     steps:
@@ -153,12 +153,13 @@ jobs:
           path: |
             ~/.android/avd/*
             ~/.android/adb*
-          key: avd-${{ matrix.devices.sdk || matrix.devices.api }}-${{ matrix.devices.target }}
+          key: avd-${{ matrix.devices.api }}-${{ matrix.devices.target }}
       - name: Run emulator and tests
         uses: reactivecircus/android-emulator-runner@v2.33.0
         with:
           working-directory: e2e
-          api-level: ${{ matrix.devices.sdk || matrix.devices.api }}
+          # Android 17 system images use "37.0" in their SDK package path.
+          api-level: ${{ matrix.devices.api == 37 && '37.0' || matrix.devices.api }}
           target: ${{ matrix.devices.target }}
           profile: pixel_2
           ram-size: "4096M"
@@ -168,7 +169,8 @@ jobs:
           arch: x86_64
           script: |
             if [ "${{ matrix.devices.api }}" = "37" ]; then adb -s "$ANDROID_SERIAL" shell cmd overlay enable-exclusive --category com.android.internal.systemui.navbar.gestural; fi
-            SOFT_CHECK=${{ matrix.devices.soft-check }} yarn test-example:android-${{ matrix.devices.api }}
+            mkdir -p artifacts
+            trap 'adb -s "$ANDROID_SERIAL" logcat -d > artifacts/logcat.txt' EXIT; SOFT_CHECK=${{ matrix.devices.soft-check }} yarn test-example:android-${{ matrix.devices.api }}
       - name: Upload screenshot assets
         uses: actions/upload-artifact@v4
         if: ${{ always() }}
