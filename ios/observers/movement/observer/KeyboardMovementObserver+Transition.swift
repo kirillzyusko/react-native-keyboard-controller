@@ -150,19 +150,24 @@ extension KeyboardMovementObserver {
   /// Dispatches a position of the keyboard that is moved by the transition.
   func updateKeyboardFrameInTransition() {
     guard
-      let position = transitionTrackingView?.layer.presentation()?.frame.origin.y,
+      let view = transitionTrackingView,
+      let position = view.layer.presentation()?.frame.origin.y,
       position != prevKeyboardPosition
     else { return }
 
     prevKeyboardPosition = position
 
-    onEvent("onKeyboardMove", position as NSNumber, position / keyboardHeight as NSNumber, duration as NSNumber, tag)
+    // `keyboardHeight` changes during the transition if the input loses its accessory view
+    let progress = position / view.frame.height
+
+    onEvent("onKeyboardMove", position as NSNumber, progress as NSNumber, duration as NSNumber, tag)
   }
 
   /// The keyboard can't tell where it is while the transition moves it. However, every change that is made
-  /// when the transition begins is animated exactly like the keyboard, so we move an invisible view along.
+  /// when the transition begins is animated exactly like the keyboard, so we move an invisible view along
+  /// (its height keeps the height that the keyboard had before the transition).
   private func trackKeyboard(in container: UIView) {
-    let view = UIView(frame: CGRect(x: 0, y: keyboardHeight, width: 0, height: 0))
+    let view = UIView(frame: CGRect(x: 0, y: keyboardHeight, width: 0, height: keyboardHeight))
     view.isHidden = true
 
     UIView.performWithoutAnimation { container.addSubview(view) }
