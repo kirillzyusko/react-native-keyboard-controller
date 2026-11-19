@@ -3,10 +3,24 @@ import { execFileSync } from "child_process";
 import colors from "colors/safe";
 import { expect } from "detox";
 
-import { waitForElementById } from "../awaitable";
+import { waitForElementById, waitForExpect } from "../awaitable";
 import { getDevicePreference } from "../env/devicePreferences";
 
 const TIMEOUT_FOR_LONG_OPERATIONS = 30000;
+
+const getAndroidKeyboard = () => {
+  const source = execFileSync(
+    "adb",
+    ["-s", device.id, "shell", "dumpsys", "window", "displays"],
+    { encoding: "utf8", timeout: 10000 },
+  ).match(
+    /InsetsSource[^\n]*\btype=ime frame=\[\d+,(\d+)\][^\n]*\bvisible=(true|false)/,
+  );
+
+  return source
+    ? { top: Number(source[1]), visible: source[2] === "true" }
+    : undefined;
+};
 
 export const delay = (ms: number): Promise<void> =>
   new Promise((resolve) => setTimeout(resolve, ms));
@@ -75,6 +89,21 @@ export const waitAndTap = async (
 ): Promise<void> => {
   await waitForElementById(id, TIMEOUT_FOR_LONG_OPERATIONS);
   await tap(id, point);
+};
+
+export const waitAndFocus = async (id: string): Promise<void> => {
+  await waitForExpect(async () => {
+    await waitAndTap(id);
+    await expect(element(by.id(id))).toBeFocused();
+
+    if (device.getPlatform() === "android") {
+      const keyboard = getAndroidKeyboard();
+
+      if (keyboard && !keyboard.visible) {
+        throw new Error(`Waiting for the keyboard to open for '${id}'`);
+      }
+    }
+  });
 };
 
 export const waitAndType = async (id: string, text: string): Promise<void> => {
@@ -148,16 +177,9 @@ export const scrollUpUntilElementIsBarelyVisible = async (
   elementId: string,
 ): Promise<void> => {
   const distanceToScroll = device.getPlatform() === "ios" ? 80 : 50;
-  const keyboardTop =
-    device.getPlatform() === "android"
-      ? execFileSync(
-          "adb",
-          ["-s", device.id, "shell", "dumpsys", "window", "displays"],
-          { encoding: "utf8" },
-        ).match(
-          /InsetsSource[^\n]*\btype=ime frame=\[\d+,(\d+)\][^\n]*\bvisible=true/,
-        )?.[1]
-      : undefined;
+  const keyboard =
+    device.getPlatform() === "android" ? getAndroidKeyboard() : undefined;
+  const keyboardTop = keyboard?.visible ? keyboard.top : undefined;
 
   for (let attempt = 0; attempt < 20; attempt++) {
     await element(by.id(scrollViewId)).scroll(
@@ -176,7 +198,7 @@ export const scrollUpUntilElementIsBarelyVisible = async (
         by.id(elementId),
       ).getAttributes()) as Detox.AndroidElementAttributes;
 
-      isVisible = frame.y + frame.height * 0.75 <= Number(keyboardTop);
+      isVisible = frame.y + frame.height * 0.75 <= keyboardTop;
     } else {
       try {
         if (device.getPlatform() === "ios") {

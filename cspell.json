@@ -68,6 +68,7 @@
     "sysui",
     "unmock",
     "gradlew",
+    "dumpsys",
     "gifs",
     "Werror",
     "alloc",
