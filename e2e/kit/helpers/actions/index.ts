@@ -152,6 +152,7 @@ export const scrollUpUntilElementIsBarelyVisible = async (
     device.getPlatform() === "android"
       ? execFileSync(
           "adb",
+          // cspell:ignore dumpsys
           ["-s", device.id, "shell", "dumpsys", "window", "displays"],
           { encoding: "utf8" },
         ).match(
