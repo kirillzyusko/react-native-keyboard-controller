@@ -3,6 +3,7 @@ package com.reactnativekeyboardcontroller.extensions
 import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.content.Context
+import android.content.res.Configuration
 import android.graphics.Point
 import android.os.Build
 import android.provider.Settings
@@ -40,12 +41,7 @@ fun Context.getDisplaySize(): Point {
 }
 
 fun Context.isSystemDarkMode(): Boolean =
-  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-    (getSystemService(Context.UI_MODE_SERVICE) as? android.app.UiModeManager)
-      ?.nightMode == android.app.UiModeManager.MODE_NIGHT_YES
-  } else {
-    false
-  }
+  resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
 
 fun Context.currentImePackage(): String? {
   val id =
