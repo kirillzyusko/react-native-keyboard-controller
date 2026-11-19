@@ -53,6 +53,19 @@
 		08A184132C4981D700BCE5DE /* UIApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A184122C4981D700BCE5DE /* UIApplication.swift */; };
 		08A184142C4981D700BCE5DE /* UIApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A184122C4981D700BCE5DE /* UIApplication.swift */; };
 		08A184152C4981D700BCE5DE /* UIApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08A184122C4981D700BCE5DE /* UIApplication.swift */; };
+		3025CEF8A4F3EE080017F687 /* InvisibleInputAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6019B04F267DC9DDC924FE09 /* InvisibleInputAccessoryView.swift */; };
+		39E1DCCAFC0499A00621F45B /* KeyboardAreaExtender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8057F733AAAE4F1AD70210 /* KeyboardAreaExtender.swift */; };
+		4B755A308D584E1FFC171E18 /* KeyboardAreaExtenderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82CB683EF5791E22C4EE2A27 /* KeyboardAreaExtenderTests.swift */; };
+		4D2FF3514704D59F521F4589 /* KeyboardOffsetProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 951974999E76745532244241 /* KeyboardOffsetProvider.swift */; };
+		578A4B028B1958ACB10D888C /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E0391020C9177D556F804FD /* Notification.swift */; };
+		64040F88130616F5EC67FE74 /* InvisibleInputAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6019B04F267DC9DDC924FE09 /* InvisibleInputAccessoryView.swift */; };
+		7686D5349527A17D868D366A /* InvisibleInputAccessoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6019B04F267DC9DDC924FE09 /* InvisibleInputAccessoryView.swift */; };
+		7E53401F2DAF87D0A97B69AD /* KeyboardOffsetProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 951974999E76745532244241 /* KeyboardOffsetProvider.swift */; };
+		90B1709E2842C7DCF9B0E49F /* KeyboardOffsetProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 951974999E76745532244241 /* KeyboardOffsetProvider.swift */; };
+		9A253991B393C14075545580 /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E0391020C9177D556F804FD /* Notification.swift */; };
+		BEBAB3006E1CAD9614C5F430 /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E0391020C9177D556F804FD /* Notification.swift */; };
+		D7E774CC381EE0230CED4EA4 /* KeyboardAreaExtender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8057F733AAAE4F1AD70210 /* KeyboardAreaExtender.swift */; };
+		EE349F75A351DE850FC502C6 /* KeyboardAreaExtender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8057F733AAAE4F1AD70210 /* KeyboardAreaExtender.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -98,6 +111,11 @@
 		0873ED8F2BB6B9960004F3A4 /* Extension+UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Extension+UIView.swift"; sourceTree = "<group>"; };
 		08833D512CB56DB9007D4380 /* TimingAnimationPerformanceTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimingAnimationPerformanceTest.swift; sourceTree = "<group>"; };
 		08A184122C4981D700BCE5DE /* UIApplication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UIApplication.swift; path = ../../extensions/UIApplication.swift; sourceTree = "<group>"; };
+		0D8057F733AAAE4F1AD70210 /* KeyboardAreaExtender.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = KeyboardAreaExtender.swift; path = ../interactive/KeyboardAreaExtender.swift; sourceTree = "<group>"; };
+		5E0391020C9177D556F804FD /* Notification.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Notification.swift; path = ../extensions/Notification.swift; sourceTree = "<group>"; };
+		6019B04F267DC9DDC924FE09 /* InvisibleInputAccessoryView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = InvisibleInputAccessoryView.swift; path = ../interactive/InvisibleInputAccessoryView.swift; sourceTree = "<group>"; };
+		82CB683EF5791E22C4EE2A27 /* KeyboardAreaExtenderTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = KeyboardAreaExtenderTests.swift; path = KeyboardControllerNativeTests/KeyboardAreaExtenderTests.swift; sourceTree = "<group>"; };
+		951974999E76745532244241 /* KeyboardOffsetProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = KeyboardOffsetProvider.swift; path = ../interactive/KeyboardOffsetProvider.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -132,6 +150,11 @@
 				0873ED652BB6B7390004F3A4 /* KeyboardControllerNativeTests */,
 				0873ED6F2BB6B7390004F3A4 /* KeyboardControllerNativeUITests */,
 				0873ED532BB6B7380004F3A4 /* Products */,
+				0D8057F733AAAE4F1AD70210 /* KeyboardAreaExtender.swift */,
+				951974999E76745532244241 /* KeyboardOffsetProvider.swift */,
+				6019B04F267DC9DDC924FE09 /* InvisibleInputAccessoryView.swift */,
+				5E0391020C9177D556F804FD /* Notification.swift */,
+				82CB683EF5791E22C4EE2A27 /* KeyboardAreaExtenderTests.swift */,
 			);
 			sourceTree = "<group>";
 		};
@@ -340,6 +363,10 @@
 				0850CCC22CB49F74000C0F8D /* SpringAnimation.swift in Sources */,
 				0873ED822BB6B94B0004F3A4 /* FocusedInputHolder.swift in Sources */,
 				0850CCCC2CB4A096000C0F8D /* UIUtils.swift in Sources */,
+				D7E774CC381EE0230CED4EA4 /* KeyboardAreaExtender.swift in Sources */,
+				90B1709E2842C7DCF9B0E49F /* KeyboardOffsetProvider.swift in Sources */,
+				64040F88130616F5EC67FE74 /* InvisibleInputAccessoryView.swift in Sources */,
+				578A4B028B1958ACB10D888C /* Notification.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -363,6 +390,11 @@
 				08833D522CB56DB9007D4380 /* TimingAnimationPerformanceTest.swift in Sources */,
 				083C81EB2F6035A5005EDD4C /* KeyboardToolbarGroupTests.swift in Sources */,
 				083700202CE8CA4F00D67BBF /* TextInput.swift in Sources */,
+				39E1DCCAFC0499A00621F45B /* KeyboardAreaExtender.swift in Sources */,
+				7E53401F2DAF87D0A97B69AD /* KeyboardOffsetProvider.swift in Sources */,
+				7686D5349527A17D868D366A /* InvisibleInputAccessoryView.swift in Sources */,
+				9A253991B393C14075545580 /* Notification.swift in Sources */,
+				4B755A308D584E1FFC171E18 /* KeyboardAreaExtenderTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -384,6 +416,10 @@
 				0850CCC42CB49F74000C0F8D /* SpringAnimation.swift in Sources */,
 				0873ED842BB6B94B0004F3A4 /* FocusedInputHolder.swift in Sources */,
 				0850CCCE2CB4A096000C0F8D /* UIUtils.swift in Sources */,
+				EE349F75A351DE850FC502C6 /* KeyboardAreaExtender.swift in Sources */,
+				4D2FF3514704D59F521F4589 /* KeyboardOffsetProvider.swift in Sources */,
+				3025CEF8A4F3EE080017F687 /* InvisibleInputAccessoryView.swift in Sources */,
+				BEBAB3006E1CAD9614C5F430 /* Notification.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
