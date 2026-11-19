@@ -41,8 +41,12 @@ extension KeyboardMovementObserver {
   func dispatchWillAppear(_ notification: Notification) {
     let (duration, frame) = notification.keyboardMetaData()
     if let keyboardFrame = frame {
-      tag = UIResponder.current.reactViewTag
+      let responder = UIResponder.current.reactViewTag
       let keyboardHeight = keyboardFrame.cgRectValue.size.height
+
+      guard !isOutdated(keyboardHeight, of: responder) else { return }
+
+      tag = responder
       self.keyboardHeight = keyboardHeight
       self.notification = notification
 

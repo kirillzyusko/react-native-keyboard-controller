@@ -140,13 +140,24 @@ extension KeyboardMovementObserver {
   ///
   /// - Returns: `true` if the keyboard described by `tag` and `keyboardHeight` has been dispatched already.
   func isKeyboardRestored() -> Bool {
-    let isRestored = restoredKeyboard?.tag == tag && restoredKeyboard?.height == keyboardHeight
+    guard let restored = restoredKeyboard else { return false }
+    let isRestored = restored.tag == tag && restored.height == keyboardHeight
 
+    // it's another keyboard: it gets dispatched, and its repeated announcements are skipped as well
     if !isRestored {
-      restoredKeyboard = nil
+      restoredKeyboard = (tag, keyboardHeight)
     }
 
     return isRestored
+  }
+
+  /// When the accessory view has just been attached, UIKit can announce the keyboard of the same input once
+  /// again with the frame that it had before: when a swipe begins, or when the keyboard has arrived with its
+  /// screen. The height of such a frame is the height that is known already, but it doesn't include the view.
+  func isOutdated(_ height: CGFloat, of responder: NSNumber) -> Bool {
+    guard isScreenInTransition || restoredKeyboard != nil else { return false }
+
+    return KeyboardAreaExtender.shared.offset > 0 && responder == tag && height == keyboardHeight
   }
 
   /// Dispatches a position of the keyboard that is moved by the transition.
