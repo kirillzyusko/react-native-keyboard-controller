@@ -11,10 +11,10 @@ import TextInput from "../../../components/TextInput";
 import { styles } from "./styles";
 
 import type { ExamplesStackParamList } from "../../../navigation/ExamplesStack";
-import type { StackScreenProps } from "@react-navigation/stack";
+import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { LayoutChangeEvent } from "react-native";
 
-type Props = StackScreenProps<ExamplesStackParamList>;
+type Props = NativeStackScreenProps<ExamplesStackParamList>;
 
 const variants = ["v1", "v2", "v3"] as const;
 

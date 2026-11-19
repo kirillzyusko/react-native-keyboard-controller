@@ -1,4 +1,3 @@
-import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
 
 import { ScreenNames } from "../../constants/screenNames";
@@ -32,6 +31,7 @@ import StatusBar from "../../screens/Examples/StatusBar";
 import ToolbarExample from "../../screens/Examples/Toolbar";
 import BottomTabBar from "../BottomTabBar";
 import NativeStack from "../NestedStack";
+import { Stack } from "../Stack";
 
 import { options } from "./options";
 
@@ -68,10 +68,8 @@ export type ExamplesStackParamList = {
   [ScreenNames.AI_KEYBOARD]: undefined;
 };
 
-const Stack = createStackNavigator<ExamplesStackParamList>();
-
-const ExamplesStack = () => (
-  <Stack.Navigator>
+const ExamplesStack = (
+  <Stack.Group>
     <Stack.Screen
       component={KeyboardAnimation}
       name={ScreenNames.ANIMATED_EXAMPLE}
@@ -222,7 +220,7 @@ const ExamplesStack = () => (
       name={ScreenNames.AI_KEYBOARD}
       options={options[ScreenNames.AI_KEYBOARD]}
     />
-  </Stack.Navigator>
+  </Stack.Group>
 );
 
 export default ExamplesStack;
