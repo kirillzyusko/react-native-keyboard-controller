@@ -149,6 +149,10 @@ public final class KeyboardTrackingView: UIView {
       if round(keyboardPosition) == round(keyboardHeight) {
         return keyboardPosition - KeyboardAreaExtender.shared.offset
       }
+      // only the accessory view is left on the screen, i. e. the keyboard is hidden
+      if round(keyboardPosition) == round(KeyboardAreaExtender.shared.offset) {
+        return 0
+      }
       return keyboardPosition
     }
 
