@@ -17,7 +17,7 @@ const DEVICE_PREFERENCES: Record<string, Preference> = {
     width: 1080,
     height: 1920,
   },
-  "e2e_emulator_37": {
+  "e2e_emulator_37.0": {
     emojiButtonCoordinates: { x: 324, y: 1704 },
     width: 1080,
     height: 1920,

@@ -2,7 +2,6 @@ import { expectBitmapsToBeEqual } from "./asserts";
 import {
   scrollDownUntilElementIsVisible,
   tap,
-  waitAndFocus,
   waitAndTap,
   waitForExpect,
 } from "./helpers";
@@ -21,7 +20,7 @@ describe("AwareScrollView with StickyView test cases", () => {
       "aware_scroll_sticky_view_scroll_container",
       "TextInput#4",
     );
-    await waitAndFocus("TextInput#4");
+    await waitAndTap("TextInput#4");
     await waitForExpect(async () => {
       await expectBitmapsToBeEqual(
         "AwareScrollViewWithStickyViewFirstInputFocused",
