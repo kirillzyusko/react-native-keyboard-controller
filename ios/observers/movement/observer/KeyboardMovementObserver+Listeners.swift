@@ -21,9 +21,13 @@ extension KeyboardMovementObserver {
 
     // the keyboard arrives together with its screen, so the screen has to be ready before it becomes visible
     if keyboardTransition(for: notification)?.kind == .withScreen {
-      return UIView.performWithoutAnimation { keyboardWillAppear(notification.withoutAnimation) }
+      return UIView.performWithoutAnimation { dispatchWillAppear(notification.withoutAnimation) }
     }
 
+    dispatchWillAppear(notification)
+  }
+
+  func dispatchWillAppear(_ notification: Notification) {
     let (duration, frame) = notification.keyboardMetaData()
     if let keyboardFrame = frame {
       tag = UIResponder.current.reactViewTag
@@ -55,12 +59,17 @@ extension KeyboardMovementObserver {
   @objc func keyboardWillDisappear(_ notification: Notification) {
     guard !UIResponder.isKeyboardPreloading, !isKeyboardInTransition else { return }
     restoredNotification = nil
-    let (duration, _) = notification.keyboardMetaData()
+    var (duration, _) = notification.keyboardMetaData()
     let transition = beginTransition(hidingKeyboardWith: notification)
 
     // the keyboard stays where it is on its screen, so there is nothing to change until the screen is gone
     if transition == .withScreen {
       return
+    }
+
+    // the keyboard goes down as long as the transition lasts, even if the notification has no duration
+    if let coordinator = transitionCoordinator {
+      duration = Int(coordinator.transitionDuration * 1000)
     }
 
     tag = UIResponder.current.reactViewTag

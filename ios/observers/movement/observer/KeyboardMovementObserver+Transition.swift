@@ -29,11 +29,18 @@ extension KeyboardMovementObserver {
     let (duration, _) = notification.keyboardMetaData()
 
     guard
-      let coordinator = FocusedInputHolder.shared.get()?.viewController?.transitionCoordinator,
-      coordinator.isInteractive,
-      // the keyboard is animated by the transition (and not dismissed by someone during the transition)
-      abs(coordinator.transitionDuration * 1000 - Double(duration)) < 1
+      let input = FocusedInputHolder.shared.get(),
+      let coordinator = input.viewController?.transitionCoordinator,
+      coordinator.isInteractive
     else { return nil }
+
+    // the keyboard is animated by the transition (and not dismissed by someone during the transition)
+    let isAnimated = abs(coordinator.transitionDuration * 1000 - Double(duration)) < 1
+    // a keyboard with an input accessory view is moved by the transition too, but it's announced without
+    // animation (and the input keeps the focus, so UIKit can bring the keyboard back)
+    let isMoved = duration == 0 && input.isFirstResponder
+
+    guard isAnimated || isMoved else { return nil }
 
     return (coordinator.isSystemPop ? .withScreen : .withGesture, coordinator)
   }
@@ -54,7 +61,7 @@ extension KeyboardMovementObserver {
       UIView.performWithoutAnimation {
         // the keyboard of the revealed screen replaces the keyboard of the screen that is gone
         if let arrived = arrived {
-          return self.keyboardWillAppear(arrived.withoutAnimation)
+          return self.dispatchWillAppear(arrived.withoutAnimation)
         }
 
         switch (transition, isKeyboardBack) {
@@ -64,7 +71,7 @@ extension KeyboardMovementObserver {
           self.keyboardWillDisappear(notification.withoutAnimation)
         case (.withGesture, true):
           if let shown = shown, shown.name == UIResponder.keyboardWillShowNotification {
-            self.keyboardWillAppear(shown.withoutAnimation)
+            self.dispatchWillAppear(shown.withoutAnimation)
             self.restoredNotification = shown
           }
         case (.withGesture, false):
