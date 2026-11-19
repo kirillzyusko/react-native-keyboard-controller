@@ -1,7 +1,7 @@
 import { HeaderBackButton } from "@react-navigation/elements";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import {
   ScrollView,
   Text,
@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import {
   KeyboardChatScrollView,
+  KeyboardGestureArea,
   KeyboardStickyView,
 } from "react-native-keyboard-controller";
 import {
@@ -22,6 +23,7 @@ import styles from "./styles";
 
 import type { NavigationProp, RouteProp } from "@react-navigation/native";
 import type { NativeStackNavigationOptions } from "@react-navigation/native-stack";
+import type { LayoutChangeEvent } from "react-native";
 
 type Keyboard = "dismiss" | "slide" | "follow";
 type Routes = {
@@ -173,6 +175,11 @@ function Chat() {
   const { bottom } = useSafeAreaInsets();
   const offset = useMemo(() => ({ opened: bottom }), [bottom]);
   const [text, setText] = useState("");
+  // the keyboard is attached to the composer, as in messengers: the input gets an accessory view
+  const [composerHeight, setComposerHeight] = useState(0);
+  const onComposerLayout = useCallback((e: LayoutChangeEvent) => {
+    setComposerHeight(e.nativeEvent.layout.height);
+  }, []);
 
   return (
     <SafeAreaView
@@ -180,43 +187,52 @@ function Chat() {
       style={[styles.container, styles.chatBackground]}
       testID="back-swipe.chat"
     >
-      <KeyboardChatScrollView
-        contentContainerStyle={styles.messages}
-        keyboardDismissMode="interactive"
-        offset={bottom}
-        testID="back-swipe.messages"
+      <KeyboardGestureArea
+        interpolator="ios"
+        offset={composerHeight}
+        style={styles.container}
+        textInputNativeID="back-swipe.input"
       >
-        {messages.map((message, index) => (
-          <View
-            key={index}
-            style={[
-              styles.bubble,
-              message.sent ? styles.sent : styles.received,
-            ]}
-          >
-            <Text style={[styles.message, message.sent && styles.sentText]}>
-              {message.text}
-            </Text>
-          </View>
-        ))}
-      </KeyboardChatScrollView>
-      <KeyboardStickyView
-        offset={offset}
-        style={styles.composer}
-        testID="back-swipe.composer"
-      >
-        <Text style={styles.plus}>＋</Text>
-        <TextInput
-          multiline
-          placeholder="Message"
-          placeholderTextColor="#85858b"
-          style={styles.input}
-          testID="chat.input"
-          value={text}
-          onChangeText={setText}
-        />
-        <Text style={styles.send}>↑</Text>
-      </KeyboardStickyView>
+        <KeyboardChatScrollView
+          contentContainerStyle={styles.messages}
+          keyboardDismissMode="interactive"
+          offset={bottom}
+          testID="back-swipe.messages"
+        >
+          {messages.map((message, index) => (
+            <View
+              key={index}
+              style={[
+                styles.bubble,
+                message.sent ? styles.sent : styles.received,
+              ]}
+            >
+              <Text style={[styles.message, message.sent && styles.sentText]}>
+                {message.text}
+              </Text>
+            </View>
+          ))}
+        </KeyboardChatScrollView>
+        <KeyboardStickyView
+          offset={offset}
+          style={styles.composer}
+          testID="back-swipe.composer"
+          onLayout={onComposerLayout}
+        >
+          <Text style={styles.plus}>＋</Text>
+          <TextInput
+            multiline
+            nativeID="back-swipe.input"
+            placeholder="Message"
+            placeholderTextColor="#85858b"
+            style={styles.input}
+            testID="chat.input"
+            value={text}
+            onChangeText={setText}
+          />
+          <Text style={styles.send}>↑</Text>
+        </KeyboardStickyView>
+      </KeyboardGestureArea>
     </SafeAreaView>
   );
 }
