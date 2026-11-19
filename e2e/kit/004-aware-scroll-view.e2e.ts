@@ -5,6 +5,7 @@ import {
   selectText,
   tap,
   typeText,
+  waitAndFocus,
   waitAndReplace,
   waitAndTap,
   waitAndType,
@@ -30,7 +31,7 @@ const closeKeyboard = async () => {
 describe("AwareScrollView test cases", () => {
   it("should push input above keyboard on focus", async () => {
     await waitAndTap("aware_scroll_view");
-    await waitAndTap("TextInput#3");
+    await waitAndFocus("TextInput#3");
     await waitForExpect(async () => {
       await expectBitmapsToBeEqual(
         "AwareScrollViewFirstInputFocused",

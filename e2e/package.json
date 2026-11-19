@@ -7,7 +7,7 @@
     "build-example:android": "detox build --configuration example.android.emu-28.release",
     "test-example:android-28": "detox test --configuration example.android.emu-28.release --loglevel verbose --take-screenshots failing --record-videos failing --retries 2",
     "test-example:android-31": "detox test --configuration example.android.emu-31.release --loglevel verbose --take-screenshots failing --record-videos failing --retries 2",
-    "test-example:android-37": "detox test --configuration example.android.emu-37.release --loglevel verbose --take-screenshots failing --record-videos failing --record-logs failing --retries 2",
+    "test-example:android-37": "detox test --configuration example.android.emu-37.release --loglevel verbose --take-screenshots failing --record-videos failing --retries 2",
     "build-example:ios": "detox build --configuration example.ios.sim-17.release",
     "test-example:ios-15": "detox test --configuration example.ios.sim-15.release --loglevel verbose --take-screenshots failing --record-videos failing --retries 2",
     "test-example:ios-16": "detox test --configuration example.ios.sim-16.release --loglevel verbose --take-screenshots failing --record-videos failing --retries 2",

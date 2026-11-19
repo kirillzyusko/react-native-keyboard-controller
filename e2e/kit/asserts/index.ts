@@ -11,6 +11,9 @@ import parseDeviceName from "../utils/parseDeviceName";
 const getDirFromFilePath = (path: string) =>
   path.substring(0, path.lastIndexOf("/"));
 
+const getScreensDir = () =>
+  `kit/assets/${device.getPlatform()}/${parseDeviceName(device.name)}`;
+
 const writeToFile = (path: string, buffer: Buffer, onWrite?: () => void) => {
   const dir = getDirFromFilePath(path);
 
@@ -74,9 +77,7 @@ function verifyBitmapsToBeEqual(
   screenName: string,
   acceptableDiffPercent = 0.1,
 ): void {
-  const platform = device.getPlatform();
-  const deviceName = parseDeviceName(device.name);
-  const SCREENS_DIR = `kit/assets/${platform}/${deviceName}`;
+  const SCREENS_DIR = getScreensDir();
 
   const expectedImagePath = `${SCREENS_DIR}/${screenName}.png`;
   const expectedBitmapBuffer = fs.readFileSync(tempImagePath);
@@ -117,12 +118,49 @@ function verifyBitmapsToBeEqual(
   }
 }
 
+async function captureStableScreenshot(
+  screenName: string,
+  acceptableDiffPercent: number,
+  capture: () => Promise<string>,
+): Promise<string> {
+  let imagePath = await capture();
+
+  if (fs.existsSync(`${getScreensDir()}/${screenName}.png`)) {
+    return imagePath;
+  }
+
+  // A new baseline must show a settled frame, not a keyboard/layout transition.
+  let previous = fs.readFileSync(imagePath);
+
+  for (let attempt = 0; attempt < 5; attempt++) {
+    await delay(1000);
+    imagePath = await capture();
+    const current = fs.readFileSync(imagePath);
+
+    if (
+      checkIsScreenShotMatch(previous, current, acceptableDiffPercent).matched
+    ) {
+      return imagePath;
+    }
+
+    previous = current;
+  }
+
+  throw new Error(
+    `Screenshot '${screenName}' did not settle for a new baseline`,
+  );
+}
+
 async function expectElementBitmapsToBeEqual(
   elementId: string,
   bitmapName: string,
   acceptableDiffPercent = 0.1,
 ): Promise<void> {
-  const imagePath = await element(by.id(elementId)).takeScreenshot(bitmapName);
+  const imagePath = await captureStableScreenshot(
+    bitmapName,
+    acceptableDiffPercent,
+    () => element(by.id(elementId)).takeScreenshot(bitmapName),
+  );
 
   verifyBitmapsToBeEqual(imagePath, bitmapName, acceptableDiffPercent);
 }
@@ -134,7 +172,11 @@ async function expectBitmapsToBeEqual(
   // better to wait 1s to be sure all scroll indicators etc are hidden
   // and then take a screenshot and compare it (because it's expensive operation)
   await delay(1000);
-  const tempImagePath = await device.takeScreenshot(screenName);
+  const tempImagePath = await captureStableScreenshot(
+    screenName,
+    acceptableDiffPercent,
+    () => device.takeScreenshot(screenName),
+  );
 
   verifyBitmapsToBeEqual(tempImagePath, screenName, acceptableDiffPercent);
 }
