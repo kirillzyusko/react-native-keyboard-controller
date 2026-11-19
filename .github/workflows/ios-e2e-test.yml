@@ -125,13 +125,8 @@ jobs:
       - name: Set matrix for PR or main
         id: set-matrix
         run: |
-          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-            # Subset for PRs: Only ios 15, 26, 26e (adjust as needed)
-            echo 'matrix={"devices": [{"ios": 15, artifact: "16.4", "xcode": "16.4", "macos": 15, "runtime": "15.5", "iphone": "iPhone 13 Pro", "os": "15.5"}, {"ios": 17, artifact: "16.4", "xcode": "16.4", "macos": 15, "runtime": "17.5", "iphone": "iPhone 15 Pro", "os": "17.5"}, {"ios": "26e", artifact: "26.4", "xcode": "26.1", "macos": 15, "iphone": "iPhone 16e", "os": "26.1"}]}' >> $GITHUB_OUTPUT
-          else
-            # Full set for main
-            echo 'matrix={"devices": [{"ios": 15, artifact: "16.4", "xcode": "16.4", "macos": 15, "runtime": "15.5", "iphone": "iPhone 13 Pro", "os": "15.5"}, {"ios": 16, artifact: "16.4", "xcode": "16.4", "macos": 15, "runtime": "16.4", "iphone": "iPhone 14 Pro", "os": "16.4"}, {"ios": 17, artifact: "16.4", "xcode": "16.4", "macos": 15, "runtime": "17.5", "iphone": "iPhone 15 Pro", "os": "17.5"}, {"ios": 18, artifact: "16.4", "xcode": "16.4", "macos": 15, "iphone": "iPhone 16 Pro", "os": "18.5"}, {"ios": 26, artifact: "16.4", "xcode": "26.0", "macos": 15, "iphone": "iPhone 17 Pro", "os": "26.2"}, {"ios": "26e", artifact: "26.4", "xcode": "26.1", "macos": 15, "iphone": "iPhone 16e", "os": "26.1"}]}' >> $GITHUB_OUTPUT
-          fi
+          # TEMPORARY (baseline regeneration): the full device set on pull requests too
+          echo 'matrix={"devices": [{"ios": 15, artifact: "16.4", "xcode": "16.4", "macos": 15, "runtime": "15.5", "iphone": "iPhone 13 Pro", "os": "15.5"}, {"ios": 16, artifact: "16.4", "xcode": "16.4", "macos": 15, "runtime": "16.4", "iphone": "iPhone 14 Pro", "os": "16.4"}, {"ios": 17, artifact: "16.4", "xcode": "16.4", "macos": 15, "runtime": "17.5", "iphone": "iPhone 15 Pro", "os": "17.5"}, {"ios": 18, artifact: "16.4", "xcode": "16.4", "macos": 15, "iphone": "iPhone 16 Pro", "os": "18.5"}, {"ios": 26, artifact: "16.4", "xcode": "26.0", "macos": 15, "iphone": "iPhone 17 Pro", "os": "26.2"}, {"ios": "26e", artifact: "26.4", "xcode": "26.1", "macos": 15, "iphone": "iPhone 16e", "os": "26.1"}]}' >> $GITHUB_OUTPUT
   e2e-test:
     name: ⚙️ Automated test cases (iOS-${{ matrix.devices.ios }}, XCode-${{ matrix.devices.xcode }})
     runs-on: macos-${{ matrix.devices.macos }}
@@ -139,6 +134,7 @@ jobs:
     env:
       WORKING_DIRECTORY: example
     strategy:
+      fail-fast: false
       matrix: ${{ fromJson(needs.determine-e2e-matrix.outputs.matrix) }}
     needs: [build, determine-e2e-matrix]
     steps:
@@ -209,5 +205,10 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: ${{ failure() }}
         with:
-          name: ios-fail-screen-shoots
+          name: ios-fail-screen-shoots-${{ matrix.devices.iphone }}-${{ matrix.devices.os }}
           path: e2e/artifacts
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() }}
+        with:
+          name: ios-e2e-baselines-${{ matrix.devices.iphone }}-${{ matrix.devices.os }}
+          path: e2e/kit/assets/ios
