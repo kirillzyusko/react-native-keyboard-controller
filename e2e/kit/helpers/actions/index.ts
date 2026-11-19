@@ -1,3 +1,5 @@
+import { execFileSync } from "child_process";
+
 import colors from "colors/safe";
 import { expect } from "detox";
 
@@ -146,6 +148,16 @@ export const scrollUpUntilElementIsBarelyVisible = async (
   elementId: string,
 ): Promise<void> => {
   const distanceToScroll = device.getPlatform() === "ios" ? 80 : 50;
+  const keyboardTop =
+    device.getPlatform() === "android"
+      ? execFileSync(
+          "adb",
+          ["-s", device.id, "shell", "dumpsys", "window", "displays"],
+          { encoding: "utf8" },
+        ).match(
+          /InsetsSource[^\n]*\btype=ime frame=\[\d+,(\d+)\][^\n]*\bvisible=true/,
+        )?.[1]
+      : undefined;
 
   for (;;) {
     await element(by.id(scrollViewId)).scroll(
@@ -160,7 +172,16 @@ export const scrollUpUntilElementIsBarelyVisible = async (
       if (device.getPlatform() === "ios") {
         await expect(element(by.id(elementId))).toBeVisible();
       } else {
-        // on Android visible is always true
+        // Edge-to-edge content can remain visible behind the keyboard.
+        if (keyboardTop !== undefined) {
+          const { frame } = (await element(
+            by.id(elementId),
+          ).getAttributes()) as Detox.AndroidElementAttributes;
+
+          if (frame.y + frame.height * 0.75 > Number(keyboardTop)) {
+            throw new Error("The input is covered by the keyboard");
+          }
+        }
         await element(by.id(elementId)).tap({ x: 0, y: 25 });
       }
     } catch (e) {
