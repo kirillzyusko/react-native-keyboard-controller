@@ -26,6 +26,13 @@ KeyboardEvents.addListener("keyboardWillShow", (e) => {
   lastState = e;
 });
 
+// Android re-syncs a keyboard whose inset changes outside of an animation
+// (e.g. on rotation) with `keyboardDidShow` alone, without `keyboardWillShow`
+KeyboardEvents.addListener("keyboardDidShow", (e) => {
+  isClosed = false;
+  lastState = e;
+});
+
 const dismiss = async (options?: Partial<DismissOptions>): Promise<void> => {
   const keepFocus = options?.keepFocus ?? false;
   const animated = options?.animated ?? true;
