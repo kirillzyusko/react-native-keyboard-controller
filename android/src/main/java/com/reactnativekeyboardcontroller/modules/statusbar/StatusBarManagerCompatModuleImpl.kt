@@ -85,16 +85,20 @@ class StatusBarManagerCompatModuleImpl(
   }
 
   fun setTranslucent(translucent: Boolean) {
-    if (!isEnabled()) {
-      return original.setTranslucent(translucent)
-    }
-
-    if (BuildConfig.IS_EDGE_TO_EDGE_ENABLED) {
-      Logger.w(TAG, "StatusBarModule: Ignored status bar change, current activity is edge-to-edge.")
-      return
-    }
-
+    // `<StatusBar />` can call this method before `KeyboardProvider` is mounted, so its state is checked
+    // on the UI thread. Otherwise the original implementation replaces the insets listener of
+    // `KeyboardProvider` with the one that removes the top inset for the whole view hierarchy.
     UiThreadUtil.runOnUiThread {
+      if (!isEnabled()) {
+        original.setTranslucent(translucent)
+        return@runOnUiThread
+      }
+
+      if (BuildConfig.IS_EDGE_TO_EDGE_ENABLED) {
+        Logger.w(TAG, "StatusBarModule: Ignored status bar change, current activity is edge-to-edge.")
+        return@runOnUiThread
+      }
+
       view()?.forceStatusBarTranslucent(translucent)
     }
   }
