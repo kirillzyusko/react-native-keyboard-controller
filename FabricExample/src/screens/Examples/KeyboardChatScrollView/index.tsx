@@ -88,10 +88,14 @@ function KeyboardChatScrollViewPlayground() {
     setText("");
   }, [addMessage, text]);
 
-  useEffect(() => {
+  const scrollToEnd = useCallback(() => {
     chatScrollViewRef.current?.scrollToEnd({ animated: true });
     scrollRef.current?.scrollToEnd({ animated: true });
-  }, [messages]);
+  }, []);
+
+  useEffect(() => {
+    scrollToEnd();
+  }, [messages, scrollToEnd]);
 
   const memoList = useCallback(
     (props: ScrollViewProps) => (
@@ -159,6 +163,10 @@ function KeyboardChatScrollViewPlayground() {
             <VirtualizedListScrollView
               ref={scrollRef}
               extraContentPadding={extraContentPadding}
+              // a native stack lays out the pushed screen twice on iOS (the
+              // header is taken into account only in the second pass), so the
+              // end has to be reached again when the viewport changes
+              onLayout={scrollToEnd}
             >
               {messages.map((message, index) => (
                 <Message key={index} {...message} />
