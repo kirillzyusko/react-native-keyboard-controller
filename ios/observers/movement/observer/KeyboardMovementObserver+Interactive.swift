@@ -54,6 +54,8 @@ extension KeyboardMovementObserver {
     }
 
     prevKeyboardPosition = position
+    // the keyboard is not where a transition has left it anymore
+    restoredKeyboard = nil
 
     keyboardDidTask?.cancel()
 
