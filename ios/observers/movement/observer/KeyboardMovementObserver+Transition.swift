@@ -22,6 +22,12 @@ extension KeyboardMovementObserver {
     return transitionCoordinator != nil
   }
 
+  /// `true` if the screen of the focused input is being moved by a gesture. UIKit rearranges the keyboard
+  /// before it announces what is going on, so the position of the keyboard tells nothing at this moment.
+  var isScreenInTransition: Bool {
+    return FocusedInputHolder.shared.get()?.viewController?.transitionCoordinator?.isInteractive == true
+  }
+
   /// Returns an interactive transition that moves the keyboard at the moment (if any).
   func keyboardTransition(
     for notification: Notification
