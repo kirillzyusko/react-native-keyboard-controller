@@ -94,6 +94,7 @@ jobs:
     env:
       WORKING_DIRECTORY: example
     strategy:
+      fail-fast: false
       matrix:
         devices:
           [
@@ -168,6 +169,13 @@ jobs:
           script: |
             if [ "${{ matrix.devices.api }}" = "37" ]; then adb -s "$ANDROID_SERIAL" shell cmd overlay enable-exclusive --category com.android.internal.systemui.navbar.gestural; fi
             SOFT_CHECK=${{ matrix.devices.soft-check }} yarn test-example:android-${{ matrix.devices.api }}
+      - name: Upload screenshot assets
+        uses: actions/upload-artifact@v4
+        if: ${{ always() }}
+        with:
+          name: android-e2e-assets-${{ matrix.devices.api }}
+          path: e2e/kit/assets/android/e2e_emulator_${{ matrix.devices.api }}
+          if-no-files-found: error
       - uses: actions/upload-artifact@v4
         if: ${{ failure() }}
         with:
