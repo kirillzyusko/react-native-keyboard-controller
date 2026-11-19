@@ -1,0 +1,26 @@
+diff --git a/node_modules/@react-navigation/native-stack/lib/module/views/NativeStackView.native.js b/node_modules/@react-navigation/native-stack/lib/module/views/NativeStackView.native.js
+index 8702c85..9706c1d 100644
+--- a/node_modules/@react-navigation/native-stack/lib/module/views/NativeStackView.native.js
++++ b/node_modules/@react-navigation/native-stack/lib/module/views/NativeStackView.native.js
+@@ -141,16 +141,11 @@ const SceneView = ({
+   // Debounce the header height updates to avoid excessive re-renders
+   debounce(setHeaderHeight, 100), []);
+   const hasCustomHeader = header != null;
+-  let headerHeightCorrectionOffset = 0;
+-  if (Platform.OS === 'android' && !hasCustomHeader) {
+-    const statusBarHeight = StatusBar.currentHeight ?? 0;
+-
+-    // FIXME: On Android, the native header height is not correctly calculated
+-    // It includes status bar height even if statusbar is not translucent
+-    // And the statusbar value itself doesn't match the actual status bar height
+-    // So we subtract the bogus status bar height and add the actual top inset
+-    headerHeightCorrectionOffset = -statusBarHeight + topInset;
+-  }
++  // `react-native-screens` reports the height of the header in dp (see its patch), as it does from
++  // 4.19, so the value needs no correction (`@react-navigation/native-stack` skips it from 7.9).
++  // Besides, `StatusBar.currentHeight` is 0 if it's read before the React context knows its
++  // activity, and then `useHeaderHeight()` returns 24 dp more until the app is restarted.
++  const headerHeightCorrectionOffset = 0;
+   const rawAnimatedHeaderHeight = useAnimatedValue(defaultHeaderHeight);
+   const animatedHeaderHeight = React.useMemo(() => Animated.add(rawAnimatedHeaderHeight, headerHeightCorrectionOffset), [headerHeightCorrectionOffset, rawAnimatedHeaderHeight]);
+ 
