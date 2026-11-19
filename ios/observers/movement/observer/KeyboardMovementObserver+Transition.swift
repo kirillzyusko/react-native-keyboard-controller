@@ -57,15 +57,18 @@ extension KeyboardMovementObserver {
   func beginTransition(hidingKeyboardWith notification: Notification) -> KeyboardTransition? {
     guard let (transition, coordinator) = keyboardTransition(for: notification) else { return nil }
     let shown = self.notification
+    let offset = KeyboardAreaExtender.shared.offset
 
     let isTracked = coordinator.animate(alongsideTransition: nil) { [weak self] context in
       guard let self = self, self.isKeyboardInTransition else { return }
       let announced = self.transitionNotification
+      // if the keyboard comes back, it has no accessory view when the input was resigned by the transition
+      let returned = announced ?? shown?.withKeyboard(loweredBy: offset - KeyboardAreaExtender.shared.offset)
       self.endTransition()
 
       UIView.performWithoutAnimation {
         if context.isCancelled {
-          self.cancelTransition(transition, hiddenBy: notification, shownBy: announced ?? shown)
+          self.cancelTransition(transition, hiddenBy: notification, shownBy: returned)
         } else {
           self.finishTransition(transition, hiddenBy: notification, shownBy: announced)
         }
@@ -106,8 +109,7 @@ extension KeyboardMovementObserver {
     }
 
     // the keyboard that travelled with its screen is where it was, and nobody was told that it had moved.
-    // The keyboard that went down is announced again: it can differ from the one that was hidden (i. e. it
-    // has no accessory view anymore)
+    // The keyboard that went down has to be dispatched again
     if transition == .withGesture, let returned = returned, returned.name == UIResponder.keyboardWillShowNotification {
       dispatchWillAppear(returned.withoutAnimation)
     }
