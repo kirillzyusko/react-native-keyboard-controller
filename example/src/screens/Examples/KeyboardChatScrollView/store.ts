@@ -7,6 +7,10 @@ import type { KeyboardChatScrollViewProps } from "react-native-keyboard-controll
 
 type ListMode = "scroll" | "flat" | "flash" | "legend";
 
+export type BackSwipeMode = "dismiss" | "slide" | "follow";
+
+const backSwipeModes: BackSwipeMode[] = ["dismiss", "slide", "follow"];
+
 const liftModes: KeyboardChatScrollViewProps["keyboardLiftBehavior"][] = [
   "always",
   "whenAtEnd",
@@ -34,6 +38,8 @@ interface ChatConfigStore {
   nextLiftBehavior: () => void;
   contactName: string;
   setContactName: (contactName: string) => void;
+  backSwipeMode: BackSwipeMode;
+  nextBackSwipeMode: () => void;
 }
 
 export const useChatConfigStore = create<ChatConfigStore>((set, get) => ({
@@ -86,4 +92,13 @@ export const useChatConfigStore = create<ChatConfigStore>((set, get) => ({
   },
   contactName: "Ksu",
   setContactName: (contactName) => set({ contactName }),
+  backSwipeMode: "slide",
+  nextBackSwipeMode: () => {
+    const idx = backSwipeModes.indexOf(get().backSwipeMode);
+
+    set({
+      backSwipeMode:
+        backSwipeModes[idx === backSwipeModes.length - 1 ? 0 : idx + 1],
+    });
+  },
 }));
