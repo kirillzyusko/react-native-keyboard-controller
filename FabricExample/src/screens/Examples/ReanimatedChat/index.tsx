@@ -13,11 +13,11 @@ import { useTelegramTransitions } from "./hooks";
 import styles from "./styles";
 
 import type { ExamplesStackParamList } from "../../../navigation/ExamplesStack";
-import type { StackScreenProps } from "@react-navigation/stack";
+import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 const AnimatedTextInput = Reanimated.createAnimatedComponent(TextInput);
 
-type Props = StackScreenProps<ExamplesStackParamList>;
+type Props = NativeStackScreenProps<ExamplesStackParamList>;
 
 function ReanimatedChat({ navigation }: Props) {
   const [isTGTransition, setTGTransition] = useState(false);

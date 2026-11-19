@@ -15,7 +15,7 @@ import AutoFillContacts from "./Contacts";
 
 import type { Contact } from "./Contacts";
 import type { ExamplesStackParamList } from "../../../navigation/ExamplesStack";
-import type { StackScreenProps } from "@react-navigation/stack";
+import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 // Optional configuration
 const options = {
@@ -181,7 +181,7 @@ function Form() {
   );
 }
 
-type Props = StackScreenProps<ExamplesStackParamList>;
+type Props = NativeStackScreenProps<ExamplesStackParamList>;
 
 export default function ToolbarExample({ navigation }: Props) {
   const [isVisible, setVisible] = useState(false);
