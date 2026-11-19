@@ -16,6 +16,7 @@ import KeyboardAnimation from "../../screens/Examples/KeyboardAnimation";
 import KeyboardAvoidingViewExample from "../../screens/Examples/KeyboardAvoidingView";
 import KeyboardAvoidingViewAutomaticExample from "../../screens/Examples/KeyboardAvoidingViewAutomatic";
 import KeyboardChatScrollViewPlayground from "../../screens/Examples/KeyboardChatScrollView";
+import KeyboardChatScrollViewProfile from "../../screens/Examples/KeyboardChatScrollView/profile";
 import KeyboardEffectsExample from "../../screens/Examples/KeyboardEffects";
 import KeyboardExtender from "../../screens/Examples/KeyboardExtender";
 import KeyboardSharedTransitionExample from "../../screens/Examples/KeyboardSharedTransitions";
@@ -63,6 +64,7 @@ export type ExamplesStackParamList = {
   [ScreenNames.KEYBOARD_SHARED_TRANSITIONS]: undefined;
   [ScreenNames.KEYBOARD_EXTENDER]: undefined;
   [ScreenNames.CHAT_KIT]: undefined;
+  [ScreenNames.CHAT_KIT_PROFILE]: undefined;
   [ScreenNames.AI_LEGEND_LIST_CHAT]: undefined;
   [ScreenNames.KEYBOARD_EFFECTS]: undefined;
   [ScreenNames.AI_KEYBOARD]: undefined;
@@ -204,6 +206,11 @@ const ExamplesStack = (
       component={KeyboardChatScrollViewPlayground}
       name={ScreenNames.CHAT_KIT}
       options={options[ScreenNames.CHAT_KIT]}
+    />
+    <Stack.Screen
+      component={KeyboardChatScrollViewProfile}
+      name={ScreenNames.CHAT_KIT_PROFILE}
+      options={options[ScreenNames.CHAT_KIT_PROFILE]}
     />
     <Stack.Screen
       component={AILegendListChat}
