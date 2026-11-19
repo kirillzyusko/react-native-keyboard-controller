@@ -10,7 +10,6 @@ import androidx.core.view.WindowInsetsControllerCompat
 import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.UiThreadUtil
 import com.reactnativekeyboardcontroller.BuildConfig
-import com.reactnativekeyboardcontroller.extensions.rootView
 import com.reactnativekeyboardcontroller.log.Logger
 import com.reactnativekeyboardcontroller.views.EdgeToEdgeReactViewGroup
 import com.reactnativekeyboardcontroller.views.EdgeToEdgeViewRegistry
@@ -86,21 +85,17 @@ class StatusBarManagerCompatModuleImpl(
   }
 
   fun setTranslucent(translucent: Boolean) {
-    UiThreadUtil.runOnUiThread {
-      val root = mReactContext.rootView
-      // The provider continues to manage window insets when keyboard callbacks are disabled.
-      val provider =
-        view()?.takeIf {
-          root != null && it.reactContext.rootView === root && (it.isAttachedToWindow || it.active)
-        }
+    if (!isEnabled()) {
+      return original.setTranslucent(translucent)
+    }
 
-      if (provider == null) {
-        original.setTranslucent(translucent)
-      } else if (BuildConfig.IS_EDGE_TO_EDGE_ENABLED) {
-        Logger.w(TAG, "StatusBarModule: Ignored status bar change, current activity is edge-to-edge.")
-      } else {
-        provider.forceStatusBarTranslucent(translucent)
-      }
+    if (BuildConfig.IS_EDGE_TO_EDGE_ENABLED) {
+      Logger.w(TAG, "StatusBarModule: Ignored status bar change, current activity is edge-to-edge.")
+      return
+    }
+
+    UiThreadUtil.runOnUiThread {
+      view()?.forceStatusBarTranslucent(translucent)
     }
   }
 

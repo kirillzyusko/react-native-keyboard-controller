@@ -240,7 +240,7 @@ class EdgeToEdgeReactViewGroup(
 
   // region external methods
   fun forceStatusBarTranslucent(isStatusBarTranslucent: Boolean) {
-    if (this.isStatusBarTranslucent != isStatusBarTranslucent) {
+    if (active && this.isStatusBarTranslucent != isStatusBarTranslucent) {
       this.isStatusBarTranslucent = isStatusBarTranslucent
       this.reApplyWindowInsets()
     }
