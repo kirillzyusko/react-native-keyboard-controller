@@ -10,6 +10,7 @@ export default StyleSheet.create({
   },
   row: {
     flexDirection: "row",
+    paddingLeft: 12,
   },
   content: {
     flex: 1,

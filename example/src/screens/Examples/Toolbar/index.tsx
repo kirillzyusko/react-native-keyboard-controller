@@ -259,7 +259,7 @@ const styles = StyleSheet.create({
   },
   header: {
     color: "black",
-    marginRight: 12,
+    marginHorizontal: 12,
   },
   modal: {
     marginTop: 32,
