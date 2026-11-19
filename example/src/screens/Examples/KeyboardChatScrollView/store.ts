@@ -32,6 +32,8 @@ interface ChatConfigStore {
   resetMessages: () => void;
   keyboardLiftBehavior: KeyboardChatScrollViewProps["keyboardLiftBehavior"];
   nextLiftBehavior: () => void;
+  contactName: string;
+  setContactName: (contactName: string) => void;
 }
 
 export const useChatConfigStore = create<ChatConfigStore>((set, get) => ({
@@ -82,4 +84,6 @@ export const useChatConfigStore = create<ChatConfigStore>((set, get) => ({
         liftModes[idx === liftModes.length - 1 ? 0 : idx + 1],
     });
   },
+  contactName: "Ksu",
+  setContactName: (contactName) => set({ contactName }),
 }));
