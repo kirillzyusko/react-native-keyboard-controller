@@ -39,7 +39,7 @@ public class KeyboardMovementObserver: NSObject {
   var transition: KeyboardTransition?
   var transitionTrackingView: UIView?
   var transitionNotification: Notification?
-  var restoredNotification: Notification?
+  var restoredKeyboard: (tag: NSNumber, height: CGFloat)?
 
   @objc public init(
     handler: @escaping (NSString, NSNumber, NSNumber, NSNumber, NSNumber) -> Void,
