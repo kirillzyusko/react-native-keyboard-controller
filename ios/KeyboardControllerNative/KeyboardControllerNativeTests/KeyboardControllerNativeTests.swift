@@ -8,6 +8,19 @@
 @testable import KeyboardControllerNative
 import XCTest
 
+#if KEYBOARD_CONTROLLER_NEW_ARCH_ENABLED
+extension NSObject {
+  func safeValue(forKey key: String) -> Any? {
+    return value(forKey: key)
+  }
+}
+
+@objcMembers
+private final class ReactSuperview: UIView {
+  dynamic var nativeId: String?
+}
+#endif
+
 extension XCTestCase {
   func waitForFocusChange(
     to textField: TestableInput,
@@ -93,6 +106,29 @@ final class KeyboardControllerNativeTests: XCTestCase {
   override func tearDownWithError() throws {
     // Put teardown code here. This method is called after the invocation of each test method in the class.
   }
+
+  #if KEYBOARD_CONTROLLER_NEW_ARCH_ENABLED
+    func testNativeIDReturnsNilForUIKitSuperviewWithoutNativeID() {
+      let superview = UIView()
+      let textField = UITextField()
+      superview.addSubview(textField)
+
+      let responder: UIResponder? = textField
+
+      XCTAssertNil(responder.nativeID)
+    }
+
+    func testNativeIDReadsReactSuperviewNativeID() {
+      let superview = ReactSuperview()
+      let textField = UITextField()
+      superview.nativeId = "react-view"
+      superview.addSubview(textField)
+
+      let responder: UIResponder? = textField
+
+      XCTAssertEqual(responder.nativeID, "react-view")
+    }
+  #endif
 
   func testSetFocusToNextShouldSetFocusToNextField() {
     let textInput1 = textFields[0]
