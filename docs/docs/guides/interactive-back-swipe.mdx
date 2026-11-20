@@ -1,0 +1,105 @@
+---
+sidebar_position: 3.5
+description: A guide that explains what happens to the keyboard when a screen is swiped back on iOS and how to choose the behavior that fits your app
+keywords:
+  [
+    react-native-keyboard-controller,
+    interactive back swipe,
+    swipe back,
+    native stack,
+    react-native-screens,
+    keyboard,
+  ]
+---
+
+# Interactive back swipe
+
+On iOS a screen can be swiped back while the keyboard is open. The keyboard is a part of this transition, so it's the transition that decides what happens to the keyboard - and the library keeps your layout in sync with it.
+
+There is no API to learn: you pick the behavior with the options of the screen, and all hooks and components of this library follow the keyboard.
+
+import Video from "@site/src/components/Video";
+
+## Choose the behavior
+
+The examples below use [native stack](https://reactnavigation.org/docs/native-stack-navigator) from `react-navigation`.
+
+### Dismiss
+
+The keyboard closes as soon as the swipe starts and opens again if the swipe gets cancelled. You can find this behavior in **Notes** and **Telegram**.
+
+<Video
+  src="/video/interactive-back-swipe/notes.mp4"
+  style={{ height: "40vh" }}
+/>
+
+```tsx
+<Stack.Screen
+  name="Chat"
+  component={Chat}
+  options={{ keyboardHandlingEnabled: true }}
+/>
+```
+
+### Slide
+
+The keyboard stays attached to its screen and slides away together with it, so the layout of the screen doesn't change. This is how **Messages** and **WhatsApp** work.
+
+<Video
+  src="/video/interactive-back-swipe/messages.mp4"
+  style={{ height: "40vh" }}
+/>
+
+It's the default behavior of the native stack, so you don't need to specify anything:
+
+```tsx
+<Stack.Screen name="Chat" component={Chat} />
+```
+
+### Follow
+
+The keyboard goes down as you drag the screen and comes back if you reverse the gesture - together with the content that depends on it. This is how **Instagram** works.
+
+<Video
+  src="/video/interactive-back-swipe/instagram.mp4"
+  style={{ height: "40vh" }}
+/>
+
+```tsx
+<Stack.Screen
+  name="Chat"
+  component={Chat}
+  options={{
+    animation: "simple_push",
+    animationMatchesGesture: true,
+    fullScreenGestureEnabled: true,
+  }}
+/>
+```
+
+:::info Why do these options change the keyboard?
+A system transition (default `animation`) carries the keyboard sideways with its screen. A custom transition (any other `animation` combined with `animationMatchesGesture`) can't do that, so iOS moves the keyboard down as the transition progresses. The library detects which transition is running, so you don't have to tell it.
+:::
+
+## What your code receives
+
+`KeyboardAvoidingView`, `KeyboardStickyView`, `useReanimatedKeyboardAnimation` and other parts of the library handle all three behaviors out-of-box. If you write your own [handler](../api/hooks/keyboard/use-keyboard-handler/index.mdx), this is what it receives:
+
+|             | Swipe starts                         | Screen is dragged                   | Swipe is finished                             | Swipe is cancelled                                  |
+| ----------- | ------------------------------------ | ----------------------------------- | --------------------------------------------- | --------------------------------------------------- |
+| **Dismiss** | regular events of a closing keyboard | -                                   | -                                             | regular events of an opening keyboard               |
+| **Slide**   | -                                    | -                                   | `onStart`/`onEnd` (`height: 0`, no animation) | -                                                   |
+| **Follow**  | `onStart` (`height: 0`)              | `onMove` with the keyboard position | `onEnd` (`height: 0`)                         | `onStart`/`onEnd` (keyboard `height`, no animation) |
+
+## Good to know
+
+- The values are shared between screens, and in **Slide** they describe the screen that owns the keyboard until the swipe is over. If the screen that gets revealed has content that depends on the keyboard, disable it while this screen is not focused (i. e. `enabled={isFocused}` for `KeyboardAvoidingView` or `KeyboardStickyView`), otherwise this content stays lifted during the swipe.
+- If the previous screen had its own keyboard, iOS brings it back when you return to that screen. In **Slide** and **Dismiss** it arrives together with the screen: you'll get `onStart`/`onEnd` with its height as soon as the swipe starts (or when the swipe is finished, if the screen that goes away has a keyboard too), and the keyboard is taken away again if the swipe gets cancelled. In **Follow** it's shown with a regular animation after the swipe.
+- `keyboardHandlingEnabled: true` works with any transition: if you add it to the options of **Follow**, then the keyboard closes before the screen starts to move.
+- Before iOS 26 `fullScreenGestureEnabled: true` turns the default `animation` into a custom transition, so you'll get **Follow** instead of **Slide**.
+- [JS stack](https://reactnavigation.org/docs/stack-navigator#keyboardhandlingenabled) closes the keyboard when the gesture starts and restores it if the gesture gets cancelled, so you get **Dismiss** there.
+- On Android a back gesture closes the keyboard first, and only the next one goes to the previous screen.
+
+## Example
+
+If you want to try all behaviors, open the **Chat Kit** screen of the [example](https://github.com/kirillzyusko/react-native-keyboard-controller/tree/main/FabricExample/src/screens/Examples/KeyboardChatScrollView) app and switch between them in its config.
