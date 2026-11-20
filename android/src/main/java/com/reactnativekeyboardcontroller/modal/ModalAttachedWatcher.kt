@@ -50,6 +50,8 @@ class ModalAttachedWatcher(
     val rootView = window?.decorView?.rootView as ViewGroup?
 
     if (rootView != null) {
+      // status bar changes should go to the window that is shown on top
+      window?.let(ActiveWindowHolder::add)
       val eventView =
         ReactViewGroup(reactContext).apply {
           layoutParams = ViewGroup.LayoutParams(0, 0)
@@ -88,6 +90,7 @@ class ModalAttachedWatcher(
       }
 
       dialog?.setOnDismissListener {
+        window?.let(ActiveWindowHolder::remove)
         callback.syncKeyboardPosition()
         callback.destroy()
         eventView.removeSelf()
