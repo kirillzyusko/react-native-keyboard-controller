@@ -34,6 +34,12 @@ public class KeyboardMovementObserver: NSObject {
   // manual did events
   var notification: Notification?
   var keyboardDidTask: DispatchWorkItem?
+  // interactive transition
+  weak var transitionCoordinator: UIViewControllerTransitionCoordinator?
+  var transition: KeyboardTransition?
+  var transitionTrackingView: UIView?
+  var transitionNotification: Notification?
+  var restoredKeyboard: (tag: NSNumber, height: CGFloat)?
 
   @objc public init(
     handler: @escaping (NSString, NSNumber, NSNumber, NSNumber, NSNumber) -> Void,

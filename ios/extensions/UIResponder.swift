@@ -17,6 +17,13 @@ public extension UIResponder {
   }
 }
 
+extension UIResponder {
+  /// The closest view controller in the responder chain.
+  var viewController: UIViewController? {
+    return (self as? UIViewController) ?? next?.viewController
+  }
+}
+
 public extension Optional where Wrapped: UIResponder {
   var reactViewTag: NSNumber {
     return ((self as? UIView)?.superview).reactNativeTag

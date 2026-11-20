@@ -10,3 +10,10 @@ public extension NSObject {
     return _safeValue(forKey: key)
   }
 }
+
+extension NSObject {
+  /// Returns `nil` for a property that an object doesn't have (without raising an exception).
+  func value(forKeyIfExists key: String) -> Any? {
+    return responds(to: NSSelectorFromString(key)) ? value(forKey: key) : nil
+  }
+}

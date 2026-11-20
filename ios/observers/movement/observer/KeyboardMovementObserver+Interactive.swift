@@ -22,7 +22,7 @@ extension KeyboardMovementObserver {
   }
 
   private func keyboardDidMoveInteractively(changeValue: CGPoint) {
-    if UIResponder.isKeyboardPreloading {
+    if UIResponder.isKeyboardPreloading || isKeyboardInTransition || isScreenInTransition {
       return
     }
     // if we are currently animating keyboard -> we need to ignore values from KVO
@@ -40,14 +40,22 @@ extension KeyboardMovementObserver {
       return
     }
 
-    if position == 0 {
+    if position <= 0 {
       // it will be triggered before `keyboardWillDisappear` and
       // we don't need to trigger `onInteractive` handler for that
       // since it will be handled in `keyboardWillDisappear` function
+      // (the position is negative when only the accessory view is left on the screen)
+      return
+    }
+
+    if position == prevKeyboardPosition {
+      // the keyboard is already there (i. e. a cancelled transition has put it back)
       return
     }
 
     prevKeyboardPosition = position
+    // the keyboard is not where a transition has left it anymore
+    restoredKeyboard = nil
 
     keyboardDidTask?.cancel()
 
