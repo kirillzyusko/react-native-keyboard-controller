@@ -19,8 +19,8 @@ const DEVICE_PREFERENCES: Record<string, Preference> = {
   },
   "iPhone 17 Pro": {
     emojiButtonCoordinates: { x: 40, y: 830 },
-    width: 393,
-    height: 852,
+    width: 402,
+    height: 874,
   },
   "iPhone 16e": {
     emojiButtonCoordinates: { x: 40, y: 830 },
@@ -29,8 +29,8 @@ const DEVICE_PREFERENCES: Record<string, Preference> = {
   },
   "iPhone 16 Pro": {
     emojiButtonCoordinates: { x: 40, y: 830 },
-    width: 393,
-    height: 852,
+    width: 402,
+    height: 874,
   },
   "iPhone 15 Pro": {
     emojiButtonCoordinates: { x: 40, y: 830 },
