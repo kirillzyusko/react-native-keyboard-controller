@@ -205,3 +205,83 @@ describe("blankSpace — Android whenAtEnd behavior", () => {
     expect(mockScrollTo).not.toHaveBeenCalled();
   });
 });
+
+describe("blankSpace — Android non-inverted, blankSpace grown while the keyboard is open", () => {
+  /**
+   * Opens the keyboard at the end of a list with no `blankSpace`
+   * (1200 → 1500), then sends a message: the content grows by 200, room is
+   * kept under it and the page scrolls the message to the top.
+   *
+   * @param scroll - Where the page scrolls the sent message to.
+   * @returns The `blankSpace` shared value.
+   * @example pinWhileOpen(1900);
+   */
+  function pinWhileOpen(scroll: number) {
+    const blankSpace = sv(0);
+
+    mockOffset.value = 1200;
+    render({ inverted: false, keyboardLiftBehavior: "whenAtEnd", blankSpace });
+
+    handlers.onStart({ height: KEYBOARD });
+    handlers.onMove({ height: KEYBOARD });
+    mockOffset.value = 1500;
+    handlers.onEnd({ height: KEYBOARD });
+
+    mockSize.value = { width: 390, height: 2200 };
+    blankSpace.value = 600;
+    mockOffset.value = scroll;
+    mockScrollTo.mockClear();
+
+    return blankSpace;
+  }
+
+  it("keeps a message pinned to the top in place when the keyboard covers only blankSpace", () => {
+    // viewport ends 500 past the content: the keyboard (300) covers blankSpace only
+    pinWhileOpen(1900);
+
+    handlers.onStart({ height: 0 });
+    handlers.onMove({ height: 200 });
+    expect(mockScrollTo).toHaveBeenLastCalledWith(
+      expect.anything(),
+      0,
+      1900,
+      false,
+    );
+    handlers.onMove({ height: 0 });
+    expect(mockScrollTo).toHaveBeenLastCalledWith(
+      expect.anything(),
+      0,
+      1900,
+      false,
+    );
+  });
+
+  it("unwinds only the content under the keyboard, and never lifts it", () => {
+    // viewport ends 150 past the content: the keyboard covers 150 of
+    // blankSpace and 150 of content, so the content moves down by 150
+    pinWhileOpen(1550);
+
+    handlers.onStart({ height: 0 });
+    handlers.onMove({ height: 200 });
+    expect(mockScrollTo).toHaveBeenLastCalledWith(
+      expect.anything(),
+      0,
+      1550,
+      false,
+    );
+    handlers.onMove({ height: 100 });
+    expect(mockScrollTo).toHaveBeenLastCalledWith(
+      expect.anything(),
+      0,
+      1500,
+      false,
+    );
+    handlers.onMove({ height: 0 });
+    expect(mockScrollTo).toHaveBeenLastCalledWith(
+      expect.anything(),
+      0,
+      1400,
+      false,
+    );
+  });
+});

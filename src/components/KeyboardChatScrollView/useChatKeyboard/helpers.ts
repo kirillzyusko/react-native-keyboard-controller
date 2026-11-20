@@ -205,6 +205,45 @@ export const getScrollEffective = (
  * clampedScrollTarget(100, 100, 1000, 800, 500); // 200, maxScroll uses 500
  * ```
  */
+/**
+ * How much of the keyboard covers `blankSpace` rather than content
+ * (non-inverted). That part moves nothing when the keyboard opens, and
+ * frees nothing when it closes.
+ *
+ * @param scrollOffset - Current scroll position.
+ * @param layoutHeight - Viewport height.
+ * @param contentHeight - Content height.
+ * @param blankSpace - Current `blankSpace` value.
+ * @param extraContentPadding - Current `extraContentPadding` value.
+ * @param keyboardHeight - Effective keyboard height.
+ * @returns The height of `blankSpace` under the keyboard, `0..keyboardHeight`.
+ * @example
+ * ```ts
+ * getBlankSpaceUnderKeyboard(1900, 800, 2200, 600, 0, 300); // 300
+ * ```
+ */
+export const getBlankSpaceUnderKeyboard = (
+  scrollOffset: number,
+  layoutHeight: number,
+  contentHeight: number,
+  blankSpace: number,
+  extraContentPadding: number,
+  keyboardHeight: number,
+): number => {
+  "worklet";
+
+  const visible =
+    getVisibleMinimumPaddingFraction(
+      scrollOffset,
+      layoutHeight,
+      contentHeight,
+      blankSpace,
+      false,
+    ) * blankSpace;
+
+  return Math.min(Math.max(0, visible - extraContentPadding), keyboardHeight);
+};
+
 export const clampedScrollTarget = (
   offsetBeforeScroll: number,
   keyboardHeight: number,
