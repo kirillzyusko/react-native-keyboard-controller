@@ -10,14 +10,23 @@ import Foundation
 import UIKit
 
 enum KeyboardView {
-  private static let windowPrefix = "<UITextEffectsWindow"
+  private static let windowPrefix = ["<UITextEffectsWindow", "<UIRemoteKeyboardWindow"]
   private static let containerPrefixes = ["<UIInputSetContainerView", "<UITrackingWindowView"]
   private static let hostPrefixes = ["<UIInputSetHostView", "<UIKeyboardItemContainerView"]
   /// inspired by https://stackoverflow.com/questions/32598490/show-uiview-with-buttons-over-keyboard-like-in-skype-viber-messengers-swift-i
   static func find() -> UIView? {
-    let windows = UIApplication.shared.windows
+    var windows: [UIWindow?] = []
+
+    if #available(iOS 26.0, *) {
+      windows = [UIWindow.keyboardWindow]
+    } else {
+      windows = UIApplication.shared.windows
+    }
+
     for window in windows {
-      if window.description.hasPrefix(windowPrefix) {
+      guard let window = window else { continue }
+
+      if window.description.hasAnyPrefix(windowPrefix) {
         for subview in window.subviews {
           if subview.description.hasAnyPrefix(containerPrefixes) {
             for hostView in subview.subviews {
