@@ -6,6 +6,7 @@ import { KeyboardController } from "react-native-keyboard-controller";
 
 import Switch from "../../../components/Switch";
 
+import { backSwipeOptions } from "./options";
 import { useChatConfigStore } from "./store";
 
 function ConfigSheet() {
@@ -25,6 +26,10 @@ function ConfigSheet() {
   );
   const nextLiftBehavior = useChatConfigStore(
     (state) => state.nextLiftBehavior,
+  );
+  const backSwipeMode = useChatConfigStore((state) => state.backSwipeMode);
+  const nextBackSwipeMode = useChatConfigStore(
+    (state) => state.nextBackSwipeMode,
   );
 
   const handlePresentModalPress = useCallback(async () => {
@@ -58,6 +63,12 @@ function ConfigSheet() {
       ),
     });
   }, [navigation]);
+
+  useEffect(() => {
+    // the mode is changed while this screen is shown, so its options are
+    // updated in place (a profile screen pushed later reads the mode itself)
+    navigation.setOptions(backSwipeOptions[backSwipeMode]);
+  }, [navigation, backSwipeMode]);
 
   return (
     <BottomSheet
@@ -149,6 +160,15 @@ function ConfigSheet() {
             onPress={nextLiftBehavior}
           >
             <Text style={styles.text}>{keyboardLiftBehavior}</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.switchContainer}>
+          <Text style={styles.text}>Back swipe</Text>
+          <TouchableOpacity
+            testID="bottom_sheet_next_back_swipe_mode"
+            onPress={nextBackSwipeMode}
+          >
+            <Text style={styles.text}>{backSwipeMode}</Text>
           </TouchableOpacity>
         </View>
       </BottomSheetView>
