@@ -1,4 +1,8 @@
 import { ScreenNames } from "../../constants/screenNames";
+import {
+  chatOptions,
+  profileOptions,
+} from "../../screens/Examples/KeyboardChatScrollView/options";
 
 export const options = {
   [ScreenNames.ANIMATED_EXAMPLE]: {
@@ -83,14 +87,8 @@ export const options = {
     title: "Keyboard Extender",
     headerShown: false,
   },
-  [ScreenNames.CHAT_KIT]: {
-    title: "Chat Kit",
-    headerTintColor: "#fff",
-    headerStyle: {
-      backgroundColor: "#3A3A3C",
-    },
-    headerBackTitle: "Back",
-  },
+  [ScreenNames.CHAT_KIT]: chatOptions,
+  [ScreenNames.CHAT_KIT_PROFILE]: profileOptions,
   [ScreenNames.AI_LEGEND_LIST_CHAT]: {
     title: "AI LegendList Chat",
   },

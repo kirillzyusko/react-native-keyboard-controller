@@ -159,7 +159,7 @@ function ConfigSheet() {
 const styles = StyleSheet.create({
   header: {
     color: "white",
-    paddingRight: 12,
+    paddingHorizontal: 12,
   },
   bottomSheetContent: {
     flex: 1,

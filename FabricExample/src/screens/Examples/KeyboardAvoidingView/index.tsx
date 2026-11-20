@@ -11,10 +11,10 @@ import { KeyboardAvoidingView } from "react-native-keyboard-controller";
 import styles from "./styles";
 
 import type { ExamplesStackParamList } from "../../../navigation/ExamplesStack";
-import type { StackScreenProps } from "@react-navigation/stack";
+import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import type { KeyboardAvoidingViewProps } from "react-native";
 
-type Props = StackScreenProps<ExamplesStackParamList>;
+type Props = NativeStackScreenProps<ExamplesStackParamList>;
 
 type Behavior = KeyboardAvoidingViewProps["behavior"];
 const behaviors: Behavior[] = ["padding", "height", "position"];

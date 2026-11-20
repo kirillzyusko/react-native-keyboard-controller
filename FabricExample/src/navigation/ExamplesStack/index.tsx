@@ -1,4 +1,3 @@
-import { createStackNavigator } from "@react-navigation/stack";
 import React from "react";
 
 import { ScreenNames } from "../../constants/screenNames";
@@ -17,6 +16,7 @@ import KeyboardAnimation from "../../screens/Examples/KeyboardAnimation";
 import KeyboardAvoidingViewExample from "../../screens/Examples/KeyboardAvoidingView";
 import KeyboardAvoidingViewAutomaticExample from "../../screens/Examples/KeyboardAvoidingViewAutomatic";
 import KeyboardChatScrollViewPlayground from "../../screens/Examples/KeyboardChatScrollView";
+import KeyboardChatScrollViewProfile from "../../screens/Examples/KeyboardChatScrollView/profile";
 import KeyboardEffectsExample from "../../screens/Examples/KeyboardEffects";
 import KeyboardExtender from "../../screens/Examples/KeyboardExtender";
 import KeyboardSharedTransitionExample from "../../screens/Examples/KeyboardSharedTransitions";
@@ -32,6 +32,7 @@ import StatusBar from "../../screens/Examples/StatusBar";
 import ToolbarExample from "../../screens/Examples/Toolbar";
 import BottomTabBar from "../BottomTabBar";
 import NativeStack from "../NestedStack";
+import { Stack } from "../Stack";
 
 import { options } from "./options";
 
@@ -63,15 +64,14 @@ export type ExamplesStackParamList = {
   [ScreenNames.KEYBOARD_SHARED_TRANSITIONS]: undefined;
   [ScreenNames.KEYBOARD_EXTENDER]: undefined;
   [ScreenNames.CHAT_KIT]: undefined;
+  [ScreenNames.CHAT_KIT_PROFILE]: undefined;
   [ScreenNames.AI_LEGEND_LIST_CHAT]: undefined;
   [ScreenNames.KEYBOARD_EFFECTS]: undefined;
   [ScreenNames.AI_KEYBOARD]: undefined;
 };
 
-const Stack = createStackNavigator<ExamplesStackParamList>();
-
-const ExamplesStack = () => (
-  <Stack.Navigator>
+const ExamplesStack = (
+  <Stack.Group>
     <Stack.Screen
       component={KeyboardAnimation}
       name={ScreenNames.ANIMATED_EXAMPLE}
@@ -208,6 +208,11 @@ const ExamplesStack = () => (
       options={options[ScreenNames.CHAT_KIT]}
     />
     <Stack.Screen
+      component={KeyboardChatScrollViewProfile}
+      name={ScreenNames.CHAT_KIT_PROFILE}
+      options={options[ScreenNames.CHAT_KIT_PROFILE]}
+    />
+    <Stack.Screen
       component={AILegendListChat}
       name={ScreenNames.AI_LEGEND_LIST_CHAT}
       options={options[ScreenNames.AI_LEGEND_LIST_CHAT]}
@@ -222,7 +227,7 @@ const ExamplesStack = () => (
       name={ScreenNames.AI_KEYBOARD}
       options={options[ScreenNames.AI_KEYBOARD]}
     />
-  </Stack.Navigator>
+  </Stack.Group>
 );
 
 export default ExamplesStack;

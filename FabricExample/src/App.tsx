@@ -21,15 +21,13 @@ const styles = StyleSheet.create({
 const linking = {
   prefixes: ["https://rnkcfabricexample.com", "rnkcfabricexample://"],
   config: {
-    initialRouteName: "EXAMPLES_STACK" as const,
+    initialRouteName: "EXAMPLES" as const,
     screens: {
-      EXAMPLES_STACK: {
-        path: "examples",
-        screens: {
-          ANIMATED_EXAMPLE: {
-            path: "animated",
-          },
-        },
+      EXAMPLES: {
+        path: "",
+      },
+      ANIMATED_EXAMPLE: {
+        path: "examples/animated",
       },
     },
   },
