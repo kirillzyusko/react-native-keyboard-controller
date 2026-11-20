@@ -61,6 +61,8 @@ RCT_EXPORT_VIEW_PROPERTY(transparent, BOOL)
   UIView *_sharedInputAccessoryView;
   NSHashTable<UIView<UITextInput> *> *_attachedInputs;
   BOOL _isObserving;
+  BOOL _keyboardIsAppearing;
+  __weak UIView<UITextInput> *_pendingReloadInput;
 #ifdef RCT_NEW_ARCH_ENABLED
   RCTSurfaceTouchHandler *_touchHandler;
 #else
@@ -142,6 +144,19 @@ RCT_EXPORT_VIEW_PROPERTY(transparent, BOOL)
                                                name:UITextViewTextDidBeginEditingNotification
                                              object:nil];
 
+  if (@available(iOS 27.0, *)) {
+    for (NSNotificationName name in @[
+           UIKeyboardWillShowNotification,
+           UIKeyboardDidShowNotification,
+           UIKeyboardWillHideNotification
+         ]) {
+      [[NSNotificationCenter defaultCenter] addObserver:self
+                                               selector:@selector(handleKeyboardTransition:)
+                                                   name:name
+                                                 object:nil];
+    }
+  }
+
   _isObserving = YES;
 }
 
@@ -154,6 +169,34 @@ RCT_EXPORT_VIEW_PROPERTY(transparent, BOOL)
   [[NSNotificationCenter defaultCenter] removeObserver:self];
 
   _isObserving = NO;
+  _keyboardIsAppearing = NO;
+  _pendingReloadInput = nil;
+}
+
+- (void)handleKeyboardTransition:(NSNotification *)notification
+{
+  _keyboardIsAppearing = [notification.name isEqualToString:UIKeyboardWillShowNotification];
+  if ([notification.name isEqualToString:UIKeyboardWillHideNotification]) {
+    _pendingReloadInput = nil;
+  }
+  if (![notification.name isEqualToString:UIKeyboardDidShowNotification] || !_pendingReloadInput) {
+    return;
+  }
+
+  // UIKit posts didShow before finishing its transition. Let that cleanup finish first.
+  __weak KeyboardExtender *weakSelf = self;
+  dispatch_async(dispatch_get_main_queue(), ^{
+    KeyboardExtender *self = weakSelf;
+    if (!self || self->_keyboardIsAppearing) {
+      return;
+    }
+    UIView<UITextInput> *input = self->_pendingReloadInput;
+    self->_pendingReloadInput = nil;
+    if (self.enabled && input.isFirstResponder &&
+        input.inputAccessoryView == self->_sharedInputAccessoryView) {
+      [input reloadInputViews];
+    }
+  });
 }
 
 - (void)handleTextInputDidBeginEditing:(NSNotification *)notification
@@ -199,12 +242,22 @@ RCT_EXPORT_VIEW_PROPERTY(transparent, BOOL)
   }
   [_attachedInputs addObject:input];
 
+  if (@available(iOS 27.0, *)) {
+    _pendingReloadInput = nil;
+    if (_keyboardIsAppearing) {
+      // Reloading during presentation cancels UIKit's assistant-view hit-test cleanup.
+      _pendingReloadInput = input;
+      return;
+    }
+  }
+
   // Refresh input view to apply changes
   [input reloadInputViews];
 }
 
 - (void)detachInputAccessoryView
 {
+  _pendingReloadInput = nil;
   // Remove the accessory view from every text input this extender attached to
   for (UIView<UITextInput> *textInput in _attachedInputs.allObjects) {
     if (textInput.inputAccessoryView == _sharedInputAccessoryView) {
