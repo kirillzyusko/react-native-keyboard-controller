@@ -14,27 +14,51 @@ keywords:
   ]
 ---
 
-Version `1.24.0` is a small release ahead of React Native 0.89. It adds Swift
-Package Manager (SwiftPM) support on iOS and on-demand view managers on Android.
+Version `1.24.0` is a small release ahead of React Native 0.89. It adds Swift Package Manager (SwiftPM) support on iOS and on-demand view managers on Android.
 
 <!-- truncate -->
 
+import ComparisonTable from "@site/src/components/ComparisonTable";
+import Video from "@site/src/components/Video";
+
 ## Swift Package Manager on iOS
 
-The npm package now includes a `Package.swift` manifest so React Native can
-autolink the library in apps that use SwiftPM. This prepares the library for
-React Native 0.89, where the team plans to make SwiftPM the default for iOS
-builds. [React Native's SwiftPM rollout plan](https://reactnative.dev/blog/2026/10/19/react-native-0.88#experimental-swift-package-manager-support).
+The npm package now includes a `Package.swift` manifest so React Native can autolink the library in apps that use SwiftPM. This prepares the library for React Native 0.89, where the team plans to make SwiftPM the default for iOS builds. [React Native's SwiftPM rollout plan](https://reactnative.dev/blog/2026/10/19/react-native-0.88#experimental-swift-package-manager-support).
 
-You can already use `1.24.0` with the opt-in SwiftPM setup in React Native 0.88.
-If your app uses SwiftPM, update the package and rebuild your iOS app.
-[Implementation and testing in #1696](https://github.com/kirillzyusko/react-native-keyboard-controller/pull/1696).
+You can already use `1.24.0` with the opt-in SwiftPM setup in React Native 0.88. If your app uses SwiftPM, update the package and rebuild your iOS app.
 
 ## On-demand view managers on Android
 
-`KeyboardControllerPackage` now implements `ViewManagerOnDemandReactPackage`.
-With React Native 0.89, the framework can defer creating each view manager and
-building its view configuration until JavaScript first uses the corresponding
-native view. This can make cold starts a little faster in apps that first use
-these views after the initial render.
-[Implementation and cold-start profiles in #1767](https://github.com/kirillzyusko/react-native-keyboard-controller/pull/1767).
+`KeyboardControllerPackage` now implements `ViewManagerOnDemandReactPackage`. With React Native 0.89, the framework can defer creating each view manager and building its view configuration until JavaScript first uses the corresponding native view. This can make cold starts a little faster in apps that first use these views after the initial render.
+
+## 🤔 What's next?
+
+I'm working on keeping the keyboard and chat layout in sync during the interactive back swipe on iOS. That work already led to a fix in React Native core. After swiping back with the keyboard open, the screen could reopen with a recycled `ScrollView` whose content was shifted up, leaving a gap at the bottom.
+
+<ComparisonTable
+  left={
+    <Video
+      src="/video/release-1-24/back-swipe-before.mp4"
+      width={70}
+      controls
+      aria-label="Interactive back swipe before the ScrollView fix"
+    />
+  }
+  right={
+    <Video
+      src="/video/release-1-24/back-swipe-after.mp4"
+      width={70}
+      controls
+      aria-label="Interactive back swipe after the ScrollView fix"
+    />
+  }
+  leftText="Before the fix, a gap appears below the content."
+  rightText="After the fix, the scroll view fills its container."
+/>
+
+As always, my top focus is **resolving open issues** and keeping the library stable for everyone.
+
+- Issues with more 👍 reactions are prioritized first. That's how I track what matters most to the community.
+- Issues labeled "sponsor 💖" receive **highest priority** as part of dedicated sponsor support.
+
+Stay tuned and follow me on [Twitter](https://twitter.com/ziusko) and [GitHub](https://github.com/kirillzyusko) for updates. Thank you for your support! 😊
