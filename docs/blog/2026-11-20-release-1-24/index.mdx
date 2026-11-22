@@ -21,15 +21,17 @@ Version `1.24.0` is an intentionally small release ahead of React Native 0.89. I
 import ComparisonTable from "@site/src/components/ComparisonTable";
 import Video from "@site/src/components/Video";
 
-## Swift Package Manager on iOS
+## 📦 Swift Package Manager on iOS
 
-The npm package now includes a `Package.swift` manifest so React Native can autolink the library in apps that use SwiftPM.
+The npm package now includes a `Package.swift` manifest so React Native can autolink the library in apps that use SwiftPM. CocoaPods remains supported, and `1.24.0` continues to work with earlier supported versions of React Native.
 
 You can already use `1.24.0` with the opt-in SwiftPM setup in React Native 0.88. If your app uses SwiftPM, update the package and rebuild your iOS app.
 
-## On-demand view managers on Android
+## 🤖 On-demand view managers on Android
 
 `KeyboardControllerPackage` now implements `ViewManagerOnDemandReactPackage`. This lets React Native prepare the library's view configurations on demand, which can reduce startup work.
+
+In `FabricExample` with React Native's lazy getter fix applied, median JS-thread CPU time in `UIManager.getConstants` dropped from 29.9 ms to 27.0 ms across 10 cold starts per release build.
 
 ## 🤔 What's next?
 
