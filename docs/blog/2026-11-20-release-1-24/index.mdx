@@ -29,13 +29,19 @@ You can already use `1.24.0` with the opt-in SwiftPM setup in React Native 0.88.
 
 ## 🤖 On-demand view managers on Android
 
-`KeyboardControllerPackage` now implements `ViewManagerOnDemandReactPackage`. This lets React Native prepare the library's view configurations on demand, which can reduce startup work.
+If a native view only appears on a later screen, its configuration can wait until you get there. `KeyboardControllerPackage` now implements `ViewManagerOnDemandReactPackage` so React Native can do that setup on demand for the library's views.
 
-In `FabricExample` with React Native's lazy getter fix applied, median JS-thread CPU time in `UIManager.getConstants` dropped from 29.9 ms to 27.0 ms across 10 cold starts per release build.
+:::note What we measured
+
+Median JS-thread CPU time in `UIManager.getConstants` went from 29.9 ms to 27.0 ms, a saving of **about 3 ms**. Each release build was measured over 10 cold starts in `FabricExample` with React Native's lazy getter fix applied.
+
+:::
+
+I'll happily take a few milliseconds from one package. Now imagine 30 packages each deferring the same amount of JS-thread work. That would add up to roughly 90 ms of CPU work moved out of startup.
 
 ## 🤔 What's next?
 
-I'm working on keeping the chat layout in sync with the keyboard during the interactive back swipe on iOS.
+I'm also working on the interactive back swipe on iOS. When you're writing a reply, you might swipe back far enough to peek at the conversation list and then decide to keep typing. The composer should stay in sync with the keyboard the whole time so you can pick up right where you left off.
 
 <ComparisonTable
   left={
