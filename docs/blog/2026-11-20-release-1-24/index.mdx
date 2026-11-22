@@ -33,7 +33,61 @@ You can already use `1.24.0` with the opt-in SwiftPM setup in React Native 0.88.
 
 ## 🤔 What's next?
 
-I'm working on keeping the chat layout in sync with the keyboard during the interactive back swipe on iOS. With the default native-stack transition, the keyboard slides sideways with the screen. The clips show a canceled swipe followed by a completed one.
+I'm working on keeping the chat layout in sync with the keyboard during the interactive back swipe on iOS. Each seven-second clip shows the same sequence. I drag about 20% across the screen, pause, and cancel the swipe. Then I drag halfway across, pause again, and complete the swipe to return to the conversation list.
+
+### Dismiss
+
+The keyboard should close when the swipe starts and reopen if you cancel it.
+
+<ComparisonTable
+  left={
+    <Video
+      src="/video/release-1-24/back-swipe-dismiss-before.mp4"
+      width={70}
+      controls
+      aria-label="Dismiss back swipe before the fix"
+    />
+  }
+  right={
+    <Video
+      src="/video/release-1-24/back-swipe-dismiss-after.mp4"
+      width={70}
+      controls
+      aria-label="Dismiss back swipe after the fix"
+    />
+  }
+  leftText="Before the fix, the keyboard travels with the chat."
+  rightText="After the fix, the keyboard closes when the swipe starts."
+/>
+
+### Follow
+
+The keyboard moves down as you drag the screen back.
+
+<ComparisonTable
+  left={
+    <Video
+      src="/video/release-1-24/back-swipe-follow-before.mp4"
+      width={70}
+      controls
+      aria-label="Follow back swipe before the fix"
+    />
+  }
+  right={
+    <Video
+      src="/video/release-1-24/back-swipe-follow-after.mp4"
+      width={70}
+      controls
+      aria-label="Follow back swipe after the fix"
+    />
+  }
+  leftText="Before the fix"
+  rightText="After the fix"
+/>
+
+### Slide
+
+With the default native-stack transition, the keyboard slides sideways with the screen.
 
 <ComparisonTable
   left={
@@ -41,7 +95,7 @@ I'm working on keeping the chat layout in sync with the keyboard during the inte
       src="/video/release-1-24/back-swipe-before.mp4"
       width={70}
       controls
-      aria-label="Interactive chat back swipe before the fix"
+      aria-label="Slide back swipe before the fix"
     />
   }
   right={
@@ -49,7 +103,7 @@ I'm working on keeping the chat layout in sync with the keyboard during the inte
       src="/video/release-1-24/back-swipe-after.mp4"
       width={70}
       controls
-      aria-label="Interactive chat back swipe after the fix"
+      aria-label="Slide back swipe after the fix"
     />
   }
   leftText="Before the fix, the composer drops behind the keyboard."
