@@ -27,7 +27,7 @@
 <p>I really hope to ship this in <code>1.25.0</code> before the new year.</p>
 <p>I've moved all the example apps to React Navigation's native stack. I can now test keyboard behavior during native screen transitions in the examples, which should make future releases more reliable for apps using the same navigator.</p>
 <p>I'm also working on getting the end-to-end tests running on Android 17. Covering a wider range of Android versions should help me catch version-specific bugs before they make it into a release.</p>
-<p>As always, my top priority is <strong>resolving open issues</strong>, so expect more bug fixes as I work to make the library more stable.</p>
+<p>As always, my top priority is <strong>resolving open issues</strong>, so expect more bug fixes as I work to make the library more stable:</p>
 <ul>
 <li>Issues with more 👍 reactions are prioritized first. That's how I track what matters most to the community.</li>
 <li>Issues labeled "sponsor 💖" receive <strong>highest priority</strong> as part of dedicated sponsor support.</li>
