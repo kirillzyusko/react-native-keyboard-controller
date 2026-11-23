@@ -25,23 +25,23 @@ import Video from "@site/src/components/Video";
 
 The npm package now includes a `Package.swift` manifest so React Native can autolink the library in apps that use SwiftPM. CocoaPods remains supported, and `1.24.0` continues to work with earlier supported versions of React Native.
 
-You can already use `1.24.0` with the opt-in SwiftPM setup in React Native 0.88. If your app uses SwiftPM, update the package and rebuild your iOS app.
+You can already use `1.24.0` with the opt-in SwiftPM setup in React Native 0.88.
 
 ## 🤖 On-demand view managers on Android
 
 If a native view only appears on a later screen, its configuration can wait until you get there. `KeyboardControllerPackage` now implements `ViewManagerOnDemandReactPackage` so React Native can do that setup on demand for the library's views.
 
-:::note What we measured
+:::info What I measured
 
-Median JS-thread CPU time in `UIManager.getConstants` went from 29.9 ms to 27.0 ms, a saving of **about 3 ms**. Each release build was measured over 10 cold starts in `FabricExample` with React Native's lazy getter fix applied.
+Median JS-thread CPU time in `UIManager.getConstants` went from 29.9 ms to 27.0 ms, a saving of **about 3 ms**.
+
+Three milliseconds is a small win for one package. If several native modules in your app can defer work this way, those savings can add up to a much faster startup.
 
 :::
 
-I'll happily take a few milliseconds from one package. Now imagine 30 packages each deferring the same amount of JS-thread work. That would add up to roughly 90 ms of CPU work moved out of startup.
-
 ## 🤔 What's next?
 
-I'm also working on the interactive back swipe on iOS. When you're writing a reply, you might swipe back far enough to peek at the conversation list and then decide to keep typing. The composer should stay in sync with the keyboard the whole time so you can pick up right where you left off.
+I'm also working on the interactive back swipe on iOS. When you are writing a reply, you might swipe back. The composer should stay in sync with the keyboard the whole time so you can pick up right where you left off.
 
 <ComparisonTable
   left={
@@ -64,7 +64,7 @@ I'm also working on the interactive back swipe on iOS. When you're writing a rep
   rightText="After the fix, the composer stays above the keyboard."
 />
 
-As always, my top focus is **resolving open issues** and keeping the library stable for everyone.
+I really hope to ship this in `1.25.0` before the new year. As always, my top priority is **resolving open issues**, so expect more bug fixes as I work to make the library more stable.
 
 - Issues with more 👍 reactions are prioritized first. That's how I track what matters most to the community.
 - Issues labeled "sponsor 💖" receive **highest priority** as part of dedicated sponsor support.
