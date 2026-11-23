@@ -24,12 +24,15 @@
 <h2 class="anchor anchorWithStickyNavbar_LWe7" id="-whats-next">🤔 What's next?<a class="hash-link" aria-label="Direct link to 🤔 What's next?" title="Direct link to 🤔 What's next?" href="https://kirillzyusko.github.io/react-native-keyboard-controller/pr-preview/pr-1796/blog/release-1-24#-whats-next">​</a></h2>
 <p>I'm also working on the interactive back swipe on iOS. When you are writing a reply, you might swipe back. The composer should stay in sync with the keyboard the whole time so you can pick up right where you left off.</p>
 <table><tbody><tr style="border:none"><td style="border:none"><div class="center video"><video autoplay="" loop="" muted="" playsinline="" height="100%" src="/react-native-keyboard-controller/pr-preview/pr-1796/video/release-1-24/back-swipe-before.mp4" width="70%" controls="" aria-label="Slide back swipe before the fix"></video></div></td><td style="border:none"><div class="center video"><video autoplay="" loop="" muted="" playsinline="" height="100%" src="/react-native-keyboard-controller/pr-preview/pr-1796/video/release-1-24/back-swipe-after.mp4" width="70%" controls="" aria-label="Slide back swipe after the fix"></video></div></td></tr><tr style="border:none;background-color:#00000000"><td style="border:none;max-width:400px;text-align:center">Before the fix, the composer drops behind the keyboard.</td><td style="border:none;max-width:400px;text-align:center">After the fix, the composer stays above the keyboard.</td></tr></tbody></table>
-<p>I really hope to ship this in <code>1.25.0</code> before the new year. As always, my top priority is <strong>resolving open issues</strong>, so expect more bug fixes as I work to make the library more stable.</p>
+<p>I really hope to ship this in <code>1.25.0</code> before the new year.</p>
+<p>I've moved all the example apps to React Navigation's native stack. I can now test keyboard behavior during native screen transitions in the examples, which should make future releases more reliable for apps using the same navigator.</p>
+<p>I'm also working on getting the end-to-end tests running on Android 17. Covering a wider range of Android versions should help me catch version-specific bugs before they make it into a release.</p>
+<p>As always, my top priority is <strong>resolving open issues</strong>, so expect more bug fixes as I work to make the library more stable.</p>
 <ul>
 <li>Issues with more 👍 reactions are prioritized first. That's how I track what matters most to the community.</li>
 <li>Issues labeled "sponsor 💖" receive <strong>highest priority</strong> as part of dedicated sponsor support.</li>
 </ul>
-<p>Stay tuned and follow me on <a href="https://twitter.com/ziusko" target="_blank" rel="noopener noreferrer">Twitter</a> and <a href="https://github.com/kirillzyusko" target="_blank" rel="noopener noreferrer">GitHub</a> for updates. Thank you for your support! 😊</p>]]></content>
+<p>Stay tuned and follow me on <a href="https://x.com/ziusko" target="_blank" rel="noopener noreferrer">X</a> and <a href="https://github.com/kirillzyusko" target="_blank" rel="noopener noreferrer">GitHub</a> for updates. Thank you for your support! 😊</p>]]></content>
         <author>
             <name>Kirill Zyusko</name>
             <uri>https://github.com/kirillzyusko</uri>
