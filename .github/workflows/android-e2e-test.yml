@@ -153,6 +153,9 @@ jobs:
             ~/.android/avd/*
             ~/.android/adb*
           key: avd-${{ matrix.devices.api }}-${{ matrix.devices.target }}
+      - name: Prepare Android 17 reference capture
+        if: ${{ matrix.devices.api == '37.0' }}
+        run: rm e2e/kit/assets/android/e2e_emulator_37.0/*.png
       - name: Run emulator and tests
         uses: reactivecircus/android-emulator-runner@v2.33.0
         with:
@@ -168,6 +171,12 @@ jobs:
           script: |
             adb shell settings put secure stylus_handwriting_enabled 0
             SOFT_CHECK=${{ matrix.devices.soft-check }} yarn test-example:android-${{ matrix.devices.api }}
+      - name: Upload Android 17 references
+        uses: actions/upload-artifact@v4
+        if: ${{ always() && matrix.devices.api == '37.0' }}
+        with:
+          name: android-17-reference-images
+          path: e2e/kit/assets/android/e2e_emulator_37.0
       - uses: actions/upload-artifact@v4
         if: ${{ failure() }}
         with:
