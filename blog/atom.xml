@@ -2,11 +2,47 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://kirillzyusko.github.io/react-native-keyboard-controller/blog</id>
     <title>Keyboard Controller Blog</title>
-    <updated>2026-11-04T00:00:00.000Z</updated>
+    <updated>2026-11-20T00:00:00.000Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog"/>
     <subtitle>Keyboard Controller Blog</subtitle>
     <icon>https://kirillzyusko.github.io/react-native-keyboard-controller/favicon.ico</icon>
+    <entry>
+        <title type="html"><![CDATA[Version 1.24 — Swift Package Manager and on-demand Android view managers 📦]]></title>
+        <id>https://kirillzyusko.github.io/react-native-keyboard-controller/blog/release-1-24</id>
+        <link href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/release-1-24"/>
+        <updated>2026-11-20T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[Version 1.24.0 is an intentionally small release ahead of React Native 0.89. It adds Swift Package Manager (SwiftPM) support on iOS and on-demand view managers on Android.]]></summary>
+        <content type="html"><![CDATA[<p>Version <code>1.24.0</code> is an intentionally small release ahead of React Native 0.89. It adds Swift Package Manager (SwiftPM) support on iOS and on-demand view managers on Android.</p>
+<!-- -->
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="-swift-package-manager-on-ios">📦 Swift Package Manager on iOS<a class="hash-link" aria-label="Direct link to 📦 Swift Package Manager on iOS" title="Direct link to 📦 Swift Package Manager on iOS" href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/release-1-24#-swift-package-manager-on-ios">​</a></h2>
+<p>The npm package now includes a <code>Package.swift</code> manifest so React Native can autolink the library in apps that use SwiftPM. CocoaPods remains supported, and <code>1.24.0</code> continues to work with earlier supported versions of React Native.</p>
+<p>You can already use <code>1.24.0</code> with the opt-in SwiftPM setup in React Native 0.88.</p>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="-on-demand-view-managers-on-android">🤖 On-demand view managers on Android<a class="hash-link" aria-label="Direct link to 🤖 On-demand view managers on Android" title="Direct link to 🤖 On-demand view managers on Android" href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/release-1-24#-on-demand-view-managers-on-android">​</a></h2>
+<p>If a native view only appears on a later screen, its configuration can wait until you get there. <code>KeyboardControllerPackage</code> now implements <code>ViewManagerOnDemandReactPackage</code> so React Native can do that setup on demand for the library's views.</p>
+<div class="theme-admonition theme-admonition-info admonition_xJq3 alert alert--info"><div class="admonitionHeading_Gvgb"><span class="admonitionIcon_Rf37"><svg viewBox="0 0 14 16"><path fill-rule="evenodd" d="M7 2.3c3.14 0 5.7 2.56 5.7 5.7s-2.56 5.7-5.7 5.7A5.71 5.71 0 0 1 1.3 8c0-3.14 2.56-5.7 5.7-5.7zM7 1C3.14 1 0 4.14 0 8s3.14 7 7 7 7-3.14 7-7-3.14-7-7-7zm1 3H6v5h2V4zm0 6H6v2h2v-2z"></path></svg></span>What I measured</div><div class="admonitionContent_BuS1"><p>Median JS-thread CPU time in <code>UIManager.getConstants</code> went from 29.9 ms to 27.0 ms, a saving of <strong>about 3 ms</strong>.</p><p>Three milliseconds is a small win for one package. If several native modules in your app can defer work this way, those savings can add up to a much faster startup.</p></div></div>
+<h2 class="anchor anchorWithStickyNavbar_LWe7" id="-whats-next">🤔 What's next?<a class="hash-link" aria-label="Direct link to 🤔 What's next?" title="Direct link to 🤔 What's next?" href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/release-1-24#-whats-next">​</a></h2>
+<p>I'm also working on the interactive back swipe on iOS. When you are writing a reply, you might swipe back. The composer should stay in sync with the keyboard the whole time so you can pick up right where you left off.</p>
+<table><tbody><tr style="border:none"><td style="border:none"><div class="center video"><video autoplay="" loop="" muted="" playsinline="" height="100%" src="/react-native-keyboard-controller/video/release-1-24/back-swipe-before.mp4" width="70%" controls="" aria-label="Slide back swipe before the fix"></video></div></td><td style="border:none"><div class="center video"><video autoplay="" loop="" muted="" playsinline="" height="100%" src="/react-native-keyboard-controller/video/release-1-24/back-swipe-after.mp4" width="70%" controls="" aria-label="Slide back swipe after the fix"></video></div></td></tr><tr style="border:none;background-color:#00000000"><td style="border:none;max-width:400px;text-align:center">Before the fix, the composer drops behind the keyboard.</td><td style="border:none;max-width:400px;text-align:center">After the fix, the composer stays above the keyboard.</td></tr></tbody></table>
+<p>I really hope to ship this in <code>1.25.0</code> before the new year.</p>
+<p>I've moved all the example apps to React Navigation's native stack. I can now test keyboard behavior during native screen transitions in the examples, which should make future releases more reliable for apps using the same navigator.</p>
+<p>I'm also working on getting the end-to-end tests running on Android 17. Covering a wider range of Android versions should help me catch version-specific bugs before they make it into a release.</p>
+<p>As always, my top priority is <strong>resolving open issues</strong>, so expect more bug fixes as I work to make the library more stable:</p>
+<ul>
+<li>Issues with more 👍 reactions are prioritized first. That's how I track what matters most to the community.</li>
+<li>Issues labeled "sponsor 💖" receive <strong>highest priority</strong> as part of dedicated sponsor support.</li>
+</ul>
+<p>Stay tuned and follow me on <a href="https://x.com/ziusko" target="_blank" rel="noopener noreferrer">X</a> and <a href="https://github.com/kirillzyusko" target="_blank" rel="noopener noreferrer">GitHub</a> for updates. Thank you for your support! 😊</p>]]></content>
+        <author>
+            <name>Kirill Zyusko</name>
+            <uri>https://github.com/kirillzyusko</uri>
+        </author>
+        <category label="react-native" term="react-native"/>
+        <category label="keyboard" term="keyboard"/>
+        <category label="ios" term="ios"/>
+        <category label="android" term="android"/>
+        <category label="swiftpm" term="swiftpm"/>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Version 1.23 — precise input tracking, fewer preload artifacts, and transparent KeyboardExtender 🎯]]></title>
         <id>https://kirillzyusko.github.io/react-native-keyboard-controller/blog/release-1-23</id>
@@ -1088,27 +1124,5 @@ without container layout shifts" src="https://kirillzyusko.github.io/react-nativ
         <category label="keyboard" term="keyboard"/>
         <category label="focused text input" term="focused text input"/>
         <category label="duration" term="duration"/>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[Interactive keyboard support]]></title>
-        <id>https://kirillzyusko.github.io/react-native-keyboard-controller/blog/interactive-keyboard</id>
-        <link href="https://kirillzyusko.github.io/react-native-keyboard-controller/blog/interactive-keyboard"/>
-        <updated>2023-04-10T00:00:00.000Z</updated>
-        <summary type="html"><![CDATA[I'm excited to announce that the upcoming release of react-native-keyboard-controller, version 1.5.0, will include a new feature that allows users to control the position of the keyboard on the screen via gestures. This new interactive keyboard feature will make it easier for users to interact with the keyboard in a more natural and intuitive way, improving the overall user experience of your React Native app.]]></summary>
-        <content type="html"><![CDATA[<p>I'm excited to announce that the upcoming release of <code>react-native-keyboard-controller</code>, version <code>1.5.0</code>, will include a new feature that allows users to control the position of the keyboard on the screen via gestures. This new interactive keyboard feature will make it easier for users to interact with the keyboard in a more natural and intuitive way, improving the overall user experience of your React Native app.</p>
-<!-- -->
-<div style="display:flex;justify-content:center;margin-bottom:20px"><div style="width:400px;height:400px" class="lottie"></div></div>
-<p>The interactive keyboard feature is customizable on Android 🤖, allowing developers to define how the gesture controls the keyboard position and how the view should be animated when the keyboard is moved. This new feature is particularly useful for chat and other apps that require precise control over the position of the keyboard. The addition of this new interactive keyboard feature will further enhance the library's capabilities and provide a more natural and intuitive user experience.</p>
-<p>Stay tuned for more updates and be sure to check out our documentation for more information on how to use this new feature in your React Native app.</p>
-<p>Thank you for choosing <code>react-native-keyboard-controller</code>! 😊</p>]]></content>
-        <author>
-            <name>Kirill Zyusko</name>
-            <uri>https://github.com/kirillzyusko</uri>
-        </author>
-        <category label="react-native" term="react-native"/>
-        <category label="keyboard" term="keyboard"/>
-        <category label="interactive" term="interactive"/>
-        <category label="android" term="android"/>
-        <category label="ios" term="ios"/>
     </entry>
 </feed>
