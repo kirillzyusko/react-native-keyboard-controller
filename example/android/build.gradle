@@ -18,12 +18,4 @@ buildscript {
     }
 }
 
-allprojects {
-    repositories {
-        maven {
-            url("$rootDir/../../e2e/node_modules/detox/Detox-android")
-        }
-    }
-}
-
 apply plugin: "com.facebook.react.rootproject"

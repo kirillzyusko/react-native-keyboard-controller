@@ -210,11 +210,15 @@
     "NDEBUG",
     "subpaths",
     "swiftpm",
-    "xcframeworks"
+    "xcframeworks",
+    "CPLUSPLUS",
+    "LDPLUSPLUS",
+    "keyevent",
+    "getprop",
+    "UDID"
   ],
   "ignorePaths": [
     "node_modules",
-    "e2e/apks/",
     "**/gradlew",
     "**/gradlew.bat",
     "**/*.pbxproj",

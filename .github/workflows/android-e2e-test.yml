@@ -42,7 +42,7 @@ jobs:
           android: false
       - uses: actions/setup-node@v4
         with:
-          node-version: 22.x
+          node-version: 24.x
           cache: "yarn"
       - name: Setup JDK 17
         uses: actions/setup-java@v4
@@ -117,7 +117,7 @@ jobs:
           path: example/android/app/build/outputs/apk/
       - uses: actions/setup-node@v4
         with:
-          node-version: 22.x
+          node-version: 24.x
           cache: "yarn"
       - name: Setup JDK 17
         uses: actions/setup-java@v4
@@ -168,5 +168,5 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: ${{ failure() }}
         with:
-          name: android-fail-screen-shoots
-          path: e2e/artifacts
+          name: android-fail-screen-shoots-${{ matrix.devices.api }}
+          path: e2e/.e2e/results
