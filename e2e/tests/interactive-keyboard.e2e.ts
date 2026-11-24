@@ -12,11 +12,16 @@ import {
 const scrollable = (ctx: Ctx) =>
   ctx.platform === "android" ? "chat.gesture" : "chat.scroll";
 
-const safeSwipe = async (callback: () => Promise<void>) => {
+const safeSwipe = async (ctx: Ctx, callback: () => Promise<void>) => {
   try {
     await callback();
-  } catch {
+  } catch (error) {
     // ignore exception, will be thrown on Android 9
+    if (ctx.platform !== "android") {
+      // On iOS a swallowed error hides a gesture that never ran:
+      // agent-device refuses a drag that enters the keyboard.
+      throw error;
+    }
   }
 };
 
@@ -25,7 +30,7 @@ describe("Interactive keyboard interactions", { serial: true }, () => {
     await openExample(ctx, `interactive_keyboard_${ctx.platform}`);
 
     // scroll to the end of ScrollView to be sure UI is always identical
-    await safeSwipe(() =>
+    await safeSwipe(ctx, () =>
       swipeElement(ctx, scrollable(ctx), "up", "fast", 1, 0.5, 0.4),
     );
   });
@@ -36,7 +41,7 @@ describe("Interactive keyboard interactions", { serial: true }, () => {
   });
 
   test("should have expected state after the gesture", async (ctx) => {
-    await safeSwipe(() =>
+    await safeSwipe(ctx, () =>
       swipeElement(ctx, scrollable(ctx), "down", "fast", 1),
     );
     await expectScreen(ctx.screen, "InteractiveKeyboardAfterGestureDown");
@@ -44,11 +49,11 @@ describe("Interactive keyboard interactions", { serial: true }, () => {
 
   test("should react on the gesture up when keyboard closed", async (ctx) => {
     // show the keyboard on Android 12+
-    await safeSwipe(() =>
+    await safeSwipe(ctx, () =>
       swipeElement(ctx, scrollable(ctx), "up", "fast", 1, 0.5, 0.5),
     );
     // scroll to the end of ScrollView to be sure UI is always identical
-    await safeSwipe(() =>
+    await safeSwipe(ctx, () =>
       swipeElement(ctx, scrollable(ctx), "up", "fast", 1, 0.5, 0.4),
     );
     await expectScreen(ctx.screen, "InteractiveKeyboardAfterGestureUp");
