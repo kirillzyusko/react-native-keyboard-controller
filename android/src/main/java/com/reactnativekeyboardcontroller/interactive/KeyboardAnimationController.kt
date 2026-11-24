@@ -362,9 +362,14 @@ internal class KeyboardAnimationController {
       insetsAnimationController
         ?: throw IllegalStateException("Controller should not be null")
 
+    currentSpringAnimation?.cancel()
+
     currentSpringAnimation =
       springAnimationOf(
         setter = {
+          if (insetsAnimationController == null) {
+            return@springAnimationOf
+          }
           insetTo(it.roundToInt())
         },
         getter = { controller.currentInsets.bottom.toFloat() },
