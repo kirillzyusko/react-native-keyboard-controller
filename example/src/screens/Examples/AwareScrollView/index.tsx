@@ -106,7 +106,12 @@ export default function AwareScrollView({ navigation }: Props) {
           onChangeText={setText}
         />
       </KeyboardAwareScrollView>
-      <BottomSheet ref={bottomSheetModalRef} index={-1} snapPoints={["40%"]}>
+      <BottomSheet
+        ref={bottomSheetModalRef}
+        accessible={false}
+        index={-1}
+        snapPoints={["40%"]}
+      >
         <BottomSheetView style={styles.bottomSheetContent}>
           <Button
             testID="bottom_sheet_close_modal"

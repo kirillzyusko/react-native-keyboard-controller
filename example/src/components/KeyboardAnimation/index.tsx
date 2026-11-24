@@ -60,6 +60,7 @@ export default function KeyboardAnimation({
 
   return (
     <TouchableOpacity
+      accessible={false}
       activeOpacity={1}
       style={styles.container}
       onPress={KeyboardController.dismiss}
