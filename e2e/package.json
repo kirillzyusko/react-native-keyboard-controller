@@ -8,7 +8,6 @@
     "build-example:ios": "xcodebuild CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ -workspace ../example/ios/KeyboardControllerExample.xcworkspace -scheme KeyboardControllerExample -configuration Release -sdk iphonesimulator -derivedDataPath ../example/ios/build",
     "test-example:android-28": "e2e run --target android-28 --retries 2",
     "test-example:android-31": "e2e run --target android-31 --retries 2",
-    "test-example:ios-15": "e2e run --target ios-15 --retries 2",
     "test-example:ios-16": "e2e run --target ios-16 --retries 2",
     "test-example:ios-17": "e2e run --target ios-17 --retries 2",
     "test-example:ios-18": "e2e run --target ios-18 --retries 2",

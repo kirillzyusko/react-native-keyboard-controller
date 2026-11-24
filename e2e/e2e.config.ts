@@ -14,9 +14,10 @@ const android = {
 };
 
 // One target per device the CI matrix runs (`yarn test-example:<target>`).
+// iOS 15 is not a target: agent-device's test runner needs iOS 15.6, and the
+// newest iOS 15 simulator is 15.5.
 // Stored screenshots are named after the target, so each device keeps its own.
 const iosDevices = {
-  "ios-15": "iPhone 13 Pro",
   "ios-16": "iPhone 14 Pro",
   "ios-17": "iPhone 15 Pro",
   "ios-18": "iPhone 16 Pro",

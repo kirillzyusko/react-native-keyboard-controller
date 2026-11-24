@@ -4,7 +4,7 @@ Source: Detox, `e2e/kit/**/*.e2e.ts` (guide: https://e2e.com/docs/migrate/detox.
 e2e: `e2e/e2e.config.ts`, tests `e2e/tests/**/*.e2e.ts`
 Build: `yarn build-example:android` / `yarn build-example:ios` in `e2e/` (plain release builds; no Detox framework)
 Run old: removed (Detox is retired in the same change)
-Run new: `yarn test-example:<target>` in `e2e/`, targets `android-28`, `android-31`, `ios-15`, `ios-16`, `ios-17`, `ios-18`, `ios-26`, `ios-26e` (Node 24.8+ or 22.22.3+)
+Run new: `yarn test-example:<target>` in `e2e/`, targets `android-28`, `android-31`, `ios-16`, `ios-17`, `ios-18`, `ios-26`, `ios-26e` (Node 24.8+ or 22.22.3+)
 Harness: done, smoke `tests/keyboard-animation.e2e.ts` on android-31
 Defect check: off
 
@@ -17,33 +17,36 @@ Last proof run, on the example app after its move to the native stack:
 `android-31` whole suite three times with no retries and `SOFT_CHECK=true`
 (as CI sets it for API 31), 309 runs passed, 3 failed (one screenshot in 017,
 see Gaps), 1 skipped (the `it.todo` placeholder); `ios-26` whole suite once,
-7 of 17 files pass and 10 are blocked as noted per row.
+12 of 17 files pass and 5 fail as noted per row. `android-28` (local
+emulator, AOSP keyboard) whole suite once: 16 of 17 files pass, the same
+screenshot in 017 fails.
 
-Stored screenshots exist for `android-31` (emulator, API 31, Google APIs,
-arm64, Pixel 2 profile) and `ios-26` (iPhone 17 Pro, iOS 26.2, Xcode 27),
-both written on macOS. Of the 62 Android screenshots, 55 match Detox's CI
+Stored screenshots exist for `android-28`, `android-31` (emulators, arm64,
+Pixel 2 profile) and `ios-26` (iPhone 17 Pro, iOS 26.2, Xcode 27), all
+written on macOS. Of the 62 Android screenshots, 55 match Detox's CI
 baselines for `e2e_emulator_31` within 0.1%, six differ only in the masked
-Password field, and one by a gesture offset; see Gaps.
+Password field, and one by a gesture offset; see Gaps. For API 28 it is 56 of 64 against
+`e2e_emulator_28`, with the same exceptions and the unstable one in 017.
 
-| Source                                            | e2e                                             | Status  | Assertions (source → e2e) | Passing              | Notes                                                                                                                                                                     |
-| ------------------------------------------------- | ----------------------------------------------- | ------- | ------------------------- | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| kit/001-keyboard-animation.e2e.ts                 | tests/keyboard-animation.e2e.ts                 | retired | 4 → 4                     | android 3/3, ios 0/1 | iOS: input hidden from the accessibility tree                                                                                                                             |
-| kit/002-enabled-disabled.e2e.ts                   | tests/enabled-disabled.e2e.ts                   | retired | 5 → 5                     | android 3/3, ios 0/1 | iOS: same                                                                                                                                                                 |
-| kit/003-input-handlers.e2e.ts                     | tests/input-handlers.e2e.ts                     | retired | 19 → 19                   | android 3/3, ios 1/1 | Android: the keyboard is hidden (Back) before reading `original_selection_text_start_end`, which sits under it                                                            |
-| kit/004-aware-scroll-view.e2e.ts                  | tests/aware-scroll-view.e2e.ts                  | retired | 13 → 15                   | android 3/3, ios 0/1 | iOS: tests 1-6 pass; 7-8 need the bottom sheet's buttons (see Gaps). Detox failed 5/8 locally                                                                             |
-| kit/005-keyboard-toolbar.e2e.ts                   | tests/keyboard-toolbar.e2e.ts                   | retired | 19 → 19                   | android 3/3, ios 0/1 | iOS: `TextInput#1` not focused after the AutoFill sheet closes (unexplained)                                                                                              |
-| kit/006-interactive-keyboard.e2e.ts               | tests/interactive-keyboard.e2e.ts               | retired | 3 → 3                     | android 3/3, ios 1/1 |                                                                                                                                                                           |
-| kit/007-keyboard-avoiding-view.e2e.ts             | tests/keyboard-avoiding-view.e2e.ts             | retired | 7 → 7                     | android 3/3, ios 1/1 | secure field masked in screenshots                                                                                                                                        |
-| kit/008-modal.e2e.ts                              | tests/modal.e2e.ts                              | retired | 9 → 9                     | android 3/3, ios 0/1 | iOS: input hidden from the accessibility tree                                                                                                                             |
-| kit/009-native-stack.e2e.ts                       | tests/native-stack.e2e.ts                       | retired | 4 → 4                     | android 3/3, ios 0/1 | iOS: same                                                                                                                                                                 |
-| kit/010-bottom-tab-bar-rotation.e2e.ts            | tests/bottom-tab-bar-rotation.e2e.ts            | retired | 6 → 6                     | android 3/3, ios 0/1 | iOS: same                                                                                                                                                                 |
-| kit/011-over-keyboard-view.e2e.ts                 | tests/over-keyboard-view.e2e.ts                 | retired | 6 → 6                     | android 3/3, ios 1/1 |                                                                                                                                                                           |
-| kit/012-close-keyboard.e2e.ts                     | tests/close-keyboard.e2e.ts                     | retired | 11 → 11                   | android 3/3, ios 1/1 |                                                                                                                                                                           |
-| kit/013-chat-flat-list.e2e.ts                     | tests/chat-flat-list.e2e.ts                     | retired | 4 → 4                     | android 3/3, ios 1/1 |                                                                                                                                                                           |
-| kit/014-keyboard-background-view.e2e.ts           | tests/keyboard-background-view.e2e.ts           | retired | 3 → 3                     | android 3/3, ios 1/1 |                                                                                                                                                                           |
-| kit/015-keyboard-extender.e2e.ts                  | tests/keyboard-extender.e2e.ts                  | retired | 6 → 6                     | android 3/3, ios 0/1 | iOS: inputs hidden from the accessibility tree                                                                                                                            |
-| kit/016-aware-scroll-view-with-sticky-view.e2e.ts | tests/aware-scroll-view-with-sticky-view.e2e.ts | retired | 4 → 4                     | android 3/3, ios 0/1 | iOS: tests 1-2 pass; test 3 blocked (see Gaps, rows under the keyboard), test 4 follows it                                                                                |
-| kit/017-keyboard-chat-scroll-view.e2e.ts          | tests/keyboard-chat-scroll-view.e2e.ts          | retired | 10 → 10                   | android 0/3, ios 0/1 | Android: the last screenshot differs on every run (see Gaps). iOS: bottom sheet's buttons hidden from the accessibility tree. `it.todo` is a `test.skip` in its own group |
+| Source                                            | e2e                                             | Status  | Assertions (source → e2e) | Passing              | Notes                                                                                                                                                                                      |
+| ------------------------------------------------- | ----------------------------------------------- | ------- | ------------------------- | -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| kit/001-keyboard-animation.e2e.ts                 | tests/keyboard-animation.e2e.ts                 | retired | 4 → 4                     | android 3/3, ios 1/1 |                                                                                                                                                                                            |
+| kit/002-enabled-disabled.e2e.ts                   | tests/enabled-disabled.e2e.ts                   | retired | 5 → 5                     | android 3/3, ios 1/1 |                                                                                                                                                                                            |
+| kit/003-input-handlers.e2e.ts                     | tests/input-handlers.e2e.ts                     | retired | 19 → 19                   | android 3/3, ios 1/1 | Android: the keyboard is hidden (Back) before reading the selection labels, which can sit under it                                                                                         |
+| kit/004-aware-scroll-view.e2e.ts                  | tests/aware-scroll-view.e2e.ts                  | retired | 13 → 15                   | android 3/3, ios 1/1 | Android: Backspace deletes the selection before `clear()`, because API 28 lists only the selection toolbar while it shows                                                                  |
+| kit/005-keyboard-toolbar.e2e.ts                   | tests/keyboard-toolbar.e2e.ts                   | retired | 19 → 19                   | android 3/3, ios 0/1 | iOS: `TextInput#1` not focused after the AutoFill sheet closes (unexplained)                                                                                                               |
+| kit/006-interactive-keyboard.e2e.ts               | tests/interactive-keyboard.e2e.ts               | retired | 3 → 3                     | android 3/3, ios 1/1 |                                                                                                                                                                                            |
+| kit/007-keyboard-avoiding-view.e2e.ts             | tests/keyboard-avoiding-view.e2e.ts             | retired | 7 → 7                     | android 3/3, ios 1/1 | secure field masked in screenshots                                                                                                                                                         |
+| kit/008-modal.e2e.ts                              | tests/modal.e2e.ts                              | retired | 9 → 9                     | android 3/3, ios 0/1 | iOS: a screenshot differs in "should close keyboard automatically" (not looked into)                                                                                                       |
+| kit/009-native-stack.e2e.ts                       | tests/native-stack.e2e.ts                       | retired | 4 → 4                     | android 3/3, ios 1/1 |                                                                                                                                                                                            |
+| kit/010-bottom-tab-bar-rotation.e2e.ts            | tests/bottom-tab-bar-rotation.e2e.ts            | retired | 6 → 6                     | android 3/3, ios 1/1 |                                                                                                                                                                                            |
+| kit/011-over-keyboard-view.e2e.ts                 | tests/over-keyboard-view.e2e.ts                 | retired | 6 → 6                     | android 3/3, ios 1/1 |                                                                                                                                                                                            |
+| kit/012-close-keyboard.e2e.ts                     | tests/close-keyboard.e2e.ts                     | retired | 11 → 11                   | android 3/3, ios 1/1 |                                                                                                                                                                                            |
+| kit/013-chat-flat-list.e2e.ts                     | tests/chat-flat-list.e2e.ts                     | retired | 4 → 4                     | android 3/3, ios 1/1 |                                                                                                                                                                                            |
+| kit/014-keyboard-background-view.e2e.ts           | tests/keyboard-background-view.e2e.ts           | retired | 3 → 3                     | android 3/3, ios 1/1 |                                                                                                                                                                                            |
+| kit/015-keyboard-extender.e2e.ts                  | tests/keyboard-extender.e2e.ts                  | retired | 6 → 6                     | android 3/3, ios 0/1 | iOS: `KeyboardExtenderIsAttached` differed by 0.45% on the run after it was written                                                                                                        |
+| kit/016-aware-scroll-view-with-sticky-view.e2e.ts | tests/aware-scroll-view-with-sticky-view.e2e.ts | retired | 4 → 4                     | android 3/3, ios 0/1 | iOS: tests 1-2 pass; test 3 blocked (see Gaps, rows under the keyboard), test 4 follows it                                                                                                 |
+| kit/017-keyboard-chat-scroll-view.e2e.ts          | tests/keyboard-chat-scroll-view.e2e.ts          | retired | 10 → 10                   | android 0/3, ios 0/1 | Android: the last screenshot differs on every run (see Gaps). iOS: a swipe in "should close keyboard interactively" does not fit the viewport. `it.todo` is a `test.skip` in its own group |
 
 ## Shared helpers (`tests/support/kit.ts`)
 
@@ -88,8 +91,8 @@ Password field, and one by a gesture offset; see Gaps.
   `example/src/components/KeyboardAnimation/index.tsx` (`TouchableOpacity`:
   001, 002, 008, 009, 010), the Keyboard Extender screen
   (`keyboard_extender.dismiss`: 015), and the bottom sheet modal (exposed as
-  one "Bottom Sheet" element: 004 tests 7-8, 017). Proposed app change, not
-  made: `accessible={false}` on those wrappers.
+  one "Bottom Sheet" element: 004 tests 7-8, 017). Those wrappers now have
+  `accessible={false}` in the example app.
 - **Secure fields** are masked in every screenshot (007's Password field).
 - **Gesture precision.** One Android checkpoint
   (`KeyboardChatScrollViewAlwaysClosed`) sits ~21 px (Android's touch slop)
@@ -109,9 +112,15 @@ Password field, and one by a gesture offset; see Gaps.
   screenshots in a row match; 016 test 1 on iOS stored a state the app holds
   for under a second. After writing screenshots, run once more without the
   flag and look at any mismatch.
-- **Untested targets.** Only `android-31` and `ios-26` ran. `android-28`
-  uses the AOSP keyboard, where `keyboardTop()` (Gboard's view ids) falls
-  back to the screen bottom.
+- **iOS 15 is dropped.** Detox ran an iPhone 13 Pro on iOS 15.5. On CI
+  agent-device's XCUITest runner fails to build for that simulator
+  (`xcodebuild build-for-testing failed`); its deployment target is iOS 15.6
+  and the newest iOS 15 simulator is 15.5. The oldest iOS target is now 16.4
+  on `main` and 17.5 on pull requests.
+- **Untested targets.** `android-28`, `android-31` and `ios-26` ran
+  locally; `ios-16`, `ios-17`, `ios-18` and `ios-26e` have not.
+- **Android keyboard.** Its top edge comes from the window manager
+  (`dumpsys`), so it holds for Gboard (API 31) and the AOSP keyboard (API 28).
 - **Screenshots per target and host OS** (`<name>-<target>-<os>.png`). CI
   renders Android on Linux and other iOS versions on other devices, so CI
   needs its own screenshots: run `yarn test-example:<target> --update-snapshots`
@@ -124,4 +133,5 @@ Password field, and one by a gesture offset; see Gaps.
 ## Next
 
 - Generate CI screenshots for every target in the workflows' matrix.
-- Decide on the `accessible={false}` app change to unblock iOS.
+- iOS: the five failing files.
+- Android: the unstable screenshot in 017.
