@@ -422,6 +422,18 @@ describe.each(["android", "ios"] as const)(
       expectOpened(keyboard);
     });
 
+    it("should be opened when the mount is over in the middle of keyboard appearance", async () => {
+      const { keyboard } = renderScreen();
+
+      emit("Start", KEYBOARD, 1);
+      emit("", KEYBOARD / 2, 0.5);
+      await finishJSTask();
+      emit("", KEYBOARD, 1);
+      emit("End", KEYBOARD, 1);
+
+      expectOpened(keyboard);
+    });
+
     it("should be opened when the end of keyboard appearance is dispatched before the handler gets attached", async () => {
       setKeyboard(
         os === "ios" ? KEYBOARD : KEYBOARD * 0.9,
@@ -432,6 +444,23 @@ describe.each(["android", "ios"] as const)(
       const { keyboard } = renderScreen();
 
       await finishJSTask();
+
+      expectOpened(keyboard);
+    });
+
+    it("should know keyboard height when mounted in the middle of keyboard appearance", async () => {
+      // `onStart` was dispatched before the mount
+      if (os === "ios") {
+        setKeyboard(KEYBOARD, 1);
+      } else {
+        setKeyboard(KEYBOARD / 3, 1 / 3);
+      }
+
+      const { keyboard } = renderScreen();
+
+      await finishJSTask();
+      emit("", KEYBOARD, 1);
+      emit("End", KEYBOARD, 1);
 
       expectOpened(keyboard);
     });

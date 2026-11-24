@@ -47,6 +47,11 @@ export const useKeyboardAnimation = () => {
 
         isClosed.value = e.height === 0;
 
+        // `onStart` is not received if the view was mounted during keyboard appearance
+        if (e.height > 0) {
+          heightWhenOpened.value = e.height;
+        }
+
         height.value = e.height;
         progress.value = e.progress;
       },
