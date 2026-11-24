@@ -211,7 +211,14 @@ jobs:
         env:
           # several runtimes can hold a simulator with the same name
           E2E_IOS_DEVICE: ${{ steps.simulator.outputs.simulator-id }}
-        run: SOFT_CHECK=false yarn test-example:ios-${{ matrix.devices.ios }}
+        run: SOFT_CHECK=false yarn test-example:ios-${{ matrix.devices.ios }} --update-snapshots
+      # TEMPORARY: CI has no stored screenshots yet; write them and upload
+      # them so they can be reviewed and committed.
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() }}
+        with:
+          name: ios-screenshots-${{ matrix.devices.ios }}
+          path: e2e/tests/*-snapshots/*-ios-${{ matrix.devices.ios }}-darwin.png
       - uses: actions/upload-artifact@v4
         if: ${{ failure() }}
         with:

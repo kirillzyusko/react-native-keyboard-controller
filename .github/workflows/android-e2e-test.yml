@@ -164,7 +164,14 @@ jobs:
           disable-animations: false
           avd-name: e2e_emulator_${{ matrix.devices.api }}
           arch: x86_64
-          script: SOFT_CHECK=${{ matrix.devices.soft-check }} yarn test-example:android-${{ matrix.devices.api }}
+          script: SOFT_CHECK=${{ matrix.devices.soft-check }} yarn test-example:android-${{ matrix.devices.api }} --update-snapshots
+      # TEMPORARY: CI has no stored screenshots yet; write them and upload
+      # them so they can be reviewed and committed.
+      - uses: actions/upload-artifact@v4
+        if: ${{ always() }}
+        with:
+          name: android-screenshots-${{ matrix.devices.api }}
+          path: e2e/tests/*-snapshots/*-android-${{ matrix.devices.api }}-linux.png
       - uses: actions/upload-artifact@v4
         if: ${{ failure() }}
         with:
