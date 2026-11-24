@@ -173,13 +173,31 @@ export async function hideAndroidKeyboard(ctx: Ctx): Promise<void> {
   if (ctx.platform !== "android") {
     return;
   }
-  const holder = ctx.screen.getByTestId(
-    "com.google.android.inputmethod.latin:id/keyboard_holder",
-  );
-
-  if ((await holder.count()) > 0) {
+  if (androidKeyboardTop(ctx) !== undefined) {
     await ctx.device.back();
   }
+}
+
+/**
+ * Android: the soft keyboard's top edge in pixels, or `undefined` when none
+ * shows. Read from the window manager, so it holds for any keyboard (Gboard on
+ * API 31, the AOSP keyboard on API 28): the keyboard's window frame plus the
+ * content inset it reports is where its keys start.
+ */
+function androidKeyboardTop({ device }: Ctx): number | undefined {
+  const shell = (command: string) =>
+    execFileSync(adb, ["-s", device.unstable_raw.deviceId, "shell", command], {
+      encoding: "utf8",
+    });
+
+  if (!shell("dumpsys input_method").includes("mInputShown=true")) {
+    return undefined;
+  }
+  const dump = shell("dumpsys window InputMethod");
+  const frame = /mFrame=\[\d+,(\d+)\]/.exec(dump);
+  const insets = /mGivenContentInsets=\[\d+,(\d+)\]/.exec(dump);
+
+  return frame && insets ? Number(frame[1]) + Number(insets[1]) : undefined;
 }
 
 /**
@@ -215,8 +233,8 @@ export async function selectText(ctx: Ctx, id: string): Promise<void> {
 
 /**
  * Top edge of the soft keyboard in `boundingBox` units, or the screen bottom
- * when none shows. iOS lists a `keyboard` node; Android lists Gboard's
- * keyboard holder (as hidden) beside the app.
+ * when none shows. iOS lists a `keyboard` node; Android asks the window
+ * manager.
  */
 async function keyboardTop(ctx: Ctx): Promise<number> {
   const size = await viewport(ctx);
@@ -231,16 +249,8 @@ async function keyboardTop(ctx: Ctx): Promise<number> {
 
     return box ? box.y : size.height;
   }
-  const holder = ctx.screen.getByTestId(
-    "com.google.android.inputmethod.latin:id/keyboard_holder",
-  );
 
-  if ((await holder.count()) === 0) {
-    return size.height;
-  }
-  const box = await holder.first().boundingBox();
-
-  return box ? box.y : size.height;
+  return androidKeyboardTop(ctx) ?? size.height;
 }
 
 /**

@@ -45,11 +45,12 @@ describe("input handlers functionality", { serial: true }, () => {
     await expect(screen.getByTestId("worklet_text")).toHaveText(
       "Worklet: QWERTY\nqwerty",
     );
+    // On Android these labels can sit under the keyboard, out of the
+    // accessibility tree.
+    await hideAndroidKeyboard(ctx);
     await expect(screen.getByTestId("selection_text_start_end")).toHaveText(
       "start: 13, end: 13",
     );
-    // On Android this label is under the keyboard, out of the accessibility tree.
-    await hideAndroidKeyboard(ctx);
     await expect(
       screen.getByTestId("original_selection_text_start_end"),
     ).toHaveText("start: 13, end: 13");
@@ -63,11 +64,12 @@ describe("input handlers functionality", { serial: true }, () => {
     await expect(screen.getByTestId("worklet_text")).toHaveText(
       "Worklet: QWERTY",
     );
+    // On Android these labels can sit under the keyboard, out of the
+    // accessibility tree.
+    await hideAndroidKeyboard(ctx);
     await expect(screen.getByTestId("selection_text_start_end")).toHaveText(
       "start: 6, end: 6",
     );
-    // On Android this label is under the keyboard, out of the accessibility tree.
-    await hideAndroidKeyboard(ctx);
     await expect(
       screen.getByTestId("original_selection_text_start_end"),
     ).toHaveText("start: 6, end: 6");
@@ -80,11 +82,12 @@ describe("input handlers functionality", { serial: true }, () => {
     await expect(screen.getByTestId("worklet_text")).toHaveText(
       "Worklet: QWERT",
     );
+    // On Android these labels can sit under the keyboard, out of the
+    // accessibility tree.
+    await hideAndroidKeyboard(ctx);
     await expect(screen.getByTestId("selection_text_start_end")).toHaveText(
       "start: 5, end: 5",
     );
-    // On Android this label is under the keyboard, out of the accessibility tree.
-    await hideAndroidKeyboard(ctx);
     await expect(
       screen.getByTestId("original_selection_text_start_end"),
     ).toHaveText("start: 5, end: 5");
@@ -97,10 +100,12 @@ describe("input handlers functionality", { serial: true }, () => {
       "start: 5, end: 5",
     );
     await screen.getByTestId("masked_input").tap();
+    await hideAndroidKeyboard(ctx);
     await expect(screen.getByTestId("selection_text_start_end")).toHaveText(
       "start: 18, end: 18",
     );
     await typeText(ctx, "multiline_input", ""); // just set focus back
+    await hideAndroidKeyboard(ctx);
     await expect(screen.getByTestId("selection_text_start_end")).toHaveText(
       "start: 5, end: 5",
     );

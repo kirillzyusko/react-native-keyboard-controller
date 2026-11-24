@@ -12,6 +12,7 @@ import {
   scrollUpUntilElementIsBarelyVisible,
   selectText,
   tapAtCentre,
+  tapBackspaceKey,
   test,
   typeText,
 } from "./support/kit";
@@ -89,6 +90,13 @@ describe("AwareScrollView test cases", { serial: true }, () => {
       "AwareScrollViewTextSelectionChanged",
       BLINKING_CURSOR,
     );
+
+    if (ctx.platform === "android") {
+      // While the selection toolbar shows, Android API 28 lists only that
+      // toolbar and the keyboard, so the field cannot be found. Deleting the
+      // selection closes the toolbar.
+      await tapBackspaceKey(ctx);
+    }
     await ctx.screen.getByTestId("TextInput#4").clear();
   });
 

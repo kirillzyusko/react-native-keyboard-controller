@@ -215,7 +215,8 @@
     "LDPLUSPLUS",
     "keyevent",
     "getprop",
-    "UDID"
+    "UDID",
+    "dumpsys"
   ],
   "ignorePaths": [
     "node_modules",
