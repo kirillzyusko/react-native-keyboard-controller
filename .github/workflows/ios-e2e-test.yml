@@ -139,6 +139,8 @@ jobs:
     env:
       WORKING_DIRECTORY: example
     strategy:
+      # TEMPORARY: let every device finish while the migration is in progress
+      fail-fast: false
       matrix: ${{ fromJson(needs.determine-e2e-matrix.outputs.matrix) }}
     needs: [build, determine-e2e-matrix]
     steps:
