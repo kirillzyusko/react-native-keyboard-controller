@@ -111,10 +111,19 @@ Password field, and one by a gesture offset; see Gaps. For API 28 it is 56 of 64
   (`KeyboardChatScrollViewAlwaysClosed`) sits ~21 px (Android's touch slop)
   from Detox's after a slow 10% swipe; later checkpoints in the file match.
 - **`KeyboardChatScrollViewAlwaysInputGrown` is not stable on Android.**
-  Since the chat playground changed on `main`, the list ends tens of pixels
-  apart from run to run after four Enter presses grow the input. The stored
-  screenshot is the one two runs agreed on, which is also Detox's. Waiting for the input's bounds between presses did not
-  help; the cause is not known.
+  After four Enter presses grow the input, the list ends short of where
+  Detox's screenshot has it, by a different amount each run. It is not the
+  test runner: with e2e detached and the keys sent by
+  `adb shell input keyevent KEYCODE_ENTER` alone, four rounds ended 2, 7, 2
+  and 5 px short (1.5 s between keys) and one batch of four keys 36 px
+  short; inside an e2e session the same batch ended 45 to 113 px short. The
+  screen before the first key is identical every time. The list is never
+  ahead, only behind, which is the limitation the comment in
+  `src/components/KeyboardChatScrollView/useExtraContentPadding/index.ts`
+  describes: a scroll event that arrives late leaves the list behind. Detox
+  waits for the app to idle around every key and matched at 0.01%. The check
+  passed before the example app moved to the native stack. The stored
+  screenshot is the one that matches Detox's.
 - **`SOFT_CHECK`.** CI sets it for API 31, and 004 then skips two pixel
   checks, so `AwareScrollViewInputChanged` and `AwareScrollViewKeyboardClosed`
   have no `android-31` screenshot. Run that target with `SOFT_CHECK=true`.
