@@ -1,11 +1,12 @@
-import { useLayoutEffect } from "react";
 import { Platform } from "react-native";
 import { useSharedValue } from "react-native-reanimated";
 
 import { useKeyboardContext } from "../../context";
 import { useKeyboardHandler } from "../../hooks";
 
-const OS = Platform.OS;
+import type { NativeEvent } from "../../types";
+
+const IS_IOS = Platform.OS === "ios";
 
 export const useKeyboardAnimation = () => {
   const { reanimated } = useKeyboardContext();
@@ -14,103 +15,133 @@ export const useKeyboardAnimation = () => {
   const height = useSharedValue(0);
   const progress = useSharedValue(0);
   const isClosed = useSharedValue(true);
+  const openingStarts = useSharedValue(0);
+  const frameRevision = useSharedValue(0);
 
-  useLayoutEffect(() => {
-    const initialHeight = -reanimated.height.value;
-    const initialProgress = reanimated.progress.value;
+  const onFrame = (e: NativeEvent) => {
+    "worklet";
+    frameRevision.value += 1;
+    progress.value = e.progress;
+    height.value = e.height;
 
-    // eslint-disable-next-line react-compiler/react-compiler
-    heightWhenOpened.value = initialHeight;
-    height.value = initialHeight;
-    progress.value = initialProgress;
-    isClosed.value = initialProgress === 0;
-  }, []);
+    if (e.height > 0) {
+      isClosed.value = false;
+
+      if (heightWhenOpened.value === 0 && e.progress > 0) {
+        heightWhenOpened.value = e.height / e.progress;
+      }
+    }
+  };
 
   useKeyboardHandler(
     {
       onStart: (e) => {
         "worklet";
 
+        // On iOS the provider jumps to the destination at start. Keep our
+        // current frame until the native move arrives.
+        if (IS_IOS) {
+          // eslint-disable-next-line react-compiler/react-compiler
+          frameRevision.value += 1;
+        }
+
         if (e.height > 0) {
+          openingStarts.value += 1;
           isClosed.value = false;
           heightWhenOpened.value = e.height;
         }
       },
-      onMove: (e) => {
-        "worklet";
-
-        progress.value = e.progress;
-        height.value = e.height;
-      },
-      onInteractive: (e) => {
-        "worklet";
-
-        progress.value = e.progress;
-        height.value = e.height;
-      },
+      onMove: onFrame,
+      onInteractive: onFrame,
       onEnd: (e) => {
         "worklet";
 
+        frameRevision.value += 1;
         isClosed.value = e.height === 0;
+
+        if (e.progress === 1) {
+          heightWhenOpened.value = e.height;
+        }
 
         height.value = e.height;
         progress.value = e.progress;
       },
     },
     [],
+    () => {
+      // Compare against this attachment, including when Suspense reuses the view.
+      const openingStartsBefore = openingStarts.value;
+      const frameRevisionBefore = frameRevision.value;
+
+      return () => {
+        "worklet";
+        const initialHeight = -reanimated.height.value;
+        const initialProgress = reanimated.progress.value;
+
+        if (frameRevision.value === frameRevisionBefore) {
+          height.value = initialHeight;
+          progress.value = initialProgress;
+        }
+        if (openingStarts.value === openingStartsBefore) {
+          // Native move events report progress as height / opened height.
+          heightWhenOpened.value =
+            progress.value > 0 ? height.value / progress.value : 0;
+        }
+        if (
+          openingStarts.value === openingStartsBefore &&
+          frameRevision.value === frameRevisionBefore
+        ) {
+          isClosed.value = initialProgress === 0;
+        }
+      };
+    },
   );
 
   return { height, progress, heightWhenOpened, isClosed };
 };
 export const useTranslateAnimation = () => {
   const { reanimated } = useKeyboardContext();
-
   const padding = useSharedValue(0);
-  const translate = useSharedValue(0);
-
-  useLayoutEffect(() => {
-    // eslint-disable-next-line react-compiler/react-compiler
-    padding.value = reanimated.progress.value;
-  }, []);
+  const paddingUpdates = useSharedValue(0);
 
   useKeyboardHandler(
     {
       onStart: (e) => {
         "worklet";
 
+        // eslint-disable-next-line react-compiler/react-compiler
+        paddingUpdates.value += 1;
+
         if (e.height === 0) {
           padding.value = 0;
         }
-        if (OS === "ios") {
-          translate.value = e.progress;
-        }
       },
-      onMove: (e) => {
+      onInteractive: () => {
         "worklet";
 
-        if (OS !== "ios") {
-          translate.value = e.progress;
-        }
-      },
-      onInteractive: (e) => {
-        "worklet";
-
+        paddingUpdates.value += 1;
         padding.value = 0;
-
-        translate.value = e.progress;
       },
       onEnd: (e) => {
         "worklet";
 
+        paddingUpdates.value += 1;
         padding.value = e.progress;
-
-        if (OS !== "ios") {
-          translate.value = e.progress;
-        }
       },
     },
     [],
+    () => {
+      const before = paddingUpdates.value;
+
+      return () => {
+        "worklet";
+
+        if (paddingUpdates.value === before) {
+          padding.value = reanimated.progress.value;
+        }
+      };
+    },
   );
 
-  return { translate, padding };
+  return { translate: reanimated.progress, padding };
 };

@@ -91,6 +91,7 @@ const KeyboardAvoidingView = forwardRef<
     ref,
   ) => {
     const initialFrame = useSharedValue<LayoutRectangle | null>(null);
+    const lastLayoutHeight = useSharedValue(0);
     const internalRef = React.useRef<View | null>(null);
     const frame = useDerivedValue(() => initialFrame.value || defaultLayout);
 
@@ -119,12 +120,14 @@ const KeyboardAvoidingView = forwardRef<
       (layout: LayoutRectangle) => {
         "worklet";
 
+        // eslint-disable-next-line react-compiler/react-compiler
+        lastLayoutHeight.value = layout.height;
+
         if (
           keyboard.isClosed.value ||
           initialFrame.value === null ||
           behavior !== "height"
         ) {
-          // eslint-disable-next-line react-compiler/react-compiler
           initialFrame.value = layout;
         }
       },
@@ -177,7 +180,12 @@ const KeyboardAvoidingView = forwardRef<
 
       switch (behavior) {
         case "height":
-          if (!keyboard.isClosed.value && height > 0) {
+          // A resumed view can miss the last frame that restores its full height.
+          if (
+            height > 0 &&
+            (!keyboard.isClosed.value ||
+              lastLayoutHeight.value !== frame.value.height)
+          ) {
             return {
               height,
               flex: 0,

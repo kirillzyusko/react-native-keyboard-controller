@@ -87,6 +87,7 @@ export const useReanimatedKeyboardAnimation = (): ReanimatedContext => {
  *
  * @param handler - Object containing keyboard event handlers.
  * @param [deps] - Dependencies array for the effect.
+ * @param [prepareSync] - Called on each subscription. Return a worklet to read current keyboard values on the UI thread after registration. Native events may have already reached the handler.
  * @example
  * ```tsx
  * function MyComponent() {
@@ -115,6 +116,7 @@ export const useReanimatedKeyboardAnimation = (): ReanimatedContext => {
 export function useGenericKeyboardHandler(
   handler: KeyboardHandler,
   deps?: unknown[],
+  prepareSync?: () => () => void,
 ) {
   const context = useKeyboardContext();
 
@@ -150,9 +152,9 @@ export function useGenericKeyboardHandler(
   );
 
   useLayoutEffect(() => {
-    const cleanup = context.setKeyboardHandlers(eventHandler);
-
-    return () => cleanup();
+    return prepareSync
+      ? context.setKeyboardHandlers(eventHandler, prepareSync())
+      : context.setKeyboardHandlers(eventHandler);
   }, deps);
 }
 
@@ -161,6 +163,7 @@ export function useGenericKeyboardHandler(
  *
  * @param handler - Object containing keyboard event handlers.
  * @param [deps] - Dependencies array for the effect.
+ * @param [prepareSync] - Called on each subscription. Return a worklet to read current keyboard values on the UI thread after registration. Native events may have already reached the handler.
  * @see {@link https://kirillzyusko.github.io/react-native-keyboard-controller/docs/api/hooks/keyboard/use-keyboard-handler|Documentation} page for more details.
  * @example
  * ```tsx
@@ -187,9 +190,13 @@ export function useGenericKeyboardHandler(
  * }
  * ```
  */
-export function useKeyboardHandler(handler: KeyboardHandler, deps?: unknown[]) {
+export function useKeyboardHandler(
+  handler: KeyboardHandler,
+  deps?: unknown[],
+  prepareSync?: () => () => void,
+) {
   useResizeMode();
-  useGenericKeyboardHandler(handler, deps);
+  useGenericKeyboardHandler(handler, deps, prepareSync);
 }
 
 /**

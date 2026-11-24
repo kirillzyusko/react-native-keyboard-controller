@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import { Animated } from "react-native";
+import { runOnUI } from "react-native-reanimated";
 
 import { findNodeHandle } from "./utils/findNodeHandle";
 
@@ -36,7 +37,10 @@ type WorkletHandlerContainer =
 export function useEventHandlerRegistration(
   viewTagRef: React.MutableRefObject<ComponentOrHandle>,
 ) {
-  const onRegisterHandler = (handler: EventHandlerProcessed<never, never>) => {
+  const onRegisterHandler = (
+    handler: EventHandlerProcessed<never, never>,
+    onRegistered?: () => void,
+  ) => {
     const currentHandler = handler as unknown as WorkletHandlerContainer;
     let registeredViewTag: number | null = null;
     let isRegistrationCancelled = false;
@@ -61,6 +65,11 @@ export function useEventHandlerRegistration(
         }
 
         registeredViewTag = viewTag;
+
+        if (onRegistered) {
+          // registerForEvents has enqueued the native handlers on the UI scheduler.
+          runOnUI(onRegistered)();
+        }
       }
     };
 

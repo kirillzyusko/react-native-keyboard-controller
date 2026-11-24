@@ -60,6 +60,33 @@ Since `onMove` handler on iOS is based on `CADisplayLink` usage - you may need t
 
 :::
 
+### Synchronizing on subscription
+
+A screen can mount or resume after the keyboard has already moved. To initialize local state, pass an optional third argument to `useKeyboardHandler`. It runs on the React Native JS thread for each subscription and returns a worklet. The library schedules that worklet on the UI thread after registering the native handlers.
+
+For example, a component can initialize the visibility of a toolbar from the provider if it missed the last keyboard event.
+
+```tsx
+const { progress } = useReanimatedKeyboardAnimation();
+const visible = useSharedValue(false);
+
+useKeyboardHandler(
+  {
+    onEnd: (event) => {
+      "worklet";
+      visible.value = event.progress > 0;
+    },
+  },
+  [],
+  () => () => {
+    "worklet";
+    visible.value = progress.value > 0;
+  },
+);
+```
+
+Read the provider inside the returned worklet. Native callbacks can run before it. When a callback records an opening target, keep that target separate from the current frame height. On iOS the provider reports the target at `onStart`, and local `onMove` events provide the intermediate frames.
+
 ### Event structure
 
 - `height` - height of the keyboard;

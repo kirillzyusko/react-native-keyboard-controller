@@ -13,9 +13,14 @@ type EventHandler = Parameters<
 
 const VIEW = 1;
 const VIEW_TAG = 42;
+const mockUIJobs: (() => void)[] = [];
 
 jest.mock("../utils/findNodeHandle", () => ({
   findNodeHandle: jest.fn(),
+}));
+jest.mock("react-native-reanimated", () => ({
+  ...require("react-native-reanimated/mock"),
+  runOnUI: (worklet: () => void) => () => mockUIJobs.push(worklet),
 }));
 
 const mockedFindNodeHandle = jest.mocked(findNodeHandle);
@@ -44,6 +49,7 @@ function renderRegistration(viewTagRef: React.MutableRefObject<number | null>) {
 }
 
 beforeEach(() => {
+  mockUIJobs.length = 0;
   mockedFindNodeHandle.mockReset();
   mockedFindNodeHandle.mockImplementation((view) =>
     view === null ? null : VIEW_TAG,
@@ -56,6 +62,40 @@ afterEach(() => {
 });
 
 describe("useEventHandlerRegistration", () => {
+  it.each([
+    ["current", false],
+    ["current", true],
+    ["workletEventHandler", false],
+    ["workletEventHandler", true],
+  ] as const)(
+    "queues the UI worklet after %s registration (deferred %s)",
+    async (shape, deferred) => {
+      const ref = { current: deferred ? null : VIEW };
+      const handler = createWorkletHandler();
+      const events: string[] = [];
+      const sync = () => events.push("sync");
+      const register = renderRegistration(ref);
+
+      handler.registerForEvents.mockImplementation(() => {
+        for (const phase of ["start", "move", "end", "interactive"]) {
+          mockUIJobs.push(() => events.push(phase));
+        }
+      });
+      const cleanup = register(
+        { [shape]: handler } as unknown as EventHandler,
+        sync,
+      );
+
+      expect(mockUIJobs).toHaveLength(deferred ? 0 : 5);
+      ref.current = VIEW;
+      await Promise.resolve();
+      expect(events).toEqual([]);
+      mockUIJobs.forEach((work) => work());
+      expect(events).toEqual(["start", "move", "end", "interactive", "sync"]);
+      cleanup();
+    },
+  );
+
   it("should support the handler shape from Reanimated 3.8 and newer", () => {
     const viewTagRef = { current: VIEW };
     const workletEventHandler = createWorkletHandler();
@@ -133,15 +173,17 @@ describe("useEventHandlerRegistration", () => {
     const viewTagRef = { current: null as number | null };
     const workletEventHandler = createWorkletHandler();
     const register = renderRegistration(viewTagRef);
-    const cleanup = register({
-      workletEventHandler,
-    } as unknown as EventHandler);
+    const cleanup = register(
+      { workletEventHandler } as unknown as EventHandler,
+      jest.fn(),
+    );
 
     cleanup();
     viewTagRef.current = VIEW;
     await Promise.resolve();
 
     expect(workletEventHandler.registerForEvents).not.toHaveBeenCalled();
+    expect(mockUIJobs).toHaveLength(0);
   });
 
   it("should not resolve a tag or warn after provider teardown", async () => {
@@ -209,14 +251,16 @@ describe("useEventHandlerRegistration", () => {
     const viewTagRef = { current: null };
     const workletEventHandler = createWorkletHandler();
     const register = renderRegistration(viewTagRef);
-    const cleanup = register({
-      workletEventHandler,
-    } as unknown as EventHandler);
+    const cleanup = register(
+      { workletEventHandler } as unknown as EventHandler,
+      jest.fn(),
+    );
 
     await Promise.resolve();
     cleanup();
 
     expect(workletEventHandler.registerForEvents).not.toHaveBeenCalled();
     expect(workletEventHandler.unregisterFromEvents).not.toHaveBeenCalled();
+    expect(mockUIJobs).toHaveLength(0);
   });
 });

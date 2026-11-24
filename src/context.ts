@@ -40,6 +40,7 @@ export type KeyboardAnimationContext = {
   /** Method for setting workletized keyboard handlers. */
   setKeyboardHandlers: (
     handlers: EventHandlerProcessed<never, never>,
+    onRegistered?: () => void,
   ) => () => void;
   /** Method for setting workletized handlers for tracking focused input events. */
   setInputHandlers: (
