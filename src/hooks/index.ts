@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect } from "react";
-import { useEvent } from "react-native-reanimated";
+import { runOnUI, useEvent } from "react-native-reanimated";
 
 import { AndroidSoftInputModes } from "../constants";
 import { useKeyboardContext } from "../context";
@@ -151,6 +151,23 @@ export function useGenericKeyboardHandler(
 
   useLayoutEffect(() => {
     const cleanup = context.setKeyboardHandlers(eventHandler);
+    const { onSync } = handler;
+    const { height, progress } = context.reanimated;
+
+    if (onSync) {
+      // events dispatched before the handler was attached are not delivered to it,
+      // so the state that the keyboard has now is reported separately
+      runOnUI(() => {
+        "worklet";
+
+        onSync({
+          height: Math.abs(height.value),
+          progress: progress.value,
+          duration: 0,
+          target: -1,
+        });
+      })();
+    }
 
     return () => cleanup();
   }, deps);
