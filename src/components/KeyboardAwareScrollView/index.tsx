@@ -510,6 +510,16 @@ const KeyboardAwareScrollView = forwardRef<
           if (e.height === 0) {
             selectionUpdatedSinceHide.value = false;
           } else if (keyboardWillAppear.value) {
+            if (
+              pendingSelectionForFocus.value &&
+              lastSelection.value?.target !== tag.value
+            ) {
+              // no selection arrived while the keyboard was moving (an empty
+              // Android input sends none until typing), so `onMove` never
+              // scrolled - scroll now with the full input layout from `onStart`
+              position.value += maybeScroll(e.height, true);
+              scrollPosition.value = position.value;
+            }
             // keyboard fully shown after appearing from hidden state — clear
             // pending flag to prevent leaking into next focus-change session.
             // Only when the keyboard was actually appearing (not a focus switch

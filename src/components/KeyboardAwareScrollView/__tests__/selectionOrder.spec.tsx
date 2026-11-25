@@ -110,4 +110,28 @@ describe("KeyboardAwareScrollView — selection order", () => {
       );
     });
   });
+
+  describe("Android empty input: onStart → onMove → onEnd, no onSelectionChange", () => {
+    it("should scroll with the full input layout when the keyboard is shown", async () => {
+      await renderKeyboardAwareScrollView();
+      mockInput.value = inputEvent(INPUT_TARGET_B, INPUT_LAYOUT_B);
+
+      mockKeyboardHandlers.current.onStart(
+        kbEvent(KEYBOARD_HEIGHT, INPUT_TARGET_B),
+      );
+
+      mockScrollTo.mockClear();
+      mockKeyboardHandlers.current.onMove(kbEvent(156, INPUT_TARGET_B));
+      mockKeyboardHandlers.current.onMove(
+        kbEvent(KEYBOARD_HEIGHT, INPUT_TARGET_B),
+      );
+      mockKeyboardHandlers.current.onEnd(
+        kbEvent(KEYBOARD_HEIGHT, INPUT_TARGET_B),
+      );
+
+      // No selection arrived, so the full input height (60.33) is used:
+      // point = 695.67 + 60.33 = 756, relativeScrollTo = 312 - (928 - 756) + 62 = 202
+      expect(lastScrollToY()).toBeCloseTo(202, 0);
+    });
+  });
 });
