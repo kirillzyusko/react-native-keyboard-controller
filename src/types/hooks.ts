@@ -162,10 +162,10 @@ export type Handlers<T> = Record<string, T | undefined>;
 export type KeyboardHandler = Partial<{
   /**
    * A callback that gets invoked after the handler is attached: when a component is mounted
-   * and when a frozen screen becomes active again. It is not invoked when dependencies of the
-   * handler change. The event contains CURRENT state of the keyboard, tag of the currently
-   * focused input and `duration` equal to `0`. Events dispatched while the handler was not
-   * attached are not delivered, so use it for initializing values that other callbacks update.
+   * and when a frozen screen becomes active again. The event contains CURRENT state of the
+   * keyboard, tag of the currently focused input and `duration` equal to `0`. Events dispatched
+   * while the handler was not attached are not delivered, so use it for initializing values
+   * that other callbacks update.
    *
    * @example
    * ```ts

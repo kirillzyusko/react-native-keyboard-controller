@@ -75,9 +75,7 @@ Since `onMove` handler on iOS is based on `CADisplayLink` usage - you may need t
 
 #### `onSync`
 
-This function is called after the handler gets attached: when a component is mounted and when a frozen screen becomes active again. It is not called when dependencies of the handler change.
-
-The event contains **current** state of the keyboard: `height` and `progress` that the keyboard has at this moment, `target` of the currently focused `TextInput` (`-1` if there is no focused input) and `duration` equal to `0`.
+This function is called after the handler gets attached: when a component is mounted and when a frozen screen becomes active again. The event contains **current** state of the keyboard: `height` and `progress` that the keyboard has at this moment, `target` of the currently focused `TextInput` (`-1` if there is no focused input) and `duration` equal to `0`.
 
 Events dispatched while the handler was not attached are not delivered to it. Use `onSync` to initialize values that other handlers update, i. e. when a component is mounted while the keyboard is already visible:
 
