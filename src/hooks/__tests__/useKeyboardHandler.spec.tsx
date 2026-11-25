@@ -326,6 +326,34 @@ describe("`useGenericKeyboardHandler` synchronization", () => {
 
     expect(calls).toEqual(["sync:0", "sync:1"]);
   });
+
+  it("should not report the state when dependencies of the handler change", async () => {
+    const calls: string[] = [];
+    const { rerender } = renderHook(
+      ({ dependency }: { dependency: number }) => {
+        useGenericKeyboardHandler(
+          {
+            onSync: (e) => {
+              calls.push(`sync:${e.progress}`);
+            },
+            onEnd: (e) => {
+              calls.push(`end:${e.progress}`);
+            },
+          },
+          [dependency],
+        );
+      },
+      { initialProps: { dependency: 1 } },
+    );
+
+    await finishJSTask();
+    open();
+    act(() => rerender({ dependency: 2 }));
+    await finishJSTask();
+    close();
+
+    expect(calls).toEqual(["sync:0", "end:1", "end:0"]);
+  });
 });
 
 describe.each(["android", "ios"] as const)(

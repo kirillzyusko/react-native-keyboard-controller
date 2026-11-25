@@ -151,12 +151,18 @@ export function useGenericKeyboardHandler(
 
   useLayoutEffect(() => {
     const cleanup = context.setKeyboardHandlers(eventHandler);
+
+    return () => cleanup();
+  }, deps);
+
+  // events dispatched while the handler was not attached (before the mount or while the screen
+  // was frozen) are not delivered to it, so the state that the keyboard has now is reported
+  // separately. Changed `deps` don't make the handler miss events, hence a separate effect
+  useLayoutEffect(() => {
     const { onSync } = handler;
     const { height, progress } = context.reanimated;
 
     if (onSync) {
-      // events dispatched before the handler was attached are not delivered to it,
-      // so the state that the keyboard has now is reported separately
       runOnUI(() => {
         "worklet";
 
@@ -168,9 +174,7 @@ export function useGenericKeyboardHandler(
         });
       })();
     }
-
-    return () => cleanup();
-  }, deps);
+  }, []);
 }
 
 /**
