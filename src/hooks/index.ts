@@ -160,6 +160,7 @@ export function useGenericKeyboardHandler(
   // separately. Changed `deps` don't make the handler miss events, hence a separate effect
   useLayoutEffect(() => {
     const { onSync } = handler;
+    const { layout } = context;
     const { height, progress } = context.reanimated;
 
     if (onSync) {
@@ -170,7 +171,7 @@ export function useGenericKeyboardHandler(
           height: Math.abs(height.value),
           progress: progress.value,
           duration: 0,
-          target: -1,
+          target: layout.value?.target ?? -1,
         });
       })();
     }
