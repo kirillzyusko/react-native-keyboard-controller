@@ -73,6 +73,7 @@ function ConfigSheet() {
   return (
     <BottomSheet
       ref={bottomSheetModalRef}
+      accessible={false}
       index={-1}
       snapPoints={["50%"]}
       onChange={handleSheetChange}

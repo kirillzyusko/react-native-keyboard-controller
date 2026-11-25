@@ -49,6 +49,7 @@ export default function KeyboardExtendExample() {
     <>
       <Image source={require("./background.jpg")} style={styles.background} />
       <TouchableWithoutFeedback
+        accessible={false}
         testID="keyboard_extender.dismiss"
         onPress={() => Keyboard.dismiss()}
       >
