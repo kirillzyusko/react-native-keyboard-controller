@@ -161,6 +161,23 @@ export type FocusedInputSelectionHandlerHook<TContext, Event> = (
 export type Handlers<T> = Record<string, T | undefined>;
 export type KeyboardHandler = Partial<{
   /**
+   * A callback that gets invoked after the handler is attached: when a component is mounted
+   * and when a frozen screen becomes active again. The event contains CURRENT state of the
+   * keyboard, tag of the currently focused input and `duration` equal to `0`. Events dispatched
+   * while the handler was not attached are not delivered, so use it for initializing values
+   * that other callbacks update.
+   *
+   * @example
+   * ```ts
+   * onSync: (e) => {
+   *   "worklet";
+   *
+   *   const isKeyboardShown = e.progress === 1;
+   * }
+   * ```
+   */
+  onSync: (e: NativeEvent) => void;
+  /**
    * A callback that gets invoked when keyboard starts its movement.
    * The event contains DESTINATION values.
    *

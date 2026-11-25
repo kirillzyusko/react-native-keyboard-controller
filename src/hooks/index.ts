@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect } from "react";
-import { useEvent } from "react-native-reanimated";
+import { runOnUI, useEvent } from "react-native-reanimated";
 
 import { AndroidSoftInputModes } from "../constants";
 import { useKeyboardContext } from "../context";
@@ -154,6 +154,28 @@ export function useGenericKeyboardHandler(
 
     return () => cleanup();
   }, deps);
+
+  // events dispatched while the handler was not attached (before the mount or while the screen
+  // was frozen) are not delivered to it, so the state that the keyboard has now is reported
+  // separately. Changed `deps` don't make the handler miss events, hence a separate effect
+  useLayoutEffect(() => {
+    const { onSync } = handler;
+    const { layout } = context;
+    const { height, progress } = context.reanimated;
+
+    if (onSync) {
+      runOnUI(() => {
+        "worklet";
+
+        onSync({
+          height: Math.abs(height.value),
+          progress: progress.value,
+          duration: 0,
+          target: layout.value?.target ?? -1,
+        });
+      })();
+    }
+  }, []);
 }
 
 /**

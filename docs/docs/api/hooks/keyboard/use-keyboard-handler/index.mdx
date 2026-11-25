@@ -3,6 +3,7 @@ keywords:
   [
     react-native-keyboard-controller,
     useKeyboardHandler,
+    onSync,
     onStart,
     onMove,
     onInteractive,
@@ -25,6 +26,9 @@ import CodeBlock from "@theme/CodeBlock";
 ```tsx
 useKeyboardHandler(
   {
+    onSync: (e) => {
+      "worklet";
+    },
     onStart: (e) => {
       "worklet";
     },
@@ -44,7 +48,7 @@ useKeyboardHandler(
 
 :::caution Worklet directives
 
-Don't forget to add `worklet` directive to all `onStart`/`onMove`/`onInteractive`/`onEnd` handlers. Otherwise your code will throw exception.
+Don't forget to add `worklet` directive to all `onSync`/`onStart`/`onMove`/`onInteractive`/`onEnd` handlers. Otherwise your code will throw exception.
 
 These handlers are not workletized by default, since it's not a part of `reanimated` package.
 
@@ -68,6 +72,25 @@ Since `onMove` handler on iOS is based on `CADisplayLink` usage - you may need t
 - `target` - tag of the focused `TextInput` (or `-1` if the tag is not found).
 
 ### Handlers
+
+#### `onSync`
+
+This function is called after the handler gets attached: when a component is mounted and when a frozen screen becomes active again. The event contains **current** state of the keyboard: `height` and `progress` that the keyboard has at this moment, `target` of the currently focused `TextInput` (`-1` if there is no focused input) and `duration` equal to `0`.
+
+Events dispatched while the handler was not attached are not delivered to it. Use `onSync` to initialize values that other handlers update, i. e. when a component is mounted while the keyboard is already visible:
+
+```ts
+useKeyboardHandler(
+  {
+    onSync: (e) => {
+      "worklet";
+      progress.value = e.progress;
+      height.value = e.height;
+    },
+  },
+  [],
+);
+```
 
 #### `onStart`
 
