@@ -72,6 +72,7 @@ export const useTranslateAnimation = () => {
 
         // eslint-disable-next-line react-compiler/react-compiler
         padding.value = e.progress;
+        translate.value = e.progress;
       },
       onStart: (e) => {
         "worklet";
