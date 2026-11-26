@@ -393,6 +393,10 @@ class KeyboardAnimationCallback(
       "KeyboardController::" + if (!isKeyboardVisible) "keyboardWillHide" else "keyboardWillShow",
       getEventParams(keyboardHeight),
     )
+    context.emitEvent(
+      "KeyboardController::" + if (!isKeyboardVisible) "keyboardDidHide" else "keyboardDidShow",
+      getEventParams(keyboardHeight),
+    )
     // dispatch full lifecycle of onStart/onMove/onEnd events to update RN animated value and
     // keep imperative hooks like `useKeyboardHandler` in sync
     listOf(
@@ -413,10 +417,6 @@ class KeyboardAnimationCallback(
         ),
       )
     }
-    context.emitEvent(
-      "KeyboardController::" + if (!isKeyboardVisible) "keyboardDidHide" else "keyboardDidShow",
-      getEventParams(keyboardHeight),
-    )
   }
 
   fun destroy() {
