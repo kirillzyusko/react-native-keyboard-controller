@@ -390,7 +390,7 @@ class KeyboardAnimationCallback(
     pendingStartEvent = null
 
     context.emitEvent(
-      "KeyboardController::" + if (!isKeyboardVisible) "keyboardDidHide" else "keyboardDidShow",
+      "KeyboardController::" + if (!isKeyboardVisible) "keyboardWillHide" else "keyboardWillShow",
       getEventParams(keyboardHeight),
     )
     // dispatch full lifecycle of onStart/onMove/onEnd events to update RN animated value and
@@ -413,6 +413,10 @@ class KeyboardAnimationCallback(
         ),
       )
     }
+    context.emitEvent(
+      "KeyboardController::" + if (!isKeyboardVisible) "keyboardDidHide" else "keyboardDidShow",
+      getEventParams(keyboardHeight),
+    )
   }
 
   fun destroy() {
