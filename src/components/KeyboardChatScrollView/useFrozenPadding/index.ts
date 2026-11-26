@@ -16,14 +16,15 @@ type UseFrozenPaddingOptions = {
 };
 
 /**
- * Hook that reconciles keyboard padding after a frozen interval.
+ * Reconciles keyboard padding after a frozen interval or an `offset` change.
  *
  * `useChatKeyboard` handlers skip all writes while `freeze` is enabled, so if
  * the keyboard opens or closes during the frozen interval `padding` keeps a
  * stale value (e.g. the open-keyboard height after a frozen dismissal). This
  * hook observes keyboard events independently of `freeze` and recomputes the
- * padding from the latest observed keyboard height as soon as `freeze`
- * transitions back to `false`.
+ * padding from the latest observed keyboard height whenever its reaction runs
+ * unfrozen: when `freeze` transitions back to `false`, and when a new `offset`
+ * restarts the reaction without a keyboard event.
  *
  * @param options - Keyboard padding shared values plus the scroll view `offset`.
  * @param options.freeze - When `true`, keyboard-driven layout writes are skipped.
@@ -68,8 +69,8 @@ function useFrozenPadding({
 
   useAnimatedReaction(
     () => freeze.value,
-    (isFrozen, wasFrozen) => {
-      if (!isFrozen && wasFrozen === true) {
+    (isFrozen) => {
+      if (!isFrozen) {
         padding.value = getEffectiveHeight(
           lastHeight.value,
           targetKeyboardHeight.value,
