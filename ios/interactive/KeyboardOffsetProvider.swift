@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import UIKit
 
 @objc(KeyboardOffsetProvider)
 public class KeyboardOffsetProvider: NSObject {
@@ -33,6 +34,9 @@ public class KeyboardOffsetProvider: NSObject {
   @objc public func removeOffset(forTextInputNativeID nativeID: String, withTag tag: NSNumber) {
     // Ensure the tag matches before removing the entry
     if let currentPair = offsetMap[nativeID], currentPair.tag == tag {
+      if #available(iOS 26.0, *), UIResponder.current.nativeID == nativeID {
+        KeyboardAreaExtender.shared.remove()
+      }
       offsetMap.removeValue(forKey: nativeID)
     }
   }

@@ -5,6 +5,8 @@
 //  Created by Kiryl Ziusko on 04/11/2024.
 //
 
+import UIKit
+
 extension Notification {
   func keyboardMetaData() -> (Int, NSValue?) {
     let duration = Int(
