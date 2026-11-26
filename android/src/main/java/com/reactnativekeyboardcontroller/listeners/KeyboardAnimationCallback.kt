@@ -171,8 +171,8 @@ class KeyboardAnimationCallback(
 
     if (isKeyboardFullyVisible && !isKeyboardSizeEqual && !isResizeHandledInCallbackMethods) {
       Logger.i(TAG, "onApplyWindowInsets: ${this.persistentKeyboardHeight} -> $keyboardHeight")
-      // a visible keyboard can have a zero height (e.g. in the middle of rotation)
-      this.syncKeyboardPosition(keyboardHeight, keyboardHeight > 0)
+      // a floating or fullscreen keyboard has a zero height and is still visible
+      this.syncKeyboardPosition(keyboardHeight, true)
 
       return insets
     }
