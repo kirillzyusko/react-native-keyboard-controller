@@ -99,6 +99,7 @@ jobs:
           [
             { api: 28, target: default, soft-check: false },
             { api: 31, target: google_apis, soft-check: true },
+            { api: "37.0", target: google_apis, soft-check: true },
           ]
     needs: build
     steps:
@@ -164,7 +165,9 @@ jobs:
           disable-animations: false
           avd-name: e2e_emulator_${{ matrix.devices.api }}
           arch: x86_64
-          script: SOFT_CHECK=${{ matrix.devices.soft-check }} yarn test-example:android-${{ matrix.devices.api }}
+          script: |
+            adb shell settings put secure stylus_handwriting_enabled 0
+            SOFT_CHECK=${{ matrix.devices.soft-check }} yarn test-example:android-${{ matrix.devices.api }}
       - uses: actions/upload-artifact@v4
         if: ${{ failure() }}
         with:

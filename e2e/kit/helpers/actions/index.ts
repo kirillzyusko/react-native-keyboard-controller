@@ -3,6 +3,7 @@ import { expect } from "detox";
 
 import { waitForElementById } from "../awaitable";
 import { getDevicePreference } from "../env/devicePreferences";
+import { expectElementAboveKeyboard, getKeyboardTop } from "../keyboard";
 
 const TIMEOUT_FOR_LONG_OPERATIONS = 30000;
 
@@ -146,6 +147,7 @@ export const scrollUpUntilElementIsBarelyVisible = async (
   elementId: string,
 ): Promise<void> => {
   const distanceToScroll = device.getPlatform() === "ios" ? 80 : 50;
+  const keyboardTop = getKeyboardTop();
 
   for (;;) {
     await element(by.id(scrollViewId)).scroll(
@@ -160,7 +162,7 @@ export const scrollUpUntilElementIsBarelyVisible = async (
       if (device.getPlatform() === "ios") {
         await expect(element(by.id(elementId))).toBeVisible();
       } else {
-        // on Android visible is always true
+        await expectElementAboveKeyboard(elementId, keyboardTop);
         await element(by.id(elementId)).tap({ x: 0, y: 25 });
       }
     } catch (e) {
