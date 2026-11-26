@@ -171,7 +171,7 @@ class KeyboardAnimationCallback(
 
     if (isKeyboardFullyVisible && !isKeyboardSizeEqual && !isResizeHandledInCallbackMethods) {
       Logger.i(TAG, "onApplyWindowInsets: ${this.persistentKeyboardHeight} -> $keyboardHeight")
-      this.onKeyboardResized(keyboardHeight)
+      this.syncKeyboardPosition(keyboardHeight, true)
 
       return insets
     }
@@ -224,7 +224,7 @@ class KeyboardAnimationCallback(
     val isKeyboardResized = keyboardHeight != 0.0 && prevKeyboardHeight != keyboardHeight
     val isKeyboardShown = isKeyboardVisible && prevKeyboardHeight != 0.0
     if (isKeyboardResized && isKeyboardShown && isResizeHandledInCallbackMethods) {
-      onKeyboardResized(keyboardHeight)
+      syncKeyboardPosition(keyboardHeight, true)
       animationsToSkip.add(animation)
 
       return bounds
@@ -392,12 +392,10 @@ class KeyboardAnimationCallback(
     duration = 0
     pendingStartEvent = null
 
+    layoutObserver?.syncUpLayout()
+
     context.emitEvent(
       "KeyboardController::" + if (!isKeyboardVisible) "keyboardWillHide" else "keyboardWillShow",
-      getEventParams(keyboardHeight),
-    )
-    context.emitEvent(
-      "KeyboardController::" + if (!isKeyboardVisible) "keyboardDidHide" else "keyboardDidShow",
       getEventParams(keyboardHeight),
     )
     // dispatch full lifecycle of onStart/onMove/onEnd events to update RN animated value and
@@ -420,45 +418,17 @@ class KeyboardAnimationCallback(
         ),
       )
     }
+    context.emitEvent(
+      "KeyboardController::" + if (!isKeyboardVisible) "keyboardDidHide" else "keyboardDidShow",
+      getEventParams(keyboardHeight),
+    )
+    context.keepShadowNodesInSync(eventPropagationView.id)
   }
 
   fun destroy() {
     pendingStartEvent = null
     view.viewTreeObserver.removeOnGlobalFocusChangeListener(focusListener)
     layoutObserver?.destroy()
-  }
-
-  /*
-   * Method that dispatches necessary events when keyboard gets resized
-   */
-  private fun onKeyboardResized(keyboardHeight: Double) {
-    duration = 0
-
-    layoutObserver?.syncUpLayout()
-
-    context.emitEvent("KeyboardController::keyboardWillShow", getEventParams(keyboardHeight))
-    listOf(
-      KeyboardTransitionEvent.Start,
-      KeyboardTransitionEvent.Move,
-      KeyboardTransitionEvent.End,
-    ).forEach { eventName ->
-      context.dispatchEvent(
-        eventPropagationView.id,
-        KeyboardTransitionEvent(
-          surfaceId,
-          eventPropagationView.id,
-          eventName,
-          keyboardHeight,
-          keyboardHeight.progress,
-          0,
-          viewTagFocused,
-        ),
-      )
-    }
-    context.emitEvent("KeyboardController::keyboardDidShow", getEventParams(keyboardHeight))
-    context.keepShadowNodesInSync(eventPropagationView.id)
-
-    this.persistentKeyboardHeight = keyboardHeight
   }
 
   private fun isKeyboardVisible(): Boolean {
