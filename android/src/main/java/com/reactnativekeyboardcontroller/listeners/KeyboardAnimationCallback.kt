@@ -390,6 +390,10 @@ class KeyboardAnimationCallback(
     pendingStartEvent = null
 
     context.emitEvent(
+      "KeyboardController::" + if (!isKeyboardVisible) "keyboardWillHide" else "keyboardWillShow",
+      getEventParams(keyboardHeight),
+    )
+    context.emitEvent(
       "KeyboardController::" + if (!isKeyboardVisible) "keyboardDidHide" else "keyboardDidShow",
       getEventParams(keyboardHeight),
     )
