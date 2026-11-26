@@ -1,5 +1,6 @@
 package com.reactnativekeyboardcontroller.listeners
 
+import android.os.SystemClock
 import android.view.View
 import android.view.ViewTreeObserver.OnGlobalFocusChangeListener
 import android.widget.EditText
@@ -31,6 +32,8 @@ import kotlin.math.abs
 
 private val TAG = KeyboardAnimationCallback::class.qualifiedName
 private val isResizeHandledInCallbackMethods = Keyboard.IS_ANIMATION_EMULATED
+private const val STALE_TRANSITION_MS = 2_000L
+private const val STALE_TRANSITION_RECHECK_DELAY_MS = 200L
 
 private data class PendingKeyboardStartEvent(
   val keyboardHeight: Double,
@@ -69,6 +72,8 @@ class KeyboardAnimationCallback(
   private var prevKeyboardHeight = getCurrentKeyboardHeight()
   private var isKeyboardVisible = false
   private var isTransitioning = false
+  private var lastTransitionActivityAtMs = 0L
+  private var staleTransitionRecheck: Runnable? = null
   private var duration = 0
   private var viewTagFocused = -1
   private var pendingStartEvent: PendingKeyboardStartEvent? = null
@@ -77,12 +82,62 @@ class KeyboardAnimationCallback(
     get() = duration == -1
   override var isSuspended: Boolean = false
 
+  // a transition is an orphan only after a window with neither progress nor end - a slow
+  // animation announcing itself in `onProgress` keeps refreshing the activity timestamp
+  private fun isTransitionStale(): Boolean =
+    isTransitioning && SystemClock.uptimeMillis() - lastTransitionActivityAtMs > STALE_TRANSITION_MS
+
+  /**
+   * A notification ignored only because the transition was inside its grace window may be
+   * the last one to arrive (the app backgrounded right after it); once the window lapses
+   * the transition is an orphan and nothing else triggers the recovery. The recheck replays
+   * the last ignored insets through the same decision path - a no-op when the transition
+   * is alive, already recovered, or owned by a gesture.
+   */
+  private fun scheduleStaleTransitionRecheck(insets: WindowInsetsCompat) {
+    if (!isTransitioning || isTransitionStale() || isSuspended) {
+      return
+    }
+
+    cancelStaleTransitionRecheck()
+    val recheck =
+      Runnable {
+        staleTransitionRecheck = null
+
+        if (isSuspended || !isTransitioning) {
+          return@Runnable
+        }
+
+        if (isTransitionStale()) {
+          // the window may have moved on since the dispatch - a lost notification is
+          // exactly what strands a transition - so trust the live root insets (the same
+          // source the focus recovery reads) and fall back to the captured ones only
+          // when the root has none to give
+          this.onApplyWindowInsets(view, ViewCompat.getRootWindowInsets(view) ?: insets)
+        } else {
+          // a late onProgress extended the animation - wait for it to end or orphan
+          scheduleStaleTransitionRecheck(insets)
+        }
+      }
+    staleTransitionRecheck = recheck
+    val remainingStaleMs = STALE_TRANSITION_MS - (SystemClock.uptimeMillis() - lastTransitionActivityAtMs)
+    view.postDelayed(recheck, remainingStaleMs + STALE_TRANSITION_RECHECK_DELAY_MS)
+  }
+
+  private fun cancelStaleTransitionRecheck() {
+    staleTransitionRecheck?.let { view.removeCallbacks(it) }
+    staleTransitionRecheck = null
+  }
+
   // listeners
   private val focusListener =
     OnGlobalFocusChangeListener { oldFocus, newFocus ->
       if (newFocus is EditText) {
         viewTagFocused = newFocus.id
-
+        if (isTransitionStale() && !InteractiveKeyboardProvider.isInteractive && !isSuspended) {
+          Logger.w(TAG, "clearing stale keyboard transition on focus")
+          this.syncKeyboardPosition()
+        }
         // keyboard is visible and focus has been changed
         if (this.isKeyboardVisible && oldFocus !== null) {
           // imitate iOS behavior and send two instant start/end events containing an info about new tag
@@ -158,7 +213,14 @@ class KeyboardAnimationCallback(
     //
     // `InteractiveKeyboardProvider.isInteractive` detect case when keyboard moves
     // because of the gesture
-    val isMoving = isTransitioning || InteractiveKeyboardProvider.isInteractive
+    // An orphaned latch (its onEnd was lost across a backgrounding) stops counting as
+    // moving after a grace window; a finger still driving the keyboard keeps counting.
+    // A suspended callback (a Modal owns the screen) keeps its latch suppressive - the
+    // modal window's own callback reports the keyboard until the insets re-dispatch
+    // that follows un-pause re-enters these paths.
+    val isStaleTransition = isTransitionStale() && !isSuspended
+    val isMoving =
+      (isTransitioning && !isStaleTransition) || InteractiveKeyboardProvider.isInteractive
     val isKeyboardFullyVisible = isKeyboardShown && !isMoving
     // when keyboard is opened and we trigger a transition from screen A to screen B,
     // then this method is getting called and we start dispatching events, and later original
@@ -169,23 +231,39 @@ class KeyboardAnimationCallback(
     // in this method
     val isKeyboardSizeEqual = this.persistentKeyboardHeight == keyboardHeight
 
-    if (isKeyboardFullyVisible && !isKeyboardSizeEqual && !isResizeHandledInCallbackMethods) {
-      Logger.i(TAG, "onApplyWindowInsets: ${this.persistentKeyboardHeight} -> $keyboardHeight")
-      this.onKeyboardResized(keyboardHeight)
+    // the stale recovery must not depend on a height change: a transition cancelled back
+    // to its starting height leaves every height equal, yet still owes its latch and its
+    // event lifecycle
+    if (isKeyboardFullyVisible && !isResizeHandledInCallbackMethods && (isStaleTransition || !isKeyboardSizeEqual)) {
+      if (isStaleTransition) {
+        // The resize notification keeps the latch set and the previous height stale, so
+        // an orphaned transition recovers by catching the whole state up instead.
+        this.syncKeyboardPosition(getCurrentKeyboardHeight(insets), true)
+      } else {
+        Logger.i(TAG, "onApplyWindowInsets: ${this.persistentKeyboardHeight} -> $keyboardHeight")
+        this.onKeyboardResized(keyboardHeight)
+      }
 
       return insets
     }
 
     // always verify insets, because sometimes default lifecycle methods may not be invoked
     // (when we press "Share" on Android 16, when Modal closes keyboard, when permission Alert presented etc.)
+    // A cancelled open desyncs on visibility alone: the window briefly reported the
+    // keyboard visible when the animation started (memorizing it and emitting
+    // `willShow`), then returned to its starting height - every height already matches,
+    // so only the memorized visibility disagrees with the window.
     val newHeight = getCurrentKeyboardHeight(insets)
-    if (prevKeyboardHeight != newHeight && !isMoving && !isSuspended) {
+    val isVisibilityDesynced = isKeyboardVisible != isKeyboardVisible()
+    if ((prevKeyboardHeight != newHeight || isVisibilityDesynced) && !isMoving && !isSuspended) {
       Logger.w(
         TAG,
         "detected desynchronized state - force updating it: $newHeight",
       )
       this.syncKeyboardPosition(newHeight, newHeight > 0)
     }
+
+    scheduleStaleTransitionRecheck(insets)
 
     return insets
   }
@@ -198,6 +276,7 @@ class KeyboardAnimationCallback(
     }
 
     isTransitioning = true
+    lastTransitionActivityAtMs = SystemClock.uptimeMillis()
   }
 
   @Suppress("detekt:ReturnCount")
@@ -265,6 +344,10 @@ class KeyboardAnimationCallback(
       return insets
     }
 
+    // a live animation keeps announcing itself here - the activity timestamp is what
+    // separates a slow animation from an orphaned latch
+    lastTransitionActivityAtMs = SystemClock.uptimeMillis()
+
     // First we get the insets which are potentially deferred
     val typesInset = insets.getInsets(config.deferredInsetTypes)
     // Then we get the persistent inset types which are applied as padding during layout
@@ -327,6 +410,7 @@ class KeyboardAnimationCallback(
     }
 
     isTransitioning = false
+    cancelStaleTransitionRecheck()
     duration = animation.durationMillis.toInt()
 
     val runnable =
@@ -382,16 +466,27 @@ class KeyboardAnimationCallback(
     isVisible: Boolean? = null,
   ) {
     val keyboardHeight = height ?: getCurrentKeyboardHeight()
+    val previousHeight = persistentKeyboardHeight
+    val wasVisibleBeforeSync = isKeyboardVisible
     // update internal state
     isKeyboardVisible = isVisible ?: isKeyboardVisible()
     if (isKeyboardVisible) {
       persistentKeyboardHeight = keyboardHeight
     }
     prevKeyboardHeight = keyboardHeight
+    persistentKeyboardHeight = keyboardHeight
     isTransitioning = false
     duration = 0
     pendingStartEvent = null
+    cancelStaleTransitionRecheck()
 
+    if (isKeyboardVisible && (keyboardHeight != previousHeight || !wasVisibleBeforeSync)) {
+      // `KeyboardController.state()` and `useKeyboardState` on the JS side only update on
+      // `keyboardWillShow`, so a show replays the show pair a real show emits - including
+      // a re-show at an unchanged height, where the persisted height still holds the last
+      // shown one
+      context.emitEvent("KeyboardController::keyboardWillShow", getEventParams(keyboardHeight))
+    }
     context.emitEvent(
       "KeyboardController::" + if (!isKeyboardVisible) "keyboardWillHide" else "keyboardWillShow",
       getEventParams(keyboardHeight),
@@ -424,6 +519,7 @@ class KeyboardAnimationCallback(
 
   fun destroy() {
     pendingStartEvent = null
+    cancelStaleTransitionRecheck()
     view.viewTreeObserver.removeOnGlobalFocusChangeListener(focusListener)
     layoutObserver?.destroy()
   }
