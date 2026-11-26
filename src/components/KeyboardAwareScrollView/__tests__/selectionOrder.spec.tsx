@@ -109,6 +109,28 @@ describe("KeyboardAwareScrollView — selection order", () => {
         kbEvent(KEYBOARD_HEIGHT, INPUT_TARGET_B),
       );
     });
+
+    it("should not scroll again in onEnd once the deferred selection arrived", async () => {
+      await renderKeyboardAwareScrollView();
+      mockInput.value = inputEvent(INPUT_TARGET_B, INPUT_LAYOUT_B);
+
+      mockKeyboardHandlers.current.onStart(
+        kbEvent(KEYBOARD_HEIGHT, INPUT_TARGET_B),
+      );
+      mockSelectionHandler.current(selectionEvent(INPUT_TARGET_B));
+      mockKeyboardHandlers.current.onMove(
+        kbEvent(KEYBOARD_HEIGHT, INPUT_TARGET_B),
+      );
+
+      mockScrollTo.mockClear();
+      mockKeyboardHandlers.current.onEnd(
+        kbEvent(KEYBOARD_HEIGHT, INPUT_TARGET_B),
+      );
+
+      // `onMove` already scrolled with the caret height, so the full input
+      // layout fallback must not run
+      expect(mockScrollTo).not.toHaveBeenCalled();
+    });
   });
 
   describe("Android empty input: onStart → onMove → onEnd, no onSelectionChange", () => {
