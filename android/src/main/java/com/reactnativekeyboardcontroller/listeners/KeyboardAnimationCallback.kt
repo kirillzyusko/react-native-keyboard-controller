@@ -384,6 +384,9 @@ class KeyboardAnimationCallback(
     val keyboardHeight = height ?: getCurrentKeyboardHeight()
     // update internal state
     isKeyboardVisible = isVisible ?: isKeyboardVisible()
+    if (isKeyboardVisible) {
+      persistentKeyboardHeight = keyboardHeight
+    }
     prevKeyboardHeight = keyboardHeight
     isTransitioning = false
     duration = 0
