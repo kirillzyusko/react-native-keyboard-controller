@@ -233,7 +233,10 @@ export type KeyboardHandlers = Handlers<KeyboardHandler>;
 export type FocusedInputHandler = Partial<{
   /** A callback that gets invoked every time when the text changes in focused input. */
   onChangeText: (e: FocusedInputTextChangedEvent) => void;
-  /** A callback that gets invoked every time when the selection (cursor) coordinates change in focused input. */
+  /**
+   * A callback that gets invoked every time when the selection (cursor) coordinates change in focused input.
+   * If an input is focused when the handler is attached, it gets invoked with the CURRENT selection of that input.
+   */
   onSelectionChange: (e: FocusedInputSelectionChangedEvent) => void;
 }>;
 export type FocusedInputHandlers = Handlers<FocusedInputHandler>;

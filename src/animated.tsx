@@ -2,6 +2,7 @@
 import React, {
   useCallback,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -11,7 +12,7 @@ import {
   controlEdgeToEdgeValues,
   isEdgeToEdge,
 } from "react-native-is-edge-to-edge";
-import Reanimated, { useSharedValue } from "react-native-reanimated";
+import Reanimated, { useEvent, useSharedValue } from "react-native-reanimated";
 
 import {
   FocusedInputEvents,
@@ -29,6 +30,7 @@ import {
 import type { KeyboardAnimationContext } from "./context";
 import type {
   FocusedInputLayoutChangedEvent,
+  FocusedInputSelectionChangedEvent,
   KeyboardControllerProps,
   KeyboardProviderProps,
   NativeEvent,
@@ -94,6 +96,9 @@ export const KeyboardProvider = (props: KeyboardProviderProps) => {
   const progressSV = useSharedValue(0);
   const heightSV = useSharedValue(0);
   const layout = useSharedValue<FocusedInputLayoutChangedEvent | null>(null);
+  const selection = useSharedValue<FocusedInputSelectionChangedEvent | null>(
+    null,
+  );
   const setKeyboardHandlers = useEventHandlerRegistration(viewRef);
   const setInputHandlers = useEventHandlerRegistration(viewRef);
   const update = useCallback(async () => {
@@ -118,6 +123,7 @@ export const KeyboardProvider = (props: KeyboardProviderProps) => {
       animated: { progress: progress, height: Animated.multiply(height, -1) },
       reanimated: { progress: progressSV, height: heightSV },
       layout,
+      selection,
       update,
       setKeyboardHandlers,
       setInputHandlers,
@@ -192,11 +198,22 @@ export const KeyboardProvider = (props: KeyboardProviderProps) => {
           layout.value = e;
         } else {
           layout.value = null;
+          selection.value = null;
         }
       },
     },
     [],
   );
+  const inputSelectionHandler = useEvent<FocusedInputSelectionChangedEvent>(
+    (e) => {
+      "worklet";
+
+      selection.value = e;
+    },
+    ["onFocusedInputSelectionChanged"],
+  );
+
+  useLayoutEffect(() => setInputHandlers(inputSelectionHandler), []);
 
   useEffect(() => {
     if (preload) {

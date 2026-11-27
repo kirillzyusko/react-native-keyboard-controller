@@ -1,7 +1,10 @@
 import { createContext, useContext } from "react";
 import { Animated } from "react-native";
 
-import type { FocusedInputLayoutChangedEvent } from "./types";
+import type {
+  FocusedInputLayoutChangedEvent,
+  FocusedInputSelectionChangedEvent,
+} from "./types";
 import type React from "react";
 import type {
   EventHandlerProcessed,
@@ -35,6 +38,8 @@ export type KeyboardAnimationContext = {
   reanimated: ReanimatedContext;
   /** Layout of the focused `TextInput` represented as `SharedValue`. */
   layout: SharedValue<FocusedInputLayoutChangedEvent | null>;
+  /** Selection of the focused `TextInput` represented as `SharedValue`. */
+  selection: SharedValue<FocusedInputSelectionChangedEvent | null>;
   /** Method for updating info about focused input layout. */
   update: () => Promise<void>;
   /** Method for setting workletized keyboard handlers. */
@@ -62,6 +67,8 @@ const DEFAULT_SHARED_VALUE = withSharedValue(0);
 const DEFAULT_LAYOUT = withSharedValue<FocusedInputLayoutChangedEvent | null>(
   null,
 );
+const DEFAULT_SELECTION =
+  withSharedValue<FocusedInputSelectionChangedEvent | null>(null);
 const defaultContext: KeyboardAnimationContext = {
   enabled: true,
   animated: {
@@ -73,6 +80,7 @@ const defaultContext: KeyboardAnimationContext = {
     height: DEFAULT_SHARED_VALUE,
   },
   layout: DEFAULT_LAYOUT,
+  selection: DEFAULT_SELECTION,
   update: Promise.resolve,
   setKeyboardHandlers: NESTED_NOOP,
   setInputHandlers: NESTED_NOOP,

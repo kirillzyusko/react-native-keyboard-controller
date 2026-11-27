@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect } from "react";
-import { runOnUI, useEvent } from "react-native-reanimated";
+import { runOnUI, useEvent, useSharedValue } from "react-native-reanimated";
 
 import { AndroidSoftInputModes } from "../constants";
 import { useKeyboardContext } from "../context";
@@ -287,6 +287,7 @@ export function useFocusedInputHandler(
   deps?: unknown[],
 ) {
   const context = useKeyboardContext();
+  const isSelectionReceived = useSharedValue(false);
 
   const { doDependenciesDiffer } = useHandler<never, never>(handler, deps);
 
@@ -301,6 +302,8 @@ export function useFocusedInputHandler(
       }
 
       if (event.eventName.endsWith("onFocusedInputSelectionChanged")) {
+        // eslint-disable-next-line react-compiler/react-compiler
+        isSelectionReceived.value = true;
         handler.onSelectionChange?.(event as FocusedInputSelectionChangedEvent);
       }
     },
@@ -313,6 +316,23 @@ export function useFocusedInputHandler(
 
     return () => cleanup();
   }, deps);
+
+  // a selection event dispatched before the handler was attached is not delivered to it,
+  // so the selection that the focused input has now is reported separately
+  useLayoutEffect(() => {
+    const { onSelectionChange } = handler;
+    const { selection } = context;
+
+    if (onSelectionChange) {
+      runOnUI(() => {
+        "worklet";
+
+        if (selection.value && !isSelectionReceived.value) {
+          onSelectionChange(selection.value);
+        }
+      })();
+    }
+  }, []);
 }
 
 export * from "./useWindowDimensions";

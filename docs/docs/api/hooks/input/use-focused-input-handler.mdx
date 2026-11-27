@@ -59,7 +59,7 @@ This handler can be handy when you need to have an access to what user typed on 
 
 ### `onSelectionChange`
 
-Fires an event whenever user selects text in focused `TextInput`. Event has following structure:
+Fires an event whenever user selects text in focused `TextInput`. If an input is focused when the handler gets attached, the handler is called with the **current** selection of that input. Event has following structure:
 
 ```ts
 type FocusedInputSelectionChangedEvent = {
