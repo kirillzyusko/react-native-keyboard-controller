@@ -24,11 +24,13 @@ import { KeyboardController } from "./module";
 import {
   useAnimatedKeyboardHandler,
   useFocusedInputLayoutHandler,
+  useFocusedInputSelectionHandler,
 } from "./reanimated";
 
 import type { KeyboardAnimationContext } from "./context";
 import type {
   FocusedInputLayoutChangedEvent,
+  FocusedInputSelectionChangedEvent,
   KeyboardControllerProps,
   KeyboardProviderProps,
   NativeEvent,
@@ -94,6 +96,9 @@ export const KeyboardProvider = (props: KeyboardProviderProps) => {
   const progressSV = useSharedValue(0);
   const heightSV = useSharedValue(0);
   const layout = useSharedValue<FocusedInputLayoutChangedEvent | null>(null);
+  const selection = useSharedValue<FocusedInputSelectionChangedEvent | null>(
+    null,
+  );
   const setKeyboardHandlers = useEventHandlerRegistration(viewRef);
   const setInputHandlers = useEventHandlerRegistration(viewRef);
   const update = useCallback(async () => {
@@ -118,6 +123,7 @@ export const KeyboardProvider = (props: KeyboardProviderProps) => {
       animated: { progress: progress, height: Animated.multiply(height, -1) },
       reanimated: { progress: progressSV, height: heightSV },
       layout,
+      selection,
       update,
       setKeyboardHandlers,
       setInputHandlers,
@@ -192,7 +198,18 @@ export const KeyboardProvider = (props: KeyboardProviderProps) => {
           layout.value = e;
         } else {
           layout.value = null;
+          selection.value = null;
         }
+      },
+    },
+    [],
+  );
+  const inputSelectionHandler = useFocusedInputSelectionHandler(
+    {
+      onFocusedInputSelectionChanged: (e) => {
+        "worklet";
+
+        selection.value = e;
       },
     },
     [],
@@ -228,6 +245,7 @@ export const KeyboardProvider = (props: KeyboardProviderProps) => {
         onKeyboardMoveInteractive={onKeyboardMove}
         onKeyboardMoveEnd={OS === "android" ? onKeyboardMove : undefined}
         onFocusedInputLayoutChangedReanimated={inputLayoutHandler}
+        onFocusedInputSelectionChangedReanimated={inputSelectionHandler}
       >
         {children}
       </KeyboardControllerViewAnimated>

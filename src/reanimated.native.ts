@@ -11,6 +11,8 @@ import type {
   EventWithName,
   FocusedInputLayoutChangedEvent,
   FocusedInputLayoutHandlerHook,
+  FocusedInputSelectionChangedEvent,
+  FocusedInputSelectionHandlerHook,
   KeyboardHandlerHook,
   NativeEvent,
 } from "./types";
@@ -102,6 +104,29 @@ export const useFocusedInputLayoutHandler: FocusedInputLayoutHandlerHook<
       }
     },
     ["onFocusedInputLayoutChanged"],
+    doDependenciesDiffer,
+  );
+};
+
+export const useFocusedInputSelectionHandler: FocusedInputSelectionHandlerHook<
+  EventContext,
+  EventWithName<FocusedInputSelectionChangedEvent>
+> = (handlers, dependencies) => {
+  const { context, doDependenciesDiffer } = useHandler(handlers, dependencies);
+
+  return useEvent(
+    (event) => {
+      "worklet";
+      const { onFocusedInputSelectionChanged } = handlers;
+
+      if (
+        onFocusedInputSelectionChanged &&
+        event.eventName.endsWith("onFocusedInputSelectionChanged")
+      ) {
+        onFocusedInputSelectionChanged(event, context);
+      }
+    },
+    ["onFocusedInputSelectionChanged"],
     doDependenciesDiffer,
   );
 };
