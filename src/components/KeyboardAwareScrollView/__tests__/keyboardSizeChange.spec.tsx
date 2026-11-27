@@ -121,6 +121,35 @@ describe("KeyboardAwareScrollView — keyboard size change (emoji toggle)", () =
     expect(mockScrollTo.mock.calls[0][3]).toBe(false);
   });
 
+  it("should not scroll short content above its top while the keyboard hides", async () => {
+    await renderKeyboardAwareScrollView();
+    mockInput.value = inputEvent(INPUT_TARGET_B, INPUT_LAYOUT_A);
+
+    mockSelectionHandler.current(selectionEvent(INPUT_TARGET_B));
+    mockKeyboardHandlers.current.onStart(
+      kbEvent(KEYBOARD_HEIGHT, INPUT_TARGET_B),
+    );
+    mockKeyboardHandlers.current.onEnd(
+      kbEvent(KEYBOARD_HEIGHT, INPUT_TARGET_B),
+    );
+
+    // Content shorter than the ScrollView, resting at -116 under a transparent
+    // header (`contentInsetAdjustmentBehavior="automatic"`). There is no ghost
+    // space to remove: any target below -116 is clamped to 0 natively.
+    mockOffset.value = -116;
+    mockLayout.value = { width: 390, height: 874 };
+    mockSize.value = { width: 390, height: 310 };
+    mockScrollTo.mockClear();
+
+    mockKeyboardHandlers.current.onStart(kbEvent(0, INPUT_TARGET_B));
+    mockKeyboardHandlers.current.onMove(
+      kbEvent(KEYBOARD_HEIGHT / 2, INPUT_TARGET_B),
+    );
+    mockKeyboardHandlers.current.onEnd(kbEvent(0, INPUT_TARGET_B));
+
+    expect(mockScrollTo).not.toHaveBeenCalled();
+  });
+
   it("should correctly adjust scroll across multiple emoji ↔ text keyboard toggles", async () => {
     await renderKeyboardAwareScrollView();
     mockInput.value = inputEvent(INPUT_TARGET_B, INPUT_LAYOUT_B);
