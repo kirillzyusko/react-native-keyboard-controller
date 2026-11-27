@@ -2,7 +2,6 @@
 import React, {
   useCallback,
   useEffect,
-  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -12,7 +11,7 @@ import {
   controlEdgeToEdgeValues,
   isEdgeToEdge,
 } from "react-native-is-edge-to-edge";
-import Reanimated, { useEvent, useSharedValue } from "react-native-reanimated";
+import Reanimated, { useSharedValue } from "react-native-reanimated";
 
 import {
   FocusedInputEvents,
@@ -25,6 +24,7 @@ import { KeyboardController } from "./module";
 import {
   useAnimatedKeyboardHandler,
   useFocusedInputLayoutHandler,
+  useFocusedInputSelectionHandler,
 } from "./reanimated";
 
 import type { KeyboardAnimationContext } from "./context";
@@ -204,16 +204,16 @@ export const KeyboardProvider = (props: KeyboardProviderProps) => {
     },
     [],
   );
-  const inputSelectionHandler = useEvent<FocusedInputSelectionChangedEvent>(
-    (e) => {
-      "worklet";
+  const inputSelectionHandler = useFocusedInputSelectionHandler(
+    {
+      onFocusedInputSelectionChanged: (e) => {
+        "worklet";
 
-      selection.value = e;
+        selection.value = e;
+      },
     },
-    ["onFocusedInputSelectionChanged"],
+    [],
   );
-
-  useLayoutEffect(() => setInputHandlers(inputSelectionHandler), []);
 
   useEffect(() => {
     if (preload) {
@@ -245,6 +245,7 @@ export const KeyboardProvider = (props: KeyboardProviderProps) => {
         onKeyboardMoveInteractive={onKeyboardMove}
         onKeyboardMoveEnd={OS === "android" ? onKeyboardMove : undefined}
         onFocusedInputLayoutChangedReanimated={inputLayoutHandler}
+        onFocusedInputSelectionChangedReanimated={inputSelectionHandler}
       >
         {children}
       </KeyboardControllerViewAnimated>
