@@ -120,6 +120,52 @@ describe("useExtraContentPadding — contentOffsetY (iOS atomic path)", () => {
     expect(mockScrollTo).not.toHaveBeenCalled();
   });
 
+  it("should clamp contentOffsetY to minScroll on shrink when content has a top inset (non-inverted)", () => {
+    const render = createRender();
+    const contentOffsetY = sv(-100);
+
+    render({
+      extraContentPadding: sv(0),
+      keyboardPadding: sv(0),
+      scroll: sv(-100),
+      layout: sv({ width: 390, height: 800 }),
+      size: sv({ width: 390, height: 200 }),
+      contentOffsetY,
+      minScroll: -100,
+      inverted: false,
+      keyboardLiftBehavior: "always",
+      freeze: false,
+    });
+
+    // delta = -80, scroll + delta = -180, maxScroll = max(200 - 800, -100) = -100
+    reactionEffect(0, 80);
+
+    expect(contentOffsetY.value).toBe(-100);
+  });
+
+  it("should keep contentOffsetY at minScroll on grow when content has a top inset (non-inverted)", () => {
+    const render = createRender();
+    const contentOffsetY = sv(-100);
+
+    render({
+      extraContentPadding: sv(80),
+      keyboardPadding: sv(0),
+      scroll: sv(-100),
+      layout: sv({ width: 390, height: 800 }),
+      size: sv({ width: 390, height: 200 }),
+      contentOffsetY,
+      minScroll: -100,
+      inverted: false,
+      keyboardLiftBehavior: "always",
+      freeze: false,
+    });
+
+    // delta = 80, scroll + delta = -20, maxScroll = max(200 - 800 + 80, -100) = -100
+    reactionEffect(80, 0);
+
+    expect(contentOffsetY.value).toBe(-100);
+  });
+
   it("should clamp contentOffsetY to -totalPadding (inverted)", () => {
     const render = createRender();
     const contentOffsetY = sv(-280);
