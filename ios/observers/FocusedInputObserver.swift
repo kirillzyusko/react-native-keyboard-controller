@@ -134,6 +134,9 @@ public class FocusedInputObserver: NSObject {
   }
 
   @objc func didReceiveBlur(_: Notification) {
+    // the input can be unmounted and recycled for another component before the block below runs,
+    // and by that time it must have its original delegate back
+    stopTrackingInput()
     // blur gets triggered on endEditing, so we check if no upcoming
     // didReceiveFocus events are coming to exclude `noFocusedInput`
     // event when user switches between inputs
@@ -172,11 +175,14 @@ public class FocusedInputObserver: NSObject {
   }
 
   func onBlur() {
+    lastSelectionEventDispatched = noFocusedInputSelectionEvent
+    dispatchLayoutEventToJS(data: noFocusedInputEvent)
+  }
+
+  private func stopTrackingInput() {
     removeObservers(newResponder: nil)
     currentInput = nil
     currentResponder = nil
-    lastSelectionEventDispatched = noFocusedInputSelectionEvent
-    dispatchLayoutEventToJS(data: noFocusedInputEvent)
   }
 
   @objc public func syncUpLayout() {
