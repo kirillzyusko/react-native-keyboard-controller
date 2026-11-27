@@ -332,6 +332,10 @@ export function useFocusedInputHandler(
         }
       })();
     }
+
+    return () => {
+      isSelectionReceived.value = false;
+    };
   }, []);
 }
 
