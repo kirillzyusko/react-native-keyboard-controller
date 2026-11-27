@@ -11,7 +11,7 @@ import UIKit
 
 @objc(ViewHierarchyNavigator)
 public class ViewHierarchyNavigator: NSObject {
-  private static let groupViewTypeName = "KeyboardToolbarGroupView"
+  private static let groupViewClass: AnyClass? = NSClassFromString("KeyboardToolbarGroupView")
 
   @objc public static func setFocusTo(direction: String) {
     DispatchQueue.main.async {
@@ -90,7 +90,9 @@ public class ViewHierarchyNavigator: NSObject {
   }
 
   private static func isGroupView(_ view: UIView) -> Bool {
-    return String(describing: type(of: view)) == groupViewTypeName
+    guard let groupViewClass = groupViewClass else { return false }
+
+    return view.isKind(of: groupViewClass)
   }
 
   private static func findTextInputInDirection(currentFocus: UIView, direction: String) -> TextInput? {

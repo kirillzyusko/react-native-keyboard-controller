@@ -8,7 +8,8 @@
 @testable import KeyboardControllerNative
 import XCTest
 
-/// A mock group view whose type name matches what ViewHierarchyNavigator checks.
+/// A mock group view registered under the class name that ViewHierarchyNavigator looks up.
+@objc(KeyboardToolbarGroupView)
 class KeyboardToolbarGroupView: UIView {}
 
 final class KeyboardToolbarGroupTests: XCTestCase {
