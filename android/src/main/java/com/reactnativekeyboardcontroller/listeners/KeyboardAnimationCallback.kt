@@ -73,6 +73,7 @@ class KeyboardAnimationCallback(
   private var viewTagFocused = -1
   private var pendingStartEvent: PendingKeyboardStartEvent? = null
   private var animationsToSkip = hashSetOf<WindowInsetsAnimationCompat>()
+  private val navigationBarOnlyAnimations = hashSetOf<WindowInsetsAnimationCompat>()
   private val isKeyboardInteractive: Boolean
     get() = duration == -1
   override var isSuspended: Boolean = false
@@ -213,6 +214,13 @@ class KeyboardAnimationCallback(
     isKeyboardVisible = isKeyboardVisible()
     duration = animation.durationMillis.toInt()
     val keyboardHeight = getCurrentKeyboardHeight()
+    if (config.hasTranslucentNavigationBar) {
+      val navigationBar = ViewCompat.getRootWindowInsets(view).navigationBarBottom()
+      // Use the full animation range so small frames of a docked IME still animate.
+      if (bounds.upperBound.bottom in 1..navigationBar) {
+        navigationBarOnlyAnimations.add(animation)
+      }
+    }
 
     if (isKeyboardVisible) {
       // do not update it on hide, since back progress will be invalid
@@ -257,11 +265,8 @@ class KeyboardAnimationCallback(
     // onProgress() is called when any of the running animations progress...
 
     // ignore non-keyboard animation or animation that we intentionally want to skip
-    val shouldSkipAnimation =
-      runningAnimations.find {
-        it.isKeyboardAnimation && !animationsToSkip.contains(it)
-      } == null
-    if (isSuspended || shouldSkipAnimation) {
+    val keyboardAnimation = runningAnimations.find { it.isKeyboardAnimation && it !in animationsToSkip }
+    if (isSuspended || keyboardAnimation == null) {
       return insets
     }
 
@@ -280,7 +285,7 @@ class KeyboardAnimationCallback(
         Insets.max(it, Insets.NONE)
       }
     val diffY = (diff.bottom - diff.top).toFloat()
-    val height = diffY.dp
+    val height = if (keyboardAnimation in navigationBarOnlyAnimations) 0.0 else diffY.dp
 
     var progress = 0.0
     try {
@@ -321,6 +326,7 @@ class KeyboardAnimationCallback(
 
   override fun onEnd(animation: WindowInsetsAnimationCompat) {
     super.onEnd(animation)
+    navigationBarOnlyAnimations.remove(animation)
 
     if (!animation.isKeyboardAnimation || isSuspended) {
       return
@@ -440,17 +446,13 @@ class KeyboardAnimationCallback(
   private fun getCurrentKeyboardHeight(insets: WindowInsetsCompat? = null): Double {
     val root = ViewCompat.getRootWindowInsets(view)
     val final = insets ?: root
-    val keyboardHeight = final?.getInsets(WindowInsetsCompat.Type.ime())?.bottom ?: 0
-    val navigationBar =
-      if (config.hasTranslucentNavigationBar) {
-        0
-      } else {
-        root?.getInsets(WindowInsetsCompat.Type.navigationBars())?.bottom ?: 0
-      }
+    val imeBottom = final?.getInsets(WindowInsetsCompat.Type.ime())?.bottom ?: 0
 
-    // on hide it will be negative value, so we are using max function
-    return (keyboardHeight - navigationBar).toFloat().dp.coerceAtLeast(0.0)
+    return resolveKeyboardHeight(imeBottom, root.navigationBarBottom(), config.hasTranslucentNavigationBar).toFloat().dp
   }
+
+  private fun WindowInsetsCompat?.navigationBarBottom(): Int =
+    this?.getInsets(WindowInsetsCompat.Type.navigationBars())?.bottom ?: 0
 
   private fun flushPendingStartEvent() {
     val event = pendingStartEvent ?: return
