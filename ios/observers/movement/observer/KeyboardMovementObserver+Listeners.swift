@@ -9,10 +9,44 @@ extension KeyboardMovementObserver {
   @objc func keyboardWillAppear(_ notification: Notification) {
     guard !UIResponder.isKeyboardPreloading else { return }
 
+    // UIKit announces a keyboard that belongs to nobody while it rearranges the input views of the screens
+    if UIResponder.current == nil, isKeyboardInTransition || isScreenInTransition {
+      return
+    }
+
+    if isAnimatedByItself(notification) {
+      endTransition()
+    }
+
+    // the screen that gets revealed brings its own keyboard, but only if the transition gets finished
+    if isKeyboardInTransition {
+      transitionNotification = notification
+      return
+    }
+
+    guard let transition = keyboardTransition(for: notification) else {
+      return dispatchWillAppear(notification)
+    }
+
+    if transition.kind == .withScreen {
+      // the keyboard arrives together with its screen, so the screen has to be ready before it becomes visible
+      UIView.performWithoutAnimation { dispatchWillAppear(notification.withoutAnimation) }
+    } else {
+      dispatchWillAppear(notification)
+    }
+
+    restoredKeyboard = (tag, keyboardHeight)
+  }
+
+  func dispatchWillAppear(_ notification: Notification) {
     let (duration, frame) = notification.keyboardMetaData()
     if let keyboardFrame = frame {
-      tag = UIResponder.current.reactViewTag
+      let responder = UIResponder.current.reactViewTag
       let keyboardHeight = keyboardFrame.cgRectValue.size.height
+
+      guard !isOutdated(keyboardHeight, of: responder) else { return }
+
+      tag = responder
       self.keyboardHeight = keyboardHeight
       self.notification = notification
 
@@ -20,6 +54,8 @@ extension KeyboardMovementObserver {
         KeyboardEventsIgnorer.shared.shouldIgnoreKeyboardEvents = false
         return
       }
+
+      guard !isKeyboardRestored() else { return }
 
       self.duration = duration
 
@@ -36,8 +72,21 @@ extension KeyboardMovementObserver {
   }
 
   @objc func keyboardWillDisappear(_ notification: Notification) {
-    guard !UIResponder.isKeyboardPreloading else { return }
-    let (duration, _) = notification.keyboardMetaData()
+    guard !UIResponder.isKeyboardPreloading, !isKeyboardInTransition else { return }
+    restoredKeyboard = nil
+    var (duration, _) = notification.keyboardMetaData()
+    let transition = beginTransition(hidingKeyboardWith: notification)
+
+    // the keyboard stays where it is on its screen, so there is nothing to change until the screen is gone
+    if transition == .withScreen {
+      return
+    }
+
+    // the keyboard goes down as long as the transition lasts, even if the notification has no duration
+    if let coordinator = transitionCoordinator {
+      duration = Int(coordinator.transitionDuration * 1000)
+    }
+
     tag = UIResponder.current.reactViewTag
     self.notification = notification
     // when keyboard disappears immediately replace the keyboard frame with .zero
@@ -52,7 +101,13 @@ extension KeyboardMovementObserver {
     setupKeyboardWatcher()
     removeKVObserver()
     initializeAnimation(fromValue: prevKeyboardPosition, toValue: 0)
-    scheduleDidEvent(height: 0, duration: animation?.duration ?? CGFloat(duration) / 1000)
+
+    if transition == nil {
+      scheduleDidEvent(height: 0, duration: animation?.duration ?? CGFloat(duration) / 1000)
+    } else {
+      // the keyboard is hidden when the transition is finished, not when `duration` elapses
+      keyboardDidTask?.cancel()
+    }
   }
 
   @objc func keyboardDidAppear(_ notification: Notification) {

@@ -22,6 +22,10 @@ extension KeyboardMovementObserver {
   }
 
   @objc func updateKeyboardFrame(link: CADisplayLink) {
+    if isKeyboardInTransition {
+      return updateKeyboardFrameInTransition()
+    }
+
     if keyboardTrackingView.view == nil {
       return
     }

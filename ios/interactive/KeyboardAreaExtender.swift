@@ -41,6 +41,20 @@ class KeyboardAreaExtender: NSObject {
     currentInputAccessoryView = nil
   }
 
+  /// Removes the accessory view from `input` right now.
+  ///
+  /// - Returns: `false` if `input` doesn't have this view.
+  func detach(from input: UIView) -> Bool {
+    guard let input = input as? TextInput, input.inputAccessoryView is InvisibleInputAccessoryView else {
+      return false
+    }
+
+    input.inputAccessoryView = nil
+    remove()
+
+    return true
+  }
+
   func updateHeight(to newHeight: CGFloat, for nativeID: String) {
     if UIResponder.current.nativeID == nativeID {
       currentInputAccessoryView?.updateHeight(to: newHeight)
