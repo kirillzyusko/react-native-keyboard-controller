@@ -211,3 +211,51 @@ describe("blankSpace — iOS whenAtEnd behavior", () => {
     expect(result.current.contentOffsetY!.value).toBe(1000);
   });
 });
+
+describe("blankSpace — iOS non-inverted, blankSpace grown while the keyboard is open", () => {
+  /**
+   * Opens the keyboard at the end of a list with no `blankSpace`
+   * (1200 → 1500), then sends a message: the content grows by 200, room is
+   * kept under it and the page scrolls the message to the top.
+   *
+   * @param scroll - Where the page scrolls the sent message to.
+   * @returns The hook's result.
+   * @example pinWhileOpen(1900);
+   */
+  function pinWhileOpen(scroll: number) {
+    const blankSpace = sv(0);
+
+    mockOffset.value = 1200;
+    const { result } = render({
+      inverted: false,
+      keyboardLiftBehavior: "whenAtEnd",
+      blankSpace,
+    });
+
+    handlers.onStart({ height: KEYBOARD });
+    expect(result.current.contentOffsetY!.value).toBe(1500);
+    mockOffset.value = 1500;
+    handlers.onEnd({ height: KEYBOARD });
+
+    mockSize.value = { width: 390, height: 2200 };
+    blankSpace.value = 600;
+    mockOffset.value = scroll;
+
+    return result;
+  }
+
+  it("keeps a message pinned to the top in place when the keyboard covers only blankSpace", () => {
+    const result = pinWhileOpen(1900);
+
+    handlers.onStart({ height: 0 });
+    expect(result.current.contentOffsetY!.value).toBe(1900);
+  });
+
+  it("unwinds only the content under the keyboard", () => {
+    // the keyboard covers 150 of blankSpace and 150 of content
+    const result = pinWhileOpen(1550);
+
+    handlers.onStart({ height: 0 });
+    expect(result.current.contentOffsetY!.value).toBe(1400);
+  });
+});

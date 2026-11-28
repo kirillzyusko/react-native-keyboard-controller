@@ -7,6 +7,7 @@ import { safeScrollTo } from "../../utils/safeScrollTo";
 
 import {
   clampedScrollTarget,
+  getBlankSpaceUnderKeyboard,
   getEffectiveHeight,
   getMinimumPaddingAbsorbed,
   getScrollEffective,
@@ -52,6 +53,11 @@ function useChatKeyboard(
   const closing = useSharedValue(false);
   const minimumPaddingFractionOnOpen = useSharedValue(0);
   const actualOpenShift = useSharedValue(0);
+  // `blankSpace` under the keyboard once it opened, and the scroll position
+  // a close starts from: what came under the keyboard since (a message
+  // pinned to the top while it was up) is not unwound on close
+  const blankUnderKeyboardOnOpen = useSharedValue(0);
+  const closeFrom = useSharedValue(0);
   const {
     layout,
     size,
@@ -165,8 +171,32 @@ function useChatKeyboard(
             // Preserve "whenAtEnd" sentinel: if open didn't shift, close shouldn't either
             if (offsetBeforeScroll.value !== -1) {
               // Use the actual displacement recorded at end of open animation
-              // (not the theoretical value) so close is symmetric with open
-              offsetBeforeScroll.value = scroll.value - actualOpenShift.value;
+              // (not the theoretical value) so close is symmetric with open,
+              // less the `blankSpace` that came under the keyboard since: the
+              // keyboard leaving it frees nothing that has to move
+              const blankUnderKeyboard = getBlankSpaceUnderKeyboard(
+                scroll.value,
+                layout.value.height,
+                size.value.height,
+                blankSpace.value,
+                extraContentPadding.value,
+                getEffectiveHeight(
+                  targetKeyboardHeight.value,
+                  targetKeyboardHeight.value,
+                  offset,
+                ),
+              );
+              const unwind = Math.max(
+                0,
+                actualOpenShift.value -
+                  Math.max(
+                    0,
+                    blankUnderKeyboard - blankUnderKeyboardOnOpen.value,
+                  ),
+              );
+
+              offsetBeforeScroll.value = scroll.value - unwind;
+              closeFrom.value = scroll.value;
             }
           }
         }
@@ -337,7 +367,14 @@ function useChatKeyboard(
             actualTotalPadding,
           );
 
-          safeScrollTo(scrollViewRef, 0, target, false);
+          // A close only moves the content down: it never lifts it on its
+          // first frames when less than the full shift is unwound
+          safeScrollTo(
+            scrollViewRef,
+            0,
+            closing.value ? Math.min(target, closeFrom.value) : target,
+            false,
+          );
 
           // Track actual (clamped) displacement during open for symmetric close
           if (!closing.value) {
@@ -363,10 +400,19 @@ function useChatKeyboard(
         // Record actual scroll displacement so close can be symmetric
         if (effective > 0 && offsetBeforeScroll.value !== -1) {
           actualOpenShift.value = scroll.value - offsetBeforeScroll.value;
+          blankUnderKeyboardOnOpen.value = getBlankSpaceUnderKeyboard(
+            scroll.value,
+            layout.value.height,
+            size.value.height,
+            blankSpace.value,
+            extraContentPadding.value,
+            effective,
+          );
         } else if (effective === 0) {
           // Fully closed: a later close event (Android sends one when a Modal
           // gives the focus back) must not reuse the previous shift
           actualOpenShift.value = 0;
+          blankUnderKeyboardOnOpen.value = 0;
         }
       },
     },

@@ -5,6 +5,7 @@ import useScrollState from "../../hooks/useScrollState";
 
 import {
   computeIOSContentOffset,
+  getBlankSpaceUnderKeyboard,
   getEffectiveHeight,
   getScrollEffective,
   getVisibleMinimumPaddingFraction,
@@ -53,6 +54,9 @@ function useChatKeyboard(
   const isInteractiveDismissal = useSharedValue(false);
   // Set by a transition that ran while frozen and so applied no content shift.
   const lastTransitionFrozen = useSharedValue(false);
+  // `blankSpace` under the keyboard once it opened: what came under it since
+  // (a message pinned to the top while it was up) is not unwound on close
+  const blankUnderKeyboardOnOpen = useSharedValue(0);
 
   const {
     layout,
@@ -207,9 +211,33 @@ function useChatKeyboard(
           padding.value,
           prevAbsorption.value,
         );
+        // Closing: the `blankSpace` that came under the keyboard since it
+        // opened frees nothing that has to move
+        const unwind =
+          !inverted && e.height === 0
+            ? Math.max(
+                0,
+                prevScrollEffective -
+                  Math.max(
+                    0,
+                    getBlankSpaceUnderKeyboard(
+                      scroll.value,
+                      layout.value.height,
+                      size.value.height,
+                      blankSpace.value,
+                      extraContentPadding.value,
+                      getEffectiveHeight(
+                        targetKeyboardHeight.value,
+                        targetKeyboardHeight.value,
+                        offset,
+                      ),
+                    ) - blankUnderKeyboardOnOpen.value,
+                  ),
+              )
+            : prevScrollEffective;
         const relativeScroll = inverted
           ? scroll.value + prevScrollEffective
-          : scroll.value - prevScrollEffective;
+          : scroll.value - unwind;
 
         padding.value = effective;
         prevAbsorption.value = minimumPaddingAbsorbed;
@@ -267,6 +295,18 @@ function useChatKeyboard(
         );
 
         padding.value = effective;
+        // where `onStart` put the content: the scroll event may not be in yet
+        blankUnderKeyboardOnOpen.value =
+          effective > 0
+            ? getBlankSpaceUnderKeyboard(
+                contentOffsetY.value,
+                layout.value.height,
+                size.value.height,
+                blankSpace.value,
+                extraContentPadding.value,
+                effective,
+              )
+            : 0;
       },
     },
     [inverted, keyboardLiftBehavior, offset, extraContentPadding],
